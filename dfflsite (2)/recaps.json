@@ -1,0 +1,19 @@
+{
+  "_comment": "Weekly ESPN-style recaps. The scheduled job appends one object to weeks[] after each week finalizes. The site sorts newest-first automatically.",
+  "_schema": {
+    "weeks[]": {
+      "season": "4-digit year as a string",
+      "week": "integer 1-17",
+      "note": "optional subtitle, e.g. 'Playoffs - Round 1'",
+      "games[]": {
+        "headline": "short ESPN-style game headline",
+        "winner": "manager display name",
+        "winner_points": "number",
+        "loser": "manager display name",
+        "loser_points": "number",
+        "body": "2-4 sentence recap"
+      }
+    }
+  },
+  "weeks": []
+}
