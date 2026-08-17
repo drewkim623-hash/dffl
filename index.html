@@ -14,6 +14,8 @@
     --grid:#2a2a33; --ring:rgba(255,255,255,.09);
     --blue:#3987e5; --red:#e66767; --aqua:#199e70; --gold:#c98500; --violet:#9085e9;
     --good:#0ca30c; --crit:#d03b3b; --mid:#383840;
+    --plus:#3ad07f; --hold:#c98500;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
     --r:14px; --rs:10px;
     --pad:max(16px,env(safe-area-inset-left));
   }
@@ -257,6 +259,72 @@
   .aw .n{font-size:13px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .aw .ic{font-size:17px;width:22px;text-align:center}
 
+  /* ============ odds board ============ */
+  .notice{border:1px solid rgba(201,133,0,.42);background:rgba(201,133,0,.07);border-radius:var(--r);
+    padding:14px 16px;margin-bottom:20px}
+  .notice .nt{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--hold);font-weight:700;margin-bottom:7px}
+  .notice p{margin:0 0 7px;font-size:13.5px;color:var(--ink-2);line-height:1.55;max-width:76ch}
+  .notice p:last-child{margin-bottom:0}
+  .notice b{color:var(--ink);font-weight:700}
+
+  .board{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);
+    overflow:hidden;margin-bottom:11px}
+  .bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 15px;background:var(--raised);border-bottom:1px solid var(--grid)}
+  .bhead .bt{font-size:14.5px;font-weight:800;letter-spacing:-.01em;min-width:0}
+  .bhead .bs{font-size:11.5px;color:var(--muted);font-weight:600;display:block;margin-top:2px;line-height:1.4}
+  .bhead .hold{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--hold);border:1px solid rgba(201,133,0,.4);background:rgba(201,133,0,.09);
+    border-radius:6px;padding:4px 7px;white-space:nowrap;font-weight:700;flex:none}
+
+  .orow{display:grid;grid-template-columns:20px auto minmax(0,1fr) auto;align-items:center;gap:10px;
+    padding:9px 15px;width:100%;background:transparent;border:0;border-top:1px solid var(--grid);
+    text-align:left;font:inherit;color:inherit;cursor:pointer;transition:background .13s}
+  .board .orow:first-of-type{border-top:0}
+  .orow:hover{background:var(--hover)}
+  .orow:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+  .orow .rk{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right}
+  .orow .who{min-width:0}
+  .orow .who .n{font-weight:700;font-size:14.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .orow .who .s{font-size:11.5px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* the price tile — a posted number, and underneath it the number the book hides */
+  .price{display:block;min-width:74px;border:1px solid var(--ring);background:var(--raised);
+    border-radius:9px;padding:6px 9px;text-align:center;transition:border-color .13s,background .13s}
+  .price .o{font-family:var(--mono);font-size:15.5px;font-weight:700;line-height:1.15;display:block;
+    font-variant-numeric:tabular-nums}
+  .price.plus .o{color:var(--plus)}
+  .price .tp{font-family:var(--mono);font-size:9.5px;color:var(--muted);display:block;margin-top:2px}
+  .price .k{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;display:block;margin-bottom:3px}
+  .orow:hover .price{border-color:rgba(57,135,229,.55);background:var(--hover)}
+  .prices{display:flex;gap:7px}
+  @media(max-width:560px){
+    .orow.two{grid-template-columns:20px auto minmax(0,1fr);grid-template-areas:"rk av who" "pr pr pr"}
+    .orow.two .rk{grid-area:rk} .orow.two .avcell{grid-area:av} .orow.two .who{grid-area:who}
+    .orow.two .prices{grid-area:pr;margin-top:3px}
+    .orow.two .prices .price{flex:1;min-width:0}
+  }
+  @media(prefers-reduced-motion:reduce){.orow,.price{transition:none}}
+
+  .bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:11px}
+
+  .mode{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:0 0 16px}
+  .mode .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+    font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none}
+  .mode .pill.pre{color:var(--hold);border:1px solid rgba(201,133,0,.45);background:rgba(201,133,0,.10)}
+  .mode .pill.post{color:var(--plus);border:1px solid rgba(58,208,127,.42);background:rgba(58,208,127,.10)}
+  .mode .what{font-size:13.5px;color:var(--ink-2);line-height:1.55;min-width:0}
+
+  .method{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:16px 17px;margin-top:22px}
+  .method h3{margin:0 0 4px;font-size:15px;font-weight:800}
+  .method p{margin:0 0 11px;font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:78ch}
+  .method p:last-child{margin-bottom:0}
+  .method code{font-family:var(--mono);font-size:12.5px;background:var(--raised);border-radius:5px;padding:1px 5px;color:var(--ink)}
+  .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
+  .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+
   /* ============ misc ============ */
   select{background:var(--raised);color:var(--ink);border:1px solid var(--ring);border-radius:9px;
     padding:10px 11px;font:inherit;font-size:14px;width:100%;cursor:pointer}
@@ -422,7 +490,9 @@ async function loadSeason(lg) {
     getSide(id, "rosters").catch(() => []),
     started ? getSide(id, "winners_bracket").catch(() => []) : Promise.resolve([]),
     started ? getSide(id, "losers_bracket").catch(() => []) : Promise.resolve([]),
-    started ? getSide(id, "drafts").catch(() => []) : Promise.resolve([]),
+    // Always: the current season's draft exists (with keepers already in it)
+    // before the season starts, and the odds board re-prices the moment it ends.
+    getSide(id, "drafts").catch(() => []),
   ]);
   tick(`${lg.season} season`);
 
@@ -482,9 +552,28 @@ async function loadSeason(lg) {
 
   // Draft picks for this season (names ride along in pick.metadata).
   let picks = [];
-  const draftId = (drafts && drafts[0] && drafts[0].draft_id) || null;
+  const draft = (drafts && drafts[0]) || null;
+  const draftId = (draft && draft.draft_id) || null;
   if (draftId && !MOCK) picks = await jget(`${API}/draft/${draftId}/picks`).catch(() => []);
   if (picks.length) tick(`${lg.season} draft`);
+
+  // A draft is only "done" when Sleeper says complete AND the board is full.
+  // Mid-draft the roster is half-built, so the odds stay on the pre-draft model.
+  const draftRounds = Number(draft && draft.settings && draft.settings.rounds) || 0;
+  const draftSlots = draftRounds * (Number(draft && draft.settings && draft.settings.teams) || rosters.length || 0);
+  const draftDone = !!draft && draft.status === "complete" && draftSlots > 0 && picks.length >= draftSlots;
+
+  // Divisions live in two places: the names hang off league.metadata.division_N,
+  // the membership off each roster's settings.division.
+  const meta = lg.metadata || {};
+  const divCount = Number(lg.settings && lg.settings.divisions) || 0;
+  const divNames = new Map();
+  for (let d = 1; d <= divCount; d++) divNames.set(d, meta[`division_${d}`] || `Division ${d}`);
+  const divOf = new Map();
+  for (const r of rosters) {
+    const d = r.settings && r.settings.division;
+    if (d != null) divOf.set(r.roster_id, Number(d));
+  }
 
   DB.seasons.push({
     leagueId: id, season: lg.season, name: lg.name, status: lg.status,
@@ -492,6 +581,8 @@ async function loadSeason(lg) {
     places: placementsOf(wb, lb, ptm), wb, lb, games: seasonGames,
     complete: lg.status === "complete",
     picks, playerPts, draftId,
+    draftStatus: (draft && draft.status) || null, draftRounds, draftSlots, draftDone,
+    meta, divCount, divNames, divOf,
   });
 }
 
@@ -705,6 +796,7 @@ const TABS = [
   { id: "managers", label: "Managers" },
   { id: "records", label: "Records" },
   { id: "matchups", label: "Matchups" },
+  { id: "odds", label: "Odds" },
   { id: "draft", label: "Draft" },
   { id: "recaps", label: "Recaps" },
 ];
@@ -727,7 +819,7 @@ function show(id) {
 }
 
 /* =============================================== HOME =============== */
-function panelHome(AT, RB) {
+function panelHome(AT, RB, model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "home";
 
   const completed = DB.seasons.filter(s => s.complete && Object.keys(s.places).length);
@@ -787,26 +879,28 @@ function panelHome(AT, RB) {
   }
   box.appendChild(inner); p.appendChild(box);
 
-  /* ---- toy title odds ---- */
-  const odds = titleOdds(window.__DIST || scoringDist());
-  if (odds && odds.length) {
+  /* ---- pre-season outlook: the same model the Odds tab prices from ---- */
+  if (model && model.ok && sim) {
+    const n = sim.sims;
+    const rows = model.teams
+      .map((t, i) => ({ uid: t.uid, title: sim.title[i] / n, playoff: sim.playoff[i] / n, wins: sim.wins[i] / n }))
+      .sort((a, b) => b.title - a.title);
     p.appendChild(sechead("Next season, for argument's sake",
-        "Three thousand simulated seasons, drawing each manager's weekly score from how they've actually scored. Treat it as a bar bet, not analysis — it has no idea who's on anyone's roster, and rosters decide almost everything. It is a measure of who has been good, projected forward."));
+      `Twenty thousand simulated ${model.season} seasons on the real format — fourteen weeks, three divisions, six playoff spots. ${model.postDraft
+        ? "Now that the draft has run, every roster is valued against the pre-draft market, and about half of a team's draft-day edge is carried into its projection."
+        : "It is pre-draft, so this knows only how these managers have scored before, and roughly a third of even that is discarded as roster luck. It re-prices itself once you draft."} The Odds tab prices the whole board and shows its working.`));
     p.appendChild(tableCard(
-      [{ label: "Manager" }, { label: "Title odds", num: 1 }, { label: "Makes playoffs", num: 1 }, { label: "Avg week", num: 1 }],
-      odds.map(o => {
-        const d = (window.__DIST || new Map()).get(o.uid) || { mean: 0, sd: 0 };
-        return `<tr>
-          <td><span class="nmcell">${avatarHTML(o.uid, "sm")}${esc(nameOf(o.uid))}</span></td>
-          <td class="num"><b>${(o.title * 100).toFixed(1)}%</b></td>
-          <td class="num">${(o.playoff * 100).toFixed(0)}%</td>
-          <td class="num">${f1(d.mean)} <span style="color:var(--muted)">±${f1(d.sd)}</span></td></tr>`;
-      })));
+      [{ label: "Manager" }, { label: "Title odds", num: 1 }, { label: "Makes playoffs", num: 1 }, { label: "Projected wins", num: 1 }],
+      rows.map(r => `<tr>
+        <td><span class="nmcell">${avatarHTML(r.uid, "sm")}${esc(nameOf(r.uid))}</span></td>
+        <td class="num"><b>${(r.title * 100).toFixed(1)}%</b></td>
+        <td class="num">${(r.playoff * 100).toFixed(0)}%</td>
+        <td class="num">${f1(r.wins)}</td></tr>`)));
   }
 
   p.appendChild(glossary([
     { t: "Win rate", d: "Regular-season wins divided by games played. Playoffs are counted separately, so these tie out exactly to Sleeper's own standings." },
-    { t: "Title odds", d: "From simulating the season three thousand times using each manager's scoring history. Entertainment only — it cannot see rosters, trades, injuries, or the draft." },
+    { t: "Title odds", d: "From simulating the season twenty thousand times off each manager's scoring history. Entertainment only — it cannot see rosters, trades, injuries, or the draft. The Odds tab explains exactly how little it knows." },
     { t: "Points / points allowed", d: "Total fantasy points your lineup scored, and the total your opponents put up against you." },
     { t: "Beat-everyone rate", d: "If you had played all 11 other teams every single week, what share would you have beaten? The fairest measure of how good someone actually is." },
     { t: "Luck", d: "Actual wins minus the wins your scoring earned. +2 means you've won two more games than your points deserved." },
@@ -1599,6 +1693,409 @@ function titleOdds(D, sims = 3000) {
     .sort((a, b) => b.title - a.title);
 }
 
+/* ================================ ODDS BOARD ======================== */
+/*
+ * Everything below prices a market the way a book would, off a Monte Carlo of
+ * the real DFFL format. Two rules govern it:
+ *   1. No constant is invented. The carry-over between seasons, the size of a
+ *      roster-year swing and the week-to-week noise are all estimated from the
+ *      league's own history, so the model's confidence tracks the evidence.
+ *   2. If the format doesn't match what the simulation knows how to run, the
+ *      board prices nothing at all rather than posting a number it can't stand
+ *      behind.
+ */
+
+const ODDS_SIMS = 20000;
+const ODDS_SEED = 20260817;   // fixed: the board must post the same price every reload
+const ODDS_HOLD = 0.06;       // the vig we add, 6%
+
+/*
+ * Fitted constants. Every one of these was estimated by regression on DFFL's
+ * own drafts and results, 2022-2025 — none are chosen by hand.
+ *
+ *   ADP_CURVE   what a player taken at a given ADP actually delivered to a
+ *               starting lineup, in points per week.  R2 = .33 over 558 picks.
+ *   W_ROSTER    how much of a team's draft-day roster edge shows up in its
+ *               scoring.  slope .541 (se .166, t = 3.3) — real, and about half.
+ *   W_HIST_*    how much of a manager's past scoring carries forward. Pre-draft
+ *               that's all we have (.684, from variance components). Once the
+ *               roster is known its weight roughly halves, to .355 — the roster
+ *               already contains most of what history was standing in for.
+ *   SHOCK_*     what's left over: how far a season lands from the projection,
+ *               after taking out the ordinary week-to-week sampling noise.
+ *               Knowing the roster cuts it from 6.9 to 4.8 points a week.
+ */
+// floor is derived, not typed in, so it is exactly the curve's own value at the
+// deepest pick anyone drafts — a rounded copy would disagree in the 4th decimal.
+const ADP_CURVE = { a: 22.7313, b: -3.6731, deepest: 220 };
+ADP_CURVE.floor = ADP_CURVE.a + ADP_CURVE.b * Math.log(ADP_CURVE.deepest);
+const W_ROSTER = 0.541;
+const W_HIST_PRE_MAX = 0.684;   // upper bound; shrunk per manager by seasons played
+const W_HIST_POST = 0.355;
+const SHOCK_PRE = 6.90;
+const SHOCK_POST = 4.84;
+
+/** Points per week a pick at this ADP has historically put in a lineup. */
+function adpValue(adp) {
+  if (!(adp > 0)) return ADP_CURVE.floor;
+  const x = Math.max(1, Math.min(ADP_CURVE.deepest, adp));
+  return Math.max(ADP_CURVE.floor, ADP_CURVE.a + ADP_CURVE.b * Math.log(x));
+}
+
+/** Match Sleeper's player names to the ADP board. Sleeper calls kickers K. */
+const adpKey = (name, pos) =>
+  String(name || "").toLowerCase().replace(/[^a-z]/g, "").replace(/(jr|sr|ii|iii|iv)$/, "")
+  + "|" + (pos === "K" ? "PK" : pos);
+
+/**
+ * The pre-draft market, frozen. Loaded from a file rather than fetched live:
+ * the board that matters is the one that existed on draft day, and it should
+ * never move afterwards.
+ */
+async function loadADP() {
+  try {
+    const d = await jget("adp-2026.json");
+    if (!d || !Array.isArray(d.players) || !d.players.length) return null;
+    const byName = new Map();
+    for (const [name, pos, adp] of d.players) byName.set(adpKey(name, pos), adp);
+    return { byName, meta: d, n: d.players.length };
+  } catch (e) { return null; }
+}
+
+/** Sum a manager's drafted roster into one points-per-week number. */
+function rosterValue(picks, adp) {
+  const out = new Map();
+  let matched = 0, total = 0;
+  for (const p of picks || []) {
+    const uid = p.picked_by;
+    if (!uid) continue;
+    total++;
+    const md = p.metadata || {};
+    const hit = adp.byName.get(adpKey(`${md.first_name || ""} ${md.last_name || ""}`, md.position));
+    if (hit != null) matched++;
+    // Undrafted-in-the-market picks (team defenses, deep fliers) get the floor.
+    // Every roster carries a couple, so this barely moves the ordering.
+    out.set(uid, (out.get(uid) || 0) + adpValue(hit != null ? hit : ADP_CURVE.deepest));
+  }
+  return { byUid: out, matched, total };
+}
+
+/** Deterministic PRNG (mulberry32). */
+function rng(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const gaussFrom = rand => (m, s) => {
+  let u = 0, v = 0;
+  while (!u) u = rand();
+  while (!v) v = rand();
+  return m + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+};
+
+/* ---------------------------------------------------- odds arithmetic */
+
+/** American price for a probability. p=.60 → -150, p=.25 → +300. */
+function americanOdds(p) {
+  if (!(p > 0 && p < 1)) return null;
+  return p >= 0.5 ? -100 * p / (1 - p) : 100 * (1 - p) / p;
+}
+/** The probability a price implies. Exactly inverts americanOdds. */
+function impliedProb(o) {
+  if (o == null || !isFinite(o) || o === 0) return null;
+  return o < 0 ? -o / (100 - o) : 100 / (o + 100);
+}
+/** Books post round numbers: nearest 5 below 200, nearest 10 from 200 up. */
+function roundOdds(o) {
+  if (o == null || !isFinite(o)) return null;
+  const step = Math.abs(o) < 200 ? 5 : 10;
+  const r = Math.round(Math.abs(o) / step) * step;
+  return o < 0 ? -r : r;
+}
+const fmtOdds = o => o == null ? "—" : (o > 0 ? "+" : "") + Math.round(o);
+
+/** Scale a market so its probabilities sum to 1+hold. This is the vig. */
+function addVig(ps, hold = ODDS_HOLD) {
+  const s = ps.reduce((a, b) => a + b, 0);
+  if (!(s > 0)) return ps.map(() => 0);
+  return ps.map(p => Math.min(0.995, p * (1 + hold) / s));
+}
+/** True probabilities in, posted prices out — with the truth kept alongside. */
+function priceMarket(rows, hold = ODDS_HOLD) {
+  const v = addVig(rows.map(r => r.p), hold);
+  return rows.map((r, i) => {
+    const raw = americanOdds(v[i]);
+    const price = roundOdds(raw);
+    return { ...r, vigP: v[i], raw, price, postedP: impliedProb(price) };
+  });
+}
+/** What the book actually holds once prices are rounded to real increments. */
+const marketHold = priced => priced.reduce((a, r) => a + (r.postedP || 0), 0) - 1;
+
+/* ------------------------------------------------------------ schedule */
+
+/** Circle method: every pair exactly once, in n-1 rounds. */
+function roundRobin(ids) {
+  const a = ids.slice(), n = a.length;
+  if (n < 2 || n % 2) return null;
+  const out = [];
+  for (let r = 0; r < n - 1; r++) {
+    const wk = [];
+    for (let i = 0; i < n / 2; i++) wk.push([a[i], a[n - 1 - i]]);
+    out.push(wk);
+    a.splice(1, 0, a.pop());
+  }
+  return out;
+}
+
+/**
+ * Sleeper's schedule shape, checked against every DFFL season 2022-2025: one
+ * full round robin, then the spare weeks are intra-division rematches. With 12
+ * teams that's 11 + 3, and the 3 spare weeks pair off each 4-team division.
+ */
+function buildSchedule(teams, weeks) {
+  const ids = teams.map((_, i) => i);
+  const rr = roundRobin(ids);
+  if (!rr) return null;
+  const spare = weeks - rr.length;
+  if (spare < 0) return null;
+  if (spare === 0) return rr;
+
+  const groups = new Map();
+  for (const i of ids) {
+    const d = teams[i].div;
+    if (!groups.has(d)) groups.set(d, []);
+    groups.get(d).push(i);
+  }
+  const sizes = [...groups.values()].map(g => g.length);
+  if (new Set(sizes).size !== 1 || sizes[0] % 2 || spare !== sizes[0] - 1) return null;
+  const per = [...groups.values()].map(g => roundRobin(g));
+  if (per.some(x => !x)) return null;
+  const extra = [];
+  for (let r = 0; r < spare; r++) extra.push(per.flatMap(rounds => rounds[r]));
+  return [...rr, ...extra];
+}
+
+/* --------------------------------------------------------------- model */
+
+/**
+ * Split what we've seen into the part that is the manager and the part that is
+ * just the roster he happened to have that year, then keep only the first.
+ * Returns null whenever the league isn't in a shape this can honestly price.
+ */
+async function oddsModel() {
+  const cur = DB.seasons[0];
+  if (!cur || !cur.rosters || !cur.divCount) return null;
+
+  const bySeason = new Map();
+  for (const g of regGames()) {
+    if (!bySeason.has(g.season)) bySeason.set(g.season, new Map());
+    const m = bySeason.get(g.season);
+    for (const s of [g.a, g.b]) {
+      if (!m.has(s.uid)) m.set(s.uid, []);
+      m.get(s.uid).push(s.pts);
+    }
+  }
+  const seasons = [...bySeason.keys()].sort();
+  if (seasons.length < 2) return null;
+
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  const avg = a => sum(a) / a.length;
+
+  // Scoring inflates and deflates year to year — judge everyone against the
+  // league average of their own season, never across seasons raw.
+  const lgMean = new Map();
+  for (const s of seasons) lgMean.set(s, avg([...bySeason.get(s).values()].flat()));
+
+  // Week-to-week noise is what's left once a manager's own season mean is out.
+  let rss = 0, rdf = 0;
+  for (const s of seasons) for (const a of bySeason.get(s).values()) {
+    if (a.length < 2) continue;
+    const m = avg(a);
+    rss += sum(a.map(x => (x - m) ** 2));
+    rdf += a.length - 1;
+  }
+  if (!rdf) return null;
+  const weekSd = Math.sqrt(rss / rdf);
+
+  // Every manager's season means, relative to that year's league average.
+  const hist = new Map();
+  for (const s of seasons) for (const [uid, a] of bySeason.get(s)) {
+    if (a.length < 8) continue;
+    if (!hist.has(uid)) hist.set(uid, []);
+    hist.get(uid).push({ season: s, m: avg(a) - lgMean.get(s) });
+  }
+  const multi = [...hist.values()].filter(v => v.length >= 2);
+  if (multi.length < 3) return null;
+
+  // One-way random effects. seasonVar is how much a manager bounces around his
+  // own level from year to year; skillVar is how far apart the managers really
+  // are once that bouncing is accounted for.
+  let wss = 0, wdf = 0;
+  for (const v of multi) {
+    const m = avg(v.map(x => x.m));
+    wss += sum(v.map(x => (x.m - m) ** 2));
+    wdf += v.length - 1;
+  }
+  const seasonVar = wss / wdf;
+  const mgrMeans = [...hist.values()].map(v => avg(v.map(x => x.m)));
+  const grand = avg(mgrMeans);
+  const nBar = avg([...hist.values()].map(v => v.length));
+  const betweenObs = sum(mgrMeans.map(x => (x - grand) ** 2)) / Math.max(1, mgrMeans.length - 1);
+  const skillVar = Math.max(0, betweenObs - seasonVar / nBar);
+  const carry = (skillVar + seasonVar) > 0 ? skillVar / (skillVar + seasonVar) : 0;
+  const base = lgMean.get(seasons[seasons.length - 1]);
+
+  // ---- Has the draft happened yet? That decides which model runs. ----
+  const adp = await loadADP();
+  const live = (cur.draftDone && adp) ? rosterValue(cur.picks, adp) : null;
+  const postDraft = !!live && live.byUid.size === cur.rosters.length;
+  const rvMean = postDraft ? avg([...live.byUid.values()]) : 0;
+
+  const teams = [];
+  for (const r of cur.rosters) {
+    const uid = cur.uidOf.get(r.roster_id);
+    const div = cur.divOf.get(r.roster_id);
+    if (!uid || div == null) return null;         // incomplete divisions → price nothing
+    const h = hist.get(uid) || [];
+    const S = h.length;
+    const rawEdge = S ? avg(h.map(x => x.m)) : 0;
+    // Shrink toward the league average by how much of this really is the man.
+    const k = (S && skillVar > 0) ? skillVar / (skillVar + seasonVar / S) : 0;
+
+    const rv = postDraft ? (live.byUid.get(uid) ?? rvMean) : null;
+    const rosterEdge = postDraft ? rv - rvMean : 0;
+    // Before the draft the manager is all we have. After it, the roster carries
+    // most of the signal and history's weight roughly halves.
+    const edge = postDraft
+      ? W_ROSTER * rosterEdge + W_HIST_POST * rawEdge
+      : k * rawEdge;
+
+    teams.push({
+      uid, rid: r.roster_id, div, seasons: S,
+      rawEdge, shrink: postDraft ? W_HIST_POST : k,
+      rosterValue: rv, rosterEdge,
+      edge, mean: base + edge,
+    });
+  }
+  teams.sort((a, b) => a.div - b.div || b.edge - a.edge);
+
+  const weeks = (cur.pws || 15) - 1;
+  const playoffTeams = cur.playoffTeams || 6;
+  const sched = buildSchedule(teams, weeks);
+
+  // The consolation bracket below is the one Sleeper actually builds for a
+  // 12-team, 6-playoff-team league. Anything else and we don't post a board.
+  const ok = !!sched && teams.length === 12 && playoffTeams === 6 && cur.divCount === 3;
+
+  return {
+    ok, postDraft, teams, sched, weeks, playoffTeams, weekSd,
+    // Knowing the roster shrinks how far a season can land from the projection.
+    seasonSd: postDraft ? SHOCK_POST : SHOCK_PRE,
+    skillSd: Math.sqrt(skillVar), carry, base,
+    seasons, divNames: cur.divNames, season: cur.season, status: cur.status,
+    nMgrSeasons: [...hist.values()].reduce((a, v) => a + v.length, 0),
+    draftStatus: cur.draftStatus, draftDone: !!cur.draftDone,
+    adpMeta: adp ? adp.meta : null, adpMissing: !adp,
+    matchRate: live ? live.matched / Math.max(1, live.total) : null,
+    picksPriced: live ? live.total : 0,
+  };
+}
+
+/* ----------------------------------------------------------- simulator */
+
+/**
+ * 14-week regular season on the real schedule, then the real brackets.
+ * Seeding: the three division winners take seeds 1-3, then the best three left
+ * over — confirmed against 2025, where the 10-4 division winner was seeded
+ * above a 10-4 team with 220 more points.
+ */
+function simulateSeason(model, sims = ODDS_SIMS) {
+  if (!model || !model.ok) return null;
+  const { teams, sched, weekSd, seasonSd, playoffTeams } = model;
+  const N = teams.length, ids = teams.map((_, i) => i);
+  const rand = rng(ODDS_SEED), gau = gaussFrom(rand);
+  const zeros = () => new Array(N).fill(0);
+  const C = {
+    sims, title: zeros(), playoff: zeros(), divWin: zeros(), divLast: zeros(),
+    last: zeros(), bye: zeros(), wins: zeros(),
+    winDist: teams.map(() => new Array(sched.length + 1).fill(0)),
+  };
+  const divs = [...new Set(teams.map(t => t.div))].sort((a, b) => a - b);
+  const pos = new Array(N);
+
+  for (let s = 0; s < sims; s++) {
+    // The 2026 roster nobody has drafted yet: one draw per manager per season.
+    const lvl = teams.map(t => gau(t.mean, seasonSd));
+    const W = zeros(), PF = zeros();
+    for (const wk of sched) {
+      const sc = lvl.map(m => gau(m, weekSd));
+      for (let i = 0; i < N; i++) PF[i] += sc[i];
+      for (const [a, b] of wk) { if (sc[a] > sc[b]) W[a]++; else W[b]++; }
+    }
+    for (let i = 0; i < N; i++) { C.wins[i] += W[i]; C.winDist[i][W[i]]++; }
+
+    const rank = ids.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a]);
+    for (let i = 0; i < N; i++) pos[rank[i]] = i;
+
+    const champs = divs.map(d => rank.find(i => teams[i].div === d)).sort((a, b) => pos[a] - pos[b]);
+    for (const i of champs) C.divWin[i]++;
+    for (const d of divs) {
+      const m = rank.filter(i => teams[i].div === d);
+      C.divLast[m[m.length - 1]]++;
+    }
+    const rest = rank.filter(i => !champs.includes(i));
+    const wilds = playoffTeams - champs.length;
+    const seeds = [...champs, ...rest.slice(0, wilds)];
+    for (const i of seeds) C.playoff[i]++;
+    C.bye[seeds[0]]++; C.bye[seeds[1]]++;
+
+    const roll = i => gau(lvl[i], weekSd);
+    const duel = (a, b) => roll(a) > roll(b) ? [a, b] : [b, a];
+    const sp = new Map(seeds.map((x, i) => [x, i]));
+
+    // Winners bracket, weeks 15-17. Seeds 1-2 sit out the first round.
+    const [w1] = duel(seeds[2], seeds[5]);
+    const [w2] = duel(seeds[3], seeds[4]);
+    const low = sp.get(w1) > sp.get(w2) ? w1 : w2;
+    const high = low === w1 ? w2 : w1;
+    const [f1] = duel(seeds[0], low);
+    const [f2] = duel(seeds[1], high);
+    const [champ] = duel(f1, f2);
+    C.title[champ]++;
+
+    // Consolation. Seeds 7-12 by record; round one is 8v9 and 7v10, and the
+    // two teams that LOSE it play off for last. Seeds 11 and 12 aren't in it —
+    // which is why the worst record in the league cannot finish bottom.
+    const L = rest.slice(wilds);
+    const [, la] = duel(L[1], L[2]);
+    const [, lb] = duel(L[0], L[3]);
+    const [, dead] = duel(la, lb);
+    C.last[dead]++;
+  }
+  return C;
+}
+
+/** The win total each manager's season is closest to a coin flip around. */
+function winTotals(model, sim) {
+  return model.teams.map((t, i) => {
+    const dist = sim.winDist[i];
+    let best = null;
+    for (let k = 1; k <= model.sched.length; k++) {
+      let over = 0;
+      for (let j = k; j < dist.length; j++) over += dist[j];
+      const p = over / sim.sims;
+      const d = Math.abs(p - 0.5);
+      if (!best || d < best.d) best = { line: k - 0.5, pOver: p, pUnder: 1 - p, d };
+    }
+    return { i, uid: t.uid, avg: sim.wins[i] / sim.sims, ...best };
+  });
+}
+
 /**
  * Draft value. A pick's worth = where it was taken minus where the player
  * actually finished in production. Positive = taken later than he performed.
@@ -1633,6 +2130,301 @@ function draftAnalysis(picks, playerPts, uidOf) {
     busts: rows.slice().sort((a, b) => a.value - b.value).slice(0, 10),
     byMgr: [...byMgr.values()].sort((a, b) => b.pts - a.pts),
   };
+}
+
+/* =============================================== ODDS =============== */
+
+/** The signature: a posted price, and under it the number a book never shows. */
+function priceTile(r, label) {
+  return `<span class="price${r.price > 0 ? " plus" : ""}">
+    ${label ? `<span class="k">${esc(label)}</span>` : ""}
+    <span class="o">${esc(fmtOdds(r.price))}</span>
+    <span class="tp">${(r.p * 100).toFixed(1)}%</span></span>`;
+}
+
+function oddsBoard(title, sub, priced, noteFn) {
+  const b = el("div", "board");
+  b.innerHTML = `<div class="bhead">
+    <span class="bt">${esc(title)}${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</span>
+    <span class="hold">Hold ${(marketHold(priced) * 100).toFixed(1)}%</span></div>`;
+  priced.forEach((r, i) => {
+    const btn = el("button", "orow");
+    btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(r.uid, "sm avcell")}
+      <span class="who"><span class="n">${esc(nameOf(r.uid))}</span>
+      <span class="s">${esc(noteFn ? noteFn(r) : teamOf(r.uid))}</span></span>${priceTile(r)}`;
+    btn.onclick = () => openProfile(r.uid);
+    b.appendChild(btn);
+  });
+  return b;
+}
+
+function panelOdds(model, sim) {
+  const p = el("div", "panel"); p.dataset.panel = "odds";
+
+  const post = !!(model && model.postDraft);
+
+  p.appendChild(sechead(`DFFL ${model ? model.season : ""} odds board`,
+    post
+      ? "Futures priced off the rosters that actually got drafted, simulated on the real DFFL format and posted the way a book would post them."
+      : "Futures on the season nobody has drafted yet, priced by a simulation of the real DFFL format and posted the way a book would post them."));
+
+  if (model) {
+    const mode = el("div", "mode");
+    mode.innerHTML = post
+      ? `<span class="pill post">Repriced · post-draft</span>
+         <span class="what">The draft is in. Every roster has been valued against the pre-draft
+           market and the whole board has moved — these are no longer prices about the managers,
+           they are prices about the teams.</span>`
+      : `<span class="pill pre">Opening line · pre-draft</span>
+         <span class="what">${model.draftStatus === "drafting"
+            ? "The draft is under way. Half-built rosters price badly, so the board holds this line and re-prices in one move the moment the draft finishes."
+            : "The draft hasn't run. The board re-prices itself automatically once it does — reload the page after the draft and every number here will have moved."}</span>`;
+    p.appendChild(mode);
+  }
+
+  const notice = el("div", "notice");
+  notice.innerHTML = `<div class="nt">House notice</div>
+    <p><b>These are not real betting lines.</b> No sportsbook offers markets on a
+       twelve-man friend league, nothing here is accepting a wager, and every price
+       was invented by a model running in your browser.</p>
+    ${post ? `
+    <p><b>These prices know your rosters, not the season.</b> Every drafted player is
+       valued at what a pick at his draft position has historically delivered to a DFFL
+       lineup. That is a real signal — about half of a team's draft-day edge shows up in
+       its scoring — but it cannot see injuries, waiver pickups, trades, or a rookie
+       breaking out.</p>
+    <p>Roughly a third of what decides a fantasy season is now on the board. The rest
+       hasn't happened.</p>` : `
+    <p><b>The board ignores the keepers and the draft order.</b> Both are already public
+       on Sleeper, and a ninth-round keeper is a real edge — but a partial roster prices
+       worse than none at all, so the model waits for the full draft rather than guessing
+       from three players.</p>
+    <p><b>It is pre-draft.</b> DFFL re-drafts every season and carries only three keepers
+       forward, so most of what decides the year still hasn't happened.</p>
+    <p>Read this as a prior on the managers, not a projection of the season.</p>`}`;
+  p.appendChild(notice);
+
+  if (!model || !model.ok || !sim) {
+    p.appendChild(el("div", "empty",
+      `<b>No board today</b>The simulation only prices the format it has been checked
+       against — twelve teams, three divisions, six playoff teams, a fourteen-week
+       season. This league doesn't currently match it, so rather than post numbers
+       that don't mean anything, it posts nothing.`));
+    return p;
+  }
+
+  const T = model.teams, n = sim.sims;
+  const nm = i => nameOf(T[i].uid);
+  const idxByDiv = d => T.map((t, i) => i).filter(i => T[i].div === d);
+  const divs = [...model.divNames.keys()].sort((a, b) => a - b);
+
+  /* ---- championship ---- */
+  p.appendChild(sechead("Championship",
+    "Every price carries a 6% hold, the way a real book's does. The small figure under each price is the model's own probability, with the vig taken back out — the number a sportsbook keeps to itself."));
+  const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: sim.title[i] / n }))
+    .sort((a, b) => b.p - a.p));
+  p.appendChild(oddsBoard("To win the DFFL championship", `${model.season} season · ${n.toLocaleString()} simulations`,
+    title, r => `Makes the playoffs ${(sim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(sim.wins[r.i] / n)} wins`));
+
+  /* ---- what the draft did (only once there is a draft) ---- */
+  if (post) {
+    p.appendChild(sechead("What the draft did",
+      "Every pick is worth what that draft slot has historically returned to a DFFL starting lineup, summed across the roster. The last three columns split each projection into the part that came from the draft and the part that came from the manager's own record."));
+    const byDraft = model.teams.slice().sort((a, b) => b.rosterEdge - a.rosterEdge);
+    p.appendChild(tableCard(
+      [{ label: "Manager" }, { label: "Roster", num: 1, title: "Points per week this roster projects to deliver" },
+      { label: "vs field", num: 1, title: "How far that sits from the average DFFL draft" },
+      { label: "From draft", num: 1 }, { label: "From record", num: 1 }, { label: "Projected week", num: 1 }],
+      byDraft.map(t => {
+        const fromDraft = W_ROSTER * t.rosterEdge, fromRec = W_HIST_POST * t.rawEdge;
+        const sgn = (v, d = 1) => `${v >= 0 ? "+" : ""}${d === 1 ? f1(v) : f2(v)}`;
+        return `<tr>
+          <td><span class="nmcell">${avatarHTML(t.uid, "sm")}${esc(nameOf(t.uid))}</span></td>
+          <td class="num">${f1(t.rosterValue)}</td>
+          <td class="num ${t.rosterEdge >= 0 ? "pos-t" : "neg-t"}"><b>${sgn(t.rosterEdge)}</b></td>
+          <td class="num ${fromDraft >= 0 ? "pos-t" : "neg-t"}">${sgn(fromDraft)}</td>
+          <td class="num ${fromRec >= 0 ? "pos-t" : "neg-t"}">${sgn(fromRec)}</td>
+          <td class="num"><b>${f1(t.mean)}</b></td></tr>`;
+      })));
+    if (model.matchRate != null && model.matchRate < 0.98) {
+      const m = el("div", "method");
+      m.innerHTML = `<p>${(model.matchRate * 100).toFixed(0)}% of the
+        ${model.picksPriced} picks matched a player on the pre-draft market;
+        the rest — team defenses and deep fliers nobody was drafting — were
+        valued at the board's floor. Every roster carries a couple, so this
+        moves the ordering very little.</p>`;
+      p.appendChild(m);
+    }
+  }
+
+  /* ---- make / miss the playoffs ---- */
+  p.appendChild(sechead("To make the playoffs",
+    "Six of twelve get in: the three division winners take seeds 1-3, then the best three records left over. Priced both ways — every manager has a yes and a no."));
+  const pb = el("div", "board");
+  pb.innerHTML = `<div class="bhead"><span class="bt">Playoff qualification
+    <span class="bs">yes / no · six of twelve qualify</span></span>
+    <span class="hold">Hold ${(ODDS_HOLD * 100).toFixed(1)}%</span></div>`;
+  T.map((t, i) => ({ uid: t.uid, i, p: sim.playoff[i] / n }))
+    .sort((a, b) => b.p - a.p)
+    .forEach((w, i) => {
+      const [yes, no] = priceMarket([{ p: w.p }, { p: 1 - w.p }]);
+      const btn = el("button", "orow two");
+      btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(w.uid, "sm avcell")}
+        <span class="who"><span class="n">${esc(nameOf(w.uid))}</span>
+        <span class="s">wins the division ${(sim.divWin[w.i] / n * 100).toFixed(0)}% · first-round bye ${(sim.bye[w.i] / n * 100).toFixed(0)}%</span></span>
+        <span class="prices">${priceTile(yes, "Yes")}${priceTile(no, "No")}</span>`;
+      btn.onclick = () => openProfile(w.uid);
+      pb.appendChild(btn);
+    });
+  p.appendChild(pb);
+
+  /* ---- division winners ---- */
+  p.appendChild(sechead("Division winners",
+    "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board."));
+  const dw = el("div", "bgrid");
+  for (const d of divs) {
+    const rows = priceMarket(idxByDiv(d).map(i => ({ uid: T[i].uid, i, p: sim.divWin[i] / n }))
+      .sort((a, b) => b.p - a.p));
+    dw.appendChild(oddsBoard(`${model.divNames.get(d)} — to win`, "division title",
+      rows, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
+  }
+  p.appendChild(dw);
+
+  /* ---- division cellar ---- */
+  p.appendChild(sechead("Division cellar",
+    "To finish last in your own division, on regular-season record."));
+  const dl = el("div", "bgrid");
+  for (const d of divs) {
+    const rows = priceMarket(idxByDiv(d).map(i => ({ uid: T[i].uid, i, p: sim.divLast[i] / n }))
+      .sort((a, b) => b.p - a.p));
+    dl.appendChild(oddsBoard(`${model.divNames.get(d)} — to finish last`, "within the division",
+      rows, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
+  }
+  p.appendChild(dl);
+
+  /* ---- last overall ---- */
+  p.appendChild(sechead("Last place overall",
+    "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it."));
+  const last = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: sim.last[i] / n }))
+    .sort((a, b) => b.p - a.p));
+  p.appendChild(oddsBoard("To finish 12th", "loser of the consolation elimination game",
+    last, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
+  const quirk = el("div", "method");
+  quirk.innerHTML = `<h3>Why this board is so flat</h3>
+    <p>Seeds 7 through 10 open the consolation bracket against each other. The two
+       that lose meet again for twelfth. Seeds 11 and 12 — the two worst records in
+       the league — skip that round entirely and cannot finish below tenth.</p>
+    <p>It has happened both years DFFL ran divisions. In 2024 the 2-12 team finished
+       tenth and a 7-7 team finished last; in 2025 the 3-11 team finished seventh.
+       Being terrible is genuinely protective here, so nobody's price gets long.</p>`;
+  p.appendChild(quirk);
+
+  /* ---- win totals ---- */
+  p.appendChild(sechead("Season win totals",
+    `Fourteen games. Each line sits where the simulation is closest to a coin flip, always on the half-win so there's no push.`));
+  const wt = el("div", "board");
+  wt.innerHTML = `<div class="bhead"><span class="bt">Regular-season wins
+    <span class="bs">over / under · ${model.weeks} games</span></span>
+    <span class="hold">Hold ${(ODDS_HOLD * 100).toFixed(1)}%</span></div>`;
+  const totals = winTotals(model, sim).sort((a, b) => b.avg - a.avg);
+  totals.forEach((w, i) => {
+    const [over, under] = priceMarket([{ p: w.pOver }, { p: w.pUnder }]);
+    const btn = el("button", "orow two");
+    btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(w.uid, "sm avcell")}
+      <span class="who"><span class="n">${esc(nameOf(w.uid))}</span>
+      <span class="s">line ${w.line.toFixed(1)} · projects ${f1(w.avg)} wins</span></span>
+      <span class="prices">${priceTile(over, `Over ${w.line.toFixed(1)}`)}${priceTile(under, `Under ${w.line.toFixed(1)}`)}</span>`;
+    btn.onclick = () => openProfile(w.uid);
+    wt.appendChild(btn);
+  });
+  p.appendChild(wt);
+
+  /* ---- methodology ---- */
+  p.appendChild(sechead("How the board is priced"));
+  const m = el("div", "method");
+  const yrs = `${model.seasons[0]}–${model.seasons[model.seasons.length - 1]}`;
+  m.innerHTML = `
+    <h3>What the model is told</h3>
+    <p>Every regular-season weekly score in DFFL history, ${yrs}. Each manager is
+       measured against the league average of his own season, so a higher-scoring year
+       doesn't flatter anyone.</p>
+    ${post ? `
+    <p>And, since the draft ran, every pick all twelve managers made — valued against
+       the pre-draft market${model.adpMeta ? ` (${model.adpMeta.source}, ${model.adpMeta.teams}-team
+       ${model.adpMeta.format}, ${model.adpMeta.drafts.toLocaleString()} drafts sampled
+       ${model.adpMeta.sampled.replace("..", " to ")})` : ""}. Keepers need no special
+       treatment here: a player kept in the ninth round is simply a player, priced at
+       what he was worth on the open board.</p>
+    <p>Still not told: injuries, waiver claims, trades, or who is going to break out.</p>` : `
+    <p>Deliberately not told: the keepers or the draft order, both of which Sleeper
+       already publishes. Three keepers is a fifth of a roster, and a fifth of a roster
+       prices worse than none — so the board waits for the full draft, then re-prices in
+       one move. Until then every price here is a statement about the manager, not about
+       the team he is going to have.</p>`}
+    <h3>How much of that is real</h3>
+    <p>A manager's scoring is split into the part that follows him and the part that is
+       just the roster he drew that year. Comparing managers to themselves across
+       seasons gives both:</p>
+    <dl>
+      ${post ? `
+      <dt>Draft-day roster edge → scoring</dt><dd>×${W_ROSTER.toFixed(2)}</dd>
+      <dt>Manager's own record → scoring</dt><dd>×${W_HIST_POST.toFixed(2)}</dd>` : `
+      <dt>Carries over year to year</dt><dd>r = ${model.carry.toFixed(2)}</dd>
+      <dt>Manager, once roster luck is removed</dt><dd>±${f1(model.skillSd)} pts/wk</dd>`}
+      <dt>Season still unknown</dt><dd>±${f1(model.seasonSd)} pts/wk</dd>
+      <dt>Week to week</dt><dd>±${f1(model.weekSd)} pts</dd>
+      <dt>Manager-seasons behind it</dt><dd>${model.nMgrSeasons}</dd>
+    </dl>
+    ${post ? `<p>Those two multipliers are a regression of what each manager actually
+       scored on what his draft was worth and what his record said, fitted over 35
+       manager-seasons. Draft value comes out at <code>×${W_ROSTER.toFixed(2)}</code>
+       — real, and statistically clear — meaning about half of a team's draft-day edge
+       survives into its scoring; the rest is given back to injuries, waivers and luck.
+       The manager's own record still counts, but its weight roughly halves once the
+       roster is known, because the roster already contains most of what a record was
+       standing in for.</p>` : ""}
+    ${post ? "" : `
+    <p>That <code>r = ${model.carry.toFixed(2)}</code> is the whole story: roughly
+       ${(model.carry * 100).toFixed(0)}% of a manager's scoring edge survives into the next
+       year and the rest is redrawn with the roster. So each manager's history is pulled
+       most of the way back toward the league average before anything is simulated, and
+       every simulated season starts by drawing him a new roster. It is estimated off
+       ${model.nMgrSeasons} manager-seasons — thin enough that the figure itself could
+       comfortably be half or double what it says.</p>
+    <p>Because DFFL has re-drafted with three keepers every year of its history, that
+       <code>r</code> already has the annual roster reset baked into it. The model isn't
+       ignoring the draft; it is admitting the draft is most of what happens.</p>`}
+    <h3>What changes when you draft</h3>
+    <p>The board runs two models and switches itself. Before the draft it prices the
+       manager; after it, it prices the roster, and the uncertainty left in a season
+       drops from <code>±6.9</code> to <code>±4.8</code> points a week. Nothing is
+       switched by hand — the page reads the draft's status from Sleeper on every load,
+       and flips only when the draft is complete and all ${model.weeks + 1 === 15
+         ? (DB.seasons[0].draftSlots || 180) : 180} picks are in. A half-finished draft
+       keeps the opening line.</p>
+    <h3>The simulation</h3>
+    <p>${n.toLocaleString()} seasons on the real format: ${model.weeks} weeks, a full
+       round robin plus intra-division rematches, wins then points-for for seeding, the
+       three division winners at seeds 1-3, byes for the top two, and weeks 15-17 for the
+       bracket. The schedule shape and the seeding rule were both read off DFFL's own
+       Sleeper history rather than assumed. It runs on a fixed seed, so the board posts
+       the same price every time you load it.</p>
+    <h3>The prices</h3>
+    <p>Probabilities in a market are scaled to sum to ${(100 + ODDS_HOLD * 100).toFixed(0)}%
+       before conversion, which is the vig — a real book holds about that. Then
+       <code>p ≥ .5 → -100p/(1-p)</code>, <code>p &lt; .5 → 100(1-p)/p</code>, rounded to
+       the nearest 5 below 200 and the nearest 10 above. The de-vigged probability is
+       printed under every price.</p>`;
+  p.appendChild(m);
+
+  p.appendChild(glossary([
+    { t: "American odds", d: "What you'd win on a 100 stake. +300 pays 300 on a 100 bet; -150 means you'd stake 150 to win 100. Negative is the favourite." },
+    { t: "Hold (vig)", d: "The book's cut. Add up what every price implies and it comes to more than 100% — that gap is the hold. Here it's 6% by construction." },
+    { t: "True probability", d: "The small figure under each price: the model's actual number, before the hold was added. A real sportsbook never shows you this." },
+    { t: "Line", d: "On win totals, the number you bet over or under. Always a half-win so the bet can't tie." },
+    { t: "Shrinkage", d: "Pulling a small sample toward the average because most of what looks like skill is noise. Four seasons of fantasy scoring is a small sample." },
+  ]));
+  return p;
 }
 
 /* ============================================== DRAFT =============== */
@@ -1740,18 +2532,21 @@ async function boot() {
     DB.seasons.sort((a, b) => Number(b.season) - Number(a.season));
 
     const AT = allTime(), RB = recordBook(), H2H = h2hMap(), DIST = scoringDist();
+    const ODDS = await oddsModel(), SIM = simulateSeason(ODDS);
     window.__AT = AT; window.__RB = RB; window.__H2H = H2H; window.__DIST = DIST;
+    window.__ODDS = ODDS; window.__SIM = SIM;
 
     const oldest = DB.seasons[DB.seasons.length - 1], newest = DB.seasons[0];
     $("#eyebrow").textContent = `${oldest.season}–${newest.season} · ${chain[0].total_rosters} teams`;
     $("#lgSub").textContent = `${DB.games.length} games on record, and every one of them still counts against you.`;
 
     const app = $("#app");
-    app.appendChild(panelHome(AT, RB));
+    app.appendChild(panelHome(AT, RB, ODDS, SIM));
     app.appendChild(panelScoreboard());
     app.appendChild(panelManagers(AT));
     app.appendChild(panelRecords(RB));
     app.appendChild(panelMatchups(AT));
+    app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelDraft());
     app.appendChild(await panelRecaps());
 
@@ -1761,7 +2556,13 @@ async function boot() {
     const want = location.hash.replace("#", "");
     show(TABS.some(t => t.id === want) ? want : "home");
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
-    window.__DFFL = { DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist };
+    window.__DFFL = {
+      DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
+      ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
+      americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
+      ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
+      ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
+    };
     document.body.dataset.ready = "1";
   } catch (e) {
     const l = $("#loader");

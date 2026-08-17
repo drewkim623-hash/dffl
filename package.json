@@ -1,0 +1,26 @@
+{
+  "name": "dffl",
+  "version": "1.0.0",
+  "description": "A single-page site for the DFFL fantasy football league. It reads the **public Sleeper API directly from the visitor's browser**, so there is no server, no database, no API key, and nothing to keep in sync — the page always matches what the Sleeper app shows.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify": "node verify.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drewkim623-hash/dffl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drewkim623-hash/dffl/issues"
+  },
+  "homepage": "https://github.com/drewkim623-hash/dffl#readme",
+  "private": "true",
+  "type": "module",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
