@@ -1048,72 +1048,123 @@ check("the old #recaps link still works", (await page.evaluate(() => !!document.
 const artl = await page.evaluate(async () => {
   const D = window.__DFFL;
   const panel = await D.panelRecaps();
-  const a = panel.querySelector(".artl");
+  document.body.appendChild(panel);
+  const teasers = [...panel.querySelectorAll(".teaser")];
+  const out = {
+    teasers: teasers.length,
+    covers: panel.querySelectorAll(".teaser .cover").length,
+    faces: panel.querySelectorAll(".teaser .cover img").length,
+    headlines: teasers.map(t => t.querySelector("h3").textContent),
+    // the index is a list of links, not the articles themselves
+    noBodyOnIndex: panel.querySelectorAll(".apara").length === 0,
+    columnFlagged: panel.querySelectorAll(".teaser.op .oflag").length,
+    newestFirst: teasers.length > 1 &&
+      teasers[0].querySelector("h3").textContent === "Nobody Has Ever Finished Last",
+  };
+  panel.remove();
+  return out;
+});
+check("the section is an index of headlines", artl.teasers === 2 && artl.noBodyOnIndex, `${artl.teasers} teasers`);
+check("every headline carries a cover", artl.covers === artl.teasers && artl.faces >= 5, `${artl.covers} covers, ${artl.faces} faces`);
+check("the newest piece leads", artl.newestFirst, artl.headlines.join(" / "));
+check("a column is flagged as a column", artl.columnFlagged === 1, `${artl.columnFlagged}`);
+
+await page.click('#tabs button[data-tab="recaps"]');
+await page.waitForFunction(() => document.querySelectorAll('[data-panel="recaps"] .teaser').length > 0, null, { timeout: 20000 });
+const opened = await page.evaluate(() => {
+  document.querySelectorAll('[data-panel="recaps"] .teaser')[1].click();
+  const a = document.querySelector('[data-panel="article"]');
   const txt = a ? a.innerText : "";
   return {
-    articles: panel.querySelectorAll(".artl").length,
+    exists: !!a,
+    indexHidden: document.querySelector('[data-panel="recaps"]').hidden,
     headline: a ? a.querySelector("h2").textContent : null,
-    paras: panel.querySelectorAll(".apara").length,
-    leads: panel.querySelectorAll(".apara.lead").length,
-    heads: panel.querySelectorAll(".ahead h3").length,
-    stats: panel.querySelectorAll(".astat").length,
-    bars: panel.querySelectorAll(".abar").length,
-    cards: panel.querySelectorAll(".acard").length,
-    picks: panel.querySelectorAll(".apick").length,
-    bold: panel.querySelectorAll(".apara b").length,
-    // the bars must diverge about the zero line, not all point one way
+    hero: a ? a.querySelectorAll(".cover.big").length : 0,
+    back: a ? !!a.querySelector(".back") : false,
+    paras: a ? a.querySelectorAll(".apara").length : 0,
+    leads: a ? a.querySelectorAll(".apara.lead").length : 0,
+    heads: a ? a.querySelectorAll(".ahead h3").length : 0,
+    stats: a ? a.querySelectorAll(".astat").length : 0,
+    bars: a ? a.querySelectorAll(".abar").length : 0,
+    cards: a ? a.querySelectorAll(".acard").length : 0,
+    picks: a ? a.querySelectorAll(".apick").length : 0,
+    bold: a ? a.querySelectorAll(".apara b").length : 0,
     barsBothWays: (() => {
-      const f = [...panel.querySelectorAll(".abar .fill")].map(n => parseFloat(n.style.left));
+      const f = [...(a ? a.querySelectorAll(".abar .fill") : [])].map(n => parseFloat(n.style.left));
       return f.some(l => l < 49.9) && f.some(l => l >= 49.9);
     })(),
     nan: /NaN|undefined/.test(txt),
-    // the article leads the section; the weekly log follows it
-    articleFirst: [...panel.children].findIndex(n => n.classList.contains("artl")) <
-      Math.max(1, [...panel.children].findIndex(n => n.classList.contains("wkhead"))) ||
-      !panel.querySelector(".wkhead"),
   };
 });
-check("the draft piece is on the page", artl.articles === 1 && artl.headline === "The CPES Problem", artl.headline);
-check("every block type renders", artl.paras > 20 && artl.heads === 8 && artl.stats === 2 && artl.bars === 12 && artl.cards === 3 && artl.picks === 5,
-  `${artl.paras}p ${artl.heads}h ${artl.stats}stat ${artl.bars}bar ${artl.cards}card ${artl.picks}pick`);
-check("the lead paragraph is marked for its drop cap", artl.leads === 1, `${artl.leads}`);
-check("bold survives the escaping", artl.bold > 5, `${artl.bold}`);
-check("the projection bars diverge both ways", artl.barsBothWays);
-check("articles lead the section", artl.articleFirst);
-check("no NaN in the article", artl.nan === false);
+check("clicking a headline opens the full article", opened.exists && opened.indexHidden && opened.headline === "The CPES Problem", opened.headline);
+check("the article page leads with its cover", opened.hero === 1);
+check("there is a way back to the index", opened.back);
+check("every block type renders in the article", opened.paras > 20 && opened.heads === 8 && opened.stats === 2 && opened.bars === 12 && opened.cards === 3 && opened.picks === 5,
+  `${opened.paras}p ${opened.heads}h ${opened.stats}stat ${opened.bars}bar ${opened.cards}card ${opened.picks}pick`);
+check("the lead paragraph is marked for its drop cap", opened.leads === 1, `${opened.leads}`);
+check("bold survives the escaping", opened.bold > 5, `${opened.bold}`);
+check("the projection bars diverge both ways", opened.barsBothWays);
+check("no NaN in the article", opened.nan === false);
 
-const artSafe = await page.evaluate(async () => {
+const column = await page.evaluate(() => {
+  document.querySelector('[data-panel="article"] .back').click();
+  document.querySelectorAll('[data-panel="recaps"] .teaser')[0].click();
+  const a = document.querySelector('[data-panel="article"]');
+  const rounds = [...a.querySelectorAll(".brd .brh")].map(n => n.textContent);
+  return {
+    headline: a.querySelector("h2").textContent,
+    isColumn: !!a.querySelector(".artl.op") && !!a.querySelector(".oflag"),
+    brackets: a.querySelectorAll(".bracket").length,
+    matches: a.querySelectorAll(".brm").length,
+    rounds,
+    winners: a.querySelectorAll(".bside.won").length,
+    placed: a.querySelectorAll(".brm.placed").length,
+    // the bracket must show the two worst records starting in round two
+    r1: [...a.querySelectorAll(".brd")][0].innerText,
+  };
+});
+check("back returns to the index and the column opens", column.headline === "Nobody Has Ever Finished Last");
+check("the column reads as opinion", column.isColumn);
+check("the toilet bowl bracket renders in full", column.brackets === 1 && column.matches === 7 && column.rounds.length === 3,
+  `${column.matches} matches, rounds: ${column.rounds.join("/")}`);
+check("every tie in the bracket has a winner marked", column.winners === column.matches, `${column.winners} of ${column.matches}`);
+check("the placing games are called out", column.placed === 3, `${column.placed}`);
+check("the two worst records are absent from round one", !/chassinator|wesley55/.test(column.r1), column.r1.replace(/\n/g, " "));
+
+await page.evaluate(() => { const a = document.querySelector('[data-panel="article"]'); if (a) a.remove(); });
+const artSafe = await page.evaluate(() => {
   const D = window.__DFFL;
-  // Copy in a file is copy, never markup: only <b> may survive.
-  const evil = { articles: [{ season: "2026", date: "2026-01-01", headline: "<img src=x onerror=alert(1)>",
-    dek: "<script>alert(2)<\/script>", byline: "x",
+  // Copy in a file is copy, never markup: only emphasis may survive. Rendered
+  // through the full-article path, which is the one that draws the body.
+  const evil = { season: "2026", date: "2026-01-01", headline: "<img src=x onerror=alert(1)>",
+    dek: "<script>alert(2)<\/script>", byline: "x", kicker: "<b>k</b>",
+    cover: { tone: "blue", players: ["not-a-player"] },
     blocks: [
       { type: "p", text: "safe <b>bold</b> and <i>italic</i> and <a href=#>link</a>" },
       { type: "h", eyebrow: "<b>eye</b>", text: "<b>head</b>" },
       { type: "bogus", text: "unknown" },
       null,
-    ] }], weeks: [] };
-  const realFetch = window.fetch;
-  window.fetch = u => String(u).includes("recaps.json")
-    ? Promise.resolve({ ok: true, json: () => Promise.resolve(evil) }) : realFetch(u);
-  const panel = await D.panelRecaps();
-  window.fetch = realFetch;
-  const p0 = panel.querySelector(".apara");
-  return {
-    imgs: panel.querySelectorAll("img").length,
-    scripts: panel.querySelectorAll("script").length,
-    anchors: panel.querySelectorAll(".abd a").length,
-    italics: panel.querySelectorAll(".apara i").length,
+    ] };
+  const node = D.articleCard(evil, true);
+  document.body.appendChild(node);
+  const p0 = node.querySelector(".apara");
+  const out = {
+    imgs: node.querySelectorAll(".abd img").length,
+    scripts: node.querySelectorAll("script").length,
+    anchors: node.querySelectorAll(".abd a").length,
+    italics: node.querySelectorAll(".apara i").length,
     boldKept: p0 ? p0.querySelectorAll("b").length : -1,
     paraText: p0 ? p0.textContent : "",
-    headlineIsText: panel.querySelector(".artl h2").textContent,
-    headingHasNoTags: panel.querySelector(".ahead h3").children.length,
-    unknownDropped: panel.querySelectorAll(".abd > *").length,
+    headlineIsText: node.querySelector("h2").textContent,
+    headingHasNoTags: node.querySelector(".ahead h3").children.length,
+    unknownDropped: node.querySelectorAll(".abd > *").length,
   };
+  node.remove();
+  return out;
 });
 check("markup in the copy is escaped, not run", artSafe.imgs === 0 && artSafe.scripts === 0 && artSafe.anchors === 0);
-check("only bold survives", artSafe.boldKept === 1 && artSafe.italics === 0, `${artSafe.boldKept} bold, ${artSafe.italics} italic`);
-check("escaped tags read as text", /<i>italic<\/i>/.test(artSafe.paraText), artSafe.paraText);
+check("bold and italic survive, nothing else does", artSafe.boldKept === 1 && artSafe.italics === 1, `${artSafe.boldKept} bold, ${artSafe.italics} italic`);
+check("tags that are not emphasis read as text", /<a href=#>link<\/a>/.test(artSafe.paraText), artSafe.paraText);
 check("a headline is text, whatever it contains", /<img/.test(artSafe.headlineIsText));
 check("headings take no markup at all", artSafe.headingHasNoTags === 0);
 check("an unknown block type is dropped rather than guessed at", artSafe.unknownDropped === 2, `${artSafe.unknownDropped}`);
