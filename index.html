@@ -325,6 +325,20 @@
   .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
   .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
 
+  /* ============ race ============ */
+  .bigg{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin:0 0 18px;
+    background:linear-gradient(100deg,rgba(57,135,229,.18),rgba(144,133,233,.06) 58%,transparent);
+    border:1px solid rgba(57,135,229,.40)}
+  .bigg .k{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  .bigg .vs{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0 4px}
+  .bigg .side{display:flex;align-items:center;gap:9px;min-width:0;flex:1 1 220px}
+  .bigg .side .n{font-size:17px;font-weight:800;letter-spacing:-.02em;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .bigg .side .sw{margin-left:auto;font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;flex:none}
+  .bigg .x{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.1em;flex:none}
+  .bigg .c{font-size:13px;color:var(--ink-2);line-height:1.55;max-width:74ch;margin-top:6px}
+  @media(max-width:560px){.bigg .x{display:none}}
+
   /* ============ trades ============ */
   .fleece{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin-top:18px;
     background:linear-gradient(100deg,rgba(230,103,103,.17),rgba(230,103,103,.03) 58%,transparent);
@@ -846,6 +860,7 @@ const TABS = [
   { id: "records", label: "Records" },
   { id: "matchups", label: "Matchups" },
   { id: "odds", label: "Odds" },
+  { id: "race", label: "Race" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
   { id: "recaps", label: "Recaps" },
@@ -865,6 +880,9 @@ function show(id) {
   // The trade block reads five seasons of transactions and a 5MB name file.
   // Nobody pays for that until they ask to see it.
   if (id === "trades") ensureTrades();
+  // Same deal for the race: it reads the rest of the schedule and runs tens of
+  // thousands of seasons, so it waits until somebody asks for it.
+  if (id === "race") ensureRace();
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
@@ -2088,6 +2106,26 @@ async function oddsModel() {
  * over — confirmed against 2025, where the 10-4 division winner was seeded
  * above a 10-4 team with 220 more points.
  */
+/**
+ * DFFL's seeding rule, in one place so the preseason board and the live race
+ * cannot drift apart: the three division winners take seeds 1-3 in record
+ * order, then the best of everyone else fills the remaining places, and byes
+ * go to seeds 1 and 2. Read off DFFL's own history — in 2025 a 10-4 division
+ * winner was seeded above a 10-4 team with 220 more points.
+ *
+ * `rank` is every team already ordered best to worst; `divOfIdx` returns a
+ * team's division.
+ */
+function seedField(rank, divOfIdx, playoffTeams) {
+  const pos = new Map(rank.map((i, k) => [i, k]));
+  const divs = [...new Set(rank.map(divOfIdx))].sort((a, b) => a - b);
+  const champs = divs.map(d => rank.find(i => divOfIdx(i) === d))
+    .filter(i => i != null).sort((a, b) => pos.get(a) - pos.get(b));
+  const rest = rank.filter(i => !champs.includes(i));
+  const wilds = Math.max(0, playoffTeams - champs.length);
+  return { champs, rest, wilds, pos, seeds: [...champs, ...rest.slice(0, wilds)] };
+}
+
 function simulateSeason(model, sims = ODDS_SIMS) {
   if (!model || !model.ok) return null;
   const { teams, sched, weekSd, seasonSd, playoffTeams } = model;
@@ -2116,15 +2154,12 @@ function simulateSeason(model, sims = ODDS_SIMS) {
     const rank = ids.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a]);
     for (let i = 0; i < N; i++) pos[rank[i]] = i;
 
-    const champs = divs.map(d => rank.find(i => teams[i].div === d)).sort((a, b) => pos[a] - pos[b]);
+    const { champs, rest, wilds, seeds } = seedField(rank, i => teams[i].div, playoffTeams);
     for (const i of champs) C.divWin[i]++;
     for (const d of divs) {
       const m = rank.filter(i => teams[i].div === d);
       C.divLast[m[m.length - 1]]++;
     }
-    const rest = rank.filter(i => !champs.includes(i));
-    const wilds = playoffTeams - champs.length;
-    const seeds = [...champs, ...rest.slice(0, wilds)];
     for (const i of seeds) C.playoff[i]++;
     C.bye[seeds[0]]++; C.bye[seeds[1]]++;
 
@@ -2602,6 +2637,373 @@ function panelDraft() {
         <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}">${r.value >= 0 ? "+" : ""}${r.value}</td></tr>`)));
   }
   sel.onchange = draw; draw();
+  return p;
+}
+
+/* ================================================ RACE ============== */
+/*
+ * Live playoff odds for the season being played right now.
+ *
+ * Everything already on the board is taken as fact — the wins are the wins —
+ * and only the games that have not been played yet are simulated. The schedule
+ * for those is not invented either: Sleeper publishes the pairings for future
+ * weeks with the scores still at zero, so the real remaining schedule is what
+ * gets run. Who a team still has to play is most of the story in a 14-week
+ * season, and a random schedule would throw that away.
+ */
+
+const RACE_SIMS = 20000;
+/*
+ * Leverage re-runs the whole season twice for every game on the slate — six
+ * matchups is twelve more seasons of simulation — so it runs at a much lower
+ * count than the main board. Ranking which game moves the picture most only
+ * needs the swings accurate to about a point, and 1,000 seasons gives that.
+ */
+const LEVERAGE_SIMS = 1000;
+
+/** Pair a week's matchup rows whether or not the week has been played. */
+function pairSchedule(entries) {
+  const by = new Map();
+  for (const e of entries || []) {
+    if (e.matchup_id == null) continue;
+    if (!by.has(e.matchup_id)) by.set(e.matchup_id, []);
+    by.get(e.matchup_id).push(e);
+  }
+  const out = [];
+  for (const arr of by.values()) if (arr.length === 2) out.push([arr[0].roster_id, arr[1].roster_id]);
+  return out;
+}
+
+const gameKey = (week, a, b) => `${week}|${Math.min(a, b)}-${Math.max(a, b)}`;
+
+/**
+ * Split the current season into what has happened and what is left, fetching
+ * the pairings for the weeks still to come.
+ */
+async function raceData() {
+  const season = DB.seasons[0];
+  const R = { season, ready: false, why: null, decided: [], upcoming: [] };
+  if (!season) { R.why = "no-league"; return R; }
+  const lastReg = (season.pws || 15) - 1;
+  const half = Math.floor((season.rosters || []).length / 2);
+  R.lastReg = lastReg; R.half = half;
+  if (!half || !season.divCount || [...season.divOf.values()].length < season.rosters.length) {
+    R.why = "no-divisions"; return R;
+  }
+
+  R.decided = season.games.filter(g => !g.playoff && g.week <= lastReg);
+  if (!R.decided.length) { R.why = "not-started"; return R; }
+
+  const per = new Map();
+  for (const g of R.decided) per.set(g.week, (per.get(g.week) || 0) + 1);
+  const need = [];
+  for (let w = 1; w <= lastReg; w++) if ((per.get(w) || 0) < half) need.push(w);
+
+  const rows = await pool(need, 6, async w =>
+    ({ w, pairs: pairSchedule(await getWeek(season.leagueId, w).catch(() => [])) }));
+  const done = new Set(R.decided.map(g => gameKey(g.week, g.a.rid, g.b.rid)));
+  for (const { w, pairs } of rows) for (const [a, b] of pairs) {
+    if (!done.has(gameKey(w, a, b))) R.upcoming.push({ week: w, a, b });
+  }
+  R.upcoming.sort((x, y) => x.week - y.week || x.a - y.a);
+  R.playedWeeks = per;
+  R.nextWeek = R.upcoming.length ? R.upcoming[0].week : null;
+  R.ready = R.upcoming.length > 0;
+  if (!R.ready) R.why = "regular-season-over";
+  return R;
+}
+
+/**
+ * Rebuild the race as it stood partway through a season that has since
+ * finished: everything up to `week` taken as fact, everything after it treated
+ * as still to play. This is how the verification harness exercises the engine —
+ * a completed season is the only place where the model can be run against a
+ * result that is already known.
+ */
+function raceAsOf(season, week) {
+  const lastReg = (season.pws || 15) - 1;
+  const reg = season.games.filter(g => !g.playoff && g.week <= lastReg);
+  const upcoming = reg.filter(g => g.week > week).map(g => ({ week: g.week, a: g.a.rid, b: g.b.rid }));
+  return {
+    season, lastReg, ready: upcoming.length > 0, why: null,
+    decided: reg.filter(g => g.week <= week),
+    upcoming, nextWeek: week + 1,
+    half: Math.floor((season.rosters || []).length / 2),
+  };
+}
+
+/**
+ * Monte-Carlo the rest of the season.
+ *
+ * `force` pins one game's result — used by the leverage pass. Both scores are
+ * still drawn normally and simply swapped if the wrong side came out on top, so
+ * forcing a win does not quietly hand anybody an unrealistic points-for total.
+ */
+function raceOdds(R, dist, sims = RACE_SIMS, force = null) {
+  const season = R.season;
+  if (!R.ready) return null;
+  const rids = season.rosters.map(r => r.roster_id);
+  const N = rids.length;
+  const idx = new Map(rids.map((r, i) => [r, i]));
+  const divOf = i => season.divOf.get(rids[i]);
+
+  // A manager with no scoring history on record runs at the league's own
+  // average rather than being left out of the race.
+  const all = [...dist.values()].filter(d => d.n > 0);
+  const lgMean = all.reduce((a, x) => a + x.mean, 0) / Math.max(1, all.length);
+  const lgSd = all.reduce((a, x) => a + x.sd, 0) / Math.max(1, all.length);
+  const D = rids.map(r => {
+    const d = dist.get(season.uidOf.get(r));
+    return d && d.n > 0 ? d : { mean: lgMean, sd: lgSd, n: 0 };
+  });
+
+  const W0 = new Array(N).fill(0), L0 = new Array(N).fill(0), T0 = new Array(N).fill(0), PF0 = new Array(N).fill(0);
+  for (const g of R.decided) {
+    const a = idx.get(g.a.rid), b = idx.get(g.b.rid);
+    if (a == null || b == null) continue;
+    PF0[a] += g.a.pts; PF0[b] += g.b.pts;
+    if (g.a.pts > g.b.pts) { W0[a]++; L0[b]++; }
+    else if (g.b.pts > g.a.pts) { W0[b]++; L0[a]++; }
+    else { T0[a]++; T0[b]++; }
+  }
+  const up = R.upcoming
+    .map(g => [idx.get(g.a), idx.get(g.b), g.week])
+    .filter(([a, b]) => a != null && b != null);
+
+  const fWin = force ? idx.get(force.win) : null;
+  const fLose = force ? idx.get(force.lose) : null;
+  const playoff = new Array(N).fill(0), divWin = new Array(N).fill(0),
+    bye = new Array(N).fill(0), winSum = new Array(N).fill(0);
+  const ids = rids.map((_, i) => i);
+  const half = T0.map(t => t * 0.5);
+
+  for (let k = 0; k < sims; k++) {
+    const W = W0.map((w, i) => w + half[i]), PF = PF0.slice();
+    for (const [a, b, wk] of up) {
+      let sa = gauss(D[a].mean, D[a].sd), sb = gauss(D[b].mean, D[b].sd);
+      if (force && wk === force.week && ((a === fWin && b === fLose) || (a === fLose && b === fWin))) {
+        const aWins = a === fWin;
+        if ((aWins && sb > sa) || (!aWins && sa > sb)) { const t = sa; sa = sb; sb = t; }
+      }
+      PF[a] += sa; PF[b] += sb;
+      if (sa > sb) W[a]++; else W[b]++;
+    }
+    for (let i = 0; i < N; i++) winSum[i] += W[i];
+    const rank = ids.slice().sort((x, y) => W[y] - W[x] || PF[y] - PF[x]);
+    const { champs, seeds } = seedField(rank, divOf, season.playoffTeams || 6);
+    for (const i of champs) divWin[i]++;
+    for (const i of seeds) playoff[i]++;
+    if (seeds.length > 1) { bye[seeds[0]]++; bye[seeds[1]]++; }
+  }
+
+  const rows = ids.map(i => ({
+    rid: rids[i], uid: season.uidOf.get(rids[i]), div: divOf(i),
+    w: W0[i], l: L0[i], t: T0[i], pf: PF0[i],
+    playoff: playoff[i] / sims, divWin: divWin[i] / sims, bye: bye[i] / sims,
+    projWins: winSum[i] / sims,
+  }));
+  return { sims, rows, byRid: new Map(rows.map(r => [r.rid, r])) };
+}
+
+/**
+ * How much each game on the next slate actually matters: run the week twice,
+ * once with each side forced to win, and measure how far the playoff picture
+ * moves between those two worlds — across all twelve teams, not just the two
+ * playing, because a result reorders everybody chasing the same places.
+ */
+function leverageBoard(R, dist, week, sims = LEVERAGE_SIMS) {
+  if (!R.ready || week == null) return [];
+  const games = R.upcoming.filter(g => g.week === week);
+  return games.map(g => {
+    const ifA = raceOdds(R, dist, sims, { week, win: g.a, lose: g.b });
+    const ifB = raceOdds(R, dist, sims, { week, win: g.b, lose: g.a });
+    // `moves` is signed from the point of view of the first team winning; the
+    // two teams playing each get the version that means "what winning is worth
+    // to me", which is the only reading that isn't misleading on a scoreboard.
+    let total = 0;
+    const moves = [];
+    for (const row of ifA.rows) {
+      const other = ifB.byRid.get(row.rid);
+      const d = row.playoff - other.playoff;
+      total += Math.abs(d);
+      moves.push({ rid: row.rid, uid: row.uid, swing: d });
+    }
+    const swingOf = rid => {
+      const m = moves.find(x => x.rid === rid);
+      return m ? m.swing : 0;
+    };
+    return {
+      week, a: g.a, b: g.b, sims,
+      aUid: R.season.uidOf.get(g.a), bUid: R.season.uidOf.get(g.b),
+      aSwing: swingOf(g.a), bSwing: -swingOf(g.b),
+      total,
+      others: moves.filter(m => m.rid !== g.a && m.rid !== g.b && Math.abs(m.swing) > 0.005)
+        .sort((x, y) => Math.abs(y.swing) - Math.abs(x.swing)),
+    };
+  }).sort((x, y) => y.total - x.total);
+}
+
+/* --------------------------------------------------------------- panel */
+const pctf = v => v <= 0 ? "0%" : v >= 1 ? "100%" : v < 0.005 ? "<1%" : v > 0.995 ? ">99%" : `${(v * 100).toFixed(0)}%`;
+const ppf = v => `${v >= 0 ? "+" : "−"}${(Math.abs(v) * 100).toFixed(1)}%`;
+
+function raceEmpty(R) {
+  const box = el("div", "empty");
+  const season = R.season && R.season.season;
+  if (R.why === "not-started") {
+    box.innerHTML = `<b>The ${esc(season || "")} season hasn't started</b>
+      Playoff odds need results to work from. This page runs the real remaining schedule
+      thousands of times over, and right now every game is remaining — so there is nothing
+      here that the preseason board on the Odds tab doesn't already say better.
+      It fills in the moment week 1 is in the books.`;
+  } else if (R.why === "regular-season-over") {
+    box.innerHTML = `<b>The ${esc(season || "")} regular season is over</b>
+      Every game has been played, so the field is settled rather than modelled. The bracket
+      is on the Scoreboard.`;
+  } else if (R.why === "no-divisions") {
+    box.innerHTML = `<b>No race to model</b>
+      This season doesn't have all three divisions assigned yet, and seeding is built out of
+      them, so there is nothing honest to compute.`;
+  } else {
+    box.innerHTML = `<b>No race to model</b>Nothing is being played right now.`;
+  }
+  return box;
+}
+
+function renderRace(host, R, O, LEV) {
+  host.innerHTML = "";
+  const season = R.season;
+  const nextWeek = R.nextWeek;
+  const played = R.decided.length, total = played + R.upcoming.length;
+
+  /* ---- the biggest game ---- */
+  const big = LEV[0];
+  if (big) {
+    const b = el("div", "bigg");
+    const line = (uid, sw) => `<div class="side">${avatarHTML(uid, "sm")}
+      <span class="n">${esc(nameOf(uid))}</span>
+      <b class="sw ${sw >= 0 ? "pos-t" : "neg-t"}">${esc(ppf(sw))}</b></div>`;
+    b.innerHTML = `<div class="k">Biggest game of week ${nextWeek}</div>
+      <div class="vs">${line(big.aUid, big.aSwing)}<span class="x">v</span>${line(big.bUid, big.bSwing)}</div>
+      <div class="c">That is how much playoff probability winning is worth to each of them. Across all
+        twelve teams the result moves ${f1(big.total * 100)} percentage points of playoff odds — more
+        than any other game on the slate.${big.others.length ? ` The team it matters most to who isn't
+        even playing: ${esc(nameOf(big.others[0].uid))}, ${esc(ppf(big.others[0].swing))} if
+        ${esc(nameOf(big.aUid))} wins.` : ""}</div>`;
+    host.appendChild(b);
+  }
+
+  const tiles = el("div", "tiles");
+  const clinched = O.rows.filter(r => r.playoff >= 1).length;
+  const out = O.rows.filter(r => r.playoff <= 0).length;
+  tiles.innerHTML = [
+    { l: "Week", v: String(nextWeek), n: `${played} of ${total} games played` },
+    { l: "Simulations", v: O.sims.toLocaleString(), n: "of the real remaining schedule" },
+    { l: "Clinched", v: String(clinched), n: clinched ? "in every simulation" : "nobody is safe yet" },
+    { l: "Eliminated", v: String(out), n: out ? "in every simulation" : "everybody is still alive" },
+  ].map(t => `<div class="tile"><div class="l">${esc(t.l)}</div><div class="v">${esc(t.v)}</div>
+    <div class="n">${esc(t.n)}</div></div>`).join("");
+  host.appendChild(tiles);
+
+  /* ---- the board ---- */
+  const nDiv = new Set(O.rows.map(r => r.div)).size;
+  const nPlay = season.playoffTeams || 6, nWild = Math.max(0, nPlay - nDiv);
+  host.appendChild(sechead("Playoff odds",
+    `${nPlay} of ${O.rows.length} get in: the ${nDiv} division winners take seeds 1-${nDiv}, then the best ${nWild} record${nWild === 1 ? "" : "s"} left over. Byes go to the top two${nDiv === 2 ? ", which in a two-division season is the two division winners" : ""}.`));
+  const rows = O.rows.slice().sort((a, b) =>
+    b.playoff - a.playoff || b.divWin - a.divWin || b.projWins - a.projWins);
+  const tag = r => r.playoff >= 1 ? ' <span class="badge blue">CLINCHED</span>'
+    : r.playoff <= 0 ? ' <span class="badge red">ELIMINATED</span>' : "";
+  host.appendChild(tableCard(
+    [{ label: "Manager" }, { label: "Division" }, { label: "Record", num: 1 }, { label: "Points for", num: 1 },
+    { label: "Playoffs", num: 1 }, { label: "Win division", num: 1 }, { label: "First-round bye", num: 1 },
+    { label: "Projected wins", num: 1, title: "Wins now, plus the average of the rest" }],
+    rows.map(r => `<tr>
+      <td><span class="nmcell">${avatarHTML(r.uid, "sm")}${esc(nameOf(r.uid))}${tag(r)}</span></td>
+      <td>${esc(season.divNames.get(r.div) || "—")}</td>
+      <td class="num">${r.w}–${r.l}${r.t ? `–${r.t}` : ""}</td>
+      <td class="num">${f1(r.pf)}</td>
+      <td class="num"><b>${esc(pctf(r.playoff))}</b></td>
+      <td class="num">${esc(pctf(r.divWin))}</td>
+      <td class="num">${esc(pctf(r.bye))}</td>
+      <td class="num">${f1(r.projWins)}</td></tr>`)));
+
+  /* ---- the rest of the slate ---- */
+  if (LEV.length) {
+    host.appendChild(sechead(`Every game in week ${nextWeek}, by what it moves`,
+      `Each game run twice — once with each side forced to win — and the difference measured across all twelve teams. ${LEV[0].sims.toLocaleString()} simulations per side, which is enough to rank them.`));
+    host.appendChild(tableCard(
+      [{ label: "Game" }, { label: "Worth to the first", num: 1, title: "Playoff probability the first-named team gains by winning this game" },
+      { label: "Worth to the second", num: 1, title: "Playoff probability the second-named team gains by winning it" },
+      { label: "League-wide move", num: 1, title: "Percentage points of playoff probability that change hands across all twelve teams" }],
+      LEV.map(g => `<tr>
+        <td>${esc(nameOf(g.aUid))} v ${esc(nameOf(g.bUid))}</td>
+        <td class="num ${g.aSwing >= 0 ? "pos-t" : "neg-t"}">${esc(ppf(g.aSwing))}</td>
+        <td class="num ${g.bSwing >= 0 ? "pos-t" : "neg-t"}">${esc(ppf(g.bSwing))}</td>
+        <td class="num"><b>${f1(g.total * 100)}</b></td></tr>`)));
+    host.appendChild(el("div", "method", `<p>Every figure in this table is in percentage points of
+      playoff probability, not fantasy points.</p>`));
+  }
+
+  const m = el("div", "method");
+  m.innerHTML = `<h3>How this is worked out</h3>
+    <p>Every result so far is taken as fact. The remaining schedule is the real one — Sleeper
+       publishes the pairings for weeks still to come — and each of those games is played out
+       ${O.sims.toLocaleString()} times, drawing both teams' scores from how they have actually scored,
+       week to week, across ${DB.seasons.length} seasons. The standings that come out of each run are
+       seeded by DFFL's own rule and the six playoff places counted.</p>
+    <p><b>Clinched</b> and <b>eliminated</b> mean a team made or missed the playoffs in every one of the
+       ${O.sims.toLocaleString()} runs. That is not quite the same as mathematically certain, and it is
+       not claimed to be.</p>
+    <p>Leverage is the honest version of "must-win". A game is run twice, once with each side forced to
+       win, and the gap between those two futures is what the game is worth. Both scores are still drawn
+       normally and swapped if the wrong side won, so forcing a result doesn't inflate anybody's
+       points-for along with it.</p>`;
+  host.appendChild(m);
+}
+
+let RACE_STARTED = false;
+async function ensureRace() {
+  if (RACE_STARTED) return;
+  RACE_STARTED = true;
+  const host = $("#raceHost");
+  if (!host) return;
+  try {
+    const R = await raceData();
+    window.__RACEDATA = R;
+    if (!R.ready) {
+      host.innerHTML = "";
+      host.appendChild(raceEmpty(R));
+      document.body.dataset.raceReady = "empty";
+      return;
+    }
+    const dist = scoringDist();
+    const O = raceOdds(R, dist);
+    const LEV = leverageBoard(R, dist, R.nextWeek);
+    window.__RACE = O; window.__LEV = LEV;
+    renderRace(host, R, O, LEV);
+    document.body.dataset.raceReady = "1";
+  } catch (e) {
+    host.innerHTML = "";
+    host.appendChild(el("div", "empty", `<b>Couldn't work out the race</b>${esc(e.message)}`));
+    document.body.dataset.raceReady = "error";
+    console.error(e);
+  }
+}
+
+function panelRace() {
+  const p = el("div", "panel"); p.dataset.panel = "race";
+  p.appendChild(sechead("The race",
+    "Live playoff odds for the season being played: the results so far taken as fact, the real remaining schedule simulated thousands of times over, and the one game this week that moves it most."));
+  const honest = el("div", "mode");
+  honest.innerHTML = `<span class="pill pre">Model output</span>
+    <span class="what">These are model outputs, not predictions. The simulation knows how each manager
+      has scored in the past — it does not know who is on anybody's roster, who is injured, or who is
+      on a bye.</span>`;
+  p.appendChild(honest);
+  const host = el("div"); host.id = "raceHost";
+  host.appendChild(el("div", "empty", "<b>Working out the race…</b>Reading the rest of the schedule and simulating it."));
+  p.appendChild(host);
   return p;
 }
 
@@ -3353,6 +3755,7 @@ async function boot() {
     app.appendChild(panelRecords(RB));
     app.appendChild(panelMatchups(AT));
     app.appendChild(panelOdds(ODDS, SIM));
+    app.appendChild(panelRace());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
     app.appendChild(await panelRecaps());
@@ -3369,6 +3772,9 @@ async function boot() {
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
+      ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
+      renderRace, raceEmpty,
+      RACE_SIMS, LEVERAGE_SIMS,
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
       gradeTrade, ptsFrom, verdictOf, resolvePick, seasonPlayed, markReversals,
       TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,

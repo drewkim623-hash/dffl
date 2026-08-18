@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "odds", "draft", "trades", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "odds", "race", "draft", "trades", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -630,6 +630,181 @@ check("does not falsely claim the 2026 data doesn't exist", dom.noFalseNeverSeen
 check("methodology lists what the model is not told", dom.methodListsOmissions);
 
 /* ==================================================== responsiveness = */
+group("Lazy tabs cost nothing at boot");
+// On a page nobody has clicked, neither heavy tab may have reached for
+// anything. Checked on its own tab because every other tab has already been
+// opened by the routing pass above.
+const lazyPage = await ctx.newPage();
+const heavy = [];
+lazyPage.on("request", r => {
+  const u = r.url();
+  if (/\/transactions\/|\/players\/nfl|\/draft\/\d+$/.test(u)) heavy.push(u.replace(/^.*\/v1/, ""));
+});
+await lazyPage.goto(BASE, { waitUntil: "domcontentloaded" });
+await lazyPage.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+await lazyPage.waitForTimeout(600);
+const lazyState = await lazyPage.evaluate(() => ({
+  trades: document.body.dataset.tradesReady || null,
+  race: document.body.dataset.raceReady || null,
+  tradeHost: !!document.querySelector("#tradesHost"),
+  raceHost: !!document.querySelector("#raceHost"),
+}));
+check("booting fetches no transactions, no player file and no draft detail", heavy.length === 0, heavy.slice(0, 3).join(", "));
+check("neither lazy tab has run at boot", lazyState.trades === null && lazyState.race === null, JSON.stringify(lazyState));
+check("both lazy panels are on the page regardless", lazyState.tradeHost && lazyState.raceHost);
+await lazyPage.close();
+
+group("Race: the off-season state");
+await page.click('#tabs button[data-tab="race"]');
+await page.waitForFunction(() => document.body.dataset.raceReady, null, { timeout: 120000 });
+const offSeason = await page.evaluate(() => {
+  const R = window.__RACEDATA, panel = document.querySelector('[data-panel="race"]');
+  return {
+    state: document.body.dataset.raceReady, why: R.why, ready: R.ready,
+    played: R.decided.length,
+    emptyText: (panel.querySelector(".empty") || {}).innerText || "",
+    honesty: panel.querySelector(".mode .what") ? panel.querySelector(".mode .what").innerText : "",
+    tables: panel.querySelectorAll("table").length,
+  };
+});
+// 2026 is drafted but unplayed, so there is no race yet — and the page must say
+// so rather than modelling a season from nothing.
+check("with no games played the race reports no race", offSeason.ready === false && offSeason.why === "not-started", `${offSeason.why}`);
+check("the off-season state renders an explanation", /hasn't started/.test(offSeason.emptyText) && offSeason.emptyText.length > 80, offSeason.emptyText.slice(0, 60));
+check("the off-season state invents no numbers", offSeason.tables === 0 && !/%/.test(offSeason.emptyText));
+check("the page says these are model outputs, not predictions", /model outputs, not predictions/.test(offSeason.honesty), offSeason.honesty.slice(0, 60));
+
+group("Race: playoff odds on a season that was actually played");
+const race = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2025");
+  const dist = D.scoringDist();
+  const R = D.raceAsOf(season, 10);
+  const O = D.raceOdds(R, dist, 20000);
+  const sum = k => O.rows.reduce((a, r) => a + r[k], 0);
+  const byDiv = {};
+  for (const r of O.rows) byDiv[r.div] = (byDiv[r.div] || 0) + r.divWin;
+  // Nothing may be modelled from before the cut: the fixed record has to be
+  // exactly what happened through week 10.
+  const realW = new Map();
+  for (const g of season.games.filter(g => !g.playoff && g.week <= 10)) {
+    const win = g.a.pts > g.b.pts ? g.a.rid : g.b.rid;
+    realW.set(win, (realW.get(win) || 0) + 1);
+  }
+  return {
+    n: O.rows.length, sims: O.sims,
+    playoffSum: sum("playoff"), byeSum: sum("bye"), winsSum: sum("projWins"),
+    divSums: byDiv, divs: Object.keys(byDiv).length,
+    recordsMatch: O.rows.every(r => (realW.get(r.rid) || 0) === r.w),
+    gamesFixed: R.decided.length, gamesLeft: R.upcoming.length,
+    // every remaining fixture must be a real one off Sleeper's schedule
+    scheduleReal: R.upcoming.every(g => season.games.some(x =>
+      x.week === g.week && ((x.a.rid === g.a && x.b.rid === g.b) || (x.a.rid === g.b && x.b.rid === g.a)))),
+    inRange: O.rows.every(r => [r.playoff, r.divWin, r.bye].every(v => isFinite(v) && v >= 0 && v <= 1)),
+    byeNeverExceedsPlayoff: O.rows.every(r => r.bye <= r.playoff + 1e-9),
+    divNeverExceedsPlayoff: O.rows.every(r => r.divWin <= r.playoff + 1e-9),
+    finite: O.rows.every(r => isFinite(r.pf) && isFinite(r.projWins) && isFinite(r.w) && isFinite(r.l)),
+  };
+});
+check("the fixed record is exactly what actually happened", race.recordsMatch);
+check("the remaining fixtures are the real schedule, not invented ones", race.scheduleReal, `${race.gamesLeft} games left`);
+check("playoff odds across the league sum to the six places", near(race.playoffSum, 6, 1e-9), `${race.playoffSum}`);
+check("bye odds sum to the two byes", near(race.byeSum, 2, 1e-9), `${race.byeSum}`);
+check("division-winner odds sum to 1 inside every division",
+  Object.values(race.divSums).every(v => near(v, 1, 1e-9)) && race.divs >= 2, JSON.stringify(race.divSums));
+check("projected wins sum to one per game played", near(race.winsSum, 84, 1e-9), `${race.winsSum}`);
+check("every probability lands between 0 and 1", race.inRange);
+check("a bye is never likelier than the playoffs", race.byeNeverExceedsPlayoff);
+check("a division title is never likelier than the playoffs", race.divNeverExceedsPlayoff);
+check("no NaN in the race table", race.finite);
+
+group("Race: clinched and eliminated");
+const dead = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2025");
+  const dist = D.scoringDist();
+  // One week left. Anybody who cannot reach the sixth-best win total is
+  // mathematically out, whatever the simulation thinks.
+  const R = D.raceAsOf(season, 13);
+  const O = D.raceOdds(R, dist, 5000);
+  const left = new Map();
+  for (const g of R.upcoming) { left.set(g.a, (left.get(g.a) || 0) + 1); left.set(g.b, (left.get(g.b) || 0) + 1); }
+  const wins = O.rows.map(r => r.w).sort((a, b) => b - a);
+  const sixth = wins[5];
+  const impossible = O.rows.filter(r => r.w + (left.get(r.rid) || 0) < sixth);
+  const certain = O.rows.filter(r => r.w > wins[5] + Math.max(...O.rows.map(x => left.get(x.rid) || 0)));
+  return {
+    impossible: impossible.length, impossibleOdds: impossible.map(r => r.playoff),
+    certainOdds: certain.map(r => r.playoff),
+    zeroCount: O.rows.filter(r => r.playoff <= 0).length,
+    oneCount: O.rows.filter(r => r.playoff >= 1).length,
+    sixth,
+  };
+});
+check("a mathematically eliminated team shows exactly 0%", dead.impossible > 0 && dead.impossibleOdds.every(v => v === 0), `${dead.impossible} eliminated, odds ${dead.impossibleOdds.join(",")}`);
+check("teams that cannot be caught show exactly 100%", dead.certainOdds.every(v => v === 1), dead.certainOdds.join(","));
+check("clinched and eliminated are both reachable states", dead.zeroCount > 0 && dead.oneCount > 0, `${dead.oneCount} clinched, ${dead.zeroCount} out`);
+
+group("Race: leverage");
+const lev = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2025");
+  const dist = D.scoringDist();
+  const R = D.raceAsOf(season, 10);
+  const board = D.leverageBoard(R, dist, 11, 4000);
+  // Forcing a team to win must never leave it worse off. Run one game both ways
+  // and compare every team's odds directly, not just the two playing.
+  const g = R.upcoming.find(x => x.week === 11);
+  const ifA = D.raceOdds(R, dist, 6000, { week: 11, win: g.a, lose: g.b });
+  const ifB = D.raceOdds(R, dist, 6000, { week: 11, win: g.b, lose: g.a });
+  const aWithWin = ifA.byRid.get(g.a).playoff, aWithLoss = ifB.byRid.get(g.a).playoff;
+  const bWithWin = ifB.byRid.get(g.b).playoff, bWithLoss = ifA.byRid.get(g.b).playoff;
+  return {
+    games: board.length, sims: board[0] && board[0].sims,
+    ranked: board.every((x, i) => i === 0 || board[i - 1].total >= x.total),
+    swingsPositive: board.every(x => x.aSwing >= -0.02 && x.bSwing >= -0.02),
+    totalsFinite: board.every(x => isFinite(x.total) && x.total >= 0 && x.total <= board.length * 12),
+    aGain: aWithWin - aWithLoss, bGain: bWithWin - bWithLoss,
+    // a forced win cannot cost the forced team wins on the season either
+    aWinsUp: ifA.byRid.get(g.a).projWins > ifB.byRid.get(g.a).projWins,
+    biggestIsLargest: board.length > 1 && board[0].total >= board[1].total,
+  };
+});
+check("every game on the slate gets a leverage number", lev.games === 6, `${lev.games}`);
+check("leverage runs at the lower simulation count", lev.sims === 4000, `${lev.sims}`);
+check("the slate is ranked by how much it moves", lev.ranked && lev.biggestIsLargest);
+check("forcing a win never lowers that team's playoff odds", lev.aGain >= -0.02 && lev.bGain >= -0.02, `${lev.aGain.toFixed(4)} / ${lev.bGain.toFixed(4)}`);
+check("winning a game is worth something to both sides", lev.swingsPositive);
+check("a forced win adds to that team's projected wins", lev.aWinsUp, `${lev.aGain}`);
+check("league-wide swings stay finite", lev.totalsFinite);
+
+group("Race: the board renders");
+const drawn = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2025");
+  const dist = D.scoringDist();
+  const R = D.raceAsOf(season, 10);
+  const O = D.raceOdds(R, dist, 4000), LEV = D.leverageBoard(R, dist, 11, 800);
+  const host = document.querySelector("#raceHost");
+  D.renderRace(host, R, O, LEV);
+  const txt = host.innerText;
+  return {
+    tables: host.querySelectorAll("table").length,
+    rows: host.querySelectorAll("table")[0].querySelectorAll("tbody tr").length,
+    big: !!host.querySelector(".bigg"),
+    tiles: host.querySelectorAll(".tile").length,
+    tags: host.querySelectorAll(".badge").length,
+    nan: /NaN|undefined|Infinity/.test(txt),
+    saysSims: /20|4,000|simulations/i.test(txt),
+  };
+});
+check("the race board draws both tables", drawn.tables === 2, `${drawn.tables}`);
+check("every manager gets a row", drawn.rows === 12, `${drawn.rows}`);
+check("the biggest game of the week is called out", drawn.big);
+check("the race summary tiles render", drawn.tiles === 4, `${drawn.tiles}`);
+check("clinched and eliminated tags reach the page", drawn.tags > 0, `${drawn.tags}`);
+check("no NaN or undefined on the race board", drawn.nan === false);
+
 group("Trades: loading and shape");
 // The tab is lazy on purpose — nothing is fetched until it is opened.
 const lazy = await page.evaluate(() => ({
@@ -936,6 +1111,29 @@ check("trades: page does not scroll horizontally at 390px", tradeNarrow.docScrol
 check("trades: nothing outside a scroller overflows at 390px", tradeNarrow.overflowing.length === 0, tradeNarrow.overflowing.join(" | "));
 check("trades: the whole board still renders at 390px", tradeNarrow.cards === 20 && tradeNarrow.tiles === 4, `${tradeNarrow.cards} cards, ${tradeNarrow.tiles} tiles`);
 
+// the race board at phone width, with a season that actually has a race in it
+await mobile.click('#tabs button[data-tab="race"]');
+await mobile.waitForFunction(() => document.body.dataset.raceReady, null, { timeout: 120000 });
+const raceNarrow = await mobile.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2025");
+  const dist = D.scoringDist();
+  const R = D.raceAsOf(season, 10);
+  D.renderRace(document.querySelector("#raceHost"), R, D.raceOdds(R, dist, 3000), D.leverageBoard(R, dist, 11, 500));
+  const panel = document.querySelector('[data-panel="race"]');
+  const over = [];
+  for (const n of panel.querySelectorAll("*")) {
+    if (n.closest(".scroll")) continue;
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { over: over.slice(0, 6), doc: document.documentElement.scrollWidth, inner: window.innerWidth,
+    rows: panel.querySelectorAll("tbody tr").length };
+});
+check("race: page does not scroll horizontally at 390px", raceNarrow.doc <= raceNarrow.inner, `${raceNarrow.doc} > ${raceNarrow.inner}`);
+check("race: nothing outside a scroller overflows at 390px", raceNarrow.over.length === 0, raceNarrow.over.join(" | "));
+check("race: the whole board renders at 390px", raceNarrow.rows >= 18, `${raceNarrow.rows} rows`);
+
 // every other tab too, so the new CSS didn't break anything narrow
 for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.click(`#tabs button[data-tab="${id}"]`);
@@ -945,6 +1143,12 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
 }
 
 group("Screenshots");
+await page.click('#tabs button[data-tab="race"]');
+await page.waitForTimeout(200);
+await page.screenshot({ path: "race-desktop.png", fullPage: true });
+await mobile.click('#tabs button[data-tab="race"]');
+await mobile.waitForTimeout(200);
+await mobile.screenshot({ path: "race-mobile.png", fullPage: true });
 await page.click('#tabs button[data-tab="trades"]');
 await page.waitForTimeout(200);
 await page.screenshot({ path: "trades-desktop.png", fullPage: true });
