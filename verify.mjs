@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "odds", "race", "draft", "trades", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "race", "draft", "trades", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -630,6 +630,174 @@ check("does not falsely claim the 2026 data doesn't exist", dom.noFalseNeverSeen
 check("methodology lists what the model is not told", dom.methodListsOmissions);
 
 /* ==================================================== responsiveness = */
+group("Power rankings: the board itself");
+const power = await page.evaluate(() => {
+  const D = window.__DFFL, P = window.__POWER;
+  const seasons = [...P.keys()];
+  const bad = [];
+  let boards = 0, wk1Boards = 0;
+  for (const yr of seasons) {
+    const R = P.get(yr);
+    for (const b of R.boards) {
+      boards++;
+      const ranks = b.rows.map(r => r.rank).sort((a, c) => a - c);
+      // a permutation of 1..n, every manager once, no gaps and no repeats
+      if (ranks.length !== R.n) bad.push(`${yr} w${b.week}: ${ranks.length} rows`);
+      if (!ranks.every((v, i) => v === i + 1)) bad.push(`${yr} w${b.week}: ranks ${ranks.join(",")}`);
+      if (new Set(b.rows.map(r => r.uid)).size !== R.n) bad.push(`${yr} w${b.week}: duplicate manager`);
+      if (b.rows.some(r => !isFinite(r.score) || !isFinite(r.pf))) bad.push(`${yr} w${b.week}: NaN`);
+      const moved = b.rows.filter(r => r.move != null);
+      const sum = moved.reduce((a, r) => a + r.move, 0);
+      if (sum !== 0) bad.push(`${yr} w${b.week}: moves sum to ${sum}`);
+      if (b.week === R.weeks[0]) {
+        wk1Boards++;
+        if (b.rows.some(r => r.move != null || r.prev != null)) bad.push(`${yr} w${b.week}: movement on the first board`);
+      } else if (moved.length !== R.n) bad.push(`${yr} w${b.week}: only ${moved.length} of ${R.n} have movement`);
+    }
+  }
+  const R25 = P.get("2025");
+  const last = R25.boards[R25.boards.length - 1];
+  const weights = D.POWER_W;
+  // the published rating has to be the published weights, not a stray constant
+  const formulaOk = R25.boards.every(b => b.rows.every(r =>
+    Math.abs(r.score - (weights.allPlay * r.apPct + weights.form * r.formPct
+      + weights.points * r.pfNorm + weights.record * r.winPct)) < 1e-12));
+  return {
+    seasons, boards, wk1Boards, bad: bad.slice(0, 5), badN: bad.length, formulaOk,
+    weightSum: Object.values(weights).reduce((a, b) => a + b, 0),
+    n: R25.n, weeks: R25.weeks.length,
+    sortedByScore: R25.boards.every(b => b.rows.every((r, i) => i === 0 || b.rows[i - 1].score >= r.score)),
+    componentsInRange: R25.boards.every(b => b.rows.every(r =>
+      [r.apPct, r.formPct, r.pfNorm, r.winPct, r.score].every(v => v >= 0 && v <= 1))),
+    // the board may only know what had happened by that week
+    cumulative: R25.boards.every((b, i) => b.rows.every(r => r.g === i + 1)),
+    topName: nameOf(last.rows[0].uid),
+  };
+});
+check("every board is a permutation of the whole league", power.badN === 0, power.bad.join(" | "));
+check("boards exist for every week of every played season", power.boards === 56 && power.seasons.length === 4, `${power.boards} boards over ${power.seasons.length} seasons`);
+check("the first board of a season shows no movement", power.wk1Boards === 4, `${power.wk1Boards}`);
+check("movement sums to zero across the league", power.badN === 0);
+check("the rating is exactly the published weights", power.formulaOk);
+check("the published weights sum to 1", near(power.weightSum, 1, 1e-12), `${power.weightSum}`);
+check("boards are ordered by rating", power.sortedByScore);
+check("every component stays between 0 and 1", power.componentsInRange);
+check("a week-N board counts exactly N weeks of games", power.cumulative);
+
+group("Power rankings: the page");
+await page.click('#tabs button[data-tab="power"]');
+await page.waitForTimeout(150);
+const powerDom = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="power"]');
+  const sels = panel.querySelectorAll("select");
+  const rows = [...panel.querySelectorAll(".pwrow")];
+  const marks = rows.map(r => r.querySelector(".mv").textContent.trim());
+  return {
+    rows: rows.length, sparks: panel.querySelectorAll(".spark").length,
+    seasonDefault: sels[0].value, weekDefault: sels[1].value,
+    weekOptions: sels[1].options.length,
+    marks, arrows: marks.filter(m => /[▲▼]/.test(m)).length,
+    // the colour is never the only carrier: an arrow and a number ride with it
+    colourNotAlone: [...panel.querySelectorAll(".mv.up, .mv.down")].every(n => /[▲▼]\s*\d+/.test(n.textContent)),
+    weightsShown: /40%[\s\S]*25%[\s\S]*20%[\s\S]*15%/.test(panel.innerText),
+    namesWeights: /All-play win %[\s\S]*Form, last 3 weeks[\s\S]*Points for[\s\S]*Actual record/.test(panel.innerText),
+    nan: /NaN|undefined|Infinity/.test(panel.innerText),
+  };
+});
+check("the board renders a row per manager", powerDom.rows === 12, `${powerDom.rows}`);
+check("it opens on the most recent completed week", powerDom.seasonDefault === "2025" && powerDom.weekDefault === "14", `${powerDom.seasonDefault} w${powerDom.weekDefault}`);
+check("every week of the season is pickable", powerDom.weekOptions === 14, `${powerDom.weekOptions}`);
+check("movement arrows reach the page", powerDom.arrows > 0, `${powerDom.arrows} arrows`);
+check("movement never relies on colour alone", powerDom.colourNotAlone);
+check("a rank line is drawn for every team", powerDom.sparks === 12, `${powerDom.sparks}`);
+check("the weights are published on the page", powerDom.weightsShown && powerDom.namesWeights);
+check("no NaN on the power board", powerDom.nan === false);
+
+const wk1Dom = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="power"]');
+  const sel = panel.querySelectorAll("select")[1];
+  sel.value = "1"; sel.dispatchEvent(new Event("change"));
+  const rows = [...panel.querySelectorAll(".pwrow")];
+  return {
+    rows: rows.length,
+    arrows: rows.filter(r => /[▲▼]/.test(r.querySelector(".mv").textContent)).length,
+    marks: rows.map(r => r.querySelector(".mv").textContent.trim()).filter(Boolean).length,
+    sparks: panel.querySelectorAll(".spark").length,
+  };
+});
+check("week 1 shows no movement arrows", wk1Dom.arrows === 0 && wk1Dom.marks === 0, `${wk1Dom.arrows} arrows, ${wk1Dom.marks} marks`);
+check("week 1 still ranks everybody", wk1Dom.rows === 12);
+check("week 1 draws no rank line, having one point", wk1Dom.sparks === 0, `${wk1Dom.sparks}`);
+
+group("Power rankings: blurbs degrade gracefully");
+const blurbs = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const before = { ok: window.__DFFL.loadBlurbs && true };
+  // Whatever rankings.json holds, the board must render. Prove the lookup is a
+  // pure miss when the file has nothing for the week on screen.
+  const missing = D.blurbFor("1999", 99, [...D.DB.mgr.keys()][0]);
+  const panel = document.querySelector('[data-panel="power"]');
+  const sel = panel.querySelectorAll("select")[1];
+  sel.value = "14"; sel.dispatchEvent(new Event("change"));
+  return {
+    ...before, missing,
+    rows: panel.querySelectorAll(".pwrow").length,
+    fallbackLines: [...panel.querySelectorAll(".pwrow .id .s")].filter(n => n.textContent.trim().length).length,
+    note: /rankings\.json/.test(panel.innerText),
+  };
+});
+check("a blurb lookup with nothing behind it returns nothing, not an error", blurbs.missing === null);
+check("the board renders in full without any blurbs", blurbs.rows === 12 && blurbs.fallbackLines === 12);
+check("the page says where the blurbs come from", blurbs.note);
+
+const noFile = await page.evaluate(async () => {
+  // Simulate the file being absent entirely: the loader swallows it and the
+  // rest of the page carries on.
+  const D = window.__DFFL;
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("rankings.json")
+    ? Promise.resolve({ ok: false, status: 404, json: () => Promise.reject(new Error("404")) })
+    : realFetch(u);
+  let threw = null;
+  try {
+    const saved = D.blurbFor("x", 1, "y");
+    await (async () => { const f = D.loadBlurbs; return f && f(); })();
+  } catch (e) { threw = String(e); }
+  window.fetch = realFetch;
+  return { threw, stillThere: document.querySelectorAll('[data-panel="power"] .pwrow').length };
+});
+check("a missing rankings.json never throws", noFile.threw === null, String(noFile.threw));
+check("the board survives a missing rankings.json", noFile.stillThere === 12);
+
+// And the other half of the contract: when the weekly job HAS written a line,
+// the board shows it in place of the fallback.
+const withBlurbs = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const panel = document.querySelector('[data-panel="power"]');
+  const top = window.__POWER.get("2025").boards[13].rows[0];
+  const name = nameOf(top.uid);
+  const stub = { weeks: [{ season: "2025", week: 14, teams: [{ manager: name, blurb: "Test line from the weekly job." }] }] };
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("rankings.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve(stub) })
+    : realFetch(u);
+  await D.loadBlurbs(true);
+  window.fetch = realFetch;
+  const sel = panel.querySelectorAll("select")[1];
+  sel.value = "1"; sel.dispatchEvent(new Event("change"));
+  sel.value = "14"; sel.dispatchEvent(new Event("change"));
+  const first = panel.querySelector(".pwrow .id .s").textContent.trim();
+  const other = [...panel.querySelectorAll(".pwrow .id .s")][1].textContent.trim();
+  const noteGone = !/rankings\.json/.test(panel.innerText);
+  const lookup = D.blurbFor("2025", 14, top.uid);
+  const caseInsensitive = D.blurbFor("2025", 14, top.uid) === stub.weeks[0].teams[0].blurb;
+  return { first, other, noteGone, lookup, caseInsensitive, name };
+});
+check("a blurb written by the job replaces the fallback line", withBlurbs.first === "Test line from the weekly job.", withBlurbs.first);
+check("teams the job didn't write about keep their fallback", /points for/.test(withBlurbs.other), withBlurbs.other);
+check("the blurb lookup matches on manager name", withBlurbs.caseInsensitive && withBlurbs.lookup !== null);
+check("the where-do-blurbs-come-from note steps aside once they arrive", withBlurbs.noteGone);
+
 group("Lazy tabs cost nothing at boot");
 // On a page nobody has clicked, neither heavy tab may have reached for
 // anything. Checked on its own tab because every other tab has already been
@@ -1134,6 +1302,25 @@ check("race: page does not scroll horizontally at 390px", raceNarrow.doc <= race
 check("race: nothing outside a scroller overflows at 390px", raceNarrow.over.length === 0, raceNarrow.over.join(" | "));
 check("race: the whole board renders at 390px", raceNarrow.rows >= 18, `${raceNarrow.rows} rows`);
 
+// the power board at phone width, on a week with movement in it
+await mobile.click('#tabs button[data-tab="power"]');
+await mobile.waitForTimeout(150);
+const powerNarrow = await mobile.evaluate(() => {
+  const panel = document.querySelector('[data-panel="power"]');
+  const over = [];
+  for (const n of panel.querySelectorAll("*")) {
+    if (n.closest(".scroll")) continue;
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { over: over.slice(0, 6), doc: document.documentElement.scrollWidth, inner: window.innerWidth,
+    rows: panel.querySelectorAll(".pwrow").length,
+    arrows: [...panel.querySelectorAll(".mv")].filter(n => /[▲▼]/.test(n.textContent)).length };
+});
+check("power: page does not scroll horizontally at 390px", powerNarrow.doc <= powerNarrow.inner, `${powerNarrow.doc} > ${powerNarrow.inner}`);
+check("power: nothing overflows at 390px", powerNarrow.over.length === 0, powerNarrow.over.join(" | "));
+check("power: the whole board renders at 390px", powerNarrow.rows === 12 && powerNarrow.arrows > 0, `${powerNarrow.rows} rows, ${powerNarrow.arrows} arrows`);
+
 // every other tab too, so the new CSS didn't break anything narrow
 for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.click(`#tabs button[data-tab="${id}"]`);
@@ -1143,6 +1330,12 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
 }
 
 group("Screenshots");
+await page.click('#tabs button[data-tab="power"]');
+await page.waitForTimeout(200);
+await page.screenshot({ path: "power-desktop.png", fullPage: true });
+await mobile.click('#tabs button[data-tab="power"]');
+await mobile.waitForTimeout(200);
+await mobile.screenshot({ path: "power-mobile.png", fullPage: true });
 await page.click('#tabs button[data-tab="race"]');
 await page.waitForTimeout(200);
 await page.screenshot({ path: "race-desktop.png", fullPage: true });

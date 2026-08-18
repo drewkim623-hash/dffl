@@ -325,6 +325,32 @@
   .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
   .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
 
+  /* ============ power rankings ============ */
+  .pwrow{
+    display:grid;grid-template-columns:30px 52px auto minmax(0,1fr) auto auto;align-items:center;gap:11px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:11px 13px}
+  .pwrow .pr{font-size:17px;font-weight:850;color:var(--ink);font-variant-numeric:tabular-nums;text-align:center;
+    letter-spacing:-.02em}
+  .mv{font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:center;
+    display:inline-block}
+  .mv.up{color:var(--good)} .mv.down{color:var(--crit)}
+  .mv.flat,.mv.none{color:var(--muted)}
+  .pwrow .id{min-width:0}
+  .pwrow .id .n{font-weight:750;font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pwrow .id .s{font-size:12.5px;color:var(--muted);display:block;line-height:1.45}
+  .pwrow .sp{display:flex;align-items:center;flex:none}
+  .spark{display:block}
+  .pwrow .stats{display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}
+  @media(max-width:820px){
+    .pwrow{grid-template-columns:30px 52px auto minmax(0,1fr);
+      grid-template-areas:"pr mv av id" "sp sp sp sp" "st st st st";gap:8px 10px}
+    .pwrow .pr{grid-area:pr} .pwrow .mv{grid-area:mv} .pwrow .av{grid-area:av} .pwrow .id{grid-area:id}
+    .pwrow .sp{grid-area:sp;justify-content:flex-start}
+    .pwrow .stats{grid-area:st;justify-content:flex-start}
+    .pwrow .stats .chip{flex:1;min-width:0}
+  }
+  @media(max-width:420px){.pwrow .sp{display:none}}
+
   /* ============ race ============ */
   .bigg{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin:0 0 18px;
     background:linear-gradient(100deg,rgba(57,135,229,.18),rgba(144,133,233,.06) 58%,transparent);
@@ -859,6 +885,7 @@ const TABS = [
   { id: "managers", label: "Managers" },
   { id: "records", label: "Records" },
   { id: "matchups", label: "Matchups" },
+  { id: "power", label: "Power" },
   { id: "odds", label: "Odds" },
   { id: "race", label: "Race" },
   { id: "draft", label: "Draft" },
@@ -2640,6 +2667,278 @@ function panelDraft() {
   return p;
 }
 
+/* =============================================== POWER ============== */
+/*
+ * ESPN-style weekly power rankings.
+ *
+ * The whole point of a power ranking is that it disagrees with the standings,
+ * so the blend below is written down on the page rather than kept in here. Four
+ * measures, every one of them already visible elsewhere on the site:
+ *
+ *   all-play (40%)  every week, a team is compared with all eleven others
+ *                   instead of the one it happened to be scheduled against.
+ *                   It is the least luck-dependent thing in the data.
+ *   form    (25%)   the same measure over the last three weeks only, because a
+ *                   team in September is not the team it is in November.
+ *   points  (20%)   raw scoring, scaled across the league that week. Says
+ *                   nothing about who you played.
+ *   record  (15%)   what actually decides the season — and the noisiest of the
+ *                   four, which is why it carries the least.
+ *
+ * Ranked cumulatively: the week-8 board knows everything through week 8 and
+ * nothing after it, so the movement between two boards is real movement.
+ */
+const POWER_W = { allPlay: 0.40, form: 0.25, points: 0.20, record: 0.15 };
+const FORM_WEEKS = 3;
+
+/** Every regular-season week of a season, as a map of manager to what he scored. */
+function weeklyScores(season) {
+  const lastReg = (season.pws || 15) - 1;
+  const byWeek = new Map();
+  for (const g of season.games) {
+    if (g.playoff || g.week > lastReg) continue;
+    if (!byWeek.has(g.week)) byWeek.set(g.week, []);
+    byWeek.get(g.week).push({ uid: g.a.uid, pts: g.a.pts, opp: g.b.uid, oppPts: g.b.pts },
+      { uid: g.b.uid, pts: g.b.pts, opp: g.a.uid, oppPts: g.a.pts });
+  }
+  return byWeek;
+}
+
+/**
+ * The board for every week of a season, each one built only from what had
+ * happened by then.
+ */
+function powerRankings(season) {
+  const byWeek = weeklyScores(season);
+  const weeks = [...byWeek.keys()].sort((a, b) => a - b);
+  if (!weeks.length) return null;
+  const uids = [...new Set([...byWeek.values()].flat().map(x => x.uid))];
+  if (uids.length < 2) return null;
+
+  const acc = new Map(uids.map(u => [u, { apW: 0, apL: 0, pf: 0, w: 0, l: 0, t: 0, g: 0 }]));
+  const boards = [];
+  let prevRank = null;
+
+  for (const wk of weeks) {
+    const rows = byWeek.get(wk);
+    // All-play: beat everybody who scored less that week, lose to everybody who
+    // scored more. Exactly the measure the Managers tab already reports.
+    for (const x of rows) {
+      const a = acc.get(x.uid);
+      for (const y of rows) {
+        if (y === x) continue;
+        if (x.pts > y.pts) a.apW++; else if (x.pts < y.pts) a.apL++;
+      }
+      a.pf += x.pts; a.g++;
+      if (x.pts > x.oppPts) a.w++; else if (x.pts < x.oppPts) a.l++; else a.t++;
+    }
+
+    // Form is the same all-play arithmetic over the last three weeks only.
+    const window = weeks.filter(w => w <= wk && w > wk - FORM_WEEKS);
+    const form = new Map(uids.map(u => [u, { w: 0, l: 0 }]));
+    for (const w of window) for (const x of byWeek.get(w)) {
+      const f = form.get(x.uid);
+      if (!f) continue;
+      for (const y of byWeek.get(w)) {
+        if (y === x) continue;
+        if (x.pts > y.pts) f.w++; else if (x.pts < y.pts) f.l++;
+      }
+    }
+
+    const pfs = uids.map(u => acc.get(u).pf);
+    const lo = Math.min(...pfs), hi = Math.max(...pfs);
+    const board = uids.map(uid => {
+      const a = acc.get(uid), f = form.get(uid);
+      const apT = a.apW + a.apL, fT = f.w + f.l, dec = a.w + a.l + a.t;
+      const apPct = apT ? a.apW / apT : 0;
+      const formPct = fT ? f.w / fT : apPct;
+      const pfNorm = hi > lo ? (a.pf - lo) / (hi - lo) : 0.5;
+      const winPct = dec ? (a.w + a.t / 2) / dec : 0;
+      return {
+        uid, apPct, formPct, pfNorm, winPct,
+        pf: a.pf, w: a.w, l: a.l, t: a.t, g: a.g,
+        score: POWER_W.allPlay * apPct + POWER_W.form * formPct
+          + POWER_W.points * pfNorm + POWER_W.record * winPct,
+      };
+    }).sort((x, y) => y.score - x.score || y.pf - x.pf);
+
+    board.forEach((r, i) => {
+      r.rank = i + 1;
+      // Week one has nothing behind it, so nothing moved.
+      r.prev = prevRank ? (prevRank.get(r.uid) ?? null) : null;
+      r.move = r.prev == null ? null : r.prev - r.rank;
+    });
+    prevRank = new Map(board.map(r => [r.uid, r.rank]));
+    boards.push({ season: season.season, week: wk, rows: board });
+  }
+
+  // One rank history per manager, for the sparklines.
+  const history = new Map(uids.map(u => [u, boards.map(b => b.rows.find(r => r.uid === u).rank)]));
+  return { season: season.season, weeks, boards, history, n: uids.length };
+}
+
+/* --------------------------------------------------------------- blurbs */
+/**
+ * One line per team, written by the weekly job into rankings.json. The site
+ * never needs them: if the file is missing, unreachable or simply has nothing
+ * for this week, the board renders exactly as it otherwise would.
+ */
+let BLURBS = null;
+async function loadBlurbs(reload) {
+  if (BLURBS && !reload) return BLURBS;
+  let data = null;
+  try { data = await jget("rankings.json"); } catch (e) { data = null; }
+  const map = new Map();
+  for (const w of (data && data.weeks) || []) {
+    for (const t of w.teams || []) {
+      if (!t || !t.manager || !t.blurb) continue;
+      map.set(`${w.season}|${w.week}|${String(t.manager).toLowerCase()}`, String(t.blurb));
+    }
+  }
+  BLURBS = { map, ok: !!data, weeks: ((data && data.weeks) || []).length };
+  return BLURBS;
+}
+const blurbFor = (season, week, uid) =>
+  BLURBS ? BLURBS.map.get(`${season}|${week}|${String(nameOf(uid)).toLowerCase()}`) || null : null;
+
+/* ---------------------------------------------------------------- panel */
+/** ↑3 / ↓2 / — . The arrow and the number both carry it; the colour is a bonus. */
+function moveHTML(move) {
+  // Week one has no board behind it, so it gets no mark at all rather than a
+  // dash that could be read as "held its place".
+  if (move == null) return `<span class="mv none"></span>`;
+  if (move === 0) return `<span class="mv flat" title="held its place">—</span>`;
+  const up = move > 0;
+  return `<span class="mv ${up ? "up" : "down"}" title="${up ? "up" : "down"} ${Math.abs(move)} place${Math.abs(move) === 1 ? "" : "s"} on last week">${up ? "▲" : "▼"} ${Math.abs(move)}</span>`;
+}
+
+/** A team's rank week by week. Low is good, so the y axis is inverted. */
+function rankSpark(ranks, upto, n) {
+  const pts = ranks.slice(0, upto);
+  if (pts.length < 2) return "";
+  const W = 118, H = 26, pad = 3;
+  const x = i => pad + (i * (W - pad * 2)) / Math.max(1, pts.length - 1);
+  const y = r => pad + ((r - 1) * (H - pad * 2)) / Math.max(1, n - 1);
+  const d = pts.map((r, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(r).toFixed(1)}`).join("");
+  const last = pts[pts.length - 1], first = pts[0];
+  const stroke = last < first ? "var(--good)" : last > first ? "var(--crit)" : "var(--muted)";
+  // Without a reference the line says nothing about where a team actually sits,
+  // so the playoff cut is drawn behind it: above the dashes is a place in the six.
+  const cut = y(6.5).toFixed(1);
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img"
+    aria-label="ranked ${first} in week 1, ${last} now; the dashed line is the playoff cut">
+    <line x1="0" y1="${cut}" x2="${W}" y2="${cut}" stroke="var(--mid)" stroke-width="1" stroke-dasharray="2 3"/>
+    <path d="${d}" fill="none" stroke="${stroke}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(pts.length - 1).toFixed(1)}" cy="${y(last).toFixed(1)}" r="2.4" fill="${stroke}"/></svg>`;
+}
+
+function panelPower() {
+  const p = el("div", "panel"); p.dataset.panel = "power";
+  p.appendChild(sechead("Power rankings",
+    "Not the standings. Every week each team is measured against the whole league rather than the one opponent it drew, and the board is rebuilt from scratch — so the arrows are real movement, not a hot take."));
+
+  const seasons = DB.seasons.filter(s => s.games.some(g => !g.playoff));
+  if (!seasons.length) {
+    p.appendChild(el("div", "empty",
+      "<b>No weeks to rank yet</b>The board is built out of results, and there aren't any. It starts the week the season does."));
+    return p;
+  }
+
+  const all = new Map();
+  for (const s of seasons) { const r = powerRankings(s); if (r) all.set(s.season, r); }
+  if (!all.size) { p.appendChild(el("div", "empty", "<b>No weeks to rank yet</b>")); return p; }
+  window.__POWER = all;
+
+  const picks = el("div", "pickrow");
+  const seasonSel = el("select"), weekSel = el("select");
+  for (const yr of [...all.keys()]) { const o = el("option", null, `${yr} season`); o.value = yr; seasonSel.appendChild(o); }
+  picks.appendChild(seasonSel); picks.appendChild(weekSel);
+  p.appendChild(picks);
+  const host = el("div"); p.appendChild(host);
+
+  function fillWeeks() {
+    const R = all.get(seasonSel.value);
+    weekSel.innerHTML = "";
+    for (const w of R.weeks) { const o = el("option", null, `Week ${w}`); o.value = String(w); weekSel.appendChild(o); }
+    // Default to the newest board there is — the one people came to read.
+    weekSel.value = String(R.weeks[R.weeks.length - 1]);
+  }
+
+  function draw() {
+    const R = all.get(seasonSel.value);
+    const wk = Number(weekSel.value);
+    const idx = R.weeks.indexOf(wk);
+    const board = R.boards[idx];
+    host.innerHTML = "";
+    if (!board) { host.appendChild(el("div", "empty", "<b>No board for that week</b>")); return; }
+
+    const rows = el("div", "rows");
+    let blurbed = 0;
+    for (const r of board.rows) {
+      const blurb = blurbFor(R.season, wk, r.uid);
+      if (blurb) blurbed++;
+      const row = el("div", "pwrow");
+      row.innerHTML = `
+        <span class="pr">${r.rank}</span>
+        ${moveHTML(r.move)}
+        ${avatarHTML(r.uid, "sm")}
+        <span class="id">
+          <span class="n">${esc(nameOf(r.uid))}</span>
+          <span class="s">${blurb ? esc(blurb) : `${r.w}–${r.l}${r.t ? `–${r.t}` : ""} · ${f1(r.pf)} points for`}</span>
+        </span>
+        <span class="sp">${rankSpark(R.history.get(r.uid), idx + 1, R.n)}</span>
+        <span class="stats">
+          <span class="chip"><span class="cv">${r.w}–${r.l}${r.t ? `–${r.t}` : ""}</span><span class="cl">Record</span></span>
+          <span class="chip"><span class="cv">${pct(r.apPct)}</span><span class="cl">All-play</span></span>
+          <span class="chip"><span class="cv">${pct(r.formPct)}</span><span class="cl">Form</span></span>
+          <span class="chip"><span class="cv">${f2(r.score)}</span><span class="cl">Rating</span></span>
+        </span>`;
+      bindTip(row, `<b>${esc(nameOf(r.uid))}</b><br>
+        all-play ${pct(r.apPct)} · form ${pct(r.formPct)}<br>
+        ${f1(r.pf)} points for · ${pct(r.pfNorm)} of the league's range<br>
+        rating ${f2(r.score)}${r.move != null ? `<br>${r.move === 0 ? "held" : r.move > 0 ? `up ${r.move}` : `down ${-r.move}`} on week ${wk - 1}` : ""}`);
+      rows.appendChild(row);
+    }
+    host.appendChild(rows);
+
+    const w = POWER_W;
+    const m = el("div", "method");
+    m.innerHTML = `<h3>What the rating is made of</h3>
+      <dl>
+        <dt>All-play win %</dt><dd>${(w.allPlay * 100).toFixed(0)}%</dd>
+        <dt>Form, last ${FORM_WEEKS} weeks</dt><dd>${(w.form * 100).toFixed(0)}%</dd>
+        <dt>Points for</dt><dd>${(w.points * 100).toFixed(0)}%</dd>
+        <dt>Actual record</dt><dd>${(w.record * 100).toFixed(0)}%</dd>
+      </dl>
+      <p><b>All-play</b> compares a team with all eleven others every week instead of the one it was
+         scheduled against, which is why it carries the most: it is the closest thing here to a measure
+         of how well somebody actually played. <b>Form</b> is the same arithmetic over the last
+         ${FORM_WEEKS} weeks only. <b>Points for</b> is scaled across the league that week, top scorer 1
+         and bottom 0. <b>Record</b> counts least — it decides the season, but a 7-3 team can be worse
+         than a 5-5 one and often is.</p>
+      <p>Each week's board is built from that week and everything before it, and nothing after, so an
+         arrow is a real change of position rather than a change of opinion. Week 1 has nothing behind
+         it and shows no arrows at all. The line beside each team is its rank, week by week, from the
+         first week of the season to this one; the dashes across it are the playoff cut, sixth of
+         twelve.</p>`;
+    host.appendChild(m);
+
+    // The note is about this week's board, not about whether the file exists: a
+    // file that is present but has nothing for week 9 looks the same to a reader.
+    if (!blurbed) {
+      host.appendChild(el("div", "method",
+        `<p>The one-line write-ups come from the weekly job that also posts the recaps — it appends them
+          to <code>rankings.json</code> after each week finalizes. There is nothing there for this week,
+          so each team shows its record and points instead.</p>`));
+    }
+  }
+
+  seasonSel.onchange = () => { fillWeeks(); draw(); };
+  weekSel.onchange = draw;
+  fillWeeks(); draw();
+  return p;
+}
+
 /* ================================================ RACE ============== */
 /*
  * Live playoff odds for the season being played right now.
@@ -3754,6 +4053,8 @@ async function boot() {
     app.appendChild(panelManagers(AT));
     app.appendChild(panelRecords(RB));
     app.appendChild(panelMatchups(AT));
+    await loadBlurbs();
+    app.appendChild(panelPower());
     app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelRace());
     app.appendChild(panelDraft());
@@ -3772,6 +4073,8 @@ async function boot() {
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
+      powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark,
+      POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
       renderRace, raceEmpty,
       RACE_SIMS, LEVERAGE_SIMS,

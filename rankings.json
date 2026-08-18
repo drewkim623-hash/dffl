@@ -1,0 +1,14 @@
+{
+  "_comment": "Weekly power-ranking blurbs. The scheduled job appends one object to weeks[] after each week finalizes, in the same pass that writes recaps.json. The site computes the ranking itself and only reads the one-line blurbs from here — if this file is missing, empty, or has nothing for the week being viewed, the board still renders with each team's record and points instead.",
+  "_schema": {
+    "weeks[]": {
+      "season": "4-digit year as a string",
+      "week": "integer 1-17",
+      "teams[]": {
+        "manager": "manager display name, exactly as Sleeper spells it",
+        "blurb": "one sentence, ESPN house style. No score recaps - those live in recaps.json. Say something about the team's week or where it is heading."
+      }
+    }
+  },
+  "weeks": []
+}
