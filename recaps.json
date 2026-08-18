@@ -1,10 +1,11 @@
 {
-  "_comment": "Weekly ESPN-style recaps. The scheduled job appends one object to weeks[] after each week finalizes. The site sorts newest-first automatically.",
+  "_comment": "The week in the DFFL. The scheduled job appends one object to weeks[] after each week finalizes: a lede, a write-up for each of the six games, and an 'around' notebook covering everything else that moved that week. The site sorts newest-first and computes the risers and sliders itself from its own power rankings, so nothing here should ever quote a rank or a movement.",
   "_schema": {
     "weeks[]": {
       "season": "4-digit year as a string",
       "week": "integer 1-17",
       "note": "optional subtitle, e.g. 'Playoffs - Round 1'",
+      "lede": "one paragraph on the week as a whole - the shape of it, what mattered, what it set up",
       "games[]": {
         "headline": "short ESPN-style game headline",
         "winner": "manager display name",
@@ -12,6 +13,11 @@
         "loser": "manager display name",
         "loser_points": "number",
         "body": "2-4 sentence recap"
+      },
+      "around[]": {
+        "kind": "one of: trade, waivers, riser, slider, streak, injury, race, note",
+        "headline": "short, factual",
+        "body": "2-3 sentences"
       }
     }
   },

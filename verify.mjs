@@ -690,11 +690,14 @@ await page.waitForTimeout(150);
 const powerDom = await page.evaluate(() => {
   const panel = document.querySelector('[data-panel="power"]');
   const sels = panel.querySelectorAll("select");
+  const openedOn = sels[0].value;
+  // the tab opens on the 2026 projection; the rest of these are about a played board
+  sels[0].value = "2025"; sels[0].dispatchEvent(new Event("change"));
   const rows = [...panel.querySelectorAll(".pwrow")];
   const marks = rows.map(r => r.querySelector(".mv").textContent.trim());
   return {
     rows: rows.length, sparks: panel.querySelectorAll(".spark").length,
-    seasonDefault: sels[0].value, weekDefault: sels[1].value,
+    openedOn, seasonDefault: sels[0].value, weekDefault: sels[1].value,
     weekOptions: sels[1].options.length,
     marks, arrows: marks.filter(m => /[▲▼]/.test(m)).length,
     // the colour is never the only carrier: an arrow and a number ride with it
@@ -705,7 +708,8 @@ const powerDom = await page.evaluate(() => {
   };
 });
 check("the board renders a row per manager", powerDom.rows === 12, `${powerDom.rows}`);
-check("it opens on the most recent completed week", powerDom.seasonDefault === "2025" && powerDom.weekDefault === "14", `${powerDom.seasonDefault} w${powerDom.weekDefault}`);
+check("the tab opens on the newest board there is", powerDom.openedOn === "__proj", `opened on ${powerDom.openedOn}`);
+check("a played season opens on its most recent completed week", powerDom.seasonDefault === "2025" && powerDom.weekDefault === "14", `${powerDom.seasonDefault} w${powerDom.weekDefault}`);
 check("every week of the season is pickable", powerDom.weekOptions === 14, `${powerDom.weekOptions}`);
 check("movement arrows reach the page", powerDom.arrows > 0, `${powerDom.arrows} arrows`);
 check("movement never relies on colour alone", powerDom.colourNotAlone);
@@ -797,6 +801,155 @@ check("a blurb written by the job replaces the fallback line", withBlurbs.first 
 check("teams the job didn't write about keep their fallback", /points for/.test(withBlurbs.other), withBlurbs.other);
 check("the blurb lookup matches on manager name", withBlurbs.caseInsensitive && withBlurbs.lookup !== null);
 check("the where-do-blurbs-come-from note steps aside once they arrive", withBlurbs.noteGone);
+
+group("Power rankings: the preseason projection");
+const projB = await page.evaluate(() => {
+  const D = window.__DFFL, P = window.__PROJ, O = window.__ODDS, S = window.__SIM;
+  if (!P) return { none: true, postDraft: O && O.postDraft };
+  const means = P.rows.map(r => r.mean);
+  const byUid = new Map(O.teams.map(t => [t.uid, t]));
+  return {
+    none: false, season: P.season, n: P.rows.length,
+    ranksArePermutation: P.rows.map(r => r.rank).every((v, i) => v === i + 1),
+    sortedByProjection: means.every((v, i) => i === 0 || means[i - 1] >= v),
+    // the board must be the odds model, not a second opinion about it
+    matchesOddsModel: P.rows.every(r => Math.abs(r.mean - byUid.get(r.uid).mean) < 1e-12),
+    splitAddsUp: P.rows.every(r => {
+      const t = byUid.get(r.uid);
+      return Math.abs((r.fromDraft + r.fromRecord) - t.edge) < 1e-9;
+    }),
+    playoffSum: P.rows.reduce((a, r) => a + r.playoff, 0),
+    winsSum: P.rows.reduce((a, r) => a + r.wins, 0),
+    finite: P.rows.every(r => [r.mean, r.wins, r.playoff, r.rosterValue].every(v => isFinite(v))),
+  };
+});
+check("a preseason projection exists once the draft is in", projB.none === false, `postDraft=${projB.postDraft}`);
+check("the projection ranks every manager exactly once", projB.n === 12 && projB.ranksArePermutation);
+check("it is ordered by projected scoring", projB.sortedByProjection);
+check("it is the odds model itself, not a second opinion", projB.matchesOddsModel);
+check("the draft and record split adds back to the edge", projB.splitAddsUp);
+check("projected playoff odds still sum to six", near(projB.playoffSum, 6, 0.02), `${projB.playoffSum}`);
+check("projected wins still sum to 84", near(projB.winsSum, 84, 0.05), `${projB.winsSum}`);
+check("no NaN in the projection", projB.finite);
+
+const projDom = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="power"]');
+  const sel = panel.querySelectorAll("select")[0];
+  const opts = [...sel.options].map(o => o.value);
+  sel.value = "__proj"; sel.dispatchEvent(new Event("change"));
+  const rows = [...panel.querySelectorAll(".pwrow")];
+  const out = {
+    hasProjOption: opts.includes("__proj"),
+    rows: rows.length,
+    arrows: rows.filter(r => /[▲▼]/.test(r.querySelector(".mv").textContent)).length,
+    weekDisabled: panel.querySelectorAll("select")[1].disabled,
+    saysProjected: /projected · post-draft/i.test(panel.innerText),
+    saysWhyDifferent: /Why this board is different/.test(panel.innerText),
+    nan: /NaN|undefined|Infinity/.test(panel.innerText),
+  };
+  sel.value = "2025"; sel.dispatchEvent(new Event("change"));
+  return out;
+});
+check("the projection is pickable from the season list", projDom.hasProjOption);
+check("the projection lists every manager", projDom.rows === 12, `${projDom.rows}`);
+check("the projection claims no movement", projDom.arrows === 0, `${projDom.arrows}`);
+check("the week picker is inert on the projection", projDom.weekDisabled);
+check("the projection says plainly what it is", projDom.saysProjected && projDom.saysWhyDifferent);
+check("no NaN on the projection board", projDom.nan === false);
+
+group("Recaps: the week around the games");
+const recap = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  // Risers and sliders are the site's own arithmetic, not the job's prose.
+  const mv = D.weekMovers("2025", 8);
+  const wk1 = D.weekMovers("2025", 1);
+  const R = D.allPowerRankings().get("2025");
+  const board8 = R.boards[R.weeks.indexOf(8)];
+  const realUp = board8.rows.filter(r => r.move > 0).sort((a, b) => b.move - a.move);
+  return {
+    hasMovers: !!mv,
+    upMatchesBoard: mv && mv.up.length && mv.up[0].uid === realUp[0].uid && mv.up[0].move === realUp[0].move,
+    upAllPositive: mv && mv.up.every(r => r.move > 0),
+    downAllNegative: mv && mv.down.every(r => r.move < 0),
+    capped: mv && mv.up.length <= 3 && mv.down.length <= 3,
+    week1None: wk1 === null,
+    unknownSeason: D.weekMovers("1999", 4) === null,
+  };
+});
+check("the recap's movers come straight off the power board", recap.upMatchesBoard);
+check("climbers climbed and fallers fell", recap.upAllPositive && recap.downAllNegative);
+check("the movers strip is capped at three a side", recap.capped);
+check("week 1 has no movers to show", recap.week1None);
+check("a season with no boards yields no movers", recap.unknownSeason);
+
+const recapDom = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  // Feed the renderer a full week in the new shape and check every part lands.
+  const stub = { weeks: [{
+    season: "2025", week: 8, note: "",
+    lede: "A lede paragraph about the week as a whole.",
+    games: [{ headline: "H", winner: "drewkim", winner_points: 120, loser: "Domo112", loser_points: 100, body: "Game body." }],
+    around: [
+      { kind: "trade", headline: "A trade happened", body: "Trade body." },
+      { kind: "waivers", headline: "Someone spent", body: "Waiver body." },
+      { kind: "bogus", headline: "Unknown kind", body: "Falls back." },
+    ],
+  }] };
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("recaps.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve(stub) })
+    : realFetch(u);
+  const panel = await D.panelRecaps();
+  window.fetch = realFetch;
+  const txt = panel.innerText;
+  return {
+    lede: !!panel.querySelector(".lede"),
+    ledeText: /lede paragraph/.test(txt),
+    games: panel.querySelectorAll(".recap").length,
+    around: panel.querySelectorAll(".atl").length,
+    kindLabels: [...panel.querySelectorAll(".atl .kl")].map(n => n.textContent),
+    movers: panel.querySelectorAll(".mvr").length,
+    heads: [...panel.querySelectorAll(".sechead h2")].map(n => n.textContent),
+    nan: /NaN|undefined/.test(txt),
+  };
+});
+check("the lede renders above the games", recapDom.lede && recapDom.ledeText);
+check("every game still renders", recapDom.games === 1, `${recapDom.games}`);
+check("every notebook item renders", recapDom.around === 3, `${recapDom.around}`);
+check("an unknown item kind falls back rather than breaking", recapDom.kindLabels.join(",") === "Trade,Waivers,Around the league", recapDom.kindLabels.join(","));
+check("the computed movers ride along with the copy", recapDom.movers > 0, `${recapDom.movers}`);
+check("the week is sectioned into games and the rest", recapDom.heads.includes("The games") && recapDom.heads.includes("Around the league"), recapDom.heads.join(" / "));
+check("no NaN in a rendered week", recapDom.nan === false);
+
+const recapOld = await page.evaluate(async () => {
+  // A week written in the old shape — games only, no lede, no notebook — must
+  // still render, because that is what is already committed.
+  const D = window.__DFFL;
+  const stub = { weeks: [{ season: "2025", week: 3, games: [
+    { headline: "Old shape", winner: "drewkim", winner_points: 1, loser: "Domo112", loser_points: 0, body: "b" }] }] };
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("recaps.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve(stub) }) : realFetch(u);
+  const panel = await D.panelRecaps();
+  window.fetch = realFetch;
+  return { games: panel.querySelectorAll(".recap").length, lede: panel.querySelectorAll(".lede").length,
+    around: panel.querySelectorAll(".atl").length, empty: panel.querySelectorAll(".empty").length };
+});
+check("a week in the old games-only shape still renders", recapOld.games === 1 && recapOld.empty === 0);
+check("nothing is invented where the job wrote nothing", recapOld.lede === 0 && recapOld.around === 0);
+
+const recapGone = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("recaps.json")
+    ? Promise.reject(new Error("404")) : realFetch(u);
+  let threw = null, panel = null;
+  try { panel = await D.panelRecaps(); } catch (e) { threw = String(e); }
+  window.fetch = realFetch;
+  return { threw, empty: panel ? panel.querySelectorAll(".empty").length : -1 };
+});
+check("a missing recaps.json never throws", recapGone.threw === null, String(recapGone.threw));
+check("a missing recaps.json shows the waiting state", recapGone.empty === 1);
 
 group("Lazy tabs cost nothing at boot");
 // On a page nobody has clicked, neither heavy tab may have reached for
@@ -1307,6 +1460,8 @@ await mobile.click('#tabs button[data-tab="power"]');
 await mobile.waitForTimeout(150);
 const powerNarrow = await mobile.evaluate(() => {
   const panel = document.querySelector('[data-panel="power"]');
+  const sel = panel.querySelectorAll("select")[0];
+  sel.value = "2025"; sel.dispatchEvent(new Event("change"));
   const over = [];
   for (const n of panel.querySelectorAll("*")) {
     if (n.closest(".scroll")) continue;

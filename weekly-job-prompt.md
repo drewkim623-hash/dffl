@@ -33,10 +33,66 @@ The routine lives at https://claude.ai/code/routines. Edit the prompt in the web
 through the API: the stored config carries a large `custom_system_prompt` and an explicit tool
 allow-list, and an API update that omits `session_context` replaces both with defaults.
 
-Steps 1 to 4 of the prompt (fetch state, pull the week, optional colour, write the recaps) are
-unchanged. Everything from step 5 on is below.
+The prompt below replaces everything from step 3b onward. Steps 1 to 3 (check the NFL state, pull
+the week's matchups, optional player colour) are unchanged.
+
+## What changed and why
+
+The recap used to be six game write-ups. It now covers the league's whole week — a lede, the games,
+and an `around` notebook of trades, waiver spending, risers, sliders, streaks and playoff
+implications — because that is what an ESPN weekly wrap actually is.
+
+The one thing the job must never do is quote a rank or a movement. The site computes the power
+rankings itself and prints the risers and sliders directly above the copy, with real numbers. If the
+prose says "up three spots" and the board says two, the page is wrong in public. The job writes what
+happened; the board handles position.
 
 ---
+
+STEP 3b — Pull the rest of the week (all via WebFetch).
+The recap is the whole league's week, not six box scores. Also pull:
+- https://api.sleeper.app/v1/league/1318040218183417856/transactions/TARGET_WEEK
+  Every trade, waiver claim and free-agent add processed that week. Keep only status
+  "complete". A trade has type "trade" and lists roster_ids, adds, drops and draft_picks;
+  a waiver has type "waiver" and settings.waiver_bid is the FAAB spent. Ignore failed claims.
+- https://api.sleeper.app/v1/league/1318040218183417856/rosters — roster_id, owner_id and
+  settings (wins, losses, ties, fpts) for season-to-date records and points.
+Transactions return player_ids, not names. Resolve only the handful you actually write
+about: WebFetch https://api.sleeper.app/v1/players/{player_id} per player, which is small.
+Never pull the full /players/nfl payload — it is ~5MB and will blow the session up.
+
+STEP 4 — Write the week.
+Straight ESPN-style throughout: clean, factual, a beat writer's Tuesday morning. Not trash
+talk, not jokes. Reference managers by their Sleeper display_name. Never invent a stat.
+
+(a) lede — one paragraph on the week as a whole. What shape did it take, what actually
+mattered, what does it set up. This is the standfirst under the week heading, so it should
+read as a summary of everything below rather than a preview of one game.
+
+(b) games — for EACH of the 6 games:
+  - headline: short, punchy, factual (under ~60 characters)
+  - body: 2-4 sentences on how the game was decided — the margin, who carried the scoring,
+    whether it was close late, what it means for the standings
+
+(c) around — 3 to 6 items covering what happened between the games. Each has a kind, a
+headline and 2-3 sentences. Use the kind that fits:
+  - trade    a completed trade. Who got what, why each side did it, who it helps.
+  - waivers  the week's notable claims. Who spent, how much FAAB, on whom, and whether the
+             price looks steep. FAAB is real money in this league — a $40 claim is a story.
+  - riser    a team playing its way up. Say what changed, not where it ranks.
+  - slider   a team falling off. Same rule.
+  - streak   a run of wins or losses worth naming.
+  - injury   only if you actually saw it in the data. Do not speculate.
+  - race     playoff or division implications with a handful of weeks left.
+  - note     anything else true and interesting.
+Write only the items the week actually supports. A quiet week gets three; a week with two
+trades and a $60 waiver claim gets six. Never pad, and never repeat what a game recap
+already said.
+
+HARD RULE on ranks: the site computes its own power rankings and prints the risers and
+sliders beside your copy, with the real numbers. Never write "up three spots", "second in
+the league", "the top team" or anything equivalent, in the lede, the games or the notebook.
+Write about what happened; the board handles position.
 
 STEP 5 — Write the power-ranking blurbs.
 The site computes its own power rankings — a blend of all-play win %, form over the last three
@@ -62,7 +118,7 @@ STEP 6 — Update the stores.
 Use the Projects tool for both files.
 
 project_read "claude/recaps.json". Append a new object to weeks[]:
-{"season":"2026","week":TARGET_WEEK,"note":"","games":[{"headline":...,"winner":...,"winner_points":...,"loser":...,"loser_points":...,"body":...}, ...6 total]}
+{"season":"2026","week":TARGET_WEEK,"note":"","lede":"...","games":[{"headline":...,"winner":...,"winner_points":...,"loser":...,"loser_points":...,"body":...}, ...6 total],"around":[{"kind":"trade|waivers|riser|slider|streak|injury|race|note","headline":"...","body":"..."}, ...3-6 total]}
 If TARGET_WEEK >= 15 set note to "Playoffs" (week 15 = Round 1, 16 = Semifinals, 17 = Championship) and note that non-bracket teams are in the consolation bracket.
 If a week with that season+week already exists, replace it rather than duplicating.
 Write the full updated JSON back with project_write to "claude/recaps.json".
