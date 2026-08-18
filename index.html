@@ -792,10 +792,55 @@ function pairWeek(entries) {
  * winners_bracket p=k decides places k and k+1.
  * losers_bracket  p=k decides places (playoffTeams+k) and (playoffTeams+k+1).
  */
-function placementsOf(wb, lb, playoffTeams) {
+/**
+ * Turn the two brackets into a finishing order.
+ *
+ * The winners bracket is what it looks like. The consolation bracket is not:
+ * DFFL runs it as a toilet bowl, where you advance by LOSING, and the team
+ * Sleeper marks as the winner of each tie is the one who lost the game and
+ * fell another rung towards last. Checked against the scoreline rather than
+ * assumed — in all four completed seasons the winners bracket agrees with the
+ * scores on every tie and the consolation bracket disagrees on every tie.
+ *
+ * That also inverts the ladder: Sleeper numbers the consolation final p:1, but
+ * in a toilet bowl the final is the game for LAST, so p:1 is the bottom rung
+ * and the highest p is the game for the best place outside the playoffs.
+ */
+function placementsOf(wb, lb, playoffTeams, games) {
   const p = {};
   for (const g of wb || []) if (g.p && g.w != null && g.l != null) { p[g.p] = g.w; p[g.p + 1] = g.l; }
-  for (const g of lb || []) if (g.p && g.w != null && g.l != null) { p[playoffTeams + g.p] = g.w; p[playoffTeams + g.p + 1] = g.l; }
+
+  const played = (games || []).filter(g => g.playoff);
+  const scoreWinner = (a, b) => {
+    const tie = played.filter(g =>
+      (g.a.rid === a && g.b.rid === b) || (g.a.rid === b && g.b.rid === a));
+    if (!tie.length) return null;
+    const g = tie[tie.length - 1];
+    if (g.a.pts === g.b.pts) return null;
+    return g.a.pts > g.b.pts ? g.a.rid : g.b.rid;
+  };
+  let checked = 0, contrary = 0;
+  for (const g of lb || []) {
+    if (!g.t1 || !g.t2 || g.w == null) continue;
+    const w = scoreWinner(g.t1, g.t2);
+    if (w == null) continue;
+    checked++;
+    if (w !== g.w) contrary++;
+  }
+  const toiletBowl = checked > 0 && contrary > checked / 2;
+  const maxP = Math.max(0, ...(lb || []).map(g => Number(g.p) || 0));
+
+  for (const g of lb || []) {
+    if (!g.p || g.w == null || g.l == null) continue;
+    if (toiletBowl) {
+      const base = playoffTeams + (maxP + 1 - g.p);
+      p[base] = g.l;        // won the game, escaped the rung
+      p[base + 1] = g.w;    // lost it, and Sleeper calls that advancing
+    } else {
+      p[playoffTeams + g.p] = g.w;
+      p[playoffTeams + g.p + 1] = g.l;
+    }
+  }
   return p;
 }
 
@@ -914,7 +959,7 @@ async function loadSeason(lg) {
   DB.seasons.push({
     leagueId: id, season: lg.season, name: lg.name, status: lg.status,
     pws, playoffTeams: ptm, rosters, users, uidOf, userById,
-    places: placementsOf(wb, lb, ptm), wb, lb, games: seasonGames,
+    places: placementsOf(wb, lb, ptm, seasonGames), wb, lb, games: seasonGames,
     complete: lg.status === "complete",
     picks, playerPts, playerWeek, draftId,
     maxKeepers: Number(lg.settings && lg.settings.max_keepers) || 0,
@@ -2680,13 +2725,17 @@ function simulateSeason(model, sims = ODDS_SIMS) {
     const [champ] = duel(f1, f2);
     C.title[champ]++;
 
-    // Consolation. Seeds 7-12 by record; round one is 8v9 and 7v10, and the
-    // two teams that LOSE it play off for last. Seeds 11 and 12 aren't in it —
-    // which is why the worst record in the league cannot finish bottom.
+    // The toilet bowl, as DFFL actually runs it. Seeds 7-12 by record. The four
+    // best of them play round one — 7v10 and 8v9 — and the two that LOSE carry
+    // on. The two worst records sit out that round and enter next, already one
+    // game from the bottom. Losing again puts you in the final, and losing the
+    // final is last place. You fall by losing, all the way down.
     const L = rest.slice(wilds);
-    const [, la] = duel(L[1], L[2]);
-    const [, lb] = duel(L[0], L[3]);
-    const [, dead] = duel(la, lb);
+    const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
+    const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
+    const [, b1] = duel(L[5], a1);          // worst seed meets one of them
+    const [, b2] = duel(L[4], a2);          // second worst meets the other
+    const [, dead] = duel(b1, b2);          // and the loser of that is twelfth
     C.last[dead]++;
   }
   return C;
@@ -2931,13 +2980,14 @@ function panelOdds(model, sim) {
   p.appendChild(oddsBoard("To finish 12th", "loser of the consolation elimination game",
     last, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
   const quirk = el("div", "method");
-  quirk.innerHTML = `<h3>Why this board is so flat</h3>
-    <p>Seeds 7 through 10 open the consolation bracket against each other. The two
-       that lose meet again for twelfth. Seeds 11 and 12 — the two worst records in
-       the league — skip that round entirely and cannot finish below tenth.</p>
-    <p>It has happened both years DFFL ran divisions. In 2024 the 2-12 team finished
-       tenth and a 7-7 team finished last; in 2025 the 3-11 team finished seventh.
-       Being terrible is genuinely protective here, so nobody's price gets long.</p>`;
+  quirk.innerHTML = `<h3>How last place is decided</h3>
+    <p>The six teams that miss the playoffs go into a toilet bowl, and it runs backwards: you advance by
+       losing. The four best of them play the first round, and the two that lose it carry on. The two
+       worst records sit that round out and enter next, already one defeat from the final — and losing
+       the final is twelfth.</p>
+    <p>So the bottom of this league is played for rather than awarded, and the seeding pushes the worst
+       two teams towards it rather than away. It has landed on the worst record in the league twice in
+       four seasons, and on a middling one twice.</p>`
   p.appendChild(quirk);
 
   /* ---- win totals ---- */

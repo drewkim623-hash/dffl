@@ -343,7 +343,7 @@
         },
         {
           "type": "p",
-          "text": "<b>chassinator</b> won this league in 2022 and has been rebuilding loudly ever since. The worst record in the league last season, eighth in the projection now — but a 24 percent division shot, and a roster he has been assembling in public: a first-round back, a tenth-round quarterback and a fourteenth-round Kyren Williams."
+          "text": "<b>chassinator</b> won this league in 2022 and has been rebuilding loudly ever since. The worst record in the league last season and last place in the toilet bowl for the second year running, eighth in the projection now — but a 24 percent division shot, and a roster he has been assembling in public: a first-round back, a tenth-round quarterback and a fourteenth-round Kyren Williams."
         },
         {
           "type": "p",
@@ -377,7 +377,7 @@
         },
         {
           "type": "p",
-          "text": "One consolation, and it is a real one: the consolation bracket in this format means the worst record does not actually finish last. Seeds eleven and twelve skip the elimination round entirely. Being terrible here is genuinely protective."
+          "text": "No consolation available, either. The six teams that miss go into a toilet bowl that runs backwards — you advance by losing — and the two worst records enter it a single defeat from the final. chassinator has come last in each of the past two seasons that way. Being bad in this league is not protective; it is the shortest route to the bottom of it."
         },
         {
           "type": "p",
@@ -414,172 +414,177 @@
     },
     {
       "season": "2026",
-      "slug": "nobody-has-ever-finished-last",
+      "slug": "i-owe-the-toilet-bowl-an-apology",
       "date": "2026-08-19",
       "kind": "opinion",
-      "kicker": "The toilet bowl",
-      "headline": "Nobody Has Ever Finished Last",
-      "dek": "Last place is decided in the consolation bracket, which is exactly as it should be. The problem is that the bracket gives byes to the two teams most deserving of it.",
+      "kicker": "Correction",
+      "headline": "I Owe The Toilet Bowl An Apology",
+      "dek": "I wrote yesterday that this league cannot punish its worst team. I had the bracket upside down. It punishes them better than almost any format I have seen.",
       "byline": "DFFL desk",
       "standfirst": "Opinion",
       "blocks": [
         {
           "type": "note",
-          "text": "Written 19 August 2026. An earlier draft of this column argued from regular-season records. That was the wrong frame — last place in DFFL is settled in the toilet bowl, by design, and it should be. The argument below is about the toilet bowl itself."
+          "text": "This column replaces one published on 19 August 2026 under the headline “Nobody Has Ever Finished Last”. That piece argued that DFFL's consolation bracket protects its worst teams from finishing bottom. It was wrong, top to bottom, for the reason set out below. The original is not preserved; it was wrong on the facts and there is nothing in it worth keeping."
         },
         {
           "type": "p",
           "lead": true,
-          "text": "Last place in this league is not handed out on record, and it shouldn't be. It is played for. Six teams miss the playoffs, they go into the consolation bracket, and somebody comes out the bottom of it. That is a good rule. A fourteen-week regular season is a long time to be told your fate is already sealed, and the toilet bowl gives the worst month of your year a point."
-        },
-        {
-          "type": "p",
-          "text": "So this is not a column about the toilet bowl being wrong. It is a column about the toilet bowl not working — because the way it is seeded, the two teams that most deserve to finish last are not allowed to."
+          "text": "Yesterday I wrote that the two worst teams in this league get byes that make last place unreachable for them, and that the format therefore pays you to give up. I read the bracket, I read the finishing order the site had computed from it, and both agreed with me. Both were wrong, because the thing they were computed from was being read backwards."
         },
         {
           "type": "h",
-          "eyebrow": "The mechanism",
-          "text": "A bye out of the only game that matters"
+          "eyebrow": "What I got wrong",
+          "text": "You advance by losing"
         },
         {
           "type": "p",
-          "text": "Six teams, three rounds. The bracket gives first-round byes to its top two seeds, and the consolation bracket is seeded worst-first — so the byes go to the two worst records in the league. Everybody else plays."
+          "text": "DFFL's consolation bracket is a toilet bowl in the literal sense: the team that <b>loses</b> each tie is the one that goes through. Sleeper records the team that advances in the field marked <i>winner</i>, which is fine for the championship bracket and exactly inverted for this one. Read naively — which is what I did, and what this site did — every result in the bottom bracket comes out the wrong way round."
         },
         {
           "type": "p",
-          "text": "The two teams that lose that opening round meet again for twelfth. That game is the whole point of the exercise, and the two worst teams in the league are not in it. They cannot be. They were not on the field when the entrants were decided."
+          "text": "There is a clean way to check. Compare the bracket's winner against the actual scoreline of the game. Across the four completed seasons the championship bracket agrees with the scores on all twenty-eight ties. The consolation bracket disagrees on all twenty-eight."
+        },
+        {
+          "type": "stat",
+          "n": "28 / 28",
+          "text": "consolation ties where the bracket's “winner” is the team that scored fewer points. That is not noise. That is the bracket telling you what it is, in a language I did not read."
+        },
+        {
+          "type": "h",
+          "eyebrow": "What it actually does",
+          "text": "The worst two start a game from the bottom"
+        },
+        {
+          "type": "p",
+          "text": "Once you read it the right way up, the design is rather good. The four best teams that missed the playoffs play the first round, and the two that lose keep falling. The two worst records sit that round out — not as a reward, as a head start towards the drop. They enter in the second round already one defeat from the final, and the final is for twelfth."
         },
         {
           "type": "bracket",
-          "title": "The 2025 toilet bowl",
-          "sub": "Six teams, three rounds. chassinator and wesley55 — the two worst records in the league — start in round two.",
+          "title": "The 2025 toilet bowl, read correctly",
+          "sub": "Winners of each tie escape upward. Losers fall. chassinator and wesley55, the two worst records, enter in round two already one game from the bottom.",
           "roundNames": [
             "Round one",
             "Round two",
-            "Placings"
+            "The drop"
           ],
           "matches": [
             {
               "round": 1,
-              "a": "drewkim 5-9",
-              "b": "moseslin 7-7",
-              "winner": "drewkim 5-9"
+              "a": "moseslin 7-7",
+              "b": "drewkim 5-9",
+              "winner": "moseslin 7-7"
             },
             {
               "round": 1,
-              "a": "jskule23 7-7",
-              "b": "bradyrife 4-10",
-              "winner": "jskule23 7-7"
-            },
-            {
-              "round": 2,
-              "a": "chassinator 3-11",
-              "b": "drewkim 5-9",
-              "winner": "chassinator 3-11"
-            },
-            {
-              "round": 2,
-              "a": "wesley55 4-10",
+              "a": "bradyrife 4-10",
               "b": "jskule23 7-7",
-              "winner": "wesley55 4-10"
+              "winner": "bradyrife 4-10"
             },
             {
               "round": 2,
-              "a": "moseslin 7-7",
-              "b": "bradyrife 4-10",
-              "winner": "moseslin 7-7",
-              "place": "11th / 12th"
+              "a": "bradyrife 4-10",
+              "b": "moseslin 7-7",
+              "winner": "bradyrife 4-10",
+              "place": "7th / 8th"
             },
             {
-              "round": 3,
-              "a": "chassinator 3-11",
+              "round": 2,
+              "a": "drewkim 5-9",
+              "b": "chassinator 3-11",
+              "winner": "drewkim 5-9"
+            },
+            {
+              "round": 2,
+              "a": "jskule23 7-7",
               "b": "wesley55 4-10",
-              "winner": "chassinator 3-11",
-              "place": "7th / 8th"
+              "winner": "jskule23 7-7"
             },
             {
               "round": 3,
               "a": "drewkim 5-9",
               "b": "jskule23 7-7",
-              "winner": "jskule23 7-7",
+              "winner": "drewkim 5-9",
               "place": "9th / 10th"
+            },
+            {
+              "round": 3,
+              "a": "wesley55 4-10",
+              "b": "chassinator 3-11",
+              "winner": "wesley55 4-10",
+              "place": "11th / 12th"
             }
           ]
         },
         {
           "type": "p",
-          "text": "Read the middle column. chassinator went 3-11 — the worst record in the league by a distance — and his first game of the postseason was for seventh place. wesley55 went 4-10 and started in the same round. The 11th-and-12th game was contested by moseslin, who went 7-7, and bradyrife, who went 4-10 and was seeded <i>above</i> chassinator on points."
-        },
-        {
-          "type": "stat",
-          "n": "7th",
-          "text": "where the worst team in the league finished last season. He won two toilet-bowl games from a bye and came out one place behind the playoff field."
+          "text": "chassinator went 3-11, entered in round two, lost to drewkim, lost the final to wesley55 by three points, and finished twelfth. He did not escape anything. He took the whole thing on the chin, which is what I said the format made impossible."
         },
         {
           "type": "h",
           "eyebrow": "The record",
-          "text": "Four seasons, four escapes"
+          "text": "It hits the right team about half the time"
         },
         {
           "type": "cards",
           "items": [
             {
               "title": "2022",
-              "big": "7th",
-              "sub": "where the worst record finished",
+              "big": "12th",
+              "sub": "bradyrife, 4-10",
               "rows": [
                 {
                   "label": "Worst record",
                   "value": "bradyrife 4-10"
                 },
                 {
-                  "label": "Finished last",
-                  "value": "jakevickers5 6-8"
+                  "label": "Match",
+                  "value": "Yes"
                 }
               ]
             },
             {
               "title": "2023",
-              "big": "10th",
-              "sub": "where the worst record finished",
+              "big": "12th",
+              "sub": "sizzlemc2, 6-8",
               "rows": [
                 {
                   "label": "Worst record",
                   "value": "bradyrife 4-10"
                 },
                 {
-                  "label": "Finished last",
-                  "value": "Domo112 5-9"
+                  "label": "Match",
+                  "value": "No"
                 }
               ]
             },
             {
               "title": "2024",
-              "big": "10th",
-              "sub": "where the worst record finished",
+              "big": "12th",
+              "sub": "chassinator, 6-8",
               "rows": [
                 {
                   "label": "Worst record",
                   "value": "victorthompson 2-12"
                 },
                 {
-                  "label": "Finished last",
-                  "value": "sizzlemc2 7-7"
+                  "label": "Match",
+                  "value": "No"
                 }
               ]
             },
             {
               "title": "2025",
-              "big": "7th",
-              "sub": "where the worst record finished",
+              "big": "12th",
+              "sub": "chassinator, 3-11",
               "rows": [
                 {
                   "label": "Worst record",
                   "value": "chassinator 3-11"
                 },
                 {
-                  "label": "Finished last",
-                  "value": "bradyrife 4-10"
+                  "label": "Match",
+                  "value": "Yes"
                 }
               ]
             }
@@ -587,50 +592,37 @@
         },
         {
           "type": "p",
-          "text": "Four seasons, and the worst team in the league has finished last exactly never. Twice it finished seventh. In 2024 victorthompson won <b>two games out of fourteen</b> — the worst season anybody has had here — and came tenth, while sizzlemc2 went 7-7 and came twelfth."
+          "text": "Twice out of four the worst record in the league has finished last. The other two times a middling team lost three games in a row at the wrong moment and wore it. That is a competition, not a filing error, and I would rather have it than a table that hands out the punishment automatically in November."
         },
         {
           "type": "p",
-          "text": "A 7-7 team finished bottom of a league containing a 2-12 team. Nobody designed that. It is what the seeding produces."
+          "text": "It also produces the single best fact in this league's short history: <b>chassinator won the whole thing in 2022 and has finished last in each of the two seasons since</b>. Champion, then twelfth, then twelfth. No other manager has been to both ends of this league, and he has been to both ends three times in four years."
         },
         {
           "type": "h",
-          "eyebrow": "Why it matters",
-          "text": "The incentive, not the injustice"
+          "eyebrow": "The lesson",
+          "text": "The data agreed with me, and the data was wrong"
         },
         {
           "type": "p",
-          "text": "I do not much mind that the toilet bowl is random. It is three weeks of fantasy football between teams that have already failed; randomness is the correct amount of dignity to give it."
+          "text": "The uncomfortable part is that nothing looked broken. The bracket had a winner field and I read it. The site had a finishing order and I quoted it. Both were internally consistent and both were upside down, and a column got published on top of them with a bracket diagram that made the wrong claim look rigorous."
         },
         {
           "type": "p",
-          "text": "What I mind is that the seeding pays you to be worse. If your season is gone by November, the reward for losing out is a bye, a shorter path and a floor of tenth. The reward for scrapping to 7-7 and missing on points is a first-round game you can lose and a shot at last. There is no downside left at the bottom of this league, and a format with no downside at the bottom will eventually get the behaviour it deserves."
-        },
-        {
-          "type": "h",
-          "eyebrow": "The fix",
-          "text": "Flip the byes"
+          "text": "What caught it was somebody who was there saying the result did not match what happened. That is the only check that would have caught it, and it is worth saying plainly: the scoreline is the source of truth here, and everything else on this site is a story told about the scoreline. Where the two disagree, the scoreline wins."
         },
         {
           "type": "p",
-          "text": "Give the first-round byes to the best two teams that missed the playoffs — seeds seven and eight — and put the two worst records into the opening round. Ninth plays twelfth, tenth plays eleventh, and the losers meet for last."
-        },
-        {
-          "type": "p",
-          "text": "That is one line in the bracket setup. It does not touch the playoffs, the schedule, the divisions or anybody's roster. It leaves the toilet bowl exactly as random and exactly as undignified as it is now. It just puts the two teams that earned the risk into the game where the risk lives."
-        },
-        {
-          "type": "p",
-          "text": "Until then, twelfth place in this league is not a verdict. It is a raffle among the teams that nearly made it, held to protect the ones that never came close."
+          "text": "The finishing order for all four seasons has been recomputed and every page that reads it — the records, the trophies, the all-time table, the odds board's price on last place — has moved with it. If you remember finishing eighth in 2023 and the site now says tenth, this is why."
         },
         {
           "type": "note",
-          "text": "Bracket and finishes are DFFL's own, off the league's Sleeper history. The 2025 consolation bracket is reproduced above exactly as it was played. Opinions are the writer's; the arithmetic is the league's."
+          "text": "Corrected 19 August 2026. Brackets and finishes are DFFL's own, off the league's Sleeper history, now cross-checked against the weekly scores. Opinions are the writer's; the arithmetic is the league's, and this time it has been checked against the games."
         }
       ],
       "cover": {
-        "tone": "red",
-        "caption": "The toilet bowl",
+        "tone": "gold",
+        "caption": "The toilet bowl, correctly",
         "players": [
           "8150"
         ]

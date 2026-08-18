@@ -1039,6 +1039,72 @@ const recapGone = await page.evaluate(async () => {
 check("a missing recaps.json never throws", recapGone.threw === null, String(recapGone.threw));
 check("a missing recaps.json shows the waiting state", recapGone.empty === 1);
 
+group("Finishing order follows the scoreboard");
+const finish = await page.evaluate(() => {
+  const DB = window.__DFFL.DB;
+  const out = { seasons: [], wrong: [], gaps: [], toilet: [], lastPerSeason: {} };
+  for (const s of DB.seasons) {
+    if (!s.complete) continue;
+    out.seasons.push(s.season);
+    const nm = r => { const u = s.uidOf.get(r); return u ? nameOf(u) : "r" + r; };
+    const place = new Map(Object.entries(s.places).map(([pl, rid]) => [Number(rid), Number(pl)]));
+    // every place 1..N exactly once
+    const pl = Object.keys(s.places).map(Number).sort((a, b) => a - b);
+    if (pl.length !== s.rosters.length || pl.some((v, i) => v !== i + 1)) out.gaps.push(`${s.season}: ${pl.join(",")}`);
+    // THE invariant: in any tie that decided a placing, whoever scored more
+    // must finish above whoever scored less. This is what was broken.
+    for (const bracket of [s.wb, s.lb]) for (const m of bracket || []) {
+      if (!m.p || !m.t1 || !m.t2) continue;
+      const games = s.games.filter(g => g.playoff &&
+        ((g.a.rid === m.t1 && g.b.rid === m.t2) || (g.a.rid === m.t2 && g.b.rid === m.t1)));
+      if (!games.length) continue;
+      const g = games[games.length - 1];
+      if (g.a.pts === g.b.pts) continue;
+      const won = g.a.pts > g.b.pts ? g.a.rid : g.b.rid;
+      const lost = won === g.a.rid ? g.b.rid : g.a.rid;
+      if (!(place.get(won) < place.get(lost)))
+        out.wrong.push(`${s.season}: ${nm(won)} beat ${nm(lost)} ${g.a.pts.toFixed(1)}-${g.b.pts.toFixed(1)} but finished ${place.get(won)} to ${place.get(lost)}`);
+    }
+    // the consolation must read as a toilet bowl: Sleeper's "winner" lost
+    let contrary = 0, checked = 0;
+    for (const m of s.lb || []) {
+      if (!m.t1 || !m.t2 || m.w == null) continue;
+      const games = s.games.filter(g => g.playoff &&
+        ((g.a.rid === m.t1 && g.b.rid === m.t2) || (g.a.rid === m.t2 && g.b.rid === m.t1)));
+      if (!games.length) continue;
+      const g = games[games.length - 1];
+      const won = g.a.pts > g.b.pts ? g.a.rid : g.b.rid;
+      checked++; if (won !== m.w) contrary++;
+    }
+    out.toilet.push(`${s.season}: ${contrary}/${checked}`);
+    out.lastPerSeason[s.season] = nm(Number(s.places[s.rosters.length]));
+  }
+  return out;
+});
+check("every place is filled exactly once, every season", finish.gaps.length === 0, finish.gaps.join(" | "));
+check("whoever won a placing game finishes above whoever lost it", finish.wrong.length === 0, finish.wrong.slice(0, 3).join(" | "));
+check("the consolation reads as a toilet bowl in every season",
+  finish.toilet.every(t => { const [a, b] = t.split(": ")[1].split("/"); return a === b && Number(b) > 0; }), finish.toilet.join(" | "));
+// the one the league itself corrected us on
+check("2025 last place is the team that lost the toilet bowl", finish.lastPerSeason["2025"] === "chassinator", JSON.stringify(finish.lastPerSeason));
+
+const lastSim = await page.evaluate(() => {
+  const D = window.__DFFL, O = window.__ODDS, S = window.__SIM, n = S.sims;
+  const rows = O.teams.map((t, i) => ({ name: nameOf(t.uid), last: S.last[i] / n, edge: t.edge }))
+    .sort((a, b) => a.edge - b.edge);
+  return {
+    sum: rows.reduce((a, r) => a + r.last, 0),
+    worstHasRisk: rows[0].last > 0.02,
+    // the old model made the two worst seeds structurally safe; they must not be
+    zeroes: rows.filter(r => r.last === 0).length,
+    worst: `${rows[0].name} ${(rows[0].last * 100).toFixed(1)}%`,
+    best: `${rows[rows.length - 1].name} ${(rows[rows.length - 1].last * 100).toFixed(1)}%`,
+  };
+});
+check("the last-place market still sums to 1", near(lastSim.sum, 1, 0.002), `${lastSim.sum}`);
+check("the worst team carries real last-place risk", lastSim.worstHasRisk, lastSim.worst);
+check("nobody is structurally safe from last", lastSim.zeroes === 0, `${lastSim.zeroes} teams at 0%`);
+
 group("News & Articles");
 const tabName = await page.evaluate(() =>
   document.querySelector('#tabs button[data-tab="recaps"]').textContent);
@@ -1059,7 +1125,7 @@ const artl = await page.evaluate(async () => {
     noBodyOnIndex: panel.querySelectorAll(".apara").length === 0,
     columnFlagged: panel.querySelectorAll(".teaser.op .oflag").length,
     newestFirst: teasers.length > 1 &&
-      teasers[0].querySelector("h3").textContent === "Nobody Has Ever Finished Last",
+      teasers[0].querySelector("h3").textContent === "I Owe The Toilet Bowl An Apology",
   };
   panel.remove();
   return out;
@@ -1123,13 +1189,14 @@ const column = await page.evaluate(() => {
     r1: [...a.querySelectorAll(".brd")][0].innerText,
   };
 });
-check("back returns to the index and the column opens", column.headline === "Nobody Has Ever Finished Last");
+check("back returns to the index and the column opens", column.headline === "I Owe The Toilet Bowl An Apology", column.headline);
 check("the column reads as opinion", column.isColumn);
 check("the toilet bowl bracket renders in full", column.brackets === 1 && column.matches === 7 && column.rounds.length === 3,
   `${column.matches} matches, rounds: ${column.rounds.join("/")}`);
 check("every tie in the bracket has a winner marked", column.winners === column.matches, `${column.winners} of ${column.matches}`);
 check("the placing games are called out", column.placed === 3, `${column.placed}`);
 check("the two worst records are absent from round one", !/chassinator|wesley55/.test(column.r1), column.r1.replace(/\n/g, " "));
+check("the column shows the drop, not a consolation ladder", /The drop/.test(column.rounds.join("/")), column.rounds.join("/"));
 
 await page.evaluate(() => { const a = document.querySelector('[data-panel="article"]'); if (a) a.remove(); });
 const artSafe = await page.evaluate(() => {
