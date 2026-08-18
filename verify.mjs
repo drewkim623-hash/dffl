@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "odds", "draft", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "odds", "draft", "trades", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -630,6 +630,163 @@ check("does not falsely claim the 2026 data doesn't exist", dom.noFalseNeverSeen
 check("methodology lists what the model is not told", dom.methodListsOmissions);
 
 /* ==================================================== responsiveness = */
+group("Trades: loading and shape");
+// The tab is lazy on purpose — nothing is fetched until it is opened.
+const lazy = await page.evaluate(() => ({
+  fetchedEarly: !!document.body.dataset.tradesReady,
+  hasPanel: !!document.querySelector('[data-panel="trades"]'),
+  placeholder: !!document.querySelector("#tradesHost .empty"),
+}));
+check("the trades panel exists before anything is fetched", lazy.hasPanel && lazy.placeholder);
+check("no transaction fetched until the tab is opened", lazy.fetchedEarly === false);
+
+await page.click('#tabs button[data-tab="trades"]');
+await page.waitForFunction(() => document.body.dataset.tradesReady, null, { timeout: 180000 });
+const tradesState = await page.evaluate(() => document.body.dataset.tradesReady);
+check("the trades tab loads its own data on first open", tradesState === "1", tradesState);
+
+const T = await page.evaluate(() => {
+  const L = window.__TRADES, W = window.__WAIVERS, D = window.__DFFL;
+  const nums = [];
+  const walk = (o, path) => {
+    if (typeof o === "number") { if (!isFinite(o)) nums.push(path); return; }
+    if (!o || typeof o !== "object") return;
+    for (const k of Object.keys(o)) { if (k === "t" || k === "trade") continue; walk(o[k], path + "." + k); }
+  };
+  walk(L.byMgr, "byMgr"); walk(L.graded.map(t => ({ m: t.margin, mv: t.moved, s: t.sides })), "graded");
+  walk(W.claims, "claims");
+  return {
+    trades: L.trades.length, graded: L.graded.length, reversed: L.reversed,
+    // every side of every graded trade mirrors: the nets must cancel exactly
+    netZero: L.graded.map(t => t.sides.reduce((a, s) => a + s.net, 0)).reduce((a, b) => Math.abs(a) + Math.abs(b), 0),
+    // and the gains must add up to everything that moved
+    movedOk: L.graded.every(t => Math.abs(t.sides.reduce((a, s) => a + s.gain, 0) - t.moved) < 1e-9),
+    ledgerSum: L.byMgr.reduce((a, m) => a + m.net, 0),
+    nonFinite: nums.slice(0, 5),
+    ungradedHaveReasons: L.trades.filter(t => !t.graded).every(t => typeof t.reason === "string" && t.reason.length > 0),
+    gradedHaveNoReason: L.graded.every(t => !t.reason),
+    picksOnlyUngraded: L.trades.filter(t => t.nPlayers === 0).every(t => !t.graded),
+    claims: W.claims.length, spent: W.totalSpent,
+    // a claim can only be ranked on value if it had weeks left to deliver any
+    rankedHaveWindow: [...W.overpays, ...W.bestBuys, ...W.bestFree].every(c => c.weeksLeft >= 3 && c.played),
+    deadHaveWindow: W.deadMoney.every(c => c.weeksLeft >= 1 && c.pts <= 0 && c.bid > 0),
+    spendMatches: Math.abs(W.spend.reduce((a, x) => a + x.spent, 0) - W.totalSpent) < 1e-9,
+    namesResolved: L.trades.flatMap(t => t.sides.flatMap(s => [...s.got, ...s.sent]))
+      .filter(x => x.name === String(x.pid)).length,
+    cards: document.querySelectorAll('[data-panel="trades"] .trade').length,
+  };
+});
+check("every trade in league history is listed", T.trades > 100, `${T.trades}`);
+check("a card is rendered for every trade", T.cards === T.trades, `${T.cards} cards / ${T.trades} trades`);
+check("both sides of every graded trade cancel to zero", T.netZero < 1e-6, `${T.netZero}`);
+check("each trade's gains sum to the points it moved", T.movedOk);
+check("the whole ledger sums to zero", Math.abs(T.ledgerSum) < 1e-6, `${T.ledgerSum}`);
+check("no NaN or Infinity anywhere in the ledger", T.nonFinite.length === 0, T.nonFinite.join(", "));
+check("every ungraded trade says why", T.ungradedHaveReasons);
+check("every graded trade carries no excuse", T.gradedHaveNoReason);
+check("a picks-only trade is never graded", T.picksOnlyUngraded);
+check("reversed trades are thrown out", T.reversed > 0 && T.reversed % 2 === 0, `${T.reversed}`);
+check("player names resolved from ids", T.namesResolved === 0, `${T.namesResolved} unresolved`);
+check("waiver claims loaded", T.claims > 500, `${T.claims}`);
+check("FAAB spend tallies to the league total", T.spendMatches);
+check("value rankings only use claims with three weeks left", T.rankedHaveWindow);
+check("dead money is real dead money", T.deadHaveWindow);
+
+const verdicts = await page.evaluate(() => {
+  const cards = [...document.querySelectorAll('[data-panel="trades"] .trade')];
+  const even = cards.filter(c => c.querySelector(".verd.even"));
+  const decided = cards.filter(c => c.querySelector(".verd.win, .verd.lop, .verd.fleeced"));
+  const none = cards.filter(c => c.querySelector(".verd.none"));
+  return {
+    even: even.length, decided: decided.length, none: none.length,
+    evenNamesWinner: even.filter(c => c.querySelector(".tside.won")).length,
+    evenShowsMargin: even.filter(c => /[+−]\d/.test(c.querySelector(".verd").textContent)).length,
+    ungradedNamesWinner: none.filter(c => c.querySelector(".tside.won")).length,
+    ungradedShowsPoints: none.filter(c => /\d+\.\d/.test(c.querySelector(".tlist") ? c.querySelector(".tlist").textContent : "")).length,
+    decidedAllHaveWinner: decided.every(c => c.querySelector(".tside.won")),
+    decidedAllShowMargin: decided.every(c => /[+−]\d/.test(c.querySelector(".verd").textContent)),
+  };
+});
+check("a trade inside the even band names no winner", verdicts.evenNamesWinner === 0, `${verdicts.evenNamesWinner} of ${verdicts.even}`);
+check("a trade inside the even band posts no margin", verdicts.evenShowsMargin === 0, `${verdicts.evenShowsMargin}`);
+check("an ungraded trade names no winner", verdicts.ungradedNamesWinner === 0, `${verdicts.ungradedNamesWinner} of ${verdicts.none}`);
+check("an ungraded trade shows no points at all", verdicts.ungradedShowsPoints === 0, `${verdicts.ungradedShowsPoints}`);
+check("every decided trade marks its winner", verdicts.decidedAllHaveWinner && verdicts.decided > 40, `${verdicts.decided} decided`);
+check("every decided trade posts its margin", verdicts.decidedAllShowMargin);
+
+group("Trades: only the weeks after a trade count");
+const after = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2023");
+  const wk = w => season.playerWeek.get(w) || new Map();
+  const all = [...new Set([...Array(14)].flatMap((_, i) => [...wk(i + 1).keys()]))];
+  // the biggest scorer of that season — a player with points in both halves
+  const pid = all.reduce((b, p) => D.ptsFrom(season, p, 1) > D.ptsFrom(season, b, 1) ? p : b, all[0]);
+  const sum = ws => ws.reduce((a, w) => a + (wk(w).get(pid) || 0), 0);
+  return {
+    pid,
+    head: sum([1, 2, 3, 4, 5, 6, 7]),
+    tail: sum([8, 9, 10, 11, 12, 13, 14]),
+    playoffs: sum([15, 16, 17]),
+    fromWeek1: D.ptsFrom(season, pid, 1),
+    fromWeek8: D.ptsFrom(season, pid, 8),
+    fromWeek15: D.ptsFrom(season, pid, 15),
+  };
+});
+check("the week-by-week test has a real player to work on", after.head > 20 && after.tail > 20, JSON.stringify(after));
+check("a full-season count matches the sum of its weeks", near(after.fromWeek1, after.head + after.tail, 1e-9), `${after.fromWeek1} vs ${after.head + after.tail}`);
+check("counting from week 8 drops weeks 1-7 exactly", near(after.fromWeek8, after.tail, 1e-9), `${after.fromWeek8} vs ${after.tail}`);
+check("a mid-season count is strictly less than the whole season", near(after.fromWeek1 - after.fromWeek8, after.head, 1e-9) && after.head > 0, `${after.fromWeek1} − ${after.fromWeek8} should be ${after.head}`);
+check("playoff weeks are scored by Sleeper but never counted here", after.playoffs > 0 && after.fromWeek15 === 0, `playoff pts ${after.playoffs}, counted ${after.fromWeek15}`);
+
+group("Trades: a synthetic trade grades to a known answer");
+const synth = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB;
+  const season = DB.seasons.find(s => s.season === "2023");
+  const rids = season.rosters.slice(0, 2).map(r => r.roster_id);
+  // Two players with real week-by-week scoring, swapped in week 6.
+  const wk = 6;
+  const pool = [...season.playerWeek.get(wk).keys()];
+  const A = pool.find(p => D.ptsFrom(season, p, wk) > 60);
+  const B = pool.find(p => p !== A && D.ptsFrom(season, p, wk) > 5 && D.ptsFrom(season, p, wk) < 40);
+  const tx = {
+    transaction_id: "synthetic", type: "trade", status: "complete", leg: wk, created: 1,
+    roster_ids: rids, draft_picks: [],
+    adds: { [A]: rids[1], [B]: rids[0] },
+    drops: { [A]: rids[0], [B]: rids[1] },
+  };
+  const g = D.gradeTrade(tx, season);
+  const ptsA = D.ptsFrom(season, A, wk), ptsB = D.ptsFrom(season, B, wk);
+  const side1 = g.sides.find(s => s.rid === rids[1]);
+  const side0 = g.sides.find(s => s.rid === rids[0]);
+  // The same trade a week earlier must be worth strictly more to the winner.
+  const earlier = D.gradeTrade({ ...tx, leg: wk - 1 }, season);
+  // And one made in the playoffs cannot be graded at all.
+  const late = D.gradeTrade({ ...tx, leg: 15 }, season);
+  // Picks with no players: nothing to score.
+  const picksOnly = D.gradeTrade({ ...tx, adds: {}, drops: {}, draft_picks: [{ round: 2, season: "2024", owner_id: rids[0], previous_owner_id: rids[1] }] }, season);
+  return {
+    ptsA, ptsB, graded: g.graded, moved: g.moved,
+    gain1: side1.gain, loss1: side1.loss, net1: side1.net,
+    gain0: side0.gain, loss0: side0.loss, net0: side0.net,
+    winnerIsA: g.winner && g.winner.rid === rids[1],
+    margin: g.margin,
+    earlierMargin: earlier.margin,
+    lateGraded: late.graded, lateReason: late.reason,
+    picksGraded: picksOnly.graded, picksReason: picksOnly.reason,
+  };
+});
+check("the synthetic winner receives exactly the better player's points", near(synth.gain1, synth.ptsA, 1e-9), `${synth.gain1} vs ${synth.ptsA}`);
+check("the synthetic loser receives exactly the lesser player's points", near(synth.gain0, synth.ptsB, 1e-9), `${synth.gain0} vs ${synth.ptsB}`);
+check("what one side gains, the other gave up", near(synth.loss0, synth.ptsA, 1e-9) && near(synth.loss1, synth.ptsB, 1e-9));
+check("the margin is the difference between the two players", near(synth.margin, synth.ptsA - synth.ptsB, 1e-9), `${synth.margin} vs ${synth.ptsA - synth.ptsB}`);
+check("points moved is both players added together", near(synth.moved, synth.ptsA + synth.ptsB, 1e-9), `${synth.moved} vs ${synth.ptsA + synth.ptsB}`);
+check("the nets are equal and opposite", near(synth.net1, -synth.net0, 1e-9), `${synth.net1} vs ${synth.net0}`);
+check("the better player's side is the winner", synth.winnerIsA === true);
+check("the same trade made a week earlier is worth more", synth.earlierMargin > synth.margin, `${synth.earlierMargin} vs ${synth.margin}`);
+check("a trade made in the playoffs is not graded", synth.lateGraded === false && /regular season/.test(synth.lateReason), synth.lateReason);
+check("a picks-only trade is not graded", synth.picksGraded === false && /picks only/.test(synth.picksReason), synth.picksReason);
+
 group("Layout at 390px");
 const mobile = await ctx.newPage();
 await mobile.goto(BASE, { waitUntil: "domcontentloaded" });
@@ -657,6 +814,29 @@ check("body does not scroll horizontally at 390px", narrow.bodyScroll <= narrow.
 check("no element overflows the viewport at 390px", narrow.overflowing.length === 0, narrow.overflowing.join(" | "));
 check("prices still render at 390px", narrow.priceCount > 60, `${narrow.priceCount}`);
 
+// the trade block, fully loaded, at phone width
+await mobile.click('#tabs button[data-tab="trades"]');
+await mobile.waitForFunction(() => document.body.dataset.tradesReady, null, { timeout: 180000 });
+const tradeNarrow = await mobile.evaluate(() => {
+  const panel = document.querySelector('[data-panel="trades"]');
+  const over = [];
+  for (const n of panel.querySelectorAll("*")) {
+    // A wide table inside overflow-x:auto is the design; the page must not scroll.
+    if (n.closest(".scroll")) continue;
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return {
+    docScroll: document.documentElement.scrollWidth, inner: window.innerWidth,
+    overflowing: over.slice(0, 6),
+    cards: panel.querySelectorAll(".trade").length,
+    tiles: panel.querySelectorAll(".tile").length,
+  };
+});
+check("trades: page does not scroll horizontally at 390px", tradeNarrow.docScroll <= tradeNarrow.inner, `${tradeNarrow.docScroll} > ${tradeNarrow.inner}`);
+check("trades: nothing outside a scroller overflows at 390px", tradeNarrow.overflowing.length === 0, tradeNarrow.overflowing.join(" | "));
+check("trades: the whole board still renders at 390px", tradeNarrow.cards > 100 && tradeNarrow.tiles === 4, `${tradeNarrow.cards} cards, ${tradeNarrow.tiles} tiles`);
+
 // every other tab too, so the new CSS didn't break anything narrow
 for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.click(`#tabs button[data-tab="${id}"]`);
@@ -666,7 +846,14 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
 }
 
 group("Screenshots");
+await page.click('#tabs button[data-tab="trades"]');
+await page.waitForTimeout(200);
+await page.screenshot({ path: "trades-desktop.png", fullPage: true });
+await mobile.click('#tabs button[data-tab="trades"]');
+await mobile.waitForTimeout(200);
+await mobile.screenshot({ path: "trades-mobile.png", fullPage: true });
 await page.click('#tabs button[data-tab="odds"]');
+await page.waitForTimeout(200);
 await page.screenshot({ path: "odds-desktop.png", fullPage: true });
 await mobile.click('#tabs button[data-tab="odds"]');
 await mobile.screenshot({ path: "odds-mobile.png", fullPage: true });

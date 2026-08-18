@@ -325,6 +325,45 @@
   .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
   .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
 
+  /* ============ trades ============ */
+  .fleece{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin-top:18px;
+    background:linear-gradient(100deg,rgba(230,103,103,.17),rgba(230,103,103,.03) 58%,transparent);
+    border:1px solid rgba(230,103,103,.38)}
+  .fleece .k{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--red);font-weight:700}
+  .fleece .v{font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin:6px 0 2px;
+    font-variant-numeric:tabular-nums}
+  .fleece .w{font-size:16px;font-weight:750;letter-spacing:-.01em}
+  .fleece .c{font-size:13px;color:var(--ink-2);margin-top:5px;line-height:1.5;max-width:64ch}
+
+  .trade{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+  .thead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    padding:10px 14px;background:var(--raised);border-bottom:1px solid var(--grid)}
+  .thead .twhen{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .verd{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+    border-radius:999px;padding:4px 10px;white-space:nowrap;border:1px solid var(--ring);color:var(--ink-2)}
+  .verd.even{color:var(--muted)}
+  .verd.win{color:var(--blue);border-color:rgba(57,135,229,.45);background:rgba(57,135,229,.10)}
+  .verd.lop{color:var(--hold);border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.10)}
+  .verd.fleeced{color:var(--red);border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.10)}
+  .verd.none{color:var(--muted);border-style:dashed}
+
+  .tsides{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .tside{padding:12px 14px;min-width:0;border-top:1px solid var(--grid)}
+  .tside + .tside{border-left:1px solid var(--grid)}
+  @media(max-width:560px){.tside + .tside{border-left:0}}
+  .tside.won{background:linear-gradient(180deg,rgba(57,135,229,.09),transparent 70%)}
+  .tside .who{display:flex;align-items:center;gap:9px;min-width:0}
+  .tside .who .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .tside .net{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;flex:none}
+  .tlist{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:4px}
+  .tline{display:flex;align-items:baseline;gap:8px;font-size:13.5px;min-width:0}
+  .tline .pn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);min-width:0}
+  .tline .pp{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink);flex:none}
+  .tline .pos{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.05em}
+  .tpicks{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
+  .tnote{padding:11px 14px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);line-height:1.5}
+  .tfilter{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:430px;margin:0 0 14px}
+
   /* ============ misc ============ */
   select{background:var(--raised);color:var(--ink);border:1px solid var(--ring);border-radius:9px;
     padding:10px 11px;font:inherit;font-size:14px;width:100%;cursor:pointer}
@@ -536,16 +575,23 @@ async function loadSeason(lg) {
     }
   }
 
-  // Per-player production, regular season only, under THIS league's scoring.
+  // Per-player production under THIS league's scoring. Two shapes of the same
+  // numbers: playerPts is the regular-season total, which is what a draft pick
+  // is judged on; playerWeek keeps them week by week, which is what a trade has
+  // to be judged on — a trade can only be credited with points scored after it.
   const playerPts = new Map();
+  const playerWeek = new Map();
   for (const { wk, d } of raw) {
-    if (wk >= pws) continue;
     for (const e of d || []) {
       const pp = e.players_points;
       if (!pp) continue;
+      let wm = playerWeek.get(wk);
+      if (!wm) playerWeek.set(wk, wm = new Map());
       for (const pid of Object.keys(pp)) {
         const v = Number(pp[pid]);
-        if (isFinite(v)) playerPts.set(pid, (playerPts.get(pid) || 0) + v);
+        if (!isFinite(v)) continue;
+        wm.set(pid, v);
+        if (wk < pws) playerPts.set(pid, (playerPts.get(pid) || 0) + v);
       }
     }
   }
@@ -580,7 +626,7 @@ async function loadSeason(lg) {
     pws, playoffTeams: ptm, rosters, users, uidOf, userById,
     places: placementsOf(wb, lb, ptm), wb, lb, games: seasonGames,
     complete: lg.status === "complete",
-    picks, playerPts, draftId,
+    picks, playerPts, playerWeek, draftId,
     draftStatus: (draft && draft.status) || null, draftRounds, draftSlots, draftDone,
     meta, divCount, divNames, divOf,
   });
@@ -798,6 +844,7 @@ const TABS = [
   { id: "matchups", label: "Matchups" },
   { id: "odds", label: "Odds" },
   { id: "draft", label: "Draft" },
+  { id: "trades", label: "Trades" },
   { id: "recaps", label: "Recaps" },
 ];
 function buildTabs() {
@@ -812,6 +859,9 @@ function buildTabs() {
 function show(id) {
   const prof = $('[data-panel="profile"]');
   if (prof) prof.remove();
+  // The trade block reads five seasons of transactions and a 5MB name file.
+  // Nobody pays for that until they ask to see it.
+  if (id === "trades") ensureTrades();
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
@@ -2552,6 +2602,582 @@ function panelDraft() {
   return p;
 }
 
+/* ============================================== TRADES ============== */
+/*
+ * Everything on this tab is judged on one rule: a trade is worth what the
+ * players did AFTER it, never what they did all season. Counting a full season
+ * would credit a manager with points scored by a player he did not yet own,
+ * which is how every "who won the trade" argument goes wrong.
+ *
+ * The transaction history is large — five seasons, eighteen legs each, plus a
+ * 5MB player-name file — and most visitors never open this tab, so none of it
+ * is fetched until they do.
+ */
+
+/* Margins are in points-per-season, so the bands are wide. Roughly: a starting
+ * running back is worth ~150 points over a full season, a bye-week filler ~20. */
+const TRADE_EVEN = 25;        // inside this, nobody won
+const TRADE_CLEAR = 90;
+const TRADE_LOPSIDED = 200;
+const FAAB_MIN = 5;           // a $1 flier that busts is not an "overpay"
+
+let TXCACHE = null;
+async function loadTransactions() {
+  if (TXCACHE) return TXCACHE;
+  if (MOCK) return (TXCACHE = []);
+  const jobs = [];
+  for (const s of DB.seasons) for (let wk = 1; wk <= 18; wk++) jobs.push({ s, wk });
+  const got = await pool(jobs, 8, async ({ s, wk }) => {
+    const list = await jget(`${API}/league/${s.leagueId}/transactions/${wk}`).catch(() => []);
+    return (list || []).map(t => ({ ...t, season: s.season }));
+  });
+  // Failed waiver claims are noise: they never happened.
+  TXCACHE = got.flat().filter(t => t && t.status === "complete");
+  return TXCACHE;
+}
+
+/* ------------------------------------------------------------- names */
+/*
+ * Transactions carry player_ids and nothing else. Draft metadata already in
+ * hand covers most traded players; the rest need Sleeper's full player file,
+ * which is ~5MB and is therefore fetched once, lazily, and only for the ids
+ * actually missing.
+ */
+let PLAYER_NAMES = null;
+function draftNameMap() {
+  const m = new Map();
+  for (const s of DB.seasons) for (const p of s.picks || []) {
+    const md = p.metadata || {};
+    const nm = `${md.first_name || ""} ${md.last_name || ""}`.trim();
+    if (p.player_id && nm) m.set(String(p.player_id), { name: nm, pos: md.position || "", team: md.team || "" });
+  }
+  return m;
+}
+async function loadPlayerNames(need) {
+  if (PLAYER_NAMES) return PLAYER_NAMES;
+  const m = draftNameMap();
+  const missing = [...need].map(String).filter(p => !m.has(p));
+  if (missing.length && !MOCK) {
+    try {
+      const all = await jget(`${API}/players/nfl`);
+      for (const pid of missing) {
+        const p = all[pid];
+        if (!p) continue;
+        const nm = (p.full_name || `${p.first_name || ""} ${p.last_name || ""}`).trim();
+        m.set(pid, { name: nm || pid, pos: p.position || "", team: p.team || "" });
+      }
+    } catch (e) { /* a missing name is a player_id on screen, not a broken page */ }
+  }
+  PLAYER_NAMES = m;
+  return m;
+}
+const pname = pid => (PLAYER_NAMES && PLAYER_NAMES.get(String(pid))) || { name: String(pid), pos: "", team: "" };
+
+/* ------------------------------------------------------------ scoring */
+
+/**
+ * What a player produced in `season`'s regular season from `from` onward.
+ * Weeks before the trade are never counted, and the playoffs are left out —
+ * they are a different competition and only six teams are in them.
+ */
+function ptsFrom(season, pid, from) {
+  if (!season || !season.playerWeek) return 0;
+  const last = (season.pws || 15) - 1;
+  let tot = 0;
+  for (let w = Math.max(1, from); w <= last; w++) {
+    const wm = season.playerWeek.get(w);
+    if (!wm) continue;
+    const v = wm.get(String(pid));
+    if (v != null && isFinite(v)) tot += v;
+  }
+  return tot;
+}
+
+const fmtPick = d => `${d.season} ${ord(Number(d.round))}`;
+
+/**
+ * Has this season actually been played? Sleeper hands back matchup rows for a
+ * season the moment it exists, every score zero, so "we have week data" is not
+ * the same question as "anybody has scored". Without this, an August trade in a
+ * season nobody has played grades out as a nil-all draw.
+ */
+function seasonPlayed(season) {
+  if (!season) return false;
+  if (season._played == null) {
+    season._played = !!(season.playerWeek && [...season.playerWeek.values()]
+      .some(wm => [...wm.values()].some(v => v > 0)));
+  }
+  return season._played;
+}
+
+/**
+ * Grade one trade. Every roster involved gets what it received and what it
+ * gave up, both counted from the trade's week forward; its net is the
+ * difference. Multi-team trades work the same way — the nets still sum to zero
+ * and the gains still sum to everything that moved.
+ */
+function gradeTrade(tx, season) {
+  if (!season) return null;
+  const week = Number(tx.leg) || 1;
+  const lastReg = (season.pws || 15) - 1;
+  const adds = tx.adds || {}, drops = tx.drops || {};
+  const pids = Object.keys(adds);
+  const picks = tx.draft_picks || [];
+  const rids = [...new Set([...(tx.roster_ids || []), ...Object.values(adds)])].filter(r => r != null);
+  const noDrops = !Object.keys(drops).length;
+
+  const val = p => { const n = pname(p); return { pid: p, name: n.name, pos: n.pos, pts: ptsFrom(season, p, week) }; };
+  const sides = rids.map(rid => {
+    const got = pids.filter(p => adds[p] === rid).map(val);
+    // A few old trades came back without a drops map. In a two-team trade the
+    // sender is unambiguous — it is whatever the other side received.
+    const sent = (noDrops && rids.length === 2
+      ? pids.filter(p => adds[p] !== rid)
+      : pids.filter(p => drops[p] === rid)).map(val);
+    const gain = got.reduce((a, x) => a + x.pts, 0);
+    const loss = sent.reduce((a, x) => a + x.pts, 0);
+    return {
+      rid, uid: season.uidOf.get(rid) || null, got, sent, gain, loss, net: gain - loss,
+      picksIn: picks.filter(d => d.owner_id === rid),
+      picksOut: picks.filter(d => d.previous_owner_id === rid),
+    };
+  });
+
+  const played = seasonPlayed(season);
+  const reason =
+    !pids.length ? "picks only — there is nothing to score" :
+    !played ? `the ${season.season} season hasn't been played` :
+    week > lastReg ? "made after the regular season ended" : null;
+
+  const moved = sides.reduce((a, x) => a + x.gain, 0);
+  const ranked = sides.slice().sort((a, b) => b.net - a.net);
+  const graded = !reason;
+  const winner = graded && ranked.length > 1 && ranked[0].net > 0 ? ranked[0] : null;
+  const margin = winner ? winner.net : 0;
+
+  return {
+    id: tx.transaction_id, season: season.season, week, date: Number(tx.created) || 0,
+    sides, ranked, moved, winner, margin, graded, reason, adds, drops,
+    partial: !season.complete, nPicks: picks.length, nTeams: rids.length, nPlayers: pids.length,
+  };
+}
+
+/**
+ * Sleeper keeps a trade that was executed and then put straight back — a veto,
+ * a misclick, a change of heart. Both halves come back marked complete, and
+ * graded naively the pair reads as the two biggest fleecings in league history,
+ * in opposite directions. A trade whose exact inverse runs between the same
+ * managers inside a day is a wash, so neither half is graded.
+ */
+function markReversals(trades) {
+  const DAY = 24 * 60 * 60 * 1000;
+  const key = t => `${t.season}|${Object.keys(t.adds).sort().join(",")}`;
+  const groups = new Map();
+  for (const t of trades) {
+    if (!t.nPlayers) continue;
+    const k = key(t);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(t);
+  }
+  let n = 0;
+  for (const g of groups.values()) {
+    if (g.length < 2) continue;
+    g.sort((a, b) => a.date - b.date);
+    for (let i = 0; i < g.length; i++) for (let j = i + 1; j < g.length; j++) {
+      const a = g[i], b = g[j];
+      if (a.reversed || b.reversed || Math.abs(b.date - a.date) > DAY) continue;
+      const pids = Object.keys(a.adds);
+      const inverse = pids.every(p => b.adds[p] != null && b.adds[p] !== a.adds[p] && b.adds[p] === a.drops[p]);
+      if (!inverse) continue;
+      for (const t of [a, b]) {
+        t.reversed = true; t.graded = false; t.winner = null; t.margin = 0;
+        t.reason = "put straight back — the same players returned inside a day";
+      }
+      n += 2;
+    }
+  }
+  return n;
+}
+
+function verdictOf(t) {
+  if (!t.graded) return { cls: "none", label: "Not graded" };
+  if (!t.winner || t.margin < TRADE_EVEN) return { cls: "even", label: "Nobody won it" };
+  const m = t.margin;
+  const label = m >= TRADE_LOPSIDED ? "Fleecing" : m >= TRADE_CLEAR ? "Lopsided" : "Won it";
+  return { cls: m >= TRADE_LOPSIDED ? "fleeced" : m >= TRADE_CLEAR ? "lop" : "win", label };
+}
+
+function tradeLedger(txs) {
+  const seasonOf = new Map(DB.seasons.map(s => [s.season, s]));
+  const trades = txs.filter(t => t.type === "trade")
+    .map(t => gradeTrade(t, seasonOf.get(t.season)))
+    .filter(Boolean)
+    .sort((a, b) => (b.date - a.date) || (Number(b.season) - Number(a.season)) || (b.week - a.week));
+  const reversed = markReversals(trades);
+
+  const byMgr = new Map();
+  for (const t of trades) {
+    if (!t.graded) continue;
+    for (const sd of t.sides) {
+      if (!sd.uid) continue;
+      if (!byMgr.has(sd.uid)) byMgr.set(sd.uid,
+        { uid: sd.uid, n: 0, net: 0, gained: 0, lost: 0, won: 0, lostN: 0, best: null, worst: null });
+      const m = byMgr.get(sd.uid);
+      m.n++; m.net += sd.net; m.gained += sd.gain; m.lost += sd.loss;
+      if (sd.net > TRADE_EVEN) m.won++; else if (sd.net < -TRADE_EVEN) m.lostN++;
+      if (!m.best || sd.net > m.best.net) m.best = { ...sd, t };
+      if (!m.worst || sd.net < m.worst.net) m.worst = { ...sd, t };
+    }
+  }
+  const graded = trades.filter(t => t.graded);
+  return {
+    trades, graded, reversed,
+    byMgr: [...byMgr.values()].sort((a, b) => b.net - a.net),
+    fleecing: graded.filter(t => t.winner).sort((a, b) => b.margin - a.margin)[0] || null,
+    moved: graded.reduce((a, t) => a + t.moved, 0),
+    seasons: [...new Set(trades.map(t => t.season))].sort((a, b) => Number(b) - Number(a)),
+  };
+}
+
+/* ------------------------------------------------------------ waivers */
+/*
+ * A claim is credited with what the player scored from the week he was claimed
+ * onward — the same rule the trades use. Nothing here knows whether a manager
+ * actually started him, or kept him.
+ */
+function waiverReport(txs) {
+  const seasonOf = new Map(DB.seasons.map(s => [s.season, s]));
+  const claims = [], spend = new Map();
+  for (const t of txs) {
+    if (t.type !== "waiver" && t.type !== "free_agent") continue;
+    const season = seasonOf.get(t.season);
+    if (!season) continue;
+    const adds = t.adds || {};
+    const pids = Object.keys(adds);
+    if (!pids.length) continue;
+    const wk = Number(t.leg) || 1;
+    const bid = Number(t.settings && t.settings.waiver_bid) || 0;
+    const rid = adds[pids[0]];
+    const uid = season.uidOf.get(rid);
+    if (!uid) continue;
+
+    if (bid > 0) {
+      const sp = spend.get(uid) || { uid, spent: 0, claims: 0 };
+      sp.spent += bid; sp.claims++; spend.set(uid, sp);
+    }
+    // One bid buys the whole claim, so a multi-player claim is one row.
+    const players = pids.map(p => { const n = pname(p); return { pid: p, name: n.name, pos: n.pos, pts: ptsFrom(season, p, wk) }; });
+    // A claim made in week 14 can only ever earn one week of points, so ranking
+    // it on points-per-dollar against a week-3 claim is not a comparison. Only
+    // claims with three regular-season weeks still to run get ranked; the money
+    // still counts towards what a manager spent, because he really spent it.
+    const lastReg = (season.pws || 15) - 1;
+    const weeksLeft = Math.max(0, lastReg - wk + 1);
+    claims.push({
+      season: t.season, week: wk, uid, bid, players, weeksLeft,
+      pts: players.reduce((a, x) => a + x.pts, 0),
+      type: t.type, played: seasonPlayed(season),
+      judged: seasonPlayed(season) && weeksLeft >= 3,
+    });
+  }
+  const scored = claims.filter(c => c.judged);
+  const paid = scored.filter(c => c.bid >= FAAB_MIN);
+  const perPoint = c => c.pts > 0 ? c.bid / c.pts : Infinity;
+  return {
+    claims, spend: [...spend.values()].sort((a, b) => b.spent - a.spent),
+    totalSpent: [...spend.values()].reduce((a, x) => a + x.spent, 0),
+    // Claims that returned something, ranked by what each point cost. A claim
+    // that returned nothing divides by zero and belongs in dead money instead.
+    overpays: paid.filter(c => c.pts > 0).sort((a, b) => (perPoint(b) - perPoint(a)) || (b.bid - a.bid)).slice(0, 10),
+    bestFree: scored.filter(c => c.bid === 0).sort((a, b) => b.pts - a.pts).slice(0, 10),
+    bestBuys: paid.slice().sort((a, b) => (perPoint(a) - perPoint(b)) || (b.pts - a.pts)).slice(0, 10),
+    // Money that bought literally nothing. Ranked by size of bid rather than by
+    // cost per point, because every one of these divides by zero. A claim needs
+    // at least one regular-season week to run, or the zero is just the calendar.
+    deadMoney: claims.filter(c => c.played && c.weeksLeft >= 1 && c.bid > 0 && c.pts <= 0)
+      .sort((a, b) => b.bid - a.bid).slice(0, 10),
+    judged: scored.length, lateSkipped: claims.filter(c => c.played && !c.judged).length,
+    perPoint,
+  };
+}
+
+/* -------------------------------------------------------------- panel */
+const plabel = x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
+const sgnf = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
+
+function tradeCard(t) {
+  const v = verdictOf(t);
+  const box = el("article", "trade");
+  const when = `${t.season} · ${t.week === 1 ? "preseason / week 1" : "week " + t.week}`;
+  // Inside the even band nobody is called a winner, so neither the margin nor
+  // the winner's highlight is shown — a 23-point edge over fourteen weeks is
+  // noise, and printing it next to "nobody won it" would argue with itself.
+  const decided = t.graded && !!t.winner && v.cls !== "even";
+  box.innerHTML = `<header class="thead">
+      <span class="twhen">${esc(when)}${t.nTeams > 2 ? ` · ${t.nTeams}-team` : ""}</span>
+      <span class="verd ${v.cls}">${esc(v.label)}${decided ? ` ${esc(sgnf(t.margin))}` : ""}</span>
+    </header>`;
+
+  const sides = el("div", "tsides");
+  for (const sd of t.sides) {
+    const d = el("div", "tside" + (decided && sd.rid === t.winner.rid ? " won" : ""));
+    const lines = sd.got.map(x =>
+      `<li class="tline"><span class="pn">${plabel(x)}</span><span class="pp">${t.graded ? f1(x.pts) : "—"}</span></li>`).join("");
+    d.innerHTML = `<div class="who">${avatarHTML(sd.uid, "sm")}
+        <span class="n">${esc(sd.uid ? nameOf(sd.uid) : "roster " + sd.rid)}</span>
+        ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}</div>
+      ${lines ? `<ul class="tlist">${lines}</ul>` : `<div class="tpicks">no players</div>`}
+      ${sd.picksIn.length ? `<div class="tpicks">picks in: ${sd.picksIn.map(fmtPick).map(esc).join(", ")}</div>` : ""}`;
+    sides.appendChild(d);
+  }
+  box.appendChild(sides);
+
+  const notes = [];
+  if (!t.graded) notes.push(`Not graded — ${t.reason}.`);
+  else notes.push(`${f1(t.moved)} points changed hands from ${t.week === 1 ? "week 1" : "week " + t.week} on${t.partial ? ", and the season is still running" : ""}.`);
+  if (t.graded && t.nPicks) notes.push(`${t.nPicks} draft pick${t.nPicks === 1 ? "" : "s"} also moved and ${t.nPicks === 1 ? "is" : "are"} not priced here.`);
+  box.appendChild(el("div", "tnote", notes.map(esc).join(" ")));
+  return box;
+}
+
+function renderTrades(host, L, W) {
+  host.innerHTML = "";
+
+  if (!L.trades.length) {
+    host.appendChild(el("div", "empty",
+      "<b>No trades on record</b>Nobody in this league has ever made one. The moment somebody does, it appears here."));
+    return;
+  }
+
+  /* ---- the hero: the worst beating anyone has taken ---- */
+  if (L.fleecing) {
+    const t = L.fleecing, w = t.winner;
+    const loser = t.ranked[t.ranked.length - 1];
+    const got = w.got.map(x => x.name).join(", ") || "nothing";
+    const gave = w.sent.map(x => x.name).join(", ") || "nothing";
+    const f = el("div", "fleece");
+    f.innerHTML = `<div class="k">Biggest fleecing in league history</div>
+      <div class="v">${esc(sgnf(t.margin))}</div>
+      <div class="w">${esc(nameOf(w.uid))} took ${esc(loser.uid ? nameOf(loser.uid) : "the other side")} — ${esc(t.season)}, ${t.week === 1 ? "preseason" : "week " + t.week}</div>
+      <div class="c">Got ${esc(got)} (${f1(w.gain)} pts from there on) for ${esc(gave)} (${f1(w.loss)}).</div>`;
+    host.appendChild(f);
+  }
+
+  const tiles = el("div", "tiles");
+  const ungraded = L.trades.length - L.graded.length;
+  tiles.innerHTML = [
+    { l: "Trades all-time", v: String(L.trades.length), n: `across ${L.seasons.length} season${L.seasons.length === 1 ? "" : "s"}` },
+    { l: "Graded", v: String(L.graded.length), n: ungraded ? `${ungraded} can't be scored fairly` : "every one of them" },
+    { l: "Points traded", v: f1(L.moved), n: "counted after each deal" },
+    { l: "Biggest margin", v: L.fleecing ? sgnf(L.fleecing.margin) : "—", n: L.fleecing ? `${nameOf(L.fleecing.winner.uid)}, ${L.fleecing.season}` : "nothing graded yet" },
+  ].map(t => `<div class="tile"><div class="l">${esc(t.l)}</div><div class="v">${esc(t.v)}</div><div class="n">${esc(t.n)}</div></div>`).join("");
+  host.appendChild(tiles);
+
+  /* ---- the ledger ---- */
+  host.appendChild(sechead("All-time trade ledger",
+    "Points gained minus points given up, added across every trade a manager has ever made. Only the weeks after each deal count."));
+  if (!L.byMgr.length) {
+    host.appendChild(el("div", "empty", "<b>Nothing to add up yet</b>No trade in league history can be scored."));
+  } else {
+    host.appendChild(tableCard(
+      [{ label: "Manager" }, { label: "Trades", num: 1 }, { label: "Net", num: 1, title: "Points gained minus points given up" },
+      { label: "Got", num: 1 }, { label: "Gave", num: 1 }, { label: "W–L", num: 1, title: "Trades won and lost by more than 25 points" },
+      { label: "Best" }, { label: "Worst" }],
+      L.byMgr.map(m => `<tr>
+        <td><span class="nmcell">${avatarHTML(m.uid, "sm")}${esc(nameOf(m.uid))}</span></td>
+        <td class="num">${m.n}</td>
+        <td class="num ${m.net >= 0 ? "pos-t" : "neg-t"}"><b>${esc(sgnf(m.net))}</b></td>
+        <td class="num">${f1(m.gained)}</td>
+        <td class="num">${f1(m.lost)}</td>
+        <td class="num">${m.won}–${m.lostN}</td>
+        <td>${m.best ? `<span class="pos-t">${esc(sgnf(m.best.net))}</span> ${esc(m.best.got.map(x => x.name).join(", ") || "picks")} <span class="pos">${esc(m.best.t.season)}</span>` : "—"}</td>
+        <td>${m.worst ? `<span class="neg-t">${esc(sgnf(m.worst.net))}</span> ${esc(m.worst.got.map(x => x.name).join(", ") || "picks")} <span class="pos">${esc(m.worst.t.season)}</span>` : "—"}</td>
+      </tr>`)));
+  }
+
+  /* ---- every trade, newest first ---- */
+  host.appendChild(sechead("Every trade in league history",
+    "Newest first. Each player is followed by what he scored from that week to the end of that regular season — the only points either side can claim."));
+  const filt = el("div", "tfilter");
+  const sel = el("select");
+  const opt = (v, t) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); };
+  opt("all", `All seasons (${L.trades.length})`);
+  for (const yr of L.seasons) opt(yr, `${yr} (${L.trades.filter(t => t.season === yr).length})`);
+  filt.appendChild(sel);
+  host.appendChild(filt);
+  const list = el("div");
+  host.appendChild(list);
+
+  function drawList() {
+    list.innerHTML = "";
+    const show = sel.value === "all" ? L.trades : L.trades.filter(t => t.season === sel.value);
+    if (!show.length) {
+      list.appendChild(el("div", "empty",
+        `<b>No trades in ${esc(sel.value)}</b>Nobody made a deal that season. It happens.`));
+      return;
+    }
+    for (const t of show) list.appendChild(tradeCard(t));
+  }
+  sel.onchange = drawList; drawList();
+
+  /* ---- waivers ---- */
+  host.appendChild(sechead("Waivers and FAAB",
+    "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him."));
+
+  if (!W.claims.length) {
+    host.appendChild(el("div", "empty", "<b>No waiver activity on record</b>"));
+  } else {
+    const worst = W.overpays[0], free = W.bestFree[0], buy = W.bestBuys[0], dead = W.deadMoney[0];
+    const money = v => "$" + Math.round(v);
+    const perPt = v => v >= 1 ? `$${Math.round(v)}` : `$${f2(v)}`;
+    const recs = el("div", "recs");
+    recs.innerHTML = [
+      dead && {
+        c: "down", l: "Most money for nothing", v: money(dead.bid),
+        w: dead.players.map(x => x.name).join(", "),
+        x: `${nameOf(dead.uid)} won him in ${dead.season} week ${dead.week} with ${dead.weeksLeft} week${dead.weeksLeft === 1 ? "" : "s"} left, and he scored ${f1(dead.pts)}`,
+      },
+      worst && worst.pts > 0 && {
+        c: "down", l: "Biggest FAAB overpay", v: `${perPt(W.perPoint(worst))}/pt`,
+        w: worst.players.map(x => x.name).join(", "),
+        x: `${nameOf(worst.uid)} paid ${money(worst.bid)} in ${worst.season} week ${worst.week} for ${f1(worst.pts)} points`,
+      },
+      free && {
+        c: "up", l: "Best free pickup", v: f1(free.pts),
+        w: free.players.map(x => x.name).join(", "),
+        x: `${nameOf(free.uid)} claimed him for nothing, ${free.season} week ${free.week}`,
+      },
+      buy && {
+        c: "up", l: "Best money spent", v: `${perPt(W.perPoint(buy))}/pt`,
+        w: buy.players.map(x => x.name).join(", "),
+        x: `${nameOf(buy.uid)} paid ${money(buy.bid)} for ${f1(buy.pts)} points, ${buy.season} week ${buy.week}`,
+      },
+      { c: "up", l: "FAAB spent, all-time", v: money(W.totalSpent), w: "across the league", x: `${W.spend.length} managers have bid on somebody` },
+    ].filter(Boolean).map(x =>
+      `<div class="rec ${x.c}"><div class="l">${esc(x.l)}</div><div class="v">${esc(x.v)}</div>
+       <div class="w">${esc(x.w)}</div><div class="c">${esc(x.x)}</div></div>`).join("");
+    host.appendChild(recs);
+
+    const claimRow = c => `<tr>
+      <td>${c.players.map(plabel).join(", ")}</td>
+      <td>${esc(nameOf(c.uid))}</td>
+      <td class="num">${esc(c.season)}</td>
+      <td class="num">${c.week}</td>
+      <td class="num">$${c.bid}</td>
+      <td class="num">${c.weeksLeft}</td>
+      <td class="num">${f1(c.pts)}</td>
+      <td class="num">${c.pts > 0 ? "$" + f2(W.perPoint(c)) : "—"}</td></tr>`;
+    const claimHead = [{ label: "Player" }, { label: "Claimed by" }, { label: "Season", num: 1 }, { label: "Wk", num: 1 },
+    { label: "Bid", num: 1 }, { label: "Weeks left", num: 1, title: "Regular-season weeks the player still had to run" },
+    { label: "Points after", num: 1 }, { label: "$ / point", num: 1 }];
+
+    host.appendChild(sechead("Worst money in league history",
+      `Claims of $${FAAB_MIN} or more with at least three regular-season weeks still to run, ranked by what each point ended up costing. The ones that returned nothing at all are below.`));
+    host.appendChild(tableCard(claimHead, W.overpays.map(claimRow)));
+
+    if (W.deadMoney.length) {
+      host.appendChild(sechead("Dead money",
+        "Winning bids that returned nothing at all. Every one of these had regular-season football left to play."));
+      host.appendChild(tableCard(
+        [{ label: "Player" }, { label: "Claimed by" }, { label: "Season", num: 1 }, { label: "Wk", num: 1 },
+        { label: "Bid", num: 1 }, { label: "Weeks left", num: 1 }, { label: "Points after", num: 1 }],
+        W.deadMoney.map(c => `<tr>
+          <td>${c.players.map(plabel).join(", ")}</td>
+          <td>${esc(nameOf(c.uid))}</td>
+          <td class="num">${esc(c.season)}</td>
+          <td class="num">${c.week}</td>
+          <td class="num"><b>$${c.bid}</b></td>
+          <td class="num">${c.weeksLeft}</td>
+          <td class="num">${f1(c.pts)}</td></tr>`)));
+    }
+
+    host.appendChild(sechead("Best free pickups", "Claimed for nothing, and what they went on to score from that week to the end of the regular season."));
+    host.appendChild(tableCard(
+      [{ label: "Player" }, { label: "Claimed by" }, { label: "Season", num: 1 }, { label: "Wk", num: 1 }, { label: "Points after", num: 1 }],
+      W.bestFree.map(c => `<tr>
+        <td>${c.players.map(plabel).join(", ")}</td>
+        <td>${esc(nameOf(c.uid))}</td>
+        <td class="num">${esc(c.season)}</td>
+        <td class="num">${c.week}</td>
+        <td class="num"><b>${f1(c.pts)}</b></td></tr>`)));
+
+    if (W.spend.length) {
+      host.appendChild(sechead("FAAB spent, by manager", "Every winning bid a manager has ever made, added up."));
+      host.appendChild(barCard(
+        W.spend.map(x => ({ label: nameOf(x.uid), v: x.spent, claims: x.claims })),
+        v => "$" + Math.round(v),
+        it => `<b>${esc(it.label)}</b><br>$${Math.round(it.v)} across ${it.claims} winning bids`));
+    }
+  }
+
+  host.appendChild(glossary([
+    { t: "Points after", d: "What a player scored from the week of the deal to the end of that regular season. Points he scored earlier belong to whoever owned him then, so they are never counted." },
+    { t: "Net", d: "Points received minus points given up. The two sides of a trade are exact mirrors, so a league-wide net of zero is the arithmetic working, not a coincidence." },
+    { t: "Not graded", d: "A trade of picks only, or one made after the regular season, or one in a season that hasn't been played. Rather than invent a number, the board says so." },
+    { t: "$ / point", d: "A winning FAAB bid divided by what the player scored afterwards. The cheapest way to compare a $40 claim to a $3 one." },
+  ]));
+
+  const m = el("div", "method");
+  m.innerHTML = `<h3>What this can and cannot see</h3>
+    <p>Points are a player's total production under DFFL scoring, starters and bench alike — the same
+       number the draft board uses. Nothing here knows whether a manager actually started the player he
+       traded for, or whether he dropped him a week later.</p>
+    <p>A player only scores here while somebody rosters him. Drop a traded player and the weeks he spends
+       unclaimed are invisible to Sleeper's box scores and therefore to this page — which flatters the
+       manager who dumped him.</p>
+    <p>Draft picks are counted and shown but never priced. A pick's worth depends on where it lands, which
+       is not known until the draft runs, so a trade that moved only picks is marked <b>not graded</b>
+       rather than given a number that would be made up. ${L.trades.length - L.graded.length} of
+       ${L.trades.length} trades fall in that bucket${L.reversed ? `, ${L.reversed} of them because the
+       same players went straight back inside a day — a trade undone is not a trade won` : ""}.</p>
+    <p>Playoff scoring is excluded on both sides. Six of twelve teams make the playoffs, so counting those
+       weeks would reward a trade for the team it was made by rather than the players in it. For the same
+       reason a waiver claim needs three regular-season weeks still to run before it is ranked on value:
+       ${W.lateSkipped} claims were made too late to judge that way, and are counted in the money spent
+       but nowhere else.</p>`;
+  host.appendChild(m);
+}
+
+let TRADES_STARTED = false;
+async function ensureTrades() {
+  if (TRADES_STARTED) return;
+  TRADES_STARTED = true;
+  const host = $("#tradesHost");
+  if (!host) return;
+  try {
+    const txs = await loadTransactions();
+    const need = new Set();
+    for (const t of txs) {
+      for (const k of Object.keys(t.adds || {})) need.add(k);
+      for (const k of Object.keys(t.drops || {})) need.add(k);
+    }
+    await loadPlayerNames(need);
+    const L = tradeLedger(txs), W = waiverReport(txs);
+    window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
+    renderTrades(host, L, W);
+    document.body.dataset.tradesReady = "1";
+  } catch (e) {
+    host.innerHTML = "";
+    host.appendChild(el("div", "empty",
+      `<b>Couldn't load the transaction history</b>${esc(e.message)}<br>Sleeper may be rate-limiting — reload in a minute.`));
+    document.body.dataset.tradesReady = "error";
+    console.error(e);
+  }
+}
+
+function panelTrades() {
+  const p = el("div", "panel"); p.dataset.panel = "trades";
+  p.appendChild(sechead("The trade block",
+    "Every trade DFFL has ever made, graded on what the players did afterwards — never on what they did all season. Waivers and FAAB get the same treatment."));
+  const host = el("div"); host.id = "tradesHost";
+  host.appendChild(el("div", "empty",
+    `<b>Reading the transaction history…</b>Five seasons of trades, waiver claims and free-agent adds,
+     plus the player-name file Sleeper keeps separately. It is a few megabytes, so it is only ever
+     fetched when somebody opens this tab — which you just did.`));
+  p.appendChild(host);
+  return p;
+}
+
 /* ---------------------------------------------------------------- boot */
 async function boot() {
   try {
@@ -2583,6 +3209,7 @@ async function boot() {
     app.appendChild(panelMatchups(AT));
     app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelDraft());
+    app.appendChild(panelTrades());
     app.appendChild(await panelRecaps());
 
     buildTabs();
@@ -2597,6 +3224,8 @@ async function boot() {
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
+      ensureTrades, loadTransactions, loadPlayerNames, tradeLedger, waiverReport,
+      gradeTrade, ptsFrom, verdictOf, TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,
     };
     document.body.dataset.ready = "1";
   } catch (e) {
