@@ -473,6 +473,45 @@ check("nearly every drafted player prices against it",
 check("the players it cannot price are all deep in the draft",
   adp.missedLatest >= 100, `earliest unpriced pick is ${adp.missedLatest}`);
 check("value curve decreases with draft position", adp.monotone);
+
+const keeperPricing = await page.evaluate(async () => {
+  const D = window.__DFFL, s = D.DB.seasons[0];
+  await D.keepersFor(s);
+  const keep = D.keepersOf(s);
+  const a = await D.loadADP();
+  // A keeper is priced at what the player is worth, not at the round he cost.
+  // Rebuild every roster by hand and require the model to agree.
+  const byMgr = new Map();
+  for (const pk of s.picks) {
+    const md = pk.metadata || {};
+    const adp = a.byName.get(D.adpKey(`${md.first_name || ""} ${md.last_name || ""}`, md.position));
+    const v = D.adpValue(adp != null ? adp : D.ADP_CURVE.deepest);
+    if (!byMgr.has(pk.picked_by)) byMgr.set(pk.picked_by, []);
+    byMgr.get(pk.picked_by).push({ v, kept: keep.has(String(pk.player_id)) });
+  }
+  let worst = 0, keptShareMin = 1, keptShareMax = 0;
+  for (const t of window.__ODDS.teams) {
+    const top = (byMgr.get(t.uid) || []).sort((x, y) => y.v - x.v).slice(0, s.draftRounds);
+    const total = top.reduce((x, y) => x + y.v, 0);
+    const kept = top.filter(x => x.kept).reduce((x, y) => x + y.v, 0);
+    worst = Math.max(worst, Math.abs(total - t.rosterValue));
+    keptShareMin = Math.min(keptShareMin, kept / total);
+    keptShareMax = Math.max(keptShareMax, kept / total);
+  }
+  // And the flag itself must not enter the valuation: price the same rosters
+  // with every keeper mark removed and nothing may move.
+  const before = window.__ODDS.teams.map(t => t.rosterValue);
+  const saved = s._keepers; s._keepers = new Set();
+  const again = D.rosterValue(s.picks, a, s.draftRounds);
+  s._keepers = saved;
+  const unchanged = window.__ODDS.teams.every((t, i) =>
+    Math.abs((again.byUid.get(t.uid) || 0) - before[i]) < 1e-9);
+  return { worst, unchanged, keptShareMin: +(keptShareMin * 100).toFixed(0), keptShareMax: +(keptShareMax * 100).toFixed(0) };
+});
+check("the odds price every keeper at what the player is worth", keeperPricing.worst < 0.05, `worst gap ${keeperPricing.worst}`);
+check("the keeper list itself never enters the valuation", keeperPricing.unchanged);
+check("keepers carry a real share of every roster", keeperPricing.keptShareMin > 10 && keeperPricing.keptShareMax < 60,
+  `${keeperPricing.keptShareMin}% to ${keeperPricing.keptShareMax}%`);
 check("pick 1 worth far more than pick 180", adp.v1 > adp.v180 * 4, `${adp.v1.toFixed(1)} vs ${adp.v180.toFixed(1)}`);
 check("out-of-range ADP clamps to the floor", adp.floored);
 check("Sleeper kickers (K) map to the board's PK", adp.kMapped);
@@ -1078,6 +1117,7 @@ const draftT = await page.evaluate(async () => {
   // Whoever owned each player the moment the draft began — last season's final
   // rosters plus any trade that closed first. A keeper has to come from there.
   const owner = await D.preDraftOwners(s26);
+  window.__STATED_2026 = ((await D.loadStatedKeepers()).seasons || {})["2026"] || null;
   const adp = await D.loadADP();
   const marked = (s26.picks || []).filter(p => k26.has(String(p.player_id)));
   const strays = [], overpaid = [];
@@ -1104,17 +1144,31 @@ const draftT = await page.evaluate(async () => {
     everyMarkedDiscounted: overpaid.length === 0, overpaid: overpaid.slice(0, 3),
     managers: Object.keys(perMgr).length,
     maxPerManager: Math.max(...Object.values(perMgr)),
+    statedCount: (() => {
+      const listed = (D.DB.seasons[0]._keeperSource === "stated") && window.__STATED_2026;
+      return listed ? Object.values(listed).flat().length : k26.size;
+    })(),
+    derivedMax: (() => {
+      // rebuild the guess on an older season, where no stated list exists
+      const s23 = DB.seasons.find(x => x.season === "2023");
+      if (!s23) return 0;
+      const per = {};
+      for (const p of s23.picks || []) if (D.keepersOf(s23).has(String(p.player_id)))
+        per[p.picked_by] = (per[p.picked_by] || 0) + 1;
+      return Math.max(0, ...Object.values(per));
+    })(),
     posClasses: ["QB", "RB", "WR", "TE", "K", "DEF", "P"].map(x => D.posClass(x)),
   };
 });
 check("keepers are worked out, not left to Sleeper's sparse flag", draftT.k26 > 25 && draftT.flaggedOnly < 5, `${draftT.k26} found vs ${draftT.flaggedOnly} flagged`);
 check("every pick Sleeper flags is caught too", draftT.flaggedAreCaught);
-check("nobody is credited with more keepers than the league allows", draftT.maxPerManager <= draftT.cap, `${draftT.maxPerManager} of ${draftT.cap}`);
+// The cap binds the derivation, not the truth: one manager really did keep four.
+check("a guessed list never exceeds the league's keeper cap", draftT.derivedMax <= draftT.cap, `${draftT.derivedMax} of ${draftT.cap}`);
 check("the first season on record has no keepers to work out", draftT.kOldest === 0, `${draftT.kOldest}`);
 check("every stated keeper is a real pick by that manager", draftT.allStatedAreHisPicks, draftT.notHis.join(" | "));
 check("most keepers do trace to last season's roster", draftT.strays.length <= 4, `${draftT.strays.length} do not: ${draftT.strays.join(", ")}`);
 check("the keeper list is read off keepers.json, not guessed", draftT.source === "stated", draftT.source);
-check("the league's own keeper count is respected", draftT.k26 === 35, `${draftT.k26}`);
+check("every keeper on the list reaches the board", draftT.k26 === draftT.statedCount, `${draftT.k26} marked of ${draftT.statedCount} stated`);
 check("positions map to their own colour class", draftT.posClasses.join(",") === "qb,rb,wr,te,kk,def,oth", draftT.posClasses.join(","));
 
 const draftDom = await page.evaluate(() => {

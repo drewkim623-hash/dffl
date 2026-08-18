@@ -265,7 +265,7 @@
         },
         {
           "type": "p",
-          "text": "One starting quarterback slot, fifteen rounds, and a room that has clearly done the maths. Five of the six biggest falls in the entire open draft were quarterbacks:"
+          "text": "One starting quarterback slot, fifteen rounds, and a room that has clearly done the maths. Four of the five biggest falls in the entire open draft were quarterbacks, and a fifth quarterback was kept in the fifteenth round rather than risk him reaching the room at all:"
         },
         {
           "type": "picks",
@@ -283,6 +283,12 @@
               "delta": "+27"
             },
             {
+              "slot": "Pick 138",
+              "name": "Bo Nix",
+              "sub": "bertalicious · market price 118",
+              "delta": "+20"
+            },
+            {
               "slot": "Pick 147",
               "name": "Matthew Stafford",
               "sub": "wesley55 · market price 81",
@@ -293,12 +299,6 @@
               "name": "Brock Purdy",
               "sub": "jskule23 · market price 88",
               "delta": "+71"
-            },
-            {
-              "slot": "Pick 178",
-              "name": "Trevor Lawrence",
-              "sub": "bradyrife · market price 92",
-              "delta": "+86"
             }
           ]
         },
@@ -317,16 +317,16 @@
         },
         {
           "type": "p",
-          "text": "Thirty-five players were kept across the twelve teams, and the gap between what they are worth and what they cost is the whole shape of this league. jskule23 kept Puka Nacua — the third player off the board in the wider market — with the 179th pick. bertalicious kept Bucky Irving at 175. moseslin kept Nico Collins at 149. saucebossandrew kept De'Von Achane, a top-ten back, in the ninth round."
+          "text": "Thirty-six players were kept across the twelve teams, and the gap between what they are worth and what they cost is the whole shape of this league. jskule23 kept Puka Nacua — the third player off the board in the wider market — with the 179th pick. bertalicious kept Bucky Irving at 175. moseslin kept Nico Collins at 149. saucebossandrew kept De'Von Achane, a top-ten back, in the ninth round."
         },
         {
           "type": "stat",
           "n": "176",
-          "text": "picks between Puka Nacua's market price and the one jskule23 actually paid — the largest keeper discount in the league. The biggest fall in the open draft was a quarterback, 86 picks."
+          "text": "picks between Puka Nacua's market price and the one jskule23 actually paid — the largest keeper discount in the league. The biggest fall in the open draft was also a quarterback: Brock Purdy, 71 picks."
         },
         {
           "type": "p",
-          "text": "At the other end, three managers kept a player at more or less exactly what he costs anybody: moseslin paid pick 20 for Saquon Barkley, whose market price is 20. jadencha paid pick 8 for Jonathan Taylor, market price 8. bradyrife paid 10 for Christian McCaffrey, market 6. Those are not bargains, they are declarations — a first-round slot spent to keep a first-round player, which is what a keeper league does to you when your best asset is also your most expensive one."
+          "text": "At the other end, three managers kept a player at more or less exactly what he costs anybody: moseslin paid pick 20 for Saquon Barkley, whose market price is 20. jadencha paid pick 8 for Jonathan Taylor, market price 8. bradyrife paid 10 for Christian McCaffrey, market 6 — and then kept a fourth, Trevor Lawrence, with the 178th pick against a market price of 92. Those are not bargains, they are declarations — a first-round slot spent to keep a first-round player, which is what a keeper league does to you when your best asset is also your most expensive one."
         },
         {
           "type": "p",
@@ -347,7 +347,7 @@
         },
         {
           "type": "p",
-          "text": "<b>bradyrife</b> is the one nobody will pick, and the numbers are less rude than the reputation. He finished last in 2025 with the worst all-time record in the league at 19-37. His 2026 draft came out fractionally on the right side of average for the first time, which for him is a step forward of some size. Chase Brown in the ninth round and Garrett Wilson in the tenth are the kind of holdings that turn a floor into a middle."
+          "text": "<b>bradyrife</b> is the one nobody will pick, and the numbers are less rude than the reputation. He finished last in 2025 with the worst all-time record in the league at 19-37. His 2026 draft came out fractionally on the right side of average for the first time, which for him is a step forward of some size. He is also the only manager carrying four keepers, and they are 43 percent of his roster's value — the highest share in the league. Chase Brown in the ninth round and Garrett Wilson in the tenth are the kind of holdings that turn a floor into a middle."
         },
         {
           "type": "h",
@@ -378,6 +378,10 @@
         {
           "type": "p",
           "text": "One consolation, and it is a real one: the consolation bracket in this format means the worst record does not actually finish last. Seeds eleven and twelve skip the elimination round entirely. Being terrible here is genuinely protective."
+        },
+        {
+          "type": "p",
+          "text": "One thing the projections deliberately do not do is discount a keeper. Puka Nacua is priced at what a top-three player is worth, not at what a fifteenth-round pick usually returns, because he will score like the former whatever he cost. Keepers are between 19 and 43 percent of every roster's value on this board, and that is the single biggest reason the projections disagree with last season's standings."
         },
         {
           "type": "h",
