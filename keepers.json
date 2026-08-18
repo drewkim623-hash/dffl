@@ -1,0 +1,76 @@
+{
+  "_comment": "The real keeper list, one entry per manager per season. Sleeper does not record this league's keepers — its is_keeper flag is set on 2 of about 36 picks in 2026 — so without this file the site works them out from pre-draft rosters and market discounts, which is a guess and says so. Anything written here wins outright. Names must match the draft board's spelling; a name written under the wrong manager marks nobody rather than marking the wrong player.",
+  "_schema": {
+    "seasons": {
+      "<4-digit season>": {
+        "<manager display name>": [
+          "<player name>",
+          "..."
+        ]
+      }
+    }
+  },
+  "seasons": {
+    "2026": {
+      "drewkim": [
+        "Jayden Daniels",
+        "Brock Bowers",
+        "Emeka Egbuka"
+      ],
+      "jadencha": [
+        "Jonathan Taylor",
+        "Amon-Ra St. Brown",
+        "Jaxon Smith-Njigba"
+      ],
+      "Domo112": [
+        "Bijan Robinson",
+        "Jahmyr Gibbs",
+        "Colston Loveland"
+      ],
+      "moseslin": [
+        "Saquon Barkley",
+        "Cam Skattebo",
+        "Nico Collins"
+      ],
+      "chassinator": [
+        "Drake Maye",
+        "Kyren Williams"
+      ],
+      "sizzlemc2": [
+        "Justin Herbert",
+        "Javonte Williams",
+        "Kenneth Walker"
+      ],
+      "wesley55": [
+        "Joe Burrow",
+        "James Cook",
+        "Quinshon Judkins"
+      ],
+      "victorthompson": [
+        "Drake London",
+        "A.J. Brown",
+        "Ladd McConkey"
+      ],
+      "jskule23": [
+        "Josh Allen",
+        "Puka Nacua",
+        "Luther Burden"
+      ],
+      "saucebossandrew": [
+        "De'Von Achane",
+        "Rashee Rice",
+        "Michael Wilson"
+      ],
+      "bertalicious": [
+        "Bucky Irving",
+        "Ja'Marr Chase",
+        "Trey McBride"
+      ],
+      "bradyrife": [
+        "Garrett Wilson",
+        "Christian McCaffrey",
+        "Chase Brown"
+      ]
+    }
+  }
+}

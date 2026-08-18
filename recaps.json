@@ -53,9 +53,13 @@
       "standfirst": "15 rounds, 180 picks",
       "blocks": [
         {
+          "type": "note",
+          "text": "Corrected 18 August 2026, twice. This piece first ran with market prices from a standard-scoring draft board; DFFL is not standard — a catch is worth a full point to receivers and tight ends and half a point to backs — so every market comparison has been recomputed against the PPR board and the projections with it. It also ran with a keeper list the site had guessed at, because Sleeper records this league's keepers on only two picks. The real list is now written down and the piece is built on it. Two sections changed outright."
+        },
+        {
           "type": "p",
           "lead": true,
-          "text": "The draft is in. Fifteen rounds, a hundred and eighty picks, and a board that looks nothing like the standings it came from. The team that finished eighth last year drafted like a contender. The team that won eleven games drafted like it was already satisfied. And a running back the market values inside the top twenty-five sat on the board until the fourteenth round."
+          "text": "The draft is in. Fifteen rounds, a hundred and eighty picks, and a board that looks nothing like the standings it came from. The team with the worst record in the league drafted like it had a plan. The team that won eleven games drafted like it was already satisfied. And a running back the market values inside the top twenty-five sat on the board until the fourteenth round."
         },
         {
           "type": "p",
@@ -69,73 +73,73 @@
             {
               "label": "jadencha",
               "sub": "CPES",
-              "value": 14.9,
+              "value": 13.8,
               "group": 1
             },
             {
               "label": "Domo112",
               "sub": "CPES",
-              "value": 9.4,
+              "value": 10.4,
               "group": 1
             },
             {
               "label": "bertalicious",
               "sub": "Pool 2",
-              "value": 4.9,
+              "value": 6.0,
+              "group": 2
+            },
+            {
+              "label": "saucebossandrew",
+              "sub": "Pool 2",
+              "value": -0.1,
               "group": 2
             },
             {
               "label": "wesley55",
               "sub": "Pool 3",
-              "value": 2.4,
+              "value": -0.5,
               "group": 3
-            },
-            {
-              "label": "saucebossandrew",
-              "sub": "Pool 2",
-              "value": -0.3,
-              "group": 2
             },
             {
               "label": "moseslin",
               "sub": "CPES",
-              "value": -0.5,
+              "value": -0.8,
               "group": 1
             },
             {
               "label": "bradyrife",
               "sub": "Pool 2",
-              "value": -3.2,
+              "value": -2.2,
               "group": 2
             },
             {
               "label": "chassinator",
               "sub": "Pool 3",
-              "value": -3.2,
+              "value": -4.2,
               "group": 3
             },
             {
               "label": "jskule23",
               "sub": "Pool 2",
-              "value": -4.0,
+              "value": -5.1,
               "group": 2
-            },
-            {
-              "label": "sizzlemc2",
-              "sub": "Pool 3",
-              "value": -6.1,
-              "group": 3
             },
             {
               "label": "victorthompson",
               "sub": "Pool 3",
-              "value": -6.6,
+              "value": -5.4,
+              "group": 3
+            },
+            {
+              "label": "sizzlemc2",
+              "sub": "Pool 3",
+              "value": -5.8,
               "group": 3
             },
             {
               "label": "drewkim",
               "sub": "CPES",
-              "value": -7.5,
+              "value": -6.0,
               "group": 1
             }
           ]
@@ -155,12 +159,12 @@
         },
         {
           "type": "stat",
-          "n": "31%",
-          "text": "jadencha's title odds — nearly double the defending champion's, and more than the bottom six teams hold between them."
+          "n": "28%",
+          "text": "jadencha's title odds — well clear of the defending champion's 20 percent, and more than the bottom six teams hold between them."
         },
         {
           "type": "p",
-          "text": "The model has him at 144.3 points a week, almost six clear of the field, with a 91 percent chance of making the playoffs. The counter-argument is the only one that has ever mattered here: he has been the best team before."
+          "text": "The model has him at 143.2 points a week, three and a half clear of the field, with a 90 percent chance of making the playoffs. The counter-argument is the only one that has ever mattered here: he has been the best team before."
         },
         {
           "type": "h",
@@ -176,17 +180,17 @@
           "items": [
             {
               "title": "CPES",
-              "big": "133.5",
+              "big": "133.8",
               "sub": "Average projection — 4.7 points a week clear of the next division",
               "lead": true,
               "rows": [
                 {
                   "label": "jadencha",
-                  "value": "58%"
+                  "value": "52%"
                 },
                 {
                   "label": "Domo112",
-                  "value": "31%"
+                  "value": "36%"
                 },
                 {
                   "label": "moseslin",
@@ -200,47 +204,47 @@
             },
             {
               "title": "Pool 2",
-              "big": "128.8",
-              "sub": "The open one — nobody above 45 percent, nobody below 15",
+              "big": "129.1",
+              "sub": "Top-heavy — one clear favourite and three teams sharing the rest",
               "rows": [
                 {
                   "label": "bertalicious",
-                  "value": "45%"
+                  "value": "48%"
                 },
                 {
                   "label": "saucebossandrew",
-                  "value": "24%"
+                  "value": "23%"
                 },
                 {
                   "label": "bradyrife",
-                  "value": "16%"
+                  "value": "18%"
                 },
                 {
                   "label": "jskule23",
-                  "value": "15%"
+                  "value": "12%"
                 }
               ]
             },
             {
               "title": "Pool 3",
-              "big": "126.0",
-              "sub": "The softest route to a top-three seed in the league",
+              "big": "125.4",
+              "sub": "The softest route to a top-three seed, and nobody in it is above 37 percent",
               "rows": [
                 {
                   "label": "wesley55",
-                  "value": "46%"
+                  "value": "37%"
                 },
                 {
                   "label": "chassinator",
                   "value": "24%"
                 },
                 {
-                  "label": "sizzlemc2",
-                  "value": "16%"
+                  "label": "victorthompson",
+                  "value": "20%"
                 },
                 {
-                  "label": "victorthompson",
-                  "value": "15%"
+                  "label": "sizzlemc2",
+                  "value": "19%"
                 }
               ]
             }
@@ -248,11 +252,11 @@
         },
         {
           "type": "p",
-          "text": "Read those three columns next to each other and the unfairness is obvious. A 46 percent shot at a top-three seed and a first-round bye is available in Pool 3 to a team that went 4-10 last season. In CPES, the second-best roster in the entire league is a 31 percent shot to win its own division."
+          "text": "Read those three columns next to each other and the unfairness is obvious. The whole of Pool 3 projects below the league average, and one of those four teams is guaranteed a top-three seed and a shot at a bye. In CPES, the second-best roster in the entire league is a 36 percent shot to win its own division."
         },
         {
           "type": "p",
-          "text": "Domo112 will probably be fine — 80 percent to make the playoffs is not a crisis. But the bye matters here, and the path to one runs through a team the model likes more."
+          "text": "Domo112 will probably be fine — 83 percent to make the playoffs is not a crisis. But the bye matters here, and the path to one runs through a team the model likes more."
         },
         {
           "type": "h",
@@ -261,7 +265,7 @@
         },
         {
           "type": "p",
-          "text": "One starting quarterback slot, fifteen rounds, and a room that has clearly done the maths. The position collapsed:"
+          "text": "One starting quarterback slot, fifteen rounds, and a room that has clearly done the maths. Five of the six biggest falls in the entire open draft were quarterbacks:"
         },
         {
           "type": "picks",
@@ -269,14 +273,8 @@
             {
               "slot": "Pick 102",
               "name": "Dak Prescott",
-              "sub": "victorthompson · market price 64",
-              "delta": "+38"
-            },
-            {
-              "slot": "Pick 119",
-              "name": "Drake Maye",
-              "sub": "chassinator · market price 48",
-              "delta": "+71"
+              "sub": "victorthompson · market price 66",
+              "delta": "+36"
             },
             {
               "slot": "Pick 126",
@@ -287,42 +285,52 @@
             {
               "slot": "Pick 147",
               "name": "Matthew Stafford",
-              "sub": "wesley55 · market price 75",
-              "delta": "+72"
+              "sub": "wesley55 · market price 81",
+              "delta": "+66"
             },
             {
               "slot": "Pick 158",
               "name": "Brock Purdy",
-              "sub": "jskule23 · market price 84",
-              "delta": "+74"
+              "sub": "jskule23 · market price 88",
+              "delta": "+71"
+            },
+            {
+              "slot": "Pick 178",
+              "name": "Trevor Lawrence",
+              "sub": "bradyrife · market price 92",
+              "delta": "+86"
             }
           ]
         },
         {
           "type": "p",
-          "text": "Every one of those fell past where the wider market takes them, and the money went somewhere specific instead: young running backs, aggressively. Jonah Coleman went 52 picks early to Domo112. Tyrone Tracy 51 early to wesley55. Woody Marks 51 early to victorthompson. RJ Harvey 44 early to sizzlemc2. Four different managers spent real draft capital on backs the market has not priced yet."
+          "text": "Every one of those fell past where the wider market takes them, and the money went somewhere specific instead: young running backs, aggressively. Every one of the six biggest reaches in the draft was a running back: Brian Robinson 64 picks early to moseslin, Blake Corum 58 early to the same manager, Woody Marks 58 early to victorthompson, Jacory Croskey-Merritt 54 early to Domo112, Tyrone Tracy 52 early to wesley55, Tyler Allgeier 50 early to bertalicious. Not one reach in the top six was a receiver."
         },
         {
           "type": "p",
-          "text": "It is a coherent league-wide read — one quarterback slot makes the position replaceable, two running back slots plus two flex spots makes backs scarce. It is also the kind of consensus that gets a whole room beaten by the one manager who zags."
+          "text": "It is a coherent league-wide read — one quarterback slot makes the position replaceable, two running back slots plus two flex spots makes backs scarce, and a receiver's point per catch is already priced into where the market takes him. It is also the kind of consensus that gets a whole room beaten by the one manager who zags."
         },
         {
           "type": "h",
-          "eyebrow": "The steal",
-          "text": "Kyren Williams sat there until pick 167"
+          "eyebrow": "The keeper economy",
+          "text": "Puka Nacua cost a fifteenth-round pick"
         },
         {
           "type": "p",
-          "text": "The single most remarkable event of the night. Kyren Williams — a back the market drafts around pick 24 — went to chassinator in the fourteenth round, 143 picks past his price. He was on bradyrife's roster at the end of last season and was not kept."
+          "text": "Thirty-five players were kept across the twelve teams, and the gap between what they are worth and what they cost is the whole shape of this league. jskule23 kept Puka Nacua — the third player off the board in the wider market — with the 179th pick. bertalicious kept Bucky Irving at 175. moseslin kept Nico Collins at 149. saucebossandrew kept De'Von Achane, a top-ten back, in the ninth round."
         },
         {
           "type": "stat",
-          "n": "143",
-          "text": "picks between Kyren Williams's market price and where he actually went. The next-biggest fall in the open draft was 74."
+          "n": "176",
+          "text": "picks between Puka Nacua's market price and the one jskule23 actually paid — the largest keeper discount in the league. The biggest fall in the open draft was a quarterback, 86 picks."
         },
         {
           "type": "p",
-          "text": "Two readings, and they are not equally flattering. Either this room knows something about his 2026 situation that a thousand-plus public drafts do not, or chassinator just got the best value anybody has taken in a DFFL draft. Worth remembering that chassinator went 3-11 last season and still walked out of this draft with Ashton Jeanty, Tyler Warren and that pick."
+          "text": "At the other end, three managers kept a player at more or less exactly what he costs anybody: moseslin paid pick 20 for Saquon Barkley, whose market price is 20. jadencha paid pick 8 for Jonathan Taylor, market price 8. bradyrife paid 10 for Christian McCaffrey, market 6. Those are not bargains, they are declarations — a first-round slot spent to keep a first-round player, which is what a keeper league does to you when your best asset is also your most expensive one."
+        },
+        {
+          "type": "p",
+          "text": "And one keeper changed hands before it was even kept. Kyren Williams finished last season on bradyrife's roster, was traded to chassinator in the weeks before the draft, and chassinator kept him at pick 167 — a top-35 back for a fourteenth-round slot. That is the market working exactly as designed: bradyrife already had three he liked more, so the fourth became somebody else's bargain."
         },
         {
           "type": "h",
@@ -331,15 +339,15 @@
         },
         {
           "type": "p",
-          "text": "<b>wesley55</b> went 4-10 and finished eighth. He now projects fourth in the league and 46 percent to win Pool 3 — the biggest gap between last season's result and this season's roster of anybody. The keeper set is why: James Cook in the fourth round, Quinshon Judkins in the fifth, Joe Burrow in the eighth, all three well inside the market's top fifty-five. He is a 65 percent playoff team in the league's weakest division."
+          "text": "<b>wesley55</b> went 4-10 and finished eighth. He now projects fifth in the league and 37 percent to win Pool 3, the best odds in it. The keeper set is why: James Cook in the fourth round, Quinshon Judkins in the fifth, Joe Burrow in the eighth. He is a 54 percent playoff team in the league's weakest division, which is a very different sentence from the one his record writes."
         },
         {
           "type": "p",
-          "text": "<b>chassinator</b> won this league in 2022 and has been rebuilding loudly ever since. The worst record in the league last season, eighth in the projection now — but a 24 percent division shot, and a roster that is one Kyren Williams season away from something entirely different."
+          "text": "<b>chassinator</b> won this league in 2022 and has been rebuilding loudly ever since. The worst record in the league last season, eighth in the projection now — but a 24 percent division shot, and a roster he has been assembling in public: a first-round back, a tenth-round quarterback and a fourteenth-round Kyren Williams."
         },
         {
           "type": "p",
-          "text": "<b>bradyrife</b> is the one nobody will pick, and the numbers are less rude than the reputation. He finished last in 2025 with the worst all-time record in the league at 19-37. His 2026 draft came out essentially neutral — a fraction below average on roster value, which for him is a step forward of some size. Chase Brown in the ninth round and Garrett Wilson in the tenth are the kind of holdings that turn a floor into a middle."
+          "text": "<b>bradyrife</b> is the one nobody will pick, and the numbers are less rude than the reputation. He finished last in 2025 with the worst all-time record in the league at 19-37. His 2026 draft came out fractionally on the right side of average for the first time, which for him is a step forward of some size. Chase Brown in the ninth round and Garrett Wilson in the tenth are the kind of holdings that turn a floor into a middle."
         },
         {
           "type": "h",
@@ -348,15 +356,15 @@
         },
         {
           "type": "p",
-          "text": "<b>saucebossandrew</b> had the best record in the league last year at 11-3 — and finished fourth, which tells you the record was already running ahead of the team. He came out of this draft slightly below average on roster value, and the model has him fifth at 50 percent to make the playoffs. A champion in 2024, so the pedigree is real; the roster is now merely fine."
+          "text": "<b>saucebossandrew</b> had the best record in the league last year at 11-3 — and finished fourth, which tells you the record was already running ahead of the team. He came out of this draft below average on roster value — the fourth-worst draft contribution in the league — and the model has him fourth at 51 percent to make the playoffs. A champion in 2024, so the pedigree is real; the roster is now merely fine."
         },
         {
           "type": "p",
-          "text": "<b>victorthompson</b> is the sharper warning. He played in last season's final. He projects eleventh. A.J. Brown, Drake London and Ladd McConkey is a genuinely strong set of holdings, but the open draft went badly — Woody Marks 51 picks early, two quarterbacks spent in a league that treats the position as free — and he finishes the night with the second-lowest roster value in the league and a 29 percent playoff chance."
+          "text": "<b>victorthompson</b> is the sharper warning. He played in last season's final. He projects eleventh. A.J. Brown, Drake London and Ladd McConkey is a genuinely strong set of holdings, but the open draft went badly — Woody Marks 58 picks early, two quarterbacks spent in a league that treats the position as free — and he finishes the night with the third-lowest roster value in the league and a 35 percent playoff chance."
         },
         {
           "type": "p",
-          "text": "<b>sizzlemc2</b> belongs in the footnote: fifth last season at 8-6, tenth in the projection, and the largest negative draft contribution of anybody at −5.4 points a week. RJ Harvey at 48 and Jordyn Tyson at 49 were both roughly 42 picks ahead of the market."
+          "text": "<b>sizzlemc2</b> belongs in the footnote: fifth last season at 8-6, eleventh in the projection, and the second-largest negative draft contribution in the league at −5.2 points a week."
         },
         {
           "type": "h",
@@ -365,7 +373,7 @@
         },
         {
           "type": "p",
-          "text": "The model puts <b>drewkim</b> there — last in projected scoring at 121.9, 21 percent to make the playoffs, and the only team in the league negative on both halves of the rating, draft and record alike. Being in CPES makes it worse: a 3 percent division shot, and two of his three division rivals are the two best teams in the league."
+          "text": "The model puts <b>drewkim</b> there — last in projected scoring at 123.4, 25 percent to make the playoffs, and the most negative record half of the rating in the league at −3.6. The keeper set is the tell: Jayden Daniels at pick 76 against a market price of 72, Brock Bowers at 72 against 38, Emeka Egbuka in the fifth. One real discount between the three of them, in a league where the top teams are saving a hundred picks apiece. Being in CPES makes it worse: a 3 percent division shot, and two of his three division rivals are the two best teams in the league."
         },
         {
           "type": "p",
@@ -378,7 +386,7 @@
         },
         {
           "type": "p",
-          "text": "Every projection above comes from the same model the Odds tab runs: each roster valued against the pre-draft market — 1,415 public drafts sampled between 10 and 17 August — and weighted against what each manager has actually scored across four seasons. Draft-day roster value predicts about half of a team's scoring edge. The other half is injuries, waivers, trades and luck, and none of it has happened yet."
+          "text": "Every projection above comes from the same model the Odds tab runs: each roster valued against the pre-draft PPR market — 6,665 public drafts sampled between 10 and 17 August — and weighted against what each manager has actually scored across four seasons. Draft-day roster value predicts about half of a team's scoring edge. The other half is injuries, waivers, trades and luck, and none of it has happened yet."
         },
         {
           "type": "p",
@@ -386,7 +394,7 @@
         },
         {
           "type": "note",
-          "text": "Numbers in this piece were frozen on 18 August 2026. The Odds, Power and Race tabs recompute from Sleeper on every load, so they will move; this won't."
+          "text": "Numbers in this piece were frozen on 18 August 2026, against the PPR market and the keeper list as the league actually set it. The Odds, Power and Race tabs recompute from Sleeper on every load, so they will move; this won't."
         }
       ]
     }

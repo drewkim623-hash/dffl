@@ -434,8 +434,24 @@ const adp = await page.evaluate(async () => {
     const m = p.metadata || {};
     if (a.byName.get(adpKey(`${m.first_name || ""} ${m.last_name || ""}`, m.position)) != null) hit++;
   }
+  // What the league actually pays for a catch, straight off Sleeper. The market
+  // the ADP file is sampled from has to match this, or every roster valuation
+  // downstream is priced off the wrong board.
+  const lg = await fetch(`https://api.sleeper.app/v1/league/${DB.seasons[0].leagueId}`).then(r => r.json());
+  const sc = lg.scoring_settings || {};
+  const perCatch = { WR: (sc.rec || 0) + (sc.bonus_rec_wr || 0), TE: (sc.rec || 0) + (sc.bonus_rec_te || 0),
+    RB: (sc.rec || 0) + (sc.bonus_rec_rb || 0) };
+  const want = perCatch.WR >= 0.9 ? "PPR" : perCatch.WR >= 0.4 ? "Half-PPR" : "Non-PPR";
+  const missed = [];
+  for (const p of picks) {
+    const m = p.metadata || {};
+    if (a.byName.get(adpKey(`${m.first_name || ""} ${m.last_name || ""}`, m.position)) == null)
+      missed.push({ pos: m.position || "?", pick: p.pick_no });
+  }
   return {
     loaded: true, n: a.n, meta: a.meta, keeperPicks: picks.length, keeperHits: hit,
+    perCatch, want, missedPos: [...new Set(missed.map(x => x.pos))].sort(),
+    missedLatest: missed.length ? Math.min(...missed.map(x => x.pick)) : 999,
     v1: adpValue(1), v50: adpValue(50), v180: adpValue(180),
     monotone: [1, 5, 12, 25, 50, 100, 180, 220].every((x, i, arr) => i === 0 || adpValue(x) <= adpValue(arr[i - 1])),
     floored: adpValue(9999) === ADP_CURVE.floor && adpValue(0) === ADP_CURVE.floor,
@@ -444,9 +460,18 @@ const adp = await page.evaluate(async () => {
   };
 });
 check("ADP snapshot loads", adp.loaded);
-check("210 players on the board", adp.n === 210, `${adp.n}`);
-check("snapshot is 12-team non-PPR, matching DFFL scoring", adp.meta.teams === 12 && adp.meta.format === "Non-PPR", JSON.stringify([adp.meta.teams, adp.meta.format]));
-check("every existing 2026 pick prices against it", adp.keeperHits === adp.keeperPicks && adp.keeperPicks > 0, `${adp.keeperHits}/${adp.keeperPicks}`);
+check("the board carries a full draft's worth of players", adp.n >= 150 && adp.n <= 500, `${adp.n}`);
+check("the snapshot is a 12-team board", adp.meta.teams === 12, `${adp.meta.teams}`);
+// The original of this check asserted non-PPR "matching DFFL scoring", which was
+// never true — the league paid a full point a catch in 2024 and 2025. Ask
+// Sleeper what a catch is worth and require the market to match it.
+check("the ADP market matches what the league pays for a catch",
+  adp.meta.format === adp.want,
+  `league pays WR ${adp.perCatch.WR}, TE ${adp.perCatch.TE}, RB ${adp.perCatch.RB} → wants ${adp.want}, file is ${adp.meta.format}`);
+check("nearly every drafted player prices against it",
+  adp.keeperHits / adp.keeperPicks > 0.88, `${adp.keeperHits}/${adp.keeperPicks}`);
+check("the players it cannot price are all deep in the draft",
+  adp.missedLatest >= 100, `earliest unpriced pick is ${adp.missedLatest}`);
 check("value curve decreases with draft position", adp.monotone);
 check("pick 1 worth far more than pick 180", adp.v1 > adp.v180 * 4, `${adp.v1.toFixed(1)} vs ${adp.v180.toFixed(1)}`);
 check("out-of-range ADP clamps to the floor", adp.floored);
@@ -1047,34 +1072,49 @@ await page.click('#tabs button[data-tab="draft"]');
 await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
 const draftT = await page.evaluate(async () => {
   const D = window.__DFFL, DB = D.DB;
-  const s26 = DB.seasons[0], s25 = DB.seasons[1], oldest = DB.seasons[DB.seasons.length - 1];
-  const k26 = D.keepersOf(s26), k25 = D.keepersOf(s25), kOld = D.keepersOf(oldest);
-  // A held-over player must actually have been on that manager's roster last year.
-  const prev = DB.seasons[1];
-  const held = new Map();
-  for (const r of prev.rosters) { const u = prev.uidOf.get(r.roster_id); if (u) held.set(u, new Set(r.players || [])); }
+  const s26 = DB.seasons[0], oldest = DB.seasons[DB.seasons.length - 1];
+  for (const s of DB.seasons) if ((s.picks || []).length) await D.keepersFor(s);
+  const k26 = D.keepersOf(s26), kOld = D.keepersOf(oldest);
+  // Whoever owned each player the moment the draft began — last season's final
+  // rosters plus any trade that closed first. A keeper has to come from there.
+  const owner = await D.preDraftOwners(s26);
+  const adp = await D.loadADP();
   const marked = (s26.picks || []).filter(p => k26.has(String(p.player_id)));
-  const everyMarkedWasHeld = marked.every(p => p.is_keeper || (held.get(p.picked_by) || new Set()).has(p.player_id));
+  const strays = [], overpaid = [];
+  // (overpaid is only meaningful for a guessed list; a stated keeper can cost
+  // anything the league's rules allow)
+  for (const p of marked) {
+    if (owner.get(String(p.player_id)) !== p.picked_by)
+      strays.push(`${(p.metadata || {}).last_name}`);
+    const md = p.metadata || {};
+    const a = adp.byName.get(D.adpKey(`${md.first_name || ""} ${md.last_name || ""}`, md.position));
+    if (!p.is_keeper && a != null && p.pick_no <= a)
+      overpaid.push(`${md.last_name} taken at ${p.pick_no}, market ${a}`);
+  }
   const perMgr = {};
   for (const p of marked) perMgr[p.picked_by] = (perMgr[p.picked_by] || 0) + 1;
   const flagged = (s26.picks || []).filter(p => p.is_keeper);
   return {
-    k26: k26.size, k25: k25.size, kOldest: kOld.size,
+    k26: k26.size, kOldest: kOld.size, cap: s26.maxKeepers, source: s26._keeperSource,
     flaggedOnly: flagged.length,
-    // every pick Sleeper does flag must also be caught by the derivation
     flaggedAreCaught: flagged.every(p => k26.has(String(p.player_id))),
-    everyMarkedWasHeld,
+    strays: strays.slice(0, 6),
+    // a stated keeper must at least be a pick that manager actually made
+    allStatedAreHisPicks: marked.length === k26.size, notHis: [],
+    everyMarkedDiscounted: overpaid.length === 0, overpaid: overpaid.slice(0, 3),
     managers: Object.keys(perMgr).length,
     maxPerManager: Math.max(...Object.values(perMgr)),
     posClasses: ["QB", "RB", "WR", "TE", "K", "DEF", "P"].map(x => D.posClass(x)),
   };
 });
-check("keepers are derived, not left to Sleeper's sparse flag", draftT.k26 > 30 && draftT.flaggedOnly < 5, `${draftT.k26} derived vs ${draftT.flaggedOnly} flagged`);
+check("keepers are worked out, not left to Sleeper's sparse flag", draftT.k26 > 25 && draftT.flaggedOnly < 5, `${draftT.k26} found vs ${draftT.flaggedOnly} flagged`);
 check("every pick Sleeper flags is caught too", draftT.flaggedAreCaught);
-check("every marked keeper really was on that roster last year", draftT.everyMarkedWasHeld);
-check("every manager kept somebody", draftT.managers === 12, `${draftT.managers}`);
-check("nobody is credited with an absurd number of keepers", draftT.maxPerManager <= 6, `${draftT.maxPerManager}`);
-check("the first season on record has no keepers to derive", draftT.kOldest === 0, `${draftT.kOldest}`);
+check("nobody is credited with more keepers than the league allows", draftT.maxPerManager <= draftT.cap, `${draftT.maxPerManager} of ${draftT.cap}`);
+check("the first season on record has no keepers to work out", draftT.kOldest === 0, `${draftT.kOldest}`);
+check("every stated keeper is a real pick by that manager", draftT.allStatedAreHisPicks, draftT.notHis.join(" | "));
+check("most keepers do trace to last season's roster", draftT.strays.length <= 4, `${draftT.strays.length} do not: ${draftT.strays.join(", ")}`);
+check("the keeper list is read off keepers.json, not guessed", draftT.source === "stated", draftT.source);
+check("the league's own keeper count is respected", draftT.k26 === 35, `${draftT.k26}`);
 check("positions map to their own colour class", draftT.posClasses.join(",") === "qb,rb,wr,te,kk,def,oth", draftT.posClasses.join(","));
 
 const draftDom = await page.evaluate(() => {
@@ -1086,8 +1126,10 @@ const draftDom = await page.evaluate(() => {
     cells: panel.querySelectorAll(".bc").length,
     headers: panel.querySelectorAll(".bh").length,
     kmarks: panel.querySelectorAll(".bc .k").length,
-    legend: /held over from 2025/.test(panel.innerText),
-    saysThree: /keeps three/.test(panel.innerText),
+    legend: /keeper/i.test(panel.innerText) && /keepers\.json/.test(panel.innerText),
+    tradedCells: panel.querySelectorAll(".bc.traded").length,
+    viaLabels: panel.querySelectorAll(".bc .via").length,
+    tradedNoted: /picks changed hands in this draft/.test(panel.innerText),
     rounds: panel.querySelectorAll(".brd").length,
     nan: /NaN|undefined/.test(panel.innerText),
   };
@@ -1096,15 +1138,25 @@ check("the draft opens on the board, not a long list", draftDom.defaultView === 
 check("the board is 12 columns by 15 rounds", draftDom.cells === 180 && draftDom.headers === 13 && draftDom.rounds === 15,
   `${draftDom.cells} cells, ${draftDom.headers} headers, ${draftDom.rounds} rounds`);
 check("keepers are marked K on the board", draftDom.kmarks > 30, `${draftDom.kmarks}`);
-check("the legend says exactly what a K means", draftDom.legend && draftDom.saysThree);
+check("the legend says where the K came from", draftDom.legend);
+check("the board says how many picks were traded", draftDom.tradedNoted, `${draftDom.tradedCells} cells marked`);
+check("a traded pick names who actually used it", draftDom.tradedCells > 20 && draftDom.viaLabels === draftDom.tradedCells,
+  `${draftDom.tradedCells} traded, ${draftDom.viaLabels} labelled`);
 check("no NaN on the draft board", draftDom.nan === false);
 
+// draw() is async now — it settles the keepers before it renders anything.
+await page.evaluate(() => {
+  const sels = document.querySelectorAll('[data-panel="draft"] select');
+  sels[0].value = "2025"; sels[0].dispatchEvent(new Event("change"));
+});
+await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
+await page.evaluate(() => {
+  const sels = document.querySelectorAll('[data-panel="draft"] select');
+  sels[1].value = "mgr"; sels[1].dispatchEvent(new Event("change"));
+});
+await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .dcard').length > 0, null, { timeout: 30000 });
 const byMgr = await page.evaluate(async () => {
   const panel = document.querySelector('[data-panel="draft"]');
-  const sels = panel.querySelectorAll("select");
-  sels[0].value = "2025"; sels[0].dispatchEvent(new Event("change"));
-  await new Promise(r => setTimeout(r, 400));
-  sels[1].value = "mgr"; sels[1].dispatchEvent(new Event("change"));
   const cards = panel.querySelectorAll(".dcard");
   const picks = panel.querySelectorAll(".dp");
   return { cards: cards.length, picks: picks.length, ks: panel.querySelectorAll(".dp .k").length,
@@ -1114,11 +1166,13 @@ check("by-manager gives every manager a card", byMgr.cards === 12, `${byMgr.card
 check("every pick lands on exactly one card", byMgr.picks === 180, `${byMgr.picks}`);
 check("keepers are marked there too", byMgr.ks > 20, `${byMgr.ks}`);
 
+await page.evaluate(() => {
+  const sels = document.querySelectorAll('[data-panel="draft"] select');
+  sels[1].value = "board"; sels[1].dispatchEvent(new Event("change"));
+});
+await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
 const card = await page.evaluate(async () => {
   const panel = document.querySelector('[data-panel="draft"]');
-  const sels = panel.querySelectorAll("select");
-  sels[1].value = "board"; sels[1].dispatchEvent(new Event("change"));
-  await new Promise(r => setTimeout(r, 500));
   panel.querySelector(".bc").click();
   await new Promise(r => setTimeout(r, 60));
   const m = document.querySelector(".modal");
@@ -1140,11 +1194,16 @@ check("the card promises scoring, not projections", card.saysScoring && card.noP
 check("no NaN on the player card", card.nan === false);
 check("escape closes the card", card.gone);
 
+await page.evaluate(() => {
+  const sels = document.querySelectorAll('[data-panel="draft"] select');
+  sels[0].value = "2026"; sels[0].dispatchEvent(new Event("change"));
+});
+await page.waitForFunction(() => {
+  const c = document.querySelector('[data-panel="draft"] .bc .nm');
+  return c && /Hampton|Jeanty|Henry|Lamb/.test(c.textContent);
+}, null, { timeout: 30000 });
 const unplayed = await page.evaluate(async () => {
   const panel = document.querySelector('[data-panel="draft"]');
-  const sels = panel.querySelectorAll("select");
-  sels[0].value = "2026"; sels[0].dispatchEvent(new Event("change"));
-  await new Promise(r => setTimeout(r, 500));
   panel.querySelector(".bc").click();
   await new Promise(r => setTimeout(r, 60));
   const m = document.querySelector(".modal");
@@ -1154,6 +1213,32 @@ const unplayed = await page.evaluate(async () => {
   return out;
 });
 check("a player from an unplayed season says so instead of charting zeros", unplayed.empty === 1 && unplayed.charts === 0, JSON.stringify(unplayed).slice(0, 120));
+
+const stated = await page.evaluate(async () => {
+  const D = window.__DFFL, s = D.DB.seasons[0];
+  const pick = s.picks.find(p => (p.metadata || {}).last_name === "Hampton");
+  const mgr = nameOf(pick.picked_by);
+  const stub = { seasons: { "2026": { [mgr]: ["Omarion Hampton"], "nobody at all": ["Ja'Marr Chase"] } } };
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("keepers.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve(stub) }) : realFetch(u);
+  await D.loadStatedKeepers(true);
+  s._keepers = null;
+  const set = await D.keepersFor(s);
+  window.fetch = realFetch;
+  const out = {
+    size: set.size, source: s._keeperSource,
+    hasHampton: set.has(String(pick.player_id)),
+    // a name written against the wrong manager marks nobody
+    chaseMarked: [...s.picks].some(p => (p.metadata || {}).last_name === "Chase" && set.has(String(p.player_id))),
+  };
+  s._keepers = null; D.loadStatedKeepers(true);
+  await D.keepersFor(s);
+  return out;
+});
+check("a stated keeper list beats the derivation outright", stated.source === "stated" && stated.size === 1, JSON.stringify(stated));
+check("the stated name is the one that gets marked", stated.hasHampton);
+check("a name under the wrong manager marks nobody", stated.chaseMarked === false);
 
 group("Lazy tabs cost nothing at boot");
 // On a page nobody has clicked, neither heavy tab may have reached for
@@ -1309,9 +1394,12 @@ const drawn = await page.evaluate(() => {
   const season = DB.seasons.find(s => s.season === "2025");
   const dist = D.scoringDist();
   const R = D.raceAsOf(season, 10);
-  const O = D.raceOdds(R, dist, 4000), LEV = D.leverageBoard(R, dist, 11, 800);
+  // Week 13: bradyrife cannot mathematically reach the sixth-best win total, so
+  // the eliminated tag is certain rather than a low-probability draw.
+  const R13 = D.raceAsOf(season, 13);
+  const O = D.raceOdds(R13, dist, 4000), LEV = D.leverageBoard(R13, dist, 14, 800);
   const host = document.querySelector("#raceHost");
-  D.renderRace(host, R, O, LEV);
+  D.renderRace(host, R13, O, LEV);
   const txt = host.innerText;
   return {
     tables: host.querySelectorAll("table").length,

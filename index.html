@@ -353,6 +353,11 @@
   .dboard .bc .no .k{color:var(--gold);font-weight:900}
   .dboard .bc .nm{font-size:12.5px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .dboard .bc .mt{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dboard .bc .via,.viax{font-size:9.5px;color:var(--violet);font-weight:750;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;display:block;letter-spacing:.02em}
+  .dboard .bc.traded{background:linear-gradient(180deg,rgba(144,133,233,.10),transparent 70%)}
+  .viax{display:inline;border:1px solid rgba(144,133,233,.45);background:rgba(144,133,233,.10);
+    border-radius:5px;padding:2px 7px;font-size:10.5px}
   .dboard .bc.qb{border-left-color:#9085e9} .dboard .bc.rb{border-left-color:#199e70}
   .dboard .bc.wr{border-left-color:#3987e5} .dboard .bc.te{border-left-color:#c98500}
   .dboard .bc.def{border-left-color:#e66767} .dboard .bc.kk{border-left-color:var(--mid)}
@@ -838,6 +843,7 @@ async function loadSeason(lg) {
     places: placementsOf(wb, lb, ptm), wb, lb, games: seasonGames,
     complete: lg.status === "complete",
     picks, playerPts, playerWeek, draftId,
+    maxKeepers: Number(lg.settings && lg.settings.max_keepers) || 0,
     draftStatus: (draft && draft.status) || null, draftRounds, draftSlots, draftDone,
     meta, divCount, divNames, divOf,
   });
@@ -2894,32 +2900,110 @@ function panelOdds(model, sim) {
 
 /* ============================================== DRAFT =============== */
 /*
- * Which picks were players held over from last season.
+ * Which picks were keepers.
  *
- * Sleeper's is_keeper flag catches two of about thirty-six here, because DFFL
- * assigns its keepers by hand rather than through Sleeper's keeper tool. The
- * rosters know better: a player drafted by the same manager who ended last
- * season holding him was kept. That is a superset — the league allows three
- * keepers each and a manager is free to re-draft a fourth player he already
- * had — so the legend says exactly what the mark means rather than claiming
- * more than the data supports.
+ * Sleeper does not know. Its is_keeper flag is set on 2 of about 36 picks in
+ * the 2026 draft — one manager used the keeper tool and nobody else did — so
+ * the flag on its own marks almost nothing. Two sources are better:
+ *
+ *   1. keepers.json, if somebody has written the real list down. The draft
+ *      room has the truth in it before a pick is made; a file is the only way
+ *      to get that truth out here. A stated list always wins.
+ *   2. Failing that, a derivation: a keeper is a player his manager already
+ *      owned going into the draft — last season's final roster, updated by any
+ *      trade that landed before the draft started — taken at a discount to the
+ *      market. Ranked by that discount and capped at the league's own
+ *      max_keepers, because keeping a player costs the round he is taken in.
+ *
+ * The derivation is a guess and the page says so. Write the list down and it
+ * stops guessing.
  */
-function keepersOf(season) {
-  if (season._keepers) return season._keepers;
-  const set = new Set();
+let STATED_KEEPERS = null;
+async function loadStatedKeepers(reload) {
+  if (STATED_KEEPERS && !reload) return STATED_KEEPERS;
+  let d = null;
+  try { d = await jget("keepers.json"); } catch (e) { d = null; }
+  STATED_KEEPERS = { seasons: (d && d.seasons) || {}, ok: !!d };
+  return STATED_KEEPERS;
+}
+
+const nameKey = x => String(x || "").toLowerCase().replace(/[^a-z]/g, "");
+
+/** Who owned each player the moment the draft started. */
+async function preDraftOwners(season) {
+  // The draft object carries its own start time, and without it a trade made
+  // the morning of the draft is indistinguishable from one made in week 3.
+  await loadDraftSlots().catch(() => null);
+  const owner = new Map();
   const prev = DB.seasons[DB.seasons.indexOf(season) + 1];
-  const held = new Map();
   for (const r of (prev && prev.rosters) || []) {
     const uid = prev.uidOf.get(r.roster_id);
-    if (uid) held.set(uid, new Set(r.players || []));
+    if (uid) for (const pid of r.players || []) owner.set(String(pid), uid);
   }
-  for (const p of season.picks || []) {
-    const h = held.get(p.picked_by);
-    if (p.is_keeper || (h && p.player_id && h.has(p.player_id))) set.add(String(p.player_id));
+  if (MOCK || !season._draftStart) return owner;
+  // Trades land in the first legs of the new season. Only the ones that closed
+  // before the draft did can have produced a keeper.
+  const legs = await pool([1, 2, 3], 3, w =>
+    jget(`${API}/league/${season.leagueId}/transactions/${w}`).catch(() => []));
+  const moves = legs.flat()
+    .filter(t => t && t.status === "complete" && Number(t.created) < season._draftStart)
+    .sort((a, b) => Number(a.created) - Number(b.created));
+  for (const t of moves) for (const [pid, rid] of Object.entries(t.adds || {})) {
+    const uid = season.uidOf.get(rid);
+    if (uid) owner.set(String(pid), uid);
+  }
+  return owner;
+}
+
+async function keepersFor(season) {
+  if (season._keepers) return season._keepers;
+  const set = new Set();
+  const stated = await loadStatedKeepers();
+  const listed = stated.seasons[String(season.season)];
+
+  if (listed) {
+    // Matched inside each manager's own picks, so a name written against the
+    // wrong manager marks nobody rather than marking somebody else's player.
+    for (const pk of season.picks || []) {
+      const md = pk.metadata || {};
+      const mine = listed[nameOf(pk.picked_by)] || [];
+      const full = nameKey(`${md.first_name || ""}${md.last_name || ""}`);
+      if (mine.some(n => nameKey(n) === full)) set.add(String(pk.player_id));
+    }
+    season._keeperSource = "stated";
+    season._keeperMisses = Object.values(listed).flat().length - set.size;
+  } else {
+    const owner = await preDraftOwners(season);
+    const adp = await loadADP();
+    const cap = season.maxKeepers || 3;
+    const byMgr = new Map();
+    for (const pk of season.picks || []) {
+      const held = owner.get(String(pk.player_id)) === pk.picked_by;
+      if (!held && !pk.is_keeper) continue;
+      const md = pk.metadata || {};
+      const a = adp && adp.byName.get(adpKey(`${md.first_name || ""} ${md.last_name || ""}`, md.position));
+      if (!byMgr.has(pk.picked_by)) byMgr.set(pk.picked_by, []);
+      byMgr.get(pk.picked_by).push({
+        pid: String(pk.player_id), flagged: !!pk.is_keeper,
+        discount: a == null ? 0 : pk.pick_no - a,
+      });
+    }
+    for (const list of byMgr.values()) {
+      list.sort((a, b) => (b.flagged - a.flagged) || (b.discount - a.discount));
+      // A keeper is taken below what the player costs on the open market. A
+      // player his manager happened to own and re-drafted at or above market
+      // is not a keeper, and filling the quota with one would invent keepers
+      // for a manager who kept fewer than his allowance.
+      for (const x of list.slice(0, cap)) if (x.flagged || x.discount > 0) set.add(x.pid);
+    }
+    season._keeperSource = "derived";
   }
   season._keepers = set;
   return set;
 }
+
+/** The cached set. Call keepersFor() first; this never fetches. */
+const keepersOf = season => (season && season._keepers) || new Set();
 
 const POSC = { QB: "qb", RB: "rb", WR: "wr", TE: "te", K: "kk", DEF: "def", DST: "def" };
 const posClass = pos => POSC[String(pos || "").toUpperCase()] || "oth";
@@ -3044,8 +3128,7 @@ function panelDraft() {
       host.appendChild(el("div", "empty", "<b>No board for this draft</b>Sleeper didn't return its slot order, so the picks are in the full list instead."));
       return;
     }
-    const slotOf = new Map();
-    for (const [rid, slot] of I.ridToSlot) slotOf.set(slot, rid);
+    const slotOf = I.slotToRid || new Map([...I.ridToSlot].map(([rid, slot]) => [slot, rid]));
     const slots = [...slotOf.keys()].sort((a, b) => a - b);
     const rounds = [...new Set(s.picks.map(x => x.round))].sort((a, b) => a - b);
     const keep = keepersOf(s);
@@ -3071,21 +3154,41 @@ function panelDraft() {
         const nm = `${md.first_name || ""} ${md.last_name || ""}`.trim() || String(pk.player_id);
         const row = A && A.rows.find(r => String(r.pid) === String(pk.player_id));
         const kept = keep.has(String(pk.player_id));
-        const b = el("button", `bc ${posClass(md.position)}`);
+        // The column is whose slot it was. Between a third and a quarter of
+        // every DFFL draft is traded, so the cell has to say who actually made
+        // the pick whenever that is somebody else.
+        const owner = s.uidOf.get(slotOf.get(sl));
+        const drafter = pk.picked_by || s.uidOf.get(pk.roster_id);
+        const traded = drafter && owner && drafter !== owner;
+        const b = el("button", `bc ${posClass(md.position)}${traded ? " traded" : ""}`);
         b.innerHTML = `<span class="no">${pk.pick_no}${kept ? ' <b class="k">K</b>' : ""}</span>
           <span class="nm">${esc(nm)}</span>
-          <span class="mt">${esc(md.position || "")}${scored && row ? ` · ${f1(row.pts)}` : ""}</span>`;
+          <span class="mt">${esc(md.position || "")}${scored && row ? ` · ${f1(row.pts)}` : ""}</span>
+          ${traded ? `<span class="via">${esc(nameOf(drafter))}</span>` : ""}`;
         b.onclick = () => openPlayer(s, pk, A);
         grid.appendChild(b);
       }
     }
     scroll.appendChild(grid); card.appendChild(scroll); host.appendChild(card);
 
+    const tradedN = s.picks.filter(x => {
+      const o = s.uidOf.get(slotOf.get(x.draft_slot));
+      return o && x.picked_by && x.picked_by !== o;
+    }).length;
     const lg = el("div", "legend");
     lg.innerHTML = `<span class="badge gold">K</span>
-      <span>held over from ${esc(String(Number(s.season) - 1))} — the league keeps three, and this marks
-      every player his manager already had, so a manager who re-drafted a fourth shows four.</span>`;
+      <span>${s._keeperSource === "stated"
+        ? `keeper, from the list in <code>keepers.json</code>`
+        : `keeper — <b>worked out, not read off Sleeper</b>, which only records the flag for a
+           couple of these. Each manager's ${s.maxKeepers || 3} biggest discounts to the market,
+           from the players he already owned when the draft started. Write the real list into
+           <code>keepers.json</code> and this stops guessing.`}</span>`;
     host.appendChild(lg);
+    const l2 = el("div", "legend");
+    l2.innerHTML = `<span class="viax">name</span>
+      <span>a pick that was traded — the column is whose slot it was, the name is who actually
+      used it. ${tradedN} of ${s.picks.length} picks changed hands in this draft.</span>`;
+    host.appendChild(l2);
     host.appendChild(el("div", "legend",
       ["QB", "RB", "WR", "TE", "K", "DEF"].map(x => `<span class="pos-dot ${posClass(x)}">${x}</span>`).join("")
       + `<span>tap any pick for that player's week-by-week scoring</span>`));
@@ -3163,8 +3266,9 @@ function panelDraft() {
         <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}">${scored ? `${r.value >= 0 ? "+" : ""}${r.value}` : "—"}</td></tr>`)));
   }
 
-  function draw() {
+  async function draw() {
     const s = drafted.find(x => x.season === sel.value);
+    await keepersFor(s).catch(() => new Set());
     const A = draftAnalysis(s.picks, s.playerPts, s.uidOf);
     // If Sleeper didn't return per-player scoring, every value would be
     // meaningless. Show the board without value rather than fake numbers.
@@ -4037,8 +4141,10 @@ async function loadDraftSlots() {
     if (!season.draftId || !(season.picks || []).length) return;
     const d = await jget(`${API}/draft/${season.draftId}`).catch(() => null);
     if (!d || !d.slot_to_roster_id) return;
+    season._draftStart = Number(d.start_time) || 0;
     idx.set(season.season, {
       ridToSlot: new Map(Object.entries(d.slot_to_roster_id).map(([slot, rid]) => [Number(rid), Number(slot)])),
+      slotToRid: new Map(Object.entries(d.slot_to_roster_id).map(([slot, rid]) => [Number(slot), Number(rid)])),
       bySlotRound: new Map(season.picks.map(x => [`${x.draft_slot}|${x.round}`, x])),
     });
   }));
@@ -4693,7 +4799,8 @@ async function boot() {
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
-      weekMovers, panelRecaps, allPowerRankings, keepersOf, playerModal, openPlayer, posClass,
+      weekMovers, panelRecaps, allPowerRankings, keepersOf, keepersFor, loadStatedKeepers,
+      preDraftOwners, playerModal, openPlayer, posClass,
       articleCard, articleBlock,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
