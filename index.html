@@ -1762,9 +1762,19 @@ async function loadADP() {
   } catch (e) { return null; }
 }
 
-/** Sum a manager's drafted roster into one points-per-week number. */
-function rosterValue(picks, adp) {
-  const out = new Map();
+/**
+ * Sum a manager's drafted roster into one points-per-week number.
+ *
+ * Only each manager's best `cap` picks count, one per round of the draft.
+ * DFFL trades picks, so rosters come out of the draft at different sizes, and
+ * an uncapped sum pays a manager for owning roster slots rather than for
+ * owning better players: every extra pick adds at least the board's floor, and
+ * an 18th player never starts. Capping at the round count prices the same
+ * number of players for everyone, so the number means the same thing on every
+ * row of the board.
+ */
+function rosterValue(picks, adp, cap = 0) {
+  const vals = new Map();
   let matched = 0, total = 0;
   for (const p of picks || []) {
     const uid = p.picked_by;
@@ -1775,9 +1785,19 @@ function rosterValue(picks, adp) {
     if (hit != null) matched++;
     // Undrafted-in-the-market picks (team defenses, deep fliers) get the floor.
     // Every roster carries a couple, so this barely moves the ordering.
-    out.set(uid, (out.get(uid) || 0) + adpValue(hit != null ? hit : ADP_CURVE.deepest));
+    if (!vals.has(uid)) vals.set(uid, []);
+    vals.get(uid).push(adpValue(hit != null ? hit : ADP_CURVE.deepest));
   }
-  return { byUid: out, matched, total };
+  const out = new Map();
+  let counted = 0, dropped = 0;
+  for (const [uid, vs] of vals) {
+    vs.sort((a, b) => b - a);
+    const keep = cap > 0 ? vs.slice(0, cap) : vs;
+    dropped += vs.length - keep.length;
+    counted += keep.length;
+    out.set(uid, keep.reduce((a, b) => a + b, 0));
+  }
+  return { byUid: out, matched, total, counted, dropped, cap };
 }
 
 /** Deterministic PRNG (mulberry32). */
@@ -1952,7 +1972,7 @@ async function oddsModel() {
 
   // ---- Has the draft happened yet? That decides which model runs. ----
   const adp = await loadADP();
-  const live = (cur.draftDone && adp) ? rosterValue(cur.picks, adp) : null;
+  const live = (cur.draftDone && adp) ? rosterValue(cur.picks, adp, cur.draftRounds) : null;
   const postDraft = !!live && live.byUid.size === cur.rosters.length;
   const rvMean = postDraft ? avg([...live.byUid.values()]) : 0;
 
@@ -2003,6 +2023,7 @@ async function oddsModel() {
     adpMeta: adp ? adp.meta : null, adpMissing: !adp,
     matchRate: live ? live.matched / Math.max(1, live.total) : null,
     picksPriced: live ? live.total : 0,
+    rosterCap: live ? live.cap : 0, picksDropped: live ? live.dropped : 0,
   };
 }
 
@@ -2229,10 +2250,13 @@ function panelOdds(model, sim) {
   /* ---- what the draft did (only once there is a draft) ---- */
   if (post) {
     p.appendChild(sechead("What the draft did",
-      "Every pick is worth what that draft slot has historically returned to a DFFL starting lineup, summed across the roster. The last three columns split each projection into the part that came from the draft and the part that came from the manager's own record."));
+      `Every pick is worth what that draft slot has historically returned to a DFFL starting
+       lineup${model.rosterCap ? `, and each manager is scored on his best ${model.rosterCap} of them —
+       one per round, so a manager who traded for extra picks is not paid for the extra roster
+       slots` : ", summed across the roster"}. The last three columns split each projection into the part that came from the draft and the part that came from the manager's own record.`));
     const byDraft = model.teams.slice().sort((a, b) => b.rosterEdge - a.rosterEdge);
     p.appendChild(tableCard(
-      [{ label: "Manager" }, { label: "Roster", num: 1, title: "Points per week this roster projects to deliver" },
+      [{ label: "Manager" }, { label: "Roster", num: 1, title: model.rosterCap ? `Points per week this roster projects to deliver, best ${model.rosterCap} picks` : "Points per week this roster projects to deliver" },
       { label: "vs field", num: 1, title: "How far that sits from the average DFFL draft" },
       { label: "From draft", num: 1 }, { label: "From record", num: 1 }, { label: "Projected week", num: 1 }],
       byDraft.map(t => {
@@ -2246,13 +2270,19 @@ function panelOdds(model, sim) {
           <td class="num ${fromRec >= 0 ? "pos-t" : "neg-t"}">${sgn(fromRec)}</td>
           <td class="num"><b>${f1(t.mean)}</b></td></tr>`;
       })));
-    if (model.matchRate != null && model.matchRate < 0.98) {
+    if ((model.matchRate != null && model.matchRate < 0.98) || model.picksDropped > 0) {
       const m = el("div", "method");
-      m.innerHTML = `<p>${(model.matchRate * 100).toFixed(0)}% of the
+      m.innerHTML = `${model.matchRate < 0.98 ? `<p>${(model.matchRate * 100).toFixed(0)}% of the
         ${model.picksPriced} picks matched a player on the pre-draft market;
         the rest — team defenses and deep fliers nobody was drafting — were
         valued at the board's floor. Every roster carries a couple, so this
-        moves the ordering very little.</p>`;
+        moves the ordering very little.</p>` : ""}
+        ${model.picksDropped > 0 ? `<p>${model.picksDropped}
+        ${model.picksDropped === 1 ? "pick was" : "picks were"} traded into rosters beyond
+        ${model.rosterCap} players and ${model.picksDropped === 1 ? "does" : "do"} not count.
+        A ${model.rosterCap + 1}th player never enters a lineup, so paying for him would price
+        roster size rather than roster quality — each manager is valued on his best
+        ${model.rosterCap}.</p>` : ""}`;
       p.appendChild(m);
     }
   }
@@ -2355,6 +2385,11 @@ function panelOdds(model, sim) {
        ${model.adpMeta.sampled.replace("..", " to ")})` : ""}. Keepers need no special
        treatment here: a player kept in the ninth round is simply a player, priced at
        what he was worth on the open board.</p>
+    ${model.rosterCap ? `<p>Each manager is scored on his best ${model.rosterCap} picks — one per
+       round of the draft. Picks get traded in DFFL, so rosters leave the draft at different
+       sizes, and counting all of them would pay a manager for owning roster slots rather
+       than better players: a ${model.rosterCap + 1}th player never enters a lineup. Trading up
+       still shows, because it shows in the players.</p>` : ""}
     <p>Still not told: injuries, waiver claims, trades, or who is going to break out.</p>` : `
     <p>Deliberately not told: the keepers or the draft order, both of which Sleeper
        already publishes. Three keepers is a fifth of a roster, and a fifth of a roster

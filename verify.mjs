@@ -539,6 +539,57 @@ const midDraft = await page.evaluate(async () => {
 check("a draft in progress keeps the opening line", midDraft.partial === false);
 check("an incomplete board keeps the opening line", midDraft.short === false);
 
+group("Traded picks buy players, not roster value");
+const capped = await page.evaluate(async () => {
+  const D = window.__DFFL, cur = D.DB.seasons[0];
+  const a = await D.loadADP();
+  const board = a.meta.players.map(([n, p]) => ({ n, p }));
+  const uids = cur.rosters.map(r => cur.uidOf.get(r.roster_id));
+  const mk = (uid, pl, no) => ({
+    pick_no: no, round: Math.ceil(no / 12), picked_by: uid, player_id: `syn${no}`,
+    metadata: { first_name: pl.n.split(" ")[0], last_name: pl.n.split(" ").slice(1).join(" "), position: pl.p },
+  });
+  const base = []; let no = 0;
+  for (let r = 0; r < 15; r++) {
+    const order = r % 2 === 0 ? uids : uids.slice().reverse();
+    for (const uid of order) { const pl = board[no]; no++; if (pl) base.push(mk(uid, pl, no)); }
+  }
+
+  const saved = { picks: cur.picks, done: cur.draftDone, status: cur.draftStatus, slots: cur.draftSlots };
+  cur.picks = base; cur.draftDone = true; cur.draftStatus = "complete"; cur.draftSlots = 180;
+  const M1 = await D.oddsModel();
+  const v1 = new Map(M1.teams.map(t => [t.uid, t.rosterValue]));
+  const e1 = new Map(M1.teams.map(t => [t.uid, t.edge]));
+
+  // Same draft, except the first manager has traded for three extra late picks.
+  // Those land beyond a startable roster, so nothing about the board may move.
+  const extra = [0, 1, 2].map(i => mk(uids[0], { n: `Deep Flier${i}`, p: "WR" }, 181 + i));
+  cur.picks = base.concat(extra);
+  const M2 = await D.oddsModel();
+  const v2 = new Map(M2.teams.map(t => [t.uid, t.rosterValue]));
+  const e2 = new Map(M2.teams.map(t => [t.uid, t.edge]));
+
+  // And a manager who traded three good picks AWAY must lose value for it.
+  cur.picks = base.filter(p => !(p.picked_by === uids[1] && p.round <= 3));
+  const M3 = await D.oddsModel();
+  const v3 = new Map(M3.teams.map(t => [t.uid, t.rosterValue]));
+
+  cur.picks = saved.picks; cur.draftDone = saved.done; cur.draftStatus = saved.status; cur.draftSlots = saved.slots;
+  return {
+    cap: M2.rosterCap, rounds: cur.draftRounds, dropped: M2.picksDropped,
+    gain: v2.get(uids[0]) - v1.get(uids[0]),
+    edgeMoved: uids.some(u => Math.abs(e2.get(u) - e1.get(u)) > 1e-9),
+    othersMoved: uids.slice(1).some(u => Math.abs(v2.get(u) - v1.get(u)) > 1e-9),
+    loss: v3.get(uids[1]) - v1.get(uids[1]),
+  };
+});
+check("the roster cap is one player per draft round", capped.cap === capped.rounds && capped.cap > 0, `cap ${capped.cap} vs ${capped.rounds} rounds`);
+check("picks beyond the cap are dropped, not counted", capped.dropped === 3, `${capped.dropped}`);
+check("three extra late picks add nothing to a roster's value", Math.abs(capped.gain) < 1e-9, `${capped.gain.toFixed(4)}`);
+check("no other manager's value moves when one trades for picks", capped.othersMoved === false);
+check("no price on the board moves when one trades for picks", capped.edgeMoved === false);
+check("trading away three early picks does cost value", capped.loss < -5, `${capped.loss.toFixed(2)}`);
+
 group("Home and Odds agree");
 const agree = await page.evaluate(() => {
   const { ODDS: M, SIM } = window.__DFFL;
