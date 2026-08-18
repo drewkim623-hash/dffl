@@ -866,6 +866,30 @@ check("teams the job didn't write about keep their fallback", /points for/.test(
 check("the blurb lookup matches on manager name", withBlurbs.caseInsensitive && withBlurbs.lookup !== null);
 check("the where-do-blurbs-come-from note steps aside once they arrive", withBlurbs.noteGone);
 
+group("The site's own data files are never served stale");
+const freshness = await page.evaluate(async () => {
+  // Record how each file is asked for. Ours must revalidate; Sleeper's must not
+  // be forced to, since those are cross-origin and change on their own clock.
+  const seen = [];
+  const realFetch = window.fetch;
+  window.fetch = (u, opt) => { seen.push({ u: String(u), mode: (opt || {}).cache || "default" }); return realFetch(u, opt); };
+  const D = window.__DFFL;
+  await D.loadADP();
+  await D.loadStatedKeepers(true);
+  await D.loadBlurbs(true);
+  await D.panelRecaps();
+  window.fetch = realFetch;
+  const ours = seen.filter(x => !/^https?:/i.test(x.u));
+  const theirs = seen.filter(x => /sleeper\.app/i.test(x.u));
+  return {
+    ours: ours.map(x => `${x.u}:${x.mode}`),
+    allOursRevalidate: ours.length > 0 && ours.every(x => x.mode === "no-cache"),
+    sleeperUntouched: theirs.every(x => x.mode === "default"),
+  };
+});
+check("every file this site owns is revalidated on load", freshness.allOursRevalidate, freshness.ours.join(" | "));
+check("Sleeper's endpoints are left to the browser", freshness.sleeperUntouched);
+
 group("Power rankings: the preseason projection");
 const projB = await page.evaluate(() => {
   const D = window.__DFFL, P = window.__PROJ, O = window.__ODDS, S = window.__SIM;

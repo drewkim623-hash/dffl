@@ -642,7 +642,16 @@ const pct = n => (n * 100).toFixed(1) + "%";
 const ord = n => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
 async function jget(url) {
-  const r = await fetch(url);
+  // This site's own JSON changes under it — the recaps, the rankings, the
+  // keeper list, the ADP snapshot — and GitHub Pages serves them with a
+  // ten-minute max-age. Fetched normally, a reader keeps seeing the old
+  // article for ten minutes after it is replaced, which is exactly long
+  // enough to look broken. "no-cache" still uses the cache, it just checks
+  // with the server first, so an unchanged file costs a 304 and nothing else.
+  // Sleeper's own endpoints are left alone: they are cross-origin, they change
+  // on their own schedule, and the browser handles them sensibly.
+  const ours = !/^https?:/i.test(url);
+  const r = await fetch(url, ours ? { cache: "no-cache" } : undefined);
   if (!r.ok) throw new Error(`${url} → HTTP ${r.status}`);
   return r.json();
 }
