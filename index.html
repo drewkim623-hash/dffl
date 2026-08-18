@@ -360,9 +360,12 @@
   .tline .pn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2);min-width:0}
   .tline .pp{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink);flex:none}
   .tline .pos{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.05em}
+  .tline .pn{white-space:normal}
+  .tline .sub{font-size:11px;color:var(--muted);font-style:normal;display:block;line-height:1.35}
   .tpicks{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
   .tnote{padding:11px 14px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);line-height:1.5}
   .tfilter{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:430px;margin:0 0 14px}
+  .back.more{display:block;width:100%;margin:4px 0 0;text-align:center}
 
   /* ============ misc ============ */
   select{background:var(--raised);color:var(--ink);border:1px solid var(--ring);border-radius:9px;
@@ -2695,6 +2698,63 @@ function ptsFrom(season, pid, from) {
 
 const fmtPick = d => `${d.season} ${ord(Number(d.round))}`;
 
+/*
+ * Turning a traded pick into the player it became.
+ *
+ * On a transaction, a pick's roster_id is the roster whose slot it originally
+ * was. On the draft board, roster_id is whoever ended up making the selection.
+ * Those two differ precisely when a pick has been traded — which is every pick
+ * on this page — so the board cannot be matched on roster_id at all. What
+ * survives a trade is the draft column, and the draft's own slot_to_roster_id
+ * maps a column back to the roster that owns it. Round plus column is the
+ * selection, whoever it was traded to.
+ */
+let PICKIDX = null;
+async function loadDraftSlots() {
+  if (PICKIDX) return PICKIDX;
+  const idx = new Map();
+  if (!MOCK) await Promise.all(DB.seasons.map(async season => {
+    if (!season.draftId || !(season.picks || []).length) return;
+    const d = await jget(`${API}/draft/${season.draftId}`).catch(() => null);
+    if (!d || !d.slot_to_roster_id) return;
+    idx.set(season.season, {
+      ridToSlot: new Map(Object.entries(d.slot_to_roster_id).map(([slot, rid]) => [Number(rid), Number(slot)])),
+      bySlotRound: new Map(season.picks.map(x => [`${x.draft_slot}|${x.round}`, x])),
+    });
+  }));
+  PICKIDX = idx;
+  return idx;
+}
+
+/** A traded pick, resolved to the player taken with it and what he scored. */
+function resolvePick(d, tradeSeason) {
+  const year = String(d.season);
+  const out = { year, round: Number(d.round), label: fmtPick(d), name: null, pos: "", pts: 0, priced: false, why: null };
+  const target = DB.seasons.find(x => x.season === year);
+  const idx = PICKIDX && PICKIDX.get(year);
+  if (!target || !idx) { out.why = `the ${year} draft isn't on record`; return out; }
+  // Roster ids are not stable from one season to the next, so travel by manager.
+  const uid = tradeSeason && tradeSeason.uidOf.get(Number(d.roster_id));
+  let rid = null;
+  if (uid) for (const [r, u] of target.uidOf) if (u === uid) rid = r;
+  if (rid == null) rid = Number(d.roster_id);
+  const slot = idx.ridToSlot.get(rid);
+  const pick = slot != null ? idx.bySlotRound.get(`${slot}|${Number(d.round)}`) : null;
+  if (!pick) { out.why = "that slot isn't on the draft board"; return out; }
+  const md = pick.metadata || {};
+  out.name = `${md.first_name || ""} ${md.last_name || ""}`.trim() || pname(pick.player_id).name;
+  out.pos = md.position || "";
+  out.no = pick.pick_no;
+  // A keeper slot did not draft anybody — the manager kept a player he already
+  // had. Crediting the pick with that player's season would price a trade for
+  // something it never delivered.
+  if (pick.is_keeper) { out.keeper = true; out.why = "used as a keeper slot, so it drafted nobody"; return out; }
+  if (!seasonPlayed(target)) { out.why = `the ${year} season hasn't been played`; return out; }
+  out.pts = target.playerPts.get(pick.player_id) || 0;
+  out.priced = true;
+  return out;
+}
+
 /**
  * Has this season actually been played? Sleeper hands back matchup rows for a
  * season the moment it exists, every score zero, so "we have week data" is not
@@ -2723,10 +2783,17 @@ function gradeTrade(tx, season) {
   const adds = tx.adds || {}, drops = tx.drops || {};
   const pids = Object.keys(adds);
   const picks = tx.draft_picks || [];
-  const rids = [...new Set([...(tx.roster_ids || []), ...Object.values(adds)])].filter(r => r != null);
+  // Whoever sent or received a pick is a party to the trade too, so that the
+  // two halves of every pick land on somebody's books and the nets still cancel.
+  const rids = [...new Set([...(tx.roster_ids || []), ...Object.values(adds),
+    ...picks.map(d => d.owner_id), ...picks.map(d => d.previous_owner_id)])].filter(r => r != null);
   const noDrops = !Object.keys(drops).length;
+  const played = seasonPlayed(season);
+  // Players are only priceable if there was regular season left to play them in.
+  const playersLive = played && week <= lastReg;
 
-  const val = p => { const n = pname(p); return { pid: p, name: n.name, pos: n.pos, pts: ptsFrom(season, p, week) }; };
+  const val = p => { const n = pname(p); return { pid: p, name: n.name, pos: n.pos, pts: playersLive ? ptsFrom(season, p, week) : 0, priced: playersLive }; };
+  const resolve = list => list.map(d => resolvePick(d, season));
   const sides = rids.map(rid => {
     const got = pids.filter(p => adds[p] === rid).map(val);
     // A few old trades came back without a drops map. In a two-team trade the
@@ -2734,30 +2801,38 @@ function gradeTrade(tx, season) {
     const sent = (noDrops && rids.length === 2
       ? pids.filter(p => adds[p] !== rid)
       : pids.filter(p => drops[p] === rid)).map(val);
-    const gain = got.reduce((a, x) => a + x.pts, 0);
-    const loss = sent.reduce((a, x) => a + x.pts, 0);
+    const picksIn = resolve(picks.filter(d => d.owner_id === rid));
+    const picksOut = resolve(picks.filter(d => d.previous_owner_id === rid));
+    const sum = xs => xs.filter(x => x.priced).reduce((a, x) => a + x.pts, 0);
+    const playerNet = sum(got) - sum(sent), pickNet = sum(picksIn) - sum(picksOut);
+    const gain = sum(got) + sum(picksIn), loss = sum(sent) + sum(picksOut);
     return {
-      rid, uid: season.uidOf.get(rid) || null, got, sent, gain, loss, net: gain - loss,
-      picksIn: picks.filter(d => d.owner_id === rid),
-      picksOut: picks.filter(d => d.previous_owner_id === rid),
+      rid, uid: season.uidOf.get(rid) || null, got, sent, picksIn, picksOut,
+      playerNet, pickNet, gain, loss, net: gain - loss,
     };
   });
 
-  const played = seasonPlayed(season);
-  const reason =
-    !pids.length ? "picks only — there is nothing to score" :
-    !played ? `the ${season.season} season hasn't been played` :
-    week > lastReg ? "made after the regular season ended" : null;
+  // Everything that moved but could not be given a number, and why.
+  const unpriced = [];
+  if (pids.length && !playersLive) unpriced.push({
+    label: `${pids.length} player${pids.length === 1 ? "" : "s"}`,
+    why: !played ? `the ${season.season} season hasn't been played` : "the trade came after the regular season ended",
+  });
+  for (const r of resolve(picks)) if (!r.priced) unpriced.push({ label: r.label, why: r.why });
+  const pricedPicks = resolve(picks).filter(r => r.priced).length;
+  const graded = (playersLive && pids.length > 0) || pricedPicks > 0;
+  const reason = graded ? null
+    : unpriced.length ? unpriced[0].why
+    : "there is nothing in it to score";
 
   const moved = sides.reduce((a, x) => a + x.gain, 0);
   const ranked = sides.slice().sort((a, b) => b.net - a.net);
-  const graded = !reason;
   const winner = graded && ranked.length > 1 && ranked[0].net > 0 ? ranked[0] : null;
   const margin = winner ? winner.net : 0;
 
   return {
     id: tx.transaction_id, season: season.season, week, date: Number(tx.created) || 0,
-    sides, ranked, moved, winner, margin, graded, reason, adds, drops,
+    sides, ranked, moved, winner, margin, graded, reason, adds, drops, unpriced, pricedPicks,
     partial: !season.complete, nPicks: picks.length, nTeams: rids.length, nPlayers: pids.length,
   };
 }
@@ -2821,17 +2896,36 @@ function tradeLedger(txs) {
     for (const sd of t.sides) {
       if (!sd.uid) continue;
       if (!byMgr.has(sd.uid)) byMgr.set(sd.uid,
-        { uid: sd.uid, n: 0, net: 0, gained: 0, lost: 0, won: 0, lostN: 0, best: null, worst: null });
+        { uid: sd.uid, n: 0, net: 0, playerNet: 0, pickNet: 0, gained: 0, lost: 0, won: 0, lostN: 0, best: null, worst: null });
       const m = byMgr.get(sd.uid);
       m.n++; m.net += sd.net; m.gained += sd.gain; m.lost += sd.loss;
+      m.playerNet += sd.playerNet; m.pickNet += sd.pickNet;
       if (sd.net > TRADE_EVEN) m.won++; else if (sd.net < -TRADE_EVEN) m.lostN++;
       if (!m.best || sd.net > m.best.net) m.best = { ...sd, t };
       if (!m.worst || sd.net < m.worst.net) m.worst = { ...sd, t };
     }
   }
   const graded = trades.filter(t => t.graded);
+  // Every priced pick that changed hands. A pick can be traded on more than
+  // once — each trade genuinely conveyed it, and the ledger debits and credits
+  // every holder in turn, which nets an intermediate owner back to zero. But
+  // only one manager ever made the selection, so the pick is listed once, under
+  // whoever held it last. `trades` runs newest first, so that is the first hit.
+  const pickHauls = [];
+  const seenPick = new Map();
+  for (const t of graded) for (const sd of t.sides) for (const r of sd.picksIn) {
+    if (!r.priced) continue;
+    const key = `${r.year}|${r.no}`;
+    const prev = seenPick.get(key);
+    if (prev) { prev.times++; continue; }
+    const row = { ...r, uid: sd.uid, from: t.season, week: t.week, times: 1 };
+    seenPick.set(key, row); pickHauls.push(row);
+  }
+  pickHauls.sort((a, b) => b.pts - a.pts);
   return {
-    trades, graded, reversed,
+    trades, graded, reversed, pickHauls,
+    pickedPriced: graded.reduce((a, t) => a + t.pricedPicks, 0),
+    picksMoved: trades.reduce((a, t) => a + t.nPicks, 0),
     byMgr: [...byMgr.values()].sort((a, b) => b.net - a.net),
     fleecing: graded.filter(t => t.winner).sort((a, b) => b.margin - a.margin)[0] || null,
     moved: graded.reduce((a, t) => a + t.moved, 0),
@@ -2903,6 +2997,9 @@ function waiverReport(txs) {
 
 /* -------------------------------------------------------------- panel */
 const plabel = x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
+/** Everything a side received, players and picks, in plain words. */
+const gotNames = sd => [...sd.got.map(x => x.name),
+  ...sd.picksIn.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
 const sgnf = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
 
 function tradeCard(t) {
@@ -2921,21 +3018,26 @@ function tradeCard(t) {
   const sides = el("div", "tsides");
   for (const sd of t.sides) {
     const d = el("div", "tside" + (decided && sd.rid === t.winner.rid ? " won" : ""));
-    const lines = sd.got.map(x =>
-      `<li class="tline"><span class="pn">${plabel(x)}</span><span class="pp">${t.graded ? f1(x.pts) : "—"}</span></li>`).join("");
+    const line = (label, pts, priced, sub) => `<li class="tline">
+      <span class="pn">${label}${sub ? `<br><i class="sub">${esc(sub)}</i>` : ""}</span>
+      <span class="pp">${priced ? f1(pts) : "—"}</span></li>`;
+    const lines = sd.got.map(x => line(plabel(x), x.pts, t.graded && x.priced))
+      .concat(sd.picksIn.map(r => line(
+        `${esc(r.label)}${r.name ? ` → ${esc(r.name)}${r.pos ? ` <span class="pos">${esc(r.pos)}</span>` : ""}` : ""}`,
+        r.pts, t.graded && r.priced, r.priced ? null : r.why))).join("");
     d.innerHTML = `<div class="who">${avatarHTML(sd.uid, "sm")}
         <span class="n">${esc(sd.uid ? nameOf(sd.uid) : "roster " + sd.rid)}</span>
         ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}</div>
-      ${lines ? `<ul class="tlist">${lines}</ul>` : `<div class="tpicks">no players</div>`}
-      ${sd.picksIn.length ? `<div class="tpicks">picks in: ${sd.picksIn.map(fmtPick).map(esc).join(", ")}</div>` : ""}`;
+      ${lines ? `<ul class="tlist">${lines}</ul>` : `<div class="tpicks">gave everything, got nothing back</div>`}`;
     sides.appendChild(d);
   }
   box.appendChild(sides);
 
   const notes = [];
   if (!t.graded) notes.push(`Not graded — ${t.reason}.`);
-  else notes.push(`${f1(t.moved)} points changed hands from ${t.week === 1 ? "week 1" : "week " + t.week} on${t.partial ? ", and the season is still running" : ""}.`);
-  if (t.graded && t.nPicks) notes.push(`${t.nPicks} draft pick${t.nPicks === 1 ? "" : "s"} also moved and ${t.nPicks === 1 ? "is" : "are"} not priced here.`);
+  else notes.push(`${f1(t.moved)} points changed hands${t.pricedPicks ? `, counting ${t.pricedPicks} pick${t.pricedPicks === 1 ? "" : "s"} at what ${t.pricedPicks === 1 ? "it" : "they"} drafted` : ""}${t.partial ? ", and the season is still running" : ""}.`);
+  if (t.graded && t.unpriced.length)
+    notes.push(`Not priced: ${t.unpriced.map(u => `${u.label} (${u.why})`).join(", ")}.`);
   box.appendChild(el("div", "tnote", notes.map(esc).join(" ")));
   return box;
 }
@@ -2953,8 +3055,9 @@ function renderTrades(host, L, W) {
   if (L.fleecing) {
     const t = L.fleecing, w = t.winner;
     const loser = t.ranked[t.ranked.length - 1];
-    const got = w.got.map(x => x.name).join(", ") || "nothing";
-    const gave = w.sent.map(x => x.name).join(", ") || "nothing";
+    const got = gotNames(w);
+    const gave = [...w.sent.map(x => x.name),
+      ...w.picksOut.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
     const f = el("div", "fleece");
     f.innerHTML = `<div class="k">Biggest fleecing in league history</div>
       <div class="v">${esc(sgnf(t.margin))}</div>
@@ -2968,7 +3071,7 @@ function renderTrades(host, L, W) {
   tiles.innerHTML = [
     { l: "Trades all-time", v: String(L.trades.length), n: `across ${L.seasons.length} season${L.seasons.length === 1 ? "" : "s"}` },
     { l: "Graded", v: String(L.graded.length), n: ungraded ? `${ungraded} can't be scored fairly` : "every one of them" },
-    { l: "Points traded", v: f1(L.moved), n: "counted after each deal" },
+    { l: "Points traded", v: f1(L.moved), n: `players after each deal, picks at what they drafted` },
     { l: "Biggest margin", v: L.fleecing ? sgnf(L.fleecing.margin) : "—", n: L.fleecing ? `${nameOf(L.fleecing.winner.uid)}, ${L.fleecing.season}` : "nothing graded yet" },
   ].map(t => `<div class="tile"><div class="l">${esc(t.l)}</div><div class="v">${esc(t.v)}</div><div class="n">${esc(t.n)}</div></div>`).join("");
   host.appendChild(tiles);
@@ -2980,45 +3083,40 @@ function renderTrades(host, L, W) {
     host.appendChild(el("div", "empty", "<b>Nothing to add up yet</b>No trade in league history can be scored."));
   } else {
     host.appendChild(tableCard(
-      [{ label: "Manager" }, { label: "Trades", num: 1 }, { label: "Net", num: 1, title: "Points gained minus points given up" },
-      { label: "Got", num: 1 }, { label: "Gave", num: 1 }, { label: "W–L", num: 1, title: "Trades won and lost by more than 25 points" },
+      [{ label: "Manager" }, { label: "Trades", num: 1 }, { label: "Net", num: 1, title: "Points gained minus points given up, players and picks together" },
+      { label: "From players", num: 1 }, { label: "From picks", num: 1, title: "Picks are worth what the player drafted with them scored" },
+      { label: "W–L", num: 1, title: "Trades won and lost by more than 25 points" },
       { label: "Best" }, { label: "Worst" }],
       L.byMgr.map(m => `<tr>
         <td><span class="nmcell">${avatarHTML(m.uid, "sm")}${esc(nameOf(m.uid))}</span></td>
         <td class="num">${m.n}</td>
         <td class="num ${m.net >= 0 ? "pos-t" : "neg-t"}"><b>${esc(sgnf(m.net))}</b></td>
-        <td class="num">${f1(m.gained)}</td>
-        <td class="num">${f1(m.lost)}</td>
+        <td class="num ${m.playerNet >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(m.playerNet))}</td>
+        <td class="num ${m.pickNet >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(m.pickNet))}</td>
         <td class="num">${m.won}–${m.lostN}</td>
-        <td>${m.best ? `<span class="pos-t">${esc(sgnf(m.best.net))}</span> ${esc(m.best.got.map(x => x.name).join(", ") || "picks")} <span class="pos">${esc(m.best.t.season)}</span>` : "—"}</td>
-        <td>${m.worst ? `<span class="neg-t">${esc(sgnf(m.worst.net))}</span> ${esc(m.worst.got.map(x => x.name).join(", ") || "picks")} <span class="pos">${esc(m.worst.t.season)}</span>` : "—"}</td>
+        <td>${m.best ? `<span class="pos-t">${esc(sgnf(m.best.net))}</span> ${esc(gotNames(m.best))} <span class="pos">${esc(m.best.t.season)}</span>` : "—"}</td>
+        <td>${m.worst ? `<span class="neg-t">${esc(sgnf(m.worst.net))}</span> ${esc(gotNames(m.worst))} <span class="pos">${esc(m.worst.t.season)}</span>` : "—"}</td>
       </tr>`)));
   }
 
-  /* ---- every trade, newest first ---- */
-  host.appendChild(sechead("Every trade in league history",
-    "Newest first. Each player is followed by what he scored from that week to the end of that regular season — the only points either side can claim."));
-  const filt = el("div", "tfilter");
-  const sel = el("select");
-  const opt = (v, t) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); };
-  opt("all", `All seasons (${L.trades.length})`);
-  for (const yr of L.seasons) opt(yr, `${yr} (${L.trades.filter(t => t.season === yr).length})`);
-  filt.appendChild(sel);
-  host.appendChild(filt);
-  const list = el("div");
-  host.appendChild(list);
-
-  function drawList() {
-    list.innerHTML = "";
-    const show = sel.value === "all" ? L.trades : L.trades.filter(t => t.season === sel.value);
-    if (!show.length) {
-      list.appendChild(el("div", "empty",
-        `<b>No trades in ${esc(sel.value)}</b>Nobody made a deal that season. It happens.`));
-      return;
-    }
-    for (const t of show) list.appendChild(tradeCard(t));
+  /* ---- what the picks turned into ---- */
+  if (L.pickHauls.length) {
+    host.appendChild(sechead("What the traded picks became",
+      `A pick is worth the player actually taken with it. ${L.pickedPriced} of the ${L.picksMoved} picks that have changed hands
+       follow through to a selection in a season that has been played. Listed under whoever held the pick last — a ×
+       marks one that was traded on more than once.`));
+    const best = L.pickHauls.slice(0, 12);
+    host.appendChild(tableCard(
+      [{ label: "Pick" }, { label: "Became" }, { label: "At", num: 1, title: "Where the pick actually landed in that draft" },
+      { label: "Ended up with" }, { label: "Traded in", num: 1 }, { label: "Points", num: 1 }],
+      best.map(r => `<tr>
+        <td>${esc(r.label)}${r.times > 1 ? ` <span class="pos">×${r.times}</span>` : ""}</td>
+        <td>${esc(r.name)}${r.pos ? ` <span class="pos">${esc(r.pos)}</span>` : ""}</td>
+        <td class="num">${r.no}</td>
+        <td>${esc(nameOf(r.uid))}</td>
+        <td class="num">${esc(r.from)}</td>
+        <td class="num"><b>${f1(r.pts)}</b></td></tr>`)));
   }
-  sel.onchange = drawList; drawList();
 
   /* ---- waivers ---- */
   host.appendChild(sechead("Waivers and FAAB",
@@ -3110,6 +3208,41 @@ function renderTrades(host, L, W) {
     }
   }
 
+  /* ---- every trade, newest first ---- */
+  // A hundred and fifty cards is a wall, and everything above is the point of
+  // the page, so the log goes last and opens short.
+  const PAGE = 20;
+  host.appendChild(sechead("Every trade in league history",
+    "Newest first. Each player is followed by what he scored from that week to the end of that regular season, and each pick by the player it became — the only points either side can claim."));
+  const filt = el("div", "tfilter");
+  const sel = el("select");
+  const opt = (v, t) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); };
+  opt("all", `All seasons (${L.trades.length})`);
+  for (const yr of L.seasons) opt(yr, `${yr} (${L.trades.filter(t => t.season === yr).length})`);
+  filt.appendChild(sel);
+  host.appendChild(filt);
+  const list = el("div");
+  host.appendChild(list);
+
+  let shown = PAGE;
+  function drawList() {
+    list.innerHTML = "";
+    const all = sel.value === "all" ? L.trades : L.trades.filter(t => t.season === sel.value);
+    if (!all.length) {
+      list.appendChild(el("div", "empty",
+        `<b>No trades in ${esc(sel.value)}</b>Nobody made a deal that season. It happens.`));
+      return;
+    }
+    for (const t of all.slice(0, shown)) list.appendChild(tradeCard(t));
+    if (all.length > shown) {
+      const more = el("button", "back more", `Show all ${all.length} trades`);
+      more.onclick = () => { shown = all.length; drawList(); };
+      list.appendChild(more);
+    }
+  }
+  sel.onchange = () => { shown = PAGE; drawList(); };
+  drawList();
+
   host.appendChild(glossary([
     { t: "Points after", d: "What a player scored from the week of the deal to the end of that regular season. Points he scored earlier belong to whoever owned him then, so they are never counted." },
     { t: "Net", d: "Points received minus points given up. The two sides of a trade are exact mirrors, so a league-wide net of zero is the arithmetic working, not a coincidence." },
@@ -3125,11 +3258,22 @@ function renderTrades(host, L, W) {
     <p>A player only scores here while somebody rosters him. Drop a traded player and the weeks he spends
        unclaimed are invisible to Sleeper's box scores and therefore to this page — which flatters the
        manager who dumped him.</p>
-    <p>Draft picks are counted and shown but never priced. A pick's worth depends on where it lands, which
-       is not known until the draft runs, so a trade that moved only picks is marked <b>not graded</b>
-       rather than given a number that would be made up. ${L.trades.length - L.graded.length} of
-       ${L.trades.length} trades fall in that bucket${L.reversed ? `, ${L.reversed} of them because the
-       same players went straight back inside a day — a trade undone is not a trade won` : ""}.</p>
+    <p>A draft pick is worth the player actually taken with it, over that player's whole regular season.
+       Resolving one is not a matter of looking up a roster: on the draft board a pick is filed under
+       whoever <i>made</i> the selection, which is the new owner, so a traded pick cannot be found that way
+       at all. What survives a trade is the draft column, and the draft's own slot map leads from the
+       original owner back to it. ${L.pickedPriced} of the ${L.picksMoved} picks that have changed hands
+       resolve to a selection in a season that has actually been played.</p>
+    <p>Two kinds of pick are deliberately left unpriced. One used as a keeper slot drafted nobody — the
+       manager kept a player he already had — and one for a season nobody has played has not delivered
+       anything yet. Both are named on the trade rather than quietly counted as zero.</p>
+    <p>Because a pick usually lands in the season after the trade, a graded trade can span two years: the
+       players are scored over the weeks left in the season the deal was made, the picks over the whole
+       season they were used in. That is what each side actually received, but it is not one currency, so
+       the ledger keeps players and picks in separate columns.</p>
+    <p>${L.trades.length - L.graded.length} of ${L.trades.length} trades still cannot be graded at
+       all${L.reversed ? `, ${L.reversed} of them because the same players went straight back inside a day —
+       a trade undone is not a trade won` : ""}.</p>
     <p>Playoff scoring is excluded on both sides. Six of twelve teams make the playoffs, so counting those
        weeks would reward a trade for the team it was made by rather than the players in it. For the same
        reason a waiver claim needs three regular-season weeks still to run before it is ranked on value:
@@ -3152,6 +3296,7 @@ async function ensureTrades() {
       for (const k of Object.keys(t.drops || {})) need.add(k);
     }
     await loadPlayerNames(need);
+    await loadDraftSlots();
     const L = tradeLedger(txs), W = waiverReport(txs);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
     renderTrades(host, L, W);
@@ -3224,8 +3369,9 @@ async function boot() {
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
-      ensureTrades, loadTransactions, loadPlayerNames, tradeLedger, waiverReport,
-      gradeTrade, ptsFrom, verdictOf, TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,
+      ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
+      gradeTrade, ptsFrom, verdictOf, resolvePick, seasonPlayed, markReversals,
+      TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,
     };
     document.body.dataset.ready = "1";
   } catch (e) {

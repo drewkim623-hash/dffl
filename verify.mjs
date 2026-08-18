@@ -665,7 +665,9 @@ const T = await page.evaluate(() => {
     nonFinite: nums.slice(0, 5),
     ungradedHaveReasons: L.trades.filter(t => !t.graded).every(t => typeof t.reason === "string" && t.reason.length > 0),
     gradedHaveNoReason: L.graded.every(t => !t.reason),
-    picksOnlyUngraded: L.trades.filter(t => t.nPlayers === 0).every(t => !t.graded),
+    picksOnlyGraded: L.trades.filter(t => t.nPlayers === 0 && t.pricedPicks > 0).every(t => t.graded),
+    picksOnlyUnpriceable: L.trades.filter(t => t.nPlayers === 0 && t.pricedPicks === 0).every(t => !t.graded),
+    splitAddsUp: L.byMgr.every(m => Math.abs(m.net - (m.playerNet + m.pickNet)) < 1e-9),
     claims: W.claims.length, spent: W.totalSpent,
     // a claim can only be ranked on value if it had weeks left to deliver any
     rankedHaveWindow: [...W.overpays, ...W.bestBuys, ...W.bestFree].every(c => c.weeksLeft >= 3 && c.played),
@@ -674,17 +676,27 @@ const T = await page.evaluate(() => {
     namesResolved: L.trades.flatMap(t => t.sides.flatMap(s => [...s.got, ...s.sent]))
       .filter(x => x.name === String(x.pid)).length,
     cards: document.querySelectorAll('[data-panel="trades"] .trade').length,
+    moreButton: !!document.querySelector('[data-panel="trades"] .back.more'),
+    // the summary sections must come before the log, not after it
+    order: [...document.querySelectorAll('[data-panel="trades"] .sechead h2')].map(h => h.textContent),
   };
 });
 check("every trade in league history is listed", T.trades > 100, `${T.trades}`);
-check("a card is rendered for every trade", T.cards === T.trades, `${T.cards} cards / ${T.trades} trades`);
+check("the trade log opens short rather than as a wall of cards", T.cards === 20 && T.moreButton, `${T.cards} cards`);
+check("the summaries come before the log", T.order.indexOf("Every trade in league history") === T.order.length - 1, T.order.join(" / "));
+check("the ledger, the picks and the waivers all render", ["All-time trade ledger", "What the traded picks became", "Waivers and FAAB"].every(h => T.order.includes(h)), T.order.join(" / "));
+await page.click('[data-panel="trades"] .back.more');
+const expanded = await page.evaluate(() => document.querySelectorAll('[data-panel="trades"] .trade').length);
+check("expanding shows a card for every trade", expanded === T.trades, `${expanded} cards / ${T.trades} trades`);
 check("both sides of every graded trade cancel to zero", T.netZero < 1e-6, `${T.netZero}`);
 check("each trade's gains sum to the points it moved", T.movedOk);
 check("the whole ledger sums to zero", Math.abs(T.ledgerSum) < 1e-6, `${T.ledgerSum}`);
 check("no NaN or Infinity anywhere in the ledger", T.nonFinite.length === 0, T.nonFinite.join(", "));
 check("every ungraded trade says why", T.ungradedHaveReasons);
 check("every graded trade carries no excuse", T.gradedHaveNoReason);
-check("a picks-only trade is never graded", T.picksOnlyUngraded);
+check("a picks-only trade is graded once its picks resolve", T.picksOnlyGraded);
+check("a picks-only trade with nothing priceable is not graded", T.picksOnlyUnpriceable);
+check("each manager's net splits exactly into players and picks", T.splitAddsUp);
 check("reversed trades are thrown out", T.reversed > 0 && T.reversed % 2 === 0, `${T.reversed}`);
 check("player names resolved from ids", T.namesResolved === 0, `${T.namesResolved} unresolved`);
 check("waiver claims loaded", T.claims > 500, `${T.claims}`);
@@ -713,6 +725,69 @@ check("an ungraded trade names no winner", verdicts.ungradedNamesWinner === 0, `
 check("an ungraded trade shows no points at all", verdicts.ungradedShowsPoints === 0, `${verdicts.ungradedShowsPoints}`);
 check("every decided trade marks its winner", verdicts.decidedAllHaveWinner && verdicts.decided > 40, `${verdicts.decided} decided`);
 check("every decided trade posts its margin", verdicts.decidedAllShowMargin);
+
+group("Trades: draft picks resolve to the player taken");
+const picks = await page.evaluate(() => {
+  const D = window.__DFFL, DB = D.DB, TX = window.__TX, L = window.__TRADES;
+  const seasonOf = new Map(DB.seasons.map(s => [s.season, s]));
+  let total = 0, resolved = 0, priced = 0, keepers = 0, unplayed = 0;
+  const wrongRound = [];
+  // How many times each distinct pick was traded, so we can isolate the ones
+  // that moved exactly once and check them against the draft board itself.
+  const moves = new Map();
+  for (const t of TX) if (t.type === "trade") for (const d of t.draft_picks || []) {
+    const k = `${d.season}|${d.round}|${d.roster_id}`;
+    moves.set(k, (moves.get(k) || 0) + 1);
+  }
+  let once = 0, selectedByReceiver = 0;
+  const wrongOwner = [];
+  for (const t of TX) {
+    if (t.type !== "trade") continue;
+    const ts = seasonOf.get(t.season);
+    for (const d of t.draft_picks || []) {
+      total++;
+      const r = D.resolvePick(d, ts);
+      if (!r.name) continue;
+      resolved++;
+      if (r.priced) priced++;
+      if (r.keeper) keepers++;
+      const target = seasonOf.get(String(d.season));
+      const board = target.picks.find(x => x.pick_no === r.no);
+      if (Number(board.round) !== Number(d.round)) wrongRound.push(`${d.season} r${d.round} -> pick ${r.no} is round ${board.round}`);
+      if (!D.seasonPlayed(target)) unplayed++;
+      if (moves.get(`${d.season}|${d.round}|${d.roster_id}`) !== 1) continue;
+      once++;
+      // A pick that moved exactly once was made by whoever received it. This is
+      // an outside check on the whole chain — nothing in it comes from the slot
+      // map the resolver used.
+      if (board.picked_by === ts.uidOf.get(Number(d.owner_id))) selectedByReceiver++;
+      else wrongOwner.push(`${d.season} r${d.round}: ${r.name} picked by someone else`);
+    }
+  }
+  const keys = L.pickHauls.map(r => `${r.year}|${r.no}`);
+  return {
+    total, resolved, priced, keepers, unplayed, once, selectedByReceiver,
+    wrongRound: wrongRound.slice(0, 3), wrongOwner: wrongOwner.slice(0, 3),
+    keeperNeverPriced: !L.trades.some(t => t.sides.some(sd =>
+      [...sd.picksIn, ...sd.picksOut].some(r => r.keeper && r.priced))),
+    unplayedNeverPriced: !L.trades.some(t => t.sides.some(sd =>
+      [...sd.picksIn, ...sd.picksOut].some(r => r.priced && !D.seasonPlayed(seasonOf.get(r.year))))),
+    haulsUnique: new Set(keys).size === keys.length,
+    haulsSane: L.pickHauls.every(r => isFinite(r.pts) && r.pts >= 0 && r.no > 0 && !!r.name),
+    haulsZero: L.pickHauls.filter(r => r.pts === 0).length,
+    everyUnpricedHasReason: L.trades.every(t => t.sides.every(sd =>
+      [...sd.picksIn, ...sd.picksOut].every(r => r.priced || (r.why && r.why.length > 0)))),
+  };
+});
+check("every traded pick resolves to a selection", picks.resolved === picks.total, `${picks.resolved}/${picks.total}`);
+check("no resolved pick lands in the wrong round", picks.wrongRound.length === 0, picks.wrongRound.join(" | "));
+check("a pick traded once was drafted by whoever received it", picks.once > 100 && picks.selectedByReceiver === picks.once, `${picks.selectedByReceiver}/${picks.once} — ${picks.wrongOwner.join(" | ")}`);
+check("most traded picks end up priced", picks.priced > 200, `${picks.priced} of ${picks.total}`);
+check("a keeper slot is never priced", picks.keeperNeverPriced && picks.keepers > 0, `${picks.keepers} keeper slots seen`);
+check("a pick in an unplayed season is never priced", picks.unplayedNeverPriced && picks.unplayed > 0, `${picks.unplayed} unplayed`);
+check("every unpriced pick says why", picks.everyUnpricedHasReason);
+check("a pick appears once in the haul table, under its last holder", picks.haulsUnique);
+check("every priced haul has a real player and a real slot", picks.haulsSane, `${picks.haulsZero} of them drafted a player who never scored`);
 
 group("Trades: only the weeks after a trade count");
 const after = await page.evaluate(() => {
@@ -763,8 +838,10 @@ const synth = await page.evaluate(() => {
   const earlier = D.gradeTrade({ ...tx, leg: wk - 1 }, season);
   // And one made in the playoffs cannot be graded at all.
   const late = D.gradeTrade({ ...tx, leg: 15 }, season);
-  // Picks with no players: nothing to score.
-  const picksOnly = D.gradeTrade({ ...tx, adds: {}, drops: {}, draft_picks: [{ round: 2, season: "2024", owner_id: rids[0], previous_owner_id: rids[1] }] }, season);
+  // Picks with no players now resolve to the player actually taken.
+  const picksOnly = D.gradeTrade({ ...tx, adds: {}, drops: {}, draft_picks: [{ round: 2, season: "2024", roster_id: rids[1], owner_id: rids[0], previous_owner_id: rids[1] }] }, season);
+  // A pick for a season nobody has played still cannot be priced.
+  const futurePick = D.gradeTrade({ ...tx, adds: {}, drops: {}, draft_picks: [{ round: 2, season: "2026", roster_id: rids[1], owner_id: rids[0], previous_owner_id: rids[1] }] }, season);
   return {
     ptsA, ptsB, graded: g.graded, moved: g.moved,
     gain1: side1.gain, loss1: side1.loss, net1: side1.net,
@@ -774,6 +851,11 @@ const synth = await page.evaluate(() => {
     earlierMargin: earlier.margin,
     lateGraded: late.graded, lateReason: late.reason,
     picksGraded: picksOnly.graded, picksReason: picksOnly.reason,
+    picksMoved: picksOnly.moved,
+    picksWinnerGain: picksOnly.winner && picksOnly.winner.gain,
+    picksResolved: picksOnly.sides.flatMap(x => x.picksIn).filter(x => x.priced)
+      .map(x => ({ name: x.name, pts: x.pts, no: x.no })),
+    futureGraded: futurePick.graded, futureReason: futurePick.reason,
   };
 });
 check("the synthetic winner receives exactly the better player's points", near(synth.gain1, synth.ptsA, 1e-9), `${synth.gain1} vs ${synth.ptsA}`);
@@ -785,7 +867,9 @@ check("the nets are equal and opposite", near(synth.net1, -synth.net0, 1e-9), `$
 check("the better player's side is the winner", synth.winnerIsA === true);
 check("the same trade made a week earlier is worth more", synth.earlierMargin > synth.margin, `${synth.earlierMargin} vs ${synth.margin}`);
 check("a trade made in the playoffs is not graded", synth.lateGraded === false && /regular season/.test(synth.lateReason), synth.lateReason);
-check("a picks-only trade is not graded", synth.picksGraded === false && /picks only/.test(synth.picksReason), synth.picksReason);
+check("a picks-only trade is graded on the player its pick became", synth.picksGraded === true && synth.picksResolved.length === 1, JSON.stringify(synth.picksResolved));
+check("the picks-only trade is worth exactly that player's season", synth.picksResolved.length === 1 && near(synth.picksMoved, synth.picksResolved[0].pts, 1e-9), `${synth.picksMoved} vs ${synth.picksResolved[0] && synth.picksResolved[0].pts}`);
+check("a pick for a season nobody has played is not graded", synth.futureGraded === false && /hasn't been played/.test(synth.futureReason), synth.futureReason);
 
 group("Layout at 390px");
 const mobile = await ctx.newPage();
@@ -833,9 +917,24 @@ const tradeNarrow = await mobile.evaluate(() => {
     tiles: panel.querySelectorAll(".tile").length,
   };
 });
+await mobile.click('[data-panel="trades"] .back.more');
+await mobile.waitForTimeout(120);
+const tradeNarrowFull = await mobile.evaluate(() => {
+  const panel = document.querySelector('[data-panel="trades"]');
+  const over = [];
+  for (const n of panel.querySelectorAll("*")) {
+    if (n.closest(".scroll")) continue;
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { over: over.slice(0, 6), cards: panel.querySelectorAll(".trade").length,
+    docScroll: document.documentElement.scrollWidth, inner: window.innerWidth };
+});
+check("trades: every card fits at 390px once expanded", tradeNarrowFull.over.length === 0 && tradeNarrowFull.docScroll <= tradeNarrowFull.inner, tradeNarrowFull.over.join(" | "));
+check("trades: all 150+ cards render at 390px", tradeNarrowFull.cards > 100, `${tradeNarrowFull.cards}`);
 check("trades: page does not scroll horizontally at 390px", tradeNarrow.docScroll <= tradeNarrow.inner, `${tradeNarrow.docScroll} > ${tradeNarrow.inner}`);
 check("trades: nothing outside a scroller overflows at 390px", tradeNarrow.overflowing.length === 0, tradeNarrow.overflowing.join(" | "));
-check("trades: the whole board still renders at 390px", tradeNarrow.cards > 100 && tradeNarrow.tiles === 4, `${tradeNarrow.cards} cards, ${tradeNarrow.tiles} tiles`);
+check("trades: the whole board still renders at 390px", tradeNarrow.cards === 20 && tradeNarrow.tiles === 4, `${tradeNarrow.cards} cards, ${tradeNarrow.tiles} tiles`);
 
 // every other tab too, so the new CSS didn't break anything narrow
 for (const id of EXPECT.filter(t => t !== "odds")) {
