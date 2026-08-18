@@ -401,6 +401,77 @@
   .mempty{background:var(--raised);border-radius:9px;padding:18px;text-align:center;color:var(--muted);
     font-size:13.5px;margin-top:15px}
 
+  /* ============ long-form articles ============ */
+  .artl{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);
+    padding:26px 26px 28px;margin-bottom:16px;overflow:hidden}
+  .ahdr{border-bottom:1px solid var(--grid);padding-bottom:16px;margin-bottom:20px}
+  .ak{font-size:11px;letter-spacing:.19em;text-transform:uppercase;color:var(--red);font-weight:700}
+  .artl h2{font-size:clamp(29px,5.4vw,44px);line-height:1.03;letter-spacing:-.035em;font-weight:900;
+    margin:10px 0 0;text-wrap:balance}
+  .adek{font-size:17px;line-height:1.5;color:var(--ink-2);margin:11px 0 0;max-width:60ch;text-wrap:pretty}
+  .aby{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);font-weight:600}
+  .aby b{color:var(--ink-2);font-weight:700}
+  .abd{max-width:66ch}
+  .apara{font-size:16.5px;line-height:1.7;color:var(--ink-2);margin:0 0 17px;text-wrap:pretty}
+  .apara b{color:var(--ink);font-weight:750}
+  .apara.lead{font-size:18px;color:var(--ink)}
+  .ahead{margin:30px 0 12px}
+  .ahead .ae{font-size:11px;letter-spacing:.19em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  .ahead h3{margin:5px 0 0;font-size:24px;line-height:1.15;letter-spacing:-.02em;font-weight:800;text-wrap:balance}
+  .astat{display:flex;gap:15px;align-items:baseline;border-top:2px solid var(--ink);
+    border-bottom:1px solid var(--grid);padding:15px 0 16px;margin:22px 0}
+  .astat .n{font-size:44px;font-weight:900;letter-spacing:-.04em;color:var(--blue);
+    font-variant-numeric:tabular-nums;line-height:.9;flex:none}
+  .astat .t{font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+  .anote{font-size:13px;line-height:1.6;color:var(--muted);border-top:1px solid var(--grid);
+    padding-top:14px;margin:24px 0 0}
+
+  .abars{margin:24px 0;max-width:none}
+  .abars .at{font-size:15px;font-weight:800;letter-spacing:-.01em}
+  .abars .as{font-size:12.5px;color:var(--muted);margin:3px 0 14px;line-height:1.45}
+  .abody{display:grid;gap:6px}
+  .abar{display:grid;grid-template-columns:minmax(84px,124px) 1fr 46px;align-items:center;gap:10px}
+  .abar .who{font-size:13px;font-weight:650;text-align:right;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;line-height:1.2}
+  .abar .who i{display:block;font-style:normal;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);font-weight:700}
+  .abar .track{position:relative;height:20px;background:var(--raised);border-radius:3px}
+  .abar .zero{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--mid);left:50%}
+  .abar .fill{position:absolute;top:3px;bottom:3px;border-radius:2px;background:var(--blue)}
+  .abar.g2 .fill{background:var(--aqua)} .abar.g3 .fill{background:var(--gold)}
+  .abar .v{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;
+    text-align:right;color:var(--ink-2)}
+
+  .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin:22px 0}
+  .acard{background:var(--raised);border:1px solid var(--ring);border-radius:var(--rs);padding:14px 15px}
+  .acard.lead{border-color:rgba(57,135,229,.5)}
+  .acard .ct{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:800}
+  .acard .cb{font-family:var(--mono);font-size:23px;font-variant-numeric:tabular-nums;margin:5px 0 2px;
+    letter-spacing:-.02em}
+  .acard .cs{font-size:11.5px;color:var(--muted);line-height:1.4;margin-bottom:10px}
+  .acard .cr{display:grid;gap:4px}
+  .acard .cr span{display:flex;align-items:baseline;gap:8px;font-size:13px}
+  .acard .cr i{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .acard .cr b{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:400;
+    color:var(--muted);font-variant-numeric:tabular-nums}
+
+  .apicks{margin:20px 0;border-top:2px solid var(--ink)}
+  .apick{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline;
+    padding:10px 0;border-bottom:1px solid var(--grid)}
+  .apick .sl{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;
+    font-variant-numeric:tabular-nums}
+  .apick .nm{font-size:14.5px;line-height:1.3}
+  .apick .nm i{display:block;font-style:normal;font-size:12px;color:var(--muted)}
+  .apick .dl{font-family:var(--mono);font-size:13px;color:var(--plus);white-space:nowrap;
+    font-variant-numeric:tabular-nums}
+  @media(max-width:560px){
+    .artl{padding:20px 17px 22px}
+    .astat{flex-direction:column;gap:7px}
+    .astat .n{font-size:38px}
+    .abar{grid-template-columns:minmax(70px,92px) 1fr 42px;gap:8px}
+  }
+
   /* ============ recap notebook ============ */
   .lede{background:var(--surface);border:1px solid var(--ring);border-left:3px solid var(--blue);
     border-radius:var(--rs);padding:14px 16px;margin-bottom:12px}
@@ -987,7 +1058,8 @@ const TABS = [
   { id: "race", label: "Race" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
-  { id: "recaps", label: "Recaps" },
+  // The id stays "recaps" so links people have already shared keep working.
+  { id: "recaps", label: "News & Articles" },
 ];
 function buildTabs() {
   const bar = $("#tabs"); bar.innerHTML = "";
@@ -1630,15 +1702,93 @@ const KINDS = {
   note: { icon: "·", label: "Around the league" },
 };
 
+/*
+ * Long-form pieces — draft reports, midseason takes — stored as blocks in
+ * recaps.json rather than as a slab of HTML, so the file stays something a
+ * person can read and edit and nothing in it can inject markup into the page.
+ * Only <b> survives from the copy; everything else is escaped.
+ */
+const artText = t => esc(String(t ?? "")).replace(/&lt;b&gt;/g, "<b>").replace(/&lt;\/b&gt;/g, "</b>");
+
+function articleBlock(b) {
+  switch (b && b.type) {
+    case "p":
+      return `<p class="${b.lead ? "apara lead" : "apara"}">${artText(b.text)}</p>`;
+    case "h":
+      return `<div class="ahead">${b.eyebrow ? `<div class="ae">${esc(b.eyebrow)}</div>` : ""}
+        <h3>${esc(b.text || "")}</h3></div>`;
+    case "stat":
+      return `<div class="astat"><span class="n">${esc(b.n || "")}</span>
+        <span class="t">${artText(b.text)}</span></div>`;
+    case "note":
+      return `<p class="anote">${artText(b.text)}</p>`;
+    case "bars": {
+      // Diverging about zero, scaled to the biggest swing either way.
+      const rows = b.rows || [];
+      const max = Math.max(1e-9, ...rows.map(r => Math.abs(Number(r.value) || 0)));
+      const body = rows.map(r => {
+        const v = Number(r.value) || 0, w = Math.abs(v) / max * 50;
+        const left = v >= 0 ? 50 : 50 - w;
+        return `<div class="abar g${Number(r.group) || 1}">
+          <span class="who">${esc(r.label || "")}${r.sub ? `<i>${esc(r.sub)}</i>` : ""}</span>
+          <span class="track"><span class="zero"></span>
+            <span class="fill" style="left:${left.toFixed(1)}%;width:${w.toFixed(1)}%"></span></span>
+          <span class="v">${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}</span></div>`;
+      }).join("");
+      return `<div class="abars"><div class="at">${esc(b.title || "")}</div>
+        ${b.sub ? `<div class="as">${esc(b.sub)}</div>` : ""}<div class="abody">${body}</div></div>`;
+    }
+    case "cards":
+      return `<div class="acards">${(b.items || []).map(c => `
+        <div class="acard${c.lead ? " lead" : ""}">
+          <div class="ct">${esc(c.title || "")}</div>
+          <div class="cb">${esc(c.big || "")}</div>
+          <div class="cs">${esc(c.sub || "")}</div>
+          <div class="cr">${(c.rows || []).map(r =>
+            `<span><i>${esc(r.label || "")}</i><b>${esc(r.value || "")}</b></span>`).join("")}</div>
+        </div>`).join("")}</div>`;
+    case "picks":
+      return `<div class="apicks">${(b.items || []).map(x => `
+        <div class="apick"><span class="sl">${esc(x.slot || "")}</span>
+          <span class="nm">${esc(x.name || "")}${x.sub ? `<i>${esc(x.sub)}</i>` : ""}</span>
+          <span class="dl">${esc(x.delta || "")}</span></div>`).join("")}</div>`;
+    default:
+      return "";
+  }
+}
+
+function articleCard(a) {
+  const box = el("article", "artl");
+  const when = a.date ? new Date(a.date + "T12:00:00Z").toLocaleDateString(undefined,
+    { day: "numeric", month: "long", year: "numeric" }) : "";
+  box.innerHTML = `<header class="ahdr">
+      ${a.kicker ? `<div class="ak">${esc(a.kicker)}</div>` : ""}
+      <h2>${esc(a.headline || "")}</h2>
+      ${a.dek ? `<p class="adek">${esc(a.dek)}</p>` : ""}
+      <div class="aby">${a.byline ? `<b>${esc(a.byline)}</b>` : ""}
+        ${when ? `<span>${esc(when)}</span>` : ""}
+        ${a.standfirst ? `<span>${esc(a.standfirst)}</span>` : ""}</div>
+    </header>
+    <div class="abd">${(a.blocks || []).map(articleBlock).join("")}</div>`;
+  return box;
+}
+
 async function panelRecaps() {
   const p = el("div", "panel"); p.dataset.panel = "recaps";
-  p.appendChild(sechead("The week in the DFFL",
-    "Every matchup written up, plus what else moved around the league — trades, waiver money, who is climbing and who is falling out of it."));
+  p.appendChild(sechead("News & articles",
+    "The long reads, and a write-up of every week — matchups, trades, waiver money, who is climbing and who is falling out of it."));
   let data = null;
   try { data = await jget("recaps.json"); } catch (e) { data = null; }
+
+  const articles = ((data && data.articles) || []).slice()
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  for (const a of articles) p.appendChild(articleCard(a));
+
   const weeks = ((data && data.weeks) || []).slice()
     .sort((a, b) => (Number(b.season) - Number(a.season)) || (b.week - a.week));
+  if (articles.length && weeks.length) p.appendChild(sechead("Week by week"));
   if (!weeks.length) {
+    if (articles.length) return p;
     p.appendChild(el("div", "empty",
       "<b>Nothing to read yet</b>The write-ups start the week the season kicks off — every game, plus the trades, the waiver moves and the power-board swings around them."));
     return p;
@@ -4544,6 +4694,7 @@ async function boot() {
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
       weekMovers, panelRecaps, allPowerRankings, keepersOf, playerModal, openPlayer, posClass,
+      articleCard, articleBlock,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
       renderRace, raceEmpty,

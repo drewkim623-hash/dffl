@@ -951,6 +951,97 @@ const recapGone = await page.evaluate(async () => {
 check("a missing recaps.json never throws", recapGone.threw === null, String(recapGone.threw));
 check("a missing recaps.json shows the waiting state", recapGone.empty === 1);
 
+group("News & Articles");
+const tabName = await page.evaluate(() =>
+  document.querySelector('#tabs button[data-tab="recaps"]').textContent);
+check("the tab is named for what it holds now", tabName === "News & Articles", tabName);
+check("the old #recaps link still works", (await page.evaluate(() => !!document.querySelector('[data-panel="recaps"]'))));
+
+const artl = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const panel = await D.panelRecaps();
+  const a = panel.querySelector(".artl");
+  const txt = a ? a.innerText : "";
+  return {
+    articles: panel.querySelectorAll(".artl").length,
+    headline: a ? a.querySelector("h2").textContent : null,
+    paras: panel.querySelectorAll(".apara").length,
+    leads: panel.querySelectorAll(".apara.lead").length,
+    heads: panel.querySelectorAll(".ahead h3").length,
+    stats: panel.querySelectorAll(".astat").length,
+    bars: panel.querySelectorAll(".abar").length,
+    cards: panel.querySelectorAll(".acard").length,
+    picks: panel.querySelectorAll(".apick").length,
+    bold: panel.querySelectorAll(".apara b").length,
+    // the bars must diverge about the zero line, not all point one way
+    barsBothWays: (() => {
+      const f = [...panel.querySelectorAll(".abar .fill")].map(n => parseFloat(n.style.left));
+      return f.some(l => l < 49.9) && f.some(l => l >= 49.9);
+    })(),
+    nan: /NaN|undefined/.test(txt),
+    // the article leads the section; the weekly log follows it
+    articleFirst: [...panel.children].findIndex(n => n.classList.contains("artl")) <
+      Math.max(1, [...panel.children].findIndex(n => n.classList.contains("wkhead"))) ||
+      !panel.querySelector(".wkhead"),
+  };
+});
+check("the draft piece is on the page", artl.articles === 1 && artl.headline === "The CPES Problem", artl.headline);
+check("every block type renders", artl.paras > 20 && artl.heads === 8 && artl.stats === 2 && artl.bars === 12 && artl.cards === 3 && artl.picks === 5,
+  `${artl.paras}p ${artl.heads}h ${artl.stats}stat ${artl.bars}bar ${artl.cards}card ${artl.picks}pick`);
+check("the lead paragraph is marked for its drop cap", artl.leads === 1, `${artl.leads}`);
+check("bold survives the escaping", artl.bold > 5, `${artl.bold}`);
+check("the projection bars diverge both ways", artl.barsBothWays);
+check("articles lead the section", artl.articleFirst);
+check("no NaN in the article", artl.nan === false);
+
+const artSafe = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  // Copy in a file is copy, never markup: only <b> may survive.
+  const evil = { articles: [{ season: "2026", date: "2026-01-01", headline: "<img src=x onerror=alert(1)>",
+    dek: "<script>alert(2)<\/script>", byline: "x",
+    blocks: [
+      { type: "p", text: "safe <b>bold</b> and <i>italic</i> and <a href=#>link</a>" },
+      { type: "h", eyebrow: "<b>eye</b>", text: "<b>head</b>" },
+      { type: "bogus", text: "unknown" },
+      null,
+    ] }], weeks: [] };
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("recaps.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve(evil) }) : realFetch(u);
+  const panel = await D.panelRecaps();
+  window.fetch = realFetch;
+  const p0 = panel.querySelector(".apara");
+  return {
+    imgs: panel.querySelectorAll("img").length,
+    scripts: panel.querySelectorAll("script").length,
+    anchors: panel.querySelectorAll(".abd a").length,
+    italics: panel.querySelectorAll(".apara i").length,
+    boldKept: p0 ? p0.querySelectorAll("b").length : -1,
+    paraText: p0 ? p0.textContent : "",
+    headlineIsText: panel.querySelector(".artl h2").textContent,
+    headingHasNoTags: panel.querySelector(".ahead h3").children.length,
+    unknownDropped: panel.querySelectorAll(".abd > *").length,
+  };
+});
+check("markup in the copy is escaped, not run", artSafe.imgs === 0 && artSafe.scripts === 0 && artSafe.anchors === 0);
+check("only bold survives", artSafe.boldKept === 1 && artSafe.italics === 0, `${artSafe.boldKept} bold, ${artSafe.italics} italic`);
+check("escaped tags read as text", /<i>italic<\/i>/.test(artSafe.paraText), artSafe.paraText);
+check("a headline is text, whatever it contains", /<img/.test(artSafe.headlineIsText));
+check("headings take no markup at all", artSafe.headingHasNoTags === 0);
+check("an unknown block type is dropped rather than guessed at", artSafe.unknownDropped === 2, `${artSafe.unknownDropped}`);
+
+const noArt = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const realFetch = window.fetch;
+  window.fetch = u => String(u).includes("recaps.json")
+    ? Promise.resolve({ ok: true, json: () => Promise.resolve({ weeks: [] }) }) : realFetch(u);
+  const panel = await D.panelRecaps();
+  window.fetch = realFetch;
+  return { artl: panel.querySelectorAll(".artl").length, empty: panel.querySelectorAll(".empty").length };
+});
+check("no articles and no weeks still shows the waiting state", noArt.artl === 0 && noArt.empty === 1);
+
+
 group("Draft: keepers, views and the player card");
 await page.click('#tabs button[data-tab="draft"]');
 await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });

@@ -27,6 +27,15 @@ on that string and falls back silently if it does not.
 beside the sentence, and the two disagreeing is the one failure mode that makes the page look broken.
 The site computes the ranking; the job supplies colour only.
 
+## articles[]
+
+`recaps.json` also holds an `articles[]` array — long-form pieces like the 2026 draft report. Those are
+written by hand or on request, not by the weekly job. **The job must read the file, append to `weeks[]`,
+and write `articles[]` back exactly as it found it.** Dropping it deletes the writing.
+
+The article block model is documented in the file's own `_schema`. Only `<b>` survives from the copy;
+everything else is escaped on the way to the page.
+
 ## Editing the routine
 
 The routine lives at https://claude.ai/code/routines. Edit the prompt in the web UI rather than
@@ -122,6 +131,9 @@ project_read "claude/recaps.json". Append a new object to weeks[]:
 If TARGET_WEEK >= 15 set note to "Playoffs" (week 15 = Round 1, 16 = Semifinals, 17 = Championship) and note that non-bracket teams are in the consolation bracket.
 If a week with that season+week already exists, replace it rather than duplicating.
 Write the full updated JSON back with project_write to "claude/recaps.json".
+
+If the file has an "articles" array, write it back exactly as you found it — those are long-form
+pieces nobody else regenerates, and dropping the key deletes them.
 
 project_read "claude/rankings.json" (if it does not exist yet, start from
 {"weeks":[]} and keep any "_comment"/"_schema" keys you find). Append:
