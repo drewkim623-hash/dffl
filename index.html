@@ -325,6 +325,82 @@
   .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
   .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
 
+  /* ============ draft board ============ */
+  .pos-dot{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:19px;
+    border-radius:5px;font-size:10px;font-weight:800;letter-spacing:.04em;padding:0 5px;flex:none;
+    background:var(--raised);color:var(--ink-2);border:1px solid var(--ring)}
+  .pos-dot.qb{color:#b3a9ff;border-color:rgba(144,133,233,.45);background:rgba(144,133,233,.13)}
+  .pos-dot.rb{color:#3fc79a;border-color:rgba(25,158,112,.45);background:rgba(25,158,112,.13)}
+  .pos-dot.wr{color:#7fb4f2;border-color:rgba(57,135,229,.45);background:rgba(57,135,229,.13)}
+  .pos-dot.te{color:#e0a63c;border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.13)}
+  .pos-dot.kk{color:var(--muted)}
+  .pos-dot.def{color:#f09090;border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.13)}
+
+  .dboard{display:grid;gap:1px;background:var(--grid);padding:1px;min-width:max-content}
+  .dboard .bh{background:var(--raised);padding:8px 7px;font-size:10.5px;font-weight:750;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    text-align:center}
+  .dboard .bh.corner{background:var(--raised)}
+  .dboard .brd{background:var(--raised);display:grid;place-items:center;font-size:11.5px;font-weight:800;
+    color:var(--muted);font-variant-numeric:tabular-nums}
+  .dboard .bc{background:var(--surface);border:0;border-left:3px solid var(--mid);padding:7px 8px;
+    text-align:left;cursor:pointer;font:inherit;color:inherit;display:grid;gap:1px;transition:background .12s;
+    min-width:0}
+  .dboard .bc:hover{background:var(--hover)}
+  .dboard .bc:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+  .dboard .bc.empty{background:var(--plane);border-left-color:transparent;cursor:default}
+  .dboard .bc .no{font-size:9.5px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+  .dboard .bc .no .k{color:var(--gold);font-weight:900}
+  .dboard .bc .nm{font-size:12.5px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dboard .bc .mt{font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dboard .bc.qb{border-left-color:#9085e9} .dboard .bc.rb{border-left-color:#199e70}
+  .dboard .bc.wr{border-left-color:#3987e5} .dboard .bc.te{border-left-color:#c98500}
+  .dboard .bc.def{border-left-color:#e66767} .dboard .bc.kk{border-left-color:var(--mid)}
+
+  .mgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
+  .dcard{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden}
+  .dh{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--raised);
+    border-bottom:1px solid var(--grid)}
+  .dh .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dh .tot{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;flex:none}
+  .dpicks{display:grid}
+  .dp{display:grid;grid-template-columns:20px 34px minmax(0,1fr) auto;align-items:center;gap:8px;
+    padding:7px 12px;background:transparent;border:0;border-top:1px solid var(--grid);text-align:left;
+    font:inherit;color:inherit;cursor:pointer;transition:background .12s}
+  .dpicks .dp:first-child{border-top:0}
+  .dp:hover{background:var(--hover)}
+  .dp .rd{font-size:10.5px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+  .dp .nm{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dp .nm .k{color:var(--gold);font-size:10.5px;font-weight:900}
+  .dp .pts{font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+  /* ============ player card ============ */
+  .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.66);backdrop-filter:blur(3px);
+    display:grid;place-items:center;padding:16px}
+  .mbox{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);width:min(560px,100%);
+    max-height:88vh;overflow:auto;padding:18px 20px 20px;position:relative;
+    box-shadow:0 24px 70px rgba(0,0,0,.6)}
+  .mx{position:absolute;top:10px;right:12px;background:transparent;border:0;color:var(--muted);
+    font-size:24px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px}
+  .mx:hover{color:var(--ink);background:var(--raised)}
+  .mhead{display:flex;align-items:center;gap:11px;padding-right:30px}
+  .mhead .who{min-width:0}
+  .mhead .n{font-size:21px;font-weight:850;letter-spacing:-.02em;line-height:1.2}
+  .mhead .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .mstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:15px 0 4px}
+  .ms{background:var(--raised);border-radius:9px;padding:9px 11px}
+  .ms b{display:block;font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .ms span{font-size:10.5px;color:var(--muted);line-height:1.3;display:block;margin-top:1px}
+  .wkchart{display:flex;align-items:flex-end;gap:3px;height:104px;margin:14px 0 0}
+  .wkchart .wk{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+    height:100%;gap:3px;min-width:0}
+  .wkchart .bar{display:block;width:100%;background:var(--blue);border-radius:2px 2px 0 0}
+  .wkchart .wk.post .bar{background:var(--mid)}
+  .wkchart .n{font-size:8.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .mnote{font-size:12.5px;color:var(--muted);line-height:1.55;margin:12px 0 0}
+  .mempty{background:var(--raised);border-radius:9px;padding:18px;text-align:center;color:var(--muted);
+    font-size:13.5px;margin-top:15px}
+
   /* ============ recap notebook ============ */
   .lede{background:var(--surface);border:1px solid var(--ring);border-left:3px solid var(--blue);
     border-radius:var(--rs);padding:14px 16px;margin-bottom:12px}
@@ -931,6 +1007,8 @@ function show(id) {
   // Same deal for the race: it reads the rest of the schedule and runs tens of
   // thousands of seasons, so it waits until somebody asks for it.
   if (id === "race") ensureRace();
+  const dp = $('[data-panel="draft"]');
+  if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
@@ -2665,6 +2743,106 @@ function panelOdds(model, sim) {
 }
 
 /* ============================================== DRAFT =============== */
+/*
+ * Which picks were players held over from last season.
+ *
+ * Sleeper's is_keeper flag catches two of about thirty-six here, because DFFL
+ * assigns its keepers by hand rather than through Sleeper's keeper tool. The
+ * rosters know better: a player drafted by the same manager who ended last
+ * season holding him was kept. That is a superset — the league allows three
+ * keepers each and a manager is free to re-draft a fourth player he already
+ * had — so the legend says exactly what the mark means rather than claiming
+ * more than the data supports.
+ */
+function keepersOf(season) {
+  if (season._keepers) return season._keepers;
+  const set = new Set();
+  const prev = DB.seasons[DB.seasons.indexOf(season) + 1];
+  const held = new Map();
+  for (const r of (prev && prev.rosters) || []) {
+    const uid = prev.uidOf.get(r.roster_id);
+    if (uid) held.set(uid, new Set(r.players || []));
+  }
+  for (const p of season.picks || []) {
+    const h = held.get(p.picked_by);
+    if (p.is_keeper || (h && p.player_id && h.has(p.player_id))) set.add(String(p.player_id));
+  }
+  season._keepers = set;
+  return set;
+}
+
+const POSC = { QB: "qb", RB: "rb", WR: "wr", TE: "te", K: "kk", DEF: "def", DST: "def" };
+const posClass = pos => POSC[String(pos || "").toUpperCase()] || "oth";
+
+/* ---------------------------------------------------- one player, opened */
+/**
+ * What a drafted player actually did, week by week. Sleeper's own player card
+ * shows projections next to results; there is no public projections feed behind
+ * this site, so this shows what happened and says nothing it cannot source.
+ */
+function playerModal(season, pick, analysis) {
+  const md = pick.metadata || {};
+  const name = `${md.first_name || ""} ${md.last_name || ""}`.trim() || String(pick.player_id);
+  const pid = String(pick.player_id);
+  const lastReg = (season.pws || 15) - 1;
+  const weeks = [...(season.playerWeek || new Map()).keys()].sort((a, b) => a - b);
+  const line = weeks.map(w => ({ w, pts: (season.playerWeek.get(w) || new Map()).get(pid) || 0 }));
+  const reg = line.filter(x => x.w <= lastReg);
+  const total = reg.reduce((a, x) => a + x.pts, 0);
+  const played = reg.filter(x => x.pts !== 0);
+  const best = played.slice().sort((a, b) => b.pts - a.pts)[0] || null;
+  const worst = played.slice().sort((a, b) => a.pts - b.pts)[0] || null;
+  const row = analysis && analysis.rows.find(r => String(r.pid) === pid);
+  const kept = keepersOf(season).has(pid);
+  const max = Math.max(1, ...line.map(x => x.pts));
+
+  const wrap = el("div", "modal");
+  const bars = line.map(x => {
+    const h = Math.max(2, Math.round((x.pts / max) * 100));
+    const post = x.w > lastReg;
+    return `<span class="wk ${post ? "post" : ""}" title="week ${x.w}: ${f1(x.pts)}">
+      <span class="bar" style="height:${h}%"></span><span class="n">${x.w}</span></span>`;
+  }).join("");
+
+  wrap.innerHTML = `<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(name)}">
+    <button class="mx" aria-label="Close">×</button>
+    <div class="mhead">
+      <span class="pos-dot ${posClass(md.position)}">${esc(md.position || "?")}</span>
+      <div class="who">
+        <div class="n">${esc(name)}${kept ? ' <span class="badge gold">K</span>' : ""}</div>
+        <div class="s">${esc(md.team || "free agent")} · pick ${pick.pick_no}, round ${pick.round}
+          · ${esc(pick.picked_by ? nameOf(pick.picked_by) : "—")}</div>
+      </div>
+    </div>
+    ${seasonPlayed(season) ? `
+      <div class="mstats">
+        <div class="ms"><b>${f1(total)}</b><span>points, regular season</span></div>
+        <div class="ms"><b>${row ? ord(row.prodRank) : "—"}</b><span>of ${analysis ? analysis.rows.length : "—"} picks</span></div>
+        <div class="ms"><b>${best ? f1(best.pts) : "—"}</b><span>best week${best ? ` (wk ${best.w})` : ""}</span></div>
+        <div class="ms"><b>${played.length}</b><span>weeks he scored</span></div>
+      </div>
+      <div class="wkchart" role="img" aria-label="weekly scoring">${bars}</div>
+      <p class="mnote">Every week he was on a roster in ${esc(season.season)}, under DFFL scoring.
+        Faded bars are the playoff weeks, which none of the draft numbers count.
+        ${worst && worst !== best ? `Quietest week he played: ${f1(worst.pts)} in week ${worst.w}.` : ""}</p>`
+      : `<div class="mempty">No scoring on record for ${esc(season.season)} yet — the season hasn't been played.</div>`}
+  </div>`;
+
+  const close = () => { wrap.remove(); document.removeEventListener("keydown", esckey); };
+  const esckey = e => { if (e.key === "Escape") close(); };
+  wrap.querySelector(".mx").onclick = close;
+  wrap.onclick = e => { if (e.target === wrap) close(); };
+  document.addEventListener("keydown", esckey);
+  return wrap;
+}
+
+function openPlayer(season, pick, analysis) {
+  const old = $(".modal");
+  if (old) old.remove();
+  document.body.appendChild(playerModal(season, pick, analysis));
+}
+
+/* ---------------------------------------------------------- the tab */
 function panelDraft() {
   const p = el("div", "panel"); p.dataset.panel = "draft";
   const drafted = DB.seasons.filter(s => s.picks && s.picks.length);
@@ -2675,45 +2853,23 @@ function panelDraft() {
       "<b>No draft data yet</b>Past drafts appear here once they're on Sleeper. The 2026 keeper draft will show up after it runs."));
     return p;
   }
-  const sel = el("select");
+
+  const picks = el("div", "pickrow");
+  const sel = el("select"), viewSel = el("select");
   drafted.forEach(s => { const o = el("option", null, `${s.season} draft`); o.value = s.season; sel.appendChild(o); });
-  const wrap = el("div"); wrap.style.cssText = "margin:0 0 14px;max-width:260px"; wrap.appendChild(sel);
-  p.appendChild(wrap);
+  [["board", "The board"], ["mgr", "By manager"], ["list", "Full list"]].forEach(([v, t]) => {
+    const o = el("option", null, t); o.value = v; viewSel.appendChild(o);
+  });
+  picks.appendChild(sel); picks.appendChild(viewSel);
+  p.appendChild(picks);
+  const highlights = el("div"); p.appendChild(highlights);
   const host = el("div"); p.appendChild(host);
 
   const pill = r => `${esc(r.name)}${r.pos ? ` <span class="badge">${esc(r.pos)}</span>` : ""}`;
-  const prow = r => `<tr>
-    <td>${pill(r)}</td>
-    <td class="num">${r.pick}</td>
-    <td class="num">${r.prodRank}</td>
-    <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}"><b>${r.value >= 0 ? "+" : ""}${r.value}</b></td>
-    <td class="num">${f1(r.pts)}</td>
-    <td>${r.uid ? esc(nameOf(r.uid)) : "—"}</td></tr>`;
-  const phead = [{ label: "Player" }, { label: "Pick", num: 1, title: "Where he was drafted" },
-  { label: "Finished", num: 1, title: "Where he ranked in actual scoring" },
-  { label: "Value", num: 1 }, { label: "Points", num: 1 }, { label: "Drafted by" }];
 
-  function draw() {
-    const s = drafted.find(x => x.season === sel.value);
-    host.innerHTML = "";
-    const A = draftAnalysis(s.picks, s.playerPts, s.uidOf);
-    if (!A) { host.appendChild(el("div", "empty", "<b>No picks recorded</b>")); return; }
-
-    // If Sleeper didn't return per-player scoring for this season, every value
-    // would be meaningless. Show the board without value rather than fake numbers.
-    const scored = A.rows.filter(r => r.pts > 0).length;
-    if (scored < A.rows.length * 0.25) {
-      host.appendChild(el("div", "empty",
-        `<b>Draft board only for ${esc(s.season)}</b>Sleeper didn't return per-player scoring for this
-         season, so steals and busts can't be calculated. The picks themselves are below.`));
-      host.appendChild(tableCard([{ label: "Pick", num: 1 }, { label: "Rd", num: 1 }, { label: "Player" }, { label: "Drafted by" }],
-        A.rows.slice().sort((a, b) => a.pick - b.pick).map(r => `<tr>
-          <td class="num">${r.pick}</td><td class="num">${r.round}</td>
-          <td>${pill(r)}${r.keeper ? ' <span class="badge gold">K</span>' : ""}</td>
-          <td>${r.uid ? esc(nameOf(r.uid)) : "—"}</td></tr>`)));
-      return;
-    }
-
+  function drawHighlights(s, A) {
+    highlights.innerHTML = "";
+    if (!A) return;
     const steal = A.steals[0], bust = A.busts[0];
     const t = el("div", "recs");
     t.innerHTML = [
@@ -2724,33 +2880,164 @@ function panelDraft() {
     ].filter(Boolean).map(x =>
       `<div class="rec ${x.c}"><div class="l">${esc(x.l)}</div><div class="v">${esc(x.v)}</div>
        <div class="w">${esc(x.w)}</div><div class="c">${esc(x.x)}</div></div>`).join("");
-    host.appendChild(t);
+    highlights.appendChild(t);
+  }
 
-    host.appendChild(sechead("Biggest steals"));
-    host.appendChild(tableCard(phead, A.steals.map(prow)));
-    host.appendChild(sechead("Biggest busts"));
-    host.appendChild(tableCard(phead, A.busts.map(prow)));
+  /* ---- the board: rounds down, draft slots across, the way it was run ---- */
+  async function drawBoard(s, A, scored) {
+    host.innerHTML = "";
+    host.appendChild(el("div", "empty", "<b>Laying out the board…</b>"));
+    const idx = await loadDraftSlots();
+    const I = idx.get(s.season);
+    host.innerHTML = "";
+    if (!I) {
+      host.appendChild(el("div", "empty", "<b>No board for this draft</b>Sleeper didn't return its slot order, so the picks are in the full list instead."));
+      return;
+    }
+    const slotOf = new Map();
+    for (const [rid, slot] of I.ridToSlot) slotOf.set(slot, rid);
+    const slots = [...slotOf.keys()].sort((a, b) => a - b);
+    const rounds = [...new Set(s.picks.map(x => x.round))].sort((a, b) => a - b);
+    const keep = keepersOf(s);
+    const byKey = new Map(s.picks.map(x => [`${x.draft_slot}|${x.round}`, x]));
 
-    host.appendChild(sechead("How each manager drafted", "Total points their picks produced, and their single best and worst selection."));
-    host.appendChild(tableCard([{ label: "Manager" }, { label: "Picks", num: 1 }, { label: "Points", num: 1 },
-    { label: "Best pick" }, { label: "Worst pick" }],
-      A.byMgr.map(m => `<tr>
-        <td><span class="nmcell">${avatarHTML(m.uid, "sm")}${esc(nameOf(m.uid))}</span></td>
-        <td class="num">${m.n}</td><td class="num"><b>${f1(m.pts)}</b></td>
-        <td>${m.best ? `${esc(m.best.name)} <span class="pos-t">+${m.best.value}</span>` : "—"}</td>
-        <td>${m.worst ? `${esc(m.worst.name)} <span class="neg-t">${m.worst.value}</span>` : "—"}</td></tr>`)));
+    const card = el("div", "card"), scroll = el("div", "scroll");
+    const grid = el("div", "dboard");
+    // 12 columns at 88px plus the round gutter fits the 1140px page without
+    // scrolling; narrower than that and the scroller takes over.
+    grid.style.gridTemplateColumns = `30px repeat(${slots.length}, minmax(88px, 1fr))`;
+    const head = [`<span class="bh corner"></span>`];
+    for (const sl of slots) {
+      const uid = s.uidOf.get(slotOf.get(sl));
+      head.push(`<span class="bh" title="${esc(uid ? nameOf(uid) : "")}">${esc(uid ? nameOf(uid) : "—")}</span>`);
+    }
+    grid.innerHTML = head.join("");
+    for (const rd of rounds) {
+      grid.insertAdjacentHTML("beforeend", `<span class="brd">${rd}</span>`);
+      for (const sl of slots) {
+        const pk = byKey.get(`${sl}|${rd}`);
+        if (!pk) { grid.insertAdjacentHTML("beforeend", `<span class="bc empty"></span>`); continue; }
+        const md = pk.metadata || {};
+        const nm = `${md.first_name || ""} ${md.last_name || ""}`.trim() || String(pk.player_id);
+        const row = A && A.rows.find(r => String(r.pid) === String(pk.player_id));
+        const kept = keep.has(String(pk.player_id));
+        const b = el("button", `bc ${posClass(md.position)}`);
+        b.innerHTML = `<span class="no">${pk.pick_no}${kept ? ' <b class="k">K</b>' : ""}</span>
+          <span class="nm">${esc(nm)}</span>
+          <span class="mt">${esc(md.position || "")}${scored && row ? ` · ${f1(row.pts)}` : ""}</span>`;
+        b.onclick = () => openPlayer(s, pk, A);
+        grid.appendChild(b);
+      }
+    }
+    scroll.appendChild(grid); card.appendChild(scroll); host.appendChild(card);
 
+    const lg = el("div", "legend");
+    lg.innerHTML = `<span class="badge gold">K</span>
+      <span>held over from ${esc(String(Number(s.season) - 1))} — the league keeps three, and this marks
+      every player his manager already had, so a manager who re-drafted a fourth shows four.</span>`;
+    host.appendChild(lg);
+    host.appendChild(el("div", "legend",
+      ["QB", "RB", "WR", "TE", "K", "DEF"].map(x => `<span class="pos-dot ${posClass(x)}">${x}</span>`).join("")
+      + `<span>tap any pick for that player's week-by-week scoring</span>`));
+  }
+
+  /* ---- by manager: fifteen picks each, in order ---- */
+  function drawByManager(s, A, scored) {
+    host.innerHTML = "";
+    if (!A) { host.appendChild(el("div", "empty", "<b>No picks recorded</b>")); return; }
+    const keep = keepersOf(s);
+    const grid = el("div", "mgrid2");
+    for (const m of A.byMgr) {
+      const mine = A.rows.filter(r => r.uid === m.uid).sort((a, b) => a.pick - b.pick);
+      const c = el("div", "dcard");
+      c.innerHTML = `<div class="dh">${avatarHTML(m.uid, "sm")}
+          <span class="n">${esc(nameOf(m.uid))}</span>
+          ${scored ? `<span class="tot">${f1(m.pts)}</span>` : ""}</div>`;
+      const ul = el("div", "dpicks");
+      for (const r of mine) {
+        const pk = s.picks.find(x => x.pick_no === r.pick);
+        const kept = keep.has(String(r.pid));
+        const b = el("button", "dp");
+        b.innerHTML = `<span class="rd">${r.round}</span>
+          <span class="pos-dot ${posClass(r.pos)}">${esc(r.pos || "?")}</span>
+          <span class="nm">${esc(r.name)}${kept ? ' <b class="k">K</b>' : ""}</span>
+          ${scored ? `<span class="pts">${f1(r.pts)}</span>` : ""}`;
+        if (pk) b.onclick = () => openPlayer(s, pk, A);
+        ul.appendChild(b);
+      }
+      c.appendChild(ul);
+      grid.appendChild(c);
+    }
+    host.appendChild(grid);
+  }
+
+  /* ---- the full list, for anyone who wants to scan it all ---- */
+  function drawList(s, A, scored) {
+    host.innerHTML = "";
+    if (!A) { host.appendChild(el("div", "empty", "<b>No picks recorded</b>")); return; }
+    const keep = keepersOf(s);
+    const kmark = r => keep.has(String(r.pid)) ? ' <span class="badge gold">K</span>' : "";
+    const prow = r => `<tr>
+      <td>${pill(r)}${kmark(r)}</td>
+      <td class="num">${r.pick}</td>
+      <td class="num">${r.prodRank}</td>
+      <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}"><b>${r.value >= 0 ? "+" : ""}${r.value}</b></td>
+      <td class="num">${f1(r.pts)}</td>
+      <td>${r.uid ? esc(nameOf(r.uid)) : "—"}</td></tr>`;
+    const phead = [{ label: "Player" }, { label: "Pick", num: 1, title: "Where he was drafted" },
+    { label: "Finished", num: 1, title: "Where he ranked in actual scoring" },
+    { label: "Value", num: 1 }, { label: "Points", num: 1 }, { label: "Drafted by" }];
+
+    if (scored) {
+      host.appendChild(sechead("Biggest steals"));
+      host.appendChild(tableCard(phead, A.steals.map(prow)));
+      host.appendChild(sechead("Biggest busts"));
+      host.appendChild(tableCard(phead, A.busts.map(prow)));
+      host.appendChild(sechead("How each manager drafted", "Total points their picks produced, and their single best and worst selection."));
+      host.appendChild(tableCard([{ label: "Manager" }, { label: "Picks", num: 1 }, { label: "Points", num: 1 },
+      { label: "Best pick" }, { label: "Worst pick" }],
+        A.byMgr.map(m => `<tr>
+          <td><span class="nmcell">${avatarHTML(m.uid, "sm")}${esc(nameOf(m.uid))}</span></td>
+          <td class="num">${m.n}</td><td class="num"><b>${f1(m.pts)}</b></td>
+          <td>${m.best ? `${esc(m.best.name)} <span class="pos-t">+${m.best.value}</span>` : "—"}</td>
+          <td>${m.worst ? `${esc(m.worst.name)} <span class="neg-t">${m.worst.value}</span>` : "—"}</td></tr>`)));
+    }
     host.appendChild(sechead("The full board", `All ${A.rows.length} picks in order.`));
     host.appendChild(tableCard([{ label: "Pick", num: 1 }, { label: "Rd", num: 1 }, { label: "Player" },
     { label: "Drafted by" }, { label: "Points", num: 1 }, { label: "Value", num: 1 }],
       A.rows.slice().sort((a, b) => a.pick - b.pick).map(r => `<tr>
         <td class="num">${r.pick}</td><td class="num">${r.round}</td>
-        <td>${pill(r)}${r.keeper ? ' <span class="badge gold">K</span>' : ""}</td>
+        <td>${pill(r)}${kmark(r)}</td>
         <td>${r.uid ? esc(nameOf(r.uid)) : "—"}</td>
-        <td class="num">${f1(r.pts)}</td>
-        <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}">${r.value >= 0 ? "+" : ""}${r.value}</td></tr>`)));
+        <td class="num">${scored ? f1(r.pts) : "—"}</td>
+        <td class="num ${r.value >= 0 ? "pos-t" : "neg-t"}">${scored ? `${r.value >= 0 ? "+" : ""}${r.value}` : "—"}</td></tr>`)));
   }
-  sel.onchange = draw; draw();
+
+  function draw() {
+    const s = drafted.find(x => x.season === sel.value);
+    const A = draftAnalysis(s.picks, s.playerPts, s.uidOf);
+    // If Sleeper didn't return per-player scoring, every value would be
+    // meaningless. Show the board without value rather than fake numbers.
+    const scored = !!A && A.rows.filter(r => r.pts > 0).length >= A.rows.length * 0.25;
+    drawHighlights(s, scored ? A : null);
+    if (!scored && viewSel.value === "list") {
+      host.innerHTML = "";
+      host.appendChild(el("div", "empty",
+        `<b>Draft board only for ${esc(s.season)}</b>Sleeper hasn't returned per-player scoring for this
+         season, so steals and busts can't be calculated. The picks themselves are below.`));
+      drawList(s, A, false);
+      return;
+    }
+    if (viewSel.value === "board") return drawBoard(s, A, scored);
+    if (viewSel.value === "mgr") return drawByManager(s, A, scored);
+    drawList(s, A, scored);
+  }
+  sel.onchange = draw; viewSel.onchange = draw;
+  // The board needs the draft's slot order, which is another request per season.
+  // Draw the highlights now and leave the board itself until somebody opens the
+  // tab, so booting the page still costs nothing extra.
+  drawHighlights(drafted[0], null);
+  p._draw = draw;
   return p;
 }
 
@@ -4256,7 +4543,7 @@ async function boot() {
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
-      weekMovers, panelRecaps, allPowerRankings,
+      weekMovers, panelRecaps, allPowerRankings, keepersOf, playerModal, openPlayer, posClass,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
       renderRace, raceEmpty,

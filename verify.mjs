@@ -951,6 +951,119 @@ const recapGone = await page.evaluate(async () => {
 check("a missing recaps.json never throws", recapGone.threw === null, String(recapGone.threw));
 check("a missing recaps.json shows the waiting state", recapGone.empty === 1);
 
+group("Draft: keepers, views and the player card");
+await page.click('#tabs button[data-tab="draft"]');
+await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
+const draftT = await page.evaluate(async () => {
+  const D = window.__DFFL, DB = D.DB;
+  const s26 = DB.seasons[0], s25 = DB.seasons[1], oldest = DB.seasons[DB.seasons.length - 1];
+  const k26 = D.keepersOf(s26), k25 = D.keepersOf(s25), kOld = D.keepersOf(oldest);
+  // A held-over player must actually have been on that manager's roster last year.
+  const prev = DB.seasons[1];
+  const held = new Map();
+  for (const r of prev.rosters) { const u = prev.uidOf.get(r.roster_id); if (u) held.set(u, new Set(r.players || [])); }
+  const marked = (s26.picks || []).filter(p => k26.has(String(p.player_id)));
+  const everyMarkedWasHeld = marked.every(p => p.is_keeper || (held.get(p.picked_by) || new Set()).has(p.player_id));
+  const perMgr = {};
+  for (const p of marked) perMgr[p.picked_by] = (perMgr[p.picked_by] || 0) + 1;
+  const flagged = (s26.picks || []).filter(p => p.is_keeper);
+  return {
+    k26: k26.size, k25: k25.size, kOldest: kOld.size,
+    flaggedOnly: flagged.length,
+    // every pick Sleeper does flag must also be caught by the derivation
+    flaggedAreCaught: flagged.every(p => k26.has(String(p.player_id))),
+    everyMarkedWasHeld,
+    managers: Object.keys(perMgr).length,
+    maxPerManager: Math.max(...Object.values(perMgr)),
+    posClasses: ["QB", "RB", "WR", "TE", "K", "DEF", "P"].map(x => D.posClass(x)),
+  };
+});
+check("keepers are derived, not left to Sleeper's sparse flag", draftT.k26 > 30 && draftT.flaggedOnly < 5, `${draftT.k26} derived vs ${draftT.flaggedOnly} flagged`);
+check("every pick Sleeper flags is caught too", draftT.flaggedAreCaught);
+check("every marked keeper really was on that roster last year", draftT.everyMarkedWasHeld);
+check("every manager kept somebody", draftT.managers === 12, `${draftT.managers}`);
+check("nobody is credited with an absurd number of keepers", draftT.maxPerManager <= 6, `${draftT.maxPerManager}`);
+check("the first season on record has no keepers to derive", draftT.kOldest === 0, `${draftT.kOldest}`);
+check("positions map to their own colour class", draftT.posClasses.join(",") === "qb,rb,wr,te,kk,def,oth", draftT.posClasses.join(","));
+
+const draftDom = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="draft"]');
+  const sels = panel.querySelectorAll("select");
+  return {
+    views: [...sels[1].options].map(o => o.value),
+    defaultView: sels[1].value,
+    cells: panel.querySelectorAll(".bc").length,
+    headers: panel.querySelectorAll(".bh").length,
+    kmarks: panel.querySelectorAll(".bc .k").length,
+    legend: /held over from 2025/.test(panel.innerText),
+    saysThree: /keeps three/.test(panel.innerText),
+    rounds: panel.querySelectorAll(".brd").length,
+    nan: /NaN|undefined/.test(panel.innerText),
+  };
+});
+check("the draft opens on the board, not a long list", draftDom.defaultView === "board" && draftDom.views.join(",") === "board,mgr,list");
+check("the board is 12 columns by 15 rounds", draftDom.cells === 180 && draftDom.headers === 13 && draftDom.rounds === 15,
+  `${draftDom.cells} cells, ${draftDom.headers} headers, ${draftDom.rounds} rounds`);
+check("keepers are marked K on the board", draftDom.kmarks > 30, `${draftDom.kmarks}`);
+check("the legend says exactly what a K means", draftDom.legend && draftDom.saysThree);
+check("no NaN on the draft board", draftDom.nan === false);
+
+const byMgr = await page.evaluate(async () => {
+  const panel = document.querySelector('[data-panel="draft"]');
+  const sels = panel.querySelectorAll("select");
+  sels[0].value = "2025"; sels[0].dispatchEvent(new Event("change"));
+  await new Promise(r => setTimeout(r, 400));
+  sels[1].value = "mgr"; sels[1].dispatchEvent(new Event("change"));
+  const cards = panel.querySelectorAll(".dcard");
+  const picks = panel.querySelectorAll(".dp");
+  return { cards: cards.length, picks: picks.length, ks: panel.querySelectorAll(".dp .k").length,
+    perCard: [...cards].map(c => c.querySelectorAll(".dp").length) };
+});
+check("by-manager gives every manager a card", byMgr.cards === 12, `${byMgr.cards}`);
+check("every pick lands on exactly one card", byMgr.picks === 180, `${byMgr.picks}`);
+check("keepers are marked there too", byMgr.ks > 20, `${byMgr.ks}`);
+
+const card = await page.evaluate(async () => {
+  const panel = document.querySelector('[data-panel="draft"]');
+  const sels = panel.querySelectorAll("select");
+  sels[1].value = "board"; sels[1].dispatchEvent(new Event("change"));
+  await new Promise(r => setTimeout(r, 500));
+  panel.querySelector(".bc").click();
+  await new Promise(r => setTimeout(r, 60));
+  const m = document.querySelector(".modal");
+  const txt = m ? m.innerText : "";
+  const bars = m ? m.querySelectorAll(".wkchart .wk").length : 0;
+  const post = m ? m.querySelectorAll(".wkchart .wk.post").length : 0;
+  const stats = m ? [...m.querySelectorAll(".ms b")].map(n => n.textContent) : [];
+  // escape closes it
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  const gone = !document.querySelector(".modal");
+  return { opened: !!m, bars, post, stats, gone, nan: /NaN|undefined/.test(txt),
+    saysScoring: /under DFFL scoring/.test(txt), noProjections: !/project/i.test(txt) };
+});
+check("clicking a pick opens that player's card", card.opened);
+check("the card charts every week of the season", card.bars === 17, `${card.bars}`);
+check("playoff weeks are drawn but marked apart", card.post === 3, `${card.post}`);
+check("the card carries real numbers", card.stats.length === 4 && card.stats.every(v => v && v !== "—"), card.stats.join("/"));
+check("the card promises scoring, not projections", card.saysScoring && card.noProjections);
+check("no NaN on the player card", card.nan === false);
+check("escape closes the card", card.gone);
+
+const unplayed = await page.evaluate(async () => {
+  const panel = document.querySelector('[data-panel="draft"]');
+  const sels = panel.querySelectorAll("select");
+  sels[0].value = "2026"; sels[0].dispatchEvent(new Event("change"));
+  await new Promise(r => setTimeout(r, 500));
+  panel.querySelector(".bc").click();
+  await new Promise(r => setTimeout(r, 60));
+  const m = document.querySelector(".modal");
+  const out = { empty: m ? m.querySelectorAll(".mempty").length : -1, charts: m ? m.querySelectorAll(".wkchart").length : -1,
+    txt: m ? m.innerText : "" };
+  if (m) m.remove();
+  return out;
+});
+check("a player from an unplayed season says so instead of charting zeros", unplayed.empty === 1 && unplayed.charts === 0, JSON.stringify(unplayed).slice(0, 120));
+
 group("Lazy tabs cost nothing at boot");
 // On a page nobody has clicked, neither heavy tab may have reached for
 // anything. Checked on its own tab because every other tab has already been
@@ -1128,14 +1241,6 @@ check("no NaN or undefined on the race board", drawn.nan === false);
 
 group("Trades: loading and shape");
 // The tab is lazy on purpose — nothing is fetched until it is opened.
-const lazy = await page.evaluate(() => ({
-  fetchedEarly: !!document.body.dataset.tradesReady,
-  hasPanel: !!document.querySelector('[data-panel="trades"]'),
-  placeholder: !!document.querySelector("#tradesHost .empty"),
-}));
-check("the trades panel exists before anything is fetched", lazy.hasPanel && lazy.placeholder);
-check("no transaction fetched until the tab is opened", lazy.fetchedEarly === false);
-
 await page.click('#tabs button[data-tab="trades"]');
 await page.waitForFunction(() => document.body.dataset.tradesReady, null, { timeout: 180000 });
 const tradesState = await page.evaluate(() => document.body.dataset.tradesReady);
@@ -1475,6 +1580,24 @@ const powerNarrow = await mobile.evaluate(() => {
 check("power: page does not scroll horizontally at 390px", powerNarrow.doc <= powerNarrow.inner, `${powerNarrow.doc} > ${powerNarrow.inner}`);
 check("power: nothing overflows at 390px", powerNarrow.over.length === 0, powerNarrow.over.join(" | "));
 check("power: the whole board renders at 390px", powerNarrow.rows === 12 && powerNarrow.arrows > 0, `${powerNarrow.rows} rows, ${powerNarrow.arrows} arrows`);
+
+// the draft board at phone width: it may scroll inside its card, never the page
+await mobile.click('#tabs button[data-tab="draft"]');
+await mobile.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
+const draftNarrow = await mobile.evaluate(() => {
+  const panel = document.querySelector('[data-panel="draft"]');
+  const over = [];
+  for (const n of panel.querySelectorAll("*")) {
+    if (n.closest(".scroll")) continue;
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { over: over.slice(0, 6), doc: document.documentElement.scrollWidth, inner: window.innerWidth,
+    cells: panel.querySelectorAll(".bc").length };
+});
+check("draft: page does not scroll horizontally at 390px", draftNarrow.doc <= draftNarrow.inner, `${draftNarrow.doc} > ${draftNarrow.inner}`);
+check("draft: nothing outside the board's scroller overflows at 390px", draftNarrow.over.length === 0, draftNarrow.over.join(" | "));
+check("draft: the board still renders at 390px", draftNarrow.cells === 180, `${draftNarrow.cells}`);
 
 // every other tab too, so the new CSS didn't break anything narrow
 for (const id of EXPECT.filter(t => t !== "odds")) {
