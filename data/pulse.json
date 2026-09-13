@@ -1,0 +1,512 @@
+{
+ "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
+ "generated": "2026-09-13T21:01:46.593Z",
+ "at": 1789333306596,
+ "season": "2026",
+ "nfl_week": 1,
+ "season_type": "regular",
+ "week_in_progress": true,
+ "standings": [
+  {
+   "manager": "Domo112",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "Malik Nabers (Questionable)"
+   ]
+  },
+  {
+   "manager": "jadencha",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "chassinator",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "Zay Flowers (Out)"
+   ]
+  },
+  {
+   "manager": "bertalicious",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "jskule23",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "wesley55",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "drewkim",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "saucebossandrew",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "moseslin",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "sizzlemc2",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "victorthompson",
+   "wins": 0,
+   "losses": 0,
+   "points_for": 0,
+   "points_against": 0,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "A.J. Brown (IR)"
+   ]
+  }
+ ],
+ "this_week": [
+  {
+   "a": {
+    "manager": "Domo112",
+    "points": 162.16,
+    "startersLeftToPlay": 3
+   },
+   "b": {
+    "manager": "moseslin",
+    "points": 94.66,
+    "startersLeftToPlay": 4
+   }
+  },
+  {
+   "a": {
+    "manager": "jadencha",
+    "points": 141.5,
+    "startersLeftToPlay": 2
+   },
+   "b": {
+    "manager": "drewkim",
+    "points": 119.2,
+    "startersLeftToPlay": 2
+   }
+  },
+  {
+   "a": {
+    "manager": "chassinator",
+    "points": 112.92,
+    "startersLeftToPlay": 3
+   },
+   "b": {
+    "manager": "sizzlemc2",
+    "points": 50.48,
+    "startersLeftToPlay": 7
+   }
+  },
+  {
+   "a": {
+    "manager": "bertalicious",
+    "points": 67.24,
+    "startersLeftToPlay": 5
+   },
+   "b": {
+    "manager": "bradyrife",
+    "points": 97.4,
+    "startersLeftToPlay": 3
+   }
+  },
+  {
+   "a": {
+    "manager": "jskule23",
+    "points": 117.76,
+    "startersLeftToPlay": 1
+   },
+   "b": {
+    "manager": "saucebossandrew",
+    "points": 95.44,
+    "startersLeftToPlay": 4
+   }
+  },
+  {
+   "a": {
+    "manager": "wesley55",
+    "points": 110.26,
+    "startersLeftToPlay": 1
+   },
+   "b": {
+    "manager": "victorthompson",
+    "points": 60.8,
+    "startersLeftToPlay": 3
+   }
+  }
+ ],
+ "trades": [
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "drewkim",
+    "sizzlemc2"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 4,
+     "from": "sizzlemc2",
+     "to": "drewkim"
+    },
+    {
+     "season": "2026",
+     "round": 5,
+     "from": "sizzlemc2",
+     "to": "drewkim"
+    },
+    {
+     "season": "2026",
+     "round": 7,
+     "from": "sizzlemc2",
+     "to": "drewkim"
+    },
+    {
+     "season": "2026",
+     "round": 4,
+     "from": "drewkim",
+     "to": "sizzlemc2"
+    },
+    {
+     "season": "2026",
+     "round": 5,
+     "from": "drewkim",
+     "to": "sizzlemc2"
+    },
+    {
+     "season": "2026",
+     "round": 7,
+     "from": "drewkim",
+     "to": "sizzlemc2"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "bertalicious",
+    "jskule23"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 1,
+     "from": "bertalicious",
+     "to": "jskule23"
+    },
+    {
+     "season": "2026",
+     "round": 1,
+     "from": "jskule23",
+     "to": "bertalicious"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "jskule23",
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "Luther Burden",
+     "pos": "WR",
+     "team": "CHI",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Luther Burden",
+     "pos": "WR",
+     "team": "CHI",
+     "status": null,
+     "from": "wesley55"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 8,
+     "from": "jskule23",
+     "to": "wesley55"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "moseslin"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 7,
+     "from": "moseslin",
+     "to": "jadencha"
+    },
+    {
+     "season": "2026",
+     "round": 6,
+     "from": "jadencha",
+     "to": "moseslin"
+    },
+    {
+     "season": "2026",
+     "round": 6,
+     "from": "chassinator",
+     "to": "jadencha"
+    },
+    {
+     "season": "2026",
+     "round": 7,
+     "from": "jskule23",
+     "to": "moseslin"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "chassinator",
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Christian McCaffrey",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "to": "bradyrife"
+    },
+    {
+     "name": "Kyren Williams",
+     "pos": "RB",
+     "team": "LAR",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Christian McCaffrey",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "from": "chassinator"
+    },
+    {
+     "name": "Kyren Williams",
+     "pos": "RB",
+     "team": "LAR",
+     "status": null,
+     "from": "bradyrife"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 3,
+     "from": "chassinator",
+     "to": "bradyrife"
+    },
+    {
+     "season": "2026",
+     "round": 3,
+     "from": "bradyrife",
+     "to": "chassinator"
+    },
+    {
+     "season": "2026",
+     "round": 4,
+     "from": "bradyrife",
+     "to": "chassinator"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Drake Maye",
+     "pos": "QB",
+     "team": "NE",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Drake Maye",
+     "pos": "QB",
+     "team": "NE",
+     "status": null,
+     "from": "Domo112"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 5,
+     "from": "chassinator",
+     "to": "Domo112"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "bradyrife"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2026",
+     "round": 7,
+     "from": "jskule23",
+     "to": "jadencha"
+    },
+    {
+     "season": "2026",
+     "round": 2,
+     "from": "drewkim",
+     "to": "jadencha"
+    }
+   ]
+  },
+  {
+   "week": 1,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Christian McCaffrey",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "to": "chassinator"
+    },
+    {
+     "name": "Jahmyr Gibbs",
+     "pos": "RB",
+     "team": "DET",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Christian McCaffrey",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "from": "Domo112"
+    },
+    {
+     "name": "Jahmyr Gibbs",
+     "pos": "RB",
+     "team": "DET",
+     "status": null,
+     "from": "chassinator"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  }
+ ],
+ "waivers": [],
+ "free_agent_moves": 49
+}

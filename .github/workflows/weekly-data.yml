@@ -20,6 +20,7 @@ on:
   schedule:
     - cron: "30 12 * * 2"   # Tue 08:30 America/New_York — before the recap job at 13:00 UTC
     - cron: "30 15 * * 0"   # Sun 11:30 America/New_York — inactives are in, kickoff is not
+    - cron: "0 11 * * *"    # daily 07:00 America/New_York — keeps the story watch current
   workflow_dispatch:
     inputs:
       week:
@@ -62,6 +63,11 @@ jobs:
       # it catches the lineups people actually set.
       - name: Refresh the roster map
         run: node build-rosters.mjs
+
+      # The daily picture the story watch reads: standings, the week in
+      # progress, recent trades and claims, who is hurt. Small and factual.
+      - name: Take the league's pulse
+        run: node build-pulse.mjs
 
       - name: Commit anything that changed
         run: |
