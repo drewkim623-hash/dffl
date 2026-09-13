@@ -2349,20 +2349,36 @@ function articleTeaser(a) {
 }
 
 let LAST_TAB_ART = "recaps";
-function openArticle(a) {
+/**
+ * Open a piece, and give it an address.
+ *
+ * The weekly email links straight at an article, so an article has to be
+ * something a URL can point at. #article/<slug> is that address: it survives a
+ * reload, it can be pasted into the league chat, and the back button leaves it.
+ */
+function openArticle(a, keepHash) {
   const cur = [...$("#app").children].find(c => !c.hidden);
   if (cur && cur.dataset.panel !== "article") LAST_TAB_ART = cur.dataset.panel;
   const old = $('[data-panel="article"]');
   if (old) old.remove();
   const p = el("div", "panel"); p.dataset.panel = "article";
   const back = el("button", "back", "← All articles");
-  back.onclick = () => show(LAST_TAB_ART);
+  back.onclick = () => show(LAST_TAB_ART);   // show() rewrites the hash to the tab
   p.appendChild(back);
   p.appendChild(articleCard(a, true));
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", "false");
+  if (!keepHash && a.slug) history.replaceState(null, "", "#article/" + encodeURIComponent(a.slug));
   scrollTo(0, 0);
+}
+
+/** Find a published piece by its slug, for a link that names one. */
+async function articleBySlug(slug) {
+  try {
+    const j = await jget("recaps.json");
+    return ((j && j.articles) || []).find(a => a.slug === slug) || null;
+  } catch (e) { return null; }
 }
 
 function articleCard(a, full) {
@@ -6324,7 +6340,20 @@ async function boot() {
     $("#loader").hidden = true;
     app.hidden = false;
     const want = location.hash.replace("#", "");
-    show(TABS.some(t => t.id === want) ? want : "home");
+    if (want.startsWith("article/")) {
+      // A link out of the email names a piece. Show the index first so there is
+      // something behind the back button, then open the piece over it.
+      show("recaps");
+      const slug = decodeURIComponent(want.slice("article/".length));
+      // Stamp the article's own address back, so a reload of this link lands
+      // on the piece rather than dropping the reader on the index.
+      articleBySlug(slug).then(a => {
+        if (a) openArticle(a);
+        else show("recaps");
+      });
+    } else {
+      show(TABS.some(t => t.id === want) ? want : "home");
+    }
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
     window.__DFFL = {
       DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
@@ -6335,7 +6364,7 @@ async function boot() {
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
       weekMovers, panelRecaps, allPowerRankings, keepersOf, keepersFor, loadStatedKeepers,
       preDraftOwners, playerModal, openPlayer, posClass,
-      articleCard, articleBlock, articleTeaser, openArticle, coverHTML, bracketHTML,
+      articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
       weekIsFinal, allWeeks,

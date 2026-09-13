@@ -17,6 +17,8 @@ import { readFile, writeFile, mkdir } from "fs/promises";
 
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 const SITE = "https://drewkim623-hash.github.io/dffl/";
+/** A link that opens one piece, not the index it sits on. */
+const linkTo = a => a && a.slug ? `${SITE}#article/${encodeURIComponent(a.slug)}` : `${SITE}#recaps`;
 
 const D = JSON.parse(await readFile("data/odds-snapshot.json", "utf8"));
 const recaps = JSON.parse(await readFile("recaps.json", "utf8").catch(() => "{}"));
@@ -105,7 +107,7 @@ const columnBlock = a => {
         ${a.kind === "opinion" ? `<div style="display:inline-block;font:800 10px/1 ${FONT};letter-spacing:.09em;
           text-transform:uppercase;color:${C.red};border:1px solid ${C.red};border-radius:3px;padding:4px 6px;margin-bottom:10px">Column</div>` : ""}
         ${a.kicker ? `<div style="font:700 10.5px/1.3 ${FONT};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">${esc(a.kicker)}</div>` : ""}
-        <a href="${SITE}#recaps" style="text-decoration:none">
+        <a href="${linkTo(a)}" style="text-decoration:none">
           <div style="font:800 24px/1.2 ${FONT};color:${C.ink};letter-spacing:-.02em">${esc(a.headline)}</div></a>
         ${a.dek ? `<div style="font:400 14px/1.55 ${FONT};color:${C.mid};margin-top:8px">${esc(a.dek)}</div>` : ""}
         ${firstStat ? `
@@ -114,7 +116,7 @@ const columnBlock = a => {
               <td style="font:400 12.5px/1.5 ${FONT};color:${C.mid};vertical-align:middle">${rich(firstStat.text)}</td></tr>
         </table>` : ""}
         ${firstPara ? `<div style="font:400 14px/1.6 ${FONT};color:${C.ink};margin-top:14px">${rich(firstPara.text)}</div>` : ""}
-        <a href="${SITE}#recaps" style="display:inline-block;margin-top:14px;font:700 14px/1 ${FONT};color:${C.blue};text-decoration:none">Read the full piece →</a>
+        <a href="${linkTo(a)}" style="display:inline-block;margin-top:14px;font:700 14px/1 ${FONT};color:${C.blue};text-decoration:none">Read the full piece →</a>
       </td></tr>
     </table>
   </td></tr>`;
@@ -166,10 +168,10 @@ const html = `<!doctype html>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:9px">
       <tr><td style="background:${C.card};border:1px solid ${C.line};border-radius:10px;padding:15px 16px">
         ${a.kicker ? `<div style="font:700 10.5px/1.3 ${FONT};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">${esc(a.kicker)}</div>` : ""}
-        <a href="${SITE}#recaps" style="text-decoration:none">
+        <a href="${linkTo(a)}" style="text-decoration:none">
           <div style="font:800 17px/1.25 ${FONT};color:${C.ink};letter-spacing:-.01em">${esc(a.headline)}</div></a>
         ${a.dek ? `<div style="font:400 13px/1.5 ${FONT};color:${C.mid};margin-top:6px">${esc(a.dek)}</div>` : ""}
-        <a href="${SITE}#recaps" style="display:inline-block;margin-top:10px;font:700 13px/1 ${FONT};color:${C.blue};text-decoration:none">Read it →</a>
+        <a href="${linkTo(a)}" style="display:inline-block;margin-top:10px;font:700 13px/1 ${FONT};color:${C.blue};text-decoration:none">Read it →</a>
       </td></tr></table>`).join("")) : ""}
 
   <tr><td style="padding:26px 0 0">
@@ -188,7 +190,7 @@ const html = `<!doctype html>
 
 const text = [
   `DFFL — Week ${D.week}, ${D.season}`,
-  lead ? `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${SITE}#recaps` : "",
+  lead ? `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}` : "",
   marquee ? `\nMATCH OF THE WEEK\n${marquee.a} ${marquee.aPts.toFixed(1)} (${pc(marquee.pA)}) v ${marquee.b} ${marquee.bPts.toFixed(1)} (${pc(marquee.pB)})` : "",
   movers.length ? `\nTHE BOARD MOVED\n` + movers.map(m =>
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
