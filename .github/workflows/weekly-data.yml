@@ -1,0 +1,81 @@
+# Pull Sleeper and commit the result.
+#
+# This workflow exists to solve one problem: the scheduled Claude routine that
+# writes the recaps cannot reach api.sleeper.app. WebFetch there wants a per-URL
+# approval nobody is present to give in an unattended run, and the sandbox's
+# egress proxy rejects curl outright — every Tuesday run failed on that before
+# this existed.
+#
+# GitHub Actions has no such restriction. So the data comes from here and lands
+# in the repo as plain JSON; the routine clones the repo and writes prose from
+# the file without touching the network at all.
+#
+# Tuesday morning: build the week that just finished, and refresh injuries.
+# Sunday late morning: refresh injuries only, after the inactive reports land
+# and before the one o'clock games kick off.
+
+name: Weekly data
+
+on:
+  schedule:
+    - cron: "30 12 * * 2"   # Tue 08:30 America/New_York — before the recap job at 13:00 UTC
+    - cron: "30 15 * * 0"   # Sun 11:30 America/New_York — inactives are in, kickoff is not
+  workflow_dispatch:
+    inputs:
+      week:
+        description: "Backfill a specific week (leave blank for the week that just finished)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-data
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Both scripts are dependency-free and use the built-in fetch, so there is
+      # deliberately no install step to go stale.
+      - name: Build the finished week
+        run: |
+          if [ -n "${{ inputs.week }}" ]; then
+            node build-week.mjs --week "${{ inputs.week }}"
+          else
+            node build-week.mjs
+          fi
+
+      - name: Refresh the injury snapshot
+        run: node build-injuries.mjs
+
+      # Rosters change on waivers, and the live win probabilities need to know
+      # which club each starter plays for. Sunday's run is the one that matters:
+      # it catches the lineups people actually set.
+      - name: Refresh the roster map
+        run: node build-rosters.mjs
+
+      - name: Commit anything that changed
+        run: |
+          git config user.name  "dffl-data[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data injuries.json rosters.json
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Data: $(node -e "
+            try {
+              const l = require('./data/latest.json');
+              process.stdout.write('week ' + l.week + ' of ' + l.season);
+            } catch (e) { process.stdout.write('injury refresh'); }
+          ")"
+          git push

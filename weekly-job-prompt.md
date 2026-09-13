@@ -1,153 +1,98 @@
 # The weekly job
 
 `recaps.json` and `rankings.json` are not written by the site. They are written once a week by a
-scheduled cloud agent — routine **DFFL weekly recaps and power rankings**, Tuesdays at 13:00 UTC
-(9am Eastern) — which reads Sleeper, writes the copy, and sends both files to Drew to commit.
+scheduled cloud agent — routine **DFFL weekly recaps**, Tuesdays at 13:00 UTC (9am Eastern).
 
 The site never depends on either file. A missing, empty or stale `rankings.json` costs nothing: the
 power rankings are computed in the browser from the game log, and each team falls back to showing
 its record and points where a blurb would go.
 
-## The contract
+## Why the job does not call Sleeper
 
-`rankings.json` holds one entry per team per week:
+It cannot. Every run from 18 August 2026 onward failed on exactly this, and the logs are
+unambiguous:
 
-```json
-{"weeks": [
-  {"season": "2026", "week": 4, "teams": [
-    {"manager": "jadencha", "blurb": "One sentence."}
-  ]}
-]}
+```
+WebFetch api.sleeper.app  → PROVENANCE_REQUIRED   (a per-URL approval nobody is there to give)
+curl    api.sleeper.app:443 → connect_rejected    (the egress proxy denies CONNECT)
 ```
 
-`manager` must be the Sleeper `display_name` spelled exactly as the API returns it — the site matches
-on that string and falls back silently if it does not.
+Both routes are closed in an unattended cloud session. So the data arrives a different way:
 
-**A blurb must never state a rank or a movement.** The board prints the rank and the arrow directly
-beside the sentence, and the two disagreeing is the one failure mode that makes the page look broken.
-The site computes the ranking; the job supplies colour only.
+- **`.github/workflows/weekly-data.yml`** runs on GitHub Actions, which has no such restriction. It
+  runs `build-week.mjs` and `build-injuries.mjs` at 12:30 UTC Tuesday — half an hour before the
+  routine — and commits the result.
+- **The routine** clones the repo and reads those committed files. It needs no network at all.
 
-## articles[]
+If the job ever finds itself reaching for `api.sleeper.app`, something has gone wrong: the answer is
+to fix the Action, not to fetch.
 
-`recaps.json` also holds an `articles[]` array — long-form pieces like the 2026 draft report. Those are
-written by hand or on request, not by the weekly job. **The job must read the file, append to `weeks[]`,
-and write `articles[]` back exactly as it found it.** Dropping it deletes the writing.
+## What the Action leaves for the job
 
-The article block model is documented in the file's own `_schema`. Only `<b>` survives from the copy;
-everything else is escaped on the way to the page.
+| File | What it holds |
+|---|---|
+| `data/latest.json` | `{season, week, file}` — points at the newest finished week |
+| `data/week-<season>-<week>.json` | the whole week: six games with full lineups, season-to-date standings, every completed transaction with FAAB and resolved player names, and a `marquee` block of the high, low, closest, blowout and unluckiest loss |
+| `injuries.json` | every player carrying a status, with name, position and club |
+
+Everything is already resolved to names. No ids need looking up, and nothing needs a second source.
+
+## What the job writes
+
+Three things, all committed straight to `main`:
+
+1. **`recaps.json` → `weeks[]`** — the week's write-up.
+2. **`rankings.json` → `weeks[]`** — one sentence of colour per manager.
+3. **`recaps.json` → `articles[]`** — one column a week.
+
+### The contract for `weeks[]`
+
+```json
+{"season":"2026","week":4,"note":"","lede":"…","games":[…6…],"around":[…3-6…]}
+```
+
+`games[]` entries are `{headline, winner, winner_points, loser, loser_points, body}`; `around[]`
+entries are `{kind, headline, body}` with kind one of `trade, waivers, riser, slider, streak,
+injury, race, note`. Replace a week that already exists rather than duplicating it. Set `note` to
+`"Playoffs"` from week 15 on (15 = Round 1, 16 = Semifinals, 17 = Championship).
+
+`rankings.json` entries are `{"manager": "<Sleeper display_name, spelled exactly>", "blurb": "…"}`,
+all twelve managers, every week. The site matches on that string and falls back silently if it does
+not match.
+
+### The article
+
+One column a week, appended to `articles[]`. Shape is documented in `recaps.json`'s own `_schema`;
+`kind: "opinion"` gets the Column flag on the front page. Give it a `slug` nothing else uses, the
+week's date, and blocks that use the `stat`, `bars` and `cards` types rather than running as
+undifferentiated paragraphs — the two pieces already in the file are the standard to match.
+
+**Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append, write it back
+whole. Dropping the key deletes writing nothing else regenerates.
+
+## The two hard rules
+
+**Never state a rank or a movement.** Not in the lede, not in a game recap, not in the notebook, not
+in a power blurb. The site computes the power rankings itself and prints each team's rank and its
+movement arrow directly beside the copy, with the real numbers. If the prose says "up three spots"
+and the board says two, the page is wrong in public. Write what happened; the board handles position.
+
+**Never invent a stat.** Everything in the data file is real and sourced. Anything not in it is not
+available.
+
+## Voice
+
+Straight ESPN, a beat writer's Tuesday morning: clean, factual, specific. Not trash talk, not jokes.
+Reference managers by their Sleeper `display_name`. The lede is one paragraph on the shape of the
+week. Game bodies are 2-4 sentences on how it was actually decided — the margin, who carried the
+scoring, whether it was close late. Notebook items are 2-3 sentences each, and only the ones the
+week supports: a quiet week gets three, a week with two trades and a $60 waiver claim gets six.
+Never pad, and never repeat in the notebook what a game recap already said.
+
+FAAB is real money in this league. A $40 claim is a story.
 
 ## Editing the routine
 
 The routine lives at https://claude.ai/code/routines. Edit the prompt in the web UI rather than
 through the API: the stored config carries a large `custom_system_prompt` and an explicit tool
 allow-list, and an API update that omits `session_context` replaces both with defaults.
-
-The prompt below replaces everything from step 3b onward. Steps 1 to 3 (check the NFL state, pull
-the week's matchups, optional player colour) are unchanged.
-
-## What changed and why
-
-The recap used to be six game write-ups. It now covers the league's whole week — a lede, the games,
-and an `around` notebook of trades, waiver spending, risers, sliders, streaks and playoff
-implications — because that is what an ESPN weekly wrap actually is.
-
-The one thing the job must never do is quote a rank or a movement. The site computes the power
-rankings itself and prints the risers and sliders directly above the copy, with real numbers. If the
-prose says "up three spots" and the board says two, the page is wrong in public. The job writes what
-happened; the board handles position.
-
----
-
-STEP 3b — Pull the rest of the week (all via WebFetch).
-The recap is the whole league's week, not six box scores. Also pull:
-- https://api.sleeper.app/v1/league/1318040218183417856/transactions/TARGET_WEEK
-  Every trade, waiver claim and free-agent add processed that week. Keep only status
-  "complete". A trade has type "trade" and lists roster_ids, adds, drops and draft_picks;
-  a waiver has type "waiver" and settings.waiver_bid is the FAAB spent. Ignore failed claims.
-- https://api.sleeper.app/v1/league/1318040218183417856/rosters — roster_id, owner_id and
-  settings (wins, losses, ties, fpts) for season-to-date records and points.
-Transactions return player_ids, not names. Resolve only the handful you actually write
-about: WebFetch https://api.sleeper.app/v1/players/{player_id} per player, which is small.
-Never pull the full /players/nfl payload — it is ~5MB and will blow the session up.
-
-STEP 4 — Write the week.
-Straight ESPN-style throughout: clean, factual, a beat writer's Tuesday morning. Not trash
-talk, not jokes. Reference managers by their Sleeper display_name. Never invent a stat.
-
-(a) lede — one paragraph on the week as a whole. What shape did it take, what actually
-mattered, what does it set up. This is the standfirst under the week heading, so it should
-read as a summary of everything below rather than a preview of one game.
-
-(b) games — for EACH of the 6 games:
-  - headline: short, punchy, factual (under ~60 characters)
-  - body: 2-4 sentences on how the game was decided — the margin, who carried the scoring,
-    whether it was close late, what it means for the standings
-
-(c) around — 3 to 6 items covering what happened between the games. Each has a kind, a
-headline and 2-3 sentences. Use the kind that fits:
-  - trade    a completed trade. Who got what, why each side did it, who it helps.
-  - waivers  the week's notable claims. Who spent, how much FAAB, on whom, and whether the
-             price looks steep. FAAB is real money in this league — a $40 claim is a story.
-  - riser    a team playing its way up. Say what changed, not where it ranks.
-  - slider   a team falling off. Same rule.
-  - streak   a run of wins or losses worth naming.
-  - injury   only if you actually saw it in the data. Do not speculate.
-  - race     playoff or division implications with a handful of weeks left.
-  - note     anything else true and interesting.
-Write only the items the week actually supports. A quiet week gets three; a week with two
-trades and a $60 waiver claim gets six. Never pad, and never repeat what a game recap
-already said.
-
-HARD RULE on ranks: the site computes its own power rankings and prints the risers and
-sliders beside your copy, with the real numbers. Never write "up three spots", "second in
-the league", "the top team" or anything equivalent, in the lede, the games or the notebook.
-Write about what happened; the board handles position.
-
-STEP 5 — Write the power-ranking blurbs.
-The site computes its own power rankings — a blend of all-play win %, form over the last three
-weeks, points for, and record — and renders each team's rank, its movement arrow and its stats
-itself. Your job is ONE SENTENCE of colour per team, which the site shows in place of that team's
-record line.
-
-HARD RULE: never state a rank or a movement in the blurb. Do not write "second in the league",
-"up three spots", "the top team" or anything equivalent. The board prints the rank and the arrow
-right next to your sentence, and if your sentence disagrees with it the page looks broken. Write
-about the team, not its position.
-
-You already have this week's twelve scores. For season-to-date record and points, WebFetch
-https://api.sleeper.app/v1/league/1318040218183417856/rosters asking for roster_id, owner_id and
-settings (wins, losses, ties, fpts) — no player arrays.
-
-Write one sentence for each of the twelve managers. Good ones say something true and specific:
-a scoring run or a drought, a team whose record flatters it or hides it, a bench that keeps
-outscoring the lineup, a schedule about to turn. Same beat-writer register as the recaps — neutral,
-factual, no jokes and no trash talk. Never invent a stat.
-
-STEP 6 — Update the stores.
-Use the Projects tool for both files.
-
-project_read "claude/recaps.json". Append a new object to weeks[]:
-{"season":"2026","week":TARGET_WEEK,"note":"","lede":"...","games":[{"headline":...,"winner":...,"winner_points":...,"loser":...,"loser_points":...,"body":...}, ...6 total],"around":[{"kind":"trade|waivers|riser|slider|streak|injury|race|note","headline":"...","body":"..."}, ...3-6 total]}
-If TARGET_WEEK >= 15 set note to "Playoffs" (week 15 = Round 1, 16 = Semifinals, 17 = Championship) and note that non-bracket teams are in the consolation bracket.
-If a week with that season+week already exists, replace it rather than duplicating.
-Write the full updated JSON back with project_write to "claude/recaps.json".
-
-If the file has an "articles" array, write it back exactly as you found it — those are long-form
-pieces nobody else regenerates, and dropping the key deletes them.
-
-project_read "claude/rankings.json" (if it does not exist yet, start from
-{"weeks":[]} and keep any "_comment"/"_schema" keys you find). Append:
-{"season":"2026","week":TARGET_WEEK,"teams":[{"manager":"<display_name>","blurb":"<one sentence>"}, ...12 total]}
-The manager field must be the Sleeper display_name spelled exactly as the API gives it — the site
-matches on that string and silently falls back to the team's record if it does not match. All twelve
-managers every week. Same replace-don't-duplicate rule. Write it back with project_write to
-"claude/rankings.json".
-
-STEP 7 — Deliver.
-Write both updated files locally as recaps.json and rankings.json and send BOTH to Drew with
-SendUserFile. In your message: say which week it covers, give the one-line marquee result (biggest
-score or closest game), and remind him to replace both files in his GitHub repo — open each file on
-github.com, click the pencil icon, paste, commit. Keep the message to a few sentences; the writing
-itself lives in the files.
-
-Background: the DFFL is a 12-team keeper league, playoffs start week 15 with 6 teams. Managers: drewkim, Domo112, jskule23, bertalicious, jadencha, chassinator, saucebossandrew, bradyrife, moseslin, sizzlemc2, victorthompson, wesley55. Defending champion is Domo112 (2025); bradyrife finished last in 2025. Fuller context is in the project doc claude/dffl-site-context.md.
