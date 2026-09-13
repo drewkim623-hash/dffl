@@ -58,6 +58,23 @@ const D = await page.evaluate(() => {
   // nameOf() isn't on the test surface; the manager table behind it is.
   const name = uid => { const m = F.DB.mgr.get(uid); return (m && m.name) || String(uid); };
 
+  // The posted price, not just the probability. priceMarket applies the same 6%
+  // hold the board posts, so what lands in the email is the number the site
+  // shows rather than a percentage the reader has to convert in their head.
+  const priced = (probs) => {
+    const m = F.priceMarket(probs.map((p, i) => ({ i, p })));
+    const by = new Map(m.map(r => [r.i, r.price]));
+    return i => by.get(i);
+  };
+  const titlePrice = priced(model.teams.map((t, i) =>
+    (live ? live.title[i] / live.sims : pre.title[i] / pre.sims)));
+  // Playoffs is six of twelve — a yes/no book per team, not one race.
+  const playoffPriceMap = new Map(F.priceBinary(model.teams.map((t, i) => ({
+    i, p: live ? live.playoff[i] / live.sims : pre.playoff[i] / pre.sims,
+  }))).map(r => [r.i, r.price]));
+  const playoffPrice = i => playoffPriceMap.get(i);
+  const openTitlePrice = priced(model.teams.map((t, i) => pre.title[i] / pre.sims));
+
   const teams = model.teams.map((t, i) => ({
     uid: t.uid, rid: t.rid, manager: name(t.uid),
     titleWas: pre.title[i] / pre.sims,
@@ -65,6 +82,9 @@ const D = await page.evaluate(() => {
     playoffWas: pre.playoff[i] / pre.sims,
     playoffNow: live ? live.playoff[i] / live.sims : null,
     wins: live ? live.wins[i] / live.sims : pre.wins[i] / pre.sims,
+    titleOdds: titlePrice(i),
+    titleOddsOpen: openTitlePrice(i),
+    playoffOdds: playoffPrice(i),
   }));
 
   const games = board && board.ok ? board.games.map(g => ({

@@ -345,8 +345,11 @@
   .wchip.done{background:var(--raised);color:var(--muted)}
   .gside{grid-template-columns:auto 1fr auto auto}
   .ws{grid-template-columns:auto 1fr auto auto}
-  .board.live .bhead .hold.live{background:rgba(201,133,0,.14);color:var(--gold);
-    border-color:rgba(201,133,0,.3);font-variant-numeric:tabular-nums}
+  /* A timestamp, not a hold — the two must not share a class, because "every
+     board states its hold" is a real check and a clock is not an answer to it. */
+  .board.live .bhead .stamp{background:rgba(201,133,0,.14);color:var(--gold);
+    border:1px solid rgba(201,133,0,.3);border-radius:999px;padding:3px 9px;
+    font-size:11px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
   .lrow{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--grid);
     border-top:1px solid var(--grid)}
   .lside{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;
@@ -2921,8 +2924,40 @@ function priceMarket(rows, hold = ODDS_HOLD) {
     return { ...r, vigP: v[i], raw, price, postedP: impliedProb(price) };
   });
 }
-/** What the book actually holds once prices are rounded to real increments. */
-const marketHold = priced => priced.reduce((a, r) => a + (r.postedP || 0), 0) - 1;
+/**
+ * A market where every runner is its own yes/no bet, not one of N competing for
+ * a single win.
+ *
+ * "To make the playoffs" is six of twelve, so the field sums to 6.00, not 1.00.
+ * Running that through priceMarket normalises it to one winner and prices a 93%
+ * certainty at +510 — a longshot price on a near-lock. Each runner is instead
+ * priced as its own two-way book: yes and no, splitting the same 6% hold.
+ */
+function priceBinary(rows, hold = ODDS_HOLD) {
+  return rows.map(r => {
+    const p = Math.max(0, Math.min(1, r.p));
+    const [yes, no] = addVig([p, 1 - p], hold);
+    const price = roundOdds(americanOdds(yes));
+    const noPrice = roundOdds(americanOdds(no));
+    return {
+      ...r, vigP: yes, raw: americanOdds(yes), price,
+      postedP: impliedProb(price),
+      noPrice, noPostedP: impliedProb(noPrice),
+    };
+  });
+}
+
+/**
+ * What the book actually holds once prices are rounded to real increments.
+ * A yes/no market holds on each runner separately, so it is the average of the
+ * two-way overrounds rather than the sum of the field.
+ */
+const marketHold = priced => {
+  if (priced.length && priced[0] && priced[0].noPostedP != null) {
+    return priced.reduce((a, r) => a + ((r.postedP || 0) + (r.noPostedP || 0) - 1), 0) / priced.length;
+  }
+  return priced.reduce((a, r) => a + (r.postedP || 0), 0) - 1;
+};
 
 /* ------------------------------------------------------------ schedule */
 
@@ -3950,7 +3985,8 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
     esc(updatedAt(live.at || Date.now())), title, openTitle,
     r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins`));
 
-  const play = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.playoff[i] / n }))
+  // Six of twelve make it, so this is twelve yes/no books, not one race.
+  const play = priceBinary(T.map((t, i) => ({ uid: t.uid, i, p: lsim.playoff[i] / n }))
     .sort((a, b) => b.p - a.p));
   host.appendChild(liveBoard("To make the playoffs",
     `six of twelve · ${updatedAt(live.at || Date.now(), "updated")}`, play, openPlay,
@@ -4028,7 +4064,7 @@ function liveMatchupBoard(board) {
       <span class="bs">${board.settled
         ? "every lineup has finished — waiting on the NFL to make it official"
         : "win probability from where the lineups actually stand"}</span></span>
-    <span class="hold live">${esc(updatedAt(board.at, "Updated"))}</span></div>`;
+    <span class="stamp">${esc(updatedAt(board.at, "Updated"))}</span></div>`;
   for (const g of board.games) {
     const row = el("div", "lrow");
     const side = (s, S, p, lead) => `
@@ -6339,7 +6375,15 @@ async function boot() {
     ensureHomeWeek();
     $("#loader").hidden = true;
     app.hidden = false;
-    const want = location.hash.replace("#", "");
+    // Two ways to name a piece. ?a=<slug> is what the email uses: Gmail proxies
+    // every outbound link through google.com/url, and a bare fragment on the end
+    // of that is what makes it stop and show a Redirect Notice instead of just
+    // going there. A query survives the round trip cleanly. #article/<slug> is
+    // what the site itself writes, so in-app links and anything already shared
+    // keep working.
+    const params = new URLSearchParams(location.search);
+    const q = params.get("a"), tab = params.get("t");
+    const want = q ? "article/" + q : (tab || location.hash.replace("#", ""));
     if (want.startsWith("article/")) {
       // A link out of the email names a piece. Show the index first so there is
       // something behind the back button, then open the piece over it.
@@ -6358,7 +6402,7 @@ async function boot() {
     window.__DFFL = {
       DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
-      americanOdds, impliedProb, roundOdds, addVig, priceMarket, marketHold,
+      americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,

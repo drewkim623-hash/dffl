@@ -2384,6 +2384,98 @@ if (home.live) {
   check("it marks who is ahead instead", home.leads > 0, `${home.leads}`);
 }
 
+/* ------------------------------------------------------------------------
+ * "Six of twelve make it" is not a race with one winner, and pricing it like
+ * one turned a 93% near-lock into a +510 longshot.
+ * ---------------------------------------------------------------------- */
+group("A yes/no market is priced as one");
+
+const bin = await page.evaluate(() => {
+  const D = window.__DFFL;
+  const probs = [0.93, 0.75, 0.5, 0.25, 0.07];
+  const rows = D.priceBinary(probs.map((p, i) => ({ i, p })));
+  const race = D.priceMarket(probs.map((p, i) => ({ i, p })));
+  return {
+    prices: rows.map(r => r.price),
+    racePrices: race.map(r => r.price),
+    // a favourite must be odds-on, a longshot odds-against
+    favouriteNegative: rows[0].price < 0,
+    longshotPositive: rows[4].price > 0,
+    monotone: rows.every((r, i) => i === 0 || r.price > rows[i - 1].price),
+    // each runner is its own two-way book holding about 6%
+    holds: rows.map(r => +(r.postedP + r.noPostedP - 1).toFixed(3)),
+    hold: +D.marketHold(rows).toFixed(3),
+    // the field does NOT have to sum to one here
+    fieldSum: +rows.reduce((a, r) => a + r.postedP, 0).toFixed(2),
+    // and the one-winner pricer still behaves as it always did
+    raceHold: +D.marketHold(race).toFixed(3),
+    raceSum: +race.reduce((a, r) => a + r.postedP, 0).toFixed(2),
+  };
+});
+check("a near-certainty prices as a heavy favourite", bin.favouriteNegative, `${bin.prices[0]}`);
+check("a longshot prices as a longshot", bin.longshotPositive, `${bin.prices[4]}`);
+check("prices lengthen as the chance falls", bin.monotone, bin.prices.join(" "));
+check("every runner holds about 6% on its own two-way book",
+  bin.holds.every(h => h > 0.045 && h < 0.075), bin.holds.join(" "));
+check("the reported hold is that per-runner hold, not a field sum",
+  bin.hold > 0.045 && bin.hold < 0.075, `${bin.hold}`);
+check("a six-of-twelve field is not forced to sum to one", bin.fieldSum > 1.5, `${bin.fieldSum}`);
+check("the one-winner pricer is unchanged", bin.raceSum > 1.03 && bin.raceSum < 1.09
+  && bin.raceHold > 0.03 && bin.raceHold < 0.09, `sum ${bin.raceSum}, hold ${bin.raceHold}`);
+
+const boards = await page.evaluate(() => {
+  const odds = document.querySelector('[data-panel="odds"]');
+  const rows = [...odds.querySelectorAll('[data-board] .orow')];
+  const live = odds.querySelector('[data-board="live"]');
+  return {
+    named: odds.querySelectorAll("[data-board]").length,
+    hasOpening: !!odds.querySelector('[data-board="opening"]'),
+    // no board should post a hold outside a plausible book's range
+    holds: [...odds.querySelectorAll("[data-board] .hold")].map(n => n.textContent.trim())
+      .filter(t => /Hold/.test(t)),
+  };
+});
+check("every board on the tab is named", boards.named >= 2, `${boards.named}`);
+check("the opening line is still there to compare against", boards.hasOpening);
+check("a timestamp is never dressed up as a hold", await page.evaluate(() => {
+  const odds = document.querySelector('[data-panel="odds"]');
+  return [...odds.querySelectorAll(".hold")].every(n => /^Hold \d+\.\d%$/.test(n.textContent.trim()));
+}));
+check("no board posts an implausible hold",
+  boards.holds.every(h => { const v = parseFloat(h.replace(/[^0-9.]/g, "")); return v > 3 && v < 12; }),
+  boards.holds.join(" | "));
+
+/* ------------------------------------------------------------------------
+ * Gmail proxies every outbound link through google.com/url, and a #fragment
+ * on the end of that is what makes it stop and show a Redirect Notice. The
+ * email links with ?a=<slug> instead, so the site has to honour it.
+ * ---------------------------------------------------------------------- */
+group("An emailed link opens the piece");
+
+for (const [url, want] of [
+  ["/?a=the-nine-game-difference", "The Nine-Game Difference"],
+  ["/?a=the-cpes-problem", "The CPES Problem"],
+  ["/?a=nothing-by-this-name", null],
+  ["/?t=odds", null],
+]) {
+  const p2 = await ctx.newPage();
+  const errs = [];
+  p2.on("pageerror", e => errs.push(e.message));
+  await p2.goto(BASE + url, { waitUntil: "domcontentloaded" });
+  await p2.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  await p2.waitForTimeout(700);
+  const got = await p2.evaluate(() => {
+    const a = document.querySelector('[data-panel="article"]');
+    const vis = [...document.querySelectorAll("#app > .panel")].find(x => !x.hidden);
+    return { headline: a && !a.hidden ? a.querySelector("h2").textContent : null,
+             panel: vis ? vis.dataset.panel : null };
+  });
+  check(`${url} → ${want || "the index, not a blank page"}`,
+    want ? got.headline === want : got.headline === null && !!got.panel,
+    `panel=${got.panel} headline=${got.headline}${errs.length ? " ERR:" + errs.join("|") : ""}`);
+  await p2.close();
+}
+
 group("Layout at 390px");
 const mobile = await ctx.newPage();
 await mobile.goto(BASE, { waitUntil: "domcontentloaded" });

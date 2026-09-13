@@ -17,8 +17,15 @@ import { readFile, writeFile, mkdir } from "fs/promises";
 
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 const SITE = "https://drewkim623-hash.github.io/dffl/";
-/** A link that opens one piece, not the index it sits on. */
-const linkTo = a => a && a.slug ? `${SITE}#article/${encodeURIComponent(a.slug)}` : `${SITE}#recaps`;
+/**
+ * A link that opens one piece, not the index it sits on.
+ *
+ * A query rather than a fragment, deliberately. Gmail rewrites every outbound
+ * link through google.com/url, and a #fragment hanging off the end of that is
+ * what makes Google stop and show a Redirect Notice rather than just following
+ * it. ?a=<slug> survives the rewrite and lands the reader on the article.
+ */
+const linkTo = a => a && a.slug ? `${SITE}?a=${encodeURIComponent(a.slug)}` : `${SITE}?t=recaps`;
 
 const D = JSON.parse(await readFile("data/odds-snapshot.json", "utf8"));
 const recaps = JSON.parse(await readFile("recaps.json", "utf8").catch(() => "{}"));
@@ -54,139 +61,240 @@ const subject = lead
     ? `DFFL Week ${D.week}: ${marquee.a} v ${marquee.b} is a coin flip`
     : `DFFL Week ${D.week}: where the board stands`;
 
-const C = { ink: "#14141a", mid: "#5c5c68", line: "#e4e4ea", bg: "#f5f5f7",
-  card: "#ffffff", blue: "#2b6fd4", red: "#c94a4a", green: "#137a45", gold: "#9a6600" };
-const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
-
-const row = (label, value, sub) => `
-  <tr>
-    <td style="padding:9px 14px;border-top:1px solid ${C.line};font:600 14px/1.3 ${FONT};color:${C.ink}">${label}
-      ${sub ? `<div style="font:400 12px/1.4 ${FONT};color:${C.mid};margin-top:2px">${sub}</div>` : ""}</td>
-    <td align="right" style="padding:9px 14px;border-top:1px solid ${C.line};font:700 15px/1.3 ${FONT};color:${C.ink};white-space:nowrap">${value}</td>
-  </tr>`;
-
-const section = (title, sub, inner) => `
-  <tr><td style="padding:26px 0 8px">
-    <div style="font:800 19px/1.2 ${FONT};color:${C.ink};letter-spacing:-.01em">${title}</div>
-    ${sub ? `<div style="font:400 13px/1.5 ${FONT};color:${C.mid};margin-top:4px">${sub}</div>` : ""}
-  </td></tr>
-  <tr><td>${inner}</td></tr>`;
-
-const card = inner => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-  style="background:${C.card};border:1px solid ${C.line};border-radius:10px;border-collapse:separate;overflow:hidden">${inner}</table>`;
-
-const gameCard = g => {
-  const side = (nm, pts, p, left, settled) => `
-    <tr>
-      <td style="padding:10px 14px;font:700 15px/1.2 ${FONT};color:${C.ink}">${esc(nm)}
-        <div style="font:400 11.5px/1.4 ${FONT};color:${C.mid};margin-top:2px">
-          ${settled ? "all played" : `${left} still to play`}</div></td>
-      <td align="right" style="padding:10px 6px;font:700 17px/1.2 ${FONT};color:${C.ink};white-space:nowrap">${pts.toFixed(1)}</td>
-      <td align="right" style="padding:10px 14px;white-space:nowrap">
-        <span style="display:inline-block;padding:3px 9px;border-radius:99px;font:800 12px/1.3 ${FONT};
-          background:${p >= 0.5 ? "#e8f5ee" : "#fdecec"};color:${p >= 0.5 ? C.green : C.red}">${pc(p)}</span></td>
-    </tr>`;
-  return card(side(g.a, g.aPts, g.pA, g.aLeft, g.settled)
-    + `<tr><td colspan="3" style="border-top:1px solid ${C.line};font-size:0;line-height:0">&nbsp;</td></tr>`
-    + side(g.b, g.bPts, g.pB, g.bLeft, g.settled));
-};
-
+/* ---------------------------------------------------------------- style */
 /**
- * The column, given the top of the email rather than a footnote at the bottom.
- * The email carries its opening, not the whole thing — the piece lives on the
- * site, where the charts in it actually render.
+ * Two columns wherever two columns fit, so the whole week is a glance rather
+ * than a scroll. Email has no flexbox worth trusting, so this is tables — but
+ * every two-up row is a <td width="50%"> pair that a media query collapses to
+ * full width on a phone, and the content in each cell is short enough to read
+ * at half width even in the clients that ignore the query.
  */
+const C = { ink: "#14141a", mid: "#5c5c68", faint: "#8a8a95", line: "#e4e4ea",
+  bg: "#eeeef1", card: "#ffffff", blue: "#2b6fd4", red: "#c94a4a",
+  green: "#137a45", gold: "#9a6600" };
+const F = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+
+const fmtOdds = o => o == null ? "—" : (o > 0 ? "+" : "") + Math.round(o);
+const oddsColour = o => o == null ? C.faint : o < 0 ? C.green : C.ink;
+
+const shell = inner => `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(subject)}</title>
+<style>
+  @media only screen and (max-width:480px){
+    .col{display:block!important;width:100%!important;max-width:100%!important}
+    .col+.col{padding-top:10px!important}
+    .pad{padding-left:14px!important;padding-right:14px!important}
+    .big{font-size:21px!important}
+  }
+</style></head>
+<body style="margin:0;padding:0;background:${C.bg};-webkit-text-size-adjust:100%">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(
+  lead ? (lead.dek || lead.headline) : "The board has moved.")}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.bg};padding:20px 10px">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%">
+${inner}
+</table></td></tr></table></body></html>`;
+
+/** A section heading. Tight — the content should be doing the talking. */
+const head2 = (title, sub) => `
+  <tr><td style="padding:22px 2px 8px">
+    <span style="font:800 17px/1.2 ${F};color:${C.ink};letter-spacing:-.01em">${title}</span>
+    ${sub ? `<span style="font:400 12.5px/1.4 ${F};color:${C.faint};padding-left:8px">${sub}</span>` : ""}
+  </td></tr>`;
+
+/** Two cells side by side that become two rows on a phone. */
+const twoUp = (a, b) => `
+  <tr><td>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td class="col" width="50%" valign="top" style="padding-right:5px">${a}</td>
+      <td class="col" width="50%" valign="top" style="padding-left:5px">${b || ""}</td>
+    </tr></table>
+  </td></tr>`;
+
+const box = (inner, pad = "0") => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+  style="background:${C.card};border:1px solid ${C.line};border-radius:10px;border-collapse:separate">
+  <tr><td style="padding:${pad}">${inner}</td></tr></table>`;
+
+/* ------------------------------------------------------------ the strip */
+const biggest = movers[0];
+const tile = (k, v, note) => `
+  <td class="col" width="33.33%" valign="top" style="padding:0 4px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+      style="background:${C.card};border:1px solid ${C.line};border-radius:10px;border-collapse:separate">
+      <tr><td style="padding:11px 13px">
+        <div style="font:700 9.5px/1.2 ${F};color:${C.faint};text-transform:uppercase;letter-spacing:.08em">${k}</div>
+        <div style="font:800 19px/1.2 ${F};color:${C.ink};margin-top:4px;letter-spacing:-.01em">${v}</div>
+        ${note ? `<div style="font:400 11px/1.35 ${F};color:${C.faint};margin-top:2px">${note}</div>` : ""}
+      </td></tr></table></td>`;
+
+const strip = `
+  <tr><td style="padding-bottom:2px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      ${tile("Week", String(D.week), `${D.decided} played · ${D.remaining} to come`)}
+      ${tile("Closest game", marquee ? pc(Math.max(marquee.pA, marquee.pB)) : "—",
+        marquee ? `${esc(marquee.pA >= marquee.pB ? marquee.a : marquee.b)} favoured` : "")}
+      ${tile("Biggest move", biggest ? `${biggest.d > 0 ? "▲" : "▼"} ${Math.abs(biggest.d * 100).toFixed(0)}pt` : "—",
+        biggest ? esc(biggest.manager) : "")}
+    </tr></table>
+  </td></tr>`;
+
+/* ------------------------------------------------------------ the column */
 const columnBlock = a => {
   const firstPara = (a.blocks || []).find(b => b.type === "p");
   const firstStat = (a.blocks || []).find(b => b.type === "stat");
   return `
-  <tr><td style="padding:22px 0 0">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-      style="background:${C.card};border:1px solid ${C.line};border-radius:12px;border-collapse:separate">
-      <tr><td style="padding:20px 20px 18px">
-        ${a.kind === "opinion" ? `<div style="display:inline-block;font:800 10px/1 ${FONT};letter-spacing:.09em;
-          text-transform:uppercase;color:${C.red};border:1px solid ${C.red};border-radius:3px;padding:4px 6px;margin-bottom:10px">Column</div>` : ""}
-        ${a.kicker ? `<div style="font:700 10.5px/1.3 ${FONT};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">${esc(a.kicker)}</div>` : ""}
-        <a href="${linkTo(a)}" style="text-decoration:none">
-          <div style="font:800 24px/1.2 ${FONT};color:${C.ink};letter-spacing:-.02em">${esc(a.headline)}</div></a>
-        ${a.dek ? `<div style="font:400 14px/1.55 ${FONT};color:${C.mid};margin-top:8px">${esc(a.dek)}</div>` : ""}
-        ${firstStat ? `
-        <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:14px">
-          <tr><td style="padding-right:12px;font:800 30px/1 ${FONT};color:${C.blue};letter-spacing:-.02em;vertical-align:middle">${esc(firstStat.n)}</td>
-              <td style="font:400 12.5px/1.5 ${FONT};color:${C.mid};vertical-align:middle">${rich(firstStat.text)}</td></tr>
-        </table>` : ""}
-        ${firstPara ? `<div style="font:400 14px/1.6 ${FONT};color:${C.ink};margin-top:14px">${rich(firstPara.text)}</div>` : ""}
-        <a href="${linkTo(a)}" style="display:inline-block;margin-top:14px;font:700 14px/1 ${FONT};color:${C.blue};text-decoration:none">Read the full piece →</a>
-      </td></tr>
-    </table>
+  <tr><td style="padding:14px 0 0">
+    ${box(`
+      ${a.kind === "opinion" ? `<span style="display:inline-block;font:800 9.5px/1 ${F};letter-spacing:.09em;
+        text-transform:uppercase;color:${C.red};border:1px solid ${C.red};border-radius:3px;padding:4px 6px;margin-bottom:9px">Column</span>` : ""}
+      ${a.kicker ? `<div style="font:700 10px/1.3 ${F};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">${esc(a.kicker)}</div>` : ""}
+      <a href="${linkTo(a)}" style="text-decoration:none">
+        <div class="big" style="font:800 25px/1.15 ${F};color:${C.ink};letter-spacing:-.022em">${esc(a.headline)}</div></a>
+      ${a.dek ? `<div style="font:400 13.5px/1.5 ${F};color:${C.mid};margin-top:7px">${esc(a.dek)}</div>` : ""}
+      ${firstStat ? `
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:13px">
+        <tr><td style="padding-right:11px;font:800 28px/1 ${F};color:${C.blue};letter-spacing:-.02em;vertical-align:middle">${esc(firstStat.n)}</td>
+            <td style="font:400 12px/1.45 ${F};color:${C.mid};vertical-align:middle">${rich(firstStat.text)}</td></tr>
+      </table>` : ""}
+      ${firstPara ? `<div style="font:400 13.5px/1.55 ${F};color:${C.ink};margin-top:12px">${rich(firstPara.text)}</div>` : ""}
+      <a href="${linkTo(a)}" style="display:inline-block;margin-top:12px;font:700 13.5px/1 ${F};color:${C.blue};text-decoration:none">Read the full piece →</a>
+    `, "18px 18px 16px")}
   </td></tr>`;
 };
 
-const html = `<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(subject)}</title></head>
-<body style="margin:0;padding:0;background:${C.bg}">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(
-  lead ? (lead.dek || lead.headline) : "The DFFL board has moved.")}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.bg};padding:24px 12px">
-<tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+/* ------------------------------------------------- match of the week */
+const marqueeBlock = g => {
+  const side = (nm, pts, p, left, lead) => `
+    <td width="50%" valign="top" style="padding:13px 14px;${lead ? `background:#f4faf6;` : ""}">
+      <div style="font:700 14.5px/1.2 ${F};color:${C.ink}">${esc(nm)}</div>
+      <div style="font:800 26px/1.15 ${F};color:${C.ink};letter-spacing:-.02em;margin-top:3px">${pts.toFixed(1)}</div>
+      <div style="font:800 13px/1.2 ${F};color:${p >= 0.5 ? C.green : C.red};margin-top:4px">${pc(p)} to win</div>
+      <div style="font:400 11px/1.3 ${F};color:${C.faint};margin-top:3px">${g.settled ? "all played" : `${left} still to play`}</div>
+    </td>`;
+  return box(`<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      ${side(g.a, g.aPts, g.pA, g.aLeft, g.pA >= g.pB)}
+      ${side(g.b, g.bPts, g.pB, g.bLeft, g.pB > g.pA)}
+    </tr></table>`);
+};
 
-  <tr><td style="padding-bottom:2px">
-    <div style="font:800 30px/1 ${FONT};letter-spacing:-.03em;color:${C.ink}">DFFL</div>
-    <div style="font:600 13px/1.4 ${FONT};color:${C.mid};margin-top:5px;text-transform:uppercase;letter-spacing:.06em">
-      Week ${D.week} · ${D.season} season</div>
+/* ------------------------------------------------------------- movers */
+const moverList = rows => rows.length ? box(rows.map((m, i) => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}">
+      <div style="font:700 13.5px/1.2 ${F};color:${C.ink}">${esc(m.manager)}</div>
+      <div style="font:400 11px/1.35 ${F};color:${C.faint};margin-top:2px">${pc(m.playoffWas)} → ${pc(m.playoffNow)}</div></td>
+    <td align="right" style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}
+      font:800 14px/1.2 ${F};color:${m.d > 0 ? C.green : C.red};white-space:nowrap">
+      ${m.d > 0 ? "▲" : "▼"} ${Math.abs(m.d * 100).toFixed(0)}pt</td>
+  </tr></table>`).join("")) : "";
+
+/* --------------------------------------------------------------- race */
+/** Six rows a side, so twelve teams read across rather than down. */
+const raceHalf = rows => box(rows.map((t, i) => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:8px 11px;${i ? `border-top:1px solid ${C.line};` : ""}
+      font:600 13px/1.2 ${F};color:${C.ink};overflow:hidden">${esc(t.manager)}
+      <div style="font:400 10.5px/1.3 ${F};color:${C.faint};margin-top:2px">${pc1(t.titleNow)} title · ${t.wins.toFixed(1)} wins</div></td>
+    <td align="right" style="padding:8px 11px;${i ? `border-top:1px solid ${C.line};` : ""}white-space:nowrap">
+      <div style="font:800 14px/1.2 ${F};color:${C.ink}">${pc(t.playoffNow)}</div>
+      <div style="font:700 11px/1.2 ${F};color:${oddsColour(t.playoffOdds)};margin-top:2px">${fmtOdds(t.playoffOdds)}</div></td>
+  </tr></table>`).join(""));
+
+/* ------------------------------------------------------------- title odds */
+const titleBoard = box(race.slice(0, 6).map((t, i) => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}
+      font:600 13.5px/1.2 ${F};color:${C.ink}">${esc(t.manager)}</td>
+    <td align="right" style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}
+      font:800 15px/1.2 ${F};color:${oddsColour(t.titleOdds)};white-space:nowrap">${fmtOdds(t.titleOdds)}
+      <span style="font:400 11px/1.2 ${F};color:${C.faint};padding-left:6px">${pc1(t.titleNow)}</span></td>
+  </tr></table>`).join(""));
+
+/* ---------------------------------------------------------- injuries */
+const injuryBlock = (D.hurt || []).length ? box((D.hurt.slice(0, 4)).map((h, i) => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}">
+      <div style="font:700 13px/1.2 ${F};color:${C.ink}">${esc(h.manager)}</div>
+      <div style="font:400 11px/1.35 ${F};color:${C.faint};margin-top:2px">
+        ${h.players.map(p => `${esc(p.name)} <span style="color:${C.gold}">${esc(p.status)}</span>`).join(" · ")}</div></td>
+    <td align="right" style="padding:9px 13px;${i ? `border-top:1px solid ${C.line};` : ""}
+      font:800 13px/1.2 ${F};color:${C.red};white-space:nowrap">−${(h.cost * 100).toFixed(1)}%</td>
+  </tr></table>`).join("")) : "";
+
+/* ------------------------------------------------------- also on the site */
+const alsoBlock = a => box(`
+  ${a.kicker ? `<div style="font:700 9.5px/1.3 ${F};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">${esc(a.kicker)}</div>` : ""}
+  <a href="${linkTo(a)}" style="text-decoration:none">
+    <div style="font:800 15px/1.25 ${F};color:${C.ink};letter-spacing:-.01em">${esc(a.headline)}</div></a>
+  ${a.dek ? `<div style="font:400 12px/1.45 ${F};color:${C.faint};margin-top:5px">${esc(a.dek)}</div>` : ""}
+  <a href="${linkTo(a)}" style="display:inline-block;margin-top:9px;font:700 12px/1 ${F};color:${C.blue};text-decoration:none">Read it →</a>
+`, "14px 15px");
+
+/* ------------------------------------------------------- the approve button */
+/**
+ * One tap to put this in front of the league.
+ *
+ * A mailto rather than a link to a server, because there is no server: the site
+ * is static. Tapping it opens a pre-addressed reply with a subject the approval
+ * routine watches for, and sending that reply is the whole approval. Nothing can
+ * go to the league without a mail actually leaving this inbox.
+ */
+const approveSubject = `DFFL PUBLISH ${D.season}-${String(D.week).padStart(2, "0")}`;
+const approveHref = `mailto:drewkim623@gmail.com?subject=${encodeURIComponent(approveSubject)}`
+  + `&amp;body=${encodeURIComponent("Send it to the league.")}`;
+const approveBlock = `
+  <tr><td style="padding:24px 0 0">
+    ${box(`
+      <div style="font:800 15px/1.25 ${F};color:${C.ink}">Only you have seen this.</div>
+      <div style="font:400 12.5px/1.5 ${F};color:${C.mid};margin-top:5px">
+        Tap below and hit send on the reply that opens. That is the whole approval — the blast then
+        goes out to all twelve managers, unchanged.</div>
+      <a href="${approveHref}" style="display:block;margin-top:13px;background:${C.green};color:#ffffff;
+        text-align:center;padding:14px;border-radius:9px;font:800 15px/1 ${F};text-decoration:none">
+        ✓&nbsp; Send this to the league</a>
+      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:9px;text-align:center">
+        Do nothing and it stays between us.</div>
+    `, "16px 16px 15px")}
+  </td></tr>`;
+
+/* ------------------------------------------------------------- assemble */
+const inner = `
+  <tr><td style="padding:0 2px 12px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font:800 27px/1 ${F};letter-spacing:-.03em;color:${C.ink}">DFFL</td>
+      <td align="right" style="font:600 11.5px/1.4 ${F};color:${C.faint};text-transform:uppercase;letter-spacing:.07em">
+        Week ${D.week} · ${D.season}</td>
+    </tr></table>
   </td></tr>
-
+  ${strip}
   ${lead ? columnBlock(lead) : ""}
-
-  ${marquee ? section("Match of the week",
-    marquee.settled
-      ? "The closest thing the week had to a contest."
-      : "The one closest to a coin flip — win probability from where the lineups actually stand, not from who happens to be ahead.",
-    gameCard(marquee)) : ""}
-
-  ${movers.length ? section("The board moved",
-    "Change in playoff probability since the draft-day line.",
-    card(movers.map(m => row(esc(m.manager),
-      `<span style="color:${m.d > 0 ? C.green : C.red}">${m.d > 0 ? "▲" : "▼"} ${Math.abs(m.d * 100).toFixed(0)}pt</span>`,
-      `${pc(m.playoffWas)} → <b style="color:${C.ink}">${pc(m.playoffNow)}</b> to make the playoffs`)).join(""))) : ""}
-
-  ${race.length ? section("The race",
-    `Six of twelve make it. ${D.decided} game${D.decided === 1 ? "" : "s"} in the book, ${D.remaining} still to play.`,
-    card(race.map(t => row(esc(t.manager), pc(t.playoffNow),
-      `${pc1(t.titleNow)} to win it all · ${t.wins.toFixed(1)} projected wins`)).join(""))) : ""}
-
-  ${(D.hurt || []).length ? section("Out this week",
-    "Straight from Sleeper's injury feed, and priced into the board.",
-    card(D.hurt.slice(0, 5).map(h => row(esc(h.manager),
-      `<span style="color:${C.red}">−${(h.cost * 100).toFixed(1)}%</span>`,
-      h.players.map(p => `${esc(p.name)} <span style="color:${C.gold}">${esc(p.status)}</span>`).join(" · "))).join(""))) : ""}
-
-  ${also.length ? section("Also on the site", "Everything else the desk has filed lately.",
-    also.map(a => `
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:9px">
-      <tr><td style="background:${C.card};border:1px solid ${C.line};border-radius:10px;padding:15px 16px">
-        ${a.kicker ? `<div style="font:700 10.5px/1.3 ${FONT};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">${esc(a.kicker)}</div>` : ""}
-        <a href="${linkTo(a)}" style="text-decoration:none">
-          <div style="font:800 17px/1.25 ${FONT};color:${C.ink};letter-spacing:-.01em">${esc(a.headline)}</div></a>
-        ${a.dek ? `<div style="font:400 13px/1.5 ${FONT};color:${C.mid};margin-top:6px">${esc(a.dek)}</div>` : ""}
-        <a href="${linkTo(a)}" style="display:inline-block;margin-top:10px;font:700 13px/1 ${FONT};color:${C.blue};text-decoration:none">Read it →</a>
-      </td></tr></table>`).join("")) : ""}
-
-  <tr><td style="padding:26px 0 0">
-    <a href="${SITE}" style="display:block;background:${C.ink};color:#fff;text-align:center;padding:14px;
-      border-radius:10px;font:700 15px/1 ${FONT};text-decoration:none">Open the full board →</a>
+  ${marquee ? head2("Match of the week",
+    marquee.settled ? "the closest thing the week had" : "closest to a coin flip") : ""}
+  ${marquee ? `<tr><td>${marqueeBlock(marquee)}</td></tr>` : ""}
+  ${(movers.length || race.length) ? head2("The board", `six of twelve make it · ${D.remaining} games still to play`) : ""}
+  ${(movers.length || race.length) ? twoUp(
+      `<div style="font:700 10px/1.2 ${F};color:${C.faint};text-transform:uppercase;letter-spacing:.08em;padding:0 2px 6px">Moved since the draft</div>${moverList(movers.slice(0, 5))}`,
+      `<div style="font:700 10px/1.2 ${F};color:${C.faint};text-transform:uppercase;letter-spacing:.08em;padding:0 2px 6px">To win it all</div>${titleBoard}`) : ""}
+  ${race.length ? head2("To make the playoffs", "price, and the chance behind it") : ""}
+  ${race.length ? twoUp(raceHalf(race.slice(0, 6)), raceHalf(race.slice(6, 12))) : ""}
+  ${injuryBlock ? head2("Out this week", "priced into the board") : ""}
+  ${injuryBlock ? `<tr><td>${injuryBlock}</td></tr>` : ""}
+  ${also.length ? head2("Also on the site") : ""}
+  ${also.length ? twoUp(alsoBlock(also[0]), also[1] ? alsoBlock(also[1]) : "") : ""}
+  <tr><td style="padding:22px 0 0">
+    <a href="${SITE}" style="display:block;background:${C.ink};color:#ffffff;text-align:center;padding:13px;
+      border-radius:9px;font:700 14.5px/1 ${F};text-decoration:none">Open the full board →</a>
   </td></tr>
+  ${approveBlock}
+  <tr><td class="pad" style="padding:18px 4px 0;font:400 11px/1.55 ${F};color:${C.faint}">
+    Prices carry the same 6% hold the site posts. Every number here was computed by the site itself,
+    so the two cannot disagree. Win probabilities move while games are being played; records,
+    standings and power rankings do not move until a week is finished.
+  </td></tr>`;
 
-  <tr><td style="padding:20px 4px 0;font:400 11.5px/1.6 ${FONT};color:${C.mid}">
-    Every number here is computed from Sleeper's own data and agrees with the site exactly.
-    Win probabilities move while games are being played; records, standings and power rankings
-    do not move until a week is finished.<br><br>
-    You're getting this because you're in the DFFL. Reply to this email to be taken off it.
-  </td></tr>
-
-</table></td></tr></table></body></html>`;
+const html = shell(inner);
 
 const text = [
   `DFFL — Week ${D.week}, ${D.season}`,
@@ -194,7 +302,9 @@ const text = [
   marquee ? `\nMATCH OF THE WEEK\n${marquee.a} ${marquee.aPts.toFixed(1)} (${pc(marquee.pA)}) v ${marquee.b} ${marquee.bPts.toFixed(1)} (${pc(marquee.pB)})` : "",
   movers.length ? `\nTHE BOARD MOVED\n` + movers.map(m =>
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
-  race.length ? `\nTHE RACE\n` + race.map(t => `${t.manager}: ${pc(t.playoffNow)} playoffs, ${pc1(t.titleNow)} title`).join("\n") : "",
+  race.length ? `\nTO MAKE THE PLAYOFFS\n` + race.map(t =>
+    `${t.manager}: ${fmtOdds(t.playoffOdds)} (${pc(t.playoffNow)}) · title ${fmtOdds(t.titleOdds)}`).join("\n") : "",
+  `\nApprove by replying with subject: ${approveSubject}`,
   `\n${SITE}`,
 ].filter(Boolean).join("\n");
 
@@ -203,12 +313,13 @@ const stem = `data/email-${D.season}-${String(D.week).padStart(2, "0")}`;
 const out = arg("--out") || `${stem}.html`;
 await writeFile(out, html);
 await writeFile(`${stem}.json`, JSON.stringify({
-  _comment: "Subject and plain-text fallback for the weekly blast. The routine sends body_file as the HTML body.",
+  _comment: "Subject, plain-text fallback and the approval subject for the weekly blast.",
   season: D.season, week: D.week, generated: new Date().toISOString(),
   subject, text, body_file: out, column: lead ? lead.headline : null,
+  approve_subject: approveSubject,
 }, null, 1) + "\n");
 
 console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB`);
 console.log(`subject: ${subject}`);
-console.log(`  column: ${lead ? lead.headline : "(none)"} · ${also.length} other pieces · `
-  + `${(D.games || []).length} matchups · ${movers.length} movers`);
+console.log(`  column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
+  + `${race.length} priced · approve with "${approveSubject}"`);
