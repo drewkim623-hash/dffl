@@ -117,6 +117,24 @@ const box = (inner, pad = "0") => `<table role="presentation" width="100%" cellp
   style="background:${C.card};border:1px solid ${C.line};border-radius:10px;border-collapse:separate">
   <tr><td style="padding:${pad}">${inner}</td></tr></table>`;
 
+/**
+ * A button that survives Gmail.
+ *
+ * An <a> styled with the `background` shorthand and white text is a coin flip:
+ * Gmail strips the shorthand, keeps color:#ffffff, and you get white text on
+ * white — a button-shaped hole, which is exactly what happened to the first one
+ * of these that went out. The bgcolor attribute is HTML, not CSS, and nothing
+ * strips it, so the colour is set three ways and the padding lives on the cell
+ * rather than the link.
+ */
+const button = (href, label, bg, size = 15) => `
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate">
+    <tr><td bgcolor="${bg}" align="center"
+      style="background-color:${bg};background:${bg};border-radius:9px;padding:14px 12px">
+      <a href="${href}" style="font:800 ${size}px/1.2 ${F};color:#ffffff;text-decoration:none;display:inline-block">${label}</a>
+    </td></tr>
+  </table>`;
+
 /* ------------------------------------------------------------ the strip */
 const biggest = movers[0];
 const tile = (k, v, note) => `
@@ -242,8 +260,7 @@ const alsoBlock = a => box(`
  * go to the league without a mail actually leaving this inbox.
  */
 const approveSubject = `DFFL PUBLISH ${D.season}-${String(D.week).padStart(2, "0")}`;
-const approveHref = `mailto:drewkim623@gmail.com?subject=${encodeURIComponent(approveSubject)}`
-  + `&amp;body=${encodeURIComponent("Send it to the league.")}`;
+const approveHref = `mailto:drewkim623@gmail.com?subject=${encodeURIComponent(approveSubject)}`;
 const approveBlock = `
   <tr><td style="padding:24px 0 0">
     ${box(`
@@ -251,10 +268,11 @@ const approveBlock = `
       <div style="font:400 12.5px/1.5 ${F};color:${C.mid};margin-top:5px">
         Tap below and hit send on the reply that opens. That is the whole approval — the blast then
         goes out to all twelve managers, unchanged.</div>
-      <a href="${approveHref}" style="display:block;margin-top:13px;background:${C.green};color:#ffffff;
-        text-align:center;padding:14px;border-radius:9px;font:800 15px/1 ${F};text-decoration:none">
-        ✓&nbsp; Send this to the league</a>
-      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:9px;text-align:center">
+      <div style="margin-top:13px">${button(approveHref, "&#10003;&nbsp; Send this to the league", C.green)}</div>
+      <div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:10px;text-align:center">
+        Button not working? Reply to this email with the subject
+        <b style="color:${C.mid}">${esc(approveSubject)}</b> — that does the same thing.</div>
+      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:6px;text-align:center">
         Do nothing and it stays between us.</div>
     `, "16px 16px 15px")}
   </td></tr>`;
@@ -283,10 +301,7 @@ const inner = `
   ${injuryBlock ? `<tr><td>${injuryBlock}</td></tr>` : ""}
   ${also.length ? head2("Also on the site") : ""}
   ${also.length ? twoUp(alsoBlock(also[0]), also[1] ? alsoBlock(also[1]) : "") : ""}
-  <tr><td style="padding:22px 0 0">
-    <a href="${SITE}" style="display:block;background:${C.ink};color:#ffffff;text-align:center;padding:13px;
-      border-radius:9px;font:700 14.5px/1 ${F};text-decoration:none">Open the full board →</a>
-  </td></tr>
+  <tr><td style="padding:22px 0 0">${button(SITE, "Open the full board &rarr;", C.ink, 14)}</td></tr>
   ${approveBlock}
   <tr><td class="pad" style="padding:18px 4px 0;font:400 11px/1.55 ${F};color:${C.faint}">
     Prices carry the same 6% hold the site posts. Every number here was computed by the site itself,
