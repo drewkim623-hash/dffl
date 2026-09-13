@@ -260,7 +260,15 @@ const alsoBlock = a => box(`
  * go to the league without a mail actually leaving this inbox.
  */
 const approveSubject = `DFFL PUBLISH ${D.season}-${String(D.week).padStart(2, "0")}`;
-const approveHref = `mailto:drewkim623@gmail.com?subject=${encodeURIComponent(approveSubject)}`;
+// The body is not decoration. An approval that opens an empty compose window
+// looks broken, gives you nothing to confirm you are sending the right thing,
+// and leaves the watcher matching on the subject alone. PUBLISH in the body
+// satisfies both routes at once, so it does not matter which one the watcher
+// happens to find first. &amp; because this lives in an href in HTML.
+const approveHref = `mailto:drewkim623@gmail.com`
+  + `?subject=${encodeURIComponent(approveSubject)}`
+  + `&amp;body=${encodeURIComponent("PUBLISH\n\nSends the DFFL Week " + D.week
+      + " email to all twelve managers. Just hit send.")}`;
 const approveBlock = `
   <tr><td style="padding:24px 0 0">
     ${box(`
