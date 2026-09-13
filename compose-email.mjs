@@ -269,10 +269,10 @@ const approveBlock = `
         Tap below and hit send on the reply that opens. That is the whole approval — the blast then
         goes out to all twelve managers, unchanged.</div>
       <div style="margin-top:13px">${button(approveHref, "&#10003;&nbsp; Send this to the league", C.green)}</div>
-      <div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:10px;text-align:center">
-        Button not working? Reply to this email with the subject
-        <b style="color:${C.mid}">${esc(approveSubject)}</b> — that does the same thing.</div>
-      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:6px;text-align:center">
+      <div style="font:400 12.5px/1.55 ${F};color:${C.mid};margin-top:12px;text-align:center">
+        Or just <b style="color:${C.ink}">reply to this email with the word PUBLISH</b>.
+        Either one does it — the button is only a shortcut.</div>
+      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:7px;text-align:center">
         Do nothing and it stays between us.</div>
     `, "16px 16px 15px")}
   </td></tr>`;
@@ -340,7 +340,7 @@ const text = [
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
   race.length ? `\nTO MAKE THE PLAYOFFS\n` + race.map(t =>
     `${t.manager}: ${fmtOdds(t.playoffOdds)} (${pc(t.playoffNow)}) · title ${fmtOdds(t.titleOdds)}`).join("\n") : "",
-  `\nApprove by replying with subject: ${approveSubject}`,
+  `\nTo send this to the league, reply to this email with the word PUBLISH.`,
   `\n${SITE}`,
 ].filter(Boolean).join("\n");
 
