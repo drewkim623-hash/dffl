@@ -1689,10 +1689,10 @@ function panelHome(AT, RB, model, sim) {
     const rows = model.teams
       .map((t, i) => ({ uid: t.uid, title: sim.title[i] / n, playoff: sim.playoff[i] / n, wins: sim.wins[i] / n }))
       .sort((a, b) => b.title - a.title);
-    p.appendChild(sechead("Next season, for argument's sake",
+    p.appendChild(sechead("The opening line",
       `Twenty thousand simulated ${model.season} seasons on the real format — fourteen weeks, three divisions, six playoff spots. ${model.postDraft
         ? "Now that the draft has run, every roster is valued against the pre-draft market, and about half of a team's draft-day edge is carried into its projection."
-        : "It is pre-draft, so this knows only how these managers have scored before, and roughly a third of even that is discarded as roster luck. It re-prices itself once you draft."} The Odds tab prices the whole board and shows its working.`));
+        : "It is pre-draft, so this knows only how these managers have scored before, and roughly a third of even that is discarded as roster luck. It re-prices itself once you draft."} This is the line as it opened, before a ball was snapped — it does not move. The Odds tab carries the live board beside it and shows its working.`));
     p.appendChild(tableCard(
       [{ label: "Manager" }, { label: "Title odds", num: 1 }, { label: "Makes playoffs", num: 1 }, { label: "Projected wins", num: 1 }],
       rows.map(r => `<tr>
@@ -3561,6 +3561,7 @@ function priceTile(r, label) {
 
 function oddsBoard(title, sub, priced, noteFn) {
   const b = el("div", "board");
+  b.dataset.board = "opening";
   b.innerHTML = `<div class="bhead">
     <span class="bt">${esc(title)}${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</span>
     <span class="hold">Hold ${(marketHold(priced) * 100).toFixed(1)}%</span></div>`;
@@ -3803,6 +3804,7 @@ function moveChip(now, was) {
  */
 function liveBoard(title, sub, priced, openBy, noteFn) {
   const b = el("div", "board");
+  b.dataset.board = "live";
   b.innerHTML = `<div class="bhead">
     <span class="bt">${esc(title)}${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</span>
     <span class="hold">Hold ${(marketHold(priced) * 100).toFixed(1)}%</span></div>`;
@@ -4004,6 +4006,7 @@ function updatedAt(ms, label) {
  */
 function liveMatchupBoard(board) {
   const b = el("div", "board live");
+  b.dataset.board = "matchups";
   b.innerHTML = `<div class="bhead">
     <span class="bt">Week ${board.week}, live
       <span class="bs">${board.settled

@@ -670,8 +670,10 @@ const agree = await page.evaluate(() => {
     count: homePcts.length,
     matches: homePcts.every((h, k) => Math.abs(h.title - expected[k].p * 100) < 0.06),
     top: homePcts[0],
-    // the same probability must be behind the top price on the odds board
-    boardTop: odds.querySelector(".price .tp").textContent.trim(),
+    // The same probability must sit behind the top price on the OPENING board.
+    // The Odds tab also carries a live board above it, which is a different
+    // question and must not be compared against a preseason table.
+    boardTop: odds.querySelector('[data-board="opening"] .price .tp').textContent.trim(),
     homeTop: homePcts[0].title.toFixed(1) + "%",
     noStaleCopy: !home.textContent.includes("Three thousand"),
   };
@@ -679,6 +681,10 @@ const agree = await page.evaluate(() => {
 check("Home lists all twelve managers", agree.count === 12, `${agree.count}`);
 check("Home title odds come from the same simulation as the board", agree.matches);
 check("Home and the odds board show the same favourite probability", agree.boardTop === agree.homeTop, `${agree.homeTop} vs ${agree.boardTop}`);
+check("the live board and the opening line are told apart", await page.evaluate(() => {
+  const odds = document.querySelector('[data-panel="odds"]');
+  return odds.querySelectorAll('[data-board="opening"]').length > 0;
+}));
 check("stale copy about the old model is gone", agree.noStaleCopy);
 
 group("Honesty requirements");
@@ -1124,21 +1130,34 @@ const artl = await page.evaluate(async () => {
     // the index is a list of links, not the articles themselves
     noBodyOnIndex: panel.querySelectorAll(".apara").length === 0,
     columnFlagged: panel.querySelectorAll(".teaser.op .oflag").length,
-    newestFirst: teasers.length > 1 &&
-      teasers[0].querySelector("h3").textContent === "I Owe The Toilet Bowl An Apology",
   };
   panel.remove();
+  // What the file says should lead, rather than a headline frozen into a test
+  // that every new piece would then break.
+  const j = await (await fetch("recaps.json", { cache: "no-cache" })).json();
+  const byDate = (j.articles || []).slice()
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+  out.published = byDate.length;
+  out.expectedLead = byDate.length ? byDate[0].headline : null;
+  out.newestFirst = out.headlines[0] === out.expectedLead;
   return out;
 });
-check("the section is an index of headlines", artl.teasers === 2 && artl.noBodyOnIndex, `${artl.teasers} teasers`);
+check("every published piece is on the index",
+  artl.teasers === artl.published && artl.teasers >= 3 && artl.noBodyOnIndex,
+  `${artl.teasers} teasers for ${artl.published} articles`);
 check("every headline carries a cover", artl.covers === artl.teasers && artl.faces >= 5, `${artl.covers} covers, ${artl.faces} faces`);
-check("the newest piece leads", artl.newestFirst, artl.headlines.join(" / "));
+check("the newest piece leads", artl.newestFirst, `${artl.headlines[0]} — expected ${artl.expectedLead}`);
 check("a column is flagged as a column", artl.columnFlagged === 1, `${artl.columnFlagged}`);
 
 await page.click('#tabs button[data-tab="recaps"]');
 await page.waitForFunction(() => document.querySelectorAll('[data-panel="recaps"] .teaser').length > 0, null, { timeout: 20000 });
-const opened = await page.evaluate(() => {
-  document.querySelectorAll('[data-panel="recaps"] .teaser')[1].click();
+// Open pieces by name. Selecting by position meant that publishing anything new
+// silently retargeted these checks at a different article.
+const opened = await page.evaluate((want) => {
+  const t = [...document.querySelectorAll('[data-panel="recaps"] .teaser')]
+    .find(x => x.querySelector("h3").textContent === want);
+  if (!t) throw new Error("no teaser headlined " + want);
+  t.click();
   const a = document.querySelector('[data-panel="article"]');
   const txt = a ? a.innerText : "";
   return {
@@ -1161,7 +1180,7 @@ const opened = await page.evaluate(() => {
     })(),
     nan: /NaN|undefined/.test(txt),
   };
-});
+}, "The CPES Problem");
 check("clicking a headline opens the full article", opened.exists && opened.indexHidden && opened.headline === "The CPES Problem", opened.headline);
 check("the article page leads with its cover", opened.hero === 1);
 check("there is a way back to the index", opened.back);
@@ -1172,9 +1191,12 @@ check("bold survives the escaping", opened.bold > 5, `${opened.bold}`);
 check("the projection bars diverge both ways", opened.barsBothWays);
 check("no NaN in the article", opened.nan === false);
 
-const column = await page.evaluate(() => {
+const column = await page.evaluate((want) => {
   document.querySelector('[data-panel="article"] .back').click();
-  document.querySelectorAll('[data-panel="recaps"] .teaser')[0].click();
+  const t = [...document.querySelectorAll('[data-panel="recaps"] .teaser')]
+    .find(x => x.querySelector("h3").textContent === want);
+  if (!t) throw new Error("no teaser headlined " + want);
+  t.click();
   const a = document.querySelector('[data-panel="article"]');
   const rounds = [...a.querySelectorAll(".brd .brh")].map(n => n.textContent);
   return {
@@ -1188,7 +1210,7 @@ const column = await page.evaluate(() => {
     // the bracket must show the two worst records starting in round two
     r1: [...a.querySelectorAll(".brd")][0].innerText,
   };
-});
+}, "I Owe The Toilet Bowl An Apology");
 check("back returns to the index and the column opens", column.headline === "I Owe The Toilet Bowl An Apology", column.headline);
 check("the column reads as opinion", column.isColumn);
 check("the toilet bowl bracket renders in full", column.brackets === 1 && column.matches === 7 && column.rounds.length === 3,
@@ -1197,6 +1219,45 @@ check("every tie in the bracket has a winner marked", column.winners === column.
 check("the placing games are called out", column.placed === 3, `${column.placed}`);
 check("the two worst records are absent from round one", !/chassinator|wesley55/.test(column.r1), column.r1.replace(/\n/g, " "));
 check("the column shows the drop, not a consolation ladder", /The drop/.test(column.rounds.join("/")), column.rounds.join("/"));
+
+const nine = await page.evaluate((want) => {
+  document.querySelector('[data-panel="article"] .back').click();
+  const t = [...document.querySelectorAll('[data-panel="recaps"] .teaser')]
+    .find(x => x.querySelector("h3").textContent === want);
+  if (!t) throw new Error("no teaser headlined " + want);
+  t.click();
+  const a = document.querySelector('[data-panel="article"]');
+  const txt = a.innerText;
+  const fills = [...a.querySelectorAll(".abar .fill")].map(n => parseFloat(n.style.left));
+  return {
+    headline: a.querySelector("h2").textContent,
+    paras: a.querySelectorAll(".apara").length,
+    leads: a.querySelectorAll(".apara.lead").length,
+    heads: a.querySelectorAll(".ahead h3").length,
+    stats: a.querySelectorAll(".astat").length,
+    bars: a.querySelectorAll(".abar").length,
+    cards: a.querySelectorAll(".acard").length,
+    note: a.querySelectorAll(".anote").length,
+    bothWays: fills.some(l => l < 49.9) && fills.some(l => l >= 49.9),
+    nan: /NaN|undefined/.test(txt),
+    // the two figures the whole piece rests on
+    quotes0009: /0\.09/.test(txt),
+    quotes598: /598/.test(txt),
+    namesBoth: /Domo112/.test(txt) && /saucebossandrew/.test(txt),
+    // and it must not claim a rank the site would contradict
+    noRankClaim: !/first in the league|top of the board/i.test(txt),
+  };
+}, "The Nine-Game Difference");
+check("the new piece opens", nine.headline === "The Nine-Game Difference", nine.headline);
+check("it is built out of blocks, not a wall of text",
+  nine.paras === 10 && nine.heads === 4 && nine.stats === 2 && nine.cards === 2 && nine.note === 1,
+  `${nine.paras}p ${nine.heads}h ${nine.stats}stat ${nine.cards}card ${nine.note}note`);
+check("its luck chart carries all thirteen managers", nine.bars === 13, `${nine.bars}`);
+check("that chart diverges both ways", nine.bothWays);
+check("one lead paragraph, for the drop cap", nine.leads === 1, `${nine.leads}`);
+check("the two figures it rests on are both in it", nine.quotes0009 && nine.quotes598);
+check("both managers are named", nine.namesBoth);
+check("no NaN anywhere in it", nine.nan === false);
 
 await page.evaluate(() => { const a = document.querySelector('[data-panel="article"]'); if (a) a.remove(); });
 const artSafe = await page.evaluate(() => {
@@ -1749,8 +1810,13 @@ const picks = await page.evaluate(() => {
     unplayedNeverPriced: !L.trades.some(t => t.sides.some(sd =>
       [...sd.picksIn, ...sd.picksOut].some(r => r.priced && !D.seasonPlayed(seasonOf.get(r.year))))),
     haulsUnique: new Set(keys).size === keys.length,
-    haulsSane: L.pickHauls.every(r => isFinite(r.pts) && r.pts >= 0 && r.no > 0 && !!r.name),
+    // Not `pts >= 0`: a fantasy player can finish a week under water — a lost
+    // fumble alone is minus two — and this assertion only ever held because it
+    // was written in an off-season where every total was zero. The first live
+    // week produced Jordan Mason on -0.4 and failed it.
+    haulsSane: L.pickHauls.every(r => isFinite(r.pts) && r.no > 0 && !!r.name),
     haulsZero: L.pickHauls.filter(r => r.pts === 0).length,
+    haulsNegative: L.pickHauls.filter(r => r.pts < 0).length,
     everyUnpricedHasReason: L.trades.every(t => t.sides.every(sd =>
       [...sd.picksIn, ...sd.picksOut].every(r => r.priced || (r.why && r.why.length > 0)))),
   };
@@ -1763,7 +1829,8 @@ check("a keeper slot is never priced", picks.keeperNeverPriced && picks.keepers 
 check("a pick in an unplayed season is never priced", picks.unplayedNeverPriced && picks.unplayed > 0, `${picks.unplayed} unplayed`);
 check("every unpriced pick says why", picks.everyUnpricedHasReason);
 check("a pick appears once in the haul table, under its last holder", picks.haulsUnique);
-check("every priced haul has a real player and a real slot", picks.haulsSane, `${picks.haulsZero} of them drafted a player who never scored`);
+check("every priced haul has a real player and a real slot", picks.haulsSane,
+  `${picks.haulsZero} scoreless, ${picks.haulsNegative} under water`);
 
 group("Trades: only the weeks after a trade count");
 const after = await page.evaluate(() => {
