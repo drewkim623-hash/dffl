@@ -294,7 +294,28 @@ const inner = `
     standings and power rankings do not move until a week is finished.
   </td></tr>`;
 
-const html = shell(inner);
+/**
+ * Squeeze the whitespace out before anyone has to handle this.
+ *
+ * The email is sent by a routine that must reproduce the body verbatim inside a
+ * tool call. The first time it tried, it sent a fragment; the second attempt
+ * only got there by diffing its own reconstruction and finding the differences
+ * were all trailing spaces on blank lines. Whitespace between tags carries no
+ * meaning here, so removing it takes that entire class of mistake off the table
+ * and drops about a fifth of the bytes with it.
+ *
+ * Text inside a tag is never touched — only the gaps between them.
+ */
+function minify(h) {
+  return h
+    .replace(/\n\s*\n/g, "\n")          // no blank lines
+    .replace(/>\s+</g, "><")             // no gaps between tags
+    .replace(/\s{2,}/g, " ")             // no runs of spaces
+    .replace(/\s+>/g, ">")
+    .trim();
+}
+
+const html = minify(shell(inner));
 
 const text = [
   `DFFL — Week ${D.week}, ${D.season}`,
@@ -308,6 +329,11 @@ const text = [
   `\n${SITE}`,
 ].filter(Boolean).join("\n");
 
+// The routine sending this has to reproduce it byte for byte. Give it something
+// to check itself against rather than hoping.
+const { createHash } = await import("crypto");
+const sha = createHash("sha256").update(html, "utf8").digest("hex");
+
 await mkdir("data", { recursive: true });
 const stem = `data/email-${D.season}-${String(D.week).padStart(2, "0")}`;
 const out = arg("--out") || `${stem}.html`;
@@ -317,9 +343,11 @@ await writeFile(`${stem}.json`, JSON.stringify({
   season: D.season, week: D.week, generated: new Date().toISOString(),
   subject, text, body_file: out, column: lead ? lead.headline : null,
   approve_subject: approveSubject,
+  bytes: Buffer.byteLength(html, "utf8"), sha256: sha,
 }, null, 1) + "\n");
 
-console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB`);
+console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB, one line`);
+console.log(`sha256: ${sha}`);
 console.log(`subject: ${subject}`);
 console.log(`  column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
   + `${race.length} priced · approve with "${approveSubject}"`);
