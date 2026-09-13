@@ -1,0 +1,277 @@
+{
+ "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
+ "generated": "2026-09-13T21:10:34.666Z",
+ "at": 1789333834666,
+ "season": "2026",
+ "week": 1,
+ "liveWeek": 1,
+ "decided": 0,
+ "remaining": 84,
+ "teams": [
+  {
+   "uid": "850931930408001536",
+   "rid": 2,
+   "manager": "jadencha",
+   "titleWas": 0.28655,
+   "titleNow": 0.2946,
+   "playoffWas": 0.8968,
+   "playoffNow": 0.9298,
+   "wins": 9.4885
+  },
+  {
+   "uid": "844705266430742528",
+   "rid": 1,
+   "manager": "Domo112",
+   "titleWas": 0.2031,
+   "titleNow": 0.21995,
+   "playoffWas": 0.8277,
+   "playoffNow": 0.88835,
+   "wins": 9.01015
+  },
+  {
+   "uid": "851564369144852480",
+   "rid": 10,
+   "manager": "moseslin",
+   "titleWas": 0.04645,
+   "titleNow": 0.0359,
+   "playoffWas": 0.43365,
+   "playoffNow": 0.3724,
+   "wins": 6.28775
+  },
+  {
+   "uid": "646481339029475328",
+   "rid": 7,
+   "manager": "drewkim",
+   "titleWas": 0.0179,
+   "titleNow": 0.0153,
+   "playoffWas": 0.25335,
+   "playoffNow": 0.21065,
+   "wins": 5.4958
+  },
+  {
+   "uid": "845540882697547776",
+   "rid": 4,
+   "manager": "bertalicious",
+   "titleWas": 0.1492,
+   "titleNow": 0.12295,
+   "playoffWas": 0.7329,
+   "playoffNow": 0.6584,
+   "wins": 7.64015
+  },
+  {
+   "uid": "850946675743793152",
+   "rid": 9,
+   "manager": "saucebossandrew",
+   "titleWas": 0.06305,
+   "titleNow": 0.0724,
+   "playoffWas": 0.50245,
+   "playoffNow": 0.55275,
+   "wins": 7.22855
+  },
+  {
+   "uid": "851478209852706816",
+   "rid": 8,
+   "manager": "bradyrife",
+   "titleWas": 0.0466,
+   "titleNow": 0.0529,
+   "playoffWas": 0.42065,
+   "playoffNow": 0.50005,
+   "wins": 7.0655
+  },
+  {
+   "uid": "845119622473699328",
+   "rid": 5,
+   "manager": "jskule23",
+   "titleWas": 0.02955,
+   "titleNow": 0.0245,
+   "playoffWas": 0.314,
+   "playoffNow": 0.28075,
+   "wins": 5.8906
+  },
+  {
+   "uid": "980916620434440192",
+   "rid": 6,
+   "manager": "wesley55",
+   "titleWas": 0.06515,
+   "titleNow": 0.0783,
+   "playoffWas": 0.5441,
+   "playoffNow": 0.63195,
+   "wins": 7.5945
+  },
+  {
+   "uid": "850932093394472960",
+   "rid": 3,
+   "manager": "chassinator",
+   "titleWas": 0.0371,
+   "titleNow": 0.03655,
+   "playoffWas": 0.3929,
+   "playoffNow": 0.40435,
+   "wins": 6.49545
+  },
+  {
+   "uid": "851571292711804928",
+   "rid": 12,
+   "manager": "victorthompson",
+   "titleWas": 0.02955,
+   "titleNow": 0.02035,
+   "playoffWas": 0.3453,
+   "playoffNow": 0.2497,
+   "wins": 5.7332
+  },
+  {
+   "uid": "851570417528332288",
+   "rid": 11,
+   "manager": "sizzlemc2",
+   "titleWas": 0.0258,
+   "titleNow": 0.0263,
+   "playoffWas": 0.3362,
+   "playoffNow": 0.32085,
+   "wins": 6.06985
+  }
+ ],
+ "games": [
+  {
+   "a": "chassinator",
+   "b": "sizzlemc2",
+   "aPts": 114.72,
+   "bPts": 50.48,
+   "pA": 0.6625894116522322,
+   "pB": 0.3374105883477678,
+   "settled": false,
+   "aLeft": 3,
+   "bLeft": 7,
+   "aFrac": 0.13165948659538473,
+   "bFrac": 0.5830522589286591
+  },
+  {
+   "a": "jskule23",
+   "b": "saucebossandrew",
+   "aPts": 117.76,
+   "bPts": 95.44,
+   "pA": 0.22223554417489189,
+   "pB": 0.7777644558251081,
+   "settled": false,
+   "aLeft": 1,
+   "bLeft": 4,
+   "aFrac": 0.03248571851027785,
+   "bFrac": 0.28548433429644027
+  },
+  {
+   "a": "bertalicious",
+   "b": "bradyrife",
+   "aPts": 67.24,
+   "bPts": 97.4,
+   "pA": 0.15958848265278347,
+   "pB": 0.8404115173472165,
+   "settled": false,
+   "aLeft": 5,
+   "bLeft": 3,
+   "aFrac": 0.2838445082452936,
+   "bFrac": 0.1982410406033774
+  },
+  {
+   "a": "wesley55",
+   "b": "victorthompson",
+   "aPts": 110.26,
+   "bPts": 64,
+   "pA": 0.974526934205649,
+   "pB": 0.025473065794351046,
+   "settled": false,
+   "aLeft": 1,
+   "bLeft": 3,
+   "aFrac": 0.10446118156602875,
+   "bFrac": 0.25155509808675913
+  },
+  {
+   "a": "jadencha",
+   "b": "drewkim",
+   "aPts": 141.5,
+   "bPts": 116.8,
+   "pA": 0.9992242097510662,
+   "pB": 0.0007757902489338164,
+   "settled": false,
+   "aLeft": 2,
+   "bLeft": 2,
+   "aFrac": 0.230432639382929,
+   "bFrac": 0.10414649402196507
+  },
+  {
+   "a": "Domo112",
+   "b": "moseslin",
+   "aPts": 162.16,
+   "bPts": 96.46,
+   "pA": 0.9998234111814223,
+   "pB": 0.00017658881857773867,
+   "settled": false,
+   "aLeft": 3,
+   "bLeft": 4,
+   "aFrac": 0.22310958370974338,
+   "bFrac": 0.27380867225852185
+  }
+ ],
+ "hurt": [
+  {
+   "manager": "chassinator",
+   "cost": 0.04500000000000004,
+   "players": [
+    {
+     "name": "Zay Flowers",
+     "status": "Out"
+    }
+   ]
+  },
+  {
+   "manager": "victorthompson",
+   "cost": 0.04500000000000004,
+   "players": [
+    {
+     "name": "A.J. Brown",
+     "status": "IR"
+    }
+   ]
+  },
+  {
+   "manager": "Domo112",
+   "cost": 0.011249999999999982,
+   "players": [
+    {
+     "name": "Malik Nabers",
+     "status": "Questionable"
+    }
+   ]
+  }
+ ],
+ "settled": false,
+ "nfl": {
+  "pre": 2,
+  "live": 4,
+  "post": 10,
+  "at": 1789333834486
+ },
+ "articles": [
+  {
+   "slug": "the-nine-game-difference",
+   "kicker": "analysis · five seasons of schedule",
+   "headline": "The Nine-Game Difference",
+   "dek": "Domo112 and saucebossandrew have played five seasons to within a tenth of a win of each other. One of them is 37-19. The other is 28-28.",
+   "byline": "DFFL desk",
+   "date": "2026-09-13"
+  },
+  {
+   "slug": "i-owe-the-toilet-bowl-an-apology",
+   "kicker": "Correction",
+   "headline": "I Owe The Toilet Bowl An Apology",
+   "dek": "I wrote yesterday that this league cannot punish its worst team. I had the bracket upside down. It punishes them better than almost any format I have seen.",
+   "byline": "DFFL desk",
+   "date": "2026-08-19"
+  },
+  {
+   "slug": "the-cpes-problem",
+   "kicker": "2026 draft · analysis",
+   "headline": "The CPES Problem",
+   "dek": "The two best rosters in the league landed in the same division. One of them is going to spend the autumn fighting for a wildcard — and that is only the second-most interesting thing about this draft.",
+   "byline": "DFFL desk",
+   "date": "2026-08-18"
+  }
+ ]
+}

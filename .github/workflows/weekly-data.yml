@@ -21,6 +21,7 @@ on:
     - cron: "30 12 * * 2"   # Tue 08:30 America/New_York — before the recap job at 13:00 UTC
     - cron: "30 15 * * 0"   # Sun 11:30 America/New_York — inactives are in, kickoff is not
     - cron: "0 11 * * *"    # daily 07:00 America/New_York — keeps the story watch current
+    - cron: "0 22 * * 6"    # Sat 18:00 America/New_York — an hour before the blast goes out
   workflow_dispatch:
     inputs:
       week:
@@ -68,6 +69,18 @@ jobs:
       # progress, recent trades and claims, who is hurt. Small and factual.
       - name: Take the league's pulse
         run: node build-pulse.mjs
+
+      # The email's numbers must be the site's numbers, so they are read off the
+      # published page rather than recomputed. That needs a browser, which is
+      # why it happens here: the routine that sends the email can reach neither
+      # Sleeper nor the site, and composes from the snapshot this leaves behind.
+      - name: Install the browser for the odds snapshot
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Snapshot what the site is showing
+        run: node build-email.mjs
 
       - name: Commit anything that changed
         run: |

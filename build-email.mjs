@@ -10,12 +10,15 @@
  *   node build-email.mjs --local               # against ./index.html
  *   node build-email.mjs --out preview.html
  *
- * Writes data/email-<season>-<week>.html — the exact body to send — plus a
- * companion .json holding the subject line and a plain-text fallback.
+ * Writes data/odds-snapshot.json — the numbers, and nothing else.
  *
- * The weekly routine does not generate this; it reads it, writes a sentence or
- * two of its own at the top if it has something to say, and sends it. Keeping
- * generation here means the email cannot invent a number.
+ * This half needs a browser and the public site, so it runs in GitHub Actions.
+ * The other half, compose-email.mjs, turns the snapshot into the email and runs
+ * anywhere — which matters, because the routine that actually sends the thing
+ * cannot reach either Sleeper or the site.
+ *
+ * The split exists so the email cannot invent a number: every figure in it was
+ * computed by the page itself and written down here.
  */
 import { writeFile, mkdir } from "fs/promises";
 import { createServer } from "http";
@@ -106,155 +109,19 @@ const articles = await page.evaluate(async () => {
 await browser.close();
 if (server) server.close();
 
-/* ------------------------------------------------------------- compose */
-const pc = n => `${(n * 100).toFixed(0)}%`;
-const pc1 = n => `${(n * 100).toFixed(1)}%`;
-const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
-
-// Who has moved most since the draft-day line.
-const movers = D.teams
-  .filter(t => t.playoffNow != null)
-  .map(t => ({ ...t, d: t.playoffNow - t.playoffWas }))
-  .sort((a, b) => Math.abs(b.d) - Math.abs(a.d))
-  .filter(t => Math.abs(t.d) >= 0.01)
-  .slice(0, 5);
-
-// The match of the week is the one closest to a coin flip.
-const marquee = D.games.length
-  ? D.games.slice().sort((a, b) => Math.abs(0.5 - a.pA) - Math.abs(0.5 - b.pA))[0]
-  : null;
-
-const race = D.teams
-  .filter(t => t.playoffNow != null)
-  .sort((a, b) => b.playoffNow - a.playoffNow);
-
-const SITE = "https://drewkim623-hash.github.io/dffl/";
-const subject = marquee && !marquee.settled
-  ? `DFFL Week ${D.week}: ${marquee.a} v ${marquee.b} is a coin flip`
-  : `DFFL Week ${D.week}: where the board stands`;
-
-const C = { ink: "#14141a", mid: "#5c5c68", line: "#e4e4ea", bg: "#f5f5f7",
-  card: "#ffffff", blue: "#2b6fd4", red: "#c94a4a", green: "#137a45", gold: "#9a6600" };
-
-const row = (label, value, sub) => `
-  <tr>
-    <td style="padding:9px 14px;border-top:1px solid ${C.line};font:600 14px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink}">${label}
-      ${sub ? `<div style="font:400 12px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid};margin-top:2px">${sub}</div>` : ""}</td>
-    <td align="right" style="padding:9px 14px;border-top:1px solid ${C.line};font:700 15px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink};white-space:nowrap">${value}</td>
-  </tr>`;
-
-const section = (title, sub, inner) => `
-  <tr><td style="padding:26px 0 8px">
-    <div style="font:800 19px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink};letter-spacing:-.01em">${title}</div>
-    ${sub ? `<div style="font:400 13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid};margin-top:4px">${sub}</div>` : ""}
-  </td></tr>
-  <tr><td>${inner}</td></tr>`;
-
-const card = inner => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-  style="background:${C.card};border:1px solid ${C.line};border-radius:10px;border-collapse:separate;overflow:hidden">${inner}</table>`;
-
-const gameCard = g => {
-  const side = (nm, pts, p, left, settled) => `
-    <tr>
-      <td style="padding:10px 14px;font:700 15px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink}">${esc(nm)}
-        <div style="font:400 11.5px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid};margin-top:2px">
-          ${settled ? "all played" : `${left} still to play`}</div></td>
-      <td align="right" style="padding:10px 6px;font:700 17px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink};white-space:nowrap">${pts.toFixed(1)}</td>
-      <td align="right" style="padding:10px 14px;white-space:nowrap">
-        <span style="display:inline-block;padding:3px 9px;border-radius:99px;font:800 12px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
-          background:${p >= 0.5 ? "#e8f5ee" : "#fdecec"};color:${p >= 0.5 ? C.green : C.red}">${pc(p)}</span></td>
-    </tr>`;
-  return card(side(g.a, g.aPts, g.pA, g.aLeft, g.settled)
-    + `<tr><td colspan="3" style="border-top:1px solid ${C.line};font-size:0;line-height:0">&nbsp;</td></tr>`
-    + side(g.b, g.bPts, g.pB, g.bLeft, g.settled));
+/* ------------------------------------------------------------ snapshot */
+const snapshot = {
+  _comment:
+    "Written by build-email.mjs, which drives the published site in a headless browser and reads "
+    + "the numbers the page itself computed. compose-email.mjs turns this into the weekly email. "
+    + "Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
+  generated: new Date().toISOString(),
+  at: Date.now(),
+  ...D,
+  articles,
 };
 
-const html = `<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(subject)}</title></head>
-<body style="margin:0;padding:0;background:${C.bg}">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(
-  marquee ? `${marquee.a} ${marquee.aPts.toFixed(1)} v ${marquee.b} ${marquee.bPts.toFixed(1)} — and the board has moved.` : "The DFFL board has moved."
-)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.bg};padding:24px 12px">
-<tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
-
-  <tr><td style="padding-bottom:6px">
-    <div style="font:800 30px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;letter-spacing:-.03em;color:${C.ink}">DFFL</div>
-    <div style="font:600 13px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid};margin-top:5px;text-transform:uppercase;letter-spacing:.06em">
-      Week ${D.week} · ${D.season} season</div>
-  </td></tr>
-
-  ${marquee ? section("Match of the week",
-    marquee.settled
-      ? "The closest thing the week had to a contest."
-      : "The one closest to a coin flip — win probability from where the lineups actually stand, not from who happens to be ahead.",
-    gameCard(marquee)) : ""}
-
-  ${movers.length ? section("The board moved",
-    "Change in playoff probability since the draft-day line.",
-    card(movers.map(m => row(esc(m.manager),
-      `<span style="color:${m.d > 0 ? C.green : C.red}">${m.d > 0 ? "▲" : "▼"} ${Math.abs(m.d * 100).toFixed(0)}pt</span>`,
-      `${pc(m.playoffWas)} → <b style="color:${C.ink}">${pc(m.playoffNow)}</b> to make the playoffs`)).join(""))) : ""}
-
-  ${race.length ? section("The race",
-    `Six of twelve make it. ${D.decided} game${D.decided === 1 ? "" : "s"} in the book, ${D.remaining} still to play.`,
-    card(race.map(t => row(esc(t.manager), pc(t.playoffNow),
-      `${pc1(t.titleNow)} to win it all · ${t.wins.toFixed(1)} projected wins`)).join(""))) : ""}
-
-  ${D.hurt.length ? section("Out this week",
-    "Straight from Sleeper's injury feed, and priced into the board.",
-    card(D.hurt.slice(0, 5).map(h => row(esc(h.manager),
-      `<span style="color:${C.red}">−${(h.cost * 100).toFixed(1)}%</span>`,
-      h.players.map(p => `${esc(p.name)} <span style="color:${C.gold}">${esc(p.status)}</span>`).join(" · "))).join(""))) : ""}
-
-  ${articles.length ? section("From the desk", "Tap a headline to read it in full.",
-    articles.map(a => `
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:9px">
-      <tr><td style="background:${C.card};border:1px solid ${C.line};border-radius:10px;padding:15px 16px">
-        ${a.kicker ? `<div style="font:700 10.5px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">${esc(a.kicker)}</div>` : ""}
-        <a href="${SITE}#recaps" style="text-decoration:none">
-          <div style="font:800 17px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.ink};letter-spacing:-.01em">${esc(a.headline)}</div></a>
-        ${a.dek ? `<div style="font:400 13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid};margin-top:6px">${esc(a.dek)}</div>` : ""}
-        <a href="${SITE}#recaps" style="display:inline-block;margin-top:10px;font:700 13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.blue};text-decoration:none">Read the full piece →</a>
-      </td></tr></table>`).join("")) : ""}
-
-  <tr><td style="padding:26px 0 0">
-    <a href="${SITE}" style="display:block;background:${C.ink};color:#fff;text-align:center;padding:14px;
-      border-radius:10px;font:700 15px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;text-decoration:none">
-      Open the full board →</a>
-  </td></tr>
-
-  <tr><td style="padding:20px 4px 0;font:400 11.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${C.mid}">
-    Every number here is computed from Sleeper's own data and agrees with the site exactly.
-    Win probabilities move while games are being played; records, standings and power rankings
-    do not move until a week is finished.<br><br>
-    You're getting this because you're in the DFFL. Reply to this email to be taken off it.
-  </td></tr>
-
-</table></td></tr></table></body></html>`;
-
-const text = [
-  `DFFL — Week ${D.week}, ${D.season}`,
-  marquee ? `\nMATCH OF THE WEEK\n${marquee.a} ${marquee.aPts.toFixed(1)} (${pc(marquee.pA)}) v ${marquee.b} ${marquee.bPts.toFixed(1)} (${pc(marquee.pB)})` : "",
-  movers.length ? `\nTHE BOARD MOVED\n` + movers.map(m =>
-    `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
-  race.length ? `\nTHE RACE\n` + race.map(t => `${t.manager}: ${pc(t.playoffNow)} playoffs, ${pc1(t.titleNow)} title`).join("\n") : "",
-  articles.length ? `\nFROM THE DESK\n` + articles.map(a => `${a.headline} — ${SITE}#recaps`).join("\n") : "",
-  `\n${SITE}`,
-].filter(Boolean).join("\n");
-
 await mkdir("data", { recursive: true });
-const stem = `data/email-${D.season}-${String(D.week).padStart(2, "0")}`;
-const out = arg("--out") || `${stem}.html`;
-await writeFile(out, html);
-await writeFile(`${stem}.json`, JSON.stringify({
-  _comment: "Subject line, plain-text fallback and recipients for the weekly blast. The routine sends the matching .html as the body.",
-  season: D.season, week: D.week, generated: new Date().toISOString(),
-  subject, text, body_file: `${stem}.html`,
-}, null, 1) + "\n");
-
-console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB`);
-console.log(`subject: ${subject}`);
-console.log(`  ${D.games.length} matchups · ${movers.length} movers · ${D.hurt.length} teams with injuries · ${articles.length} articles`);
+await writeFile("data/odds-snapshot.json", JSON.stringify(snapshot, null, 1) + "\n");
+console.log(`data/odds-snapshot.json — week ${D.week}, ${D.teams.length} teams, `
+  + `${D.games.length} live matchups, ${D.hurt.length} teams carrying injuries`);
