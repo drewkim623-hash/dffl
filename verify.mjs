@@ -1847,6 +1847,476 @@ check("a picks-only trade is graded on the player its pick became", synth.picksG
 check("the picks-only trade is worth exactly that player's season", synth.picksResolved.length === 1 && near(synth.picksMoved, synth.picksResolved[0].pts, 1e-9), `${synth.picksMoved} vs ${synth.picksResolved[0] && synth.picksResolved[0].pts}`);
 check("a pick for a season nobody has played is not graded", synth.futureGraded === false && /hasn't been played/.test(synth.futureReason), synth.futureReason);
 
+/* ------------------------------------------------------------------------
+ * A week is only a result once it has been played out. Mid-Sunday the matchup
+ * rows already carry real, partial scores, and taking those as wins is how a
+ * site ends up crowning a team that is up thirty with three starters still to
+ * kick off. These checks pin the rule in two places: the decision itself, and
+ * the guarantee that nothing which feeds a record ever sees a live game.
+ * ---------------------------------------------------------------------- */
+group("A week is only a result once it has been played");
+
+const wf = await page.evaluate(() => {
+  const { weekIsFinal, DB } = window.__DFFL;
+  const save = DB.state;
+  const lg = { season: "2026", status: "in_season" };
+  DB.state = { season: "2026", week: 5 };
+  const r = {
+    past: weekIsFinal(lg, 4),
+    current: weekIsFinal(lg, 5),
+    future: weekIsFinal(lg, 6),
+    otherSeason: weekIsFinal({ season: "2024", status: "complete" }, 5),
+    completeLeague: weekIsFinal({ season: "2026", status: "complete" }, 5),
+  };
+  DB.state = null;
+  r.noState = weekIsFinal(lg, 5);
+  DB.state = { season: "2026", week: "nonsense" };
+  r.badState = weekIsFinal(lg, 5);
+  DB.state = save;
+  return r;
+});
+check("a week the NFL has finished is a result", wf.past === true);
+check("the week being played right now is not a result", wf.current === false);
+check("a week nobody has played yet is not a result", wf.future === false);
+check("a season that is not the live one is final throughout", wf.otherSeason === true);
+check("a completed league is final throughout", wf.completeLeague === true);
+check("no NFL state → nothing is held back", wf.noState === true);
+check("unreadable NFL state → nothing is held back", wf.badState === true);
+
+const split = await page.evaluate(() => {
+  const { DB, weekIsFinal } = window.__DFFL;
+  const statusOf = s => (DB.seasons.find(x => x.season === s) || {}).status;
+  const lgOf = g => ({ season: g.season, status: statusOf(g.season) });
+  const key = g => `${g.season}|${g.week}|${Math.min(g.a.rid, g.b.rid)}`;
+  const inGames = new Set(DB.games.map(key));
+  return {
+    games: DB.games.length,
+    live: DB.live.length,
+    liveWeek: (DB.seasons[0] || {}).liveWeek,
+    // nothing in the record book may sit in a week that is not finished
+    leaks: DB.games.filter(g => !weekIsFinal(lgOf(g), g.week)).length,
+    // and every live game must be genuinely unfinished
+    wrongly: DB.live.filter(g => weekIsFinal(lgOf(g), g.week)).length,
+    dupes: DB.live.filter(g => inGames.has(key(g))).length,
+    liveFlagged: DB.live.every(g => g.live === true),
+    finalUnflagged: DB.games.every(g => !g.live),
+    seasonSplit: DB.seasons.every(s =>
+      s.games.every(g => !g.live) && (s.live || []).every(g => g.live === true)),
+  };
+});
+check("the record book holds finished football only", split.leaks === 0, `${split.leaks} unfinished games counted`);
+check("every held-back game really is unfinished", split.wrongly === 0, `${split.wrongly}`);
+check("a live game is never also counted as a result", split.dupes === 0, `${split.dupes}`);
+check("live games carry the flag, finished ones don't", split.liveFlagged && split.finalUnflagged);
+check("each season splits the same way as the league does", split.seasonSplit);
+check("games still on record", split.games > 300, `${split.games}`);
+
+// The standings, the record book and every simulation read DB.games, so the
+// split above is the whole guarantee — but check the one place that is allowed
+// to show a live week shows it as scores rather than as results.
+await page.click('#tabs button[data-tab="scores"]');
+await page.waitForTimeout(150);
+const sb = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="scores"]');
+  const wSel = panel.querySelectorAll("select")[1];
+  const opt = [...wSel.options].find(o => /in progress/.test(o.textContent));
+  if (!opt) return { present: false };
+  wSel.value = opt.value;
+  wSel.dispatchEvent(new Event("change"));
+  const txt = n => (n.textContent || "");
+  return {
+    present: true,
+    cards: panel.querySelectorAll(".game").length,
+    note: !!panel.querySelector(".livenote"),
+    verdicts: panel.querySelectorAll(".gside.win, .gside.lose").length,
+    leads: panel.querySelectorAll(".gside.lead").length,
+    feet: [...panel.querySelectorAll(".gfoot")].filter(f => /In progress/.test(txt(f))).length,
+    wonBy: [...panel.querySelectorAll(".gfoot")].filter(f => /won by/.test(txt(f))).length,
+    crowns: [...panel.querySelectorAll(".gside .gt")].filter(t => /top score|low score/.test(txt(t))).length,
+  };
+});
+if (!sb.present) {
+  check("no week is in progress, so the scoreboard shows results only", split.live === 0, `${split.live} live games but no live week on the board`);
+} else {
+  check("the live week is on the scoreboard", sb.cards > 0, `${sb.cards}`);
+  check("the live week says so in words", sb.note);
+  check("nobody is marked as having won a live game", sb.verdicts === 0, `${sb.verdicts} sides styled as win/lose`);
+  check("the side ahead is marked as ahead, not as the winner", sb.leads > 0, `${sb.leads}`);
+  check("every live card reads as in progress", sb.feet === sb.cards, `${sb.feet}/${sb.cards}`);
+  check("no live card claims anyone won by anything", sb.wonBy === 0, `${sb.wonBy}`);
+  check("no high or low score is crowned mid-week", sb.crowns === 0, `${sb.crowns}`);
+}
+
+/* ------------------------------------------------------------------------
+ * The live board: results update the draft-day projection rather than
+ * replacing it, injuries are charged to the week they belong to, and none of
+ * it is allowed to disturb the opening line.
+ * ---------------------------------------------------------------------- */
+group("Injuries");
+
+const injFile = await page.evaluate(async () => {
+  const r = await fetch("injuries.json", { cache: "no-cache" });
+  if (!r.ok) return { ok: false, status: r.status };
+  const j = await r.json();
+  const vals = Object.values(j.map || {});
+  return {
+    ok: true, count: j.count, keys: Object.keys(j.map || {}).length,
+    bytes: JSON.stringify(j).length,
+    shaped: vals.every(v => v.s && v.n && v.t),
+    noFreeAgents: vals.every(v => v.t && v.t !== "FA"),
+    fresh: Date.now() - j.at < 30 * 24 * 60 * 60 * 1000,
+  };
+});
+check("injuries.json is published", injFile.ok, `HTTP ${injFile.status}`);
+check("it carries a status per player", injFile.ok && injFile.count === injFile.keys, `${injFile.count} vs ${injFile.keys}`);
+check("every row has a status, a name and a club", injFile.shaped);
+check("nobody without an NFL club is in it", injFile.noFreeAgents);
+check("it is small enough for the front page", injFile.bytes < 200 * 1024, `${(injFile.bytes / 1024).toFixed(1)}KB`);
+check("it is not stale", injFile.fresh);
+
+const avail = await page.evaluate(() => {
+  const D = window.__DFFL;
+  const season = D.DB.seasons[0];
+  const r0 = season.rosters[0];
+  const st = (r0.starters || []).filter(p => p && p !== "0");
+  const mk = pairs => {
+    const m = new Map();
+    for (const [pid, s] of pairs) m.set(pid, { s, n: "T " + s, p: "WR", t: "XX" });
+    return { map: m, at: Date.now(), source: "test" };
+  };
+  const one = D.availability(season, mk([[st[0], "Out"]])).get(r0.roster_id);
+  const two = D.availability(season, mk([[st[0], "Out"], [st[1], "Questionable"]])).get(r0.roster_id);
+  const weird = D.availability(season, mk([[st[0], "Bananas"]])).get(r0.roster_id);
+  const allOut = D.availability(season, mk(st.map(p => [p, "Out"]))).get(r0.roster_id);
+  const none = D.availability(season, { map: new Map() });
+  const n = st.length;
+  return {
+    starters: n, basis: one.basis,
+    oneMult: one.mult, oneExpect: 1 - (1 / n) * (1 - D.REPLACEMENT),
+    twoMult: two.mult,
+    twoExpect: 1 - ((1 / n) * (1 - D.REPLACEMENT) + (1 / n) * (1 - D.INJ_AVAIL.Questionable) * (1 - D.REPLACEMENT)),
+    weirdMult: weird.mult, weirdHurt: weird.hurt.length,
+    allOutMult: allOut.mult, floor: D.INJ_FLOOR,
+    everyoneHealthy: [...none.values()].every(x => x.mult === 1 && x.hurt.length === 0),
+    othersUntouched: [...D.availability(season, mk([[st[0], "Out"]])).values()]
+      .filter(x => x.rid !== r0.roster_id).every(x => x.mult === 1),
+    ruledOut: ["Out", "IR", "PUP", "Sus", "NA", "DNR", "COV"].every(k => D.INJ_AVAIL[k] === 0),
+    coinFlips: D.INJ_AVAIL.Doubtful === 0.25 && D.INJ_AVAIL.Questionable === 0.75,
+  };
+});
+check("every designation that means 'not playing' is priced at zero", avail.ruledOut);
+check("doubtful and questionable are the only partial ones", avail.coinFlips);
+check("no injuries means every team at full strength", avail.everyoneHealthy);
+check("one starter ruled out costs the replacement gap, not the player",
+  near(avail.oneMult, avail.oneExpect, 1e-9), `${avail.oneMult} vs ${avail.oneExpect}`);
+check("a questionable starter costs a quarter of that again",
+  near(avail.twoMult, avail.twoExpect, 1e-9), `${avail.twoMult} vs ${avail.twoExpect}`);
+check("an injury to one team does not touch another", avail.othersUntouched);
+check("a status nobody has heard of is treated as healthy",
+  avail.weirdMult === 1 && avail.weirdHurt === 0, `${avail.weirdMult}`);
+check("the haircut cannot exceed the floor", avail.allOutMult >= avail.floor - 1e-12, `${avail.allOutMult}`);
+check("before a week is finished every starter is weighed the same",
+  avail.basis === "even", avail.basis);
+
+group("The line moves on results, slowly");
+
+const post = await page.evaluate(() => {
+  const D = window.__DFFL, model = window.__ODDS;
+  const t = model.teams[0];
+  const games = (pts, weeks) => Array.from({ length: weeks }, (_, i) => ({
+    season: "2026", week: i + 1, playoff: false,
+    a: { rid: t.rid, uid: t.uid, pts }, b: { rid: -1, uid: null, pts: 0 },
+  }));
+  const at = n => D.livePosterior(model, { games: games(t.mean + 60, n) })[0];
+  const zero = D.livePosterior(model, { games: [] });
+  const one = at(1), three = at(3), six = at(6);
+  const below = D.livePosterior(model, { games: games(t.mean - 60, 4) })[0];
+  return {
+    untouched: Math.max(...zero.map(x => Math.abs(x.moved))), zeroN: zero[0].n,
+    between: one.mean > t.mean && one.mean < t.mean + 60,
+    monotone: one.moved < three.moved && three.moved < six.moved,
+    tightens: six.levelSd < three.levelSd && three.levelSd < one.levelSd && one.levelSd < model.seasonSd,
+    symmetric: Math.abs(below.moved + D.livePosterior(model, { games: games(t.mean + 60, 4) })[0].moved) < 1e-9,
+    oneWeekSmall: Math.abs(one.moved) < 6,
+    priorKept: Math.abs(one.priorMean - t.mean) < 1e-12,
+  };
+});
+check("no finished week means the opening line stands", post.untouched === 0 && post.zeroN === 0);
+check("the posterior lands between the projection and what was scored", post.between);
+check("more evidence moves it further", post.monotone);
+check("and tightens it, always inside the draft-day spread", post.tightens);
+check("a cold start moves it exactly as far as a hot one, the other way", post.symmetric);
+check("one big week barely moves the line", post.oneWeekSmall);
+check("the draft-day projection is kept alongside it", post.priorKept);
+
+group("The live board prices the season being played");
+
+const lsim = await page.evaluate(() => {
+  const D = window.__DFFL, model = window.__ODDS, sim = window.__SIM;
+  const season = D.DB.seasons[0];
+  const rids = model.teams.map(t => t.rid);
+  const decided = [], upcoming = [];
+  for (let w = 1; w <= 7; w++) for (let k = 0; k < rids.length; k += 2) {
+    decided.push({ season: season.season, week: w, playoff: false,
+      a: { rid: rids[k], uid: null, pts: 130 }, b: { rid: rids[k + 1], uid: null, pts: 90 } });
+  }
+  for (let w = 8; w <= 14; w++) for (let k = 0; k < rids.length; k += 2) {
+    upcoming.push({ week: w, a: rids[k], b: rids[k + 1] });
+  }
+  const R = { season, ready: true, decided, upcoming, nextWeek: 8, lastReg: 14 };
+  const avail = D.availability(season, { map: new Map() });
+  const empty = D.liveState(model, season,
+    { season, ready: true, decided: [], upcoming, nextWeek: 1, lastReg: 14 }, avail);
+  const live = D.liveState(model, season, R, avail);
+  const L = D.simulateSeason(model, 4000, live);
+  const n = L.sims;
+  const winners = rids.map((_, i) => i).filter(i => i % 2 === 0);
+  const losers = rids.map((_, i) => i).filter(i => i % 2 === 1);
+  const idx = new Map(rids.map((r, i) => [r, i]));
+  const wk = D.weeksOf(upcoming, idx);
+  const again = D.simulateSeason(model, sim.sims);
+  return {
+    emptyIsNull: empty === null,
+    weeks: live.weeks.length, adjWeek: live.adjWeek,
+    decided: live.decided, remaining: live.remaining,
+    w0: live.W0.every((w, i) => w === (i % 2 === 0 ? 7 : 0)),
+    grouped: wk.length === 7 && wk[0].week === 8 && wk.every(x => x.pairs.length === 6)
+      && wk.every((x, i) => i === 0 || x.week > wk[i - 1].week),
+    title: L.title.reduce((a, b) => a + b, 0) / n,
+    playoff: L.playoff.reduce((a, b) => a + b, 0) / n,
+    last: L.last.reduce((a, b) => a + b, 0) / n,
+    bye: L.bye.reduce((a, b) => a + b, 0) / n,
+    divWin: L.divWin.reduce((a, b) => a + b, 0) / n,
+    winnersIn: winners.reduce((a, i) => a + L.playoff[i], 0) / n / winners.length,
+    losersIn: losers.reduce((a, i) => a + L.playoff[i], 0) / n / losers.length,
+    minWins: Math.min(...L.wins.map(w => w / n)),
+    maxWins: Math.max(...L.wins.map(w => w / n)),
+    distOk: L.winDist.every(d => d.length === model.weeks + 1
+      && d.reduce((a, b) => a + b, 0) === n && d.every(v => v >= 0)),
+    flagged: L.live === true,
+    preseasonUntouched: again.title.every((v, i) => v === sim.title[i])
+      && again.playoff.every((v, i) => v === sim.playoff[i]),
+  };
+});
+check("nothing decided means no live board", lsim.emptyIsNull);
+check("the remaining schedule groups into its real weeks", lsim.grouped);
+check("injuries are charged to the next week and no other", lsim.adjWeek === 8, `${lsim.adjWeek}`);
+check("the banked record is carried in exactly", lsim.w0, "7-0 / 0-7 split not preserved");
+check("42 games banked, 42 left", lsim.decided === 42 && lsim.remaining === 42, `${lsim.decided}/${lsim.remaining}`);
+check("exactly one champion per simulated season", near(lsim.title, 1, 1e-9), `${lsim.title}`);
+check("exactly six playoff teams", near(lsim.playoff, 6, 1e-9), `${lsim.playoff}`);
+check("exactly three division winners", near(lsim.divWin, 3, 1e-9), `${lsim.divWin}`);
+check("exactly two byes", near(lsim.bye, 2, 1e-9), `${lsim.bye}`);
+check("exactly one team finishes twelfth", near(lsim.last, 1, 1e-9), `${lsim.last}`);
+check("teams that won every game are nearly certain to make it", lsim.winnersIn > 0.95, `${lsim.winnersIn}`);
+check("teams that lost every game are nearly certain not to", lsim.losersIn < 0.05, `${lsim.losersIn}`);
+check("nobody projects fewer wins than they have banked", lsim.minWins >= 7 - 4.5 && lsim.maxWins <= 14, `${lsim.minWins}-${lsim.maxWins}`);
+check("the win distribution is well formed", lsim.distOk);
+check("the live board says it is live", lsim.flagged);
+check("and none of it disturbs the opening line", lsim.preseasonUntouched);
+
+/* ------------------------------------------------------------------------
+ * A week in flight: the odds move with it, and nothing else does. This is the
+ * whole contract — a probability may change on a Sunday afternoon, a result
+ * may not.
+ * ---------------------------------------------------------------------- */
+group("A week in flight is priced, not decided");
+
+const gs = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const g = await D.loadNflGames(true);
+  const counts = { pre: 0, in: 0, post: 0 };
+  for (const v of g.byTeam.values()) {
+    if (v.state === "pre_game") counts.pre++;
+    else if (v.state === "complete") counts.post++;
+    else counts.in++;
+  }
+  return {
+    ok: g.ok, source: g.source, clubs: g.byTeam.size,
+    pre: g.pre, live: g.live, post: g.post, counts,
+    rem: {
+      pre: D.gameRemaining("pre_game"),
+      live: D.gameRemaining("in_game"),
+      done: D.gameRemaining("complete"),
+      junk: D.gameRemaining("who knows"),
+      missing: D.gameRemaining(undefined),
+    },
+    // the site's own club spellings must all resolve, or a lineup silently
+    // reads as "nothing left to play"
+    unresolved: (() => {
+      const R = window.__DFFL.ROSTERED_TEST || null;
+      return null;
+    })(),
+  };
+});
+check("the NFL schedule loads from Sleeper", gs.ok && gs.source === "sleeper", gs.source);
+check("every club has a game state", gs.clubs === 32, `${gs.clubs}`);
+check("the three states account for every club", gs.counts.pre + gs.counts.in + gs.counts.post === gs.clubs);
+check("games total the week's fixtures", (gs.pre + gs.live + gs.post) === 16, `${gs.pre}/${gs.live}/${gs.post}`);
+check("a game not started has all of itself left", gs.rem.pre === 1);
+check("a game under way counts as half played", gs.rem.live === 0.5);
+check("a finished game has nothing left", gs.rem.done === 0);
+check("an unknown or missing state yields nothing rather than guessing",
+  gs.rem.junk === 0 && gs.rem.missing === 0);
+
+const clubs = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const r = await D.loadRostered();
+  const g = await D.loadNflGames();
+  const teams = [...new Set([...r.map.values()].map(x => x.t).filter(Boolean))];
+  return {
+    source: r.source, players: r.map.size, slots: r.slots,
+    unresolved: teams.filter(t => t !== "FA" && !g.byTeam.has(t)),
+  };
+});
+check("rosters.json is published and read", clubs.source === "file" && clubs.players > 100, `${clubs.source}/${clubs.players}`);
+check("the lineup slots are known", clubs.slots.length === 10 && clubs.slots[0] === "QB" && clubs.slots[9] === "DEF", clubs.slots.join(","));
+check("every club on a DFFL roster resolves against the schedule",
+  clubs.unresolved.length === 0, `unmatched: ${clubs.unresolved.join(",")}`);
+
+const lin = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const shares = D.slotShares();
+  const games = { byTeam: new Map([["AAA", { rem: 1, state: "pre_game" }], ["BBB", { rem: 0, state: "complete" }], ["CCC", { rem: 0.5, state: "in_game" }]]) };
+  const rostered = { map: new Map([
+    ["p1", { n: "All To Play", p: "QB", t: "AAA" }],
+    ["p2", { n: "Finished",    p: "RB", t: "BBB" }],
+    ["p3", { n: "Mid Game",    p: "WR", t: "CCC" }],
+    ["p4", { n: "On A Bye",    p: "TE", t: "ZZZ" }],
+  ]) };
+  const mu = 100, sd = 30;
+  const even = [0.25, 0.25, 0.25, 0.25];
+  const allDone = D.lineupState(["p2", "p2", "p2", "p2"], 90, mu, sd, rostered, games, even);
+  const allLeft = D.lineupState(["p1", "p1", "p1", "p1"], 0, mu, sd, rostered, games, even);
+  const mixed = D.lineupState(["p1", "p2", "p3", "p4"], 45, mu, sd, rostered, games, even);
+  const bye = D.lineupState(["p4", "p4", "p4", "p4"], 12, mu, sd, rostered, games, even);
+  const p = (a, b) => D.liveWinProb(a, b);
+  return {
+    done: { frac: allDone.frac, sd: allDone.sd, exp: allDone.expected, counts: [allDone.done, allDone.inPlay, allDone.toPlay] },
+    left: { frac: allLeft.frac, sd: +allLeft.sd.toFixed(6), exp: allLeft.expected },
+    mixed: { frac: mixed.frac, exp: mixed.expected, counts: [mixed.done, mixed.inPlay, mixed.toPlay] },
+    bye: { frac: bye.frac, exp: bye.expected },
+    settledWin: p(allDone, D.lineupState(["p2","p2","p2","p2"], 80, mu, sd, rostered, games, even)),
+    settledLoss: p(D.lineupState(["p2","p2","p2","p2"], 80, mu, sd, rostered, games, even), allDone),
+    deadHeat: p(allLeft, allLeft),
+    // trailing by 35 with the whole lineup left beats leading by 35 with none of it
+    comeback: p(D.lineupState(["p1","p1","p1","p1"], 0, mu, sd, rostered, games, even),
+                D.lineupState(["p2","p2","p2","p2"], 35, mu, sd, rostered, games, even)),
+    shares: shares && { n: shares.length, sum: +shares.reduce((a, b) => a + b, 0).toFixed(9),
+      qbOverK: shares[0] > shares[8], allPositive: shares.every(x => x > 0) },
+  };
+});
+check("a lineup that has finished has nothing left and no spread",
+  lin.done.frac === 0 && lin.done.sd === 0 && lin.done.exp === 90);
+check("a lineup that has not started expects its whole week",
+  lin.left.frac === 1 && lin.left.exp === 100 && lin.left.sd === 30);
+check("a half-played game counts half", lin.mixed.frac === 0.375, `${lin.mixed.frac}`);
+check("played, playing and still to come are counted separately",
+  JSON.stringify(lin.mixed.counts) === JSON.stringify([2, 1, 1]), JSON.stringify(lin.mixed.counts));
+check("a club with no game this week brings nothing", lin.bye.frac === 0 && lin.bye.exp === 12);
+check("a finished matchup is a certainty, both ways", lin.settledWin === 1 && lin.settledLoss === 0);
+check("two identical lineups are a coin flip", Math.abs(lin.deadHeat - 0.5) < 1e-9, `${lin.deadHeat}`);
+check("a whole lineup still to play beats a 35-point lead with none left",
+  lin.comeback > 0.5 && lin.comeback < 1, `${lin.comeback}`);
+check("lineup slot shares come off this league's own history",
+  lin.shares && Math.abs(lin.shares.sum - 1) < 1e-9 && lin.shares.n === 10, JSON.stringify(lin.shares));
+check("a quarterback is worth more of the lineup than a kicker", lin.shares.qbOverK);
+check("no slot is worth nothing", lin.shares.allPositive);
+
+const board = await page.evaluate(() => {
+  const B = window.__BOARD, L = window.__LIVE, S = window.__LSIM, P = window.__SIM;
+  if (!B) return { none: true };
+  return {
+    none: false, ok: B.ok, week: B.week, n: B.games.length, at: B.at,
+    bounded: B.games.every(g => g.pA >= 0 && g.pA <= 1 && g.pB >= 0 && g.pB <= 1),
+    complements: B.games.every(g => Math.abs(g.pA + g.pB - 1) < 1e-9),
+    ordered: B.games.every((g, i) => i === 0
+      || Math.abs(0.5 - g.pA) >= Math.abs(0.5 - B.games[i - 1].pA) - 1e-9),
+    live: L && { pending: L.pending.length, weeks: L.weeks.length, liveWeek: L.liveWeek, remaining: L.remaining },
+    full: L ? L.pending.length + L.remaining : null,
+    titleSum: S ? S.title.reduce((a, b) => a + b, 0) / S.sims : null,
+    playoffSum: S ? S.playoff.reduce((a, b) => a + b, 0) / S.sims : null,
+    moved: (S && P) ? Math.max(...S.title.map((v, i) => Math.abs(v / S.sims - P.title[i] / P.sims))) : null,
+  };
+});
+if (board.none || !board.ok) {
+  check("no week in flight, so no live board", true);
+} else {
+  check("every matchup in the live week is priced", board.n === 6, `${board.n}`);
+  check("probabilities are probabilities", board.bounded);
+  check("the two sides of a matchup sum to one", board.complements);
+  check("the board leads with the closest game", board.ordered);
+  check("the board is stamped with when it was worked out", board.at > 0);
+  check("the week in flight is pending, not upcoming",
+    board.live.pending === 6 && board.live.liveWeek === board.week, JSON.stringify(board.live));
+  check("the rest of the season is still simulated",
+    board.live.weeks === 13 && board.full === 84, `${board.live.weeks} weeks / ${board.full} games`);
+  check("the season still resolves to one champion", Math.abs(board.titleSum - 1) < 1e-9, `${board.titleSum}`);
+  check("and six playoff teams", Math.abs(board.playoffSum - 6) < 1e-9, `${board.playoffSum}`);
+  check("one week in flight moves the title market, but not wildly",
+    board.moved > 0 && board.moved < 0.25, `biggest move ${board.moved}`);
+}
+
+const sealed = await page.evaluate(() => {
+  const D = window.__DFFL;
+  const season = D.DB.seasons[0];
+  const live = season.live || [];
+  const PR = D.allPowerRankings().get(season.season) || null;
+  const at = window.__AT;
+  return {
+    liveGames: live.length,
+    // the live week must appear in no record, no ranking and no standing
+    inRecord: D.DB.games.some(g => g.season === season.season && g.week === season.liveWeek),
+    inSeasonGames: season.games.some(g => g.week === season.liveWeek),
+    powerBoards: PR ? PR.boards.map(b => b.week) : [],
+    powerHasLive: PR ? PR.boards.some(b => b.week === season.liveWeek) : false,
+    winsBalance: at.reduce((a, r) => a + r.w, 0) === at.reduce((a, r) => a + r.l, 0),
+    seasonRecords: at.reduce((a, r) => a + r.w + r.l, 0),
+  };
+});
+check("there is a week in flight to guard against", sealed.liveGames === 6, `${sealed.liveGames}`);
+check("it is in no record", sealed.inRecord === false);
+check("it is in no season's game log", sealed.inSeasonGames === false);
+check("it is in no power ranking", sealed.powerHasLive === false, sealed.powerBoards.join(","));
+check("wins and losses still balance league-wide", sealed.winsBalance);
+
+group("The front page leads with this season");
+
+const home = await page.evaluate(() => {
+  const panel = document.querySelector('[data-panel="home"]');
+  const week = document.querySelector("#homeWeek");
+  const champ = panel.querySelector(".champbar");
+  const heads = [...week.querySelectorAll("h2")].map(h => h.textContent.trim());
+  const pos = n => [...panel.children].indexOf(n.closest('[data-panel="home"] > *') || n);
+  return {
+    present: !!week,
+    filled: document.body.dataset.homeWeek || null,
+    skeletonGone: !week.querySelector(".wskel"),
+    heads,
+    games: week.querySelectorAll(".wgame").length,
+    sides: week.querySelectorAll(".wgame .ws").length,
+    aboveChampion: champ ? pos(week) < pos(champ) : true,
+    hasChampion: !!champ,
+    injuryChips: week.querySelectorAll(".ichip").length,
+    teasers: week.querySelectorAll(".teaser").length,
+    // a live week must not colour anybody as the winner, here either
+    verdicts: week.querySelectorAll(".ws.win, .ws.lose").length,
+    leads: week.querySelectorAll(".ws.lead").length,
+    live: /still|live|being played/i.test(week.textContent),
+  };
+});
+check("the week block is on the front page", home.present && home.filled === "1", home.filled);
+check("it replaced its own skeleton", home.skeletonGone);
+check("it leads the page, above the old champion", home.aboveChampion);
+check("the defending champion is still on the page, just not first", home.hasChampion);
+check("this week's games are on it", home.games === 6 && home.sides === 12, `${home.games} games / ${home.sides} sides`);
+check("the injury report reaches the front page", home.injuryChips > 0, `${home.injuryChips} chips`);
+check("the desk's latest pieces are linked", home.teasers > 0, `${home.teasers}`);
+if (home.live) {
+  check("a live week crowns nobody on the front page either", home.verdicts === 0, `${home.verdicts}`);
+  check("it marks who is ahead instead", home.leads > 0, `${home.leads}`);
+}
+
 group("Layout at 390px");
 const mobile = await ctx.newPage();
 await mobile.goto(BASE, { waitUntil: "domcontentloaded" });
@@ -2006,6 +2476,18 @@ await page.waitForTimeout(200);
 await page.screenshot({ path: "odds-desktop.png", fullPage: true });
 await mobile.click('#tabs button[data-tab="odds"]');
 await mobile.screenshot({ path: "odds-mobile.png", fullPage: true });
+await page.click('#tabs button[data-tab="scores"]');
+await page.waitForTimeout(200);
+await page.screenshot({ path: "scores-desktop.png", fullPage: true });
+await mobile.click('#tabs button[data-tab="scores"]');
+await mobile.waitForTimeout(200);
+await mobile.screenshot({ path: "scores-mobile.png", fullPage: true });
+await page.click('#tabs button[data-tab="home"]');
+await page.waitForTimeout(200);
+await page.screenshot({ path: "home-desktop.png", fullPage: true });
+await mobile.click('#tabs button[data-tab="home"]');
+await mobile.waitForTimeout(200);
+await mobile.screenshot({ path: "home-mobile.png", fullPage: true });
 check("screenshots written", true);
 
 /* -------------------------------------------------------------- done */

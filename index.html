@@ -246,6 +246,133 @@
     display:flex;justify-content:space-between;align-items:center;gap:10px}
   .gfoot a{color:var(--blue);font-weight:700;text-decoration:none;white-space:nowrap}
   .gfoot a:hover{text-decoration:underline}
+  /* A week still being played: ahead is not won, so it is never the win blue. */
+  .gside.lead{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent)}
+  .gside.lead:hover{background:linear-gradient(90deg,rgba(201,133,0,.20),var(--hover))}
+  .gside.lead .gp{color:var(--gold)}
+  .livenote{background:rgba(201,133,0,.09);border:1px solid rgba(201,133,0,.32);
+    border-radius:var(--rs);padding:11px 13px;margin:0 0 12px;font-size:12.5px;
+    color:var(--ink-2);line-height:1.55}
+  .livenote b{color:var(--gold)}
+  .livedot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);
+    margin-right:6px;vertical-align:middle;animation:livepulse 1.6s ease-in-out infinite}
+  @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.25}}
+  @media (prefers-reduced-motion:reduce){.livedot{animation:none}}
+  /* ---- the live odds board ---- */
+  .livestrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+  .livestrip span{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);
+    padding:8px 12px;display:flex;flex-direction:column;gap:2px;flex:1 1 120px}
+  .livestrip .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .livestrip b{font-size:16px;font-variant-numeric:tabular-nums}
+  .srcnote{font-size:12px;color:var(--muted);line-height:1.55;margin:0 0 12px;
+    padding:9px 12px;background:var(--raised);border-radius:var(--rs);border:1px solid var(--ring)}
+  .srcnote b{color:var(--ink-2)}
+  .orow.live .was{display:block;font-size:11px;color:var(--muted);margin-top:2px;
+    font-variant-numeric:tabular-nums}
+  .mv{margin-left:6px;font-weight:700}
+  .mv.up{color:var(--plus)} .mv.down{color:var(--red)} .mv.flat{color:var(--muted)}
+  .irow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
+    padding:11px 14px;border-top:1px solid var(--grid)}
+  .irow.none{display:block;color:var(--muted);font-size:13px;line-height:1.55}
+  .irow .plist{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+  .irow .ip{display:inline-flex;align-items:center;gap:5px;background:var(--raised);
+    border:1px solid var(--ring);border-radius:999px;padding:2px 8px;font-size:11.5px}
+  .irow .ip b{font-weight:700}
+  .irow .ip i{font-style:normal;color:var(--muted);font-size:10.5px}
+  .irow .st{font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+  .st-questionable{color:var(--gold)} .st-doubtful{color:#e09a3c}
+  .st-out,.st-ir,.st-pup,.st-sus,.st-na,.st-dnr,.st-cov{color:var(--red)}
+  .irow .cost{text-align:right;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;
+    color:var(--ink-2);display:flex;flex-direction:column;line-height:1.15}
+  .irow .cost.bite{color:var(--red)}
+  .irow .cost .k{font-size:9.5px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted)}
+  .notice.live p:first-of-type{margin-top:0}
+  /* ---- the front page's week ---- */
+  .wskel{padding:26px;text-align:center;color:var(--muted);font-size:13px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);margin-bottom:14px}
+  .wstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px;margin-bottom:6px}
+  .wgame{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--ring);
+    border-radius:var(--rs);padding:0;overflow:hidden;cursor:pointer;font:inherit;color:inherit}
+  .wgame:hover{border-color:var(--grid);background:var(--hover)}
+  .ws{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;padding:8px 11px}
+  .ws + .ws{border-top:1px solid var(--grid)}
+  .ws.win{background:linear-gradient(90deg,rgba(57,135,229,.11),transparent)}
+  .ws.lead{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent)}
+  .ws .wn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ws .wp{font-weight:800;font-size:14.5px;font-variant-numeric:tabular-nums}
+  .ws.win .wp{color:var(--blue)} .ws.lead .wp{color:var(--gold)}
+  .ws.lose .wn,.ws.lose .wp{color:var(--ink-2)}
+  .wf{display:block;padding:5px 11px;background:var(--raised);font-size:10.5px;color:var(--muted)}
+  .movers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mcol{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);overflow:hidden}
+  .mh{padding:8px 12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--muted);background:var(--raised)}
+  .mcol.up .mh{color:var(--plus)} .mcol.down .mh{color:var(--red)}
+  .mrow{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:8px;width:100%;
+    padding:9px 12px;background:none;border:0;border-top:1px solid var(--grid);cursor:pointer;
+    font:inherit;color:inherit;text-align:left}
+  .mrow:hover{background:var(--hover)}
+  .mrow .mn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mrow .mrk{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .mrow .mdl{font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums}
+  .mcol.up .mdl{color:var(--plus)} .mcol.down .mdl{color:var(--red)}
+  .mnone{padding:11px 12px;color:var(--muted);font-size:12.5px}
+  .bmovers{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:9px}
+  .bmv{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);
+    padding:10px 12px;cursor:pointer;font:inherit;color:inherit;text-align:left}
+  .bmv:hover{background:var(--hover)}
+  .bmv .bn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bmv .bp{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;
+    display:flex;flex-direction:column;line-height:1.1;text-align:right}
+  .bmv .bp .k{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .bmv .bd{grid-column:1/-1;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .bmv.up .bd{color:var(--plus)} .bmv.down .bd{color:var(--red)}
+  .istrip{display:flex;flex-wrap:wrap;gap:8px}
+  .ichip{display:inline-grid;grid-template-columns:auto auto;align-items:center;gap:7px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 13px 6px 6px;
+    cursor:pointer;font:inherit;color:inherit}
+  .ichip:hover{background:var(--hover)}
+  .ichip .in{font-weight:700;font-size:12.5px}
+  .ichip .ipl{grid-column:2;font-size:11px;color:var(--muted)}
+  .tlist.home{margin-bottom:4px}
+  /* ---- live win probability ---- */
+  .wchip{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;
+    padding:2px 6px;border-radius:999px;white-space:nowrap;letter-spacing:.01em}
+  .wchip.ahead{background:rgba(58,208,127,.14);color:var(--plus)}
+  .wchip.behind{background:rgba(230,103,103,.12);color:var(--red)}
+  .wchip.done{background:var(--raised);color:var(--muted)}
+  .gside{grid-template-columns:auto 1fr auto auto}
+  .ws{grid-template-columns:auto 1fr auto auto}
+  .board.live .bhead .hold.live{background:rgba(201,133,0,.14);color:var(--gold);
+    border-color:rgba(201,133,0,.3);font-variant-numeric:tabular-nums}
+  .lrow{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--grid);
+    border-top:1px solid var(--grid)}
+  .lside{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;
+    padding:10px 12px;background:var(--surface);row-gap:2px}
+  .lside.up{background:linear-gradient(180deg,rgba(58,208,127,.07),var(--surface))}
+  .lside .ln{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lside .lpts{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .lside .wchip{grid-column:3}
+  .lside .lleft{grid-column:1/-1;font-size:10.5px;color:var(--muted)}
+  .lfoot{padding:9px 13px;background:var(--raised);font-size:11px;color:var(--muted);line-height:1.5}
+  @media (max-width:520px){
+    .lrow{grid-template-columns:1fr}
+    .gside{grid-template-columns:auto 1fr auto}
+    .gside .wchip{grid-column:2;justify-self:start}
+    .ws{grid-template-columns:auto 1fr auto}
+    .ws .wchip{display:none}
+  }
+  @media (max-width:520px){
+    .movers{grid-template-columns:1fr}
+    .bmovers{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    .livestrip span{flex:1 1 calc(50% - 8px)}
+    .irow{grid-template-columns:auto 1fr;row-gap:6px}
+    .irow .cost{grid-column:2;text-align:left;flex-direction:row;align-items:baseline;gap:6px}
+  }
   .pickrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px;margin-bottom:14px}
 
   /* ============ awards ============ */
@@ -844,13 +971,39 @@ function placementsOf(wb, lb, playoffTeams, games) {
   return p;
 }
 
-const DB = { seasons: [], games: [], mgr: new Map(), state: null };
+/**
+ * `games` is finished football and nothing else. A week the NFL is still
+ * playing lands in `live` instead, so every record, standing, streak, power
+ * ranking and simulation on this site is computed from results that cannot
+ * change. Only the scoreboard reads `live`, and it labels it as in progress.
+ */
+const DB = { seasons: [], games: [], live: [], mgr: new Map(), state: null };
 
 function mgrOf(uid, seedName) {
   if (!DB.mgr.has(uid)) DB.mgr.set(uid, { uid, name: seedName || "Unknown", team: "", avatar: null });
   const m = DB.mgr.get(uid);
   if (seedName && !m.locked) m.name = seedName;
   return m;
+}
+
+/**
+ * Has the NFL finished playing this week?
+ *
+ * Sleeper only advances `state.week` once the last game of a week is over, which
+ * makes it the one honest "every starter has played" signal on offer. The box
+ * score cannot answer it: a starter sitting on zero at four o'clock is either a
+ * player who has not kicked off yet or a player who caught nothing all
+ * afternoon, and the matchup rows do not say which.
+ *
+ * Anything outside the season being played right now is final by definition.
+ */
+function weekIsFinal(lg, wk) {
+  if (lg.status === "complete") return true;
+  const st = DB.state;
+  if (!st || String(st.season) !== String(lg.season)) return true;
+  const cur = Number(st.week);
+  if (!isFinite(cur)) return true;
+  return wk < cur;
 }
 
 async function loadSeason(lg) {
@@ -896,17 +1049,25 @@ async function loadSeason(lg) {
     return { wk, d };
   });
 
-  const seasonGames = [];
+  // A week is not a result until it has been played out. Mid-Sunday the
+  // matchups already carry real, partial scores — a team up by thirty at four
+  // o'clock with three starters still to kick off has won nothing — so a week
+  // the NFL is still playing is held aside as live and kept out of DB.games
+  // entirely. Everything downstream reads DB.games, which is why the fix is one
+  // decision here rather than a caveat in thirty places.
+  const seasonGames = [], liveGames = [];
+  let liveWeek = null;
   for (const { wk, d } of raw) {
+    const final = weekIsFinal(lg, wk);
     for (const [a, b] of pairWeek(d)) {
       const g = {
-        season: lg.season, week: wk, playoff: wk >= pws,
+        season: lg.season, week: wk, playoff: wk >= pws, live: !final,
         a: { rid: a.rid, uid: uidOf.get(a.rid), pts: a.pts },
         b: { rid: b.rid, uid: uidOf.get(b.rid), pts: b.pts },
       };
       if (!g.a.uid || !g.b.uid) continue;
-      seasonGames.push(g);
-      DB.games.push(g);
+      if (final) { seasonGames.push(g); DB.games.push(g); }
+      else { liveGames.push(g); DB.live.push(g); liveWeek = wk; }
     }
   }
 
@@ -928,6 +1089,26 @@ async function loadSeason(lg) {
         wm.set(pid, v);
         if (wk < pws) playerPts.set(pid, (playerPts.get(pid) || 0) + v);
       }
+    }
+  }
+
+  // What each lineup slot actually scores, from finished regular-season weeks
+  // only. starters[] is ordered by the league's roster_positions, so index 0 is
+  // the quarterback and index 8 the kicker — which is what lets a half-played
+  // week be priced as something other than "half the points are in".
+  const slotPts = [];
+  for (const { wk, d } of raw) {
+    if (wk >= pws || !weekIsFinal(lg, wk)) continue;
+    for (const e of d || []) {
+      const pp = e.players_points || {};
+      (e.starters || []).forEach((pid, i) => {
+        if (!pid || pid === "0") return;
+        const v = Number(pp[pid]);
+        if (!isFinite(v)) return;
+        if (!slotPts[i]) slotPts[i] = { sum: 0, n: 0 };
+        slotPts[i].sum += v;
+        slotPts[i].n++;
+      });
     }
   }
 
@@ -960,6 +1141,8 @@ async function loadSeason(lg) {
     leagueId: id, season: lg.season, name: lg.name, status: lg.status,
     pws, playoffTeams: ptm, rosters, users, uidOf, userById,
     places: placementsOf(wb, lb, ptm, seasonGames), wb, lb, games: seasonGames,
+    live: liveGames, liveWeek, slotPts,
+    finalWeeks: new Set(seasonGames.filter(g => !g.playoff).map(g => g.week)),
     complete: lg.status === "complete",
     picks, playerPts, playerWeek, draftId,
     maxKeepers: Number(lg.settings && lg.settings.max_keepers) || 0,
@@ -1206,6 +1389,7 @@ function show(id) {
   // Same deal for the race: it reads the rest of the schedule and runs tens of
   // thousands of seasons, so it waits until somebody asks for it.
   if (id === "race") ensureRace();
+  if (id === "odds") ensureLiveOdds();
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
@@ -1215,8 +1399,232 @@ function show(id) {
 }
 
 /* =============================================== HOME =============== */
+/* ============================================ THE WEEK, ON THE HOME PAGE */
+
+/**
+ * recaps.json is read by the News tab and by the home page's desk block. Fetch
+ * it once; a failure is cached as null so a missing file costs one request.
+ */
+let RECAPS_P = null;
+function recapsOnce() { return RECAPS_P || (RECAPS_P = jget("recaps.json").catch(() => null)); }
+
+/**
+ * The live board, the injury feed and the remaining schedule, assembled once and
+ * shared by everything that wants them. The Odds tab and the home page both
+ * read this, so the site never runs the same twenty thousand seasons twice or
+ * pulls Sleeper's player file more than once a page.
+ */
+let LIVE_P = null, LIVE_FULL = false;
+function liveOnce(opts) {
+  const full = !!(opts && opts.full);
+  if (LIVE_P && (LIVE_FULL || !full)) return LIVE_P;
+  LIVE_FULL = LIVE_FULL || full;
+  return (LIVE_P = (async () => {
+    const model = window.__ODDS, sim = window.__SIM;
+    const season = DB.seasons[0];
+    const R = await raceDataOnce();
+    const inj = await loadInjuries({ full: LIVE_FULL });
+    const avail = availability(season, inj);
+    const posterior = (model && model.ok) ? livePosterior(model, season) : null;
+    const board = posterior ? await liveWeekBoard(season, posterior, model.weekSd) : null;
+    const live = (model && model.ok && sim) ? liveState(model, season, R, avail, board) : null;
+    const lsim = live ? simulateSeason(model, ODDS_SIMS, live) : null;
+    window.__INJ = inj; window.__AVAIL = avail; window.__LIVE = live;
+    window.__LSIM = lsim; window.__BOARD = board;
+    return { R, inj, avail, live, lsim, model, sim, season, board };
+  })());
+}
+
+/** This week's six matchups, live or final, each one a way into the scoreboard. */
+function weekStrip(w) {
+  const g = el("div", "wstrip");
+  const scores = w.games.flatMap(x => [x.a.pts, x.b.pts]);
+  const best = Math.max(...scores);
+  w.games.slice().sort((x, y) => (y.a.pts + y.b.pts) - (x.a.pts + x.b.pts)).forEach(game => {
+    const card = el("button", "wgame");
+    const side = s => {
+      const ahead = s.pts > (s === game.a ? game.b : game.a).pts;
+      const cls = w.live ? (ahead ? "lead" : "") : (ahead ? "win" : "lose");
+      const lg = w.live ? liveGameFor(DB.seasons[0], w.week, game.a.rid, game.b.rid) : null;
+      const pr = lg ? (lg.a.rid === s.rid ? lg.pA : lg.pB) : null;
+      return `<span class="ws ${cls}">${avatarHTML(s.uid, "xs")}
+        <span class="wn">${esc(nameOf(s.uid))}</span>
+        ${pr != null ? winChip(pr, lg.settled) : ""}
+        <span class="wp">${f2(s.pts)}</span></span>`;
+    };
+    const margin = Math.abs(game.a.pts - game.b.pts);
+    card.innerHTML = side(game.a) + side(game.b) +
+      `<span class="wf">${w.live
+        ? `<span class="livedot"></span>live · by ${f1(margin)}`
+        : `${game.a.pts === best || game.b.pts === best ? "top score · " : ""}by ${f1(margin)}`}</span>`;
+    card.onclick = () => show("scores");
+    g.appendChild(card);
+  });
+  return g;
+}
+
+/** Climbing and falling on the power board, this week against last. */
+function moversRow(season) {
+  const PR = allPowerRankings().get(season.season);
+  if (!PR || PR.boards.length < 2) return null;
+  const last = PR.boards[PR.boards.length - 1];
+  const moved = last.rows.filter(r => r.move != null && r.move !== 0)
+    .sort((a, b) => Math.abs(b.move) - Math.abs(a.move));
+  if (!moved.length) return null;
+  const up = moved.filter(r => r.move > 0).slice(0, 3);
+  const down = moved.filter(r => r.move < 0).slice(0, 3);
+  const box = el("div", "movers");
+  const col = (title, rows, kind) => {
+    const c = el("div", `mcol ${kind}`);
+    c.innerHTML = `<div class="mh">${esc(title)}</div>`;
+    if (!rows.length) { c.appendChild(el("div", "mnone", "Nobody")); return c; }
+    for (const r of rows) {
+      const b = el("button", "mrow");
+      b.innerHTML = `${avatarHTML(r.uid, "xs")}
+        <span class="mn">${esc(nameOf(r.uid))}</span>
+        <span class="mrk">#${r.rank}</span>
+        <span class="mdl">${r.move > 0 ? "▲" : "▼"}${Math.abs(r.move)}</span>`;
+      b.onclick = () => openProfile(r.uid);
+      c.appendChild(b);
+    }
+    return c;
+  };
+  box.appendChild(col(`Climbing · week ${last.week}`, up, "up"));
+  box.appendChild(col(`Falling · week ${last.week}`, down, "down"));
+  return box;
+}
+
+/** Whose season has repriced hardest since the draft. */
+function boardMovers(model, sim, lsim) {
+  const n = lsim.sims, o = sim.sims;
+  const rows = model.teams.map((t, i) => ({
+    uid: t.uid,
+    now: lsim.playoff[i] / n,
+    was: sim.playoff[i] / o,
+    d: lsim.playoff[i] / n - sim.playoff[i] / o,
+  })).filter(r => Math.abs(r.d) >= 0.02).sort((a, b) => Math.abs(b.d) - Math.abs(a.d)).slice(0, 6);
+  if (!rows.length) return null;
+  const box = el("div", "bmovers");
+  for (const r of rows) {
+    const b = el("button", `bmv ${r.d > 0 ? "up" : "down"}`);
+    b.innerHTML = `${avatarHTML(r.uid, "xs")}
+      <span class="bn">${esc(nameOf(r.uid))}</span>
+      <span class="bp">${(r.now * 100).toFixed(0)}%<span class="k">playoffs</span></span>
+      <span class="bd">${r.d > 0 ? "▲" : "▼"} ${Math.abs(r.d * 100).toFixed(0)}pt</span>`;
+    b.onclick = () => openProfile(r.uid);
+    box.appendChild(b);
+  }
+  return box;
+}
+
+/** Who is hurt, in one line per team, for people who only read the front page. */
+function injuryStrip(model, avail) {
+  const rows = model.teams.map(t => ({ t, a: avail.get(t.rid) }))
+    .filter(x => x.a && x.a.hurt.length)
+    .sort((a, b) => a.a.mult - b.a.mult).slice(0, 6);
+  if (!rows.length) return null;
+  const box = el("div", "istrip");
+  for (const { t, a } of rows) {
+    const b = el("button", "ichip");
+    const names = a.hurt.slice(0, 2).map(h => {
+      const p = h.rec || injPlayer(h.pid);
+      return `<span class="st-${esc(String(h.status).toLowerCase())}">${esc(p ? p.n : h.pid)}</span>`;
+    }).join(", ");
+    const more = a.hurt.length > 2 ? ` +${a.hurt.length - 2}` : "";
+    b.innerHTML = `${avatarHTML(t.uid, "xs")}<span class="in">${esc(nameOf(t.uid))}</span>
+      <span class="ipl">${names}${esc(more)}</span>`;
+    b.onclick = () => openProfile(t.uid);
+    box.appendChild(b);
+  }
+  return box;
+}
+
+/**
+ * The front page's own week: what is being played, who is climbing, whose
+ * season has repriced, who is hurt, and what the desk has filed. Everything in
+ * it changes on its own every week, which is the point — the rest of the home
+ * page is history and history does not move.
+ */
+async function ensureHomeWeek() {
+  const host = $("#homeWeek");
+  if (!host) return;
+  try {
+    const weeks = allWeeks();
+    const w = weeks[0];
+    const season = DB.seasons[0];
+    host.innerHTML = "";
+
+    // Price the week in flight before drawing it, so the strip carries live win
+    // probabilities on first paint rather than flashing in a second later.
+    if (w && w.live) { try { await liveOnce(); } catch (e) { /* draw it plain */ } }
+
+    if (w && String(w.season) === String(season.season)) {
+      host.appendChild(sechead(`Week ${w.week}${w.live ? "" : " · final"}`,
+        w.live
+          ? "Being played right now. Scores are live; nothing counts as a win until every starter has played."
+          : "The last week in the book. Tap any game for the full scoreboard."));
+      host.appendChild(weekStrip(w));
+    }
+
+    const mv = moversRow(season);
+    if (mv) {
+      host.appendChild(sechead("Climbing and falling",
+        "Movement on the power board week over week — measured against the whole league, not the one opponent you drew."));
+      host.appendChild(mv);
+    }
+
+    // Everything above is free: it is built from data the page already holds.
+    // Everything below is not, and the front page refuses to pay for it. The
+    // live board costs the rest of the schedule and twenty thousand seasons; the
+    // injury feed costs a 5MB download unless something cheap already has it.
+    // So the home page shows each only when it can be had for nothing, and the
+    // Odds tab — which somebody opened on purpose — is what pays.
+    const model = window.__ODDS, sim = window.__SIM;
+    const lsim = window.__LSIM, live = window.__LIVE;
+    if (model && model.ok && sim && lsim && live) {
+      const bm = boardMovers(model, sim, lsim);
+      if (bm) {
+        host.appendChild(sechead("Whose season has changed",
+          `How far each team's playoff price has moved since the draft, off ${live.decided} finished games and the real schedule still to come. The Odds tab shows the whole board.`));
+        host.appendChild(bm);
+      }
+    }
+    const inj = await loadInjuries();
+    if (model && model.ok && inj.map.size) {
+      const is = injuryStrip(model, availability(DB.seasons[0], inj));
+      if (is) {
+        host.appendChild(sechead("Out this week",
+          "Straight from Sleeper's injury feed, and priced into the board on the Odds tab."));
+        host.appendChild(is);
+      }
+    }
+
+    const data = await recapsOnce();
+    const arts = ((data && data.articles) || []).slice()
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 2);
+    if (arts.length) {
+      host.appendChild(sechead("From the desk",
+        "The latest long reads. Tap to read in full."));
+      const list = el("div", "tlist home");
+      for (const a of arts) list.appendChild(articleTeaser(a));
+      host.appendChild(list);
+    }
+    startLivePolling();
+    document.body.dataset.homeWeek = "1";
+  } catch (e) {
+    document.body.dataset.homeWeek = "error";
+    console.error(e);
+  }
+}
+
 function panelHome(AT, RB, model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "home";
+
+  // The front page leads with the season being played, not with a trophy
+  // everybody already knows about. Filled in just after first paint.
+  const week = el("div"); week.id = "homeWeek";
+  week.appendChild(el("div", "wskel", "Reading this week\u2026"));
+  p.appendChild(week);
 
   const completed = DB.seasons.filter(s => s.complete && Object.keys(s.places).length);
   const cs = completed[0];
@@ -2051,12 +2459,16 @@ async function panelRecaps() {
 
 /* ====================================== NEW: derived features ======== */
 
-/** Every completed week, newest first: [{season, week, games:[...]}] */
+/**
+ * Every week with scores on it, newest first: [{season, week, live, games:[...]}].
+ * This is the one place that looks at DB.live — the scoreboard is allowed to
+ * show a week in progress because it reports scores, not results.
+ */
 function allWeeks() {
   const m = new Map();
-  for (const g of DB.games) {
+  for (const g of [...DB.games, ...DB.live]) {
     const k = g.season + "|" + g.week;
-    if (!m.has(k)) m.set(k, { season: g.season, week: g.week, playoff: g.playoff, games: [] });
+    if (!m.has(k)) m.set(k, { season: g.season, week: g.week, playoff: g.playoff, live: !!g.live, games: [] });
     m.get(k).games.push(g);
   }
   return [...m.values()].sort((a, b) => Number(b.season) - Number(a.season) || b.week - a.week);
@@ -2184,7 +2596,8 @@ function panelScoreboard() {
   function fillWeeks() {
     wSel.innerHTML = "";
     weeks.filter(w => w.season === sSel.value).forEach(w => {
-      const o = el("option", null, `Week ${w.week}${w.playoff ? " · playoffs" : ""}`);
+      const o = el("option", null,
+        `Week ${w.week}${w.playoff ? " · playoffs" : ""}${w.live ? " · in progress" : ""}`);
       o.value = w.week; wSel.appendChild(o);
     });
   }
@@ -2196,32 +2609,52 @@ function panelScoreboard() {
     const best = Math.max(...scores), worst = Math.min(...scores);
     const season = DB.seasons.find(x => x.season === w.season);
     const sleeperURL = season ? `https://sleeper.com/leagues/${season.leagueId}/matchup` : null;
+    // A week still being played shows its scores and stops there: nobody is
+    // coloured as the winner, no high or low score is crowned, and the gap is a
+    // lead rather than a margin of victory.
+    if (w.live) host.appendChild(el("div", "livenote",
+      `<b>Week ${w.week} is still being played.</b> These are live scores, and they are all they
+       are. Nothing here counts as a win or a loss — and no standing, record, streak, power
+       ranking or playoff number anywhere on this site moves — until every starter has played.`));
     const grid = el("div", "sbgrid");
     w.games.slice().sort((x, y) => (y.a.pts + y.b.pts) - (x.a.pts + x.b.pts)).forEach(g => {
       const card = el("div", "game");
       const side = s => {
-        const won = s.pts > (s === g.a ? g.b : g.a).pts;
+        const ahead = s.pts > (s === g.a ? g.b : g.a).pts;
         const tags = [];
-        if (s.pts === best) tags.push("top score");
-        if (s.pts === worst) tags.push("low score");
-        return `<button class="gside ${won ? "win" : "lose"}" data-uid="${esc(s.uid)}">
+        if (!w.live && s.pts === best) tags.push("top score");
+        if (!w.live && s.pts === worst) tags.push("low score");
+        const cls = w.live ? (ahead ? "lead" : "") : (ahead ? "win" : "lose");
+        const lg = w.live ? liveGameFor(season, w.week, g.a.rid, g.b.rid) : null;
+        const p = lg ? (lg.a.rid === s.rid ? lg.pA : lg.pB) : null;
+        return `<button class="gside ${cls}" data-uid="${esc(s.uid)}">
           ${avatarHTML(s.uid, "sm")}
           <span style="min-width:0"><span class="gn">${esc(nameOf(s.uid))}</span>
             <span class="gt">${esc(tags.join(" · ") || teamOf(s.uid) || "")}</span></span>
+          ${p != null ? winChip(p, lg.settled) : ""}
           <span class="gp">${f2(s.pts)}</span></button>`;
       };
       const margin = Math.abs(g.a.pts - g.b.pts);
       card.innerHTML = side(g.a) + side(g.b) +
         `<div class="gfoot">
-           <span>${margin < 5 ? "Nail-biter" : margin > 40 ? "Blowout" : "Final"} · won by ${f2(margin)}</span>
+           <span>${w.live
+             ? `<span class="livedot"></span>In progress · leading by ${f2(margin)}`
+             : `${margin < 5 ? "Nail-biter" : margin > 40 ? "Blowout" : "Final"} · won by ${f2(margin)}`}</span>
            ${sleeperURL ? `<a href="${esc(sleeperURL)}" target="_blank" rel="noopener"
               title="Opens the ${esc(w.season)} league on Sleeper — pick week ${esc(String(w.week))} there">Sleeper ↗</a>` : ""}
          </div>`;
       grid.appendChild(card);
     });
     host.appendChild(grid);
+    const B = window.__BOARD;
+    if (w.live && B && B.ok && B.week === w.week) {
+      host.appendChild(el("div", "srcnote", esc(updatedAt(B.at, "Win probability updated"))
+        + " · it moves as the games do. Nothing here counts as a result."));
+    }
     for (const b of host.querySelectorAll(".gside")) b.onclick = () => openProfile(b.dataset.uid);
   }
+  // The board is priced after this panel is built, so repaint when it arrives.
+  onLive(() => { if (!p.hidden || p.dataset.drawn) draw(); });
   sSel.onchange = () => { fillWeeks(); draw(); };
   wSel.onchange = draw;
   fillWeeks(); draw();
@@ -2674,30 +3107,64 @@ function seedField(rank, divOfIdx, playoffTeams) {
   return { champs, rest, wilds, pos, seeds: [...champs, ...rest.slice(0, wilds)] };
 }
 
-function simulateSeason(model, sims = ODDS_SIMS) {
+/**
+ * Run the season out and count what happens.
+ *
+ * With no `live` state this is the preseason board: every team starts 0-0 and
+ * plays a generated schedule, one scoring level drawn per manager per season.
+ *
+ * With `live` state it is the same machine started partway through — the real
+ * wins and points already banked, the real fixtures still to come, each team's
+ * level drawn from its posterior rather than its projection, and next week's
+ * injuries taken off next week only. Both paths share every line below the
+ * regular season, which is the point: the preseason board and the live board
+ * cannot seed, bracket or price a toilet bowl differently from one another.
+ */
+function simulateSeason(model, sims = ODDS_SIMS, live = null) {
   if (!model || !model.ok) return null;
-  const { teams, sched, weekSd, seasonSd, playoffTeams } = model;
+  const { weekSd, seasonSd, playoffTeams } = model;
+  const teams = live ? live.teams : model.teams;
+  // Both paths walk [{week, pairs}] so an injury can be charged to one week.
+  const slate = live ? live.weeks
+    : model.sched.map((pairs, i) => ({ week: i + 1, pairs }));
+  const maxWins = model.weeks || model.sched.length;
   const N = teams.length, ids = teams.map((_, i) => i);
   const rand = rng(ODDS_SEED), gau = gaussFrom(rand);
   const zeros = () => new Array(N).fill(0);
   const C = {
-    sims, title: zeros(), playoff: zeros(), divWin: zeros(), divLast: zeros(),
+    sims, live: !!live, title: zeros(), playoff: zeros(), divWin: zeros(), divLast: zeros(),
     last: zeros(), bye: zeros(), wins: zeros(),
-    winDist: teams.map(() => new Array(sched.length + 1).fill(0)),
+    winDist: teams.map(() => new Array(maxWins + 1).fill(0)),
   };
   const divs = [...new Set(teams.map(t => t.div))].sort((a, b) => a - b);
   const pos = new Array(N);
 
   for (let s = 0; s < sims; s++) {
-    // The 2026 roster nobody has drafted yet: one draw per manager per season.
-    const lvl = teams.map(t => gau(t.mean, seasonSd));
-    const W = zeros(), PF = zeros();
-    for (const wk of sched) {
-      const sc = lvl.map(m => gau(m, weekSd));
-      for (let i = 0; i < N; i++) PF[i] += sc[i];
-      for (const [a, b] of wk) { if (sc[a] > sc[b]) W[a]++; else W[b]++; }
+    // Preseason: the roster nobody has drafted yet, one draw per manager per
+    // season. Live: the same draw, but around the posterior and much tighter,
+    // because half the uncertainty has already been resolved by being played.
+    const lvl = teams.map(t => gau(t.mean, live ? t.levelSd : seasonSd));
+    const W = live ? live.W0.slice() : zeros();
+    const PF = live ? live.PF0.slice() : zeros();
+    // The week in flight, drawn from where the lineups actually stand: a side
+    // with nothing left to play has no spread and simply banks its score.
+    for (const g of (live && live.pending) || []) {
+      const sa = gau(g.eA, g.sdA), sb = gau(g.eB, g.sdB);
+      PF[g.a] += sa; PF[g.b] += sb;
+      if (sa > sb) W[g.a]++; else W[g.b]++;
     }
-    for (let i = 0; i < N; i++) { C.wins[i] += W[i]; C.winDist[i][W[i]]++; }
+    for (const wk of slate) {
+      const hit = live && wk.week === live.adjWeek ? live.mult : null;
+      const sc = lvl.map((m, i) => gau(hit ? m * hit[i] : m, weekSd));
+      for (let i = 0; i < N; i++) PF[i] += sc[i];
+      for (const [a, b] of wk.pairs) { if (sc[a] > sc[b]) W[a]++; else W[b]++; }
+    }
+    for (let i = 0; i < N; i++) {
+      C.wins[i] += W[i];
+      // A tie banks half a win, so round before bucketing the distribution.
+      const b = Math.min(maxWins, Math.max(0, Math.round(W[i])));
+      C.winDist[i][b]++;
+    }
 
     const rank = ids.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a]);
     for (let i = 0; i < N; i++) pos[rank[i]] = i;
@@ -2756,6 +3223,295 @@ function winTotals(model, sim) {
     return { i, uid: t.uid, avg: sim.wins[i] / sim.sims, ...best };
   });
 }
+
+/* ================================ INJURIES AND LIVE REPRICING ========= */
+
+/**
+ * Sleeper publishes every player's injury status on one endpoint. The file is
+ * about 5MB, which is far too much to pull on every page load — but the part
+ * that matters, the players actually carrying a status, is about 13KB. So it is
+ * fetched once, reduced to {player_id: status}, and kept in localStorage for six
+ * hours. Absence from that map means healthy, which is true by construction.
+ *
+ * Sleeper asks that this endpoint be called at most once a day per user; six
+ * hours is a compromise that keeps a Sunday-morning downgrade from going stale
+ * while still costing one download a day for anyone reading the site normally.
+ */
+const INJ_KEY = "dffl.injuries.v2";
+const INJ_TTL = 6 * 60 * 60 * 1000;
+
+/**
+ * How much of a week a player on each status is expected to give you.
+ *
+ * The zeroes are the designations that mean "not playing" — ruled out, on
+ * injured reserve, physically-unable-to-perform, suspended, not active, did not
+ * report, covid. Doubtful and Questionable are the only genuine coin flips, and
+ * the numbers on them are the conventional reading of those tags rather than
+ * anything DFFL-specific: doubtful players mostly sit, questionable players
+ * mostly play and are mostly fine.
+ */
+const INJ_AVAIL = {
+  Out: 0, IR: 0, PUP: 0, Sus: 0, NA: 0, DNR: 0, COV: 0,
+  Doubtful: 0.25, Questionable: 0.75,
+};
+
+/**
+ * What you get back when a starter is replaced.
+ *
+ * A hurt starter does not cost you his whole output: the manager benches him and
+ * plays somebody, and that somebody scores. In a 15-man roster with five bench
+ * spots the replacement is meaningfully worse than the man he replaces but a
+ * long way from nothing, so a starter ruled out costs about 45% of his share of
+ * the lineup rather than 100% of it. This is also why the haircut is honest
+ * about lineups nobody has fixed yet: if a manager leaves an IR player in his
+ * starters on Sunday morning, the model assumes he will swap him before kickoff
+ * and charges him the replacement gap, not a zero.
+ */
+const REPLACEMENT = 0.55;
+
+/** The most any one week's injuries may take off a team, as a sanity rail. */
+const INJ_FLOOR = 0.80;
+
+let INJURIES = null;
+
+/**
+ * The injury feed, cheapest source first.
+ *
+ * Sleeper's player file is five megabytes and the front page must not pull it:
+ * booting this site costs a handful of small JSON reads and that is a guarantee
+ * worth keeping, particularly on a phone. So there are three cheap sources
+ * before the expensive one — memory, this browser's six-hour cache, and a small
+ * injuries.json committed alongside the site — and the 5MB download happens only
+ * when something explicitly asks for it with {full: true}. The Odds tab does,
+ * because opening it is already a deliberate act; the home page does not, and
+ * simply shows nothing until one of the cheap sources has an answer.
+ */
+async function loadInjuries(opt) {
+  const o = opt === true ? { force: true, full: true } : (opt || {});
+  if (INJURIES && !o.force) return INJURIES;
+  if (MOCK) return (INJURIES = { map: new Map(), at: null, source: "mock" });
+  try {
+    const raw = localStorage.getItem(INJ_KEY);
+    if (raw && !o.force) {
+      const c = JSON.parse(raw);
+      if (c && c.at && (Date.now() - c.at) < INJ_TTL && c.map) {
+        return (INJURIES = { map: new Map(Object.entries(c.map)), at: c.at, source: "cache" });
+      }
+    }
+  } catch (e) { /* private window, cleared storage, quota — carry on */ }
+  // Written weekly by the scheduled job. A few kilobytes, and it means a reader
+  // who has never opened the Odds tab still sees who is hurt.
+  try {
+    const f = await jget("injuries.json");
+    if (f && f.map && f.at && (Date.now() - f.at) < 7 * 24 * 60 * 60 * 1000) {
+      try { localStorage.setItem(INJ_KEY, JSON.stringify({ at: f.at, map: f.map })); } catch (e) {}
+      return (INJURIES = { map: new Map(Object.entries(f.map)), at: f.at, source: "file" });
+    }
+  } catch (e) { /* not published yet — that is fine */ }
+  if (!o.full) {
+    // Nothing cheap had it, and nobody asked to pay for the big one.
+    return { map: new Map(), at: null, source: "deferred" };
+  }
+  try {
+    const all = await jget(`${API}/players/nfl`);
+    // Keep the name and position alongside the status: the injury report has to
+    // print "Zay Flowers", and the player file is the only place the site ever
+    // sees a name for somebody who arrived on waivers rather than in the draft.
+    const slim = {};
+    for (const id of Object.keys(all || {})) {
+      const p = all[id];
+      const s = p && p.injury_status;
+      if (!s) continue;
+      slim[id] = {
+        s: String(s),
+        n: p.full_name || [p.first_name, p.last_name].filter(Boolean).join(" ") || id,
+        p: p.position || "",
+        t: p.team || "FA",
+      };
+    }
+    const at = Date.now();
+    try { localStorage.setItem(INJ_KEY, JSON.stringify({ at, map: slim })); } catch (e) { /* fine */ }
+    return (INJURIES = { map: new Map(Object.entries(slim)), at, source: "sleeper", n: Object.keys(slim).length });
+  } catch (e) {
+    // No injury data is a worse model, not a broken one: every team runs healthy.
+    return (INJURIES = { map: new Map(), at: null, source: "unavailable", error: e.message });
+  }
+}
+
+/** The name, position and club the injury feed carries for a player. */
+function injPlayer(pid, inj) {
+  const r = (inj || INJURIES || { map: new Map() }).map.get(String(pid));
+  return r || null;
+}
+
+/**
+ * What each roster's injuries cost it next week.
+ *
+ * A starter's weight is his share of the lineup's scoring so far this season,
+ * which is the only per-player signal the site has that is measured under this
+ * league's own scoring. Early in the year there is not enough of it to mean
+ * anything, so until a team has 50 points of starter production on record every
+ * starter is weighted the same.
+ */
+function availability(season, inj) {
+  const out = new Map();
+  if (!season || !season.rosters) return out;
+  // Weight by finished football only. season.playerPts runs to the live week,
+  // and a half-played Sunday ranks a Thursday-night receiver above a starter who
+  // has not kicked off — which would hand the injury model a lineup ordered by
+  // kickoff time rather than by ability.
+  const done = season.finalWeeks || new Set();
+  const pts = new Map();
+  for (const wk of done) {
+    const wm = (season.playerWeek || new Map()).get(wk);
+    if (!wm) continue;
+    for (const [pid, v] of wm) pts.set(pid, (pts.get(pid) || 0) + (Number(v) || 0));
+  }
+  for (const r of season.rosters) {
+    const rows = (r.starters || []).filter(p => p && p !== "0").map(pid => ({
+      pid,
+      rec: (inj && inj.map.get(pid)) || null,
+      status: ((inj && inj.map.get(pid)) || {}).s || null,
+      pts: Number(pts.get(pid)) || 0,
+    }));
+    const tot = rows.reduce((a, x) => a + x.pts, 0);
+    // One finished week is thin but real; nothing at all is not. Until there is
+    // something to weigh, every starter counts the same.
+    const byPoints = done.size >= 1 && tot >= 50 && rows.length > 0;
+    let loss = 0;
+    for (const x of rows) {
+      x.share = byPoints ? x.pts / tot : (rows.length ? 1 / rows.length : 0);
+      x.avail = x.status == null ? 1 : (INJ_AVAIL[x.status] ?? 1);
+      x.loss = x.share * (1 - x.avail) * (1 - REPLACEMENT);
+      loss += x.loss;
+    }
+    out.set(r.roster_id, {
+      rid: r.roster_id,
+      mult: Math.max(INJ_FLOOR, 1 - loss),
+      raw: 1 - loss,
+      basis: byPoints ? "points" : "even", weighedOver: done.size,
+      starters: rows.length,
+      hurt: rows.filter(x => x.avail < 1).sort((a, b) => b.loss - a.loss),
+    });
+  }
+  return out;
+}
+
+/**
+ * The preseason projection, updated by what has actually been scored.
+ *
+ * Straight conjugate-normal arithmetic: the draft-day projection is the prior,
+ * each finished week is one observation of it through week-to-week noise, and
+ * the posterior is the precision-weighted blend. Nothing about it is tuned — the
+ * two spreads it weighs are the same seasonSd and weekSd the preseason board
+ * already publishes.
+ *
+ * The practical consequence is that the board moves slowly and for the right
+ * reason. One 140-point week is drowned by the noise it was drawn from; a team
+ * scoring 140 every week for six weeks genuinely reprices. That is the correct
+ * behaviour for a fantasy league and it is what stops the odds lurching every
+ * Sunday.
+ */
+function livePosterior(model, season) {
+  if (!model || !model.ok || !season) return null;
+  const wk = model.weekSd, pri = model.seasonSd;
+  if (!(wk > 0) || !(pri > 0)) return null;
+  const byRid = new Map();
+  for (const g of (season.games || [])) {
+    if (g.playoff) continue;
+    for (const s of [g.a, g.b]) {
+      if (!byRid.has(s.rid)) byRid.set(s.rid, []);
+      byRid.get(s.rid).push(s.pts);
+    }
+  }
+  const pp = 1 / (pri * pri);
+  return model.teams.map(t => {
+    const obs = byRid.get(t.rid) || [];
+    const n = obs.length;
+    const op = n / (wk * wk);
+    const om = n ? obs.reduce((a, b) => a + b, 0) / n : 0;
+    const mean = n ? (pp * t.mean + op * om) / (pp + op) : t.mean;
+    return {
+      ...t, n, priorMean: t.mean, obsMean: n ? om : null, mean,
+      levelSd: Math.sqrt(1 / (pp + op)), moved: mean - t.mean,
+    };
+  });
+}
+
+/**
+ * Group the race's flat list of remaining fixtures into weeks, so the simulator
+ * can walk the rest of the season a week at a time — which is what lets an
+ * injury apply to the week it belongs to and no further.
+ */
+function weeksOf(upcoming, idx) {
+  const by = new Map();
+  for (const g of upcoming || []) {
+    const a = idx.get(g.a), b = idx.get(g.b);
+    if (a == null || b == null) continue;
+    if (!by.has(g.week)) by.set(g.week, []);
+    by.get(g.week).push([a, b]);
+  }
+  return [...by.entries()].sort((x, y) => x[0] - y[0]).map(([week, pairs]) => ({ week, pairs }));
+}
+
+/**
+ * Everything the live board needs, assembled: posterior scoring levels, the
+ * actual standings, the real remaining schedule, and next week's injuries.
+ *
+ * Returns null before the season has produced anything to update on, which is
+ * the signal to keep posting the preseason board.
+ */
+function liveState(model, season, R, avail, board) {
+  if (!model || !model.ok || !R) return null;
+  const teams = livePosterior(model, season);
+  if (!teams) return null;
+  const idx = new Map(teams.map((t, i) => [t.rid, i]));
+  const N = teams.length;
+  const W0 = new Array(N).fill(0), PF0 = new Array(N).fill(0);
+  let played = 0;
+  for (const g of R.decided) {
+    const a = idx.get(g.a.rid), b = idx.get(g.b.rid);
+    if (a == null || b == null) continue;
+    played++;
+    PF0[a] += g.a.pts; PF0[b] += g.b.pts;
+    if (g.a.pts > g.b.pts) W0[a]++;
+    else if (g.b.pts > g.a.pts) W0[b]++;
+    else { W0[a] += 0.5; W0[b] += 0.5; }
+  }
+  // The week being played is not "upcoming" — its scores are half in. Pull it
+  // out of the schedule and carry it as pending, priced off where the lineups
+  // actually stand, so the board moves on Sunday afternoon instead of Tuesday.
+  const liveWk = board && board.ok && board.games.length ? board.week : null;
+  const pending = [];
+  if (liveWk != null) {
+    for (const g of board.games) {
+      const a = idx.get(g.a.rid), b = idx.get(g.b.rid);
+      if (a == null || b == null) continue;
+      pending.push({ a, b, eA: g.A.expected, eB: g.B.expected, sdA: g.A.sd, sdB: g.B.sd, pA: g.pA });
+    }
+  }
+  const weeks = weeksOf((R.upcoming || []).filter(g => g.week !== liveWk), idx);
+  // Nothing banked and nothing in flight means there is nothing to reprice from.
+  if (!played && !pending.length) return null;
+  if (!weeks.length && !pending.length) return null;
+  // Injuries are known for the week about to be played and nowhere else. A
+  // hamstring in week 3 says nothing about week 11, so the haircut is applied to
+  // the next week only and every week after it is simulated healthy.
+  const mult = teams.map(t => {
+    const a = avail && avail.get(t.rid);
+    return a ? a.mult : 1;
+  });
+  return {
+    teams, idx, W0, PF0, weeks, mult, pending, liveWeek: liveWk,
+    // Injuries bite on the next week nobody has started. A week already in
+    // flight is priced off who has actually played, not off a status.
+    adjWeek: weeks.length ? weeks[0].week : null,
+    played, decided: R.decided.length,
+    remaining: (R.upcoming || []).filter(g => g.week !== liveWk).length,
+    at: Date.now(),
+  };
+}
+
 
 /**
  * Draft value. A pick's worth = where it was taken minus where the player
@@ -2819,6 +3575,563 @@ function oddsBoard(title, sub, priced, noteFn) {
   return b;
 }
 
+/* ============================ THE WEEK BEING PLAYED, PRICED ============ */
+
+/**
+ * A result waits for the whistle. A probability does not.
+ *
+ * Nothing in this section is allowed to hand anybody a win, move a power
+ * ranking or touch a record — those still come only from weeks the NFL has
+ * finished. What it does is price the week while it is happening, the way a
+ * live win probability does: a team on 118 with its quarterback still to play
+ * is in better shape than a team on 118 with nobody left, and the board should
+ * say so rather than waiting until Tuesday to notice.
+ *
+ * That needs one thing Sleeper's matchup rows do not carry — whether a given
+ * starter's NFL game has been played. Sleeper's own schedule does, so the club
+ * each starter plays for (from rosters.json) is matched against the state of
+ * that club's game this week.
+ */
+/**
+ * Where each NFL game stands this week: not started, being played, or over.
+ *
+ * ESPN publishes a richer feed with a clock on it, but it sends no
+ * Access-Control-Allow-Origin to a browser and so is unusable from a page like
+ * this one. Sleeper's own schedule is 27KB, carries the same three states, is
+ * CORS-clean, and spells the clubs exactly the way the rest of this site already
+ * does — no alias table, no second provider, no proxy.
+ *
+ * The cost of that choice is honest and worth stating: there is no game clock,
+ * so a game in progress is counted as half played rather than measured. A
+ * matchup hanging on a fourth-quarter drive will be priced as though that game
+ * were at half time. Everything else — kicked off or not, finished or not — is
+ * exact.
+ */
+const SLEEPER_SCHEDULE = "https://api.sleeper.app/schedule/nfl/regular";
+
+/** How much of a game is still to come, by the only three states on offer. */
+const GAME_LEFT = { pre_game: 1, in_game: 0.5, complete: 0 };
+function gameRemaining(status) {
+  const v = GAME_LEFT[status];
+  return v == null ? 0 : v;
+}
+
+/** How long a live board stays warm before it is worth asking again. */
+const GAMES_TTL = 45 * 1000;
+
+let NFLGAMES = null, NFLGAMES_AT = 0;
+async function loadNflGames(force) {
+  if (MOCK) return { byTeam: new Map(), ok: false, source: "mock", at: null };
+  if (NFLGAMES && !force && (Date.now() - NFLGAMES_AT) < GAMES_TTL) return NFLGAMES;
+  const st = DB.state;
+  const season = st ? String(st.season) : (DB.seasons[0] || {}).season;
+  const week = st ? Number(st.week) : null;
+  if (!season || !week) {
+    return (NFLGAMES = { byTeam: new Map(), ok: false, source: "no-state", at: null });
+  }
+  try {
+    const all = await jget(`${SLEEPER_SCHEDULE}/${season}`);
+    const byTeam = new Map();
+    let pre = 0, live = 0, post = 0;
+    for (const g of (all || [])) {
+      if (Number(g.week) !== week) continue;
+      const rem = gameRemaining(g.status);
+      if (g.status === "pre_game") pre++;
+      else if (g.status === "complete") post++;
+      else live++;
+      for (const t of [g.home, g.away]) {
+        if (t) byTeam.set(t, { rem, state: g.status, opp: t === g.home ? g.away : g.home });
+      }
+    }
+    NFLGAMES_AT = Date.now();
+    return (NFLGAMES = {
+      byTeam, ok: byTeam.size > 0, source: "sleeper", at: NFLGAMES_AT,
+      pre, live, post, week, season,
+    });
+  } catch (e) {
+    // Without this the site cannot tell a starter who has played from one who
+    // has not. It says so and prices nothing rather than guessing.
+    return (NFLGAMES = { byTeam: new Map(), ok: false, source: "unavailable", at: null, error: e.message });
+  }
+}
+
+/** Every rostered player's club and position, committed as a few kilobytes. */
+let ROSTERED = null;
+async function loadRostered() {
+  if (ROSTERED) return ROSTERED;
+  try {
+    const j = await jget("rosters.json");
+    if (j && j.map) {
+      return (ROSTERED = {
+        map: new Map(Object.entries(j.map)), slots: j.slots || [], at: j.at, source: "file",
+      });
+    }
+  } catch (e) { /* not published yet */ }
+  return (ROSTERED = { map: new Map(), slots: [], at: null, source: "unavailable" });
+}
+
+/**
+ * What each lineup slot is worth, measured on this league's own finished weeks.
+ *
+ * A quarterback is not a kicker, so "half the lineup still to play" is not half
+ * the points still to come. These are the real shares DFFL's starters have
+ * produced by slot — QB, RB, RB, WR, WR, TE, FLEX, FLEX, K, DEF — normalised to
+ * sum to one.
+ */
+let SLOTSHARE = null;
+function slotShares() {
+  if (SLOTSHARE) return SLOTSHARE;
+  const sum = [], n = [];
+  for (const s of DB.seasons) {
+    for (const [i, acc] of (s.slotPts || []).entries()) {
+      if (!acc || !acc.n) continue;
+      sum[i] = (sum[i] || 0) + acc.sum;
+      n[i] = (n[i] || 0) + acc.n;
+    }
+  }
+  const avg = sum.map((v, i) => (n[i] ? v / n[i] : 0));
+  const tot = avg.reduce((a, b) => a + b, 0);
+  // No history to read yet — treat every slot alike rather than inventing weights.
+  if (!tot || !avg.length) return (SLOTSHARE = null);
+  return (SLOTSHARE = avg.map(v => v / tot));
+}
+
+/**
+ * Price one lineup mid-week: what it has scored, what is still to come, and how
+ * uncertain the rest of it is.
+ *
+ * The expectation is the team's own posterior weekly mean scaled by the share of
+ * its lineup still to play; the spread is week-to-week noise scaled by the root
+ * of that same share, so a lineup with nothing left has no uncertainty and a
+ * lineup with everything left has all of it.
+ */
+function lineupState(starters, points, mu, weekSd, rostered, games, shares) {
+  const rows = (starters || []).filter(p => p && p !== "0");
+  let left = 0, unknown = 0;
+  const detail = [];
+  rows.forEach((pid, i) => {
+    const rec = rostered.map.get(String(pid));
+    const club = rec && rec.t ? rec.t : null;
+    const g = club ? games.byTeam.get(club) : null;
+    // No club, or a club not playing this week: a bye or a free agent, and
+    // either way nothing more is coming from him.
+    const rem = g ? g.rem : 0;
+    if (!g && club) unknown++;
+    const w = shares && shares[i] != null ? shares[i] : (1 / rows.length);
+    left += w * rem;
+    detail.push({ pid, name: rec ? rec.n : String(pid), pos: rec ? rec.p : "",
+      club, rem, weight: w, state: g ? g.state : "none" });
+  });
+  const frac = Math.max(0, Math.min(1, left));
+  return {
+    scored: points,
+    frac,
+    expected: points + mu * frac,
+    sd: weekSd * Math.sqrt(frac),
+    toPlay: detail.filter(d => d.rem >= 0.999).length,
+    inPlay: detail.filter(d => d.rem > 0.001 && d.rem < 0.999).length,
+    done: detail.filter(d => d.rem <= 0.001).length,
+    unknown, detail,
+  };
+}
+
+/** P(a beats b), given where both stand and what each has left. */
+function liveWinProb(A, B) {
+  const s = Math.sqrt(A.sd * A.sd + B.sd * B.sd);
+  if (!(s > 0.001)) return A.expected > B.expected ? 1 : (A.expected < B.expected ? 0 : 0.5);
+  return normCdf((A.expected - B.expected) / s);
+}
+
+/**
+ * The week being played, priced matchup by matchup.
+ *
+ * Returns null when there is no live week, which is the normal state from
+ * Tuesday to Thursday and all through the off-season.
+ */
+async function liveWeekBoard(season, teams, weekSd) {
+  const wk = season.liveWeek;
+  if (!wk || !(season.live || []).length) return null;
+  const [rostered, games] = await Promise.all([loadRostered(), loadNflGames()]);
+  if (!games.ok || !rostered.map.size) {
+    return { week: wk, ok: false, why: !games.ok ? "no-espn" : "no-rosters", games: [], at: Date.now() };
+  }
+  const shares = slotShares();
+  const byRid = new Map(teams.map(t => [t.rid, t]));
+  const starters = new Map((season.rosters || []).map(r => [r.roster_id, r.starters || []]));
+  const rows = [];
+  for (const g of season.live) {
+    const ta = byRid.get(g.a.rid), tb = byRid.get(g.b.rid);
+    if (!ta || !tb) continue;
+    const A = lineupState(starters.get(g.a.rid), g.a.pts, ta.mean, weekSd, rostered, games, shares);
+    const B = lineupState(starters.get(g.b.rid), g.b.pts, tb.mean, weekSd, rostered, games, shares);
+    const p = liveWinProb(A, B);
+    rows.push({
+      week: wk, a: g.a, b: g.b, A, B, pA: p, pB: 1 - p,
+      settled: A.frac < 0.001 && B.frac < 0.001,
+    });
+  }
+  rows.sort((x, y) => Math.abs(0.5 - x.pA) - Math.abs(0.5 - y.pA));
+  return {
+    week: wk, ok: true, games: rows, at: Date.now(),
+    nfl: { pre: games.pre, live: games.live, post: games.post, at: games.at },
+    settled: rows.every(r => r.settled),
+    shares: !!shares,
+  };
+}
+
+/* ---------------------------------------------- the live board, rendered */
+
+/**
+ * raceData() fetches the pairings for every week still to come, and both the
+ * Race tab and the live odds board need them. Fetch them once.
+ */
+let RACEDATA_P = null;
+function raceDataOnce() { return RACEDATA_P || (RACEDATA_P = raceData()); }
+
+/** A price movement chip: where the line opened, and how far it has come. */
+function moveChip(now, was) {
+  if (was == null) return "";
+  const d = now - was;
+  if (Math.abs(d) < 0.005) return `<span class="mv flat">unchanged</span>`;
+  const cls = d > 0 ? "up" : "down";
+  return `<span class="mv ${cls}">${d > 0 ? "▲" : "▼"} ${Math.abs(d * 100).toFixed(1)}pt</span>`;
+}
+
+/**
+ * The same board as the preseason one, with two extra things: what the line was
+ * before a ball was kicked, and how far it has moved since.
+ */
+function liveBoard(title, sub, priced, openBy, noteFn) {
+  const b = el("div", "board");
+  b.innerHTML = `<div class="bhead">
+    <span class="bt">${esc(title)}${sub ? `<span class="bs">${esc(sub)}</span>` : ""}</span>
+    <span class="hold">Hold ${(marketHold(priced) * 100).toFixed(1)}%</span></div>`;
+  priced.forEach((r, i) => {
+    const was = openBy.get(r.uid);
+    const btn = el("button", "orow live");
+    btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(r.uid, "sm avcell")}
+      <span class="who"><span class="n">${esc(nameOf(r.uid))}</span>
+      <span class="s">${esc(noteFn ? noteFn(r) : teamOf(r.uid))}</span>
+      ${was != null ? `<span class="was">opened ${esc(fmtOdds(roundOdds(americanOdds(addVig([was])[0]))))}
+        ${moveChip(r.p, was)}</span>` : ""}</span>${priceTile(r)}`;
+    btn.onclick = () => openProfile(r.uid);
+    b.appendChild(btn);
+  });
+  return b;
+}
+
+/** Who is hurt, and what the model thinks it costs. */
+function injuryBoard(model, avail, inj) {
+  const rows = model.teams
+    .map(t => ({ t, a: avail.get(t.rid) }))
+    .filter(x => x.a && x.a.hurt.length)
+    .sort((a, b) => a.a.mult - b.a.mult);
+  const b = el("div", "board");
+  b.innerHTML = `<div class="bhead"><span class="bt">The injury report
+    <span class="bs">what next week's lineups are missing</span></span></div>`;
+  if (!rows.length) {
+    b.appendChild(el("div", "irow none",
+      `<span>Nobody in a starting lineup is carrying a status right now. Every team is
+       priced at full strength.</span>`));
+    return b;
+  }
+  for (const { t, a } of rows) {
+    const r = el("div", "irow");
+    const list = a.hurt.map(h => {
+      const p = h.rec || injPlayer(h.pid, inj);
+      const nm = p ? p.n : h.pid;
+      const sub = p && p.p ? `${p.p}\u2009\u00b7\u2009${p.t}` : "";
+      return `<span class="ip"><b>${esc(nm)}</b>${sub ? `<i>${esc(sub)}</i>` : ""}
+        <span class="st st-${esc(h.status.toLowerCase())}">${esc(h.status)}</span></span>`;
+    }).join("");
+    r.innerHTML = `${avatarHTML(t.uid, "sm avcell")}
+      <span class="who"><span class="n">${esc(nameOf(t.uid))}</span>
+        <span class="plist">${list}</span></span>
+      <span class="cost ${a.mult < 0.97 ? "bite" : ""}">−${((1 - a.mult) * 100).toFixed(1)}%<span class="k">next week</span></span>`;
+    b.appendChild(r);
+  }
+  return b;
+}
+
+/**
+ * The board before there is anything to reprice from: the season has not
+ * produced a finished week yet, so the opening line still stands. Said plainly
+ * rather than dressed up as a live number.
+ */
+function renderLiveWaiting(host, R, inj, avail, board) {
+  host.innerHTML = "";
+  if (board && board.ok && board.games.length) {
+    host.appendChild(sechead(`Week ${board.week}, live`,
+      "The week is being played. These are win probabilities, not results — nothing here moves a record."));
+    host.appendChild(liveMatchupBoard(board));
+  }
+  const why = !R || !R.ready
+    ? "The regular season is over — there is nothing left to simulate."
+    : "No week has finished yet, so there is nothing to update the season line with.";
+  host.appendChild(el("div", "livenote",
+    `<b>The season board has not moved.</b> ${esc(why)} Every price below is the line as it opened
+     after the draft, and it will reprice on its own the moment a week is in the book.`));
+  if (inj && inj.map.size) host.appendChild(injuryNote(inj, avail));
+}
+
+/** A one-line provenance note on the injury feed. */
+function injuryNote(inj, avail) {
+  const hurt = [...(avail || new Map()).values()].reduce((a, x) => a + x.hurt.length, 0);
+  const when = inj.at ? new Date(inj.at).toLocaleString(undefined,
+    { weekday: "short", hour: "numeric", minute: "2-digit" }) : null;
+  const d = el("div", "srcnote");
+  d.innerHTML = inj.source === "unavailable"
+    ? `<b>No injury data.</b> Sleeper's player file didn't load, so every lineup is priced
+       at full strength. ${esc(inj.error || "")}`
+    : `<b>${hurt}</b> player${hurt === 1 ? "" : "s"} in a DFFL starting lineup currently carries a
+       status, from Sleeper's own injury feed${when ? ` · read ${esc(when)}` : ""}
+       ${inj.source === "cache" ? " · from this browser's cache" : ""}.`;
+  return d;
+}
+
+/**
+ * The live board. Same markets as the opening line, priced off what has actually
+ * been scored, who is actually hurt, and who is actually left to play.
+ */
+function renderLive(host, model, sim, live, lsim, inj, avail, board) {
+  host.innerHTML = "";
+  const n = lsim.sims, o = sim.sims, T = model.teams;
+  const inFlight = live.liveWeek;
+  const lastDone = inFlight != null ? inFlight - 1
+    : (live.adjWeek != null ? live.adjWeek - 1 : 0);
+
+  host.appendChild(sechead("The live board",
+    `${inFlight != null
+      ? `Week ${inFlight} is being played, and these prices move with it — every matchup is valued off
+         where the lineups actually stand, not off who happens to be ahead.`
+      : `Repriced off ${live.decided} finished game${live.decided === 1 ? "" : "s"} and the
+         ${live.remaining} fixtures still on the schedule.`}
+     The opening line is kept beside every price so you can see what the season has changed.`));
+
+  const strip = el("div", "livestrip");
+  strip.innerHTML = `
+    <span><span class="k">Through</span><b>Week ${Math.max(0, lastDone)}</b></span>
+    <span><span class="k">${inFlight != null ? "In play" : "Next up"}</span>
+      <b>Week ${inFlight != null ? inFlight : (live.adjWeek ?? "—")}</b></span>
+    <span><span class="k">Games banked</span><b>${live.decided}</b></span>
+    <span><span class="k">Left to play</span><b>${live.remaining + (live.pending || []).length}</b></span>
+    <span><span class="k">Updated</span><b>${esc(new Date(live.at || Date.now())
+      .toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }))}</b></span>`;
+  host.appendChild(strip);
+
+  if (board && board.ok && board.games.length) host.appendChild(liveMatchupBoard(board));
+  else if (board && !board.ok) host.appendChild(liveBoardProblem(board));
+  host.appendChild(injuryNote(inj, avail));
+
+  const openTitle = new Map(T.map((t, i) => [t.uid, sim.title[i] / o]));
+  const openPlay = new Map(T.map((t, i) => [t.uid, sim.playoff[i] / o]));
+
+  const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.title[i] / n }))
+    .sort((a, b) => b.p - a.p));
+  host.appendChild(liveBoard("To win the DFFL championship",
+    esc(updatedAt(live.at || Date.now())), title, openTitle,
+    r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins`));
+
+  const play = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.playoff[i] / n }))
+    .sort((a, b) => b.p - a.p));
+  host.appendChild(liveBoard("To make the playoffs",
+    `six of twelve · ${updatedAt(live.at || Date.now(), "updated")}`, play, openPlay,
+    r => `${f1(lsim.wins[r.i] / n)} projected wins`));
+
+  host.appendChild(injuryBoard(model, avail, inj));
+
+  const meth = el("div", "notice live");
+  meth.innerHTML = `<div class="nt">How the line moves</div>
+    <p><b>Results update the projection, they do not replace it.</b> Each finished week is one
+       observation of a team's true level, read through week-to-week noise of ±${f1(model.weekSd)}
+       points. The draft-day projection carries ±${f1(model.seasonSd)}. The board is the
+       precision-weighted blend of the two, which is why one big Sunday barely moves a price and
+       six of them move it a long way.</p>
+    <p><b>Injuries are charged to one week only.</b> A starter ruled out costs his team
+       ${((1 - REPLACEMENT) * 100).toFixed(0)}% of his share of the lineup — not all of it, because
+       somebody comes off the bench and scores. Questionable is priced at
+       ${(INJ_AVAIL.Questionable * 100).toFixed(0)}% availability, doubtful at
+       ${(INJ_AVAIL.Doubtful * 100).toFixed(0)}%. Nothing is assumed about the week after: a
+       hamstring today says nothing about November, so every later week is simulated healthy.</p>
+    <p><b>Still not known:</b> who gets claimed off waivers, who gets traded, and which bench
+       player is about to become a starter.</p>`;
+  host.appendChild(meth);
+}
+
+/* ------------------------------------------- live prices, on every surface */
+
+/**
+ * Anything that should redraw when the live board moves registers here. The
+ * scoreboard and the front page both show win probabilities they cannot compute
+ * themselves — they are built before the schedule has been read — so they
+ * subscribe and repaint once it has.
+ */
+const LIVE_SUBS = new Set();
+function onLive(fn) { LIVE_SUBS.add(fn); return fn; }
+function emitLive() {
+  for (const fn of LIVE_SUBS) { try { fn(); } catch (e) { console.error(e); } }
+}
+
+/** The live board for a given season and week, if one has been priced. */
+function liveGameFor(season, week, ridA, ridB) {
+  const b = window.__BOARD;
+  if (!b || !b.ok || b.week !== week) return null;
+  return b.games.find(g =>
+    (g.a.rid === ridA && g.b.rid === ridB) || (g.a.rid === ridB && g.b.rid === ridA)) || null;
+}
+
+/** A win probability, as a pill. Deliberately not styled as a price. */
+function winChip(p, settled) {
+  const pc = p * 100;
+  const txt = settled ? (p >= 0.5 ? "won" : "lost")
+    : pc >= 99.5 ? ">99%" : pc <= 0.5 ? "<1%" : `${pc.toFixed(0)}%`;
+  const cls = settled ? "done" : p >= 0.5 ? "ahead" : "behind";
+  return `<span class="wchip ${cls}">${esc(txt)}</span>`;
+}
+
+/** When the numbers were last worked out, in the reader's own clock. */
+function updatedAt(ms, label) {
+  const t = new Date(ms).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  return `${label || "Odds updated"} ${t}`;
+}
+
+/**
+ * Every matchup being played, with the chance each side wins it.
+ *
+ * This is the one board on the site that moves while you are looking at it, and
+ * the only place a number is allowed to change before a week is over. It still
+ * awards nothing: no record, no ranking and no standing moves off anything here.
+ */
+function liveMatchupBoard(board) {
+  const b = el("div", "board live");
+  b.innerHTML = `<div class="bhead">
+    <span class="bt">Week ${board.week}, live
+      <span class="bs">${board.settled
+        ? "every lineup has finished — waiting on the NFL to make it official"
+        : "win probability from where the lineups actually stand"}</span></span>
+    <span class="hold live">${esc(updatedAt(board.at, "Updated"))}</span></div>`;
+  for (const g of board.games) {
+    const row = el("div", "lrow");
+    const side = (s, S, p, lead) => `
+      <span class="lside ${lead ? "up" : ""}">
+        ${avatarHTML(s.uid, "xs")}
+        <span class="ln">${esc(nameOf(s.uid))}</span>
+        <span class="lpts">${f2(S.scored)}</span>
+        ${winChip(p, g.settled)}
+        <span class="lleft">${S.frac < 0.001
+          ? "all played"
+          : `${S.toPlay + S.inPlay} to come · ${(S.frac * 100).toFixed(0)}% of the lineup`}</span>
+      </span>`;
+    row.innerHTML = side(g.a, g.A, g.pA, g.pA >= 0.5) + side(g.b, g.B, g.pB, g.pB > 0.5);
+    b.appendChild(row);
+  }
+  const foot = el("div", "lfoot");
+  foot.innerHTML = board.nfl
+    ? `${board.nfl.post} NFL game${board.nfl.post === 1 ? "" : "s"} final ·
+       ${board.nfl.live} in play · ${board.nfl.pre} still to kick off. A game already under way
+       counts as half played — Sleeper's schedule carries no clock.
+       ${board.shares ? "Points still to come are weighted by what each lineup slot has historically scored in this league."
+        : "With no finished weeks on record yet, every lineup slot is weighted the same."}`
+    : "";
+  b.appendChild(foot);
+  return b;
+}
+
+/** The board could not be priced — said plainly rather than shown as certainty. */
+function liveBoardProblem(board) {
+  const d = el("div", "srcnote");
+  d.innerHTML = board.why === "no-espn"
+    ? `<b>No live game data.</b> Sleeper's NFL schedule didn't load, so the site can't tell a
+       starter who has played from one who hasn't, and won't guess at a live number.`
+    : `<b>No roster map yet.</b> rosters.json hasn't been published, so the site doesn't know which
+       club each starter plays for. Run <code>node build-rosters.mjs</code>.`;
+  return d;
+}
+
+/**
+ * Keep the live board moving.
+ *
+ * Only while a week is actually in flight, and only when something has changed:
+ * scores, or the state of an NFL game. Re-running twenty thousand seasons
+ * against an identical board would cost a phone its battery for nothing.
+ */
+let LIVE_TIMER = null, LIVE_SIG = null;
+const LIVE_POLL = 60 * 1000;
+
+function liveSignature(season, board) {
+  const scores = (season.live || []).map(g => `${g.a.rid}:${g.a.pts}|${g.b.rid}:${g.b.pts}`).join(",");
+  const nfl = board && board.nfl ? `${board.nfl.pre}/${board.nfl.live}/${board.nfl.post}` : "-";
+  return scores + "#" + nfl;
+}
+
+async function refreshLive() {
+  const season = DB.seasons[0];
+  if (!season || !season.liveWeek) return false;
+  try {
+    // Re-read the week's scores from Sleeper before repricing anything.
+    const d = await getWeek(season.leagueId, season.liveWeek).catch(() => null);
+    if (d) {
+      const fresh = new Map();
+      for (const [a, b] of pairWeek(d)) { fresh.set(a.rid, a.pts); fresh.set(b.rid, b.pts); }
+      for (const g of season.live) {
+        if (fresh.has(g.a.rid)) g.a.pts = fresh.get(g.a.rid);
+        if (fresh.has(g.b.rid)) g.b.pts = fresh.get(g.b.rid);
+      }
+    }
+    await loadNflGames(true);
+    LIVE_P = null;
+    const out = await liveOnce(LIVE_FULL ? { full: true } : undefined);
+    const sig = liveSignature(season, out.board);
+    const moved = sig !== LIVE_SIG;
+    LIVE_SIG = sig;
+    emitLive();
+    return moved;
+  } catch (e) { console.error(e); return false; }
+}
+
+function startLivePolling() {
+  const season = DB.seasons[0];
+  if (LIVE_TIMER || !season || !season.liveWeek) return;
+  LIVE_TIMER = setInterval(async () => {
+    // Nothing to do while the tab is in the background.
+    if (document.hidden) return;
+    await refreshLive();
+    const b = window.__BOARD;
+    if (b && b.ok && b.settled) { clearInterval(LIVE_TIMER); LIVE_TIMER = null; }
+  }, LIVE_POLL);
+  // A reader coming back to the tab wants it current immediately, not in a minute.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && LIVE_TIMER) refreshLive();
+  });
+}
+
+let LIVE_STARTED = false;
+async function ensureLiveOdds() {
+  if (LIVE_STARTED) return;
+  LIVE_STARTED = true;
+  const host = $("#liveHost");
+  if (!host) return;
+  const model = window.__ODDS, sim = window.__SIM;
+  if (!model || !model.ok || !sim) { host.remove(); return; }
+  try {
+    const { R, inj, avail, live, lsim, board } = await liveOnce({ full: true });
+    if (!live || !lsim) {
+      renderLiveWaiting(host, R, inj, avail, board);
+      document.body.dataset.liveReady = "waiting";
+      return;
+    }
+    renderLive(host, model, sim, live, lsim, inj, avail, board);
+    document.body.dataset.liveReady = "1";
+    startLivePolling();
+  } catch (e) {
+    host.innerHTML = "";
+    host.appendChild(el("div", "empty",
+      `<b>Couldn't reprice the board</b>${esc(e.message)}<br>The opening line below still stands.`));
+    document.body.dataset.liveReady = "error";
+    console.error(e);
+  }
+}
+
 function panelOdds(model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "odds";
 
@@ -2842,6 +4155,12 @@ function panelOdds(model, sim) {
             : "The draft hasn't run. The board re-prices itself automatically once it does — reload the page after the draft and every number here will have moved."}</span>`;
     p.appendChild(mode);
   }
+
+  // Filled in lazily the first time the tab is opened: the live board needs the
+  // remaining schedule and the injury feed, neither of which should hold up the
+  // first paint of the whole site.
+  const liveHost = el("div"); liveHost.id = "liveHost";
+  p.appendChild(liveHost);
 
   const notice = el("div", "notice");
   notice.innerHTML = `<div class="nt">House notice</div>
@@ -3918,8 +5237,12 @@ async function raceData() {
     R.why = "no-divisions"; return R;
   }
 
+  // Note the two questions kept apart here. "Is there a race to show?" needs a
+  // finished week — the Race tab says nothing until one exists. "What is left to
+  // play?" does not, and the live odds board needs it from the first Sunday of
+  // the season. So the remaining schedule is always worked out; only `ready`
+  // waits for a result.
   R.decided = season.games.filter(g => !g.playoff && g.week <= lastReg);
-  if (!R.decided.length) { R.why = "not-started"; return R; }
 
   const per = new Map();
   for (const g of R.decided) per.set(g.week, (per.get(g.week) || 0) + 1);
@@ -3935,8 +5258,9 @@ async function raceData() {
   R.upcoming.sort((x, y) => x.week - y.week || x.a - y.a);
   R.playedWeeks = per;
   R.nextWeek = R.upcoming.length ? R.upcoming[0].week : null;
-  R.ready = R.upcoming.length > 0;
-  if (!R.ready) R.why = "regular-season-over";
+  R.ready = R.decided.length > 0 && R.upcoming.length > 0;
+  if (!R.decided.length) R.why = "not-started";
+  else if (!R.upcoming.length) R.why = "regular-season-over";
   return R;
 }
 
@@ -4196,7 +5520,7 @@ async function ensureRace() {
   const host = $("#raceHost");
   if (!host) return;
   try {
-    const R = await raceData();
+    const R = await raceDataOnce();
     window.__RACEDATA = R;
     if (!R.ready) {
       host.innerHTML = "";
@@ -4992,6 +6316,8 @@ async function boot() {
     app.appendChild(await panelRecaps());
 
     buildTabs();
+    // Deliberately not awaited: the front page paints, then fills itself in.
+    ensureHomeWeek();
     $("#loader").hidden = true;
     app.hidden = false;
     const want = location.hash.replace("#", "");
@@ -5009,6 +6335,12 @@ async function boot() {
       articleCard, articleBlock, articleTeaser, openArticle, coverHTML, bracketHTML,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
+      weekIsFinal, allWeeks,
+      loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
+      ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
+      liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
+      loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
+      liveWeekBoard, refreshLive, startLivePolling, liveSignature, onLive, emitLive, GAME_LEFT,
       renderRace, raceEmpty,
       RACE_SIMS, LEVERAGE_SIMS,
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
