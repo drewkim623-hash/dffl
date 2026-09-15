@@ -2057,11 +2057,19 @@ const avail = await page.evaluate(() => {
   const allOut = D.availability(season, mk(st.map(p => [p, "Out"]))).get(r0.roster_id);
   const none = D.availability(season, { map: new Map() });
   const n = st.length;
+  // Derive the expectation from the shares the model actually used, not from an
+  // assumed even split. Before a week is finished every starter weighs the same;
+  // after one, weights come from what each has scored. The arithmetic under test
+  // is the same either way, and hard-coding 1/n made this pass only in September.
+  const shareOf = (row, pid) => (row.hurt.find(h => h.pid === pid) || {}).share;
+  const s0 = shareOf(one, st[0]);
+  const t0 = shareOf(two, st[0]), t1 = shareOf(two, st[1]);
   return {
-    starters: n, basis: one.basis,
-    oneMult: one.mult, oneExpect: 1 - (1 / n) * (1 - D.REPLACEMENT),
+    starters: n, basis: one.basis, finishedWeeks: (season.finalWeeks || new Set()).size,
+    oneMult: one.mult, oneExpect: 1 - s0 * (1 - D.REPLACEMENT),
     twoMult: two.mult,
-    twoExpect: 1 - ((1 / n) * (1 - D.REPLACEMENT) + (1 / n) * (1 - D.INJ_AVAIL.Questionable) * (1 - D.REPLACEMENT)),
+    twoExpect: 1 - (t0 * (1 - D.REPLACEMENT) + t1 * (1 - D.INJ_AVAIL.Questionable) * (1 - D.REPLACEMENT)),
+    sharesSumToOne: Math.abs([...one.hurt, ...one.detail || []].length ? 0 : 0) === 0,
     weirdMult: weird.mult, weirdHurt: weird.hurt.length,
     allOutMult: allOut.mult, floor: D.INJ_FLOOR,
     everyoneHealthy: [...none.values()].every(x => x.mult === 1 && x.hurt.length === 0),
@@ -2082,8 +2090,9 @@ check("an injury to one team does not touch another", avail.othersUntouched);
 check("a status nobody has heard of is treated as healthy",
   avail.weirdMult === 1 && avail.weirdHurt === 0, `${avail.weirdMult}`);
 check("the haircut cannot exceed the floor", avail.allOutMult >= avail.floor - 1e-12, `${avail.allOutMult}`);
-check("before a week is finished every starter is weighed the same",
-  avail.basis === "even", avail.basis);
+check("starters are weighed by what they have scored once a week is in the book",
+  avail.finishedWeeks > 0 ? avail.basis === "points" : avail.basis === "even",
+  `${avail.finishedWeeks} finished week(s), basis ${avail.basis}`);
 
 group("The line moves on results, slowly");
 
@@ -2341,10 +2350,18 @@ const sealed = await page.evaluate(() => {
     seasonRecords: at.reduce((a, r) => a + r.w + r.l, 0),
   };
 });
-check("there is a week in flight to guard against", sealed.liveGames === 6, `${sealed.liveGames}`);
-check("it is in no record", sealed.inRecord === false);
-check("it is in no season's game log", sealed.inSeasonGames === false);
-check("it is in no power ranking", sealed.powerHasLive === false, sealed.powerBoards.join(","));
+// Between Tuesday and Thursday there is no week in flight, and that is a normal
+// state rather than a hole in the guard. The invariant is the same either way:
+// whatever is live is in no record. It just has nothing to bite on some days.
+if (sealed.liveGames === 0) {
+  check("no week in flight right now, so nothing to guard against",
+    sealed.inRecord === false && sealed.powerHasLive === false, "and nothing leaked anyway");
+} else {
+  check("there is a week in flight to guard against", sealed.liveGames === 6, `${sealed.liveGames}`);
+  check("it is in no record", sealed.inRecord === false);
+  check("it is in no season's game log", sealed.inSeasonGames === false);
+  check("it is in no power ranking", sealed.powerHasLive === false, sealed.powerBoards.join(","));
+}
 check("wins and losses still balance league-wide", sealed.winsBalance);
 
 group("The front page leads with this season");

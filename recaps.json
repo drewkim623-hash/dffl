@@ -40,7 +40,91 @@
    }
   }
  },
- "weeks": [],
+ "weeks": [
+  {
+   "season": "2026",
+   "week": 1,
+   "note": "",
+   "lede": "Six games, and the scoreboard split almost exactly down the middle of the league: the three highest-scoring teams all won, and so did the three lowest. jadencha opened with 195.9 and buried drewkim by more than seventy. Domo112 and moseslin combined for 348.92 in the best game of the day and moseslin still went home with nothing. At the other end, bradyrife and bertalicious needed only 195.94 between them to settle a game, which is less than jadencha managed on his own.",
+   "games": [
+    {
+     "headline": "Domo112 survives the shootout",
+     "winner": "Domo112",
+     "winner_points": 187.06,
+     "loser": "moseslin",
+     "loser_points": 161.86,
+     "body": "The highest-scoring game of the week by some distance — 348.92 between them, and neither side ever really stopped. Caleb Williams put up 37.26 for Domo112, the best single performance anywhere on the slate. moseslin's 161.86 would have beaten three of the six winning scores; it did not beat this one. Domo112 got there despite a starting tight end who finished on nothing."
+    },
+    {
+     "headline": "jadencha opens with 195.9",
+     "winner": "jadencha",
+     "winner_points": 195.9,
+     "loser": "drewkim",
+     "loser_points": 125.1,
+     "body": "The week's high score and its widest margin, 70.8 points, and it was never close. D'Andre Swift led with 32.9 in a lineup where the scoring was spread rather than stacked. jadencha also left 54 points on his bench, which is the sort of detail that only reads as a problem in a week you lose. drewkim's 125.1 was not a disaster; it simply arrived on the wrong Sunday."
+    },
+    {
+     "headline": "sizzlemc2 holds off chassinator",
+     "winner": "sizzlemc2",
+     "winner_points": 162.66,
+     "loser": "chassinator",
+     "loser_points": 144.52,
+     "body": "Kenneth Walker's 35.6 gave sizzlemc2 the cushion and chassinator never quite closed the 18.14 that separated them. Ashton Jeanty answered with 30.7 but got thin support — Terry McLaurin managed 3.4. Both benches were loud, 50.6 and 44.9 unused respectively, in a game decided by less than either."
+    },
+    {
+     "headline": "saucebossandrew edges the closest game",
+     "winner": "saucebossandrew",
+     "winner_points": 137.52,
+     "loser": "jskule23",
+     "loser_points": 124.76,
+     "body": "Twelve and three-quarter points, the tightest result of the week. Josh Allen's 35.66 was the best number on the field and it belonged to the losing side; jskule23 got almost nothing behind him and watched another 43.6 sit on his bench. Chris Olave's 30.2 was enough for saucebossandrew, who did not need a second big score and did not get one."
+    },
+    {
+     "headline": "wesley55 wins the low-scoring half",
+     "winner": "wesley55",
+     "winner_points": 111.46,
+     "loser": "victorthompson",
+     "loser_points": 90.5,
+     "body": "Derrick Henry's 35.8 accounted for nearly a third of wesley55's total, which tells you how quiet the rest of it was — Kyle Pitts finished on zero and it did not matter. victorthompson's 90.5 was the week's lowest score, with Ladd McConkey's 19.2 the only real contribution and 35.36 stranded on the bench."
+    },
+    {
+     "headline": "bradyrife takes the quietest game of the week",
+     "winner": "bradyrife",
+     "winner_points": 105.2,
+     "loser": "bertalicious",
+     "loser_points": 90.74,
+     "body": "195.94 combined, the lowest-scoring game on the slate, settled by 14.46. Trevor Lawrence's 26.1 was as good as it got for bradyrife. bertalicious lost while leaving 53.64 on his bench — more than half his starting total again, and comfortably more than the margin."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "Eight trades, and McCaffrey moved twice",
+     "body": "Christian McCaffrey went from chassinator to bradyrife in a swap that sent Kyren Williams the other way with a pair of picks, then turned up on chassinator's roster again in a separate deal with Domo112 that cost Jahmyr Gibbs. chassinator was involved in three of the eight trades on record, which is a lot of activity for a manager who then lost his opener."
+    },
+    {
+     "kind": "trade",
+     "headline": "jskule23 pays a pick for Luther Burden",
+     "body": "A straight player-for-pick with wesley55 — Burden across, an eighth-rounder back. jskule23 also swapped first-round picks with bertalicious in a separate deal. Both of them lost in week 1."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Nobody spent a dollar",
+     "body": "Forty-nine free-agent moves went through and not one of them cost FAAB. Every manager still has his full budget, which will not last, but it does mean the first genuine waiver war is still ahead."
+    },
+    {
+     "kind": "note",
+     "headline": "The benches were the story",
+     "body": "bertalicious left 53.64 unused and lost by 14.46. jskule23 left 43.6 and lost by 12.76. chassinator left 44.9 and lost by 18.14. All three would have won the game they played with a lineup they already owned."
+    },
+    {
+     "kind": "note",
+     "headline": "Two starters finished on zero, and both teams won anyway",
+     "body": "Kyle Pitts for wesley55 and Colston Loveland for Domo112 both posted nothing. Neither cost their manager the week, which says more about the opposition than the tight ends."
+    }
+   ]
+  }
+ ],
  "articles": [
   {
    "season": "2026",

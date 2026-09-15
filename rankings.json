@@ -1,14 +1,69 @@
 {
-  "_comment": "Weekly power-ranking blurbs. The scheduled job appends one object to weeks[] after each week finalizes, in the same pass that writes recaps.json. The site computes the ranking itself and only reads the one-line blurbs from here — if this file is missing, empty, or has nothing for the week being viewed, the board still renders with each team's record and points instead.",
-  "_schema": {
-    "weeks[]": {
-      "season": "4-digit year as a string",
-      "week": "integer 1-17",
-      "teams[]": {
-        "manager": "manager display name, exactly as Sleeper spells it",
-        "blurb": "one sentence, ESPN house style. No score recaps - those live in recaps.json. Say something about the team's week or where it is heading."
-      }
+ "_comment": "Weekly power-ranking blurbs. The scheduled job appends one object to weeks[] after each week finalizes, in the same pass that writes recaps.json. The site computes the ranking itself and only reads the one-line blurbs from here — if this file is missing, empty, or has nothing for the week being viewed, the board still renders with each team's record and points instead.",
+ "_schema": {
+  "weeks[]": {
+   "season": "4-digit year as a string",
+   "week": "integer 1-17",
+   "teams[]": {
+    "manager": "manager display name, exactly as Sleeper spells it",
+    "blurb": "one sentence, ESPN house style. No score recaps - those live in recaps.json. Say something about the team's week or where it is heading."
+   }
+  }
+ },
+ "weeks": [
+  {
+   "season": "2026",
+   "week": 1,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Opened with 195.9 and spread it across the lineup rather than leaning on one player, then left another 54 points on the bench without needing them."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Caleb Williams' 37.26 was the best single number of the week, and it came in the highest-scoring game anyone played."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "Kenneth Walker's 35.6 did the heavy lifting in a game where both benches outscored the margin several times over."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "Won the tightest game of the week without a second big score, which is a harder way to do it than the scoreboard suggests."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "Derrick Henry carried nearly a third of the total and a starting tight end on zero cost nothing."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "Took the quietest game on the slate with 105.2 and picked up Christian McCaffrey in the preseason, though not for long."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Scored 161.86, more than three of the six winners managed, and has nothing to show for it."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "Traded three times before a ball was snapped, ended up with McCaffrey after all, and still lost while 44.9 sat on his bench."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "125.1 would have been competitive in four of the other games; it arrived against the week's high score instead."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Had Josh Allen's 35.66, the best performance on the losing side all week, and 43.6 more sitting unused."
+    },
+    {
+     "manager": "bertalicious",
+     "blurb": "Lost by 14.46 with 53.64 on the bench, which is the kind of week that looks worse on the lineup sheet than the scoreboard."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "The week's lowest score at 90.5, with one player in double figures and 35.36 left behind."
     }
-  },
-  "weeks": []
+   ]
+  }
+ ]
 }
