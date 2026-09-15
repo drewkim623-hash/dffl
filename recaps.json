@@ -1068,6 +1068,104 @@
     },
     {
      "type": "h",
+     "eyebrow": "the power board",
+     "text": "Where the Standings Lie"
+    },
+    {
+     "type": "p",
+     "text": "The site keeps its own ranking, and it does not care who you played. Forty per cent of it is beat-everyone rate — how your score would have fared against all eleven other teams that week rather than the one you drew. Twenty-five per cent is recent form, twenty per cent is points scored, and only fifteen per cent is your actual record. After one week that produces a board which disagrees with the standings in three places."
+    },
+    {
+     "type": "picks",
+     "items": [
+      {
+       "slot": "1",
+       "name": "jadencha",
+       "sub": "1-0 · 195.9 points",
+       "delta": "won"
+      },
+      {
+       "slot": "2",
+       "name": "Domo112",
+       "sub": "1-0 · 187.06 points",
+       "delta": "won"
+      },
+      {
+       "slot": "3",
+       "name": "sizzlemc2",
+       "sub": "1-0 · 162.66 points",
+       "delta": "won"
+      },
+      {
+       "slot": "4",
+       "name": "moseslin",
+       "sub": "0-1 · 161.86 points",
+       "delta": "lost"
+      },
+      {
+       "slot": "5",
+       "name": "saucebossandrew",
+       "sub": "1-0 · 137.52 points",
+       "delta": "won"
+      },
+      {
+       "slot": "6",
+       "name": "chassinator",
+       "sub": "0-1 · 144.52 points",
+       "delta": "lost"
+      },
+      {
+       "slot": "7",
+       "name": "wesley55",
+       "sub": "1-0 · 111.46 points",
+       "delta": "won"
+      },
+      {
+       "slot": "8",
+       "name": "drewkim",
+       "sub": "0-1 · 125.1 points",
+       "delta": "lost"
+      },
+      {
+       "slot": "9",
+       "name": "jskule23",
+       "sub": "0-1 · 124.76 points",
+       "delta": "lost"
+      },
+      {
+       "slot": "10",
+       "name": "bradyrife",
+       "sub": "1-0 · 105.2 points",
+       "delta": "won"
+      },
+      {
+       "slot": "11",
+       "name": "bertalicious",
+       "sub": "0-1 · 90.74 points",
+       "delta": "lost"
+      },
+      {
+       "slot": "12",
+       "name": "victorthompson",
+       "sub": "0-1 · 90.5 points",
+       "delta": "lost"
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "<b>moseslin sits fourth at 0-1</b>, above three managers who won. <b>chassinator is sixth</b>, also at 0-1, above two more. And <b>bradyrife is tenth despite winning</b> — the lowest-ranked team in the league with a victory, because 105.2 is the third-lowest score anyone posted, and he beat one of the only two teams in the league he would have beaten at all."
+    },
+    {
+     "type": "p",
+     "text": "This is the whole argument for keeping a board at all. Three of the six games in week 1 were decided by the schedule as much as by the football: moseslin's 161.86 beats three of the six winning scores, and drewkim's 125.1 would have won two of the other games outright. Records reward you for who you were pointed at. This does not."
+    },
+    {
+     "type": "p",
+     "text": "No arrows yet — this is the first board of the season and there is nothing behind it to move from. From week 2 the movement column starts, and it will be a better read than the ranking itself."
+    },
+    {
+     "type": "h",
      "eyebrow": "the board",
      "text": "What One Week Did to the Season"
     },
