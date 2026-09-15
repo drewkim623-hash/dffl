@@ -30,6 +30,17 @@ const linkTo = a => a && a.slug ? `${SITE}?a=${encodeURIComponent(a.slug)}` : `$
 const D = JSON.parse(await readFile("data/odds-snapshot.json", "utf8"));
 const recaps = JSON.parse(await readFile("recaps.json", "utf8").catch(() => "{}"));
 
+/**
+ * The week that just finished, if it has been written up.
+ *
+ * Between Tuesday and Thursday there is no week in flight, so "match of the
+ * week" has nothing to show and the email would open on a board with no
+ * football in it. The recap fills that space with the thing people actually
+ * want first: what happened.
+ */
+const lastWeek = (recaps.weeks || []).slice()
+  .sort((a, b) => Number(b.season) - Number(a.season) || b.week - a.week)[0] || null;
+
 const byDate = (recaps.articles || []).slice()
   .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
 // The week's column leads the email; anything else recent rides along under it.
@@ -151,8 +162,19 @@ const strip = `
   <tr><td style="padding-bottom:2px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       ${tile("Week", String(D.week), `${D.decided} played · ${D.remaining} to come`)}
-      ${tile("Closest game", marquee ? pc(Math.max(marquee.pA, marquee.pB)) : "—",
-        marquee ? `${esc(marquee.pA >= marquee.pB ? marquee.a : marquee.b)} favoured` : "")}
+      ${(() => {
+        // A week in flight has a coin-flip to point at. Between Tuesday and
+        // Thursday it does not, so fall back to the tightest finished result
+        // rather than printing a dash where a number should be.
+        if (marquee) return tile("Closest game", pc(Math.max(marquee.pA, marquee.pB)),
+          `${esc(marquee.pA >= marquee.pB ? marquee.a : marquee.b)} favoured`);
+        // recaps.json carries the two scores, not the gap between them.
+        const gap = g => g.winner_points - g.loser_points;
+        const tight = lastWeek && lastWeek.games.length
+          ? lastWeek.games.slice().sort((a, b) => gap(a) - gap(b))[0] : null;
+        return tile("Tightest last week", tight ? gap(tight).toFixed(2) : "—",
+          tight ? `${esc(tight.winner)} over ${esc(tight.loser)}` : "");
+      })()}
       ${tile("Biggest move", biggest ? `${biggest.d > 0 ? "▲" : "▼"} ${Math.abs(biggest.d * 100).toFixed(0)}pt` : "—",
         biggest ? esc(biggest.manager) : "")}
     </tr></table>
@@ -179,6 +201,38 @@ const columnBlock = a => {
       ${firstPara ? `<div style="font:400 13.5px/1.55 ${F};color:${C.ink};margin-top:12px">${rich(firstPara.text)}</div>` : ""}
       <a href="${linkTo(a)}" style="display:inline-block;margin-top:12px;font:700 13.5px/1 ${F};color:${C.blue};text-decoration:none">Read the full piece →</a>
     `, "18px 18px 16px")}
+  </td></tr>`;
+};
+
+/* --------------------------------------------------------- the week's recap */
+/** Six results, two across, with the lede above them. */
+const recapBlock = wk => {
+  const half = rows => box(rows.map((g, i) => `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="padding:9px 12px;${i ? `border-top:1px solid ${C.line};` : ""}">
+        <div style="font:700 12.5px/1.3 ${F};color:${C.ink}">${esc(g.headline)}</div>
+        <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:3px">
+          <b style="color:${C.mid}">${esc(g.winner)}</b> ${g.winner_points}
+          &nbsp;def&nbsp; ${esc(g.loser)} ${g.loser_points}</div></td>
+    </tr></table>`).join(""));
+  return `
+  ${head2(`Week ${wk.week} in the book`, "every result, and how it happened")}
+  <tr><td style="padding-bottom:10px">
+    ${box(`<div style="font:400 13.5px/1.6 ${F};color:${C.ink}">${rich(wk.lede)}</div>`, "15px 16px")}
+  </td></tr>
+  ${twoUp(half(wk.games.slice(0, 3)), half(wk.games.slice(3, 6)))}
+  ${(wk.around || []).length ? `
+  <tr><td style="padding-top:10px">
+    ${box((wk.around.slice(0, 3)).map((a, i) => `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="padding:10px 13px;${i ? `border-top:1px solid ${C.line};` : ""}">
+          <div style="font:700 9.5px/1.2 ${F};color:${C.blue};text-transform:uppercase;letter-spacing:.08em">${esc(a.kind)}</div>
+          <div style="font:700 13px/1.3 ${F};color:${C.ink};margin-top:4px">${esc(a.headline)}</div>
+          <div style="font:400 12px/1.5 ${F};color:${C.mid};margin-top:4px">${rich(a.body)}</div></td>
+      </tr></table>`).join(""))}
+  </td></tr>` : ""}
+  <tr><td style="padding-top:10px">
+    <a href="${SITE}?t=recaps" style="font:700 13px/1 ${F};color:${C.blue};text-decoration:none">Read the whole week &rarr;</a>
   </td></tr>`;
 };
 
@@ -296,6 +350,7 @@ const inner = `
   </td></tr>
   ${strip}
   ${lead ? columnBlock(lead) : ""}
+  ${lastWeek ? recapBlock(lastWeek) : ""}
   ${marquee ? head2("Match of the week",
     marquee.settled ? "the closest thing the week had" : "closest to a coin flip") : ""}
   ${marquee ? `<tr><td>${marqueeBlock(marquee)}</td></tr>` : ""}
@@ -343,6 +398,8 @@ const html = minify(shell(inner));
 const text = [
   `DFFL — Week ${D.week}, ${D.season}`,
   lead ? `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}` : "",
+  lastWeek ? `\nWEEK ${lastWeek.week} IN THE BOOK\n` + lastWeek.games.map(g =>
+    `${g.winner} ${g.winner_points} def ${g.loser} ${g.loser_points} — ${g.headline}`).join("\n") : "",
   marquee ? `\nMATCH OF THE WEEK\n${marquee.a} ${marquee.aPts.toFixed(1)} (${pc(marquee.pA)}) v ${marquee.b} ${marquee.bPts.toFixed(1)} (${pc(marquee.pB)})` : "",
   movers.length ? `\nTHE BOARD MOVED\n` + movers.map(m =>
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
@@ -372,5 +429,5 @@ await writeFile(`${stem}.json`, JSON.stringify({
 console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB, one line`);
 console.log(`sha256: ${sha}`);
 console.log(`subject: ${subject}`);
-console.log(`  column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
+console.log(`  recap: ${lastWeek ? "week " + lastWeek.week : "(none)"} · column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
   + `${race.length} priced · approve with "${approveSubject}"`);
