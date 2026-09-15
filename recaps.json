@@ -946,9 +946,9 @@
    "date": "2026-09-15",
    "kicker": "2026 · week 1",
    "headline": "Week 1, Game by Game",
-   "dek": "Six games, 1,637 points, and three managers who lost while more sat on their bench than the margin they lost by. The whole opening week, one game at a time.",
+   "dek": "Every game in full, the board that moved underneath them, the matchup week 2 is built around, and the men whose Sunday changes what happens next.",
    "byline": "DFFL desk",
-   "standfirst": "6 games · 120 starters",
+   "standfirst": "6 games · 120 starters · 1,637.28 points",
    "cover": {
     "tone": "blue",
     "caption": "Week 1, 2026"
@@ -957,7 +957,7 @@
     {
      "type": "p",
      "lead": true,
-     "text": "The first week of a fantasy season is mostly noise pretending to be information, and this one was louder than most. The three highest-scoring teams all won and the three lowest all lost, which sounds tidy until you look at moseslin, who scored 161.86 — more than three of the six winners managed — and is 0-1 for his trouble. jadencha put up the week's high and won by seventy. bertalicious scored 90.74, lost by fourteen, and left more on his bench than the gap. Here is all of it."
+     "text": "The first week of a fantasy season is mostly noise pretending to be information, and this one was louder than most. The three highest-scoring teams all won and the three lowest all lost, which sounds tidy until you look at moseslin, who scored 161.86 — more than three of the six winners managed — and is 0-1 for his trouble. jadencha put up the week's high and won by seventy. bertalicious scored 90.74, lost by fourteen, and left more on his bench than the gap. Here is all of it, and then what it did to the season."
     },
     {
      "type": "stat",
@@ -971,15 +971,15 @@
     },
     {
      "type": "p",
-     "text": "The best game of the week and the cruellest result in it. <b>Caleb Williams</b> gave Domo112 37.26, the single best performance anywhere on the slate, and <b>Jalen Coker</b> added 35.8 behind him. Four Domo112 starters cleared 27. That is normally enough to win comfortably, and it was — but only just, because moseslin would not stop scoring either."
+     "text": "The best game of the week and the cruellest result in it. <b>Caleb Williams</b> gave Domo112 37.26, the single best performance anywhere on the slate, and <b>Jalen Coker</b> added 35.8 behind him. <b>Jahmyr Gibbs</b> — acquired from chassinator days before the season in exchange for Christian McCaffrey — went for 32.1 on his first Sunday in the shirt. <b>Bijan Robinson</b> made it four starters over 27."
     },
     {
      "type": "p",
-     "text": "<b>Christian Watson</b> 34.7, <b>Justin Jefferson</b> 31.2, <b>Lamar Jackson</b> 24.96, <b>Nico Collins</b> 21.2. moseslin got four men over twenty and still lost by 25.2, because the bottom of his lineup went quiet at exactly the wrong moment: Saquon Barkley 8.5, Rico Dowdle 3.1. The 161.86 he posted would have won three of the other five games on the board."
+     "text": "That is normally enough to win at a canter, and it very nearly was not. <b>Christian Watson</b> 34.7, <b>Justin Jefferson</b> 31.2, <b>Lamar Jackson</b> 24.96, <b>Nico Collins</b> 21.2: moseslin also got four men past twenty, and the difference in the end was where the two lineups stopped. Domo112's fifth-best starter scored 16.9. moseslin's fifth-best scored 14.1, and then it fell away fast — <b>Saquon Barkley</b> 8.5, <b>Rico Dowdle</b> 3.1, a tight end on 4.1."
     },
     {
      "type": "p",
-     "text": "Domo112 won this with a zero in his lineup. <b>Colston Loveland</b> did nothing at all and it did not matter, which is the kind of margin for error that makes a week look easier in the standings than it felt on Sunday."
+     "text": "Domo112 won this with a zero in his lineup: <b>Colston Loveland</b> did nothing at all and it did not matter. That is the tell of a genuinely strong week — the margin for error was wide enough to absorb an empty roster spot in a game that produced 348.92 points. moseslin has the harder lesson. He is 0-1 with the fourth-highest score in the league, which is not a problem he can fix by playing better."
     },
     {
      "type": "h",
@@ -988,11 +988,15 @@
     },
     {
      "type": "p",
-     "text": "The week's high score and its widest margin, and the interesting thing about it is how evenly it was built. jadencha did not get one enormous number — his best was <b>D'Andre Swift</b> at 32.9. He got six players between 23 and 33: Swift, <b>Amon-Ra St. Brown</b> 28.7, <b>Jaxon Smith-Njigba</b> 28.2, <b>Isaiah Likely</b> 27.8, <b>Jaxson Dart</b> 26.6, <b>Jonathan Taylor</b> 23.6. Nothing spectacular, everything good, all at once."
+     "text": "The week's high score and its widest margin, and the interesting thing is how ordinary it looked up close. jadencha did not get one enormous number — his best was <b>D'Andre Swift</b> at 32.9, which was only the seventh-best individual score of the week. What he got was six players between 23 and 33: Swift, <b>Amon-Ra St. Brown</b> 28.7, <b>Jaxon Smith-Njigba</b> 28.2, <b>Isaiah Likely</b> 27.8, <b>Jaxson Dart</b> 26.6, <b>Jonathan Taylor</b> 23.6."
     },
     {
      "type": "p",
-     "text": "drewkim's 125.1 was not the problem people will say it was. His best scorer was <b>Brock Purdy</b> at 22.1 and his kicker and defence combined for 35 — a lineup that did roughly what it was built to do and ran into the wrong opponent in week one. He also left 35.56 on the bench, which stings more in a 70-point loss than it should."
+     "text": "Nothing spectacular, everything good, all at once — and 54 more points left on the bench he never needed. It is the sort of week that tells you more about a roster than a single huge performance would, because six good scores are harder to fluke than one great one."
+    },
+    {
+     "type": "p",
+     "text": "drewkim's 125.1 was not the disaster the margin implies. <b>Brock Purdy</b> led him with 22.1 and his kicker and defence combined for 35 — a lineup that did roughly what it was built to do. Seven of his ten starters landed between 6.8 and 14.4, which is a floor rather than a failure. He ran into the highest score in the league in week one, and 35.56 on his own bench turned a bad day into a worse-looking one."
     },
     {
      "type": "h",
@@ -1001,11 +1005,15 @@
     },
     {
      "type": "p",
-     "text": "sizzlemc2 won this at running back and nowhere else. <b>Kenneth Walker</b> 35.6, <b>David Montgomery</b> 27.4, <b>Javonte Williams</b> 21.7 — 84.7 from three backs, more than half his total. Behind them the lineup was ordinary: Justin Herbert 14.26, Travis Kelce 11.1, Josh Downs 5.7."
+     "text": "sizzlemc2 won this in one position group and nowhere else. <b>Kenneth Walker</b> 35.6, <b>David Montgomery</b> 27.4, <b>Javonte Williams</b> 21.7 — 84.7 from three running backs, more than half his total. Behind them the lineup was unremarkable: Justin Herbert 14.26, Travis Kelce 11.1, Josh Downs 5.7. If the backs had been merely good rather than excellent, this is a loss."
     },
     {
      "type": "p",
-     "text": "chassinator had the better top end in places — <b>Ashton Jeanty</b> 30.7 and <b>Zay Flowers</b> 29 — but got almost nothing from two starters he would have expected more from, <b>Terry McLaurin</b> at 3.4 and <b>Cameron Dicker</b> at 2. He lost by 18.14 with 44.9 sitting unused, which is the recurring theme of this week and the most avoidable one."
+     "text": "chassinator matched him at the top — <b>Ashton Jeanty</b> 30.7 and <b>Zay Flowers</b> 29 — and lost it at the bottom. <b>Terry McLaurin</b> managed 3.4 and <b>Cameron Dicker</b> 2, and two starting spots producing 5.4 between them is not survivable against 84.7 from someone else's backfield. He lost by 18.14 with 44.9 unused."
+    },
+    {
+     "type": "p",
+     "text": "There is an additional problem here, and it is the most consequential injury in the league right now: <b>Zay Flowers is out for week 2</b>. The model puts that at 9.0% off chassinator's expected scoring, comfortably the largest injury cost anyone is carrying, and it lands on a manager who is already 0-1 and has just watched his playoff price lengthen."
     },
     {
      "type": "h",
@@ -1014,15 +1022,15 @@
     },
     {
      "type": "p",
-     "text": "Twelve and three-quarter points, the tightest game of the week, and the losing manager had the best player in it. <b>Josh Allen</b> scored 35.66 for jskule23 and finished as the highest-scoring player on any losing side all week. Nobody else in that lineup reached 23."
+     "text": "Twelve and three-quarter points, the tightest game of the week, and the losing manager had the best player on the field. <b>Josh Allen</b> scored 35.66 for jskule23 and finished as the highest-scoring player on any losing side all week. Nobody else in that lineup reached 23."
     },
     {
      "type": "p",
-     "text": "saucebossandrew won it the boring way and the reliable way: <b>Chris Olave</b> 30.2, <b>Jalen Hurts</b> 24.72, <b>Breece Hall</b> 19.8, a defence worth 13, and then a floor that never dropped through — six of his ten starters scored between 7 and 11. He left only 18.2 on the bench, the tidiest lineup call of the week."
+     "text": "saucebossandrew won it the unglamorous way. <b>Chris Olave</b> 30.2, <b>Jalen Hurts</b> 24.72, <b>Breece Hall</b> 19.8, a defence worth 13 — and then, crucially, a floor that never gave way: six of his ten starters scored between 7 and 11. He left only 18.2 on his bench, the most efficient lineup call of the week by a distance, and in a game settled by 12.76 that is not a footnote, it is the result."
     },
     {
      "type": "p",
-     "text": "jskule23, by contrast, left 43.6 unused and started a defence that scored nothing. In a game decided by 12.76, either of those is the whole story."
+     "text": "jskule23 left 43.6 unused and started a defence that scored nothing. Either of those is the whole margin. It is a harsh way to begin a season in which he also traded a first-round pick to bertalicious and an eighth for Luther Burden, who contributed 9.5 on debut."
     },
     {
      "type": "h",
@@ -1031,11 +1039,15 @@
     },
     {
      "type": "p",
-     "text": "<b>Derrick Henry</b> scored 35.8 and the <b>Pittsburgh</b> defence added 20, and between them that was 50 of wesley55's 111.46 — nearly half his week from two roster spots. Everything else was thin: Joe Burrow 15.16, then nobody above 8.9, and <b>Kyle Pitts</b> on zero."
+     "text": "<b>Derrick Henry</b> scored 35.8 and the <b>Pittsburgh</b> defence added 20 — 50 of wesley55's 111.46 from two roster spots, in a week where everything else was thin. Joe Burrow managed 15.16 and then nobody cleared 8.9. <b>Kyle Pitts</b> finished on zero."
     },
     {
      "type": "p",
-     "text": "It did not matter, because victorthompson posted the lowest score in the league. <b>Ladd McConkey</b> 19.2 and <b>Dalton Kincaid</b> 19 were the only starters in double figures worth the name, <b>A.J. Brown</b> managed 5.6, the kicker scored 1 and the defence scored 0. A 35.36-point bench does not fix a week like that, but it does not help to see it either."
+     "text": "It did not cost him, because victorthompson posted the lowest score in the league. <b>Ladd McConkey</b> 19.2 and <b>Dalton Kincaid</b> 19 were the only real contributions, <b>A.J. Brown</b> managed 5.6, the kicker scored 1 and the defence scored 0. Two roster spots producing a single point between them is the kind of detail that turns a bad week into a 90.5."
+    },
+    {
+     "type": "p",
+     "text": "It gets worse before it gets better: <b>McConkey is questionable</b> for week 2. The one starter who actually produced is the one in doubt, and victorthompson's playoff price has already moved further against him than anyone's but bertalicious."
     },
     {
      "type": "h",
@@ -1044,16 +1056,120 @@
     },
     {
      "type": "p",
-     "text": "The lowest-scoring game of the week, and the one that will be argued about longest. bradyrife won with 105.2 — <b>Trevor Lawrence</b> 26.1, <b>Chase Brown</b> 16.3, a kicker on 14, and <b>Christian McCaffrey</b>, acquired days earlier, contributing 11.3."
+     "text": "The lowest-scoring game of the week and the one that will be argued about longest. bradyrife won with 105.2 — <b>Trevor Lawrence</b> 26.1, <b>Chase Brown</b> 16.3, a kicker on 14, and <b>Christian McCaffrey</b>, acquired days earlier from chassinator, contributing 11.3 before being traded on again."
     },
     {
      "type": "p",
-     "text": "bertalicious lost by 14.46 with <b>53.64 points on his bench</b> — more than half his own starting total again, and nearly four times the margin. <b>Trey McBride</b> did his job at 24.5 and <b>Bucky Irving</b> added 16.8, but <b>Ja'Marr Chase</b> managed 3.2, <b>Courtland Sutton</b> 3.1, the kicker 1 and the defence 1. Four starters produced 8.4 points between them."
+     "text": "bertalicious lost by 14.46 with <b>53.64 points on his bench</b> — more than half his own starting total again, and nearly four times the margin. <b>Trey McBride</b> did his job at 24.5 and <b>Bucky Irving</b> added 16.8. Then it collapses: <b>Ja'Marr Chase</b> 3.2, <b>Courtland Sutton</b> 3.1, the kicker 1, the defence 1. Four starting spots produced 8.4 points between them, which is not a lineup problem so much as a Sunday where nothing landed."
+    },
+    {
+     "type": "p",
+     "text": "Nobody paid a higher price for one week. bertalicious opened the season at 14.9% to win the whole thing, behind only jadencha and Domo112, and has given back more ground than anyone."
     },
     {
      "type": "h",
-     "eyebrow": "what it added up to",
-     "text": "Three games lost on the bench"
+     "eyebrow": "the board",
+     "text": "What one week did to the season"
+    },
+    {
+     "type": "p",
+     "text": "The odds board reprices off results, and week 1 moved it more than a single week usually can — partly because there are only fourteen of them, and partly because two of the six results were emphatic. These are the changes in each manager's chance of making the playoffs since the draft-day line."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff odds, draft day to now",
+     "sub": "Change in each manager's chance of making the six, after one week",
+     "rows": [
+      {
+       "label": "sizzlemc2",
+       "sub": "34% → 50%",
+       "value": 16.2,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "50% → 60%",
+       "value": 10,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "83% → 91%",
+       "value": 7.9,
+       "group": 2
+      },
+      {
+       "label": "bradyrife",
+       "sub": "42% → 49%",
+       "value": 6.6,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "sub": "54% → 60%",
+       "value": 6,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "sub": "90% → 95%",
+       "value": 5,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "43% → 43%",
+       "value": -0.2,
+       "group": 3
+      },
+      {
+       "label": "drewkim",
+       "sub": "25% → 20%",
+       "value": -5.1,
+       "group": 3
+      },
+      {
+       "label": "jskule23",
+       "sub": "31% → 24%",
+       "value": -7,
+       "group": 3
+      },
+      {
+       "label": "chassinator",
+       "sub": "39% → 31%",
+       "value": -8.6,
+       "group": 3
+      },
+      {
+       "label": "victorthompson",
+       "sub": "35% → 20%",
+       "value": -14.1,
+       "group": 3
+      },
+      {
+       "label": "bertalicious",
+       "sub": "73% → 57%",
+       "value": -16.6,
+       "group": 3
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2</b> gained most — sixteen points of playoff probability, from a coin flip to better than one. <b>bertalicious</b> lost most, seventeen, and his title chance fell from 14.9% to 9.3%. <b>victorthompson</b> is not far behind at fourteen. At the top, jadencha is now priced at −19900 to make the playoffs, which is the board's way of saying it has seen enough."
+    },
+    {
+     "type": "p",
+     "text": "Worth keeping in proportion: one week is one game in fourteen, and the model knows it. Nobody's season ended on Sunday. But a fortnight of this and the wildcard race has a shape."
+    },
+    {
+     "type": "h",
+     "eyebrow": "week 2",
+     "text": "The matchup: bertalicious v saucebossandrew"
+    },
+    {
+     "type": "p",
+     "text": "Of the six games on the week 2 slate this is the only one the model cannot separate. Their projected win totals are 7.2 and 7.5 — a quarter of a win apart across a whole season — and their playoff odds sit at 57% and 60%. Every other game has a gap of at least 1.4 projected wins."
     },
     {
      "type": "cards",
@@ -1061,34 +1177,39 @@
       {
        "lead": true,
        "title": "bertalicious",
-       "big": "53.64",
-       "sub": "left on the bench",
+       "big": "57%",
+       "sub": "to make the playoffs",
        "rows": [
         {
-         "label": "Lost by",
-         "value": "14.46"
+         "label": "Since the draft",
+         "value": "−17pt"
+        },
+        {
+         "label": "Projected wins",
+         "value": "7.2"
+        },
+        {
+         "label": "Week 1",
+         "value": "90.74"
         }
        ]
       },
       {
-       "title": "chassinator",
-       "big": "44.90",
-       "sub": "left on the bench",
+       "title": "saucebossandrew",
+       "big": "60%",
+       "sub": "to make the playoffs",
        "rows": [
         {
-         "label": "Lost by",
-         "value": "18.14"
-        }
-       ]
-      },
-      {
-       "title": "jskule23",
-       "big": "43.60",
-       "sub": "left on the bench",
-       "rows": [
+         "label": "Since the draft",
+         "value": "+10pt"
+        },
         {
-         "label": "Lost by",
-         "value": "12.76"
+         "label": "Projected wins",
+         "value": "7.5"
+        },
+        {
+         "label": "Week 1",
+         "value": "137.52"
         }
        ]
       }
@@ -1096,15 +1217,84 @@
     },
     {
      "type": "p",
-     "text": "All three would have won the game they played with players they already owned. That is not a claim about which player should have started — hindsight makes geniuses of everyone on a Tuesday — but it is worth writing down, because three of six games turning on lineup calls is a lot for one week."
+     "text": "It is also the week's best story. bertalicious fell furthest on Sunday and saucebossandrew rose second-most, and they now play each other while sitting three points apart. The loser drops into the congested middle of the board; the winner gets clear of it. For a week 2 game between two 1-0-and-0-1 teams, there is a surprising amount riding on it."
     },
     {
      "type": "p",
-     "text": "Elsewhere: eight trades went through before the season started, <b>Christian McCaffrey</b> changed hands twice and ended up back with chassinator, and forty-nine free-agent moves were processed without a single dollar of FAAB being spent. Every manager still has his full budget. That will not survive contact with a waiver wire much longer."
+     "text": "Elsewhere the slate is lopsided. Domo112 at 91% meets drewkim at 20%, and jadencha at 95% meets moseslin, who is the best 0-1 team in the league by some way and deserves better than the draw he has been given."
+    },
+    {
+     "type": "h",
+     "eyebrow": "week 2",
+     "text": "Who to watch"
+    },
+    {
+     "type": "picks",
+     "items": [
+      {
+       "slot": "OUT",
+       "name": "Zay Flowers",
+       "sub": "chassinator · scored 29.0 in week 1",
+       "delta": "−9.0% to the lineup"
+      },
+      {
+       "slot": "QUES",
+       "name": "Ladd McConkey",
+       "sub": "victorthompson · his only starter over 19.2",
+       "delta": "−2.5%"
+      },
+      {
+       "slot": "QUES",
+       "name": "Jalen Coker",
+       "sub": "Domo112 · scored 35.8 in week 1",
+       "delta": "−2.2%"
+      },
+      {
+       "slot": "WATCH",
+       "name": "Caleb Williams",
+       "sub": "Domo112 · 37.26, the week's best score",
+       "delta": "can he repeat it"
+      },
+      {
+       "slot": "WATCH",
+       "name": "Kenneth Walker",
+       "sub": "sizzlemc2 · 35.6 in a backfield that carried the win",
+       "delta": "84.7 from three backs"
+      },
+      {
+       "slot": "BOUNCE",
+       "name": "Ja'Marr Chase",
+       "sub": "bertalicious · 3.2 in a 14.46 defeat",
+       "delta": "in the game of the week"
+      },
+      {
+       "slot": "BOUNCE",
+       "name": "Saquon Barkley",
+       "sub": "moseslin · 8.5 in a 161.86 losing effort",
+       "delta": "the one that did not fire"
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The injuries are the part that actually moves numbers. Flowers being out is the single largest availability hit in the league, and it falls on a manager who can least afford it. Coker's status matters less to Domo112's week than it would to anyone else's — at 91% he can absorb it — but 35.8 is a lot to have in doubt."
+    },
+    {
+     "type": "h",
+     "eyebrow": "everything else",
+     "text": "What changed after Sunday"
+    },
+    {
+     "type": "p",
+     "text": "Forty-nine free-agent moves were processed and <b>not one dollar of FAAB was spent</b>. Every manager still has his entire budget, which is remarkable after an opening week that produced this many zeroes in starting lineups. The first real waiver war is still ahead, and the first manager to break ranks will find out what everyone else thinks a player is worth."
+    },
+    {
+     "type": "p",
+     "text": "The eight trades on record all predate the season. <b>Christian McCaffrey</b> was the busiest man in the league without playing a snap for the manager who drafted him: chassinator sent him to bradyrife with Kyren Williams coming back, then reacquired him from Domo112 for Jahmyr Gibbs. Gibbs scored 32.1 in his first week for Domo112. McCaffrey scored 11.3 for bradyrife. It is one week and it proves nothing, but it is the sort of one week people remember in December."
     },
     {
      "type": "note",
-     "text": "Every score here is the official Sleeper total under this league's scoring, taken from the week's own data file. Bench figures are the sum of all non-starting players on that roster for the week. Written the Tuesday after week 1."
+     "text": "Every score is the official Sleeper total under this league's scoring, taken from the week's own data file. Bench figures are the sum of all non-starting players for the week. Playoff and title probabilities, and the prices beside them, are the site's own live board as it stood on the Tuesday after week 1 — they move as the season is played. Injury costs are the model's estimate of what a lineup loses next week, not a forecast of the player."
     }
    ]
   }
