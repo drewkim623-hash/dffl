@@ -1,7 +1,7 @@
 # The weekly job
 
 `recaps.json` and `rankings.json` are not written by the site. They are written once a week by a
-scheduled cloud agent — routine **DFFL weekly recaps**, Tuesdays at 13:00 UTC (9am Eastern).
+scheduled cloud agent — routine **DFFL Tuesday recaps**, Tuesdays at 13:00 UTC (9am Eastern).
 
 The site never depends on either file. A missing, empty or stale `rankings.json` costs nothing: the
 power rankings are computed in the browser from the game log, and each team falls back to showing
@@ -39,11 +39,12 @@ Everything is already resolved to names. No ids need looking up, and nothing nee
 
 ## What the job writes
 
-Three things, all committed straight to `main`:
+Two things, both committed straight to `main`:
 
 1. **`recaps.json` → `weeks[]`** — the week's write-up.
 2. **`rankings.json` → `weeks[]`** — one sentence of colour per manager.
-3. **`recaps.json` → `articles[]`** — one column a week.
+
+This job does not touch `articles[]`.
 
 ### The contract for `weeks[]`
 
@@ -60,15 +61,14 @@ injury, race, note`. Replace a week that already exists rather than duplicating 
 all twelve managers, every week. The site matches on that string and falls back silently if it does
 not match.
 
-### The article
+### `articles[]` is not this job's
 
-One column a week, appended to `articles[]`. Shape is documented in `recaps.json`'s own `_schema`;
-`kind: "opinion"` gets the Column flag on the front page. Give it a `slug` nothing else uses, the
-week's date, and blocks that use the `stat`, `bars` and `cards` types rather than running as
-undifferentiated paragraphs — the two pieces already in the file are the standard to match.
+The weekly column lives in `recaps.json` → `articles[]`, but the Tuesday job doesn't write it: the
+Saturday blast writes the week's column, and a separate midweek story watch files one or two more
+through the week.
 
-**Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append, write it back
-whole. Dropping the key deletes writing nothing else regenerates.
+**Never drop `articles[]` when rewriting `recaps.json`.** Read the file, write `weeks[]` back, and
+leave `articles[]` exactly as found. Dropping the key deletes writing nothing else regenerates.
 
 ## The two hard rules
 
