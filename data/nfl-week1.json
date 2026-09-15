@@ -1,0 +1,114 @@
+[
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "CAR",
+  "away": "CHI",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "CIN",
+  "away": "TB",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "DET",
+  "away": "NO",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "HOU",
+  "away": "BUF",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "IND",
+  "away": "BAL",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "JAX",
+  "away": "CLE",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-14",
+  "home": "KC",
+  "away": "DEN",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "MIN",
+  "away": "GB",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "NYG",
+  "away": "DAL",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "LV",
+  "away": "MIA",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "PHI",
+  "away": "WAS",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "PIT",
+  "away": "ATL",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "LAC",
+  "away": "ARI",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-09",
+  "home": "SEA",
+  "away": "NE",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-10",
+  "home": "LAR",
+  "away": "SF",
+  "status": "complete"
+ },
+ {
+  "week": 1,
+  "date": "2026-09-13",
+  "home": "TEN",
+  "away": "NYJ",
+  "status": "complete"
+ }
+]
