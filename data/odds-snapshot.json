@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-09-15T14:48:39.769Z",
- "at": 1789483719770,
+ "generated": "2026-09-16T11:04:16.919Z",
+ "at": 1789556656919,
  "season": "2026",
  "week": 2,
  "liveWeek": null,
@@ -13,9 +13,9 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.28655,
-   "titleNow": 0.32165,
+   "titleNow": 0.3215,
    "playoffWas": 0.8968,
-   "playoffNow": 0.9465,
+   "playoffNow": 0.94655,
    "wins": 9.7121,
    "titleOdds": 195,
    "titleOddsOpen": 230,
@@ -26,24 +26,24 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.2031,
-   "titleNow": 0.23305,
+   "titleNow": 0.23315,
    "playoffWas": 0.8277,
-   "playoffNow": 0.9068,
-   "wins": 9.1885,
+   "playoffNow": 0.90735,
+   "wins": 9.1923,
    "titleOdds": 300,
    "titleOddsOpen": 360,
-   "playoffOdds": -2480
+   "playoffOdds": -2520
   },
   {
    "uid": "851564369144852480",
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.04645,
-   "titleNow": 0.04275,
+   "titleNow": 0.0431,
    "playoffWas": 0.43365,
-   "playoffNow": 0.43135,
+   "playoffNow": 0.43165,
    "wins": 6.4431,
-   "titleOdds": 2110,
+   "titleOdds": 2090,
    "titleOddsOpen": 1930,
    "playoffOdds": 120
   },
@@ -52,11 +52,11 @@
    "rid": 7,
    "manager": "drewkim",
    "titleWas": 0.0179,
-   "titleNow": 0.0122,
+   "titleNow": 0.01225,
    "playoffWas": 0.25335,
-   "playoffNow": 0.202,
-   "wins": 5.438,
-   "titleOdds": 7630,
+   "playoffNow": 0.2014,
+   "wins": 5.4342,
+   "titleOdds": 7600,
    "titleOddsOpen": 5170,
    "playoffOdds": 370
   },
@@ -65,9 +65,9 @@
    "rid": 4,
    "manager": "bertalicious",
    "titleWas": 0.1492,
-   "titleNow": 0.09335,
+   "titleNow": 0.0933,
    "playoffWas": 0.7329,
-   "playoffNow": 0.5669,
+   "playoffNow": 0.56695,
    "wins": 7.20885,
    "titleOdds": 910,
    "titleOddsOpen": 530,
@@ -78,9 +78,9 @@
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.06305,
-   "titleNow": 0.0769,
+   "titleNow": 0.077,
    "playoffWas": 0.50245,
-   "playoffNow": 0.6022,
+   "playoffNow": 0.60235,
    "wins": 7.4647,
    "titleOdds": 1130,
    "titleOddsOpen": 1400,
@@ -91,11 +91,11 @@
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.0466,
-   "titleNow": 0.0488,
+   "titleNow": 0.04875,
    "playoffWas": 0.42065,
-   "playoffNow": 0.48635,
+   "playoffNow": 0.4863,
    "wins": 7.0767,
-   "titleOdds": 1830,
+   "titleOdds": 1840,
    "titleOddsOpen": 1920,
    "playoffOdds": -105
   },
@@ -104,11 +104,11 @@
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.02955,
-   "titleNow": 0.02045,
+   "titleNow": 0.02035,
    "playoffWas": 0.314,
-   "playoffNow": 0.24425,
+   "playoffNow": 0.24455,
    "wins": 5.6641,
-   "titleOdds": 4510,
+   "titleOdds": 4540,
    "titleOddsOpen": 3090,
    "playoffOdds": 290
   },
@@ -117,10 +117,10 @@
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.06515,
-   "titleNow": 0.06735,
+   "titleNow": 0.0673,
    "playoffWas": 0.5441,
-   "playoffNow": 0.60385,
-   "wins": 7.52075,
+   "playoffNow": 0.60585,
+   "wins": 7.5312,
    "titleOdds": 1300,
    "titleOddsOpen": 1350,
    "playoffOdds": -180
@@ -130,11 +130,11 @@
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.0371,
-   "titleNow": 0.028,
+   "titleNow": 0.0276,
    "playoffWas": 0.3929,
-   "playoffNow": 0.3072,
-   "wins": 5.88555,
-   "titleOdds": 3270,
+   "playoffNow": 0.3041,
+   "wins": 5.8751,
+   "titleOdds": 3320,
    "titleOddsOpen": 2440,
    "playoffOdds": 210
   },
@@ -143,11 +143,11 @@
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02955,
-   "titleNow": 0.01385,
+   "titleNow": 0.0138,
    "playoffWas": 0.3453,
-   "playoffNow": 0.2044,
+   "playoffNow": 0.20455,
    "wins": 5.47885,
-   "titleOdds": 6710,
+   "titleOdds": 6740,
    "titleOddsOpen": 3090,
    "playoffOdds": 360
   },
@@ -156,11 +156,11 @@
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0258,
-   "titleNow": 0.04165,
+   "titleNow": 0.0419,
    "playoffWas": 0.3362,
-   "playoffNow": 0.4982,
+   "playoffNow": 0.4984,
    "wins": 6.9188,
-   "titleOdds": 2170,
+   "titleOdds": 2150,
    "titleOddsOpen": 3560,
    "playoffOdds": -110
   }
@@ -169,7 +169,7 @@
  "hurt": [
   {
    "manager": "chassinator",
-   "cost": 0.09029892056462774,
+   "cost": 0.09773816656680645,
    "players": [
     {
      "name": "Zay Flowers",
@@ -199,11 +199,15 @@
   },
   {
    "manager": "drewkim",
-   "cost": 0.009082733812949662,
+   "cost": 0.012588632838466673,
    "players": [
     {
      "name": "Alec Pierce",
      "status": "Questionable"
+    },
+    {
+     "name": "Brock Bowers",
+     "status": "Out"
     }
    ]
   },
@@ -222,6 +226,14 @@
  "nfl": null,
  "articles": [
   {
+   "slug": "week-1-game-by-game",
+   "kicker": "2026 · week 1",
+   "headline": "Week 1, Game by Game",
+   "dek": "A Monday-night heist, a man who needed seventeen points from one receiver, and the best score in the league losing anyway. Every game in full, plus the board that moved underneath them.",
+   "byline": "DFFL desk",
+   "date": "2026-09-15"
+  },
+  {
    "slug": "the-nine-game-difference",
    "kicker": "analysis · five seasons of schedule",
    "headline": "The Nine-Game Difference",
@@ -236,14 +248,6 @@
    "dek": "I wrote yesterday that this league cannot punish its worst team. I had the bracket upside down. It punishes them better than almost any format I have seen.",
    "byline": "DFFL desk",
    "date": "2026-08-19"
-  },
-  {
-   "slug": "the-cpes-problem",
-   "kicker": "2026 draft · analysis",
-   "headline": "The CPES Problem",
-   "dek": "The two best rosters in the league landed in the same division. One of them is going to spend the autumn fighting for a wildcard — and that is only the second-most interesting thing about this draft.",
-   "byline": "DFFL desk",
-   "date": "2026-08-18"
   }
  ]
 }

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-15T12:47:02.123Z",
- "at": 1789476422123,
+ "generated": "2026-09-16T11:03:48.882Z",
+ "at": 1789556628882,
  "season": "2026",
  "nfl_week": 2,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 0,
    "points_for": 195.9,
    "points_against": 125.1,
-   "faab_spent": 0,
+   "faab_spent": 4,
    "starters_hurt": []
   },
   {
@@ -51,7 +51,7 @@
    "losses": 0,
    "points_for": 111.46,
    "points_against": 90.5,
-   "faab_spent": 0,
+   "faab_spent": 21,
    "starters_hurt": []
   },
   {
@@ -60,7 +60,7 @@
    "losses": 0,
    "points_for": 105.2,
    "points_against": 90.74,
-   "faab_spent": 0,
+   "faab_spent": 36,
    "starters_hurt": []
   },
   {
@@ -78,9 +78,9 @@
    "losses": 1,
    "points_for": 144.52,
    "points_against": 162.66,
-   "faab_spent": 0,
+   "faab_spent": 15,
    "starters_hurt": [
-    "Zay Flowers (Out)"
+    "Zay Flowers (Questionable)"
    ]
   },
   {
@@ -89,8 +89,9 @@
    "losses": 1,
    "points_for": 125.1,
    "points_against": 195.9,
-   "faab_spent": 0,
+   "faab_spent": 2,
    "starters_hurt": [
+    "Brock Bowers (Questionable)",
     "Alec Pierce (Questionable)"
    ]
   },
@@ -109,8 +110,10 @@
    "losses": 1,
    "points_for": 90.74,
    "points_against": 105.2,
-   "faab_spent": 0,
-   "starters_hurt": []
+   "faab_spent": 18,
+   "starters_hurt": [
+    "TreVeyon Henderson (Questionable)"
+   ]
   },
   {
    "manager": "victorthompson",
@@ -120,7 +123,6 @@
    "points_against": 111.46,
    "faab_spent": 0,
    "starters_hurt": [
-    "A.J. Brown (IR)",
     "Ladd McConkey (Questionable)"
    ]
   }
@@ -154,7 +156,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "wesley55",
@@ -195,7 +197,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   }
  ],
@@ -510,6 +512,188 @@
    "picks": []
   }
  ],
- "waivers": [],
- "free_agent_moves": 49
+ "waivers": [
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Kaelon Black",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Ja'Kobi Lane",
+     "pos": "WR",
+     "team": "BAL",
+     "status": "Doubtful",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 36,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "Romeo Doubs",
+     "pos": "WR",
+     "team": "NE",
+     "status": null,
+     "to": "wesley55"
+    }
+   ],
+   "drops": [],
+   "faab": 21,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "bertalicious"
+   ],
+   "adds": [
+    {
+     "name": "Caleb Douglas",
+     "pos": "WR",
+     "team": "MIA",
+     "status": null,
+     "to": "bertalicious"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Rachaad White",
+     "pos": "RB",
+     "team": "WAS",
+     "status": null,
+     "from": "bertalicious"
+    }
+   ],
+   "faab": 18,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "San Francisco 49ers",
+     "pos": "DEF",
+     "team": "SF",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Detroit Lions",
+     "pos": "DEF",
+     "team": "DET",
+     "status": null,
+     "from": "chassinator"
+    }
+   ],
+   "faab": 12,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Tampa Bay Buccaneers",
+     "pos": "DEF",
+     "team": "TB",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jake Ferguson",
+     "pos": "TE",
+     "team": "DAL",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": 4,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Jordan Love",
+     "pos": "QB",
+     "team": "GB",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chris Rodriguez",
+     "pos": "RB",
+     "team": "JAX",
+     "status": null,
+     "from": "chassinator"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "week": 1,
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "status": null,
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chig Okonkwo",
+     "pos": "TE",
+     "team": "WAS",
+     "status": "Questionable",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 2,
+   "picks": []
+  }
+ ],
+ "free_agent_moves": 57
 }

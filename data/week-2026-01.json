@@ -2,7 +2,7 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 1,
- "generated": "2026-09-15T12:47:00.689Z",
+ "generated": "2026-09-16T11:03:47.504Z",
  "league": {
   "id": "1318040218183417856",
   "name": "DFFL",
@@ -1125,7 +1125,7 @@
    "ties": 0,
    "points_for": 195.9,
    "points_against": 125.1,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 4
   },
   {
    "manager": "Domo112",
@@ -1169,7 +1169,7 @@
    "ties": 0,
    "points_for": 111.46,
    "points_against": 90.5,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 21
   },
   {
    "manager": "bradyrife",
@@ -1180,7 +1180,7 @@
    "ties": 0,
    "points_for": 105.2,
    "points_against": 90.74,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 36
   },
   {
    "manager": "moseslin",
@@ -1202,7 +1202,7 @@
    "ties": 0,
    "points_for": 144.52,
    "points_against": 162.66,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 15
   },
   {
    "manager": "drewkim",
@@ -1213,7 +1213,7 @@
    "ties": 0,
    "points_for": 125.1,
    "points_against": 195.9,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 2
   },
   {
    "manager": "jskule23",
@@ -1235,7 +1235,7 @@
    "ties": 0,
    "points_for": 90.74,
    "points_against": 105.2,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 18
   },
   {
    "manager": "victorthompson",
@@ -1250,6 +1250,232 @@
   }
  ],
  "transactions": [
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chig Okonkwo",
+     "pos": "TE",
+     "team": "WAS",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 2,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "Romeo Doubs",
+     "pos": "WR",
+     "team": "NE",
+     "to": "wesley55"
+    }
+   ],
+   "drops": [],
+   "faab": 21,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Jordan Love",
+     "pos": "QB",
+     "team": "GB",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chris Rodriguez",
+     "pos": "RB",
+     "team": "JAX",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "bertalicious"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Bo Nix",
+     "pos": "QB",
+     "team": "DEN",
+     "from": "bertalicious"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bertalicious"
+   ],
+   "adds": [
+    {
+     "name": "Caleb Douglas",
+     "pos": "WR",
+     "team": "MIA",
+     "to": "bertalicious"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Rachaad White",
+     "pos": "RB",
+     "team": "WAS",
+     "from": "bertalicious"
+    }
+   ],
+   "faab": 18,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Rashod Bateman",
+     "pos": "WR",
+     "team": "BAL",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Tank Bigsby",
+     "pos": "RB",
+     "team": "PHI",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Kaelon Black",
+     "pos": "RB",
+     "team": "SF",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Ja'Kobi Lane",
+     "pos": "WR",
+     "team": "BAL",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 36,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Alvin Kamara",
+     "pos": "RB",
+     "team": "NO",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jalen Nailor",
+     "pos": "WR",
+     "team": "LV",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Tampa Bay Buccaneers",
+     "pos": "DEF",
+     "team": "TB",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jake Ferguson",
+     "pos": "TE",
+     "team": "DAL",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 4,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "San Francisco 49ers",
+     "pos": "DEF",
+     "team": "SF",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Detroit Lions",
+     "pos": "DEF",
+     "team": "DET",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 12,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
