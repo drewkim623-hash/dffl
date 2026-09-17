@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-16T11:03:48.882Z",
- "at": 1789556628882,
+ "generated": "2026-09-17T11:03:56.422Z",
+ "at": 1789643036423,
  "season": "2026",
  "nfl_week": 2,
  "season_type": "regular",
@@ -14,7 +14,9 @@
    "points_for": 195.9,
    "points_against": 125.1,
    "faab_spent": 4,
-   "starters_hurt": []
+   "starters_hurt": [
+    "D'Andre Swift (Questionable)"
+   ]
   },
   {
    "manager": "Domo112",
@@ -34,7 +36,9 @@
    "points_for": 162.66,
    "points_against": 144.52,
    "faab_spent": 0,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Eddy Pineiro (Questionable)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -52,7 +56,9 @@
    "points_for": 111.46,
    "points_against": 90.5,
    "faab_spent": 21,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Joe Burrow (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -61,7 +67,9 @@
    "points_for": 105.2,
    "points_against": 90.74,
    "faab_spent": 36,
-   "starters_hurt": []
+   "starters_hurt": [
+    "George Kittle (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -70,7 +78,9 @@
    "points_for": 161.86,
    "points_against": 187.06,
    "faab_spent": 0,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Nico Collins (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -92,7 +102,7 @@
    "faab_spent": 2,
    "starters_hurt": [
     "Brock Bowers (Questionable)",
-    "Alec Pierce (Questionable)"
+    "Michael Pittman (Questionable)"
    ]
   },
   {
@@ -101,7 +111,7 @@
    "losses": 1,
    "points_for": 124.76,
    "points_against": 137.52,
-   "faab_spent": 0,
+   "faab_spent": 10,
    "starters_hurt": []
   },
   {
@@ -110,10 +120,8 @@
    "losses": 1,
    "points_for": 90.74,
    "points_against": 105.2,
-   "faab_spent": 18,
-   "starters_hurt": [
-    "TreVeyon Henderson (Questionable)"
-   ]
+   "faab_spent": 8,
+   "starters_hurt": []
   },
   {
    "manager": "victorthompson",
@@ -156,7 +164,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "wesley55",
@@ -197,7 +205,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -533,7 +541,7 @@
      "name": "Ja'Kobi Lane",
      "pos": "WR",
      "team": "BAL",
-     "status": "Doubtful",
+     "status": "IR",
      "from": "bradyrife"
     }
    ],
@@ -695,5 +703,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 57
+ "free_agent_moves": 64
 }
