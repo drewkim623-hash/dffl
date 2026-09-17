@@ -128,6 +128,88 @@
  "articles": [
   {
    "season": "2026",
+   "slug": "bradyrife-bought-the-backup-too",
+   "date": "2026-09-17",
+   "source": "watch",
+   "kicker": "2026 · week 1 waivers",
+   "headline": "Bradyrife Bought the Backup Too",
+   "dek": "Christian McCaffrey arrived by trade last week. Kaelon Black just arrived by the highest FAAB bid of the round — same 49ers backfield, same fantasy roster.",
+   "byline": "DFFL desk",
+   "standfirst": "$36 · the round's top bid",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "The waiver wire that had not processed as of Monday has now cleared, and the two managers who spent real money went and built things. <b>wesley55</b> paid $21 for <b>Romeo Doubs</b>. <b>bradyrife</b> paid $36 for <b>Kaelon Black</b> — the highest bid to clear this round — and in doing so added the backup running back to a backfield he already controls the starter of."
+    },
+    {
+     "type": "stat",
+     "n": "$36",
+     "text": "What bradyrife paid for Kaelon Black, San Francisco's backup running back. It is the highest FAAB bid to clear this waiver round, and $15 more than the next one."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the backfield",
+     "text": "One Manager, Two 49ers"
+    },
+    {
+     "type": "p",
+     "text": "bradyrife already owns <b>Christian McCaffrey</b>, acquired last week in a trade with chassinator that also sent Kyren Williams the other way. McCaffrey scored 11.3 in his bradyrife debut. Black has not played a snap for the roster yet, but the price says this was insurance rather than a speculative stash — bradyrife spent more on the backup than anyone else spent on anything this round."
+    },
+    {
+     "type": "p",
+     "text": "The corresponding drop was easy. bradyrife let go of <b>Ja'Kobi Lane</b>, a wide receiver who has been on injured reserve."
+    },
+    {
+     "type": "bars",
+     "title": "FAAB spent this waiver round",
+     "sub": "By manager, in dollars.",
+     "rows": [
+      {
+       "label": "bradyrife",
+       "value": 36,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "value": 21,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "value": 15,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "value": 10,
+       "group": 2
+      },
+      {
+       "label": "bertalicious",
+       "value": 8,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "value": 4,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "value": 2,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Five managers spent nothing at all. <b>Domo112</b>, <b>sizzlemc2</b>, <b>saucebossandrew</b>, <b>moseslin</b> and <b>victorthompson</b> carried their full FAAB budget into week 2 untouched."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "slug": "the-cpes-problem",
    "date": "2026-08-18",
    "kicker": "2026 draft · analysis",
