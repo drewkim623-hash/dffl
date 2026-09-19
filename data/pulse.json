@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-18T11:03:44.759Z",
- "at": 1789729424760,
+ "generated": "2026-09-19T11:03:08.149Z",
+ "at": 1789815788149,
  "season": "2026",
  "nfl_week": 2,
  "season_type": "regular",
@@ -15,7 +15,6 @@
    "points_against": 125.1,
    "faab_spent": 4,
    "starters_hurt": [
-    "D'Andre Swift (Questionable)",
     "DJ Moore (Out)"
    ]
   },
@@ -26,9 +25,7 @@
    "points_for": 187.06,
    "points_against": 161.86,
    "faab_spent": 0,
-   "starters_hurt": [
-    "Jalen Coker (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -70,9 +67,7 @@
    "points_for": 105.2,
    "points_against": 90.74,
    "faab_spent": 36,
-   "starters_hurt": [
-    "George Kittle (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -82,7 +77,7 @@
    "points_against": 187.06,
    "faab_spent": 0,
    "starters_hurt": [
-    "Nico Collins (Questionable)"
+    "Nico Collins (Out)"
    ]
   },
   {
@@ -93,7 +88,7 @@
    "points_against": 162.66,
    "faab_spent": 15,
    "starters_hurt": [
-    "Zay Flowers (Questionable)"
+    "Zay Flowers (Doubtful)"
    ]
   },
   {
@@ -104,8 +99,6 @@
    "points_against": 195.9,
    "faab_spent": 2,
    "starters_hurt": [
-    "Brock Bowers (Questionable)",
-    "Alec Pierce (Questionable)",
     "Michael Pittman (Questionable)"
    ]
   },
@@ -115,8 +108,10 @@
    "losses": 1,
    "points_for": 124.76,
    "points_against": 137.52,
-   "faab_spent": 10,
-   "starters_hurt": []
+   "faab_spent": 11,
+   "starters_hurt": [
+    "Puka Nacua (Questionable)"
+   ]
   },
   {
    "manager": "bertalicious",
@@ -699,11 +694,38 @@
      "name": "Chig Okonkwo",
      "pos": "TE",
      "team": "WAS",
-     "status": "Questionable",
+     "status": "Out",
      "from": "drewkim"
     }
    ],
    "faab": 2,
+   "picks": []
+  },
+  {
+   "week": 2,
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Makai Lemon",
+     "pos": "WR",
+     "team": "PHI",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Devaughn Vele",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "from": "jskule23"
+    }
+   ],
+   "faab": 1,
    "picks": []
   },
   {
