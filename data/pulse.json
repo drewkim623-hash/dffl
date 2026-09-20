@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-20T11:03:10.980Z",
- "at": 1789902190980,
+ "generated": "2026-09-20T15:36:14.689Z",
+ "at": 1789918574689,
  "season": "2026",
  "nfl_week": 2,
  "season_type": "regular",
@@ -124,7 +124,7 @@
    "losses": 1,
    "points_for": 90.5,
    "points_against": 111.46,
-   "faab_spent": 1,
+   "faab_spent": 7,
    "starters_hurt": [
     "Ladd McConkey (Questionable)"
    ]
@@ -614,6 +614,33 @@
     }
    ],
    "faab": 12,
+   "picks": []
+  },
+  {
+   "week": 2,
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Devaughn Vele",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Patrick Mahomes",
+     "pos": "QB",
+     "team": "KC",
+     "status": null,
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 6,
    "picks": []
   },
   {
