@@ -45,7 +45,24 @@ const byDate = (recaps.articles || []).slice()
   .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
 // The week's column leads the email; anything else recent rides along under it.
 const lead = byDate[0] || null;
-const also = byDate.slice(1, 3);
+/**
+ * Everything else the desk filed this week.
+ *
+ * The midweek story watch publishes one or two pieces between blasts, and this
+ * is where they reach anybody who does not visit the site. Taking "the next two
+ * by date" was the crude version: on a quiet week it re-showed pieces the league
+ * had already been sent. This takes only what was published since the last
+ * blast, so the section is genuinely "what you missed" and disappears when
+ * there is nothing.
+ */
+const SINCE_DAYS = 7;
+const asOf = D.generated ? new Date(D.generated) : new Date();
+const cutoff = new Date(asOf.getTime() - SINCE_DAYS * 864e5);
+const also = byDate.slice(1).filter(a => {
+  if (!a.date) return false;
+  const d = new Date(a.date + "T12:00:00Z");
+  return isFinite(d) && d >= cutoff;
+}).slice(0, 3);
 
 const pc = n => `${(n * 100).toFixed(0)}%`;
 const pc1 = n => `${(n * 100).toFixed(1)}%`;
@@ -344,7 +361,8 @@ const inner = `
   ${race.length ? twoUp(raceHalf(race.slice(0, 6)), raceHalf(race.slice(6, 12))) : ""}
   ${injuryBlock ? head2("Out this week", "priced into the board") : ""}
   ${injuryBlock ? `<tr><td>${injuryBlock}</td></tr>` : ""}
-  ${also.length ? head2("Also on the site") : ""}
+  ${also.length ? head2(also.length === 1 ? "Also this week" : "Also this week",
+    "filed since the last email") : ""}
   ${also.length ? twoUp(alsoBlock(also[0]), also[1] ? alsoBlock(also[1]) : "") : ""}
   <tr><td style="padding:22px 0 0">${button(SITE, "Open the full board &rarr;", C.ink, 14)}</td></tr>
   ${footerNote}
@@ -409,5 +427,5 @@ await writeFile(`${stem}.json`, JSON.stringify({
 console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB, one line`);
 console.log(`sha256: ${sha}`);
 console.log(`subject: ${subject}`);
-console.log(`  recap: ${lastWeek ? "week " + lastWeek.week : "(none)"} · column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
+console.log(`  recap: ${lastWeek ? "week " + lastWeek.week : "(none)"} · column: ${lead ? lead.headline : "(none)"} · ${also.length} since last blast · `
   + `${race.length} priced`);
