@@ -304,39 +304,21 @@ const alsoBlock = a => box(`
   <a href="${linkTo(a)}" style="display:inline-block;margin-top:9px;font:700 12px/1 ${F};color:${C.blue};text-decoration:none">Read it →</a>
 `, "14px 15px");
 
-/* ------------------------------------------------------- the approve button */
+/* ---------------------------------------------------------------- footer */
 /**
- * One tap to put this in front of the league.
- *
- * A mailto rather than a link to a server, because there is no server: the site
- * is static. Tapping it opens a pre-addressed reply with a subject the approval
- * routine watches for, and sending that reply is the whole approval. Nothing can
- * go to the league without a mail actually leaving this inbox.
+ * The blast goes to the league directly, so there is no approval step and no
+ * button asking for one. What replaces it is the thing a newsletter actually
+ * owes its readers: who sent it and how to stop receiving it.
  */
-const approveSubject = `DFFL PUBLISH ${D.season}-${String(D.week).padStart(2, "0")}`;
-// The body is not decoration. An approval that opens an empty compose window
-// looks broken, gives you nothing to confirm you are sending the right thing,
-// and leaves the watcher matching on the subject alone. PUBLISH in the body
-// satisfies both routes at once, so it does not matter which one the watcher
-// happens to find first. &amp; because this lives in an href in HTML.
-const approveHref = `mailto:drewkim623@gmail.com`
-  + `?subject=${encodeURIComponent(approveSubject)}`
-  + `&amp;body=${encodeURIComponent("PUBLISH\n\nSends the DFFL Week " + D.week
-      + " email to all twelve managers. Just hit send.")}`;
-const approveBlock = `
-  <tr><td style="padding:24px 0 0">
+const footerNote = `
+  <tr><td style="padding:22px 0 0">
     ${box(`
-      <div style="font:800 15px/1.25 ${F};color:${C.ink}">Only you have seen this.</div>
-      <div style="font:400 12.5px/1.5 ${F};color:${C.mid};margin-top:5px">
-        Tap below and hit send on the reply that opens. That is the whole approval — the blast then
-        goes out to all twelve managers, unchanged.</div>
-      <div style="margin-top:13px">${button(approveHref, "&#10003;&nbsp; Send this to the league", C.green)}</div>
-      <div style="font:400 12.5px/1.55 ${F};color:${C.mid};margin-top:12px;text-align:center">
-        Or just <b style="color:${C.ink}">reply to this email with the word PUBLISH</b>.
-        Either one does it — the button is only a shortcut.</div>
-      <div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:7px;text-align:center">
-        Do nothing and it stays between us.</div>
-    `, "16px 16px 15px")}
+      <div style="font:700 13px/1.35 ${F};color:${C.ink}">Written by the DFFL desk, Saturday evening.</div>
+      <div style="font:400 12px/1.55 ${F};color:${C.mid};margin-top:6px">
+        Every number is computed from Sleeper's own data by
+        <a href="${SITE}" style="color:${C.blue};text-decoration:none">the league site</a>, so this and
+        the site cannot disagree. Reply to this email if you would rather not get it.</div>
+    `, "15px 16px")}
   </td></tr>`;
 
 /* ------------------------------------------------------------- assemble */
@@ -365,7 +347,7 @@ const inner = `
   ${also.length ? head2("Also on the site") : ""}
   ${also.length ? twoUp(alsoBlock(also[0]), also[1] ? alsoBlock(also[1]) : "") : ""}
   <tr><td style="padding:22px 0 0">${button(SITE, "Open the full board &rarr;", C.ink, 14)}</td></tr>
-  ${approveBlock}
+  ${footerNote}
   <tr><td class="pad" style="padding:18px 4px 0;font:400 11px/1.55 ${F};color:${C.faint}">
     Prices carry the same 6% hold the site posts. Every number here was computed by the site itself,
     so the two cannot disagree. Win probabilities move while games are being played; records,
@@ -405,7 +387,6 @@ const text = [
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
   race.length ? `\nTO MAKE THE PLAYOFFS\n` + race.map(t =>
     `${t.manager}: ${fmtOdds(t.playoffOdds)} (${pc(t.playoffNow)}) · title ${fmtOdds(t.titleOdds)}`).join("\n") : "",
-  `\nTo send this to the league, reply to this email with the word PUBLISH.`,
   `\n${SITE}`,
 ].filter(Boolean).join("\n");
 
@@ -422,7 +403,6 @@ await writeFile(`${stem}.json`, JSON.stringify({
   _comment: "Subject, plain-text fallback and the approval subject for the weekly blast.",
   season: D.season, week: D.week, generated: new Date().toISOString(),
   subject, text, body_file: out, column: lead ? lead.headline : null,
-  approve_subject: approveSubject,
   bytes: Buffer.byteLength(html, "utf8"), sha256: sha,
 }, null, 1) + "\n");
 
@@ -430,4 +410,4 @@ console.log(`${out} — ${(html.length / 1024).toFixed(1)}KB, one line`);
 console.log(`sha256: ${sha}`);
 console.log(`subject: ${subject}`);
 console.log(`  recap: ${lastWeek ? "week " + lastWeek.week : "(none)"} · column: ${lead ? lead.headline : "(none)"} · ${also.length} others · `
-  + `${race.length} priced · approve with "${approveSubject}"`);
+  + `${race.length} priced`);
