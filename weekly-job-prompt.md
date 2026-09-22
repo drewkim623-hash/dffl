@@ -85,7 +85,8 @@ available.
 
 **Every piece the desk publishes goes to the league by email, and nothing waits for approval.**
 That covers all three jobs: the Tuesday recap, anything the midweek story watch files, and the
-Saturday column. Write it, commit it, send it.
+Saturday column. Write it, commit it, push it, send it — no draft to Drew, no reply to wait for.
+Pushing an article and emailing it are one action, not two with a gate between them.
 
 ### Who it goes to
 
@@ -102,20 +103,28 @@ moseslin2023@gmail.com, dominickreyes1@gmail.com
 Dominick Reyes was missing from the list used up to 19 September. He is on it now. If a send goes
 out to eleven addresses, the list is the old one and is wrong.
 
-### Never send the same piece twice
+### A column is never reused
 
 The blast leads with the newest article in `articles[]` and carries the newest week in `weeks[]`.
-Neither file knows anything about email, so on a quiet week the default behaviour is to send the
-league a column it already read. `data/sent-emails.json` is the record of what actually reached
-them. Before composing, run:
+Neither file knows anything about email, so left alone the default behaviour is to send the league
+a column it already read. `data/sent-emails.json` is the record of what actually reached them.
+Before composing, run:
 
 ```
 node blast-status.mjs
 ```
 
-Exit **0** means there is something new. Exit **1** means the newest piece has already been sent —
-**write a new article first**, then send that. Do not send a repeat, and do not silently skip: a
-quiet week is a week to file something short, not a week to go dark.
+Exit **0** — the newest piece is unsent. Compose and send it.
+
+Exit **1** — the newest piece has already been sent. **Write a new article off current data, then
+send that.** Not a repeat, and not a skipped week. This is the normal Saturday case: the Tuesday
+blast will usually have sent the week's column already, so Saturday writes a fresh one. A new
+recap does not excuse a stale column — it is what the new piece should be built on, not a reason
+to skip writing it.
+
+There is always something to write. The board has moved, somebody has been claimed, a man is back
+from injury, a 2-0 team is being carried by one receiver. Find the piece the data supports and
+file it.
 
 After the send actually succeeds, record it and commit:
 
