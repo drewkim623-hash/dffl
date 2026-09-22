@@ -804,6 +804,75 @@ check("week 1 still ranks everybody", wk1Dom.rows === 12);
 check("week 1 draws no rank line, having one point", wk1Dom.sparks === 0, `${wk1Dom.sparks}`);
 
 group("Power rankings: blurbs degrade gracefully");
+
+/* The column prints the power board — ranks and movement arrows — and the site
+ * prints its own beside the copy. They come from the same powerRankings() call,
+ * so drift is impossible by construction; this asserts the construction. */
+const artBoard = await page.evaluate(async () => {
+  const F = window.__DFFL;
+  const j = await (await fetch("recaps.json", { cache: "no-cache" })).json();
+  const col = (j.articles || []).find(a => a.slug === "one-game-was-on-the-bench");
+  if (!col) return { skip: "column not published" };
+  const picks = col.blocks.filter(b => b.type === "picks");
+  const board = picks.find(b => b.items.length === 12);
+  const inj = picks.find(b => b !== board);
+  if (!board) return { skip: "no twelve-row picks block" };
+
+  const P = F.powerRankings(F.DB.seasons[0]);
+  // The board for the week the column is ABOUT, not the newest one. Comparing
+  // against the latest would start failing the moment week 3 is in the book,
+  // which would be this check rotting rather than the article being wrong.
+  const wk = Number(col.kicker.match(/week (\d+)/i)?.[1]);
+  const last = P.boards.find(b => b.week === wk);
+  if (!last) return { skip: `no board for week ${wk}` };
+  const name = uid => { const m = F.DB.mgr.get(uid); return (m && m.name) || String(uid); };
+  const live = last.rows.map((r, i) => ({
+    rank: i + 1, manager: name(r.uid), rec: `${r.w}-${r.l}`, pf: r.pf.toFixed(2),
+    move: r.prev == null || r.prev === r.rank ? "—"
+      : `${r.prev > r.rank ? "\u25b2" : "\u25bc"} ${Math.abs(r.prev - r.rank)}`,
+  }));
+
+  const mism = [];
+  board.items.forEach((it, i) => {
+    const l = live[i];
+    if (!l) { mism.push(`row ${i} missing`); return; }
+    if (it.slot !== String(l.rank)) mism.push(`${i}: slot ${it.slot} vs ${l.rank}`);
+    if (it.name !== l.manager) mism.push(`${i}: ${it.name} vs ${l.manager}`);
+    if (!it.sub.includes(l.rec)) mism.push(`${i}: rec ${it.sub} lacks ${l.rec}`);
+    if (!it.sub.includes(l.pf)) mism.push(`${i}: pf ${it.sub} lacks ${l.pf}`);
+    if (it.delta !== l.move) mism.push(`${i}: move "${it.delta}" vs "${l.move}"`);
+  });
+
+  // The injury picks block against the live availability map.
+  const A = window.__AVAIL || new Map();
+  const S = F.DB.seasons[0];
+  const ridToUid = new Map((S.rosters || []).map(r => [r.roster_id, r.owner_id]));
+  const liveInj = [...A.entries()].filter(([, a]) => a.hurt.length)
+    .map(([rid, a]) => ({ manager: name(ridToUid.get(rid)), cost: ((1 - a.mult) * 100).toFixed(1), n: a.hurt.length }))
+    .sort((x, y) => Number(y.cost) - Number(x.cost));
+  const injMism = [];
+  if (inj) inj.items.forEach((it, i) => {
+    const l = liveInj[i];
+    if (!l) { injMism.push(`row ${i} missing`); return; }
+    if (it.name !== l.manager) injMism.push(`${i}: ${it.name} vs ${l.manager}`);
+    if (!it.slot.includes(l.cost)) injMism.push(`${i}: cost ${it.slot} vs ${l.cost}`);
+    if (!it.delta.startsWith(String(l.n))) injMism.push(`${i}: count ${it.delta} vs ${l.n}`);
+  });
+
+  return { rows: board.items.length, mism, injRows: inj ? inj.items.length : 0, injMism,
+    liveInjRows: liveInj.length };
+});
+if (artBoard.skip) {
+  check("the column's power board matches the site's", true, `skipped: ${artBoard.skip}`);
+} else {
+  check("the column prints all twelve board rows", artBoard.rows === 12, `${artBoard.rows}`);
+  check("every rank, record, points and arrow matches powerRankings()",
+    artBoard.mism.length === 0, artBoard.mism.slice(0, 4).join(" | "));
+  check("the column's injury table covers every affected roster",
+    artBoard.injRows === artBoard.liveInjRows, `${artBoard.injRows} vs ${artBoard.liveInjRows}`);
+  check("every injury cost and starter count matches the live board",
+    artBoard.injMism.length === 0, artBoard.injMism.slice(0, 4).join(" | "));
+}
 const blurbs = await page.evaluate(async () => {
   const D = window.__DFFL;
   const before = { ok: window.__DFFL.loadBlurbs && true };

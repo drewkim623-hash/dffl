@@ -1964,6 +1964,100 @@
     },
     {
      "type": "h",
+     "eyebrow": "the power board",
+     "text": "Where the Standings Lie"
+    },
+    {
+     "type": "p",
+     "text": "The site keeps its own ranking and it does not care who you played. 40% of it is beat-everyone rate — how you would have done against all eleven other lineups each week rather than the one you drew — 25% the same arithmetic over the last 3 weeks, 20% scoring and only 15% the actual record. After two weeks that produces a board the results table would not recognise."
+    },
+    {
+     "type": "picks",
+     "items": [
+      {
+       "slot": "1",
+       "name": "jadencha",
+       "sub": "2-0 · 341.00 points",
+       "delta": "—"
+      },
+      {
+       "slot": "2",
+       "name": "wesley55",
+       "sub": "2-0 · 250.04 points",
+       "delta": "▲ 5"
+      },
+      {
+       "slot": "3",
+       "name": "sizzlemc2",
+       "sub": "1-1 · 273.64 points",
+       "delta": "—"
+      },
+      {
+       "slot": "4",
+       "name": "bradyrife",
+       "sub": "2-0 · 239.26 points",
+       "delta": "▲ 6"
+      },
+      {
+       "slot": "5",
+       "name": "saucebossandrew",
+       "sub": "1-1 · 257.68 points",
+       "delta": "—"
+      },
+      {
+       "slot": "6",
+       "name": "Domo112",
+       "sub": "1-1 · 272.38 points",
+       "delta": "▼ 4"
+      },
+      {
+       "slot": "7",
+       "name": "drewkim",
+       "sub": "1-1 · 237.74 points",
+       "delta": "▲ 1"
+      },
+      {
+       "slot": "8",
+       "name": "bertalicious",
+       "sub": "1-1 · 222.52 points",
+       "delta": "▲ 3"
+      },
+      {
+       "slot": "9",
+       "name": "chassinator",
+       "sub": "0-2 · 249.14 points",
+       "delta": "▼ 3"
+      },
+      {
+       "slot": "10",
+       "name": "victorthompson",
+       "sub": "1-1 · 219.76 points",
+       "delta": "▲ 2"
+      },
+      {
+       "slot": "11",
+       "name": "moseslin",
+       "sub": "0-2 · 240.16 points",
+       "delta": "▼ 7"
+      },
+      {
+       "slot": "12",
+       "name": "jskule23",
+       "sub": "0-2 · 235.68 points",
+       "delta": "▼ 3"
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Two lines in it are worth arguing about. <b>sizzlemc2</b> is 1-1 and sits above <b>bradyrife</b>, who is 2-0 — because sizzlemc2 has scored 34.38 more and would have beaten more of the league on a neutral schedule. <b>chassinator</b> is 0-2 and sits above <b>victorthompson</b> at 1-1 on the same logic, having outscored him by 29.38."
+    },
+    {
+     "type": "p",
+     "text": "The movement is where week 2 really landed. <b>moseslin</b> fell 7 places, the steepest drop on the board, after following 161.86 with the lowest score of the week. <b>bradyrife</b> climbed 6 and <b>wesley55</b> 5, which is what back-to-back wins buys when the scoring backs them up. <b>jadencha</b> has not moved, because there is nowhere above him to go."
+    },
+    {
+     "type": "h",
      "eyebrow": "the table",
      "text": "Two Weeks In, and the Record Does Not Explain It"
     },
@@ -2231,15 +2325,70 @@
     {
      "type": "h",
      "eyebrow": "the injury list",
-     "text": "Four Men Who Are Not Back This Month"
+     "text": "Who Is Missing, and What It Costs"
     },
     {
      "type": "p",
-     "text": "The four longest absences on DFFL rosters, with the dates the injury feed carries: <b>Zach Charbonnet</b> (knee - acl, surgery) to 11 October, <b>Omar Cooper</b> (ankle, sprain) to 18 October, <b>Jordan Mason</b> (thumb, surgery) to 25 October, <b>De'Zhaun Stribling</b> (ankle, surgery) to 22 November. None of them costs a manager anything while he is left out of a lineup, which is the point of checking."
+     "text": "7 of the twelve rosters carry at least one starter with a status going into week 3, and the board prices every one of them. The bill runs from 9.9% of a team's week down to 0.1%, which is the difference between a problem and a footnote."
+    },
+    {
+     "type": "picks",
+     "items": [
+      {
+       "slot": "−9.9%",
+       "name": "drewkim",
+       "sub": "Jayden Daniels out (elbow, dislocated) · Alec Pierce out (heel) · Jadarian Price questionable (chest)",
+       "delta": "3 starters"
+      },
+      {
+       "slot": "−9.1%",
+       "name": "Domo112",
+       "sub": "Caleb Williams out (hamstring, strain) · Mike Evans questionable (hip) · Malik Nabers questionable (shoulder)",
+       "delta": "3 starters"
+      },
+      {
+       "slot": "−6.3%",
+       "name": "jadencha",
+       "sub": "Jaxson Dart out (knee, sprain) · DJ Moore out (shoulder, sprain)",
+       "delta": "2 starters"
+      },
+      {
+       "slot": "−2.3%",
+       "name": "moseslin",
+       "sub": "Rico Dowdle out (toe) · Saquon Barkley questionable (arm, stinger)",
+       "delta": "2 starters"
+      },
+      {
+       "slot": "−1.2%",
+       "name": "bradyrife",
+       "sub": "Jayden Reed out (neck)",
+       "delta": "1 starter"
+      },
+      {
+       "slot": "−1.1%",
+       "name": "bertalicious",
+       "sub": "Aaron Jones questionable (knee)",
+       "delta": "1 starter"
+      },
+      {
+       "slot": "−0.1%",
+       "name": "sizzlemc2",
+       "sub": "Dallas Goedert questionable (knee, sprain)",
+       "delta": "1 starter"
+      }
+     ]
     },
     {
      "type": "p",
-     "text": "The ones that do cost something are the weekly tags. <b>drewkim</b> carries the heaviest bill at −9.9% on next week's pricing with <b>Jayden Daniels</b> and <b>Alec Pierce</b> both out, and <b>Domo112</b> −9.1% with <b>Caleb Williams</b> out and <b>Malik Nabers</b> and <b>Mike Evans</b> questionable. <b>jadencha</b> is priced 6.3% lighter for week 3 and still the shortest price on the board."
+     "text": "<b>drewkim</b> carries the heaviest of it at 9.9%, with <b>Jayden Daniels</b> out on a dislocated elbow and <b>Alec Pierce</b> out with a heel. <b>Domo112</b> is 9.1% lighter with <b>Caleb Williams</b> out and both <b>Malik Nabers</b> and <b>Mike Evans</b> questionable — which, after losing by 27.32 with Nabers on 1.1, is the same problem twice. <b>jadencha</b> is priced 6.3% down and is still the shortest price on the board."
+    },
+    {
+     "type": "p",
+     "text": "Longer term, four men on DFFL rosters are not playing again this month: <b>Zach Charbonnet</b> (knee - acl, surgery) to 11 October, <b>Omar Cooper</b> (ankle, sprain) to 18 October, <b>Jordan Mason</b> (thumb, surgery) to 25 October, <b>De'Zhaun Stribling</b> (ankle, surgery) to 22 November. None of them costs a manager anything while he stays out of the lineup, which is the point of checking."
+    },
+    {
+     "type": "note",
+     "text": "A status costs a team for one week only. A man ruled out takes 45% of his share of the lineup off that week's projection — not all of it, because somebody comes off the bench and scores — and nothing is assumed about the week after. The expected return dates above are reported, not priced: a roster carrying a man out until 22 November is charged for next Sunday and no further."
     },
     {
      "type": "note",
