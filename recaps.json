@@ -43,6 +43,94 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 2,
+   "note": "",
+   "lede": "Six games and 1401.7 points between them, 235.6 fewer than the opening week, and the week was the better for it. jadencha put up 145.1 and beat moseslin by 66.8, the only blowout on the slate; four of the other five were settled by fewer than 28. bertalicious and saucebossandrew needed 251.94 between them to separate by 11.62. Domo112 went from the second-best score in the league to 85.32 and lost by 27.32. Three teams are 2-0, three are 0-2, and the six in between are all 1-1 — and the points-for table does not agree with any of it.",
+   "games": [
+    {
+     "headline": "bertalicious holds on in the closest game of the week",
+     "winner": "bertalicious",
+     "winner_points": 131.78,
+     "loser": "saucebossandrew",
+     "loser_points": 120.16,
+     "body": "The tightest game of the week and the highest-scoring — 251.94 between them, settled by 11.62. Ja'Marr Chase went for 26.5 and Stefon Diggs 21.7, and Baker Mayfield returned 13.18 in his first week on the roster after bertalicious dropped Jared Goff for him. saucebossandrew's 120.16 was the best losing score of week 2, with 44.5 more sitting on his bench."
+    },
+    {
+     "headline": "Allen and Adams both clear 40; bradyrife has more behind his",
+     "winner": "bradyrife",
+     "winner_points": 134.06,
+     "loser": "jskule23",
+     "loser_points": 110.92,
+     "body": "Josh Allen's 40.82 and Davante Adams's 40.5 were the second- and third-best individual scores of the week, on opposite sides of the same game. The difference was everything else: Christian McCaffrey added 20.6 and George Kittle 19 for bradyrife, while nobody in the jskule23 lineup besides Allen cleared 14. jskule23 left 10.1 on his bench, the least of any manager in the league — this was the team he had."
+    },
+    {
+     "headline": "wesley55's defence outscores most of a lineup",
+     "winner": "wesley55",
+     "winner_points": 138.58,
+     "loser": "chassinator",
+     "loser_points": 104.62,
+     "body": "Carolina's 27 was the best score in the wesley55 lineup, a week after he added the unit and dropped Pittsburgh for it. Jaylen Waddle (22.8) and James Cook (21.4) did the rest. chassinator got 20.3 out of Jake Ferguson, himself a free-agent pickup that week, but started Rhamondre Stevenson for 3.1 and left 55.2 on the bench, Tre Tucker's 25.9 included."
+    },
+    {
+     "headline": "victorthompson makes seven moves and wins by 18",
+     "winner": "victorthompson",
+     "winner_points": 129.26,
+     "loser": "sizzlemc2",
+     "loser_points": 110.98,
+     "body": "Seven roster moves in a week, and the two that mattered both started: Dak Prescott for 29.76 and Devaughn Vele, claimed for $6, for 11.4. New England's 23 was the second-best defensive score anywhere on the slate. sizzlemc2 lost this one in his tight end slot, which is its own story."
+    },
+    {
+     "headline": "jadencha wins by 66.8 and has not been tested yet",
+     "winner": "jadencha",
+     "winner_points": 145.1,
+     "loser": "moseslin",
+     "loser_points": 78.3,
+     "body": "Jaxon Smith-Njigba's 44.5 was the best individual score of the week and Amon-Ra St. Brown's 35.2 was not far behind; between them they nearly covered the 66.8-point margin on their own. moseslin managed 78.3, the lowest score of week 2, and got 2.5 from Saquon Barkley. jadencha has now won by 70.8 and 66.8 and has scored 341.0, more than any other manager in the league."
+    },
+    {
+     "headline": "Domo112 falls 101 points off his own pace",
+     "winner": "drewkim",
+     "winner_points": 112.64,
+     "loser": "Domo112",
+     "loser_points": 85.32,
+     "body": "Domo112 scored 187.06 in the opening week, the second-best score in the league. He followed it with 85.32, a drop of 101.74 and the second-lowest score of week 2, with 1.1 from Malik Nabers and 1.3 from Colston Loveland. drewkim did not need much — DeVonta Smith's 27.7 and Omarion Hampton's 16.5 covered it — and still left 67.88 unused, Brock Purdy's 28.48 among it."
+    }
+   ],
+   "around": [
+    {
+     "kind": "note",
+     "headline": "Week 3: jadencha and Domo112, 613.38 points between them",
+     "body": "The headline game of week 3 pairs jadencha, 2-0 with 341.0 points, against Domo112 at 1-1 with 272.38 — the most combined scoring of any week 3 pairing. jadencha has won by 70.8 and 66.8 and has not yet played a close game; Domo112 owns both the second-best single week in the league and the steepest fall of week 2. The next-heaviest pairing is wesley55 and sizzlemc2 at 523.68."
+    },
+    {
+     "kind": "race",
+     "headline": "Three unbeaten, three winless, and a points table that disagrees",
+     "body": "jadencha, wesley55 and bradyrife are 2-0; chassinator, moseslin and jskule23 are 0-2. Scoring does not explain the split: sizzlemc2 is 1-1 on 273.64, more than either unbeaten team other than jadencha, and moseslin is 0-2 on 240.16, which is more than bradyrife has scored while winning twice. Six of the twelve make the playoffs and 72 games remain."
+    },
+    {
+     "kind": "riser",
+     "headline": "bertalicious and victorthompson found forty points; Domo112 lost a hundred",
+     "body": "The two lowest scores of the opening week were bertalicious's 90.74 and victorthompson's 90.5. Both won in week 2, on 131.78 and 129.26 — swings of 41.04 and 38.76, the largest in the league in either direction bar one. That one is Domo112, down 101.74 from 187.06 to 85.32, with moseslin next at 83.56 lower."
+    },
+    {
+     "kind": "waivers",
+     "headline": "victorthompson dropped Patrick Mahomes for a $6 receiver",
+     "body": "Seven moves, and the one that will be remembered is releasing Patrick Mahomes to claim Devaughn Vele for $6. Vele started and returned 11.4, while Dak Prescott — already on the roster — went for 29.76. jskule23 dropped Vele in the same waiver run and spent $1 on Makai Lemon, who did not start. Eight dollars changed hands across the whole league."
+    },
+    {
+     "kind": "note",
+     "headline": "Eight trades in week 1, none in week 2",
+     "body": "The market that moved Christian McCaffrey twice in the opening week produced nothing at all in the second. Every roster change in week 2 came off waivers or the free-agent pool, and only three of the twenty-two cost a dollar. bradyrife has still committed more budget than anyone this season at $36."
+    },
+    {
+     "kind": "injury",
+     "headline": "Four rosters are carrying a man who will not play again this month",
+     "body": "Zach Charbonnet is on the physically-unable-to-perform list after ACL surgery and is not expected back before 11 October. Jordan Mason (thumb, surgery) is dated to 25 October, Omar Cooper (ankle) to 18 October, and De'Zhaun Stribling (ankle, surgery) to 22 November. All four are on DFFL rosters, and none of them counts against a lineup that leaves him out."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 1,
    "note": "",
    "lede": "Six games, and the scoreboard split almost exactly down the middle of the league: the three highest-scoring teams all won, and so did the three lowest. jadencha opened with 195.9 and buried drewkim by more than seventy. Domo112 and moseslin combined for 348.92 in the best game of the day and moseslin still went home with nothing. At the other end, bradyrife and bertalicious needed only 195.94 between them to settle a game, which is less than jadencha managed on his own.",
@@ -1542,7 +1630,7 @@
       {
        "label": "bertalicious",
        "sub": "73.3% → 53.3%",
-       "value": -20.0,
+       "value": -20,
        "group": 1
       },
       {
@@ -1560,7 +1648,7 @@
       {
        "label": "drewkim",
        "sub": "25.3% → 20.4%",
-       "value": -5.0,
+       "value": -5,
        "group": 1
       },
       {
@@ -1685,6 +1773,111 @@
     {
      "type": "note",
      "text": "All prices and probabilities from the site's own odds board, comparing the preseason line to the numbers as of week 2. Nothing here is a rank or a projection of where anyone will finish — only how far the board has already moved."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "one-game-was-on-the-bench",
+   "date": "2026-09-22",
+   "kind": "opinion",
+   "kicker": "2026 · week 2, the lineups",
+   "headline": "One Game Was on the Bench",
+   "dek": "The league left 482.22 points in its bench slots. Exactly one of the six losses could have been reversed from there.",
+   "byline": "DFFL desk",
+   "standfirst": "Week 2 · every lineup checked",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Every Tuesday somebody adds up what his bench scored and concludes the week was taken from him. Week 2 hands that argument more ammunition than most: <b>482.22 points</b> sat in bench slots across the twelve rosters, against 1401.7 actually scored. It is a large number and it is mostly noise. Of the six managers who lost, one could have won by changing a single name."
+    },
+    {
+     "type": "stat",
+     "n": "69.98",
+     "text": "The points sizzlemc2 left on his bench, more than any other manager in week 2. He lost the game by 18.28."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the one that counted",
+     "text": "Kelce for Goedert"
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2 started Dallas Goedert at tight end and got 1.4 out of him. Travis Kelce was on his bench and scored 25.1. Both are tight ends, so the swap needed no other change, and it is worth 23.7 points against a margin of 18.28 — victorthompson 129.26, sizzlemc2 110.98. Goedert had been added that week, dropping Rashid Shaheed, and went into Sunday carrying a knee sprain and a questionable tag."
+    },
+    {
+     "type": "p",
+     "text": "The rest of that roster did its job. CeeDee Lamb's 35.3 was the best score on either side of the game, better than anything victorthompson started, and Kenneth Walker added 21.8. It was a winning team with one slot left unattended."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the other five",
+     "text": "Not close enough to matter"
+    },
+    {
+     "type": "p",
+     "text": "Nobody else was within reach. saucebossandrew came nearest — Xavier Worthy's 13.5 for Michael Wilson's 3.8 is 9.7 points and he lost by 11.62, which leaves him 1.92 short. chassinator had 55.2 sitting there and needed 33.96; Tre Tucker's 25.9 for Rhamondre Stevenson's 3.1 gets him 22.8 of it. Domo112 needed 27.32 and his best bench score was 13.3. jskule23 had 10.1 on his bench, less than anyone in the league, and lost by 23.14. moseslin lost by 66.8, a margin larger than ten of the twelve bench totals in the league."
+    },
+    {
+     "type": "bars",
+     "title": "One swap, six losses",
+     "sub": "best bench player in for the worst starter, measured against the margin",
+     "rows": [
+      {
+       "label": "sizzlemc2",
+       "sub": "Kelce 25.1 for Goedert 1.4",
+       "value": 5.42,
+       "group": 1
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "Worthy 13.5 for Wilson 3.8",
+       "value": -1.92,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "Tucker 25.9 for Stevenson 3.1",
+       "value": -11.16,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "Coleman 13.3 for Nabers 1.1",
+       "value": -15.12,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "sub": "Johnson 4.5 for Fields 5",
+       "value": -23.64,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "Corum 9.7 for Barkley 2.5",
+       "value": -59.6,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Which is the useful way to read a bench total. It measures the scoring a roster had available, not the scoring a manager threw away."
+    },
+    {
+     "type": "stat",
+     "n": "255.06",
+     "text": "Points left on the bench by the six managers who won, against 227.16 by the six who lost. The winners wasted more of it."
+    },
+    {
+     "type": "p",
+     "text": "drewkim won by 27.32 with 67.88 unused and Brock Purdy's 28.48 among it. jadencha won by 66.8 with 47.3 left over. A bench full of points is what depth looks like in a week when the starters were already enough, and there is no version of either result where the bench was the story."
+    },
+    {
+     "type": "note",
+     "text": "Bench totals cover every non-starting slot. The single-swap test puts each manager's best bench score in place of the worst starter the week file records for him, and only the sizzlemc2 case was checked for position eligibility — the rest are an upper bound on what one change could have done, not a lineup anyone could have set."
     }
    ]
   }
