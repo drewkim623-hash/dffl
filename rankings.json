@@ -13,6 +13,60 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 2,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Two wins by 70.8 and 66.8, and Jaxon Smith-Njigba's 44.5 was the best individual score of the week — nothing has asked him a question yet."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Went from 187.06 to 85.32 in seven days, the steepest week-to-week fall of the season, with Malik Nabers on 1.1 and Colston Loveland on 1.3."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "Left 69.98 on the bench, more than anyone, and Travis Kelce's 25.1 of it sat behind a tight end who scored 1.4."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "His 120.16 was the best score any loser posted and would have beaten one of the six winning scores."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "The Carolina Panthers gave him 27 the week he picked them up, the best defensive score in the league."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "Davante Adams went for 40.5, and he is 2-0 on 239.26 — less scoring than either of the other unbeaten teams."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Lamar Jackson, Justin Jefferson and Saquon Barkley in the same lineup produced 78.3, the lowest score of the week."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "Jake Ferguson returned 20.3 the week he was claimed, and 55.2 still sat on the bench with Tre Tucker's 25.9 in it."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "Won by 27.32 with 67.88 unused, Brock Purdy's 28.48 among it — nearly twice what his starting quarterback managed."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Josh Allen's 40.82 was the best score on any losing side, and with 10.1 on the bench there was nothing else to reach for."
+    },
+    {
+     "manager": "bertalicious",
+     "blurb": "Dropped Jared Goff for Baker Mayfield and got 13.18 out of him in a game settled by 11.62."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "Seven roster moves, one of them releasing Patrick Mahomes, and Dak Prescott's 29.76 made that look deliberate."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 1,
    "teams": [
     {
