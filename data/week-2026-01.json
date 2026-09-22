@@ -2,7 +2,7 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 1,
- "generated": "2026-09-20T15:36:13.336Z",
+ "generated": "2026-09-22T03:02:18.000Z",
  "league": {
   "id": "1318040218183417856",
   "name": "DFFL",
@@ -291,7 +291,7 @@
     },
     {
      "manager": "drewkim",
-     "team": "rice plantation🌾",
+     "team": "inova hospital🏥",
      "roster_id": 7,
      "points": 125.1,
      "starters": [
@@ -1206,7 +1206,7 @@
   },
   {
    "manager": "drewkim",
-   "team": "rice plantation🌾",
+   "team": "inova hospital🏥",
    "roster_id": 7,
    "wins": 0,
    "losses": 1,
@@ -3209,7 +3209,7 @@
     },
     {
      "manager": "drewkim",
-     "team": "rice plantation🌾",
+     "team": "inova hospital🏥",
      "roster_id": 7,
      "points": 125.1,
      "starters": [
