@@ -259,8 +259,17 @@
   @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.25}}
   @media (prefers-reduced-motion:reduce){.livedot{animation:none}}
   /* ---- the live odds board ---- */
+  .asofbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 10px}
+  .asofbar .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .asofbar select{background:var(--surface);color:var(--ink);border:1px solid var(--ring);
+    border-radius:var(--rs);padding:7px 10px;font:inherit;font-size:13px;font-weight:600}
+  .asofbar .rewound{font-size:11.5px;color:var(--gold)}
   .livestrip{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
-  .livestrip span{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);
+  /* Direct children only. Each tile holds a nested <span class="k"> label, and an
+     unscoped descendant selector gave that label its own border and a 120px
+     flex-basis too — which in a column container stretched it into an empty box
+     with the value pushed out below it. */
+  .livestrip > span{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);
     padding:8px 12px;display:flex;flex-direction:column;gap:2px;flex:1 1 120px}
   .livestrip .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
   .livestrip b{font-size:16px;font-variant-numeric:tabular-nums}
@@ -376,7 +385,7 @@
     .bmovers{grid-template-columns:1fr}
   }
   @media (max-width:520px){
-    .livestrip span{flex:1 1 calc(50% - 8px)}
+    .livestrip > span{flex:1 1 calc(50% - 8px)}
     .irow{grid-template-columns:auto 1fr;row-gap:6px}
     .irow .cost{grid-column:2;text-align:left;flex-direction:row;align-items:baseline;gap:6px}
   }
@@ -3470,13 +3479,17 @@ function availability(season, inj) {
  * behaviour for a fantasy league and it is what stops the odds lurching every
  * Sunday.
  */
-function livePosterior(model, season) {
+function livePosterior(model, season, throughWeek = null) {
   if (!model || !model.ok || !season) return null;
   const wk = model.weekSd, pri = model.seasonSd;
   if (!(wk > 0) || !(pri > 0)) return null;
   const byRid = new Map();
   for (const g of (season.games || [])) {
     if (g.playoff) continue;
+    // throughWeek rewinds the board: only what had been scored by the end of
+    // that week counts toward a team's level, so the page can show what the
+    // model believed then rather than what it believes now.
+    if (throughWeek != null && g.week > throughWeek) continue;
     for (const s of [g.a, g.b]) {
       if (!byRid.has(s.rid)) byRid.set(s.rid, []);
       byRid.get(s.rid).push(s.pts);
@@ -3519,9 +3532,9 @@ function weeksOf(upcoming, idx) {
  * Returns null before the season has produced anything to update on, which is
  * the signal to keep posting the preseason board.
  */
-function liveState(model, season, R, avail, board) {
+function liveState(model, season, R, avail, board, throughWeek = null) {
   if (!model || !model.ok || !R) return null;
-  const teams = livePosterior(model, season);
+  const teams = livePosterior(model, season, throughWeek);
   if (!teams) return null;
   const idx = new Map(teams.map((t, i) => [t.rid, i]));
   const N = teams.length;
@@ -3560,7 +3573,7 @@ function liveState(model, season, R, avail, board) {
     return a ? a.mult : 1;
   });
   return {
-    teams, idx, W0, PF0, weeks, mult, pending, liveWeek: liveWk,
+    teams, idx, W0, PF0, weeks, mult, pending, liveWeek: liveWk, throughWeek,
     // Injuries bite on the next week nobody has started. A week already in
     // flight is priced off who has actually played, not off a status.
     adjWeek: weeks.length ? weeks[0].week : null,
@@ -4002,11 +4015,65 @@ function injuryNote(inj, avail) {
 }
 
 /**
+ * The markets that used to exist only on the opening line: division winners,
+ * division cellar, last place overall. They were rendered from the preseason
+ * simulation and never moved, so after two weeks a 0-2 team still carried its
+ * draft-day division price. Given any simulation they now render from that one,
+ * with the opening price and the movement chip beside each, exactly as the
+ * title and playoff boards do.
+ */
+function marketBoards(host, model, S, n, sim, o) {
+  const T = model.teams;
+  const divs = [...model.divNames.keys()].sort((a, b) => a - b);
+  // The team carries its own division; the model has no divOf map.
+  const idxByDiv = d => T.map((t, i) => i).filter(i => T[i].div === d);
+  // An opening price is only meaningful against the same market it is priced in,
+  // so each board's opening field is vigged on its own — a division of four, not
+  // the league of twelve.
+  const openOf = (ids, key) => new Map(priceMarket(ids.map(i => ({ uid: T[i].uid, p: sim[key][i] / o })))
+    .map(r => [r.uid, { p: r.p, price: r.price }]));
+
+  host.appendChild(sechead("Division winners",
+    "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board."));
+  const dw = el("div", "bgrid");
+  for (const d of divs) {
+    const ids = idxByDiv(d);
+    const rows = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: S.divWin[i] / n })).sort((a, b) => b.p - a.p));
+    dw.appendChild(liveBoard(`${model.divNames.get(d)} — to win`, "division title",
+      rows, openOf(ids, "divWin"), r => `projects ${f1(S.wins[r.i] / n)} wins`));
+  }
+  host.appendChild(dw);
+
+  host.appendChild(sechead("Division cellar",
+    "To finish last in your own division, on regular-season record."));
+  const dl = el("div", "bgrid");
+  for (const d of divs) {
+    const ids = idxByDiv(d);
+    const rows = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: S.divLast[i] / n })).sort((a, b) => b.p - a.p));
+    dl.appendChild(liveBoard(`${model.divNames.get(d)} — to finish last`, "within the division",
+      rows, openOf(ids, "divLast"), r => `projects ${f1(S.wins[r.i] / n)} wins`));
+  }
+  host.appendChild(dl);
+
+  host.appendChild(sechead("Last place overall",
+    "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it."));
+  const allIds = T.map((t, i) => i);
+  const last = priceMarket(allIds.map(i => ({ uid: T[i].uid, i, p: S.last[i] / n })).sort((a, b) => b.p - a.p));
+  host.appendChild(liveBoard("To finish 12th", "loser of the consolation elimination game",
+    last, openOf(allIds, "last"), r => `projects ${f1(S.wins[r.i] / n)} wins`));
+}
+
+/**
  * The live board. Same markets as the opening line, priced off what has actually
  * been scored, who is actually hurt, and who is actually left to play.
  */
-function renderLive(host, model, sim, live, lsim, inj, avail, board) {
+function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = null) {
   host.innerHTML = "";
+  // A rewound board has no week in flight and no contemporaneous injury report,
+  // so the two surfaces that depend on "now" are left out rather than shown
+  // stale. Everything else is priced exactly as it was at the end of that week.
+  const past = asOf != null;
+  if (past) { board = null; inj = null; avail = null; }
   const n = lsim.sims, o = sim.sims, T = model.teams;
   const inFlight = live.liveWeek;
   const lastDone = inFlight != null ? inFlight - 1
@@ -4019,6 +4086,37 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
       : `Repriced off ${live.decided} finished game${live.decided === 1 ? "" : "s"} and the
          ${live.remaining} fixtures still on the schedule.`}
      The opening line is kept beside every price so you can see what the season has changed.`));
+
+  if (R) {
+    const weeks = pricedWeeks();
+    if (weeks.length) {
+      const bar = el("div", "asofbar");
+      const sel = el("select");
+      const now = el("option", null, "Now — latest prices"); now.value = ""; sel.appendChild(now);
+      for (const w of weeks) {
+        const o = el("option", null, `As they stood after week ${w}`);
+        o.value = String(w);
+        if (past && Number(asOf) === w) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.onchange = () => {
+        const v = sel.value;
+        if (!v) {
+          const N = LIVE_NOW;
+          if (N) renderLive(host, model, sim, N.live, N.lsim, N.inj, N.avail, N.board, N.R, null);
+          return;
+        }
+        const b = boardAsOf(model, Number(v), R);
+        if (!b) return;
+        renderLive(host, model, sim, b.live, b.lsim, null, null, null, R, Number(v));
+      };
+      bar.appendChild(el("span", "k", "Board"));
+      bar.appendChild(sel);
+      if (past) bar.appendChild(el("span", "rewound",
+        `Rewound to the end of week ${asOf} \u00b7 priced healthy, with no week in flight`));
+      host.appendChild(bar);
+    }
+  }
 
   const strip = el("div", "livestrip");
   strip.innerHTML = `
@@ -4033,7 +4131,7 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
 
   if (board && board.ok && board.games.length) host.appendChild(liveMatchupBoard(board));
   else if (board && !board.ok) host.appendChild(liveBoardProblem(board));
-  host.appendChild(injuryNote(inj, avail));
+  if (inj) host.appendChild(injuryNote(inj, avail));
 
   // The opening price has to be vigged against the whole opening field, exactly
   // as the live price is. Pricing one probability on its own is not a cheaper
@@ -4059,7 +4157,11 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
     `six of twelve · ${updatedAt(live.at || Date.now(), "updated")}`, play, openPlay,
     r => `${f1(lsim.wins[r.i] / n)} projected wins`));
 
-  host.appendChild(injuryBoard(model, avail, inj));
+  // Every other market, now priced off the same simulation rather than off the
+  // draft-day line it used to be stuck on.
+  marketBoards(host, model, lsim, n, sim, o);
+
+  if (inj && avail) host.appendChild(injuryBoard(model, avail, inj));
 
   const meth = el("div", "notice live");
   meth.innerHTML = `<div class="nt">How the line moves</div>
@@ -4077,6 +4179,45 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
     <p><b>Still not known:</b> who gets claimed off waivers, who gets traded, and which bench
        player is about to become a starter.</p>`;
   host.appendChild(meth);
+}
+
+/**
+ * The board as it stood at the end of a given week.
+ *
+ * raceAsOf rewinds the schedule — everything after `week` becomes a fixture
+ * again — and livePosterior is told to forget those results too, so the model
+ * is looking at exactly what it could have seen then. Two things are
+ * deliberately NOT rewound because they cannot be: there is no week in flight
+ * in the past, and the injury list is today's. A historical board is therefore
+ * priced healthy, which is the honest reading of "what did the numbers say
+ * after week 3" rather than a pretence of a contemporaneous injury report.
+ */
+function boardAsOf(model, week, R) {
+  const season = DB.seasons[0];
+  if (!model || !model.ok || !season || !R) return null;
+  // Scope the REAL race data rather than rebuilding it. raceAsOf() looks only at
+  // games already played, so for the newest week it finds nothing left to play
+  // and the state bails out — the genuine remaining schedule is fetched by
+  // raceData() and lives only on R.
+  const decided = (R.decided || []).filter(g => g.week <= week);
+  const replay = (R.decided || []).filter(g => g.week > week)
+    .map(g => ({ week: g.week, a: g.a.rid, b: g.b.rid }));
+  const upcoming = [...replay, ...(R.upcoming || [])]
+    .sort((x, y) => x.week - y.week || x.a - y.a);
+  const scoped = { ...R, decided, upcoming, ready: upcoming.length > 0 };
+  const live = liveState(model, season, scoped, null, null, week);
+  if (!live) return null;
+  return { live, lsim: simulateSeason(model, ODDS_SIMS, live), R: scoped };
+}
+
+/** Every finished regular-season week, newest first. */
+function pricedWeeks() {
+  const season = DB.seasons[0];
+  if (!season) return [];
+  const lastReg = (season.pws || 15) - 1;
+  const done = new Set((season.games || [])
+    .filter(g => !g.playoff && g.week <= lastReg).map(g => g.week));
+  return [...done].sort((a, b) => b - a);
 }
 
 /* ------------------------------------------- live prices, on every surface */
@@ -4227,6 +4368,11 @@ function startLivePolling() {
   });
 }
 
+// The current board, kept aside so the week selector can get back to it. Reading
+// renderLive's own parameters instead does not work: inside a rewound render
+// those ARE the rewound values, so "Now" would redraw the week you were already
+// looking at.
+let LIVE_NOW = null;
 let LIVE_STARTED = false;
 async function ensureLiveOdds() {
   if (LIVE_STARTED) return;
@@ -4242,7 +4388,8 @@ async function ensureLiveOdds() {
       document.body.dataset.liveReady = "waiting";
       return;
     }
-    renderLive(host, model, sim, live, lsim, inj, avail, board);
+    LIVE_NOW = { live, lsim, inj, avail, board, R };
+    renderLive(host, model, sim, live, lsim, inj, avail, board, R);
     document.body.dataset.liveReady = "1";
     startLivePolling();
   } catch (e) {
@@ -6485,6 +6632,7 @@ async function boot() {
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
       liveWeekBoard, refreshLive, startLivePolling, liveSignature, onLive, emitLive, GAME_LEFT,
+      boardAsOf, pricedWeeks,
       renderRace, raceEmpty,
       RACE_SIMS, LEVERAGE_SIMS,
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,

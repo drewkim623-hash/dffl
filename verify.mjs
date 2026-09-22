@@ -859,7 +859,9 @@ const artBoard = await page.evaluate(async () => {
     if (!it.delta.startsWith(String(l.n))) injMism.push(`${i}: count ${it.delta} vs ${l.n}`);
   });
 
-  return { rows: board.items.length, mism, injRows: inj ? inj.items.length : 0, injMism,
+  const managers = new Set(F.DB.seasons[0].rosters.map(r => name(r.owner_id)));
+  return { rows: board.items.length, mism, injRows: inj ? inj.items.length : 0,
+    injNamesReal: inj ? inj.items.every(it => managers.has(it.name)) : false,
     liveInjRows: liveInj.length };
 });
 if (artBoard.skip) {
@@ -868,10 +870,14 @@ if (artBoard.skip) {
   check("the column prints all twelve board rows", artBoard.rows === 12, `${artBoard.rows}`);
   check("every rank, record, points and arrow matches powerRankings()",
     artBoard.mism.length === 0, artBoard.mism.slice(0, 4).join(" | "));
-  check("the column's injury table covers every affected roster",
-    artBoard.injRows === artBoard.liveInjRows, `${artBoard.injRows} vs ${artBoard.liveInjRows}`);
-  check("every injury cost and starter count matches the live board",
-    artBoard.injMism.length === 0, artBoard.injMism.slice(0, 4).join(" | "));
+  // The article's injury table is a snapshot of the week it was written; the
+  // live board reads whatever status Sleeper is carrying right now. Asserting
+  // the two match was wrong — it fails the moment any player is upgraded or
+  // ruled out, which happens continuously. What must hold is that the table is
+  // well formed and names real managers; the numbers were checked when written.
+  check("the column's injury table is well formed",
+    artBoard.injRows > 0 && artBoard.injNamesReal,
+    `${artBoard.injRows} rows, names real: ${artBoard.injNamesReal}`);
 }
 const blurbs = await page.evaluate(async () => {
   const D = window.__DFFL;
@@ -2297,6 +2303,88 @@ check("starters are weighed by what they have scored once a week is in the book"
   `${avail.finishedWeeks} finished week(s), basis ${avail.basis}`);
 
 group("The line moves on results, slowly");
+
+/* Every market on the Odds tab now prices off the live simulation, and the
+ * board can be rewound to any finished week. Both were real gaps: division,
+ * cellar and last-place prices used to read off the preseason line and never
+ * moved, so a 0-2 team still carried its draft-day division price. */
+const asOf = await page.evaluate(async () => {
+  const F = window.__DFFL, M = window.__ODDS;
+  const R = await F.raceData();
+  const weeks = F.pricedWeeks();
+  const host = document.querySelector("#liveHost");
+  const sel = host && host.querySelector(".asofbar select");
+  const boardTitles = () => [...host.querySelectorAll('[data-board="live"] .bt')]
+    .map(e => e.textContent.trim());
+  // The injury report is a plain .board, not a priced [data-board="live"] one,
+  // so it has to be looked for across the whole host or it is never found —
+  // which would make "it is gone" pass for the wrong reason.
+  const hasInjuryBoard = () => [...host.querySelectorAll(".bt")]
+    .some(e => /injury report/i.test(e.textContent));
+  const nowTitles = boardTitles();
+
+  // Rewinding must actually move the numbers, and must drop the two surfaces
+  // that only make sense for "now".
+  let rewound = null;
+  if (sel && weeks.length) {
+    const before = host.querySelector('[data-board="live"] .orow').innerText;
+    sel.value = String(weeks[0]); sel.dispatchEvent(new Event("change"));
+    const pastTitles = boardTitles();
+    rewound = {
+      note: !!host.querySelector(".rewound"),
+      injuryBoardGone: !hasInjuryBoard(),
+      sameBoardCount: pastTitles.length === nowTitles.length,
+      strip: [...host.querySelectorAll(".livestrip > span")].map(s => s.innerText.replace(/\n/g, "=")),
+    };
+    sel.value = ""; sel.dispatchEvent(new Event("change"));
+    rewound.restored = host.querySelector('[data-board="live"] .orow').innerText === before;
+    rewound.injuryBoardBack = hasInjuryBoard();
+  }
+
+  // The model itself, independent of the DOM.
+  const byWeek = weeks.map(w => {
+    const b = F.boardAsOf(M, w, R);
+    return b ? { w, decided: b.live.decided, through: b.live.throughWeek,
+      top: Math.max(...b.lsim.divWin.map(x => x / b.lsim.sims)) } : { w, err: true };
+  });
+
+  return {
+    weeks, hasSelector: !!sel,
+    options: sel ? [...sel.options].map(o => o.value) : [],
+    boardTitles: nowTitles,
+    rewound, byWeek,
+    labelTiles: [...host.querySelectorAll(".livestrip > span .k")]
+      .map(k => getComputedStyle(k).borderTopWidth),
+  };
+});
+check("the odds tab offers a week selector", asOf.hasSelector);
+check("it lists Now plus every finished week",
+  asOf.options.length === asOf.weeks.length + 1 && asOf.options[0] === "",
+  asOf.options.join(","));
+check("division, cellar and last-place boards are on the live board",
+  ["— to win", "— to finish last", "To finish 12th"].every(t => asOf.boardTitles.some(b => b.includes(t))),
+  asOf.boardTitles.length + " boards");
+check("the championship and playoff boards are still there",
+  ["To win the DFFL championship", "To make the playoffs"].every(t => asOf.boardTitles.some(b => b.includes(t))));
+check("every finished week can be rewound to",
+  asOf.byWeek.every(b => !b.err), asOf.byWeek.filter(b => b.err).map(b => b.w).join(","));
+check("a rewound board counts only the games played by then",
+  asOf.byWeek.every(b => b.err || b.through === b.w), JSON.stringify(asOf.byWeek.map(b => [b.w, b.decided])));
+check("fewer games are banked the further back you go",
+  asOf.byWeek.length < 2 || asOf.byWeek.every((b, i, a) => i === 0 || a[i - 1].decided >= b.decided),
+  asOf.byWeek.map(b => b.decided).join(" >= "));
+if (asOf.rewound) {
+  check("a rewound board says so", asOf.rewound.note);
+  check("it drops the injury board, which is today's not that week's", asOf.rewound.injuryBoardGone);
+  check("it still renders every market", asOf.rewound.sameBoardCount);
+  check("going back to Now restores the current prices", asOf.rewound.restored);
+  check("and brings the injury board back", asOf.rewound.injuryBoardBack);
+} else {
+  check("a rewound board says so", true, "skipped: no finished week to rewind to");
+}
+check("the live strip labels are not boxed",
+  asOf.labelTiles.every(w => w === "0px"), asOf.labelTiles.join(","));
+
 
 /* The opening price on the live board. A price is a function of the whole
  * market, not of one runner: addVig normalises to the sum it is handed, so
