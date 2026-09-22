@@ -13,14 +13,13 @@
  *   node build-pulse.mjs
  */
 import { writeFile, mkdir } from "fs/promises";
+import { fetchJSON } from "./fetch-json.mjs";
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
-const get = async p => {
-  const r = await fetch(`${API}/${p}`);
-  if (!r.ok) throw new Error(`${p} -> HTTP ${r.status}`);
-  return r.json();
-};
+// Retries the blips rather than dying on them; see fetch-json.mjs. The label
+// keeps the error text reading the way it always has.
+const get = p => fetchJSON(`${API}/${p}`, { label: p });
 
 const state = await get("state/nfl");
 const league = await get(`league/${LEAGUE}`);
@@ -29,8 +28,8 @@ const week = Number(state.week) || 1;
 const [users, rosters, players, schedule] = await Promise.all([
   get(`league/${LEAGUE}/users`),
   get(`league/${LEAGUE}/rosters`),
-  fetch(`${API}/players/nfl`).then(r => r.json()),
-  fetch("https://api.sleeper.app/schedule/nfl/regular/" + league.season).then(r => r.json()).catch(() => []),
+  get("players/nfl"),
+  fetchJSON(`https://api.sleeper.app/schedule/nfl/regular/${league.season}`, { label: "schedule" }).catch(() => []),
 ]);
 
 const userById = new Map(users.map(u => [u.user_id, u]));

@@ -40,14 +40,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
 
-      # Both scripts are dependency-free and use the built-in fetch, so there is
-      # deliberately no install step to go stale.
+      # The build scripts have no npm dependencies — they share fetch-json.mjs
+      # out of the repo and use the built-in fetch — so there is deliberately no
+      # install step here to go stale. The browser below is a separate matter.
       - name: Build the finished week
         run: |
           if [ -n "${{ inputs.week }}" ]; then

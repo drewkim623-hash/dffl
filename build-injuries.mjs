@@ -15,15 +15,17 @@
  * job runs it as part of the Tuesday update.
  */
 import { writeFile } from "fs/promises";
+import { fetchJSON } from "./fetch-json.mjs";
 
 const SRC = "https://api.sleeper.app/v1/players/nfl";
 
-const res = await fetch(SRC);
-if (!res.ok) {
-  console.error(`${SRC} -> HTTP ${res.status}`);
+// 5MB over a connection Sleeper sometimes resets, on a schedule with nobody
+// watching to hit re-run: retrying is the difference between a fresh snapshot
+// and a red job. See fetch-json.mjs.
+const all = await fetchJSON(SRC).catch(e => {
+  console.error(e.message);
   process.exit(1);
-}
-const all = await res.json();
+});
 
 const map = {};
 for (const id of Object.keys(all)) {

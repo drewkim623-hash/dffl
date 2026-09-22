@@ -16,20 +16,19 @@
  * Sunday is the one that needs pricing.
  */
 import { writeFile } from "fs/promises";
+import { fetchJSON } from "./fetch-json.mjs";
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
 
-const get = async (path) => {
-  const r = await fetch(`${API}/${path}`);
-  if (!r.ok) throw new Error(`${path} -> HTTP ${r.status}`);
-  return r.json();
-};
+// Retries the blips rather than dying on them; see fetch-json.mjs. The label
+// keeps the error text reading the way it always has.
+const get = (path) => fetchJSON(`${API}/${path}`, { label: path });
 
 const [league, rosters, players] = await Promise.all([
   get(`league/${LEAGUE}`),
   get(`league/${LEAGUE}/rosters`),
-  fetch(`${API}/players/nfl`).then(r => r.json()),
+  get("players/nfl"),
 ]);
 
 // The slots a lineup is made of, in the order Sleeper lists starters. This is

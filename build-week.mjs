@@ -19,6 +19,7 @@
  * run is a no-op in the off-season rather than a failure.
  */
 import { writeFile, mkdir } from "fs/promises";
+import { fetchJSON } from "./fetch-json.mjs";
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
@@ -28,11 +29,9 @@ const arg = (k) => {
   return i > 0 ? process.argv[i + 1] : null;
 };
 
-async function get(path) {
-  const r = await fetch(`${API}/${path}`);
-  if (!r.ok) throw new Error(`${path} -> HTTP ${r.status}`);
-  return r.json();
-}
+// Retries the blips rather than dying on them; see fetch-json.mjs. The label
+// keeps the error text reading the way it always has.
+const get = (path) => fetchJSON(`${API}/${path}`, { label: path });
 
 const state = await get("state/nfl");
 const league = await get(`league/${LEAGUE}`);
@@ -56,7 +55,7 @@ const [users, rosters, matchups, txns, players] = await Promise.all([
   get(`league/${LEAGUE}/rosters`),
   get(`league/${LEAGUE}/matchups/${target}`),
   get(`league/${LEAGUE}/transactions/${target}`).catch(() => []),
-  fetch(`${API}/players/nfl`).then(r => r.json()),
+  get("players/nfl"),
 ]);
 
 const userById = new Map(users.map(u => [u.user_id, u]));
