@@ -57,14 +57,17 @@ jobs:
             node build-week.mjs
           fi
 
-      - name: Refresh the injury snapshot
-        run: node build-injuries.mjs
-
       # Rosters change on waivers, and the live win probabilities need to know
       # which club each starter plays for. Sunday's run is the one that matters:
       # it catches the lineups people actually set.
       - name: Refresh the roster map
         run: node build-rosters.mjs
+
+      # After the roster map on purpose: the injury snapshot carries ESPN's prose
+      # only for players somebody actually rosters, so it needs today's rosters
+      # rather than last run's.
+      - name: Refresh the injury snapshot
+        run: node build-injuries.mjs
 
       # The daily picture the story watch reads: standings, the week in
       # progress, recent trades and claims, who is hurt. Small and factual.

@@ -279,6 +279,10 @@
     border:1px solid var(--ring);border-radius:999px;padding:2px 8px;font-size:11.5px}
   .irow .ip b{font-weight:700}
   .irow .ip i{font-style:normal;color:var(--muted);font-size:10.5px}
+  .irow .ip em{font-style:normal;color:var(--ink-2);font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.03em;padding-left:6px;margin-left:1px;
+    border-left:1px solid var(--grid)}
+  .irow .ip[title]{cursor:help}
   .irow .st{font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
   .st-questionable{color:var(--gold)} .st-doubtful{color:#e09a3c}
   .st-out,.st-ir,.st-pup,.st-sus,.st-na,.st-dnr,.st-cov{color:var(--red)}
@@ -3288,7 +3292,10 @@ function winTotals(model, sim) {
  * hours is a compromise that keeps a Sunday-morning downgrade from going stale
  * while still costing one download a day for anyone reading the site normally.
  */
-const INJ_KEY = "dffl.injuries.v2";
+// v3 added the outlook fields (bp, sev, ret, note). Bumping the key rather than
+// merging means a reader with a warm v2 cache sees the detail today instead of
+// in six hours.
+const INJ_KEY = "dffl.injuries.v3";
 const INJ_TTL = 6 * 60 * 60 * 1000;
 
 /**
@@ -3874,6 +3881,42 @@ function liveBoard(title, sub, priced, openBy, noteFn) {
 }
 
 /** Who is hurt, and what the model thinks it costs. */
+/**
+ * What is wrong, in the fewest words that are still true.
+ *
+ * The body part comes from Sleeper and the severity from ESPN, and the two
+ * overlap often enough — a concussion is both — that saying it twice has to be
+ * guarded against rather than hoped about.
+ */
+function injuryDetail(rec) {
+  if (!rec) return "";
+  const bp = String(rec.bp || "").trim();
+  const sev = String(rec.sev || "").trim();
+  if (bp && sev && bp.toLowerCase() !== sev.toLowerCase()) return `${bp}, ${sev.toLowerCase()}`;
+  return bp || sev;
+}
+
+/**
+ * When he is expected back, said the way a reader would say it.
+ *
+ * ESPN dates a season-ending injury to the middle of February, which is true
+ * and useless — nobody needs the day. Past a hundred-odd days it is simply the
+ * season, and inside that a date is what a manager actually wants.
+ */
+function returnLabel(iso) {
+  if (!iso) return "";
+  const [y, m, d] = String(iso).split("-").map(Number);
+  if (!y || !m || !d) return "";
+  // Built from parts rather than parsed: an ISO date is midnight UTC, and in a
+  // western timezone that prints as the day before.
+  const when = new Date(y, m - 1, d);
+  const days = (when - Date.now()) / 86400000;
+  // The status badge beside this already says OUT or IR, so "out for the season"
+  // would read as "OUT OUT FOR THE SEASON".
+  if (days > 110) return "rest of season";
+  return `back ${when.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+}
+
 function injuryBoard(model, avail, inj) {
   const rows = model.teams
     .map(t => ({ t, a: avail.get(t.rid) }))
@@ -3893,9 +3936,17 @@ function injuryBoard(model, avail, inj) {
     const list = a.hurt.map(h => {
       const p = h.rec || injPlayer(h.pid, inj);
       const nm = p ? p.n : h.pid;
-      const sub = p && p.p ? `${p.p}\u2009\u00b7\u2009${p.t}` : "";
-      return `<span class="ip"><b>${esc(nm)}</b>${sub ? `<i>${esc(sub)}</i>` : ""}
-        <span class="st st-${esc(h.status.toLowerCase())}">${esc(h.status)}</span></span>`;
+      const dot = "\u2009\u00b7\u2009";
+      const sub = [p && p.p ? `${p.p}${dot}${p.t}` : "", injuryDetail(p)]
+        .filter(Boolean).join(dot);
+      const back = returnLabel(p && p.ret);
+      // The note is ESPN's prose and runs to a couple of hundred characters,
+      // which is more than a chip can hold. It hangs off the title so the
+      // report stays scannable and the detail is one hover away.
+      const tip = p && p.note ? ` title="${esc(p.note)}"` : "";
+      return `<span class="ip"${tip}><b>${esc(nm)}</b>${sub ? `<i>${esc(sub)}</i>` : ""}
+        <span class="st st-${esc(h.status.toLowerCase())}">${esc(h.status)}</span>${
+          back ? `<em>${esc(back)}</em>` : ""}</span>`;
     }).join("");
     r.innerHTML = `${avatarHTML(t.uid, "sm avcell")}
       <span class="who"><span class="n">${esc(nameOf(t.uid))}</span>
@@ -3930,6 +3981,9 @@ function renderLiveWaiting(host, R, inj, avail, board) {
 /** A one-line provenance note on the injury feed. */
 function injuryNote(inj, avail) {
   const hurt = [...(avail || new Map()).values()].reduce((a, x) => a + x.hurt.length, 0);
+  // Only claim the second source when the loaded feed actually carries it: the
+  // 5MB fallback path is Sleeper alone.
+  const outlook = [...inj.map.values()].some(r => r && (r.sev || r.ret || r.note));
   const when = inj.at ? new Date(inj.at).toLocaleString(undefined,
     { weekday: "short", hour: "numeric", minute: "2-digit" }) : null;
   const d = el("div", "srcnote");
@@ -3937,7 +3991,7 @@ function injuryNote(inj, avail) {
     ? `<b>No injury data.</b> Sleeper's player file didn't load, so every lineup is priced
        at full strength. ${esc(inj.error || "")}`
     : `<b>${hurt}</b> player${hurt === 1 ? "" : "s"} in a DFFL starting lineup currently carries a
-       status, from Sleeper's own injury feed${when ? ` · read ${esc(when)}` : ""}
+       status, from Sleeper's own injury feed${outlook ? ", with severity and expected return from ESPN's" : ""}${when ? ` · read ${esc(when)}` : ""}
        ${inj.source === "cache" ? " · from this browser's cache" : ""}.`;
   return d;
 }
@@ -6413,6 +6467,7 @@ async function boot() {
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
       weekIsFinal, allWeeks,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
+      injuryDetail, returnLabel,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,

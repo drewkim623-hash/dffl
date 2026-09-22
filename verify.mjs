@@ -2041,6 +2041,96 @@ check("nobody without an NFL club is in it", injFile.noFreeAgents);
 check("it is small enough for the front page", injFile.bytes < 200 * 1024, `${(injFile.bytes / 1024).toFixed(1)}KB`);
 check("it is not stale", injFile.fresh);
 
+/* The outlook: Sleeper says a man is hurt, ESPN says how badly and for how
+ * long. The rails below are all about not lying — a stale return date, a
+ * "Not Specified" severity printed as detail, or ESPN's status quietly
+ * replacing Sleeper's would each be worse than showing nothing. */
+const outlook = await page.evaluate(async () => {
+  const [ij, rj] = await Promise.all([
+    fetch("injuries.json", { cache: "no-cache" }).then(r => r.json()),
+    fetch("rosters.json", { cache: "no-cache" }).then(r => r.json()).catch(() => ({ map: {} })),
+  ]);
+  const rostered = new Set(Object.keys(rj.map || {}));
+  const ent = Object.entries(ij.map || {});
+  const vals = ent.map(([, v]) => v);
+  const NOT_BODY = /^(coach's decision|undisclosed|personal|not injury related|rest)$/i;
+  // Sleeper's own vocabulary. ESPN writes "Injured Reserve" and "Active"; if
+  // either ever appears here, the feeds have been crossed and the Odds tab is
+  // pricing off a status INJ_AVAIL has never heard of.
+  const SLEEPER_STATUSES = new Set(["Out","Questionable","Doubtful","IR","PUP","Sus","NA","DNR","COV"]);
+  return {
+    n: vals.length,
+    withBp: vals.filter(v => v.bp).length,
+    withSev: vals.filter(v => v.sev).length,
+    withRet: vals.filter(v => v.ret).length,
+    withNote: vals.filter(v => v.note).length,
+    badBp: vals.filter(v => v.bp && NOT_BODY.test(v.bp)).length,
+    badSev: vals.filter(v => v.sev && /not specified/i.test(v.sev)).length,
+    badRet: vals.filter(v => v.ret && !/^\d{4}-\d{2}-\d{2}$/.test(v.ret)).length,
+    pastRet: vals.filter(v => v.ret && Date.parse(v.ret) < Date.parse(ij.generated)).length,
+    longNote: vals.filter(v => v.note && v.note.length > 201).length,
+    tinyNote: vals.filter(v => v.note && v.note.length < 20).length,
+    noteOffRoster: ent.filter(([id, v]) => v.note && !rostered.has(id)).length,
+    foreignStatus: vals.filter(v => !SLEEPER_STATUSES.has(v.s)).map(v => v.s),
+    statusSource: (ij.sources || {}).status || "",
+    outlookSource: (ij.sources || {}).outlook || "",
+    // Outlook fields are additive: a row that has none of them must still be
+    // a complete row, because that is what every row was before this existed.
+    bareRowsIntact: vals.filter(v => !v.bp && !v.sev && !v.ret && !v.note).every(v => v.s && v.n && v.t),
+  };
+});
+check("the outlook reached a meaningful share of the list", outlook.withBp > outlook.n * 0.2,
+  `${outlook.withBp}/${outlook.n} body parts, ${outlook.withSev} severities, ${outlook.withRet} return dates`);
+check("no coach's decision is printed as a body part", outlook.badBp === 0, `${outlook.badBp}`);
+check("no severity says 'Not Specified'", outlook.badSev === 0, `${outlook.badSev}`);
+check("every return date is an ISO date", outlook.badRet === 0, `${outlook.badRet}`);
+check("no return date is already in the past", outlook.pastRet === 0, `${outlook.pastRet}`);
+check("notes are capped", outlook.longNote === 0, `${outlook.longNote} over 201 chars`);
+check("no note is too short to say anything", outlook.tinyNote === 0, `${outlook.tinyNote}`);
+check("notes are carried only for rostered players", outlook.noteOffRoster === 0,
+  `${outlook.noteOffRoster} off-roster notes`);
+check("Sleeper is still the only authority on status", outlook.foreignStatus.length === 0,
+  [...new Set(outlook.foreignStatus)].join(", "));
+check("the file names both of its sources", !!outlook.statusSource && !!outlook.outlookSource,
+  `status=${outlook.statusSource} outlook=${outlook.outlookSource}`);
+check("a row with no outlook is still a complete row", outlook.bareRowsIntact);
+
+// The two renderers, on the cases that actually occur in the feed.
+const injRender = await page.evaluate(() => {
+  const { injuryDetail, returnLabel } = window.__DFFL;
+  const iso = d => new Date(Date.now() + d * 86400000).toISOString().slice(0, 10);
+  return {
+    both: injuryDetail({ bp: "Knee - ACL", sev: "Surgery" }),
+    dupe: injuryDetail({ bp: "Concussion", sev: "Concussion" }),
+    bpOnly: injuryDetail({ bp: "Hamstring" }),
+    sevOnly: injuryDetail({ sev: "Sprain" }),
+    empty: injuryDetail({}),
+    nul: injuryDetail(null),
+    near: returnLabel(iso(19)),
+    far: returnLabel(iso(150)),
+    junk: returnLabel("not-a-date"),
+    none: returnLabel(""),
+    // An ISO date is midnight UTC; built wrong it prints as the day before. The
+    // invariant is the label naming the day the ISO string names — comparing
+    // against today-plus-19 instead would fail on its own near local midnight,
+    // when that instant and that date are different days.
+    sameDay: (() => {
+      const d = iso(19);
+      return returnLabel(d).includes(String(Number(d.slice(8, 10))));
+    })(),
+    sameDayFor: iso(19),
+  };
+});
+check("a body part and a severity read as one phrase", injRender.both === "Knee - ACL, surgery", injRender.both);
+check("a severity that repeats the body part is said once", injRender.dupe === "Concussion", injRender.dupe);
+check("either half stands alone", injRender.bpOnly === "Hamstring" && injRender.sevOnly === "Sprain");
+check("nothing known prints nothing", injRender.empty === "" && injRender.nul === "");
+check("a date weeks out is given as a date", /^back /.test(injRender.near), injRender.near);
+check("a date months out is given as the season", injRender.far === "rest of season", injRender.far);
+check("a return date is not shifted by the timezone", injRender.sameDay,
+  `${injRender.sameDayFor} rendered as "${injRender.near}"`);
+check("an absent or broken return date prints nothing", injRender.junk === "" && injRender.none === "");
+
 const avail = await page.evaluate(() => {
   const D = window.__DFFL;
   const season = D.DB.seasons[0];
