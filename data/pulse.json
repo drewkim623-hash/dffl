@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-22T04:06:38.852Z",
- "at": 1790049998853,
+ "generated": "2026-09-22T11:03:46.120Z",
+ "at": 1790075026120,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -9,10 +9,10 @@
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 1,
+   "wins": 2,
    "losses": 0,
-   "points_for": 195.9,
-   "points_against": 125.1,
+   "points_for": 341,
+   "points_against": 203.4,
    "faab_spent": 4,
    "starters_hurt": [
     "Jaxson Dart (Out)",
@@ -20,11 +20,42 @@
    ]
   },
   {
+   "manager": "wesley55",
+   "wins": 2,
+   "losses": 0,
+   "points_for": 250.04,
+   "points_against": 195.12,
+   "faab_spent": 21,
+   "starters_hurt": []
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 2,
+   "losses": 0,
+   "points_for": 239.26,
+   "points_against": 201.66,
+   "faab_spent": 36,
+   "starters_hurt": [
+    "Jayden Reed (Out)"
+   ]
+  },
+  {
+   "manager": "sizzlemc2",
+   "wins": 1,
+   "losses": 1,
+   "points_for": 273.64,
+   "points_against": 273.78,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "Dallas Goedert (Questionable)"
+   ]
+  },
+  {
    "manager": "Domo112",
    "wins": 1,
-   "losses": 0,
-   "points_for": 187.06,
-   "points_against": 161.86,
+   "losses": 1,
+   "points_for": 272.38,
+   "points_against": 274.5,
    "faab_spent": 0,
    "starters_hurt": [
     "Caleb Williams (Out)",
@@ -33,94 +64,31 @@
    ]
   },
   {
-   "manager": "sizzlemc2",
-   "wins": 1,
-   "losses": 0,
-   "points_for": 162.66,
-   "points_against": 144.52,
-   "faab_spent": 0,
-   "starters_hurt": [
-    "Dallas Goedert (Questionable)"
-   ]
-  },
-  {
    "manager": "saucebossandrew",
    "wins": 1,
-   "losses": 0,
-   "points_for": 137.52,
-   "points_against": 124.76,
-   "faab_spent": 0,
-   "starters_hurt": []
-  },
-  {
-   "manager": "wesley55",
-   "wins": 1,
-   "losses": 0,
-   "points_for": 111.46,
-   "points_against": 90.5,
-   "faab_spent": 21,
-   "starters_hurt": []
-  },
-  {
-   "manager": "bradyrife",
-   "wins": 1,
-   "losses": 0,
-   "points_for": 105.2,
-   "points_against": 90.74,
-   "faab_spent": 36,
-   "starters_hurt": [
-    "Jayden Reed (Out)"
-   ]
-  },
-  {
-   "manager": "moseslin",
-   "wins": 0,
    "losses": 1,
-   "points_for": 161.86,
-   "points_against": 187.06,
+   "points_for": 257.68,
+   "points_against": 256.54,
    "faab_spent": 0,
-   "starters_hurt": [
-    "Saquon Barkley (Questionable)",
-    "Rico Dowdle (Out)"
-   ]
-  },
-  {
-   "manager": "chassinator",
-   "wins": 0,
-   "losses": 1,
-   "points_for": 144.52,
-   "points_against": 162.66,
-   "faab_spent": 15,
    "starters_hurt": []
   },
   {
    "manager": "drewkim",
-   "wins": 0,
+   "wins": 1,
    "losses": 1,
-   "points_for": 125.1,
-   "points_against": 195.9,
+   "points_for": 237.74,
+   "points_against": 281.22,
    "faab_spent": 2,
    "starters_hurt": [
-    "Jayden Daniels (Out)",
-    "Jadarian Price (Questionable)",
-    "Alec Pierce (Out)"
+    "Jadarian Price (Questionable)"
    ]
   },
   {
-   "manager": "jskule23",
-   "wins": 0,
-   "losses": 1,
-   "points_for": 124.76,
-   "points_against": 137.52,
-   "faab_spent": 11,
-   "starters_hurt": []
-  },
-  {
    "manager": "bertalicious",
-   "wins": 0,
+   "wins": 1,
    "losses": 1,
-   "points_for": 90.74,
-   "points_against": 105.2,
+   "points_for": 222.52,
+   "points_against": 225.36,
    "faab_spent": 8,
    "starters_hurt": [
     "Aaron Jones (Questionable)"
@@ -128,11 +96,41 @@
   },
   {
    "manager": "victorthompson",
-   "wins": 0,
+   "wins": 1,
    "losses": 1,
-   "points_for": 90.5,
-   "points_against": 111.46,
+   "points_for": 219.76,
+   "points_against": 222.44,
    "faab_spent": 7,
+   "starters_hurt": []
+  },
+  {
+   "manager": "chassinator",
+   "wins": 0,
+   "losses": 2,
+   "points_for": 249.14,
+   "points_against": 301.24,
+   "faab_spent": 15,
+   "starters_hurt": []
+  },
+  {
+   "manager": "moseslin",
+   "wins": 0,
+   "losses": 2,
+   "points_for": 240.16,
+   "points_against": 332.16,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "Saquon Barkley (Questionable)",
+    "Rico Dowdle (Out)"
+   ]
+  },
+  {
+   "manager": "jskule23",
+   "wins": 0,
+   "losses": 2,
+   "points_for": 235.68,
+   "points_against": 271.58,
+   "faab_spent": 11,
    "starters_hurt": []
   }
  ],
