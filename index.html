@@ -3859,6 +3859,11 @@ function moveChip(now, was) {
 /**
  * The same board as the preseason one, with two extra things: what the line was
  * before a ball was kicked, and how far it has moved since.
+ *
+ * openBy maps uid to {p, price} — the opening probability, for the movement
+ * chip, and the opening posted price, already vigged against the whole opening
+ * field by the caller. It must not be a bare probability: a price cannot be
+ * derived from one runner in isolation.
  */
 function liveBoard(title, sub, priced, openBy, noteFn) {
   const b = el("div", "board");
@@ -3872,8 +3877,8 @@ function liveBoard(title, sub, priced, openBy, noteFn) {
     btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(r.uid, "sm avcell")}
       <span class="who"><span class="n">${esc(nameOf(r.uid))}</span>
       <span class="s">${esc(noteFn ? noteFn(r) : teamOf(r.uid))}</span>
-      ${was != null ? `<span class="was">opened ${esc(fmtOdds(roundOdds(americanOdds(addVig([was])[0]))))}
-        ${moveChip(r.p, was)}</span>` : ""}</span>${priceTile(r)}`;
+      ${was ? `<span class="was">opened ${esc(fmtOdds(was.price))}
+        ${moveChip(r.p, was.p)}</span>` : ""}</span>${priceTile(r)}`;
     btn.onclick = () => openProfile(r.uid);
     b.appendChild(btn);
   });
@@ -4030,8 +4035,16 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board) {
   else if (board && !board.ok) host.appendChild(liveBoardProblem(board));
   host.appendChild(injuryNote(inj, avail));
 
-  const openTitle = new Map(T.map((t, i) => [t.uid, sim.title[i] / o]));
-  const openPlay = new Map(T.map((t, i) => [t.uid, sim.playoff[i] / o]));
+  // The opening price has to be vigged against the whole opening field, exactly
+  // as the live price is. Pricing one probability on its own is not a cheaper
+  // way to get the same number — addVig normalises to the sum it is handed, so a
+  // single runner always comes back a 99.5% certainty. That is what printed
+  // "opened -19900" against all twelve teams. Title is one race, playoffs are
+  // twelve yes/no books, so each uses the market function its board uses.
+  const openTitle = new Map(priceMarket(T.map((t, i) => ({ uid: t.uid, p: sim.title[i] / o })))
+    .map(r => [r.uid, { p: r.p, price: r.price }]));
+  const openPlay = new Map(priceBinary(T.map((t, i) => ({ uid: t.uid, p: sim.playoff[i] / o })))
+    .map(r => [r.uid, { p: r.p, price: r.price }]));
 
   const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.title[i] / n }))
     .sort((a, b) => b.p - a.p));

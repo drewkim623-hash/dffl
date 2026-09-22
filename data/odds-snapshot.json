@@ -1,7 +1,7 @@
 {
- "_comment": "Written by build-email.mjs. NOTE: built early, on 2026-09-22, from a local copy of the site with week 2 forced final, because every week 2 game was over but Sleeper had not yet advanced state.week and so had not posted the results into the standings. The board here therefore counts two weeks while the published site still counted one. The Tuesday Action overwrites this with the ordinary live snapshot. Everything in it was still computed by the site's own model, not recomputed by hand.",
- "generated": "2026-09-22T03:58:06.205Z",
- "at": 1790049486205,
+ "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
+ "generated": "2026-09-22T04:06:58.760Z",
+ "at": 1790050018760,
  "season": "2026",
  "week": 3,
  "liveWeek": null,

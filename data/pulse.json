@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-22T03:56:29.237Z",
- "at": 1790049389237,
+ "generated": "2026-09-22T04:06:38.852Z",
+ "at": 1790049998853,
  "season": "2026",
- "nfl_week": 2,
+ "nfl_week": 3,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -140,488 +140,78 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 85.32,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "drewkim",
-    "points": 112.64,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
     "manager": "jadencha",
-    "points": 145.1,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "moseslin",
-    "points": 78.3,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 104.62,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "wesley55",
-    "points": 138.58,
-    "startersLeftToPlay": 0
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "bertalicious",
-    "points": 131.78,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 120.16,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "jskule23",
-    "points": 110.92,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "bradyrife",
-    "points": 134.06,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "sizzlemc2",
-    "points": 110.98,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "victorthompson",
-    "points": 129.26,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
- "trades": [
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "drewkim",
-    "sizzlemc2"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 4,
-     "from": "sizzlemc2",
-     "to": "drewkim"
-    },
-    {
-     "season": "2026",
-     "round": 5,
-     "from": "sizzlemc2",
-     "to": "drewkim"
-    },
-    {
-     "season": "2026",
-     "round": 7,
-     "from": "sizzlemc2",
-     "to": "drewkim"
-    },
-    {
-     "season": "2026",
-     "round": 4,
-     "from": "drewkim",
-     "to": "sizzlemc2"
-    },
-    {
-     "season": "2026",
-     "round": 5,
-     "from": "drewkim",
-     "to": "sizzlemc2"
-    },
-    {
-     "season": "2026",
-     "round": 7,
-     "from": "drewkim",
-     "to": "sizzlemc2"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "bertalicious",
-    "jskule23"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 1,
-     "from": "bertalicious",
-     "to": "jskule23"
-    },
-    {
-     "season": "2026",
-     "round": 1,
-     "from": "jskule23",
-     "to": "bertalicious"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "jskule23",
-    "wesley55"
-   ],
-   "adds": [
-    {
-     "name": "Luther Burden",
-     "pos": "WR",
-     "team": "CHI",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Luther Burden",
-     "pos": "WR",
-     "team": "CHI",
-     "status": null,
-     "from": "wesley55"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 8,
-     "from": "jskule23",
-     "to": "wesley55"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "moseslin"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 7,
-     "from": "moseslin",
-     "to": "jadencha"
-    },
-    {
-     "season": "2026",
-     "round": 6,
-     "from": "jadencha",
-     "to": "moseslin"
-    },
-    {
-     "season": "2026",
-     "round": 6,
-     "from": "chassinator",
-     "to": "jadencha"
-    },
-    {
-     "season": "2026",
-     "round": 7,
-     "from": "jskule23",
-     "to": "moseslin"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "chassinator",
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Christian McCaffrey",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "to": "bradyrife"
-    },
-    {
-     "name": "Kyren Williams",
-     "pos": "RB",
-     "team": "LAR",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Christian McCaffrey",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "from": "chassinator"
-    },
-    {
-     "name": "Kyren Williams",
-     "pos": "RB",
-     "team": "LAR",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 3,
-     "from": "chassinator",
-     "to": "bradyrife"
-    },
-    {
-     "season": "2026",
-     "round": 3,
-     "from": "bradyrife",
-     "to": "chassinator"
-    },
-    {
-     "season": "2026",
-     "round": 4,
-     "from": "bradyrife",
-     "to": "chassinator"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Drake Maye",
-     "pos": "QB",
-     "team": "NE",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Drake Maye",
-     "pos": "QB",
-     "team": "NE",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 5,
-     "from": "chassinator",
-     "to": "Domo112"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "bradyrife"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2026",
-     "round": 7,
-     "from": "jskule23",
-     "to": "jadencha"
-    },
-    {
-     "season": "2026",
-     "round": 2,
-     "from": "drewkim",
-     "to": "jadencha"
-    }
-   ]
-  },
-  {
-   "week": 1,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Christian McCaffrey",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "to": "chassinator"
-    },
-    {
-     "name": "Jahmyr Gibbs",
-     "pos": "RB",
-     "team": "DET",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Christian McCaffrey",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "from": "Domo112"
-    },
-    {
-     "name": "Jahmyr Gibbs",
-     "pos": "RB",
-     "team": "DET",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": null,
-   "picks": []
-  }
- ],
+ "trades": [],
  "waivers": [
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Kaelon Black",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "to": "bradyrife"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Ja'Kobi Lane",
-     "pos": "WR",
-     "team": "BAL",
-     "status": "IR",
-     "from": "bradyrife"
-    }
-   ],
-   "faab": 36,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "wesley55"
-   ],
-   "adds": [
-    {
-     "name": "Romeo Doubs",
-     "pos": "WR",
-     "team": "NE",
-     "status": null,
-     "to": "wesley55"
-    }
-   ],
-   "drops": [],
-   "faab": 21,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "bertalicious"
-   ],
-   "adds": [
-    {
-     "name": "Caleb Douglas",
-     "pos": "WR",
-     "team": "MIA",
-     "status": "Questionable",
-     "to": "bertalicious"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Rachaad White",
-     "pos": "RB",
-     "team": "WAS",
-     "status": null,
-     "from": "bertalicious"
-    }
-   ],
-   "faab": 18,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "San Francisco 49ers",
-     "pos": "DEF",
-     "team": "SF",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Detroit Lions",
-     "pos": "DEF",
-     "team": "DET",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 12,
-   "picks": []
-  },
   {
    "week": 2,
    "type": "waiver",
@@ -647,87 +237,6 @@
     }
    ],
    "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Tampa Bay Buccaneers",
-     "pos": "DEF",
-     "team": "TB",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Jake Ferguson",
-     "pos": "TE",
-     "team": "DAL",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 4,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Jordan Love",
-     "pos": "QB",
-     "team": "GB",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chris Rodriguez",
-     "pos": "RB",
-     "team": "JAX",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 3,
-   "picks": []
-  },
-  {
-   "week": 1,
-   "type": "waiver",
-   "managers": [
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "team": "WAS",
-     "status": null,
-     "to": "drewkim"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chig Okonkwo",
-     "pos": "TE",
-     "team": "WAS",
-     "status": "Out",
-     "from": "drewkim"
-    }
-   ],
-   "faab": 2,
    "picks": []
   },
   {
@@ -785,5 +294,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 71
+ "free_agent_moves": 19
 }

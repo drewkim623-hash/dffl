@@ -2186,6 +2186,47 @@ check("starters are weighed by what they have scored once a week is in the book"
 
 group("The line moves on results, slowly");
 
+/* The opening price on the live board. A price is a function of the whole
+ * market, not of one runner: addVig normalises to the sum it is handed, so
+ * pricing a single probability alone returns a 99.5% certainty every time. That
+ * printed "opened -19900" against all twelve teams on both live boards. */
+const openPrices = await page.evaluate(() => {
+  const { priceMarket, priceBinary, addVig, americanOdds, roundOdds } = window.__DFFL;
+  // Strictly decreasing on purpose: equal probabilities should price equally,
+  // and the real board does carry ties, so a distinctness test needs distinct input.
+  const field = [0.286, 0.202, 0.149, 0.092, 0.066, 0.063, 0.047, 0.037, 0.031, 0.030, 0.025, 0.018];
+  // What the old code did, kept as the thing being guarded against.
+  const alone = field.map(p => roundOdds(americanOdds(addVig([p])[0])));
+  const asRace = priceMarket(field.map((p, i) => ({ i, p }))).map(r => r.price);
+  const asBooks = priceBinary(field.map((p, i) => ({ i, p }))).map(r => r.price);
+  const rows = [...document.querySelectorAll('[data-board="live"] .orow .was')]
+    .map(e => (e.textContent.match(/opened\s*([+-]?\d+)/) || [])[1]).filter(Boolean);
+  return {
+    aloneDistinct: new Set(alone).size, aloneFirst: alone[0],
+    raceDistinct: new Set(asRace).size, raceFirst: asRace[0], raceLast: asRace[asRace.length - 1],
+    booksDistinct: new Set(asBooks).size,
+    domCount: rows.length, domDistinct: new Set(rows).size,
+    domHasSentinel: rows.includes("-19900"),
+    domSample: rows.slice(0, 4),
+  };
+});
+check("pricing one runner alone collapses every price to the same certainty",
+  openPrices.aloneDistinct === 1 && String(openPrices.aloneFirst) === "-19900",
+  `${openPrices.aloneDistinct} distinct, first ${openPrices.aloneFirst}`);
+check("priced as a race, distinct openings give distinct prices",
+  openPrices.raceDistinct === 12, `${openPrices.raceDistinct} distinct`);
+check("the favourite opens shorter than the longshot",
+  openPrices.raceFirst < openPrices.raceLast, `${openPrices.raceFirst} vs ${openPrices.raceLast}`);
+check("priced as yes/no books, distinct openings stay distinct",
+  openPrices.booksDistinct === 12, `${openPrices.booksDistinct} distinct`);
+check("the live board prints an opening price per row",
+  openPrices.domCount === 0 || openPrices.domCount >= 12, `${openPrices.domCount} rows`);
+check("no board opens every team at the same price",
+  openPrices.domCount === 0 || openPrices.domDistinct > 1,
+  `${openPrices.domDistinct} distinct of ${openPrices.domCount}: ${openPrices.domSample.join(", ")}`);
+check("no opening price is the one-runner sentinel",
+  !openPrices.domHasSentinel, openPrices.domSample.join(", "));
+
 const post = await page.evaluate(() => {
   const D = window.__DFFL, model = window.__ODDS;
   const t = model.teams[0];
