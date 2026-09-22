@@ -2088,6 +2088,49 @@ if (!sb.present) {
  * replacing it, injuries are charged to the week they belong to, and none of
  * it is allowed to disturb the opening line.
  * ---------------------------------------------------------------------- */
+group("The blast ledger");
+
+/* data/sent-emails.json is what stops the Saturday blast re-sending a column the
+ * league already read. It fails open if it is malformed or if a slug in it does
+ * not match anything in recaps.json — the guard would quietly decide nothing has
+ * ever been sent. These are cheap and catch exactly that. */
+const ledgerFile = await page.evaluate(async () => {
+  const [l, r] = await Promise.all([
+    fetch("data/sent-emails.json", { cache: "no-cache" }).then(x => x.ok ? x.json() : null).catch(() => null),
+    fetch("recaps.json", { cache: "no-cache" }).then(x => x.json()),
+  ]);
+  if (!l) return { missing: true };
+  const slugs = new Set((r.articles || []).map(a => a.slug));
+  const weeks = new Set((r.weeks || []).map(w => `${w.season}w${w.week}`));
+  const refs = l.sent.flatMap(s => [s.lead, ...(s.alsoSent || [])]).filter(Boolean);
+  return {
+    missing: false,
+    n: l.sent.length,
+    shaped: l.sent.every(s => s.at && s.subject && typeof s.to === "number"),
+    chronological: l.sent.every((s, i, a) => i === 0 || String(a[i - 1].at) <= String(s.at)),
+    danglingSlugs: refs.filter(s => !slugs.has(s)),
+    danglingWeeks: l.sent.filter(s => s.recap).map(s => `${s.recap.season}w${s.recap.week}`)
+      .filter(w => !weeks.has(w)),
+    reachedTwelve: l.sent[l.sent.length - 1] ? l.sent[l.sent.length - 1].to : 0,
+    newestArticleSent: refs.includes(((r.articles || []).slice()
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0] || {}).slug),
+  };
+});
+if (ledgerFile.missing) {
+  check("the blast ledger is published", false, "data/sent-emails.json not found");
+} else {
+  check("the blast ledger is published and shaped", ledgerFile.shaped, `${ledgerFile.n} entries`);
+  check("its entries are in chronological order", ledgerFile.chronological);
+  check("every article it says was sent still exists",
+    ledgerFile.danglingSlugs.length === 0, ledgerFile.danglingSlugs.join(", "));
+  check("every week it says was blasted still exists",
+    ledgerFile.danglingWeeks.length === 0, ledgerFile.danglingWeeks.join(", "));
+  check("the most recent send reached all twelve", ledgerFile.reachedTwelve === 12,
+    `${ledgerFile.reachedTwelve} addresses`);
+  check("the guard can tell the newest piece has been sent",
+    typeof ledgerFile.newestArticleSent === "boolean", `${ledgerFile.newestArticleSent}`);
+}
+
 group("Injuries");
 
 const injFile = await page.evaluate(async () => {

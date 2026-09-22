@@ -1,0 +1,49 @@
+{
+ "_comment": "Every blast that has actually reached the league. Nothing else knows this: recaps.json records what has been written, not what has been sent, and the two are not the same file for a reason. The routine appends here after a send and commits, so the next run can tell whether the piece it is about to lead with has already been in somebody's inbox. blast-status.mjs reads it.",
+ "_schema": {
+  "sent[]": {
+   "at": "ISO timestamp of the send",
+   "subject": "the subject line as it went out",
+   "lead": "slug of the article the blast led with, or null",
+   "alsoSent": "slugs carried in the 'Also this week' section, which count as sent",
+   "recap": "{season, week} of the recap it carried, or null",
+   "to": "number of league addresses it reached",
+   "sha256": "sha256 of the HTML body, so a resend is identifiable",
+   "by": "routine | hand",
+   "note": "anything a later reader would need to know"
+  }
+ },
+ "sent": [
+  {
+   "at": "2026-09-19T23:21:18Z",
+   "subject": "Re: DFFL Week 2: The Steepest Fall on the Board",
+   "lead": "the-steepest-fall-on-the-board",
+   "alsoSent": [
+    "bradyrife-bought-the-backup-too",
+    "week-1-game-by-game"
+   ],
+   "recap": {
+    "season": "2026",
+    "week": 1
+   },
+   "to": 11,
+   "sha256": null,
+   "by": "hand",
+   "note": "The routine sent this to Drew alone at 23:10Z under the old approval flow; Drew forwarded it to the other ten eleven minutes later. Recorded as the league send because that is what the league received. Dominick Reyes was not on that list."
+  },
+  {
+   "at": "2026-09-22T04:32:50Z",
+   "subject": "DFFL Week 3: One Game Was on the Bench",
+   "lead": "one-game-was-on-the-bench",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 2
+   },
+   "to": 12,
+   "sha256": "368f0a1839376b62ed898550b70a9c5a4fc8503de14bb3f315eab082f260f2a2",
+   "by": "hand",
+   "note": "Sent early, on the Tuesday rather than waiting for the Saturday blast, because every week 2 game was final. All twelve in To at Drew's instruction rather than the usual eleven in BCC. First send to include Dominick Reyes. The 'Also this week' section was suppressed: both pieces it would have carried went out on 19 September."
+  }
+ ]
+}

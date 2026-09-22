@@ -44,7 +44,8 @@ Two things, both committed straight to `main`:
 1. **`recaps.json` → `weeks[]`** — the week's write-up.
 2. **`rankings.json` → `weeks[]`** — one sentence of colour per manager.
 
-This job does not touch `articles[]`.
+This job does not touch `articles[]` — but it does send, which used to be somebody
+else's job. See **Sending the blast** below.
 
 ### The contract for `weeks[]`
 
@@ -61,11 +62,11 @@ injury, race, note`. Replace a week that already exists rather than duplicating 
 all twelve managers, every week. The site matches on that string and falls back silently if it does
 not match.
 
-### `articles[]` is not this job's
+### `articles[]` is not this job's to *write*
 
 The weekly column lives in `recaps.json` → `articles[]`, but the Tuesday job doesn't write it: the
 Saturday blast writes the week's column, and a separate midweek story watch files one or two more
-through the week.
+through the week. Every one of those jobs now *sends* what it filed — see below.
 
 **Never drop `articles[]` when rewriting `recaps.json`.** Read the file, write `weeks[]` back, and
 leave `articles[]` exactly as found. Dropping the key deletes writing nothing else regenerates.
@@ -79,6 +80,61 @@ and the board says two, the page is wrong in public. Write what happened; the bo
 
 **Never invent a stat.** Everything in the data file is real and sourced. Anything not in it is not
 available.
+
+## Sending the blast
+
+**Every piece the desk publishes goes to the league by email, and nothing waits for approval.**
+That covers all three jobs: the Tuesday recap, anything the midweek story watch files, and the
+Saturday column. Write it, commit it, send it.
+
+### Who it goes to
+
+All twelve, in **To**, every time. Not BCC — the league sees each other and can reply to each other,
+which is what was asked for.
+
+```
+drewkim623@gmail.com, jadenisxd@gmail.com, Joeskule23@gmail.com, bradyrife@gmail.com,
+Willie124w@gmail.com, victorthompson023@gmail.com, matthewcolella2@gmail.com,
+andrewcroft44@gmail.com, connorhassan04@gmail.com, weshowenstein@gmail.com,
+moseslin2023@gmail.com, dominickreyes1@gmail.com
+```
+
+Dominick Reyes was missing from the list used up to 19 September. He is on it now. If a send goes
+out to eleven addresses, the list is the old one and is wrong.
+
+### Never send the same piece twice
+
+The blast leads with the newest article in `articles[]` and carries the newest week in `weeks[]`.
+Neither file knows anything about email, so on a quiet week the default behaviour is to send the
+league a column it already read. `data/sent-emails.json` is the record of what actually reached
+them. Before composing, run:
+
+```
+node blast-status.mjs
+```
+
+Exit **0** means there is something new. Exit **1** means the newest piece has already been sent —
+**write a new article first**, then send that. Do not send a repeat, and do not silently skip: a
+quiet week is a week to file something short, not a week to go dark.
+
+After the send actually succeeds, record it and commit:
+
+```
+node blast-status.mjs --record --subject "<subject>" --lead <slug> \
+  --also <slug,slug> --season 2026 --week <n> --to 12 --sha <sha256> --by routine
+```
+
+A send that is not recorded will be sent again next time. Recording is part of sending, not an
+afterthought.
+
+### Nothing checks the numbers but you
+
+There is no approval step any more, which means no second pair of eyes between a wrong number and
+twelve inboxes. The two hard rules below are the whole guard, and one of them needs restating here:
+**any ordinal or count must be checked against a sorted list, not recalled.** "The second-highest
+score", "three of the six winners", "the lowest bench in the league" — those are the claims that
+slip past every numeric check, and several have needed correcting after the fact. Sort the list and
+look. If a figure cannot be traced to a file in this repo, it does not go in the email.
 
 ## Voice
 
