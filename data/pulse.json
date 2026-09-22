@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-22T03:02:19.339Z",
- "at": 1790046139339,
+ "generated": "2026-09-22T03:15:00.811Z",
+ "at": 1790046900811,
  "season": "2026",
  "nfl_week": 2,
  "season_type": "regular",
@@ -164,7 +164,7 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 103.92,
+    "points": 104.62,
     "startersLeftToPlay": 1
    },
    "b": {
