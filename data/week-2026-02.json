@@ -2,7 +2,7 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 2,
- "generated": "2026-09-22T12:47:00.173Z",
+ "generated": "2026-09-23T11:03:47.410Z",
  "league": {
   "id": "1318040218183417856",
   "name": "DFFL",
@@ -1125,7 +1125,7 @@
    "ties": 0,
    "points_for": 341,
    "points_against": 203.4,
-   "waiver_budget_used": 4
+   "waiver_budget_used": 7
   },
   {
    "manager": "wesley55",
@@ -1158,7 +1158,7 @@
    "ties": 0,
    "points_for": 273.64,
    "points_against": 273.78,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 4
   },
   {
    "manager": "Domo112",
@@ -1191,7 +1191,7 @@
    "ties": 0,
    "points_for": 237.74,
    "points_against": 281.22,
-   "waiver_budget_used": 2
+   "waiver_budget_used": 33
   },
   {
    "manager": "bertalicious",
@@ -1202,7 +1202,7 @@
    "ties": 0,
    "points_for": 222.52,
    "points_against": 225.36,
-   "waiver_budget_used": 8
+   "waiver_budget_used": 16
   },
   {
    "manager": "victorthompson",
@@ -1213,7 +1213,7 @@
    "ties": 0,
    "points_for": 219.76,
    "points_against": 222.44,
-   "waiver_budget_used": 7
+   "waiver_budget_used": 25
   },
   {
    "manager": "chassinator",
@@ -1224,7 +1224,7 @@
    "ties": 0,
    "points_for": 249.14,
    "points_against": 301.24,
-   "waiver_budget_used": 15
+   "waiver_budget_used": 38
   },
   {
    "manager": "moseslin",
@@ -1235,7 +1235,7 @@
    "ties": 0,
    "points_for": 240.16,
    "points_against": 332.16,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 5
   },
   {
    "manager": "jskule23",
@@ -1246,10 +1246,278 @@
    "ties": 0,
    "points_for": 235.68,
    "points_against": 271.58,
-   "waiver_budget_used": 11
+   "waiver_budget_used": 62
   }
  ],
  "transactions": [
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Adonai Mitchell",
+     "pos": "WR",
+     "team": "NYJ",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 31,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Malik Washington",
+     "pos": "WR",
+     "team": "MIA",
+     "from": "chassinator"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "New York Giants",
+     "pos": "DEF",
+     "team": "NYG",
+     "to": "moseslin"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Baltimore Ravens",
+     "pos": "DEF",
+     "team": "BAL",
+     "from": "moseslin"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "DJ Moore",
+     "pos": "WR",
+     "team": "BUF",
+     "to": "chassinator"
+    },
+    {
+     "name": "D'Andre Swift",
+     "pos": "RB",
+     "team": "CHI",
+     "to": "chassinator"
+    },
+    {
+     "name": "Ashton Jeanty",
+     "pos": "RB",
+     "team": "LV",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "DJ Moore",
+     "pos": "WR",
+     "team": "BUF",
+     "from": "jadencha"
+    },
+    {
+     "name": "D'Andre Swift",
+     "pos": "RB",
+     "team": "CHI",
+     "from": "jadencha"
+    },
+    {
+     "name": "Ashton Jeanty",
+     "pos": "RB",
+     "team": "LV",
+     "from": "chassinator"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Tank Bigsby",
+     "pos": "RB",
+     "team": "PHI",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "DeMario Douglas",
+     "pos": "WR",
+     "team": "NE",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 4,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Emanuel Wilson",
+     "pos": "RB",
+     "team": "SEA",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Devin Singletary",
+     "pos": "RB",
+     "team": "NYG",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 14,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "C.J. Stroud",
+     "pos": "QB",
+     "team": "HOU",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Bryce Young",
+     "pos": "QB",
+     "team": "CAR",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jordan Love",
+     "pos": "QB",
+     "team": "GB",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 23,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Patrick Mahomes",
+     "pos": "QB",
+     "team": "KC",
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kenyon Sadiq",
+     "pos": "TE",
+     "team": "NYJ",
+     "from": "jskule23"
+    }
+   ],
+   "faab": 51,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Minnesota Vikings",
+     "pos": "DEF",
+     "team": "MIN",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [],
+   "faab": 4,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bertalicious"
+   ],
+   "adds": [
+    {
+     "name": "Jared Goff",
+     "pos": "QB",
+     "team": "DET",
+     "to": "bertalicious"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Baker Mayfield",
+     "pos": "QB",
+     "team": "TB",
+     "from": "bertalicious"
+    }
+   ],
+   "faab": 8,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
