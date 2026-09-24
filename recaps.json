@@ -2395,6 +2395,118 @@
      "text": "Bench totals cover every non-starting slot. The single-swap test puts each manager's best bench score in place of the worst starter the week file records for him, and only the sizzlemc2 case was checked for position eligibility — the rest are an upper bound on what one change could have done, not a lineup anyone could have set. Points-for and records here are summed from the two weeks' game logs rather than read off Sleeper's standings, which still read one week when this was written. Every score is the official Sleeper total under this league's scoring."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-fifty-one-dollar-quarterback",
+   "date": "2026-09-24",
+   "source": "watch",
+   "kicker": "2026 · week 2 waivers",
+   "headline": "The Fifty-One Dollar Quarterback",
+   "dek": "jskule23 is 0-2 and has now spent $62 in FAAB this season, more than any other manager in the league. Fifty-one of it went on Patrick Mahomes in a single claim — by itself more than every other manager's full-season total.",
+   "byline": "DFFL desk",
+   "standfirst": "$51 · the round's only claim in that neighborhood",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "The waiver wire's biggest move of the last two weeks was not close. <b>jskule23</b>, winless at 0-2, bid $51 to claim <b>Patrick Mahomes</b> off free agency — the largest single FAAB claim of the season, and bigger by itself than the entire season's spending of every other manager in the league."
+    },
+    {
+     "type": "stat",
+     "n": "$51",
+     "text": "What jskule23 paid to claim Patrick Mahomes off waivers. It is the largest single bid of the season, and more than any other manager has spent on waivers all year."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the source",
+     "text": "A Rival's Discard"
+    },
+    {
+     "type": "p",
+     "text": "Mahomes did not come from nowhere. In the same waiver run, <b>victorthompson</b> released him to claim <b>Devaughn Vele</b> for $6. jskule23 turned around and paid $51 to bring him aboard, dropping <b>Kenyon Sadiq</b> to make room."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the ledger",
+     "text": "The League's Biggest Spender"
+    },
+    {
+     "type": "p",
+     "text": "It is jskule23's third FAAB story of the season. He spent $10 in the league's first waiver round, $1 more on Makai Lemon this week, and the $51 for Mahomes pushes his season total to $62 — the most of any manager in the league, $24 ahead of second-place chassinator's $38."
+    },
+    {
+     "type": "bars",
+     "title": "Season FAAB spent, by manager",
+     "sub": "Total dollars committed so far this year.",
+     "rows": [
+      {
+       "label": "jskule23",
+       "value": 62,
+       "group": 1
+      },
+      {
+       "label": "chassinator",
+       "value": 38,
+       "group": 2
+      },
+      {
+       "label": "bradyrife",
+       "value": 36,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "value": 33,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "value": 25,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "value": 21,
+       "group": 2
+      },
+      {
+       "label": "bertalicious",
+       "value": 16,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "value": 7,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "value": 5,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2",
+       "value": 4,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "value": 0,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "value": 0,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "jskule23 is 0-2, one of three winless teams in the league alongside moseslin and chassinator. The board has moved against him since the draft: a 31.5% shot at the playoffs on the preseason line is a 17.1% shot now."
+    }
+   ]
   }
  ]
 }
