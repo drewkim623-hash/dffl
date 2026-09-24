@@ -2,7 +2,7 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 2,
- "generated": "2026-09-23T11:03:47.410Z",
+ "generated": "2026-09-24T11:03:37.281Z",
  "league": {
   "id": "1318040218183417856",
   "name": "DFFL",

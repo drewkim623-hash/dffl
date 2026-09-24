@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-23T11:03:49.105Z",
- "at": 1790161429105,
+ "generated": "2026-09-24T11:03:39.073Z",
+ "at": 1790247819073,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -14,7 +14,9 @@
    "points_for": 341,
    "points_against": 203.4,
    "faab_spent": 7,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jaylen Warren (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -33,7 +35,7 @@
    "points_against": 201.66,
    "faab_spent": 36,
    "starters_hurt": [
-    "Jayden Reed (Doubtful)"
+    "Jayden Reed (Out)"
    ]
   },
   {
@@ -54,6 +56,7 @@
    "faab_spent": 0,
    "starters_hurt": [
     "Malik Nabers (Questionable)",
+    "Jalen Coker (Questionable)",
     "Mike Evans (Questionable)"
    ]
   },
@@ -74,7 +77,8 @@
    "points_against": 281.22,
    "faab_spent": 33,
    "starters_hurt": [
-    "Jadarian Price (Questionable)"
+    "Jadarian Price (Questionable)",
+    "Brock Bowers (Questionable)"
    ]
   },
   {
@@ -116,6 +120,7 @@
    "faab_spent": 5,
    "starters_hurt": [
     "Saquon Barkley (Questionable)",
+    "Nico Collins (Questionable)",
     "Rico Dowdle (Questionable)"
    ]
   },
@@ -127,6 +132,7 @@
    "points_against": 271.58,
    "faab_spent": 62,
    "starters_hurt": [
+    "Travis Etienne (Questionable)",
     "Puka Nacua (Questionable)"
    ]
   }
@@ -148,7 +154,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
@@ -160,7 +166,7 @@
    "a": {
     "manager": "bertalicious",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "jskule23",
@@ -189,7 +195,7 @@
    "b": {
     "manager": "moseslin",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -573,5 +579,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 23
+ "free_agent_moves": 29
 }
