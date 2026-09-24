@@ -17,3 +17,5 @@ article-mobile.png
 email-preview.png
 email-desktop.png
 email-phone.png
+data/email-*.html
+data/email-*.json
