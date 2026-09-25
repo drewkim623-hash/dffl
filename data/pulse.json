@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-24T11:03:39.073Z",
- "at": 1790247819073,
+ "generated": "2026-09-25T11:03:45.155Z",
+ "at": 1790334225155,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 0,
    "points_for": 341,
    "points_against": 203.4,
-   "faab_spent": 7,
+   "faab_spent": 10,
    "starters_hurt": [
     "Jaylen Warren (Questionable)"
    ]
@@ -34,9 +34,7 @@
    "points_for": 239.26,
    "points_against": 201.66,
    "faab_spent": 36,
-   "starters_hurt": [
-    "Jayden Reed (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -55,7 +53,6 @@
    "points_against": 274.5,
    "faab_spent": 0,
    "starters_hurt": [
-    "Malik Nabers (Questionable)",
     "Jalen Coker (Questionable)",
     "Mike Evans (Questionable)"
    ]
@@ -67,7 +64,9 @@
    "points_for": 257.68,
    "points_against": 256.54,
    "faab_spent": 0,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Tony Pollard (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -78,7 +77,9 @@
    "faab_spent": 33,
    "starters_hurt": [
     "Jadarian Price (Questionable)",
-    "Brock Bowers (Questionable)"
+    "Adonai Mitchell (Questionable)",
+    "Brock Bowers (Questionable)",
+    "DeVonta Smith (Questionable)"
    ]
   },
   {
@@ -141,13 +142,13 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 36.3,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "jadencha",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 22,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -158,8 +159,8 @@
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 30.4,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -177,25 +178,25 @@
   {
    "a": {
     "manager": "wesley55",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 1.5,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 6.6,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": -2,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 22.6,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -308,7 +309,7 @@
      "name": "Adonai Mitchell",
      "pos": "WR",
      "team": "NYJ",
-     "status": null,
+     "status": "Questionable",
      "to": "drewkim"
     }
    ],
@@ -470,7 +471,7 @@
      "name": "Tank Bigsby",
      "pos": "RB",
      "team": "PHI",
-     "status": null,
+     "status": "Questionable",
      "to": "victorthompson"
     }
    ],
@@ -503,6 +504,25 @@
    ],
    "drops": [],
    "faab": 4,
+   "picks": []
+  },
+  {
+   "week": 3,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Malik Washington",
+     "pos": "WR",
+     "team": "MIA",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [],
+   "faab": 3,
    "picks": []
   },
   {
@@ -579,5 +599,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 29
+ "free_agent_moves": 35
 }
