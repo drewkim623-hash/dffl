@@ -2507,6 +2507,178 @@
      "text": "jskule23 is 0-2, one of three winless teams in the league alongside moseslin and chassinator. The board has moved against him since the draft: a 31.5% shot at the playoffs on the preseason line is a 17.1% shot now."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "same-record-different-board",
+   "date": "2026-09-26",
+   "source": "saturday",
+   "kicker": "2026 · week 3, by the odds",
+   "headline": "Same Record, Different Board",
+   "dek": "jadencha, wesley55 and bradyrife are all 2-0. The board splits their playoff odds by 44.8 points. moseslin is 0-2 and still prices ahead of a team with a win.",
+   "byline": "DFFL desk",
+   "standfirst": "44.8 pts · the spread among the league's three unbeaten teams",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Three weekends in, six of the league's twelve teams are tied with somebody: three teams are 2-0, three are 0-2, and the standings treat each group as interchangeable. The odds board, which updates on box scores rather than win columns, does not. Playoff probability inside the unbeaten tier spans 44.8 points. Inside the winless tier it spans 26.5 — wide enough that the model likes one 0-2 team better than a team that has actually won a game."
+    },
+    {
+     "type": "stat",
+     "n": "44.8 pts",
+     "text": "The spread in current playoff probability between the league's highest and lowest unbeaten team — jadencha at 97.9% and bradyrife at 53.2%. Same record, a coin flip apart in how the board prices the rest of the season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the unbeaten",
+     "text": "Three And Oh, Far From Even"
+    },
+    {
+     "type": "p",
+     "text": "jadencha (2-0) carries a 97.9% playoff probability and a +155 title price, the shortest in the league. wesley55, also 2-0, sits at 74.0% and +840. bradyrife, the third unbeaten team, is at 53.2% and +1580 — a near coin flip on making the postseason at all, with a title price that implies roughly a sixth of jadencha's probability. All three have the identical record. None of them have the same season, according to the board."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff probability now, by record tier",
+     "sub": "All twelve teams, grouped by current win-loss record",
+     "rows": [
+      {
+       "label": "jadencha",
+       "sub": "2-0",
+       "value": 97.9,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "1-1",
+       "value": 84.3,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "sub": "2-0",
+       "value": 74.0,
+       "group": 1
+      },
+      {
+       "label": "bertalicious",
+       "sub": "1-1",
+       "value": 56.7,
+       "group": 2
+      },
+      {
+       "label": "bradyrife",
+       "sub": "2-0",
+       "value": 53.2,
+       "group": 1
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "1-1",
+       "value": 44.5,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "1-1",
+       "value": 44.3,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "sub": "1-1",
+       "value": 40.1,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "0-2",
+       "value": 39.0,
+       "group": 3
+      },
+      {
+       "label": "drewkim",
+       "sub": "1-1",
+       "value": 29.4,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "0-2",
+       "value": 23.9,
+       "group": 3
+      },
+      {
+       "label": "jskule23",
+       "sub": "0-2",
+       "value": 12.5,
+       "group": 3
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the winless",
+     "text": "0-2 Doesn't Mean What It Says"
+    },
+    {
+     "type": "p",
+     "text": "chassinator and jskule23 are priced about where an 0-2 record suggests: 23.9% and 12.5% playoff probability, the two lowest numbers on the board. moseslin is not. At 39.0%, moseslin's playoff odds sit ahead of drewkim's 29.4% despite two fewer wins — the only case in the league of an 0-2 team outpricing a team that has actually won a game."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "lead": true,
+       "title": "moseslin",
+       "big": "39.0%",
+       "sub": "playoff probability, 0-2",
+       "rows": [
+        {
+         "label": "Record",
+         "value": "0-2"
+        },
+        {
+         "label": "Points for",
+         "value": "240.16"
+        },
+        {
+         "label": "Title odds",
+         "value": "+2610 (3.5%)"
+        }
+       ]
+      },
+      {
+       "title": "drewkim",
+       "big": "29.4%",
+       "sub": "playoff probability, 1-1",
+       "rows": [
+        {
+         "label": "Record",
+         "value": "1-1"
+        },
+        {
+         "label": "Points for",
+         "value": "237.74"
+        },
+        {
+         "label": "Title odds",
+         "value": "+5190 (1.8%)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of this is a prediction — the numbers move again the moment Sunday's games are final, and jadencha's own run to 97.9% started from a division no one else in this tier shares. But the record book flattens three very different situations into 2-0, 1-1 and 0-2, and the board underneath it has not agreed to pretend they're the same."
+    },
+    {
+     "type": "note",
+     "text": "All probabilities and odds from the site's own live board as of Saturday, comparing the preseason line to the current snapshot. Nothing here is a power ranking or a projection of final standings."
+    }
+   ]
   }
  ]
 }
