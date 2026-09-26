@@ -29,6 +29,7 @@ const linkTo = a => a && a.slug ? `${SITE}?a=${encodeURIComponent(a.slug)}` : `$
 
 const D = JSON.parse(await readFile("data/odds-snapshot.json", "utf8"));
 const recaps = JSON.parse(await readFile("recaps.json", "utf8").catch(() => "{}"));
+const sentLog = JSON.parse(await readFile("data/sent-emails.json", "utf8").catch(() => "{}"));
 
 /**
  * The week that just finished, if it has been written up.
@@ -54,14 +55,24 @@ const lead = byDate[0] || null;
  * had already been sent. This takes only what was published since the last
  * blast, so the section is genuinely "what you missed" and disappears when
  * there is nothing.
+ *
+ * "Since the last blast" means since the last blast actually went out, not a
+ * fixed lookback window — a fixed window still re-shows a piece that was
+ * itself the lead of a recent send. sent-emails.json is the record of what
+ * has actually reached the league (both leads and "also" carries count), so
+ * both gate this section: the cutoff is the last send's timestamp, and
+ * anything already sent by slug is excluded even if it falls after it.
  */
-const SINCE_DAYS = 7;
-const asOf = D.generated ? new Date(D.generated) : new Date();
-const cutoff = new Date(asOf.getTime() - SINCE_DAYS * 864e5);
+const sent = sentLog.sent || [];
+const lastSentAt = sent.length
+  ? new Date(Math.max(...sent.map(s => new Date(s.at).getTime()).filter(isFinite)))
+  : null;
+const alreadySent = new Set(sent.flatMap(s => [s.lead, ...(s.alsoSent || [])]).filter(Boolean));
 const also = byDate.slice(1).filter(a => {
-  if (!a.date) return false;
+  if (!a.date || alreadySent.has(a.slug)) return false;
   const d = new Date(a.date + "T12:00:00Z");
-  return isFinite(d) && d >= cutoff;
+  if (!isFinite(d)) return false;
+  return lastSentAt ? d > lastSentAt : true;
 }).slice(0, 3);
 
 const pc = n => `${(n * 100).toFixed(0)}%`;
