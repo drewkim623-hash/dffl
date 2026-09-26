@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-25T11:03:45.155Z",
- "at": 1790334225155,
+ "generated": "2026-09-26T11:03:21.618Z",
+ "at": 1790420601618,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -64,9 +64,7 @@
    "points_for": 257.68,
    "points_against": 256.54,
    "faab_spent": 0,
-   "starters_hurt": [
-    "Tony Pollard (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -76,7 +74,6 @@
    "points_against": 281.22,
    "faab_spent": 33,
    "starters_hurt": [
-    "Jadarian Price (Questionable)",
     "Adonai Mitchell (Questionable)",
     "Brock Bowers (Questionable)",
     "DeVonta Smith (Questionable)"
@@ -120,9 +117,7 @@
    "points_against": 332.16,
    "faab_spent": 5,
    "starters_hurt": [
-    "Saquon Barkley (Questionable)",
-    "Nico Collins (Questionable)",
-    "Rico Dowdle (Questionable)"
+    "Rico Dowdle (Out)"
    ]
   },
   {
@@ -133,8 +128,7 @@
    "points_against": 271.58,
    "faab_spent": 62,
    "starters_hurt": [
-    "Travis Etienne (Questionable)",
-    "Puka Nacua (Questionable)"
+    "Puka Nacua (Doubtful)"
    ]
   }
  ],
@@ -599,5 +593,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 35
+ "free_agent_moves": 37
 }
