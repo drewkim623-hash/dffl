@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-27T11:03:16.074Z",
- "at": 1790506996074,
+ "generated": "2026-09-27T15:37:07.512Z",
+ "at": 1790523427512,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -104,8 +104,8 @@
    "points_against": 301.24,
    "faab_spent": 38,
    "starters_hurt": [
-    "Zay Flowers (Questionable)",
-    "DJ Moore (Questionable)"
+    "DJ Moore (Questionable)",
+    "Zay Flowers (Questionable)"
    ]
   },
   {
@@ -115,9 +115,7 @@
    "points_for": 240.16,
    "points_against": 332.16,
    "faab_spent": 5,
-   "starters_hurt": [
-    "Rico Dowdle (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "jskule23",
@@ -592,5 +590,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 39
+ "free_agent_moves": 40
 }
