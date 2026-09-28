@@ -1436,6 +1436,138 @@ check("a trade draws the trade layout", covers.trade);
 check("markup in a headline is escaped into the cover, not run", covers.evilSafe && covers.evilAsText);
 check("an article with no cover field still gets a hero cover", covers.bareHero === 1, `${covers.bareHero}`);
 
+// Cover polish. Each of these is aimed at a way the covers have actually gone wrong:
+// text past the edge, a cover that says nothing but DFFL, the wrong kind, the wrong
+// row lit on a scoreboard, a record read as a number, labels cut mid-word.
+const COVER_KIND_TABLE = {
+  "bradyrife-bought-the-backup-too": "waivers", "the-cpes-problem": "draft",
+  "i-owe-the-toilet-bowl-an-apology": "column", "the-nine-game-difference": "analysis",
+  "week-1-game-by-game": "recap", "the-steepest-fall-on-the-board": "odds",
+  "one-game-was-on-the-bench": "column", "the-fifty-one-dollar-quarterback": "waivers",
+  "same-record-different-board": "odds",
+};
+const coverPage = await ctx.newPage();
+coverPage.on("pageerror", e => errors.push(String(e)));
+await coverPage.goto(BASE, { waitUntil: "domcontentloaded" });
+await coverPage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+const coverAudit = () => coverPage.evaluate(async () => {
+  const D = window.__DFFL;
+  const plain = s => String(s ?? "").replace(/<\/?[bi]>/gi, "").replace(/\s+/g, " ").trim();
+  const arts = ((await (await fetch("recaps.json", { cache: "no-cache" })).json()).articles || []);
+  const panel = await D.panelRecaps();
+  document.body.appendChild(panel);
+  const covers = [...panel.querySelectorAll(".teaser")].map(t => ({
+    a: arts.find(x => x.headline === t.querySelector("h3").textContent), svg: t.querySelector(".cover svg"), where: "card" }));
+  // Heroes as a reader gets them: the article opened for real, at this viewport.
+  const heroH = [];
+  for (const a of arts) {
+    D.openArticle(a, true);
+    const hero = document.querySelector('[data-panel="article"] .cover.big');
+    heroH.push(hero.getBoundingClientRect().height);
+    covers.push({ a, svg: hero.querySelector("svg").cloneNode(true), where: "hero" });
+  }
+  // The clones are laid out in a holder so getBBox() works on them.
+  const holder = document.createElement("div");
+  document.body.appendChild(holder);
+  for (const c of covers) if (c.where === "hero") holder.appendChild(c.svg);
+  const out = { n: covers.length, heroH, overflow: [], content: [], labels: [], kinds: [], weights: [] };
+  for (const { a, svg, where } of covers) {
+    const tag = `${where}:${a.slug}`, vb = svg.viewBox.baseVal;
+    const texts = [...svg.querySelectorAll("text")], words = texts.map(t => t.textContent);
+    for (const t of texts) {
+      const b = t.getBBox();
+      if (b.x < 2 || b.y < 2 || b.x + b.width > vb.width - 2 || b.y + b.height > vb.height - 2)
+        out.overflow.push(`${tag} "${t.textContent}" ${[b.x, b.y, b.x + b.width, b.y + b.height].map(Math.round).join(",")} in ${vb.width}x${vb.height}`);
+    }
+    // Real content, not just the wordmark and label.
+    const head = plain(a.headline).toUpperCase(), joined = words.join(" "), layout = svg.dataset.layout;
+    const blocks = (a.blocks || []).filter(Boolean);
+    const cards = blocks.find(b => b.type === "cards" && (b.items || []).length === 2);
+    let ok;
+    if (layout === "title") ok = !!head && joined.includes(head);
+    else if (layout === "stat") ok = joined.includes(head) && words.includes(plain(blocks.find(b => b.type === "stat").n));
+    else if (layout === "versus") ok = cards && ["odds", "analysis"].includes(svg.dataset.kind)
+      ? cards.items.flatMap(i => [i.title, i.big]).map(plain).every(s => words.includes(s))
+      : svg.querySelectorAll("text.cv-name").length === 2 && svg.querySelectorAll("text.cv-num").length === 2 &&
+        [...svg.querySelectorAll("text.cv-name")].every(t => t.textContent && JSON.stringify(a).includes(t.textContent));
+    else ok = false;
+    if (!ok) out.content.push(`${tag} (${layout}): ${words.join(" | ")}`);
+    // The label: there, and cut (if at all) only after a whole word of the piece's own copy.
+    const tok = s => String(s).toUpperCase().split(/[\s·,;:—–]+/).filter(Boolean);
+    const allowed = new Set([...tok([a.cover && a.cover.caption, a.kicker, a.season, a.headline].map(plain).join(" ")),
+      "WEEK", ...Object.keys(D.COVER_PALETTE).map(k => k.toUpperCase())]);
+    const lab = svg.querySelector("text.cv-label"), lt = lab ? lab.textContent : "";
+    const bad = tok(lt.replace(/…$/, "")).filter(w => !allowed.has(w));
+    if (!lt.trim() || bad.length || /…./.test(lt)) out.labels.push(`${tag}: "${lt}"${bad.length ? " (" + bad.join(",") + ")" : ""}`);
+    if (svg.dataset.kind !== D.coverKind(a)) out.kinds.push(`${tag}: drawn ${svg.dataset.kind}, coverKind ${D.coverKind(a)}`);
+    for (const n of svg.querySelectorAll("*")) {
+      const w = n.getAttribute("font-weight") || n.style.fontWeight;
+      if (w && (+w > 700 || /bold(er)?$/i.test(w) && w !== "bold")) out.weights.push(`${tag}: ${w}`);
+    }
+  }
+  const one = (slug, where) => covers.find(c => c.a.slug === slug && c.where === where);
+  const rows = c => Object.fromEntries([...c.svg.querySelectorAll("text.cv-name")].map(t => [t.textContent, t.getAttribute("fill")]));
+  out.steep = ["card", "hero"].map(w => rows(one("the-steepest-fall-on-the-board", w)));
+  // Who is drawn in white, where the copy names both managers and the figures must decide.
+  out.lit = Object.fromEntries(["week-1-game-by-game", "the-nine-game-difference"].flatMap(s => ["card", "hero"].map(w =>
+    [`${w}:${s}`, Object.entries(rows(one(s, w))).filter(([, f]) => f === "#ffffff").map(([n]) => n).join("+")])));
+  out.nine = ["card", "hero"].map(w => [...one("the-nine-game-difference", w).svg.querySelectorAll("text")].map(t => t.textContent));
+  out.kindOf = Object.fromEntries(arts.map(a => [a.slug, D.coverKind(a)]));
+  holder.remove();
+  panel.remove();
+  return out;
+});
+const cov1280 = await coverAudit();
+await coverPage.setViewportSize({ width: 390, height: 844 });
+const cov390 = await coverAudit();
+const coverEdge = await coverPage.evaluate(() => {
+  const D = window.__DFFL, out = {};
+  const texts = s => { const b = document.createElement("div"); b.innerHTML = s; return [...b.querySelectorAll("text")].map(t => t.textContent); };
+  out.draftDay = D.coverKind({ slug: "draft-day-regrets", season: "2026", kicker: "2026 · week 4", headline: "Draft Day Regrets", blocks: [] });
+  const noHead = { slug: "verify-no-headline", date: "2026-10-02", blocks: [] };
+  out.dffl = ["card", "hero", "wide"].map(v => texts(D.coverSVG(noHead, v)).filter(t => t === "DFFL").length);
+  const empty = { slug: "verify-empty-cards", source: "saturday", headline: "Empty Cards Here", date: "2026-10-03",
+    blocks: [{ type: "cards", items: [{}, {}] }] };
+  const half = { slug: "verify-half-cards", source: "saturday", headline: "Half a Scoreboard", date: "2026-10-04",
+    blocks: [{ type: "cards", items: [{ title: "drewkim", big: "12.0" }, { title: "moseslin" }] }] };
+  out.emptyCards = [empty, half].flatMap(a => ["card", "wide"].map(v => {
+    const s = D.coverSVG(a, v);
+    return /data-layout="title"/.test(s) && texts(s).join(" ").includes(a.headline.toUpperCase());
+  }));
+  try {
+    const s = { slug: "verify-string-players", headline: "String Players", date: "2026-10-05", cover: { players: "8150" }, blocks: [] };
+    const h = D.coverHTML(s, false) + D.coverHTML(s, true) + D.coverSVG(s, "wide");
+    out.strPlayers = (h.match(/<img/g) || []).length === 0 ? "ok" : "drew headshots from a string";
+  } catch (e) { out.strPlayers = String(e); }
+  return out;
+});
+await coverPage.close();
+const both = [cov1280, cov390];
+check("every real cover shows its headline or its figures, not just the wordmark",
+  both.every(c => c.content.length === 0 && c.n >= 18), both.flatMap(c => c.content).join(" ; ") || `${cov1280.n} covers per viewport`);
+check("every real article gets the cover kind its desk expects",
+  Object.entries(COVER_KIND_TABLE).every(([s, k]) => cov1280.kindOf[s] === k) && both.every(c => c.kinds.length === 0),
+  Object.entries(COVER_KIND_TABLE).filter(([s, k]) => cov1280.kindOf[s] !== k).map(([s, k]) => `${s}: ${cov1280.kindOf[s]}, want ${k}`)
+    .concat(both.flatMap(c => c.kinds)).join(" ; "));
+check("no cover text runs past the art's edge at 1280px", cov1280.overflow.length === 0, cov1280.overflow.slice(0, 6).join(" ; "));
+check("no cover text runs past the art's edge at 390px", cov390.overflow.length === 0, cov390.overflow.slice(0, 6).join(" ; "));
+check("every cover carries its label, cut only after a whole word", both.every(c => c.labels.length === 0),
+  both.flatMap(c => c.labels).slice(0, 6).join(" ; "));
+check("The Steepest Fall lights bertalicious and mutes drewkim",
+  cov1280.steep.every(r => r.bertalicious === "#ffffff" && r.drewkim === "#c6c5cf"), JSON.stringify(cov1280.steep));
+check("a scoreboard naming both managers lights the winner: Week 1 → Domo112, Nine-Game → saucebossandrew (37-19)",
+  both.every(c => ["card", "hero"].every(w => c.lit[`${w}:week-1-game-by-game`] === "Domo112" &&
+    c.lit[`${w}:the-nine-game-difference`] === "saucebossandrew")), JSON.stringify(cov1280.lit));
+check("a 28-28 record is drawn whole, as a record",
+  cov1280.nine.every(t => t.includes("28-28") && t.includes("37-19") && !t.includes("28")), JSON.stringify(cov1280.nine[0]));
+check("the desktop hero stands 240-330px tall at 1280", cov1280.heroH.every(h => h >= 240 && h <= 330), cov1280.heroH.map(Math.round).join(" "));
+check("the phone hero keeps at least 140px at 390", cov390.heroH.every(h => h >= 140), cov390.heroH.map(Math.round).join(" "));
+check("a recap kicker outranks a word in the headline", coverEdge.draftDay === "recap", coverEdge.draftDay);
+check("a piece with no headline says DFFL once, not twice", coverEdge.dffl.every(n => n === 1), coverEdge.dffl.join(" "));
+check("a face-off with an empty side draws the headline instead", coverEdge.emptyCards.every(Boolean), coverEdge.emptyCards.join(" "));
+check("players given as a string are ignored, not thrown on", coverEdge.strPlayers === "ok", coverEdge.strPlayers);
+check("no cover text is set heavier than 700", both.every(c => c.weights.length === 0), both.flatMap(c => c.weights).slice(0, 6).join(" ; "));
+
 const noArt = await page.evaluate(async () => {
   const D = window.__DFFL;
   const realFetch = window.fetch;
