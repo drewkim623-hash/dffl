@@ -131,10 +131,10 @@ A new recap goes out only if **all four** of these hold:
    they treat it as finished and the email is titled for the next week. Anything else means the
    file is stale.
 3. `generated_at` in `latest.json` is less than 12 hours old. Use that field, not the file's date:
-   modification times in a git checkout mean nothing. Be clear about what this proves: once the
-   previous week is final, every run of the Action rewrites `latest.json` and refreshes
-   `generated_at`, even while Monday night's game is still being played. So this check only
-   proves the Action ran recently. It is not what stops a duplicate.
+   modification times in a git checkout mean nothing. Be clear about what this proves:
+   `generated_at` refreshes on every run of the Action. Once the previous week is final, every run
+   rewrites `latest.json`, even while Monday night's game is still being played. So this check
+   only proves the workflow ran recently. It is not what stops a duplicate.
 4. That recap week (`latest.season`, `latest.week`) is not already logged in
    `data/sent-emails.json`. This, and recording every send, is the real guard against sending
    the same recap twice.
