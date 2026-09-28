@@ -1026,6 +1026,11 @@ function mgrOf(uid, seedName) {
  * afternoon, and the matchup rows do not say which.
  *
  * Anything outside the season being played right now is final by definition.
+ *
+ * DB.state is the *effective* state (see effectiveState below): once the
+ * GitHub Action has marked the week Sleeper still calls current as final in
+ * data/latest.json, the week counts as over here too, instead of waiting hours
+ * for Sleeper to flip. The email snapshot reads this page, so they agree.
  */
 function weekIsFinal(lg, wk) {
   if (lg.status === "complete") return true;
@@ -1035,6 +1040,28 @@ function weekIsFinal(lg, wk) {
   if (!isFinite(cur)) return true;
   return wk < cur;
 }
+
+/**
+ * The effective current week. Sleeper advances state.week hours after Monday
+ * night's last game; build-week.mjs marks the week final in data/latest.json as
+ * soon as every NFL game is complete and every matchup scored. If latest.json
+ * says the week Sleeper still calls current is final, act as though Sleeper had
+ * already advanced. A copy of effective-week.mjs — test-effective-week.mjs
+ * checks the two stay identical.
+ */
+/* effective-week:begin */
+function effectiveState(state, latest) {
+  if (!state || !latest || latest.final !== true) return state;
+  const sw = Number(state.week), lw = Number(latest.week);
+  if (!Number.isInteger(sw) || sw < 1 || lw !== sw) return state;
+  if (String(latest.season) !== String(state.season)) return state;
+  const bump = v => (Number(v) === sw ? sw + 1 : v);
+  return Object.assign({}, state, {
+    week: sw + 1, leg: bump(state.leg), display_week: bump(state.display_week),
+    sleeper_week: sw, advanced_by: "latest.json",
+  });
+}
+/* effective-week:end */
 
 async function loadSeason(lg) {
   const id = lg.league_id;
@@ -6829,6 +6856,14 @@ async function boot() {
   try {
     if (MOCK) await mockInit();
     try { DB.state = MOCK ? null : await jget(`${API}/state/nfl`); } catch (e) { DB.state = null; }
+    // Everything below reads DB.state, so the effective week is applied once,
+    // here. A missing or unreadable latest.json changes nothing.
+    if (DB.state) {
+      const latest = await fetch("data/latest.json", { cache: "no-cache" })
+        .then(r => (r.ok ? r.json() : null)).catch(() => null);
+      DB.sleeperState = DB.state;
+      DB.state = effectiveState(DB.state, latest);
+    }
 
     const chain = await loadChain();
     if (!chain.length) throw new Error("Could not load the league from Sleeper.");
@@ -6903,7 +6938,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
       ensureRace, raceData, raceAsOf, raceOdds, leverageBoard, seedField, pairSchedule,
-      weekIsFinal, allWeeks,
+      weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
       injuryDetail, returnLabel,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
