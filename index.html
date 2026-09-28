@@ -894,6 +894,11 @@
   th:first-child{background:var(--surface)}
   td{padding:14px 12px}
   .h2h td.cell{padding:8px 6px}
+  @media(max-width:620px){
+    th,td{padding-left:10px;padding-right:10px}
+    .card th:first-child,.card td:first-child{padding-left:12px}
+    .card th:last-child,.card td:last-child{padding-right:12px}
+  }
 
   /* row-cards: this week's games */
   .wstrip{gap:12px;margin-bottom:0}
