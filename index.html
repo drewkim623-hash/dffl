@@ -764,13 +764,16 @@
   .pp td.sd,.pp th.num{padding-left:6px;padding-right:6px}
   .pp td.sd{font-size:12.5px;min-width:30px;text-align:center}
   .pp .ppn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
-  .pp .ppn .nm{overflow:hidden;text-overflow:ellipsis;max-width:150px}
+  .pp .ppn .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+  /* the pinned name cell clips its own content and sits above the cells scrolling under it */
+  .pp td:first-child,.pp th:first-child{overflow:hidden;z-index:1}
+  .pp .nmcell{min-width:0}
   .pp .ppn .badge{font-size:9.5px;padding:1px 6px}
   .pp .ppwi{font-size:12.5px;color:var(--ink-2)}
   .pp .ppwi.muted{color:var(--muted)}
   @media(max-width:560px){
     .pp td:first-child{max-width:128px}
-    .pp .ppn .nm{max-width:92px}
+    .pp .ppn .nm{max-width:64px}
     .pp td,.pp th{padding-top:8px;padding-bottom:8px}
   }
 
