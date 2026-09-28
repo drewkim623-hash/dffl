@@ -2172,6 +2172,7 @@ if (ledgerFile.missing) {
   for (const [file, name] of [
     ["test-email-week.mjs", "the ledger-week and send-guard unit tests pass"],
     ["test-week-final.mjs", "the week-finality unit tests pass"],
+    ["test-effective-week.mjs", "the effective-week unit tests pass, and index.html's copy matches"],
   ]) {
     const r = node(["--test", file]);
     const m = /# pass (\d+)[\s\S]*?# fail (\d+)/.exec(r.stdout || "");
@@ -2193,6 +2194,10 @@ if (ledgerFile.missing) {
   const crons = [...wf.matchAll(/cron:\s*"([^"]+)"/g)].map(m => m[1]);
   check("the Tuesday build runs just after midnight ET in both EDT and EST",
     crons.includes("30 4 * * 2") && crons.includes("30 5 * * 2") && !crons.includes("30 12 * * 2"), crons.join(" | "));
+  const pushLines = wf.split("\n").filter(l => /^\s*git (push|pull)\b/.test(l) || /git pull --rebase/.test(l));
+  check("the data push rebases onto main first and never forces",
+    /git pull --rebase/.test(wf) && /git rebase --abort/.test(wf) && !/--force|\s-f\b|push\s+\+/.test(pushLines.join("\n"))
+      && wf.indexOf("git pull --rebase") < wf.lastIndexOf("git push"), pushLines.map(l => l.trim()).join(" | "));
 
   const g = node(["recap-guard.mjs", "--json"]);
   let verdict = null;
@@ -3029,6 +3034,52 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.waitForTimeout(80);
   const w = await mobile.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   check(`${id}: no horizontal overflow at 390px`, w);
+}
+
+/* ------------------------------------------------------------------------
+ * 1 AM Tuesday, simulated: Sleeper still says week 2 while data/latest.json
+ * already marks week 2 final. The site must treat week 2 as finished and week
+ * 3 as the live one — the same rule the email snapshot reads (effective-week).
+ * Mocks only Sleeper's state and latest.json; everything else is live.
+ * ---------------------------------------------------------------------- */
+group("Effective week (simulated 1 AM Tuesday)");
+{
+  const simCtx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await simCtx.route(/api\.sleeper\.app\/v1\/state\/nfl/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ week: 2, leg: 2, display_week: 2, season: "2026", season_type: "regular",
+      league_season: "2026", previous_season: "2025", season_start_date: "2026-09-09",
+      league_create_season: "2026", season_has_scores: true }),
+  }));
+  await simCtx.route(/\/data\/latest\.json(\?.*)?$/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ season: "2026", week: 2, file: "data/week-2026-02.json",
+      generated: new Date().toISOString(), generated_at: new Date().toISOString(), final: true,
+      sleeper_state: { week: 2, leg: 2, display_week: 2, season_type: "regular", season: "2026" } }),
+  }));
+  const sim = await simCtx.newPage();
+  await sim.goto(BASE, { waitUntil: "domcontentloaded" });
+  await sim.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const S = await sim.evaluate(() => {
+    const D = window.__DFFL, s = D.DB.seasons.find(x => x.season === "2026") || {};
+    return {
+      ready: document.body.dataset.ready,
+      sleeperWeek: D.DB.sleeperState ? D.DB.sleeperState.week : null,
+      week: D.DB.state ? D.DB.state.week : null,
+      liveWeek: s.liveWeek ?? null,
+      liveWeek2: D.DB.live.filter(g => g.season === "2026" && g.week === 2).length,
+      final2: D.DB.games.filter(g => g.season === "2026" && g.week === 2).length,
+      foot: (document.querySelector("#footNote") || {}).textContent || "",
+    };
+  });
+  check("simulated 1 AM Tuesday: the site takes the effective week, latest.week + 1",
+    S.ready === "1" && S.sleeperWeek === 2 && S.week === 3 && /week 3\b/.test(S.foot),
+    `sleeper ${S.sleeperWeek}, effective ${S.week}, foot "${S.foot.trim()}"`);
+  check("simulated 1 AM Tuesday: the finished week is not shown as live",
+    S.liveWeek2 === 0 && S.liveWeek !== 2, `liveWeek ${S.liveWeek}, ${S.liveWeek2} week-2 games live`);
+  check("simulated 1 AM Tuesday: the finished week counts as played",
+    S.final2 === 6, `${S.final2} week-2 games in the book`);
+  await simCtx.close();
 }
 
 group("Screenshots");
