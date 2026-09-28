@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-27T15:37:07.512Z",
- "at": 1790523427512,
+ "generated": "2026-09-28T11:03:56.226Z",
+ "at": 1790593436226,
  "season": "2026",
  "nfl_week": 3,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 341,
    "points_against": 203.4,
    "faab_spent": 10,
-   "starters_hurt": [
-    "Jaylen Warren (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -53,8 +51,8 @@
    "points_against": 274.5,
    "faab_spent": 0,
    "starters_hurt": [
-    "Jalen Coker (Questionable)",
-    "Mike Evans (Questionable)"
+    "Jalen Coker (Out)",
+    "Mike Evans (Out)"
    ]
   },
   {
@@ -64,7 +62,10 @@
    "points_for": 257.68,
    "points_against": 256.54,
    "faab_spent": 0,
-   "starters_hurt": []
+   "starters_hurt": [
+    "De'Von Achane (Out)",
+    "Breece Hall (Out)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -73,10 +74,7 @@
    "points_for": 237.74,
    "points_against": 281.22,
    "faab_spent": 33,
-   "starters_hurt": [
-    "Brock Bowers (Questionable)",
-    "Adonai Mitchell (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bertalicious",
@@ -94,7 +92,9 @@
    "points_for": 219.76,
    "points_against": 222.44,
    "faab_spent": 25,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Spencer Shrader (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -103,10 +103,7 @@
    "points_for": 249.14,
    "points_against": 301.24,
    "faab_spent": 38,
-   "starters_hurt": [
-    "DJ Moore (Questionable)",
-    "Zay Flowers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -115,7 +112,9 @@
    "points_for": 240.16,
    "points_against": 332.16,
    "faab_spent": 5,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Justin Jefferson (Out)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -125,7 +124,9 @@
    "points_against": 271.58,
    "faab_spent": 62,
    "starters_hurt": [
-    "Puka Nacua (Doubtful)"
+    "Travis Etienne (Questionable)",
+    "Mark Andrews (Questionable)",
+    "Puka Nacua (Out)"
    ]
   }
  ],
@@ -133,73 +134,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 36.3,
-    "startersLeftToPlay": 8
+    "points": 134.06,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "jadencha",
-    "points": 22,
-    "startersLeftToPlay": 9
+    "points": 132.34,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 107.54,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "victorthompson",
-    "points": 30.4,
-    "startersLeftToPlay": 9
+    "points": 114.14,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "bertalicious",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 129.86,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "jskule23",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 87.26,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 1.5,
-    "startersLeftToPlay": 9
+    "points": 131.28,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 6.6,
-    "startersLeftToPlay": 9
+    "points": 148.6,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": -2,
-    "startersLeftToPlay": 9
+    "points": 114.68,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "moseslin",
-    "points": 22.6,
-    "startersLeftToPlay": 9
+    "points": 121.34,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 150.78,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 100.1,
+    "startersLeftToPlay": 1
    }
   }
  ],
@@ -216,7 +217,7 @@
      "name": "DJ Moore",
      "pos": "WR",
      "team": "BUF",
-     "status": "Questionable",
+     "status": null,
      "to": "chassinator"
     },
     {
@@ -239,7 +240,7 @@
      "name": "DJ Moore",
      "pos": "WR",
      "team": "BUF",
-     "status": "Questionable",
+     "status": null,
      "from": "jadencha"
     },
     {
@@ -300,7 +301,7 @@
      "name": "Adonai Mitchell",
      "pos": "WR",
      "team": "NYJ",
-     "status": "Questionable",
+     "status": "Out",
      "to": "drewkim"
     }
    ],
@@ -363,7 +364,7 @@
      "name": "Devin Singletary",
      "pos": "RB",
      "team": "NYG",
-     "status": null,
+     "status": "Out",
      "from": "victorthompson"
     }
    ],
@@ -390,7 +391,7 @@
      "name": "Baker Mayfield",
      "pos": "QB",
      "team": "TB",
-     "status": null,
+     "status": "Questionable",
      "from": "bertalicious"
     }
    ],
@@ -590,5 +591,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 40
+ "free_agent_moves": 42
 }
