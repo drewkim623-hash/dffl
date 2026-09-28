@@ -1,7 +1,7 @@
 # The weekly job
 
 `recaps.json` and `rankings.json` are not written by the site. They are written once a week by a
-scheduled cloud agent — routine **DFFL Tuesday recaps**, Tuesdays at 13:00 UTC (9am Eastern).
+scheduled cloud agent — routine **DFFL Tuesday recaps**, Tuesdays at 1:00 AM Eastern.
 
 The site never depends on either file. A missing, empty or stale `rankings.json` costs nothing: the
 power rankings are computed in the browser from the game log, and each team falls back to showing
@@ -20,8 +20,9 @@ curl    api.sleeper.app:443 → connect_rejected    (the egress proxy denies CON
 Both routes are closed in an unattended cloud session. So the data arrives a different way:
 
 - **`.github/workflows/weekly-data.yml`** runs on GitHub Actions, which has no such restriction. It
-  runs `build-week.mjs` and `build-injuries.mjs` at 12:30 UTC Tuesday — half an hour before the
-  routine — and commits the result.
+  runs `build-week.mjs` and `build-injuries.mjs` at about 12:30 AM Eastern on Tuesday — half an hour
+  before the routine — and commits the result. (Two UTC entries cover EDT and EST; see the workflow.)
+  `build-week.mjs` only moves `latest.json` once the week is truly over.
 - **The routine** clones the repo and reads those committed files. It needs no network at all.
 
 If the job ever finds itself reaching for `api.sleeper.app`, something has gone wrong: the answer is
@@ -31,11 +32,17 @@ to fix the Action, not to fetch.
 
 | File | What it holds |
 |---|---|
-| `data/latest.json` | `{season, week, file}` — points at the newest finished week |
+| `data/latest.json` | `{season, week, file}` — points at the newest finished week — plus `final`, `generated_at` (UTC), and `sleeper_state` (Sleeper's `week`, `leg`, `display_week`, `season_type`, `season` as read at `generated_at`). See **Which week** below |
 | `data/week-<season>-<week>.json` | the whole week: six games with full lineups, season-to-date standings, every completed transaction with FAAB and resolved player names, and a `marquee` block of the high, low, closest, blowout and unluckiest loss |
 | `injuries.json` | every player carrying a status, with name, position and club |
 
 Everything is already resolved to names. No ids need looking up, and nothing needs a second source.
+
+One catch in the week file: Sleeper posts a week into the team records when it advances its week,
+which is hours after Monday night's game ends. When the standings are exactly one week behind,
+`build-week.mjs` folds the week's results in itself (`standings_folded: true`). If
+`standings_through_week` is still less than `week`, the `standings` block is behind the games above
+it: do not quote a record or points-for from it. The games themselves are final and correct.
 
 ## What the job writes
 
@@ -103,6 +110,45 @@ moseslin2023@gmail.com, dominickreyes1@gmail.com
 Dominick Reyes was missing from the list used up to 19 September. He is on it now. If a send goes
 out to eleven addresses, the list is the old one and is wrong.
 
+### Which week: check before a new recap goes out
+
+This routine cannot reach Sleeper, so it judges the week from `data/latest.json` alone. Before
+writing or sending a recap the league has not had yet, run:
+
+```
+node recap-guard.mjs
+```
+
+A new recap goes out only if **all four** of these hold:
+
+1. `latest.json` has `"final": true` — every NFL game that week is complete and every league
+   matchup has points.
+2. Sleeper's week as recorded in `latest.json` (`sleeper_state.week`) is `latest.week + 1`, or is
+   still `latest.week` while `final` is true. Sleeper advances its week hours after Monday night's
+   game ends: after weeks 1 and 2 it moved sometime between about midnight and 7 AM. At 1 AM it
+   usually has not moved yet, so "still the same week, and final" has to count. The site and the
+   email build use the same rule (`effective-week.mjs`): once `latest.json` marks the week final,
+   they treat it as finished and the email is titled for the next week. Anything else means the
+   file is stale.
+3. `generated_at` in `latest.json` is less than 12 hours old. Use that field, not the file's date:
+   modification times in a git checkout mean nothing. Be clear about what this proves:
+   `generated_at` refreshes on every run of the Action. Once the previous week is final, every run
+   rewrites `latest.json`, even while Monday night's game is still being played. So this check
+   only proves the workflow ran recently. It is not what stops a duplicate.
+4. That recap week (`latest.season`, `latest.week`) is not already logged in
+   `data/sent-emails.json`. This, and recording every send, is the real guard against sending
+   the same recap twice.
+
+Exit **0**: go ahead. If `recaps.json` already has this week, don't write a second recap: use the
+one that is there. Exit **1**: **send nothing** and write no recap. Say in your final message
+which condition failed (the script prints it). Do not work around it: no hand edits to
+`latest.json`, no `--week`, no reaching for Sleeper.
+
+The Tuesday recap always runs this check. The midweek story watch and the Saturday blast do not
+write recaps; they run it only when `node blast-status.mjs` shows the recap they would carry is
+**not** already blasted. When it is already blasted, this check does not apply and the column goes
+out as usual.
+
 ### A column is never reused
 
 The blast leads with the newest article in `articles[]` and carries the newest week in `weeks[]`.
@@ -133,7 +179,7 @@ node blast-status.mjs --record --subject "<subject>" --lead <slug> \
   --also <slug,slug> --to 12 --sha <sha256> --by routine
 ```
 
-Leave `--week` off. The recap is recorded automatically as the newest week in `recaps.json`, which
+Leave `--week` and `--season` off. The recap is recorded automatically as the newest week in `recaps.json`, which
 is the one compose-email put in the email. If you do pass `--week`, it is the recap week just
 played — **not** the upcoming week in the subject. An email titled "DFFL Week 3: ..." carries the
 week 2 recap, so it is recorded with `--week 2`, or with no `--week` at all.

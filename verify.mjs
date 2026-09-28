@@ -1441,6 +1441,70 @@ check("a headline is text, whatever it contains", /<img/.test(artSafe.headlineIs
 check("headings take no markup at all", artSafe.headingHasNoTags === 0);
 check("an unknown block type is dropped rather than guessed at", artSafe.unknownDropped === 2, `${artSafe.unknownDropped}`);
 
+const covers = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const panel = await D.panelRecaps();
+  document.body.appendChild(panel);
+  const teasers = [...panel.querySelectorAll(".teaser")];
+  const out = {
+    teasers: teasers.length,
+    drawn: teasers.filter(t => t.querySelectorAll(".cover svg").length === 1 &&
+      [...t.querySelectorAll(".cover svg text")].some(x => x.textContent.trim())).length,
+    fallbacks: panel.querySelectorAll(".cfall").length,
+    fills: [...new Set([...panel.querySelectorAll(".cover svg text")].map(x => x.getAttribute("fill")))],
+  };
+  panel.remove();
+  const arts = ((await (await fetch("recaps.json", { cache: "no-cache" })).json()).articles || []);
+  // Same article, fresh object, empty cache: the same bytes.
+  out.deterministic = arts.every(a => {
+    const s = D.coverSVG(a, false) + D.coverSVG(a, true);
+    D.coverSVG.cache.clear();
+    return D.coverSVG(structuredClone(a), false) + D.coverSVG(structuredClone(a), true) === s;
+  });
+  const svgs = arts.flatMap(a => [D.coverSVG(a, false), D.coverSVG(a, true)]);
+  out.distinct = new Set(svgs).size === svgs.length;
+  out.kinds = new Set(arts.map(D.coverKind)).size;
+  out.pairs = new Set(arts.map(a => { const p = D.COVER_PALETTE[D.coverKind(a)]; return p.from + p.to; })).size;
+  // WCAG contrast of both text colours on every gradient stop.
+  const lum = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map(v => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)
+    .reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+  const ratio = (x, y) => { const [hi, lo] = [lum(x), lum(y)].sort((p, q) => q - p); return (hi + .05) / (lo + .05); };
+  out.worst = Math.min(...Object.values(D.COVER_PALETTE).flatMap(p => [p.from, p.to])
+    .flatMap(s => [ratio("#ffffff", s), ratio("#c6c5cf", s)]));
+  const trade = { slug: "verify-trade", season: "2026", date: "2026-10-01", headline: "A Trade", blocks: [],
+    cover: { trade: { a: "drewkim", b: "moseslin", aGets: ["Bijan Robinson"], bGets: ["Ja'Marr Chase", "a 2027 1st"] } } };
+  const tsvg = D.coverSVG(trade, false);
+  out.trade = D.coverKind(trade) === "trade" && /data-layout="trade"/.test(tsvg) &&
+    /drewkim/.test(tsvg) && /moseslin/.test(tsvg) && /Bijan Robinson/.test(tsvg);
+  const evil = { season: "2026", date: "2026-01-01", headline: "<img src=x onerror=alert(1)>",
+    kicker: "<b>k</b>", cover: { players: ["not-a-player"] }, blocks: [] };
+  const esvg = D.coverSVG(evil, false) + D.coverSVG(evil, true);
+  const box = document.createElement("div");
+  box.innerHTML = esvg;
+  out.evilSafe = !/<img|<script/i.test(esvg) && box.querySelectorAll("img,script").length === 0 &&
+    ![...box.querySelectorAll("*")].some(n => [...n.attributes].some(at => /^on/i.test(at.name)));
+  out.evilAsText = /&lt;img/i.test(esvg);
+  const bare = arts.find(a => !a.cover);
+  if (bare) {
+    const node = D.articleCard(bare, true);
+    document.body.appendChild(node);
+    out.bareHero = node.querySelectorAll(".cover.big svg").length;
+    node.remove();
+  }
+  return out;
+});
+check("every teaser draws one cover with words on it, and no fallback plates",
+  covers.drawn === covers.teasers && covers.teasers > 0 && covers.fallbacks === 0,
+  `${covers.drawn} of ${covers.teasers} drawn, ${covers.fallbacks} fallbacks`);
+check("cover text is only white or --ink-2", covers.fills.every(f => f === "#ffffff" || f === "#c6c5cf"), covers.fills.join(" "));
+check("covers are deterministic and no two alike", covers.deterministic && covers.distinct && (covers.kinds >= 4 || covers.pairs >= 4),
+  `${covers.kinds} kinds, ${covers.pairs} gradients`);
+check("every cover gradient stop reads at 4.5:1 for both text colours", covers.worst >= 4.5, covers.worst.toFixed(2));
+check("a trade draws the trade layout", covers.trade);
+check("markup in a headline is escaped into the cover, not run", covers.evilSafe && covers.evilAsText);
+check("an article with no cover field still gets a hero cover", covers.bareHero === 1, `${covers.bareHero}`);
+
 const noArt = await page.evaluate(async () => {
   const D = window.__DFFL;
   const realFetch = window.fetch;
@@ -2229,6 +2293,58 @@ if (ledgerFile.missing) {
     check("recording the newest recap by number is accepted",
       !refused(String(newest.week)), `--week ${newest.week}`);
   }
+}
+
+/* The Tuesday build and the "which week" guard. The unit tests run in node;
+ * the prompt and the workflow are read as text. Nothing here requires today's
+ * data/latest.json to carry final or generated_at yet — files written before
+ * build-week.mjs learned to add them still pass, and the guard just says hold. */
+{
+  const { spawnSync } = await import("node:child_process");
+  const node = args => spawnSync(process.execPath, args, { cwd: ROOT, encoding: "utf8", timeout: 60000 });
+  for (const [file, name] of [
+    ["test-email-week.mjs", "the ledger-week and send-guard unit tests pass"],
+    ["test-week-final.mjs", "the week-finality unit tests pass"],
+    ["test-effective-week.mjs", "the effective-week unit tests pass, and index.html's copy matches"],
+  ]) {
+    const r = node(["--test", file]);
+    const m = /# pass (\d+)[\s\S]*?# fail (\d+)/.exec(r.stdout || "");
+    check(name, r.status === 0, m ? `${m[1]} pass, ${m[2]} fail` : String(r.stderr || r.error || "").slice(0, 200));
+  }
+
+  const prompt = await readFile(join(ROOT, "weekly-job-prompt.md"), "utf8");
+  const recordCmd = (prompt.match(/node blast-status\.mjs --record[^`]*/) || [""])[0];
+  check("the prompt's record command passes neither --season nor --week",
+    !!recordCmd && !/--(season|week)\b/.test(recordCmd), recordCmd.replace(/\s+/g, " ").slice(0, 140));
+  check("the prompt still says a refused --record means the email already went out",
+    /If `--record` exits 2, the\s+email has already been sent\. Do not send it again\./.test(prompt));
+  check("the prompt carries the which-week guard",
+    /node recap-guard\.mjs/.test(prompt) && /"final": true/.test(prompt) && /latest\.week \+ 1/.test(prompt)
+      && /generated_at/.test(prompt) && /12 hours/.test(prompt) && /data\/sent-emails\.json/.test(prompt)
+      && /send nothing/i.test(prompt));
+
+  const wf = await readFile(join(ROOT, ".github/workflows/weekly-data.yml"), "utf8");
+  const crons = [...wf.matchAll(/cron:\s*"([^"]+)"/g)].map(m => m[1]);
+  check("the Tuesday build runs just after midnight ET in both EDT and EST",
+    crons.includes("30 4 * * 2") && crons.includes("30 5 * * 2") && !crons.includes("30 12 * * 2"), crons.join(" | "));
+  const pushLines = wf.split("\n").filter(l => /^\s*git (push|pull)\b/.test(l) || /git pull --rebase/.test(l));
+  check("the data push rebases onto main first and never forces",
+    /git pull --rebase/.test(wf) && /git rebase --abort/.test(wf) && !/--force|\s-f\b|push\s+\+/.test(pushLines.join("\n"))
+      && wf.indexOf("git pull --rebase") < wf.lastIndexOf("git push"), pushLines.map(l => l.trim()).join(" | "));
+
+  const g = node(["recap-guard.mjs", "--json"]);
+  let verdict = null;
+  try { verdict = JSON.parse(g.stdout); } catch {}
+  check("the send guard reads the real latest.json and ledger and names all four conditions",
+    (g.status === 0 || g.status === 1) && verdict && verdict.checks.length === 4 && verdict.ok === (g.status === 0),
+    verdict ? (verdict.ok ? "would send" : `would hold: ${verdict.failed.join(", ")}`) : String(g.stderr).slice(0, 200));
+
+  const latestNow = JSON.parse(await readFile(join(ROOT, "data/latest.json"), "utf8"));
+  check("latest.json's new fields, where present, are well-formed",
+    !("generated_at" in latestNow) || (Number.isFinite(Date.parse(latestNow.generated_at))
+      && typeof latestNow.final === "boolean" && !!latestNow.sleeper_state
+      && Number.isFinite(Number(latestNow.sleeper_state.week))),
+    "generated_at" in latestNow ? `${latestNow.generated_at}, final ${latestNow.final}` : "not written by the new build-week yet");
 }
 
 group("Injuries");
@@ -3066,6 +3182,52 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.waitForTimeout(80);
   const w = await mobile.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   check(`${id}: no horizontal overflow at 390px`, w);
+}
+
+/* ------------------------------------------------------------------------
+ * 1 AM Tuesday, simulated: Sleeper still says week 2 while data/latest.json
+ * already marks week 2 final. The site must treat week 2 as finished and week
+ * 3 as the live one — the same rule the email snapshot reads (effective-week).
+ * Mocks only Sleeper's state and latest.json; everything else is live.
+ * ---------------------------------------------------------------------- */
+group("Effective week (simulated 1 AM Tuesday)");
+{
+  const simCtx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await simCtx.route(/api\.sleeper\.app\/v1\/state\/nfl/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ week: 2, leg: 2, display_week: 2, season: "2026", season_type: "regular",
+      league_season: "2026", previous_season: "2025", season_start_date: "2026-09-09",
+      league_create_season: "2026", season_has_scores: true }),
+  }));
+  await simCtx.route(/\/data\/latest\.json(\?.*)?$/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ season: "2026", week: 2, file: "data/week-2026-02.json",
+      generated: new Date().toISOString(), generated_at: new Date().toISOString(), final: true,
+      sleeper_state: { week: 2, leg: 2, display_week: 2, season_type: "regular", season: "2026" } }),
+  }));
+  const sim = await simCtx.newPage();
+  await sim.goto(BASE, { waitUntil: "domcontentloaded" });
+  await sim.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const S = await sim.evaluate(() => {
+    const D = window.__DFFL, s = D.DB.seasons.find(x => x.season === "2026") || {};
+    return {
+      ready: document.body.dataset.ready,
+      sleeperWeek: D.DB.sleeperState ? D.DB.sleeperState.week : null,
+      week: D.DB.state ? D.DB.state.week : null,
+      liveWeek: s.liveWeek ?? null,
+      liveWeek2: D.DB.live.filter(g => g.season === "2026" && g.week === 2).length,
+      final2: D.DB.games.filter(g => g.season === "2026" && g.week === 2).length,
+      foot: (document.querySelector("#footNote") || {}).textContent || "",
+    };
+  });
+  check("simulated 1 AM Tuesday: the site takes the effective week, latest.week + 1",
+    S.ready === "1" && S.sleeperWeek === 2 && S.week === 3 && /week 3\b/.test(S.foot),
+    `sleeper ${S.sleeperWeek}, effective ${S.week}, foot "${S.foot.trim()}"`);
+  check("simulated 1 AM Tuesday: the finished week is not shown as live",
+    S.liveWeek2 === 0 && S.liveWeek !== 2, `liveWeek ${S.liveWeek}, ${S.liveWeek2} week-2 games live`);
+  check("simulated 1 AM Tuesday: the finished week counts as played",
+    S.final2 === 6, `${S.final2} week-2 games in the book`);
+  await simCtx.close();
 }
 
 group("Screenshots");
