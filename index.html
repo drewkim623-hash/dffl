@@ -20,7 +20,11 @@
     --pad:max(16px,env(safe-area-inset-left));
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0;overflow-x:hidden}
+  /* overflow-x on html goes to the viewport; on body it has to be clip, not hidden,
+     or body becomes a scroll container and the sticky tab bar scrolls away with it. */
+  html,body{margin:0;padding:0}
+  html{overflow-x:hidden}
+  body{overflow-x:clip}
   body{
     background:var(--plane); color:var(--ink);
     font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -49,6 +53,10 @@
   nav.tabs{position:sticky;top:0;z-index:40;background:rgba(11,11,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--grid)}
   .tabrow{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:8px 0}
   .tabrow::-webkit-scrollbar{display:none}
+  nav.tabs .wrap{position:relative}
+  nav.tabs .wrap::after{content:"";position:absolute;top:0;bottom:0;right:var(--pad);width:32px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--plane));opacity:0;transition:opacity .14s}
+  nav.tabs .wrap.more::after{opacity:1}
   .tabrow button{
     background:transparent;border:1px solid transparent;border-radius:999px;color:var(--muted);
     font-weight:650;font-size:14.5px;padding:8px 15px;cursor:pointer;white-space:nowrap;transition:.14s}
@@ -589,13 +597,24 @@
     .cover.big{min-height:150px}
     .cover.big .faces img{width:88px;height:88px;margin-left:-18px}
   }
+  /* No headshots (none listed, or every one failed to load): the league mark instead. */
+  .cover .cfall{position:absolute;top:50%;right:18px;transform:translateY(-50%);display:none;
+    font-size:44px;font-weight:900;letter-spacing:-.035em;line-height:1;opacity:.55;
+    background:linear-gradient(96deg,#fff 20%,var(--blue) 70%,var(--violet) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .cover.big .cfall{font-size:72px;right:26px}
+  .cover:not(:has(.faces img)) .cfall{display:block}
+  @media(max-width:620px){
+    .cover .cfall{font-size:34px}
+    .cover.big .cfall{font-size:48px}
+  }
 
   /* ============ bracket ============ */
   .bracket{margin:24px 0}
   .bracket .brt{font-size:15px;font-weight:800;letter-spacing:-.01em}
   .bracket .brs{font-size:12.5px;color:var(--muted);margin:3px 0 12px;line-height:1.45}
   .brcols{display:flex;gap:10px;min-width:max-content;padding-bottom:4px}
-  .brd{display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:168px}
+  .bracket .brd{display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:168px}
   .brh{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;
     margin-bottom:2px}
   .brm{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);overflow:hidden;
@@ -1393,6 +1412,17 @@ function buildTabs() {
     b.onclick = () => show(t.id);
     bar.appendChild(b);
   });
+  tabHint();
+  if (!bar.dataset.hint) {
+    bar.dataset.hint = "1";
+    bar.addEventListener("scroll", tabHint, { passive: true });
+    window.addEventListener("resize", tabHint, { passive: true });
+  }
+}
+/** Fades the right edge of the tab row while there are more tabs off to the right. */
+function tabHint() {
+  const bar = $("#tabs");
+  bar.parentElement.classList.toggle("more", bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
 }
 function show(id) {
   const prof = $('[data-panel="profile"]');
@@ -1858,6 +1888,7 @@ function panelManagers(AT) {
   p.appendChild(sechead("Every manager", "Tap anyone for their full career. Sort the list however you like."));
 
   const sel = el("select");
+  sel.setAttribute("aria-label", "Sort managers by");
   [["win", "Best win rate"], ["ppg", "Most points per game"], ["titles", "Most championships"],
   ["luck", "Luckiest first"], ["unluck", "Unluckiest first"], ["az", "A to Z"]]
     .forEach(([v, t]) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); });
@@ -2022,6 +2053,7 @@ function panelMatchups(AT) {
   const cmp = el("div", "compare");
   const pick = el("div", "cpick");
   const s1 = el("select"), s2 = el("select");
+  s1.setAttribute("aria-label", "First manager"); s2.setAttribute("aria-label", "Second manager");
   uids.forEach(u => {
     const a = el("option", null, nameOf(u)); a.value = u; s1.appendChild(a);
     const b = el("option", null, nameOf(u)); b.value = u; s2.appendChild(b);
@@ -2166,6 +2198,7 @@ function panelMatchups(AT) {
 
   p.appendChild(sechead("Look back at a season"));
   const sel = el("select");
+  sel.setAttribute("aria-label", "Season to look back at");
   DB.seasons.forEach(s => {
     const o = el("option", null, `${s.season}${s.complete ? "" : " (in progress)"}`);
     o.value = s.season; sel.appendChild(o);
@@ -2275,6 +2308,7 @@ function coverHTML(a, big) {
       loading="lazy" onerror="this.remove()">`).join("");
   return `<div class="cover t-${tone}${big ? " big" : ""}">
     <div class="faces">${faces}</div>
+    <div class="cfall" aria-hidden="true">DFFL</div>
     ${c.caption ? `<div class="ccap">${esc(c.caption)}</div>` : ""}</div>`;
 }
 
@@ -2619,6 +2653,7 @@ function panelScoreboard() {
   }
   const row = el("div", "pickrow");
   const sSel = el("select"), wSel = el("select");
+  sSel.setAttribute("aria-label", "Season"); wSel.setAttribute("aria-label", "Week");
   const seasons = [...new Set(weeks.map(w => w.season))];
   seasons.forEach(s => { const o = el("option", null, s); o.value = s; sSel.appendChild(o); });
   row.appendChild(sSel); row.appendChild(wSel);
@@ -4110,7 +4145,9 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
         if (!b) return;
         renderLive(host, model, sim, b.live, b.lsim, null, null, null, R, Number(v));
       };
-      bar.appendChild(el("span", "k", "Board"));
+      sel.id = "asof-sel";
+      const lab = el("label", "k", "Board"); lab.htmlFor = sel.id;
+      bar.appendChild(lab);
       bar.appendChild(sel);
       if (past) bar.appendChild(el("span", "rewound",
         `Rewound to the end of week ${asOf} \u00b7 priced healthy, with no week in flight`));
@@ -4883,6 +4920,7 @@ function panelDraft() {
 
   const picks = el("div", "pickrow");
   const sel = el("select"), viewSel = el("select");
+  sel.setAttribute("aria-label", "Draft year"); viewSel.setAttribute("aria-label", "Draft view");
   drafted.forEach(s => { const o = el("option", null, `${s.season} draft`); o.value = s.season; sel.appendChild(o); });
   [["board", "The board"], ["mgr", "By manager"], ["list", "Full list"]].forEach(([v, t]) => {
     const o = el("option", null, t); o.value = v; viewSel.appendChild(o);
@@ -5304,6 +5342,7 @@ function panelPower(model, sim) {
   const PROJKEY = "__proj";
   const picks = el("div", "pickrow");
   const seasonSel = el("select"), weekSel = el("select");
+  seasonSel.setAttribute("aria-label", "Season"); weekSel.setAttribute("aria-label", "Week");
   if (proj) { const o = el("option", null, `${proj.season} preseason`); o.value = PROJKEY; seasonSel.appendChild(o); }
   for (const yr of [...all.keys()]) { const o = el("option", null, `${yr} season`); o.value = yr; seasonSel.appendChild(o); }
   picks.appendChild(seasonSel); picks.appendChild(weekSel);
@@ -6440,6 +6479,7 @@ function renderTrades(host, L, W) {
     "Newest first. Each player is followed by what he scored from that week to the end of that regular season, and each pick by the player it became — the only points either side can claim."));
   const filt = el("div", "tfilter");
   const sel = el("select");
+  sel.setAttribute("aria-label", "Filter trades by season");
   const opt = (v, t) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); };
   opt("all", `All seasons (${L.trades.length})`);
   for (const yr of L.seasons) opt(yr, `${yr} (${L.trades.filter(t => t.season === yr).length})`);
