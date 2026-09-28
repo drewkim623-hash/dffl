@@ -3941,12 +3941,12 @@ let RACEDATA_P = null;
 function raceDataOnce() { return RACEDATA_P || (RACEDATA_P = raceData()); }
 
 /** A price movement chip: where the line opened, and how far it has come. */
-function moveChip(now, was) {
+function moveChip(now, was, unit = "pt") {
   if (was == null) return "";
   const d = now - was;
   if (Math.abs(d) < 0.005) return `<span class="mv flat">unchanged</span>`;
   const cls = d > 0 ? "up" : "down";
-  return `<span class="mv ${cls}">${d > 0 ? "▲" : "▼"} ${Math.abs(d * 100).toFixed(1)}pt</span>`;
+  return `<span class="mv ${cls}">${d > 0 ? "▲" : "▼"} ${Math.abs(d * 100).toFixed(1)}${unit}</span>`;
 }
 
 /**
@@ -4492,8 +4492,9 @@ const halfPt = x => Math.round(x * 2) / 2;
  * One matchup posted as a game: moneyline, spread and total.
  *
  * A and B are lineupState-shaped: { expected, sd }. Nothing new is modelled here.
- *   Pregame:  expected = the team's posterior weekly mean, sd = weekSd
- *             (lineupState with frac = 1 and nothing scored).
+ *   Pregame:  expected = the team's posterior weekly mean through last week,
+ *             sd = √(weekSd² + levelSd²) — week-to-week noise plus uncertainty in the
+ *             team's level, as in the futures sim (weekSd alone if levelSd is missing).
  *   In play:  expected = scored + mean·frac, sd = weekSd·√frac, straight off the live board.
  *
  *   pA       = liveWinProb(A, B) = Φ((expA − expB) / √(sdA² + sdB²))
@@ -4532,7 +4533,9 @@ const fmtSpread = s => !isFinite(s) ? "—" : s === 0 ? "PK" : (s > 0 ? "+" : ""
  */
 function coverResult(spread, margin) {
   if (!isFinite(spread) || !isFinite(margin) || spread === 0) return null;
-  const favBy = spread > 0 ? margin : -margin;
+  // To the cent, so a push isn't lost to float noise in the summed scores.
+  const m = Math.round(margin * 100) / 100;
+  const favBy = spread > 0 ? m : -m;
   const need = Math.abs(spread);
   return favBy > need ? "covered" : favBy === need ? "push" : "missed";
 }
@@ -4606,7 +4609,7 @@ function pathHTML(pts, uid) {
   if (pts.length === 1) return `<div class="glpath">${esc(nameOf(uid))} opened at <b>${pc(pts[0].p)}</b>${tag}</div>`;
   const open = pts[0].p, now = pts[pts.length - 1].p, live = pts.filter(q => q.live).length;
   return `<div class="glpath">${pts.length >= 3 ? lineSpark(pts) : ""}
-    <span>${esc(nameOf(uid))} to win: open <b>${pc(open)}</b>${tag} → now <b>${pc(now)}</b>${moveChip(now, open)}</span>
+    <span>${esc(nameOf(uid))} to win: open <b>${pc(open)}</b>${tag} → now <b>${pc(now)}</b>${moveChip(now, open, " pp")}</span>
     <span>${pts.length} readings · ${pts.length - live} pre-kickoff, ${live} in-game</span></div>`;
 }
 
@@ -4618,8 +4621,6 @@ function gameLinesData(R, hist) {
   const model = window.__ODDS, season = DB.seasons[0];
   const out = { week: null, status: "none", games: [], byes: [], at: Date.now() };
   if (!season) return out;
-  const teams = (model && model.ok && livePosterior(model, season)) || [];
-  const byRid = new Map(teams.map(t => [t.rid, t]));
   const weekSd = model && model.weekSd;
   const uidOf = new Map();
   for (const g of [...(season.games || []), ...(season.live || [])]) {
@@ -4636,9 +4637,15 @@ function gameLinesData(R, hist) {
       .filter(g => g.a.uid && g.b.uid);
   }
   if (out.week == null) return out;
+  // Levels through the previous week only, so the pregame line never sees this week's scores.
+  const teams = (model && model.ok && livePosterior(model, season, out.week - 1)) || [];
+  const byRid = new Map(teams.map(t => [t.rid, t]));
   const board = window.__BOARD && window.__BOARD.ok && window.__BOARD.week === out.week ? window.__BOARD : null;
   if (board) out.at = board.at;
-  const pre = t => t && isFinite(t.mean) && weekSd > 0 ? { expected: t.mean, sd: weekSd } : null;
+  // Pregame sd = √(weekSd² + levelSd²): week-to-week noise plus uncertainty in the
+  // team's level, the same per-game spread the futures sim draws from.
+  const pre = t => t && isFinite(t.mean) && weekSd > 0
+    ? { expected: t.mean, sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
   const played = new Set();
   for (const g of pairs) {
     played.add(g.a.rid); played.add(g.b.rid);
@@ -4735,8 +4742,9 @@ function paintGameLines(data) {
   const how = el("details", "gloss glhow");
   how.innerHTML = `<summary>How these lines are made</summary><div class="gitems">
     <p>Nothing new is modelled. Before kickoff each lineup is expected to score its team's weekly
-      level on the power model, with the model's week-to-week spread of ±${f1((window.__ODDS || {}).weekSd || 0)} pts.
-      Once games start it's what's already scored plus that level times the share of the lineup still to play,
+      level on the power model (through last week), with a spread of √(weekSd² + levelSd²): the model's
+      week-to-week noise of ±${f1((window.__ODDS || {}).weekSd || 0)} pts plus how unsure it still is of the
+      team's level — the same per-game spread the futures simulation uses. Once games start it's what's already scored plus that level times the share of the lineup still to play,
       and the spread shrinks with the square root of that share — the same numbers as the live board below.</p>
     <p><b>Money:</b> win chance <code>Φ((expA − expB) / √(sdA² + sdB²))</code>, a ${(ODDS_HOLD * 100).toFixed(0)}%
       hold added across both sides, rounded to the prices a book posts.

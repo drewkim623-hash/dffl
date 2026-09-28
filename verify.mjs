@@ -459,7 +459,7 @@ const gl = await page.evaluate(() => {
       pAok: Math.abs(fav.pA - D.liveWinProb({ expected: 132, sd: 30 }, { expected: 118, sd: 30 })) < 1e-12 },
     done: { decided: done.decided, ml: done.ml },
     even, evenOk: eq.spreadPrice === even && eq.totalPrice === even,
-    cover: [coverResult(6.5, 10), coverResult(6.5, 3), coverResult(-3, -3), coverResult(0, 5)],
+    cover: [coverResult(6.5, 10), coverResult(6.5, 3), coverResult(-3, -3), coverResult(0, 5), coverResult(6.5, 6.5000000001)],
     opener: (L ? L.games : []).filter(g => g.open).map(g => !!(g.path[0] && g.path[0].pre && !g.path[0].live
       && g.path[0].p === g.open.pA && g.path.every((q, i) => i === 0 || q.t > g.path[0].t))),
     openers: (L ? L.games : []).filter(g => g.open).length,
@@ -486,7 +486,7 @@ check("gameLine: the stronger team is the moneyline favourite with a negative sp
 check("gameLine: win chance is liveWinProb's", gl.fav.pAok);
 check("gameLine: spread and total both post the vigged 50/50 price", gl.evenOk && gl.even === -115, `${gl.even}`);
 check("gameLine: a decided game gets no price", gl.done.decided && gl.done.ml.every(x => x == null));
-check("coverResult: covered / didn't / push / no favourite", JSON.stringify(gl.cover) === JSON.stringify(["covered", "missed", "push", null]), JSON.stringify(gl.cover));
+check("coverResult: covered / didn't / push / no favourite / push through float noise", JSON.stringify(gl.cover) === JSON.stringify(["covered", "missed", "push", null, "push"]), JSON.stringify(gl.cover));
 check("each path opens on the card's pregame model line", gl.openers > 0 && gl.opener.every(Boolean),
   `${gl.opener.filter(Boolean).length}/${gl.openers}`);
 check("no uncaught page errors after game lines", errors.length === 0, errors.slice(0, 2).join(" | "));
