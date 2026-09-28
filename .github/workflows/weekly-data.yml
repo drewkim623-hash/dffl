@@ -115,4 +115,14 @@ jobs:
               process.stdout.write('week ' + l.week + ' of ' + l.season);
             } catch (e) { process.stdout.write('injury refresh'); }
           ")"
-          git push
+          # The routine commits to main too (recaps, the send ledger), and the
+          # two Tuesday runs make a collision likelier. Replay this one commit
+          # on top of whatever landed since checkout, then push once. No loop,
+          # no force: if the rebase conflicts it is aborted and the step fails
+          # loudly, and the next scheduled run starts clean.
+          if ! git pull --rebase origin "${GITHUB_REF_NAME:-main}"; then
+            git rebase --abort || true
+            echo "::error::Could not rebase the data commit onto main; nothing pushed."
+            exit 1
+          fi
+          git push origin "HEAD:${GITHUB_REF_NAME:-main}"
