@@ -422,6 +422,75 @@ check("all three division names appear", dom.divNamesShown);
 check("all five markets present", dom.markets.length === 4, dom.markets.join(" / "));
 check("methodology section present", dom.hasMethod);
 
+group("Odds: game lines");
+await page.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
+const gl = await page.evaluate(() => {
+  const D = window.__DFFL, p = document.querySelector('[data-panel="odds"]');
+  const sec = p.querySelector('[data-board="gamelines"]');
+  const season = D.DB.seasons[0], B = window.__BOARD, L = window.__LINES;
+  const expected = (season.live || []).length || (B && B.ok ? B.games.length : null) || (L ? L.games.length : 0);
+  const cards = [...(sec ? sec.querySelectorAll('[data-card="gameline"]') : [])].map(c => {
+    const ml = [...c.querySelectorAll('[data-mkt="ml"]')];
+    const odds = [...c.querySelectorAll('[data-mkt="ml"] [data-odds]')].map(e => +e.dataset.odds);
+    const priced = odds.length === 2;
+    return {
+      state: c.dataset.state, rids: !!(c.dataset.a && c.dataset.b),
+      mlBoth: ml.length === 2 && ml.every(m => m.textContent.trim() && m.textContent.trim() !== "—"),
+      priced, sum: priced ? odds.reduce((a, o) => a + D.impliedProb(o), 0) : null,
+      resultOnly: !priced && ml.every(m => /Won|Lost|Tie|OTB/.test(m.textContent)),
+      spreads: [...c.querySelectorAll('[data-mkt="spread"]')].map(e => +e.dataset.line),
+      totals: [...c.querySelectorAll('[data-mkt="total"]')].map(e => +e.dataset.line),
+      oddsNumeric: [...c.querySelectorAll("[data-odds]")].every(e => /^-?\d+$/.test(e.dataset.odds) && Math.abs(+e.dataset.odds) >= 100),
+    };
+  });
+  const { gameLine, fmtSpread, coverResult, ODDS_HOLD } = D;
+  const eq = gameLine({ expected: 120, sd: 30 }, { expected: 120, sd: 30 });
+  const fav = gameLine({ expected: 132, sd: 30 }, { expected: 118, sd: 30 });
+  const done = gameLine({ expected: 101, sd: 0 }, { expected: 99, sd: 0 });
+  const even = D.roundOdds(D.americanOdds(D.addVig([0.5, 0.5], ODDS_HOLD)[0]));
+  return {
+    // sub-nav first, then the game lines, then the futures board's own heading
+    inOdds: !!sec, first: !!sec && p.firstElementChild.classList.contains("glnav") &&
+      !!(sec.compareDocumentPosition(p.querySelector(".sechead")) & Node.DOCUMENT_POSITION_FOLLOWING),
+    nav: [...p.querySelectorAll(".glnav button")].map(b => b.textContent.trim()),
+    expected, cards, status: L && L.status,
+    eq: { spread: eq.spread, label: fmtSpread(eq.spread), ml: eq.ml, total: eq.total },
+    fav: { ml: fav.ml, spreadA: -fav.spread, pA: fav.pA, total: fav.total,
+      pAok: Math.abs(fav.pA - D.liveWinProb({ expected: 132, sd: 30 }, { expected: 118, sd: 30 })) < 1e-12 },
+    done: { decided: done.decided, ml: done.ml },
+    even, evenOk: eq.spreadPrice === even && eq.totalPrice === even,
+    cover: [coverResult(6.5, 10), coverResult(6.5, 3), coverResult(-3, -3), coverResult(0, 5), coverResult(6.5, 6.5000000001)],
+    opener: (L ? L.games : []).filter(g => g.open).map(g => !!(g.path[0] && g.path[0].pre && !g.path[0].live
+      && g.path[0].p === g.open.pA && g.path.every((q, i) => i === 0 || q.t > g.path[0].t))),
+    openers: (L ? L.games : []).filter(g => g.open).length,
+  };
+});
+check("odds tab contains the game-lines board", gl.inOdds);
+check("game lines sit above the futures with a two-pill sub-nav", gl.first && gl.nav.join("/") === "Game lines/Futures", gl.nav.join("/"));
+check("one card per matchup this week", gl.cards.length === gl.expected && gl.expected > 0, `${gl.cards.length} cards vs ${gl.expected} matchups`);
+check("every card carries both managers' rids", gl.cards.every(c => c.rids));
+check("every card shows a moneyline (or result) for both teams", gl.cards.every(c => c.mlBoth && (c.priced || c.resultOnly)),
+  JSON.stringify(gl.cards.map(c => [c.state, c.priced, c.resultOnly])));
+check("undecided cards post two moneyline prices", gl.cards.filter(c => c.state === "live" || c.state === "upcoming")
+  .every(c => c.priced || c.resultOnly), JSON.stringify(gl.cards.map(c => c.state)));
+check("posted moneylines imply between 1.00 and 1.12", gl.cards.filter(c => c.priced).every(c => c.sum >= 1 && c.sum <= 1.12),
+  gl.cards.filter(c => c.priced).map(c => c.sum.toFixed(3)).join(","));
+check("every card has a spread and a total on both sides", gl.cards.every(c => c.spreads.length === 2 && c.totals.length === 2));
+check("spreads and totals are multiples of 0.5", gl.cards.every(c => [...c.spreads, ...c.totals].every(x => Number.isFinite(x) && Math.abs(x * 2 - Math.round(x * 2)) < 1e-9)));
+check("the two sides of a spread mirror each other", gl.cards.every(c => c.spreads[0] === -c.spreads[1]));
+check("every data-odds is a whole American price", gl.cards.every(c => c.oddsNumeric));
+check("gameLine: equal teams are a pick'em at near-even money", gl.eq.spread === 0 && gl.eq.label === "PK" &&
+  gl.eq.ml[0] === gl.eq.ml[1] && gl.eq.ml[0] <= -100 && gl.eq.ml[0] >= -125, JSON.stringify(gl.eq));
+check("gameLine: the stronger team is the moneyline favourite with a negative spread",
+  gl.fav.ml[0] < 0 && gl.fav.ml[1] > 0 && gl.fav.spreadA < 0 && gl.fav.spreadA === -14 && gl.fav.total === 250, JSON.stringify(gl.fav));
+check("gameLine: win chance is liveWinProb's", gl.fav.pAok);
+check("gameLine: spread and total both post the vigged 50/50 price", gl.evenOk && gl.even === -115, `${gl.even}`);
+check("gameLine: a decided game gets no price", gl.done.decided && gl.done.ml.every(x => x == null));
+check("coverResult: covered / didn't / push / no favourite / push through float noise", JSON.stringify(gl.cover) === JSON.stringify(["covered", "missed", "push", null, "push"]), JSON.stringify(gl.cover));
+check("each path opens on the card's pregame model line", gl.openers > 0 && gl.opener.every(Boolean),
+  `${gl.opener.filter(Boolean).length}/${gl.openers}`);
+check("no uncaught page errors after game lines", errors.length === 0, errors.slice(0, 2).join(" | "));
+
 group("ADP snapshot");
 const adp = await page.evaluate(async () => {
   const { loadADP, adpValue, adpKey, ADP_CURVE, DB } = window.__DFFL;
@@ -2991,6 +3060,21 @@ check("document does not scroll horizontally at 390px", narrow.docScroll <= narr
 check("body does not scroll horizontally at 390px", narrow.bodyScroll <= narrow.inner, `${narrow.bodyScroll} > ${narrow.inner}`);
 check("no element overflows the viewport at 390px", narrow.overflowing.length === 0, narrow.overflowing.join(" | "));
 check("prices still render at 390px", narrow.priceCount > 60, `${narrow.priceCount}`);
+await mobile.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
+const glNarrow = await mobile.evaluate(() => {
+  const sec = document.querySelector('[data-board="gamelines"]');
+  const over = [];
+  // Scoped to the game lines: the rest of the panel has its own overflow check above.
+  for (const n of document.querySelectorAll('[data-board="gamelines"] *')) {
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { doc: document.documentElement.scrollWidth, inner: window.innerWidth, over: over.slice(0, 6),
+    cards: sec ? sec.querySelectorAll('[data-card="gameline"]').length : 0 };
+});
+check("game lines: no horizontal overflow at 390px", glNarrow.doc <= glNarrow.inner && glNarrow.over.length === 0,
+  `${glNarrow.doc} > ${glNarrow.inner} ${glNarrow.over.join(" | ")}`);
+check("game lines: cards render at 390px", glNarrow.cards > 0, `${glNarrow.cards}`);
 
 // the trade block, fully loaded, at phone width
 await mobile.click('#tabs button[data-tab="trades"]');

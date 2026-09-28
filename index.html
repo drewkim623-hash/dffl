@@ -459,6 +459,51 @@
   }
   @media(prefers-reduced-motion:reduce){.orow,.price{transition:none}}
 
+  /* game lines — this week's matchups posted like a sportsbook's game board */
+  .glnav{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+  .glnav button{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer;
+    background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 14px}
+  .glnav button:hover{background:var(--hover);color:var(--ink)}
+  .glnav button[aria-current="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+  .glgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr));gap:10px;padding:12px}
+  .glcard{background:var(--raised);border:1px solid var(--ring);border-radius:var(--rs);padding:10px 12px;min-width:0}
+  .glcard .glst{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);
+    font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+  .glcard .glst .live{color:var(--gold)}
+  .glrow{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,minmax(0,74px));gap:6px;align-items:center;padding:3px 0}
+  .glrow.glhd{padding:0;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .glrow.glhd span{text-align:center}
+  .glwho{display:flex;align-items:center;gap:7px;min-width:0}
+  .glwho .n{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .glwho .sc{margin-left:auto;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+  .glwho.won .n,.glwho.won .sc{color:var(--ink)} .glwho.lost .n,.glwho.lost .sc{color:var(--muted)}
+  .glbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:42px;min-width:0;
+    border:1px solid var(--ring);background:var(--surface);border-radius:8px;padding:4px 2px;text-align:center}
+  .glbtn .l{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .glbtn .o{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
+  .glbtn .o.plus{color:var(--plus)}
+  .glbtn .r{font-size:11px;color:var(--muted);font-weight:700}
+  .glpath{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;padding-top:7px;
+    border-top:1px solid var(--grid);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .glpath b{color:var(--ink-2)}
+  .glpath svg{flex:none;display:block}
+  .glres{margin-top:6px;font-size:12px;color:var(--ink-2)}
+  .glres .cv{font-weight:800} .glres .cv.yes{color:var(--plus)} .glres .cv.no{color:var(--red)} .glres .cv.push{color:var(--muted)}
+  .glbye{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:2px 4px}
+  details.gloss.glhow{margin:0 12px 12px}
+  .glhow .gitems{padding:4px 16px 12px}
+  .glhow p{font-size:12px;color:var(--ink-2);line-height:1.55;margin:6px 0}
+  .glhow code{font-family:var(--mono);font-size:11px}
+  @media(max-width:420px){
+    .glgrid{padding:8px} .glcard{padding:9px 8px}
+    .glrow{grid-template-columns:minmax(0,1fr) repeat(3,minmax(0,62px));gap:4px}
+    .glbtn .l{font-size:11px} .glbtn .o{font-size:11.5px}
+    .glwho .av{display:none}
+    /* the score drops under the name so the name gets the whole cell */
+    .glwho{display:grid;grid-template-columns:minmax(0,1fr);gap:1px}
+    .glwho .sc,.glwho.won .sc{margin-left:0;font-size:10.5px;color:var(--muted)}
+  }
+
   .bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:11px}
 
   .mode{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:0 0 16px}
@@ -1457,7 +1502,7 @@ function show(id) {
   // Same deal for the race: it reads the rest of the schedule and runs tens of
   // thousands of seasons, so it waits until somebody asks for it.
   if (id === "race") ensureRace();
-  if (id === "odds") ensureLiveOdds();
+  if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
@@ -4160,12 +4205,12 @@ let RACEDATA_P = null;
 function raceDataOnce() { return RACEDATA_P || (RACEDATA_P = raceData()); }
 
 /** A price movement chip: where the line opened, and how far it has come. */
-function moveChip(now, was) {
+function moveChip(now, was, unit = "pt") {
   if (was == null) return "";
   const d = now - was;
   if (Math.abs(d) < 0.005) return `<span class="mv flat">unchanged</span>`;
   const cls = d > 0 ? "up" : "down";
-  return `<span class="mv ${cls}">${d > 0 ? "▲" : "▼"} ${Math.abs(d * 100).toFixed(1)}pt</span>`;
+  return `<span class="mv ${cls}">${d > 0 ? "▲" : "▼"} ${Math.abs(d * 100).toFixed(1)}${unit}</span>`;
 }
 
 /**
@@ -4702,8 +4747,325 @@ async function ensureLiveOdds() {
   }
 }
 
+/* ------------------------------------------------ game lines, this week */
+
+/** To the nearest half point, the way a book posts a spread or a total. */
+const halfPt = x => Math.round(x * 2) / 2;
+
+/**
+ * One matchup posted as a game: moneyline, spread and total.
+ *
+ * A and B are lineupState-shaped: { expected, sd }. Nothing new is modelled here.
+ *   Pregame:  expected = the team's posterior weekly mean through last week,
+ *             sd = √(weekSd² + levelSd²) — week-to-week noise plus uncertainty in the
+ *             team's level, as in the futures sim (weekSd alone if levelSd is missing).
+ *   In play:  expected = scored + mean·frac, sd = weekSd·√frac, straight off the live board.
+ *
+ *   pA       = liveWinProb(A, B) = Φ((expA − expB) / √(sdA² + sdB²))
+ *   Money    = [vA, vB] = addVig([pA, 1 − pA], ODDS_HOLD); price = roundOdds(americanOdds(v))
+ *   Spread   = expA − expB to the nearest 0.5 (A's margin; A posts −spread, B +spread; 0 is PK)
+ *   Total    = expA + expB to the nearest 0.5
+ *   Spread and total are set at the model's median, so both sides are a coin flip and
+ *   both post roundOdds(americanOdds(addVig([.5, .5])[0])).
+ *
+ * A game with no uncertainty left is decided: it gets a result, not a price. A game
+ * so lopsided that addVig's 0.995 ceiling binds can't post a two-sided moneyline
+ * that holds together, so that market comes off the board (spread and total stay).
+ */
+function gameLine(A, B, hold = ODDS_HOLD) {
+  if (!A || !B || !isFinite(A.expected) || !isFinite(B.expected)) return null;
+  const sdA = isFinite(A.sd) ? A.sd : 0, sdB = isFinite(B.sd) ? B.sd : 0;
+  const pA = liveWinProb({ expected: A.expected, sd: sdA }, { expected: B.expected, sd: sdB });
+  const decided = !(Math.sqrt(sdA * sdA + sdB * sdB) > 0.001);
+  const v = addVig([pA, 1 - pA], hold);
+  const offBoard = !decided && v.some(x => x >= 0.995 || x <= 0);
+  const ml = decided || offBoard ? [null, null] : v.map(x => roundOdds(americanOdds(x)));
+  const even = roundOdds(americanOdds(addVig([0.5, 0.5], hold)[0]));
+  const spread = halfPt(A.expected - B.expected) || 0;   // || 0 folds −0 into 0
+  return {
+    pA, pB: 1 - pA, decided, offBoard, expA: A.expected, expB: B.expected,
+    ml, spread, total: halfPt(A.expected + B.expected), spreadPrice: even, totalPrice: even,
+  };
+}
+
+/** A spread as posted for one side: −6.5, +6.5, or PK. */
+const fmtSpread = s => !isFinite(s) ? "—" : s === 0 ? "PK" : (s > 0 ? "+" : "") + s.toFixed(1);
+
+/**
+ * Did the pregame favourite cover the pregame spread? spread is A's pregame
+ * margin, rounded to the half point; margin is A's final score minus B's.
+ */
+function coverResult(spread, margin) {
+  if (!isFinite(spread) || !isFinite(margin) || spread === 0) return null;
+  // To the cent, so a push isn't lost to float noise in the summed scores.
+  const m = Math.round(margin * 100) / 100;
+  const favBy = spread > 0 ? m : -m;
+  const need = Math.abs(spread);
+  return favBy > need ? "covered" : favBy === need ? "push" : "missed";
+}
+
+/**
+ * The line-history file and the latest snapshot, both optional. A missing or
+ * malformed file means no path, never an error.
+ */
+let OHIST_P = null;
+function oddsHistoryOnce() {
+  return OHIST_P || (OHIST_P = Promise.all([
+    jget("data/odds-history.json").catch(() => null),
+    jget("data/odds-snapshot.json").catch(() => null),
+  ]).then(([h, s]) => ({
+    weeks: h && h.weeks && typeof h.weeks === "object" ? h.weeks : {},
+    snap: s && Array.isArray(s.games) ? s : null,
+  })));
+}
+
+/**
+ * How one matchup's line moved over the week, from ridA's side. The path is the
+ * model's pregame line (openP: livePosterior through the previous week, flagged
+ * pre and placed just before the earliest snapshot), then every committed
+ * data/odds-snapshot.json reading for that week (via data/odds-history.json plus
+ * the current snapshot), then the live number now. Rows name managers by
+ * username, so they're matched on name, either order.
+ */
+function linePath(hist, seasonId, week, uidA, uidB, nowP, nowAt, nowLive, openP) {
+  const namesA = new Set([nameOf(uidA)]), namesB = new Set([nameOf(uidB)]);
+  const snap = hist && hist.snap;
+  for (const t of (snap && snap.teams) || []) {
+    if (t.uid === uidA && t.manager) namesA.add(t.manager);
+    if (t.uid === uidB && t.manager) namesB.add(t.manager);
+  }
+  const key = `${seasonId}-${week}`;
+  const rows = [...((hist && Array.isArray(hist.weeks[key])) ? hist.weeks[key] : [])];
+  if (snap && `${snap.season}-${snap.liveWeek ?? snap.week}` === key) {
+    const seen = new Set(rows.map(r => r && r.at));
+    if (!seen.has(snap.generated)) for (const g of snap.games) rows.push({ ...g, at: snap.generated });
+  }
+  const pts = [];
+  for (const r of rows) {
+    if (!r || typeof r.pA !== "number" || !isFinite(Date.parse(r.at))) continue;
+    const fwd = namesA.has(r.a) && namesB.has(r.b), rev = namesA.has(r.b) && namesB.has(r.a);
+    if (!fwd && !rev) continue;
+    pts.push({ t: Date.parse(r.at), p: fwd ? r.pA : 1 - r.pA, live: (r.aPts || 0) > 0 || (r.bPts || 0) > 0 });
+  }
+  if (nowP != null && isFinite(nowP)) pts.push({ t: nowAt || Date.now(), p: nowP, live: !!nowLive, now: true });
+  pts.sort((x, y) => x.t - y.t);
+  // Every committed snapshot so far was taken after kickoff, so without this the
+  // "open" would be an in-game reading.
+  if (openP != null && isFinite(openP)) pts.unshift({ t: (pts.length ? pts[0].t : Date.now()) - 1, p: openP, live: false, pre: true });
+  return pts;
+}
+
+/** A 50%-lined sparkline of a win probability; in-game readings in gold. */
+function lineSpark(pts) {
+  const W = 88, H = 24, n = pts.length;
+  const x = i => (2 + i * (W - 4) / (n - 1)).toFixed(1), y = p => (2 + (1 - p) * (H - 4)).toFixed(1);
+  const line = pts.map((q, i) => `${x(i)},${y(q.p)}`).join(" ");
+  const dots = pts.map((q, i) => `<circle cx="${x(i)}" cy="${y(q.p)}" r="1.8" fill="${q.live ? "var(--gold)" : "var(--muted)"}"/>`).join("");
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+    <line x1="0" x2="${W}" y1="${y(0.5)}" y2="${y(0.5)}" stroke="var(--grid)" stroke-dasharray="2 2"/>
+    <polyline points="${line}" fill="none" stroke="var(--blue)" stroke-width="1.5"/>${dots}</svg>`;
+}
+
+function pathHTML(pts, uid) {
+  const pc = p => `${(p * 100).toFixed(0)}%`;
+  if (!pts.length) return `<div class="glpath">No line history yet</div>`;
+  const tag = pts[0].pre ? " (pregame model)" : "";
+  if (pts.length === 1) return `<div class="glpath">${esc(nameOf(uid))} opened at <b>${pc(pts[0].p)}</b>${tag}</div>`;
+  const open = pts[0].p, now = pts[pts.length - 1].p, live = pts.filter(q => q.live).length;
+  return `<div class="glpath">${pts.length >= 3 ? lineSpark(pts) : ""}
+    <span>${esc(nameOf(uid))} to win: open <b>${pc(open)}</b>${tag} → now <b>${pc(now)}</b>${moveChip(now, open, " pp")}</span>
+    <span>${pts.length} readings · ${pts.length - live} pre-kickoff, ${live} in-game</span></div>`;
+}
+
+/**
+ * The week's matchups with a pregame and a current line each. The week in flight
+ * if there is one, otherwise the next week on the schedule, otherwise nothing.
+ */
+function gameLinesData(R, hist) {
+  const model = window.__ODDS, season = DB.seasons[0];
+  const out = { week: null, status: "none", games: [], byes: [], at: Date.now() };
+  if (!season) return out;
+  const weekSd = model && model.weekSd;
+  const uidOf = new Map();
+  for (const g of [...(season.games || []), ...(season.live || [])]) {
+    uidOf.set(g.a.rid, g.a.uid); uidOf.set(g.b.rid, g.b.uid);
+  }
+  let pairs = [], inFlight = false;
+  if (season.liveWeek && (season.live || []).length) {
+    out.week = season.liveWeek; inFlight = true;
+    pairs = season.live.map(g => ({ a: g.a, b: g.b }));
+  } else if (R && R.nextWeek != null) {
+    out.week = R.nextWeek;
+    pairs = (R.upcoming || []).filter(g => g.week === R.nextWeek)
+      .map(g => ({ a: { rid: g.a, uid: uidOf.get(g.a), pts: 0 }, b: { rid: g.b, uid: uidOf.get(g.b), pts: 0 } }))
+      .filter(g => g.a.uid && g.b.uid);
+  }
+  if (out.week == null) return out;
+  // Levels through the previous week only, so the pregame line never sees this week's scores.
+  const teams = (model && model.ok && livePosterior(model, season, out.week - 1)) || [];
+  const byRid = new Map(teams.map(t => [t.rid, t]));
+  const board = window.__BOARD && window.__BOARD.ok && window.__BOARD.week === out.week ? window.__BOARD : null;
+  if (board) out.at = board.at;
+  // Pregame sd = √(weekSd² + levelSd²): week-to-week noise plus uncertainty in the
+  // team's level, the same per-game spread the futures sim draws from.
+  const pre = t => t && isFinite(t.mean) && weekSd > 0
+    ? { expected: t.mean, sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
+  const played = new Set();
+  for (const g of pairs) {
+    played.add(g.a.rid); played.add(g.b.rid);
+    const bg = board ? board.games.find(x => x.a.rid === g.a.rid && x.b.rid === g.b.rid) : null;
+    const A0 = pre(byRid.get(g.a.rid)), B0 = pre(byRid.get(g.b.rid));
+    const open = A0 && B0 ? gameLine(A0, B0) : null;
+    const now = bg ? gameLine(bg.A, bg.B) : open;
+    const aPts = bg ? bg.A.scored : (g.a.pts || 0), bPts = bg ? bg.B.scored : (g.b.pts || 0);
+    const started = inFlight && (aPts > 0 || bPts > 0);
+    const settled = !!(bg && bg.settled);
+    const path = linePath(hist, season.season, out.week, g.a.uid, g.b.uid,
+      now ? now.pA : null, board ? board.at : Date.now(), started, open ? open.pA : null);
+    out.games.push({
+      a: g.a, b: g.b, aPts, bPts, open, now, settled, started, path,
+      cover: settled && open ? coverResult(open.spread, aPts - bPts) : null,
+    });
+  }
+  for (const t of teams) if (!played.has(t.rid) && uidOf.get(t.rid)) out.byes.push({ rid: t.rid, uid: uidOf.get(t.rid) });
+  out.status = !out.games.length ? "none"
+    : out.games.every(g => g.settled) ? "final"
+    : out.games.some(g => g.started) ? "live" : "upcoming";
+  return out;
+}
+
+function gameCardHTML(g) {
+  const L = g.now, O = g.open;
+  const state = g.settled ? "final" : !L ? "none" : L.decided ? "decided" : g.started ? "live" : "upcoming";
+  const odds = o => o == null ? `<span class="r">—</span>`
+    : `<span class="o ${o > 0 ? "plus" : ""}" data-odds="${o}">${esc(fmtOdds(o))}</span>`;
+  const done = g.settled || (L && L.decided);
+  const cell = (mkt, line, lineNum, price, extra = "") =>
+    `<div class="glbtn" data-mkt="${mkt}"${lineNum != null && isFinite(lineNum) ? ` data-line="${lineNum}"` : ""}>
+      ${line != null ? `<span class="l">${esc(line)}</span>` : ""}${extra || odds(price)}</div>`;
+  // Settled: the pregame line and the result, no prices. Otherwise the current line.
+  const S = done ? O : L;
+  const row = (side, i) => {
+    const pts = i ? g.bPts : g.aPts, opp = i ? g.aPts : g.bPts;
+    const res = done ? (pts > opp ? "won" : pts < opp ? "lost" : "") : "";
+    const sp = S ? (i ? S.spread : -S.spread) : NaN;
+    const mlExtra = done ? `<span class="r">${res === "won" ? "Won" : res === "lost" ? "Lost" : "Tie"}</span>`
+      : L && L.offBoard ? `<span class="r" title="Too one-sided to post a two-way price">OTB</span>` : "";
+    return `<div class="glrow">
+      <span class="glwho ${res}">${avatarHTML(side.uid, "xs")}<span class="n">${esc(nameOf(side.uid))}</span>
+        ${g.started || done ? `<span class="sc">${f2(pts)}</span>` : ""}</span>
+      ${cell("spread", S ? fmtSpread(sp) : "—", S ? sp : null, done ? null : S && S.spreadPrice, done ? " " : "")}
+      ${cell("ml", null, null, L && !done ? L.ml[i] : null, mlExtra)}
+      ${cell("total", S ? `${i ? "U" : "O"} ${S.total.toFixed(1)}` : "—", S ? S.total : null,
+        done ? null : S && S.totalPrice, done ? " " : "")}
+    </div>`;
+  };
+  const status = state === "final" ? "Final" : state === "decided" ? "Decided"
+    : state === "live" ? `<span class="live">Live</span>` : state === "upcoming" ? "Upcoming" : "—";
+  const lineNote = done ? "Pregame line" : state === "live" ? "Live line" : "Opening line";
+  let res = "";
+  if (g.settled) {
+    const cv = g.cover, fav = O && O.spread !== 0 ? (O.spread > 0 ? g.a : g.b) : null;
+    res = `<div class="glres">Final${O ? ` · pregame ${O.spread === 0 ? "PK"
+      : `${esc(nameOf(fav.uid))} −${Math.abs(O.spread).toFixed(1)}`}` : ""}${cv
+      ? ` · <span class="cv ${cv === "covered" ? "yes" : cv === "push" ? "push" : "no"}">${cv === "covered"
+        ? "Covered" : cv === "push" ? "Push" : "Didn't cover"}</span>` : ""}</div>`;
+  }
+  return `<div class="glcard" data-card="gameline" data-a="${g.a.rid}" data-b="${g.b.rid}" data-state="${state}">
+    <div class="glst"><span>${status}</span><span>${lineNote}</span></div>
+    <div class="glrow glhd"><span></span><span>Spread</span><span>Money</span><span>Total</span></div>
+    ${row(g.a, 0)}${row(g.b, 1)}${res}
+    ${pathHTML(g.path, g.a.uid)}
+  </div>`;
+}
+
+function paintGameLines(data) {
+  const host = $("#glHost");
+  if (!host) return;
+  window.__LINES = data;
+  host.innerHTML = "";
+  const b = el("div", "board gl");
+  b.dataset.board = "gamelines";
+  if (data.week == null) {
+    b.innerHTML = `<div class="bhead"><span class="bt">Game lines</span></div>`;
+    b.appendChild(el("div", "empty", `<b>No games to price</b><br>There's no current week on the schedule — lines post
+      once the next week's matchups are set.`));
+    host.appendChild(b);
+    return;
+  }
+  const st = { upcoming: "Upcoming", live: "Live", final: "Final", none: "—" }[data.status];
+  b.innerHTML = `<div class="bhead">
+    <span class="bt">Week ${data.week} lines
+      <span class="bs">${st} · priced from each lineup's expected score and the model's week-to-week spread</span></span>
+    <span class="stamp">${esc(updatedAt(data.at, "Updated"))}</span></div>`;
+  const grid = el("div", "glgrid");
+  grid.innerHTML = data.games.map(gameCardHTML).join("") + data.byes.map(t =>
+    `<div class="glbye">${avatarHTML(t.uid, "xs")}<span>${esc(nameOf(t.uid))} — Bye</span></div>`).join("");
+  if (!data.games.length) grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No matchups found for week ${data.week}.</div>`;
+  b.appendChild(grid);
+  const how = el("details", "gloss glhow");
+  how.innerHTML = `<summary>How these lines are made</summary><div class="gitems">
+    <p>Nothing new is modelled. Before kickoff each lineup is expected to score its team's weekly
+      level on the power model (through last week), with a spread of √(weekSd² + levelSd²): the model's
+      week-to-week noise of ±${f1((window.__ODDS || {}).weekSd || 0)} pts plus how unsure it still is of the
+      team's level — the same per-game spread the futures simulation uses. Once games start it's what's already scored plus that level times the share of the lineup still to play,
+      and the spread shrinks with the square root of that share — the same numbers as the live board below.</p>
+    <p><b>Money:</b> win chance <code>Φ((expA − expB) / √(sdA² + sdB²))</code>, a ${(ODDS_HOLD * 100).toFixed(0)}%
+      hold added across both sides, rounded to the prices a book posts.
+      <b>Spread:</b> the expected margin to the nearest half point. <b>Total:</b> the expected combined score to the
+      nearest half point. Both are set where the model sees a coin flip, so each side carries the same vigged price.</p>
+    <p><b>The path</b> under each game is the listed team's win chance: first the model's pregame line (the
+      power model through last week, before a ball was kicked), then every snapshot of the odds the site
+      committed this week (<code>data/odds-snapshot.json</code>, collected in <code>data/odds-history.json</code>,
+      plus the current snapshot), then the live number now. Grey dots are pre-kickoff, gold in-game. A lineup with nothing left to play
+      shows its result, not a price. These are not real betting lines.</p></div>`;
+  b.appendChild(how);
+  host.appendChild(b);
+}
+
+let GL_STARTED = false;
+async function ensureGameLines() {
+  if (GL_STARTED) return;
+  GL_STARTED = true;
+  const host = $("#glHost");
+  if (host) host.innerHTML = `<div class="board gl" data-board="gamelines"><div class="bhead">
+    <span class="bt">Game lines<span class="bs">Pricing this week's games…</span></span></div></div>`;
+  let R = null, hist = null;
+  const paint = () => {
+    try { paintGameLines(gameLinesData(R, hist)); }
+    catch (e) { console.error(e); }
+  };
+  try {
+    [R, hist] = await Promise.all([
+      raceDataOnce().catch(() => null),
+      oddsHistoryOnce().catch(() => null),
+      liveOnce().catch(() => null),
+    ]);
+  } catch (e) { console.error(e); }
+  paint();
+  onLive(paint);
+  document.body.dataset.linesReady = "1";
+}
+
 function panelOdds(model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "odds";
+
+  // Games first, futures below — a sportsbook's front page.
+  const nav = el("div", "glnav");
+  nav.innerHTML = `<button type="button" data-jump="glHost" aria-current="true">Game lines</button>
+    <button type="button" data-jump="futuresTop">Futures</button>`;
+  nav.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-jump]");
+    if (!btn) return;
+    for (const x of nav.children) x.setAttribute("aria-current", String(x === btn));
+    const t = document.getElementById(btn.dataset.jump);
+    if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  p.appendChild(nav);
+  const glHost = el("div"); glHost.id = "glHost";
+  p.appendChild(glHost);
+  const futuresTop = el("div"); futuresTop.id = "futuresTop";
+  p.appendChild(futuresTop);
 
   const post = !!(model && model.postDraft);
 
@@ -6955,6 +7317,8 @@ async function boot() {
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
       liveWeekBoard, refreshLive, startLivePolling, liveSignature, onLive, emitLive, GAME_LEFT,
       boardAsOf, pricedWeeks,
+      gameLine, gameLinesData, ensureGameLines, paintGameLines, oddsHistoryOnce, linePath, coverResult,
+      fmtSpread, halfPt,
       renderRace, raceEmpty,
       RACE_SIMS, LEVERAGE_SIMS,
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
