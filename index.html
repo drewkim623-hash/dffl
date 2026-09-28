@@ -6855,17 +6855,26 @@ function panelTrades() {
 async function boot() {
   try {
     if (MOCK) await mockInit();
-    try { DB.state = MOCK ? null : await jget(`${API}/state/nfl`); } catch (e) { DB.state = null; }
+    // Sleeper's state, data/latest.json and the league chain don't depend on
+    // one another, so all three requests start together rather than one after
+    // another. The league chain never reads DB.state; only loadSeason, below,
+    // does, and it runs after the effective week has been applied.
+    const stateP = MOCK ? Promise.resolve(null) : jget(`${API}/state/nfl`).catch(() => null);
+    const latestP = MOCK ? Promise.resolve(null)
+      : fetch("data/latest.json", { cache: "no-cache" })
+        .then(r => (r.ok ? r.json() : null)).catch(() => null);
+    const chainP = loadChain();
+    chainP.catch(() => {}); // still thrown below; this only stops an early "unhandled" report
+    DB.state = await stateP;
     // Everything below reads DB.state, so the effective week is applied once,
     // here. A missing or unreadable latest.json changes nothing.
     if (DB.state) {
-      const latest = await fetch("data/latest.json", { cache: "no-cache" })
-        .then(r => (r.ok ? r.json() : null)).catch(() => null);
+      const latest = await latestP;
       DB.sleeperState = DB.state;
       DB.state = effectiveState(DB.state, latest);
     }
 
-    const chain = await loadChain();
+    const chain = await chainP;
     if (!chain.length) throw new Error("Could not load the league from Sleeper.");
     total = chain.length * 22;
     $("#lgName").textContent = chain[0].name || "League";
