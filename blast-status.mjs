@@ -11,6 +11,12 @@
  *   node blast-status.mjs --json       # the same, for a script to branch on
  *   node blast-status.mjs --record ... # append a send after it has happened
  *
+ * --record logs the newest recap unless told otherwise, because that is what
+ * compose-email.mjs put in the email. --week is the recap week just played, not
+ * the "Week N" in the subject, and a week that disagrees is refused (exit 2,
+ * nothing written). --no-recap logs a send that carried none; --allow-older-week
+ * is for backfilling a send made before a newer recap existed.
+ *
  * Exit codes are the point, and neither of them means "skip the week":
  *   0 — the newest piece is unsent. Compose and send it.
  *   1 — the newest piece has already been sent. WRITE A NEW ONE off current
@@ -19,6 +25,7 @@
  * A routine can branch on that without interpreting prose.
  */
 import { readFile, writeFile } from "fs/promises";
+import { resolveRecapWeek } from "./email-week.mjs";
 
 const argv = process.argv.slice(2);
 const arg = k => { const i = argv.indexOf(k); return i > -1 ? argv[i + 1] : null; };
@@ -35,13 +42,25 @@ if (has("--record")) {
     subject: arg("--subject") || "",
     lead: arg("--lead") || null,
     alsoSent: (arg("--also") || "").split(",").map(s => s.trim()).filter(Boolean),
-    recap: arg("--week") ? { season: arg("--season") || String(new Date().getFullYear()), week: Number(arg("--week")) } : null,
+    recap: null, // resolved below, before anything is written
     to: Number(arg("--to") || 0),
     sha256: arg("--sha") || null,
     by: arg("--by") || "routine",
     note: arg("--note") || "",
   };
   if (!entry.subject) { console.error("--record needs at least --subject"); process.exit(2); }
+  // Checked before anything is written: a wrong week here would later mark the
+  // real recap "already blasted". See email-week.mjs.
+  try {
+    entry.recap = resolveRecapWeek({
+      recaps,
+      // A flag given with no value arrives as "", which is refused, not defaulted.
+      weekArg: has("--week") ? arg("--week") ?? "" : null,
+      seasonArg: has("--season") ? arg("--season") ?? "" : null,
+      noRecap: has("--no-recap"),
+      allowOlder: has("--allow-older-week"),
+    });
+  } catch (err) { console.error(err.message); process.exit(2); }
   ledger.sent.push(entry);
   ledger.sent.sort((a, b) => String(a.at).localeCompare(String(b.at)));
   await writeFile(LEDGER, JSON.stringify(ledger, null, 1) + "\n");

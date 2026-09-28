@@ -2137,6 +2137,31 @@ if (ledgerFile.missing) {
     typeof ledgerFile.newestArticleSent === "boolean", `${ledgerFile.newestArticleSent}`);
 }
 
+/* The subject says the upcoming week; the recap inside is the week just played.
+ * Recording the subject's number once logged a recap that did not exist. These
+ * run the recorder's week check against the real recaps.json, in node. */
+{
+  const { resolveRecapWeek, newestRecap } = await import(new URL("./email-week.mjs", import.meta.url));
+  const recaps = JSON.parse(await readFile(join(ROOT, "recaps.json"), "utf8"));
+  const newest = newestRecap(recaps);
+  const refused = weekArg => { try { resolveRecapWeek({ recaps, weekArg }); return false; } catch { return true; } };
+  if (!newest) {
+    for (const name of ["recording a send defaults to the recap the email carries",
+      "recording the subject's week instead of the recap's is refused",
+      "recording the newest recap by number is accepted"])
+      check(name, true, "recaps.json has no weeks yet");
+  } else {
+    const byDefault = resolveRecapWeek({ recaps });
+    check("recording a send defaults to the recap the email carries",
+      byDefault && byDefault.season === newest.season && byDefault.week === newest.week,
+      `${JSON.stringify(byDefault)}`);
+    check("recording the subject's week instead of the recap's is refused",
+      refused(String(newest.week + 1)), `--week ${newest.week + 1} with newest ${newest.season} week ${newest.week}`);
+    check("recording the newest recap by number is accepted",
+      !refused(String(newest.week)), `--week ${newest.week}`);
+  }
+}
+
 group("Injuries");
 
 const injFile = await page.evaluate(async () => {
