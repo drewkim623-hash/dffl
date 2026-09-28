@@ -1707,6 +1707,92 @@ if (ppLive.state === "empty") {
   check("live: the picture ran in a worker", ppLive.via === "worker", ppLive.via);
 }
 
+group("Playoff Picture: follows the live board");
+// Move a live score and reprice the way the 60s poll does: the tab must redraw
+// off the new run, in the one worker it already has.
+const ppRefresh = await page.evaluate(async () => {
+  const D = window.__DFFL, games = D.DB.seasons[0].live || [];
+  if (!games.length || document.body.dataset.pictureReady !== "1") return { skip: true };
+  const b = window.__BOARD;
+  const open = g => b && b.ok && b.games.some(x => !x.settled
+    && ((x.a.rid === g.a.rid && x.b.rid === g.b.rid) || (x.a.rid === g.b.rid && x.b.rid === g.a.rid)));
+  const g = games.find(open) || games[0];
+  const RealWorker = window.Worker;
+  let made = 0;
+  window.Worker = class extends RealWorker { constructor(...a) { super(...a); made++; } };
+  const bump = async d => {
+    const prev = window.__PICTURE;
+    g.a.pts += d;
+    LIVE_P = null;
+    await D.liveOnce();
+    D.emitLive();
+    for (let t = 0; t < 150 && window.__PICTURE === prev; t++) await new Promise(r => setTimeout(r, 100));
+    const P = window.__PICTURE, L = window.__LSIM;
+    return {
+      redrawn: P !== prev, via: P.via,
+      exact: P.playoff.every((p, i) => p === L.playoff[i] / L.sims),
+      changed: P.playoff.some((p, i) => p !== prev.playoff[i]),
+    };
+  };
+  try {
+    const one = await bump(60), two = await bump(60);
+    await bump(-120);   // put the real score back for the checks that follow
+    return { one, two, made };
+  } finally { window.Worker = RealWorker; }
+});
+if (ppRefresh.skip) {
+  check("live refresh redraws the picture (skipped: no live week)", true);
+} else {
+  for (const [k, r] of [["first", ppRefresh.one], ["second", ppRefresh.two]]) {
+    check(`live refresh (${k}): the picture redraws`, r.redrawn, JSON.stringify(r));
+    check(`live refresh (${k}): Playoffs still equals the Odds tab's run exactly`, r.exact);
+    check(`live refresh (${k}): the numbers moved with the score`, r.changed);
+  }
+  check("two live refreshes create at most one worker", ppRefresh.made <= 1, `${ppRefresh.made} created`);
+  check("refreshes still run in the worker", ppRefresh.one.via === "worker" && ppRefresh.two.via === "worker", `${ppRefresh.one.via}/${ppRefresh.two.via}`);
+}
+
+group("Playoff Picture: the empty state");
+const ppEmpty = await page.evaluate(() => {
+  const box = window.__DFFL.pictureEmpty("not-started", "2026");
+  return { text: box.innerText || box.textContent, tables: box.querySelectorAll("table").length };
+});
+check("the not-started state says so and invents no numbers",
+  /hasn't started/.test(ppEmpty.text) && ppEmpty.tables === 0 && !/%/.test(ppEmpty.text), ppEmpty.text.slice(0, 60));
+
+group("Race data: a season that was actually played");
+const race = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const season = D.DB.seasons.find(s => s.season === "2025");
+  const R = D.raceAsOf(season, 10);
+  // Nothing may be modelled from before the cut: the fixed record has to be
+  // exactly what happened through week 10.
+  const tally = gs => {
+    const w = new Map();
+    for (const g of gs) {
+      if (g.a.pts > g.b.pts) w.set(g.a.rid, (w.get(g.a.rid) || 0) + 1);
+      else if (g.b.pts > g.a.pts) w.set(g.b.rid, (w.get(g.b.rid) || 0) + 1);
+      else for (const s of [g.a, g.b]) w.set(s.rid, (w.get(s.rid) || 0) + 0.5);
+    }
+    return w;
+  };
+  const realW = tally(season.games.filter(g => !g.playoff && g.week <= 10)), fixedW = tally(R.decided);
+  const L = await D.raceData();
+  return {
+    recordsMatch: R.decided.length > 0 && season.rosters.every(r => (realW.get(r.roster_id) || 0) === (fixedW.get(r.roster_id) || 0)),
+    gamesLeft: R.upcoming.length,
+    // every remaining fixture must be a real one off Sleeper's schedule
+    scheduleReal: R.upcoming.every(g => season.games.some(x =>
+      x.week === g.week && ((x.a.rid === g.a && x.b.rid === g.b) || (x.a.rid === g.b && x.b.rid === g.a)))),
+    liveShape: ["ready", "why", "decided", "upcoming", "nextWeek"].filter(k => !(k in L)),
+    nextWeekOk: !L.upcoming.length || L.nextWeek === L.upcoming[0].week,
+  };
+});
+check("the fixed record is exactly what actually happened", race.recordsMatch);
+check("the remaining fixtures are the real schedule, not invented ones", race.scheduleReal && race.gamesLeft > 0, `${race.gamesLeft} games left`);
+check("raceData on the live season has ready, why, decided, upcoming and nextWeek", race.liveShape.length === 0, race.liveShape.join(","));
+check("raceData's nextWeek is the first upcoming game's week", race.nextWeekOk);
+
 group("Playoff Picture: the engine");
 const ppEng = await page.evaluate(async () => {
   const D = window.__DFFL, M = window.__ODDS;
@@ -1780,7 +1866,11 @@ const ppClinch = await page.evaluate(() => {
   // Z play each other, so only one can: only full enumeration sees that.
   const c = D.exactClinch({ teams: T([10, 6, 10, 4, 4, 0], [1, 1, 2, 2, 2, 1]),
     remaining: [[3, 4], [3, 5], [4, 5], [1, 5], [0, 2]], playoffTeams: 4, byes: 2 });
-  return { a, b, c };
+  // Half-wins on record: team 0 can still get in through a tied result, which a
+  // win-or-lose walk never visits.
+  const d = D.exactClinch({ teams: T([7, 7.5, 7.5, 12, 12, 12], [1, 2, 2, 3, 1, 2]),
+    remaining: [[0, 3], [1, 2]], playoffTeams: 4, byes: 2 });
+  return { a, b, c, d };
 });
 check("a runaway division leader has clinched the playoffs, division and bye",
   ppClinch.a[0].clinchedPlayoff && ppClinch.a[0].clinchedDiv && ppClinch.a[0].clinchedBye, JSON.stringify(ppClinch.a[0]));
@@ -1790,6 +1880,8 @@ check("a spot a points tiebreak decides is never claimed either way",
   JSON.stringify(ppClinch.b.slice(0, 2)));
 check("the untied division winner and the last-place team are still called", ppClinch.b[2].clinchedPlayoff && ppClinch.b[3].eliminated);
 check("enumeration clinches what the bounds can't", ppClinch.c[1].clinchedPlayoff && ppClinch.c[1].method === "enumeration", JSON.stringify(ppClinch.c[1]));
+check("with a tie on record, a team a tied result can still carry in is not eliminated",
+  !ppClinch.d[0].eliminated && ppClinch.d.every(c => c.method === "bounds"), JSON.stringify(ppClinch.d[0]));
 
 const pp13 = await page.evaluate(() => {
   const D = window.__DFFL;

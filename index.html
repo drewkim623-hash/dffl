@@ -5980,6 +5980,9 @@ function exactClinch({ teams, remaining, playoffTeams, byes }) {
   // Four weeks or fewer: walk every outcome for whoever the bounds left open.
   const m = remaining.length;
   if (m > ENUM_WEEKS * Math.floor(N / 2)) return out;
+  // A tie on record means a future game can also end tied, which the walk below
+  // (win or lose only) never visits: keep to the bounds, which stay sound.
+  if (teams.some(t => !Number.isInteger(t.w))) return out;
   const divOf = teams.map(t => t.div);
   // Does team i get a seed in standings W? `lenient` gives i every tie on wins,
   // otherwise it loses them all. Which rival wins a tied division doesn't
@@ -6067,7 +6070,8 @@ function pictureJob(model, live, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS) {
 /** The runs themselves. Self-contained: this function is also the worker's body. */
 function pictureRun(job) {
   const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss });
-  const main = pick(simulateSeason(job.model, job.sims, job.live));
+  // The live board's own run, when the caller already has it: only the what-ifs are new work.
+  const main = job.main || pick(simulateSeason(job.model, job.sims, job.live));
   const forced = job.games.map(([a, b]) => ({
     a, b,
     ifA: pick(simulateSeason(job.model, job.whatIfSims, job.live, { force: { a, b, winner: a } })),
@@ -6084,11 +6088,51 @@ function pictureWorkerSource() {
     seedField.toString(), simulateSeason.toString(), pictureRun.toString(),
     `onmessage = e => {
       let msg;
-      try { msg = { ok: true, out: pictureRun(e.data) }; }
-      catch (err) { msg = { ok: false, err: String((err && err.message) || err) }; }
+      try { msg = { id: e.data.id, ok: true, out: pictureRun(e.data.job) }; }
+      catch (err) { msg = { id: e.data.id, ok: false, err: String((err && err.message) || err) }; }
       postMessage(msg);
     };`,
   ].join("\n");
+}
+
+/*
+ * One worker for the life of the page, one job in it at a time. A job asked for
+ * while another is running waits as PP_NEXT, and a newer one replaces it, so
+ * live refreshes never pile up. A worker that goes quiet is thrown away.
+ */
+const PP_TIMEOUT = 20000;
+let PP_WORKER = null, PP_URL = null, PP_ID = 0, PP_CUR = null, PP_NEXT = null;
+
+function pictureWorker() {
+  if (PP_WORKER) return PP_WORKER;
+  PP_URL = URL.createObjectURL(new Blob([pictureWorkerSource()], { type: "text/javascript" }));
+  PP_WORKER = new Worker(PP_URL);
+  PP_WORKER.onmessage = e => {
+    const d = e.data || {}, j = PP_CUR;
+    if (!j || d.id !== j.id) return;   // a reply nobody is waiting on any more
+    clearTimeout(j.timer); PP_CUR = null;
+    d.ok ? j.resolve(d.out) : j.reject(new Error(d.err || "worker failed"));
+    pictureNext();
+  };
+  PP_WORKER.onerror = e => { if (e.preventDefault) e.preventDefault(); pictureWorkerDrop(new Error(e.message || "worker error")); };
+  return PP_WORKER;
+}
+
+/** Discard the worker; whatever it owed falls back to the main thread. */
+function pictureWorkerDrop(err) {
+  try { PP_WORKER && PP_WORKER.terminate(); } catch (_) {}
+  if (PP_URL) URL.revokeObjectURL(PP_URL);
+  PP_WORKER = PP_URL = null;
+  for (const j of [PP_CUR, PP_NEXT]) if (j) { clearTimeout(j.timer); j.reject(err); }
+  PP_CUR = PP_NEXT = null;
+}
+
+function pictureNext() {
+  if (PP_CUR || !PP_NEXT) return;
+  const j = PP_CUR = PP_NEXT; PP_NEXT = null;
+  try { pictureWorker().postMessage({ id: j.id, job: j.job }); }
+  catch (e) { pictureWorkerDrop(e); return; }
+  j.timer = setTimeout(() => pictureWorkerDrop(new Error("worker timed out")), PP_TIMEOUT);
 }
 
 function runPictureWorker(job) {
@@ -6096,15 +6140,9 @@ function runPictureWorker(job) {
     if (window.__PP_FORCE_MAIN) return reject(new Error("main thread forced"));
     if (typeof Worker === "undefined" || typeof Blob === "undefined" || !window.URL || !URL.createObjectURL)
       return reject(new Error("no worker support"));
-    let w, url;
-    const done = () => { try { w && w.terminate(); } catch (_) {} if (url) URL.revokeObjectURL(url); };
-    try {
-      url = URL.createObjectURL(new Blob([pictureWorkerSource()], { type: "text/javascript" }));
-      w = new Worker(url);
-    } catch (e) { done(); return reject(e); }
-    w.onmessage = e => { done(); e.data && e.data.ok ? resolve(e.data.out) : reject(new Error((e.data && e.data.err) || "worker failed")); };
-    w.onerror = e => { if (e.preventDefault) e.preventDefault(); done(); reject(new Error(e.message || "worker error")); };
-    w.postMessage(job);
+    if (PP_NEXT) PP_NEXT.reject(Object.assign(new Error("superseded by a newer job"), { superseded: true }));
+    PP_NEXT = { id: ++PP_ID, job, resolve, reject };
+    pictureNext();
   });
 }
 
@@ -6114,6 +6152,7 @@ function runPictureMain(job) { return { ...pictureRun(job), via: "main" }; }
 async function runPicture(job) {
   try { return { ...(await runPictureWorker(job)), via: "worker" }; }
   catch (e) {
+    if (e.superseded) throw e;
     if (!window.__PP_FORCE_MAIN) console.warn("Playoff Picture worker unavailable, running on the page:", e.message);
     return runPictureMain(job);
   }
@@ -6150,11 +6189,13 @@ function swingBoard(out) {
 
 /**
  * The whole tab's data: rules, standings, the runs, the what-ifs and the exact
- * clinch table. `main: true` skips the worker (tests compare the two).
+ * clinch table. `main: true` skips the worker (tests compare the two). `lsim`
+ * is the Odds tab's run on this same live state, reused rather than repeated.
  */
-async function computePicture(model, live, R, season, { main = false, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS } = {}) {
+async function computePicture(model, live, R, season, { main = false, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS, lsim = null } = {}) {
   const rules = leagueRules(season);
   const job = pictureJob(model, live, whatIfSims, sims);
+  if (lsim && lsim.sims === sims) job.main = { sims: lsim.sims, playoff: lsim.playoff, seed: lsim.seed, miss: lsim.miss };
   const out = main ? runPictureMain(job) : await runPicture(job);
   const N = live.teams.length;
   const L = new Array(N).fill(0), T = new Array(N).fill(0);
@@ -6180,6 +6221,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   }));
   return {
     rules, rows, clinch, out, via: out.via, sims: out.main.sims, whatIfSims,
+    tied: live.W0.some(w => !Number.isInteger(w)),
     swings: swingBoard(out), remaining: remaining.length,
     week: live.pending && live.pending.length ? live.liveWeek : (live.weeks[0] ? live.weeks[0].week : null),
     inFlight: !!(live.pending && live.pending.length),
@@ -6318,43 +6360,63 @@ function renderPicture(host, PP) {
        bracket is fixed, not reseeded. Division winners are seeded first, in record order, then the
        best records left — the rule DFFL's past seasons were actually seeded by.</p>
     <p><b>Clinched</b> and <b>eliminated</b> are not read off the simulation. They are worked out
-       exactly from the win totals still reachable${PP.remaining <= ENUM_WEEKS * Math.floor(rows.length / 2)
+       exactly from the win totals still reachable${!PP.tied && PP.remaining <= ENUM_WEEKS * Math.floor(rows.length / 2)
          ? ", and with this few weeks left every combination of remaining results is checked" : ""}.
        Points for can't be known in advance, so a spot that could come down to a points tiebreak is
-       never called clinched or eliminated.</p>
+       never called clinched or eliminated. When the league has a tied game on record, clinched and
+       eliminated are computed from the win bounds only — a half win makes more finishes possible
+       than the win-or-lose check walks.</p>
     <p><b>What-if</b> runs the season twice for each game this week, once with each side forced to win,
        ${PP.whatIfSims.toLocaleString()} times a side on the same random draws. Both scores are still drawn
        and swapped if the wrong side won, so forcing a result doesn't inflate anybody's points for.</p>`;
   host.appendChild(m);
 }
 
-let PICTURE_STARTED = false;
+let PICTURE_STARTED = false, PICTURE_SEQ = 0, PICTURE_DRAWN = false;
 async function ensurePicture() {
   if (PICTURE_STARTED) return;
   PICTURE_STARTED = true;
   const host = $("#pictureHost");
   if (!host) return;
+  await drawPicture(host);
+  // From here on the tab follows the live board: every reprice redraws it.
+  onLive(() => drawPicture(host));
+  startLivePolling();
+}
+
+/** One pass of the tab. Only the newest pass may paint; older ones drop out. */
+async function drawPicture(host) {
+  const seq = ++PICTURE_SEQ;
   try {
     const L = await liveOnce();
+    if (seq !== PICTURE_SEQ) return;
     const R = L.R;
     window.__RACEDATA = R;
     if (!L.live || R.why === "no-divisions" || R.why === "regular-season-over") {
       host.innerHTML = "";
       host.appendChild(pictureEmpty(R.why || (L.live ? null : "not-started"), L.season && L.season.season));
       document.body.dataset.pictureReady = "empty";
+      PICTURE_DRAWN = false;
       return;
     }
-    host.innerHTML = "";
-    host.appendChild(el("div", "empty", "<b>Calculating…</b>Simulating the rest of the season and every game this week both ways."));
-    const PP = await computePicture(L.model, L.live, R, L.season);
+    // A refresh keeps the last table up while it works.
+    if (!PICTURE_DRAWN) {
+      host.innerHTML = "";
+      host.appendChild(el("div", "empty", "<b>Calculating…</b>Simulating the rest of the season and every game this week both ways."));
+    }
+    const PP = await computePicture(L.model, L.live, R, L.season, { lsim: L.lsim });
+    if (seq !== PICTURE_SEQ) return;
     window.__PICTURE = {
       seed: PP.out.main.seed, miss: PP.out.main.miss, sims: PP.sims, via: PP.via,
       playoff: PP.rows.map(r => r.playoff), rids: PP.rows.map(r => r.rid),
       whatIf: PP.whatIf, clinch: PP.clinch, rules: PP.rules, swings: PP.swings,
     };
     renderPicture(host, PP);
+    PICTURE_DRAWN = true;
     document.body.dataset.pictureReady = "1";
   } catch (e) {
+    if (seq !== PICTURE_SEQ) return;
+    if (PICTURE_DRAWN) { console.error(e); return; }
     host.innerHTML = "";
     host.appendChild(el("div", "empty", `<b>Couldn't work out the playoff picture</b>${esc(e.message)}`));
     document.body.dataset.pictureReady = "error";
@@ -7187,7 +7249,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, computePicture, exactClinch, leagueRules, pictureJob, pictureRun,
+      ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
