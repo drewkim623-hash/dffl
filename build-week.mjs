@@ -13,6 +13,7 @@
  *
  *   node build-week.mjs            # the newest week that is really over
  *   node build-week.mjs --week 3   # a specific week, for backfill
+ *   node build-week.mjs --force    # write even if the week is not final
  *
  * Writes data/week-<season>-<week>.json and points data/latest.json at it.
  * Exits 0 and writes nothing when no week has finished yet, so the scheduled
@@ -21,13 +22,16 @@
  * A week is only written once it is final: every NFL game in it complete and
  * every league matchup scored (see week-final.mjs). If it is not, nothing is
  * written — latest.json stays where it was and the workflow has nothing of
- * ours to commit — and the script still exits 0. latest.json also carries
+ * ours to commit — and the script still exits 0, printing a GitHub ::warning::.
+ * --force writes anyway, marked final: false, which the send guard refuses.
+ * If Sleeper's schedule feed cannot be read, nothing is written either, and
+ * the rest of the workflow still runs. latest.json also carries
  * Sleeper's state as read at the time, `final`, and a `generated_at` UTC
  * timestamp, which is what the sending routine's "which week" check reads.
  */
 import { writeFile, mkdir } from "fs/promises";
 import { fetchJSON } from "./fetch-json.mjs";
-import { weekFinality, chooseTargetWeek, buildLatest } from "./week-final.mjs";
+import { weekFinality, chooseTargetWeek, buildLatest, foldWeekIntoStandings } from "./week-final.mjs";
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
@@ -45,6 +49,7 @@ const state = await get("state/nfl");
 const league = await get(`league/${LEAGUE}`);
 
 const forced = arg("--week");
+const force = process.argv.includes("--force");
 
 if (String(state.season) !== String(league.season)) {
   console.log(`Sleeper is in ${state.season}; the league is ${league.season}. Nothing written.`);
@@ -60,7 +65,17 @@ if (!forced && state.season_type !== "regular") {
 
 // Which games are over, from the same undocumented schedule feed the site's
 // live board and build-pulse.mjs read. See week-final.mjs for what it returns.
-const schedule = await fetchJSON(`https://api.sleeper.app/schedule/nfl/regular/${league.season}`, { label: "schedule" });
+// If it cannot be read, nobody can say whether the week is over: write
+// nothing and exit 0, so the rosters, injuries, pulse and odds steps still run.
+let schedule;
+try {
+  schedule = await fetchJSON(`https://api.sleeper.app/schedule/nfl/regular/${league.season}`, { label: "schedule" });
+} catch (e) {
+  console.log(`::warning::build-week: could not read Sleeper's schedule (${e.message}). `
+    + `Cannot tell whether the week is over, so nothing written; data/latest.json left as it was.`);
+  if (!force) process.exit(0);
+  schedule = [];
+}
 const matchupsFor = week => get(`league/${LEAGUE}/matchups/${week}`);
 
 // Sleeper used to be the whole rule here: it advances state.week once a week
@@ -77,7 +92,7 @@ if (forced) {
   if (Number.isFinite(stateWeek) && stateWeek >= 1) {
     cache.set(stateWeek, await matchupsFor(stateWeek));
   }
-  const current = weekFinality({ week: stateWeek, schedule, matchups: cache.get(stateWeek) || [] });
+  const current = weekFinality({ week: stateWeek, schedule, matchups: cache.get(stateWeek) || [], stateWeek });
   target = chooseTargetWeek({ stateWeek, stateWeekFinal: current.final });
   if (current.final) console.log(`Sleeper still calls week ${stateWeek} current, but it is over: building it now.`);
 }
@@ -88,10 +103,15 @@ if (!Number.isFinite(target) || target < 1) {
 }
 
 const matchups = cache.has(target) ? cache.get(target) : await matchupsFor(target);
-const finality = weekFinality({ week: target, schedule, matchups });
+const finality = weekFinality({ week: target, schedule, matchups, stateWeek });
 if (!finality.final) {
-  console.log(`Week ${target} is not final: ${finality.reason}. data/latest.json left as it was; nothing written.`);
-  process.exit(0);
+  console.log(`::warning::build-week: week ${target} is not final: ${finality.reason}.`);
+  if (!force) {
+    console.log(`Week ${target} is not final. data/latest.json left as it was; nothing written.`);
+    process.exit(0);
+  }
+  console.log(`::warning::build-week --force: WRITING WEEK ${target} ANYWAY, marked final: false. `
+    + `The send guard (recap-guard.mjs) will refuse it until a normal run marks it final.`);
 }
 
 const [users, rosters, txns, players] = await Promise.all([
@@ -203,11 +223,19 @@ const marquee = {
 };
 
 // Sleeper posts a week into the team records when it flips state.week, not
-// when the last game ends. Built in that gap, the standings are one game
-// behind the games above them, and this says so rather than letting a writer
-// quote a record that is about to change. (In the playoffs it stops at the
-// last regular-season week anyway, because Sleeper's records do.)
-const standingsThrough = Math.max(0, ...standings.map(s => s.wins + s.losses + s.ties));
+// when the last game ends. Built in that gap (1 AM Tuesday, usually), the
+// standings are one game behind the games above them; fold the week in when
+// that is plainly all that is missing, and say how far they run either way.
+// (In the playoffs they stop at the last regular-season week, as Sleeper's do.)
+const isPlayoffs = target >= (league.settings.playoff_week_start || 15);
+const fold = foldWeekIntoStandings({
+  standings, games, week: target, isPlayoffs,
+  medianMatch: !!(league.settings && Number(league.settings.league_average_match)),
+});
+const standingsThrough = fold.through;
+if (fold.folded) console.log(`  standings: ${fold.reason}`);
+else if (standingsThrough < target && !isPlayoffs)
+  console.log(`::warning::build-week: standings run through week ${standingsThrough}, not ${target}, and could not be folded: ${fold.reason}`);
 
 const generatedAt = new Date().toISOString();
 const out = {
@@ -219,11 +247,12 @@ const out = {
   week: target,
   generated: generatedAt,
   generated_at: generatedAt,
-  final: true,
+  final: finality.final,
   standings_through_week: standingsThrough,
+  standings_folded: fold.folded,
   league: { id: LEAGUE, name: league.name, playoff_week_start: league.settings.playoff_week_start },
-  is_playoffs: target >= (league.settings.playoff_week_start || 15),
-  games, standings, transactions, marquee,
+  is_playoffs: isPlayoffs,
+  games, standings: fold.standings, transactions, marquee,
 };
 
 await mkdir("data", { recursive: true });
@@ -237,9 +266,8 @@ await writeFile("data/latest.json", JSON.stringify(buildLatest({
   },
 }), null, 1) + "\n");
 
-console.log(`${file} — week ${target}, ${games.length} games, ${transactions.length} transactions, final`);
+console.log(`${file} — week ${target}, ${games.length} games, ${transactions.length} transactions, `
+  + (finality.final ? "final" : "NOT FINAL (--force)"));
 console.log(`  Sleeper state: week ${state.week}, leg ${state.leg}, display_week ${state.display_week}, ${state.season_type}`);
-if (standingsThrough < target && !out.is_playoffs)
-  console.log(`  standings run through week ${standingsThrough}: Sleeper has not posted week ${target} into the records yet`);
 console.log(`  marquee: ${marquee.high.manager} ${marquee.high.points} high · `
   + `${marquee.closest.winner} by ${marquee.closest.margin} closest`);

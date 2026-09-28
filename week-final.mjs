@@ -21,6 +21,13 @@
  * open; anything else that is not "complete" does, including statuses nobody
  * has seen yet. When in doubt, the week is not over.
  *
+ * Points: while a week is still the one Sleeper calls current, 0 (or null)
+ * means "not scored yet" — that is what every matchup reads before kickoff.
+ * Once Sleeper has moved past the week and all its games are done, any finite
+ * number counts, 0 and negatives included: an empty lineup or a brutal week
+ * is a real result, and treating it as unscored would stall the week forever.
+ * null, missing or non-numeric points never count.
+ *
  * Pure: no network, no files, nothing at import time. build-week.mjs does the
  * fetching; test-week-final.mjs covers the cases.
  */
@@ -32,10 +39,12 @@ const DONE = new Set(["complete", "canceled", "cancelled"]);
  * @param {number} p.week                 the week in question
  * @param {Array}  p.schedule             Sleeper's regular-season schedule (all weeks)
  * @param {Array}  p.matchups             /league/<id>/matchups/<week>
- * @returns {{final: boolean, reason: string, nfl: object, league: object}}
+ * @param {number} [p.stateWeek]          Sleeper's state.week, if known
+ * @returns {{final: boolean, past: boolean, reason: string, nfl: object, league: object}}
  */
-export function weekFinality({ week, schedule, matchups }) {
+export function weekFinality({ week, schedule, matchups, stateWeek }) {
   const w = Number(week);
+  const sw = stateWeek === null || stateWeek === undefined || stateWeek === "" ? NaN : Number(stateWeek);
   const games = (Array.isArray(schedule) ? schedule : []).filter(g => g && Number(g.week) === w);
   const pending = games.filter(g => !DONE.has(String(g.status)));
   const nfl = {
@@ -48,8 +57,11 @@ export function weekFinality({ week, schedule, matchups }) {
   // Only entries with a matchup_id are games. A team with none (a playoff bye,
   // an eliminated team) is not waiting on anything.
   const entries = (Array.isArray(matchups) ? matchups : []).filter(e => e && e.matchup_id != null);
-  const scored = e => e.points !== null && e.points !== undefined && e.points !== ""
-    && Number.isFinite(Number(e.points)) && Number(e.points) > 0;
+  // In the past: Sleeper has moved beyond the week and every game in it is done.
+  const past = Number.isFinite(sw) && Number.isInteger(w) && sw > w && games.length > 0 && pending.length === 0;
+  const numeric = e => e.points !== null && e.points !== undefined && e.points !== ""
+    && typeof e.points !== "boolean" && Number.isFinite(Number(e.points));
+  const scored = e => numeric(e) && (past || Number(e.points) > 0);
   const unscored = entries.filter(e => !scored(e));
   const league = {
     entries: entries.length,
@@ -57,13 +69,13 @@ export function weekFinality({ week, schedule, matchups }) {
     unscored: unscored.map(e => `roster ${e.roster_id} (${e.points === undefined ? "no points" : e.points})`),
   };
 
-  const out = (final, reason) => ({ final, reason, nfl, league });
+  const out = (final, reason) => ({ final, past, reason, nfl, league });
   if (!Number.isInteger(w) || w < 1) return out(false, `week ${week} is not a real week`);
   if (!games.length) return out(false, `Sleeper's schedule lists no NFL games for week ${w}`);
   if (pending.length) return out(false, `${pending.length} of ${games.length} NFL games in week ${w} are not complete: ${nfl.pending.join(", ")}`);
   if (!entries.length) return out(false, `the league has no matchups for week ${w}`);
-  // Zero counts as unrecorded. A full lineup that genuinely scores 0.00 does
-  // not happen; a matchup Sleeper has not scored yet reads 0 all the time.
+  // In the current week, zero counts as unrecorded: a matchup Sleeper has not
+  // scored yet reads 0 all the time. Once the week is past, only non-numbers do.
   if (unscored.length) return out(false, `${unscored.length} of ${entries.length} league matchup entries in week ${w} have no points: ${league.unscored.join(", ")}`);
   return out(true, `all ${games.length} NFL games in week ${w} are over and all ${entries.length} league entries are scored`);
 }
@@ -118,4 +130,53 @@ export function buildLatest({ season, week, file, generatedAt, state, final, fin
 function numOrNull(v) {
   const n = Number(v);
   return v === null || v === undefined || v === "" || !Number.isFinite(n) ? null : n;
+}
+
+const round2 = n => Math.round(n * 100) / 100;
+
+/**
+ * Fold a finished week into standings that are exactly one week behind.
+ *
+ * Sleeper posts a week into the team records when it flips state.week, not
+ * when the last game ends, so a week built in that gap carries standings one
+ * game short. When — and only when — that is plainly what happened, add the
+ * week's results: every team one game behind, every team in exactly one game
+ * this week, not a playoff week, and no league-median game (which Sleeper
+ * scores as a second result nobody here can see). Anything else is left
+ * exactly as Sleeper had it.
+ *
+ * @returns {{standings: Array, through: number, folded: boolean, reason: string}}
+ */
+export function foldWeekIntoStandings({ standings, games, week, isPlayoffs = false, medianMatch = false }) {
+  const rows = (Array.isArray(standings) ? standings : []).map(s => ({ ...s }));
+  const played = s => (Number(s.wins) || 0) + (Number(s.losses) || 0) + (Number(s.ties) || 0);
+  const through = rows.length ? Math.max(...rows.map(played)) : 0;
+  const w = Number(week);
+  const keep = reason => ({ standings: rows, through, folded: false, reason });
+
+  if (!rows.length) return keep("no standings");
+  if (through >= w) return keep(`standings already run through week ${through}`);
+  if (isPlayoffs) return keep("playoff weeks do not change the records");
+  if (medianMatch) return keep("the league also plays the median, which only Sleeper can score");
+  if (rows.some(s => played(s) !== w - 1)) return keep(`not every team is exactly one game behind week ${w}`);
+
+  const byRid = new Map(rows.map(s => [s.roster_id, s]));
+  const seen = new Map();
+  for (const g of games || []) for (const sd of (g && g.sides) || []) seen.set(sd.roster_id, (seen.get(sd.roster_id) || 0) + 1);
+  if (seen.size !== rows.length || rows.some(s => seen.get(s.roster_id) !== 1))
+    return keep(`not every team has exactly one game in week ${w}`);
+  const pts = sd => (sd.points === null || sd.points === undefined || sd.points === "" ? NaN : Number(sd.points));
+  if ((games || []).some(g => g.sides.length !== 2 || !g.sides.every(sd => Number.isFinite(pts(sd)))))
+    return keep(`a week ${w} game has no usable score`);
+
+  for (const g of games) {
+    const [a, b] = g.sides, A = byRid.get(a.roster_id), B = byRid.get(b.roster_id);
+    const pa = pts(a), pb = pts(b);
+    for (const r of [A, B]) { r.wins = Number(r.wins) || 0; r.losses = Number(r.losses) || 0; r.ties = Number(r.ties) || 0; }
+    if (pa > pb) { A.wins++; B.losses++; } else if (pb > pa) { B.wins++; A.losses++; } else { A.ties++; B.ties++; }
+    A.points_for = round2((Number(A.points_for) || 0) + pa); A.points_against = round2((Number(A.points_against) || 0) + pb);
+    B.points_for = round2((Number(B.points_for) || 0) + pb); B.points_against = round2((Number(B.points_against) || 0) + pa);
+  }
+  rows.sort((x, y) => y.wins - x.wins || y.points_for - x.points_for);
+  return { standings: rows, through: w, folded: true, reason: `week ${w} folded in from its games; Sleeper had not posted it yet` };
 }
