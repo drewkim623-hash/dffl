@@ -10,7 +10,10 @@
 # in the repo as plain JSON; the routine clones the repo and writes prose from
 # the file without touching the network at all.
 #
-# Tuesday morning: build the week that just finished, and refresh injuries.
+# Tuesday just after midnight: build the week that just finished, and refresh
+# injuries. build-week.mjs only moves data/latest.json once every NFL game that
+# week is complete and every league matchup is scored; until then it writes
+# nothing and exits 0, so an early run is harmless.
 # Sunday late morning: refresh injuries only, after the inactive reports land
 # and before the one o'clock games kick off.
 
@@ -18,7 +21,18 @@ name: Weekly data
 
 on:
   schedule:
-    - cron: "30 12 * * 2"   # Tue 08:30 America/New_York — before the recap job at 13:00 UTC
+    # Tuesday build, for the recap routine at 01:00 ET. Cron is UTC and does not
+    # follow daylight saving, so there are two entries on purpose:
+    #   04:30 UTC = 00:30 EDT (until 1 Nov 2026) but 23:30 EST Monday after it,
+    #               which can be before Monday night's game is over;
+    #   05:30 UTC = 01:30 EDT, or 00:30 EST once the clocks go back.
+    # Whichever one runs after the week is final writes it; the other finds the
+    # week not final yet (nothing written) or rebuilds the same final week, and
+    # rebuilding only refreshes timestamps — the same thing the daily 07:00 run
+    # does every day. In EST the 05:30 run is the one the 01:00 routine reads;
+    # in EDT the 04:30 run is, and the 05:30 one lands after the send.
+    - cron: "30 4 * * 2"    # Tue 00:30 EDT / Mon 23:30 EST
+    - cron: "30 5 * * 2"    # Tue 01:30 EDT / Tue 00:30 EST
     - cron: "30 15 * * 0"   # Sun 11:30 America/New_York — inactives are in, kickoff is not
     - cron: "0 11 * * *"    # daily 07:00 America/New_York — keeps the story watch current
     - cron: "0 22 * * 6"    # Sat 18:00 America/New_York — an hour before the blast goes out
