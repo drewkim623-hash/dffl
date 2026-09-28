@@ -1,0 +1,42 @@
+{
+ "home-1280": {
+  "sleeperWeek": 2,
+  "effectiveWeek": 3,
+  "liveWeek": 3,
+  "liveWeeks": [
+   3
+  ],
+  "week2InBook": 6,
+  "foot": "Currently NFL 2026, week 3."
+ },
+ "matchups-1280": {
+  "sleeperWeek": 2,
+  "effectiveWeek": 3,
+  "liveWeek": 3,
+  "liveWeeks": [
+   3
+  ],
+  "week2InBook": 6,
+  "foot": "Currently NFL 2026, week 3."
+ },
+ "home-390": {
+  "sleeperWeek": 2,
+  "effectiveWeek": 3,
+  "liveWeek": 3,
+  "liveWeeks": [
+   3
+  ],
+  "week2InBook": 6,
+  "foot": "Currently NFL 2026, week 3."
+ },
+ "matchups-390": {
+  "sleeperWeek": 2,
+  "effectiveWeek": 3,
+  "liveWeek": 3,
+  "liveWeeks": [
+   3
+  ],
+  "week2InBook": 6,
+  "foot": "Currently NFL 2026, week 3."
+ }
+}
