@@ -39,9 +39,10 @@ to fix the Action, not to fetch.
 Everything is already resolved to names. No ids need looking up, and nothing needs a second source.
 
 One catch in the week file: Sleeper posts a week into the team records when it advances its week,
-which is hours after Monday night's game ends. If `standings_through_week` is less than `week`, the
-`standings` block is one game behind the games above it. Do not quote a record or points-for from
-it; the games themselves are final and correct.
+which is hours after Monday night's game ends. When the standings are exactly one week behind,
+`build-week.mjs` folds the week's results in itself (`standings_folded: true`). If
+`standings_through_week` is still less than `week`, the `standings` block is behind the games above
+it: do not quote a record or points-for from it. The games themselves are final and correct.
 
 ## What the job writes
 
@@ -124,18 +125,24 @@ A new recap goes out only if **all four** of these hold:
    matchup has points.
 2. Sleeper's week as recorded in `latest.json` (`sleeper_state.week`) is `latest.week + 1`, or is
    still `latest.week` while `final` is true. Sleeper advances its week hours after Monday night's
-   game ends: after week 2 it still said week 2 at midnight and said week 3 by 7 AM. At 1 AM it
-   usually has not moved yet, so "still the same week, and final" has to count. Anything else
-   means the file is stale.
+   game ends: after weeks 1 and 2 it moved sometime between about midnight and 7 AM. At 1 AM it
+   usually has not moved yet, so "still the same week, and final" has to count. The site and the
+   email build use the same rule (`effective-week.mjs`): once `latest.json` marks the week final,
+   they treat it as finished and the email is titled for the next week. Anything else means the
+   file is stale.
 3. `generated_at` in `latest.json` is less than 12 hours old. Use that field, not the file's date:
-   modification times in a git checkout mean nothing.
+   modification times in a git checkout mean nothing. Be clear about what this proves: once the
+   previous week is final, every run of the Action rewrites `latest.json` and refreshes
+   `generated_at`, even while Monday night's game is still being played. So this check only
+   proves the Action ran recently. It is not what stops a duplicate.
 4. That recap week (`latest.season`, `latest.week`) is not already logged in
-   `data/sent-emails.json`.
+   `data/sent-emails.json`. This, and recording every send, is the real guard against sending
+   the same recap twice.
 
-Exit **0**: go ahead. Exit **1**: **send nothing** and write no recap. Say in your final message
+Exit **0**: go ahead. If `recaps.json` already has this week, don't write a second recap: use the
+one that is there. Exit **1**: **send nothing** and write no recap. Say in your final message
 which condition failed (the script prints it). Do not work around it: no hand edits to
-`latest.json`, no `--week`, no reaching for Sleeper. Once the Action has caught up (it runs again
-at 7 AM), the routine can be run again by hand and will pass.
+`latest.json`, no `--week`, no reaching for Sleeper.
 
 The Tuesday recap always runs this check. The midweek story watch and the Saturday blast do not
 write recaps; they run it only when `node blast-status.mjs` shows the recap they would carry is

@@ -104,7 +104,15 @@ export function resolveRecapWeek({ recaps, weekArg, seasonArg, noRecap = false, 
  *           season, behind latest — fails.
  *   fresh   generated_at is under maxAgeHours old (12 by default). File
  *           mtimes in a git checkout mean nothing; only this timestamp does.
+ *           It refreshes on every Action run once the previous week is final
+ *           — including during Monday night's game — so it proves the Action
+ *           ran recently, nothing more.
  *   unsent  that recap week is not already logged in data/sent-emails.json.
+ *           This, with every send recorded, is what actually stops a repeat.
+ *
+ * The same "Sleeper hasn't flipped but the week is final" reading is what the
+ * site and the email build use (effective-week.mjs), so an email sent on the
+ * strength of rule 2's second branch is already titled for the next week.
  *
  * Returns every condition with ok and a sentence, so the routine can say
  * exactly which one failed. Pure: pass the parsed files and the time.
