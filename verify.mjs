@@ -2162,6 +2162,53 @@ if (ledgerFile.missing) {
   }
 }
 
+/* The Tuesday build and the "which week" guard. The unit tests run in node;
+ * the prompt and the workflow are read as text. Nothing here requires today's
+ * data/latest.json to carry final or generated_at yet — files written before
+ * build-week.mjs learned to add them still pass, and the guard just says hold. */
+{
+  const { spawnSync } = await import("node:child_process");
+  const node = args => spawnSync(process.execPath, args, { cwd: ROOT, encoding: "utf8", timeout: 60000 });
+  for (const [file, name] of [
+    ["test-email-week.mjs", "the ledger-week and send-guard unit tests pass"],
+    ["test-week-final.mjs", "the week-finality unit tests pass"],
+  ]) {
+    const r = node(["--test", file]);
+    const m = /# pass (\d+)[\s\S]*?# fail (\d+)/.exec(r.stdout || "");
+    check(name, r.status === 0, m ? `${m[1]} pass, ${m[2]} fail` : String(r.stderr || r.error || "").slice(0, 200));
+  }
+
+  const prompt = await readFile(join(ROOT, "weekly-job-prompt.md"), "utf8");
+  const recordCmd = (prompt.match(/node blast-status\.mjs --record[^`]*/) || [""])[0];
+  check("the prompt's record command passes neither --season nor --week",
+    !!recordCmd && !/--(season|week)\b/.test(recordCmd), recordCmd.replace(/\s+/g, " ").slice(0, 140));
+  check("the prompt still says a refused --record means the email already went out",
+    /If `--record` exits 2, the\s+email has already been sent\. Do not send it again\./.test(prompt));
+  check("the prompt carries the which-week guard",
+    /node recap-guard\.mjs/.test(prompt) && /"final": true/.test(prompt) && /latest\.week \+ 1/.test(prompt)
+      && /generated_at/.test(prompt) && /12 hours/.test(prompt) && /data\/sent-emails\.json/.test(prompt)
+      && /send nothing/i.test(prompt));
+
+  const wf = await readFile(join(ROOT, ".github/workflows/weekly-data.yml"), "utf8");
+  const crons = [...wf.matchAll(/cron:\s*"([^"]+)"/g)].map(m => m[1]);
+  check("the Tuesday build runs just after midnight ET in both EDT and EST",
+    crons.includes("30 4 * * 2") && crons.includes("30 5 * * 2") && !crons.includes("30 12 * * 2"), crons.join(" | "));
+
+  const g = node(["recap-guard.mjs", "--json"]);
+  let verdict = null;
+  try { verdict = JSON.parse(g.stdout); } catch {}
+  check("the send guard reads the real latest.json and ledger and names all four conditions",
+    (g.status === 0 || g.status === 1) && verdict && verdict.checks.length === 4 && verdict.ok === (g.status === 0),
+    verdict ? (verdict.ok ? "would send" : `would hold: ${verdict.failed.join(", ")}`) : String(g.stderr).slice(0, 200));
+
+  const latestNow = JSON.parse(await readFile(join(ROOT, "data/latest.json"), "utf8"));
+  check("latest.json's new fields, where present, are well-formed",
+    !("generated_at" in latestNow) || (Number.isFinite(Date.parse(latestNow.generated_at))
+      && typeof latestNow.final === "boolean" && !!latestNow.sleeper_state
+      && Number.isFinite(Number(latestNow.sleeper_state.week))),
+    "generated_at" in latestNow ? `${latestNow.generated_at}, final ${latestNow.final}` : "not written by the new build-week yet");
+}
+
 group("Injuries");
 
 const injFile = await page.evaluate(async () => {
