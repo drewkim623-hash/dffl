@@ -1372,6 +1372,70 @@ check("a headline is text, whatever it contains", /<img/.test(artSafe.headlineIs
 check("headings take no markup at all", artSafe.headingHasNoTags === 0);
 check("an unknown block type is dropped rather than guessed at", artSafe.unknownDropped === 2, `${artSafe.unknownDropped}`);
 
+const covers = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  const panel = await D.panelRecaps();
+  document.body.appendChild(panel);
+  const teasers = [...panel.querySelectorAll(".teaser")];
+  const out = {
+    teasers: teasers.length,
+    drawn: teasers.filter(t => t.querySelectorAll(".cover svg").length === 1 &&
+      [...t.querySelectorAll(".cover svg text")].some(x => x.textContent.trim())).length,
+    fallbacks: panel.querySelectorAll(".cfall").length,
+    fills: [...new Set([...panel.querySelectorAll(".cover svg text")].map(x => x.getAttribute("fill")))],
+  };
+  panel.remove();
+  const arts = ((await (await fetch("recaps.json", { cache: "no-cache" })).json()).articles || []);
+  // Same article, fresh object, empty cache: the same bytes.
+  out.deterministic = arts.every(a => {
+    const s = D.coverSVG(a, false) + D.coverSVG(a, true);
+    D.coverSVG.cache.clear();
+    return D.coverSVG(structuredClone(a), false) + D.coverSVG(structuredClone(a), true) === s;
+  });
+  const svgs = arts.flatMap(a => [D.coverSVG(a, false), D.coverSVG(a, true)]);
+  out.distinct = new Set(svgs).size === svgs.length;
+  out.kinds = new Set(arts.map(D.coverKind)).size;
+  out.pairs = new Set(arts.map(a => { const p = D.COVER_PALETTE[D.coverKind(a)]; return p.from + p.to; })).size;
+  // WCAG contrast of both text colours on every gradient stop.
+  const lum = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map(v => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)
+    .reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+  const ratio = (x, y) => { const [hi, lo] = [lum(x), lum(y)].sort((p, q) => q - p); return (hi + .05) / (lo + .05); };
+  out.worst = Math.min(...Object.values(D.COVER_PALETTE).flatMap(p => [p.from, p.to])
+    .flatMap(s => [ratio("#ffffff", s), ratio("#c6c5cf", s)]));
+  const trade = { slug: "verify-trade", season: "2026", date: "2026-10-01", headline: "A Trade", blocks: [],
+    cover: { trade: { a: "drewkim", b: "moseslin", aGets: ["Bijan Robinson"], bGets: ["Ja'Marr Chase", "a 2027 1st"] } } };
+  const tsvg = D.coverSVG(trade, false);
+  out.trade = D.coverKind(trade) === "trade" && /data-layout="trade"/.test(tsvg) &&
+    /drewkim/.test(tsvg) && /moseslin/.test(tsvg) && /Bijan Robinson/.test(tsvg);
+  const evil = { season: "2026", date: "2026-01-01", headline: "<img src=x onerror=alert(1)>",
+    kicker: "<b>k</b>", cover: { players: ["not-a-player"] }, blocks: [] };
+  const esvg = D.coverSVG(evil, false) + D.coverSVG(evil, true);
+  const box = document.createElement("div");
+  box.innerHTML = esvg;
+  out.evilSafe = !/<img|<script/i.test(esvg) && box.querySelectorAll("img,script").length === 0 &&
+    ![...box.querySelectorAll("*")].some(n => [...n.attributes].some(at => /^on/i.test(at.name)));
+  out.evilAsText = /&lt;img/i.test(esvg);
+  const bare = arts.find(a => !a.cover);
+  if (bare) {
+    const node = D.articleCard(bare, true);
+    document.body.appendChild(node);
+    out.bareHero = node.querySelectorAll(".cover.big svg").length;
+    node.remove();
+  }
+  return out;
+});
+check("every teaser draws one cover with words on it, and no fallback plates",
+  covers.drawn === covers.teasers && covers.teasers > 0 && covers.fallbacks === 0,
+  `${covers.drawn} of ${covers.teasers} drawn, ${covers.fallbacks} fallbacks`);
+check("cover text is only white or --ink-2", covers.fills.every(f => f === "#ffffff" || f === "#c6c5cf"), covers.fills.join(" "));
+check("covers are deterministic and no two alike", covers.deterministic && covers.distinct && (covers.kinds >= 4 || covers.pairs >= 4),
+  `${covers.kinds} kinds, ${covers.pairs} gradients`);
+check("every cover gradient stop reads at 4.5:1 for both text colours", covers.worst >= 4.5, covers.worst.toFixed(2));
+check("a trade draws the trade layout", covers.trade);
+check("markup in a headline is escaped into the cover, not run", covers.evilSafe && covers.evilAsText);
+check("an article with no cover field still gets a hero cover", covers.bareHero === 1, `${covers.bareHero}`);
+
 const noArt = await page.evaluate(async () => {
   const D = window.__DFFL;
   const realFetch = window.fetch;
