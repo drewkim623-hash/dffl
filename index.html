@@ -8,7 +8,8 @@
 <meta name="theme-color" content="#0b0b0f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"></noscript>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0f'/%3E%3Ctext x='16' y='23' font-family='system-ui,sans-serif' font-size='16' font-weight='800' fill='%233987e5' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -833,8 +834,8 @@
   main.wrap{padding-top:20px;padding-bottom:90px}
   @media(min-width:760px){
     body{font-size:15px}
-    .wrap{padding:0 max(24px,env(safe-area-inset-left))}
-    nav.tabs .wrap::after{right:max(24px,env(safe-area-inset-left))}
+    .wrap{padding:0 max(24px,env(safe-area-inset-right)) 0 max(24px,env(safe-area-inset-left))}
+    nav.tabs .wrap::after{right:max(24px,env(safe-area-inset-right))}
   }
 
   /* tabs: opaque surface bar, underline for the active tab */
@@ -881,21 +882,18 @@
   .mcard .rec,.mcard .pc{white-space:nowrap}
   /* Poppins has no tabular figures: stacked number columns go to mono */
   td.num,.h2h td.cell,.ws .wp,.gside .gp,.lside .lpts,.tside .net,.irow .cost,.mrow .mrk,.mrow .mdl,
-  .mcard .rec,.mcard .pc{font-family:var(--mono)}
+  .mcard .rec,.mcard .pc,.tile .v,.rec .v,.cscore .big,.fleece .v,.chip .cv,.pwrow .pr,.mv,.rowc .pos,
+  .wchip,.bmv .bp,.bmv .bd,.dboard .brd,.dboard .bc .no,.dp .rd,.dp .pts,.dh .tot,.ms b,.livestrip b,
+  .aw .n,.bigg .side .sw,.astat .n,.tline .pp,.wkchart .n,.bar .v,.divbar .v{font-family:var(--mono)}
   /* heavy display numbers stay SemiBold, not Black */
   .tile .v,.rec .v,.cscore .big,.fleece .v,.astat .n,.phead .nm,.artl h2{letter-spacing:-.02em}
 
-  /* colored small text keeps its original weight */
-  .mv,.ws .wp,.gside .gp,.lside .lpts,.mrow .mdl,.wchip,.badge,.irow .st,.irow .cost,.bpl,.oflag,
-  .pos-dot,.teaser .more,.tside .net,.atl .ic,.dh .tot{font-weight:800}
-  .chip .cv,.dboard .bc .via,.viax{font-weight:750}
-  .price .o,.verd,.ak,.ahead .ae,.bigg .k,.fleece .k,.champbar .k,.notice .nt,.bhead .hold,.mode .pill,
-  .gfoot a,.board.live .bhead .stamp,.bmv .bd{font-weight:700}
-  .dboard .bc .no .k,.dp .nm .k,details.gloss summary::before{font-weight:900}
-  .mcard .go{font-weight:650}
+  b,strong{font-weight:600}
 
   /* tables inside a card: sentence-case headers, 1px row dividers, ~50px rows */
-  .card{padding:4px 16px}
+  .card:has(table){padding:4px 0}
+  .card th:first-child,.card td:first-child{padding-left:16px}
+  .card th:last-child,.card td:last-child{padding-right:16px}
   th{font-size:13px;font-weight:500;color:var(--ink-2);text-transform:none;letter-spacing:0;
     background:var(--surface);padding:12px}
   th:first-child{background:var(--surface)}
@@ -914,7 +912,8 @@
   #homeWeek .wstrip .wgame:first-child{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
     column-gap:8px;padding:20px 16px 16px;color:#fff;
     background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 75%,#000),color-mix(in srgb,var(--violet) 75%,#000))}
-  #homeWeek .wstrip .wgame:first-child::before{content:"–" / "";grid-column:2;grid-row:1;align-self:start;
+  .wdash{display:none}
+  #homeWeek .wstrip .wgame:first-child .wdash{display:block;grid-column:2;grid-row:1;align-self:start;
     line-height:40px;font-size:20px;font-weight:600;color:#fff}
   #homeWeek .wstrip .wgame:first-child .ws:first-child{grid-column:1;grid-row:1}
   #homeWeek .wstrip .wgame:first-child .ws + .ws{grid-column:3;grid-row:1}
@@ -930,13 +929,22 @@
   #homeWeek .wstrip .wgame:first-child .ws + .ws .wp{justify-self:start}
   #homeWeek .wstrip .wgame:first-child .wchip{grid-area:ch;justify-self:start;color:#fff;background:rgba(0,0,0,.3)}
   #homeWeek .wstrip .wgame:first-child .ws + .ws .wchip{justify-self:end}
+  #homeWeek .wstrip .wgame:first-child .ws.win .wp,#homeWeek .wstrip .wgame:first-child .ws.lead .wp{background:var(--plane);padding:2px 8px;border-radius:var(--rs)}
+  #homeWeek .wstrip .wgame:first-child .ws.win .wp{color:var(--blue)}
+  #homeWeek .wstrip .wgame:first-child .ws.lead .wp{color:var(--gold)}
+  #homeWeek .wstrip .wgame:first-child .wchip.ahead{color:var(--plus);background:var(--plane)}
+  #homeWeek .wstrip .wgame:first-child .wchip.behind{color:var(--red);background:var(--plane)}
+  @media(max-width:479px){
+    #homeWeek .wstrip .wgame:first-child .ws{grid-template-areas:"wp wp" "av wn" "ch ch"}
+    #homeWeek .wstrip .wgame:first-child .ws + .ws{grid-template-areas:"wp wp" "wn av" "ch ch"}
+  }
   #homeWeek .wstrip .wgame:first-child .wf{grid-column:1/-1;background:none;color:#fff;text-align:center;
     font-size:12px;padding:14px 0 0}
   @media(min-width:760px){
     #homeWeek .wstrip .wgame:first-child{padding:24px max(24px,calc(50% - 300px)) 18px;column-gap:16px}
     #homeWeek .wstrip .wgame:first-child .ws{column-gap:16px}
     #homeWeek .wstrip .wgame:first-child .av{width:52px;height:52px}
-    #homeWeek .wstrip .wgame:first-child::before{line-height:52px;font-size:24px}
+    #homeWeek .wstrip .wgame:first-child .wdash{line-height:52px;font-size:24px}
     #homeWeek .wstrip .wgame:first-child .wp{font-size:32px}
   }
 
@@ -1487,7 +1495,16 @@ function sechead(title, sub, action) {
   if (action) {
     const b = el("button", "seeall", esc(action.label || "See all"));
     b.type = "button";
-    b.onclick = () => show(action.tab);
+    if (action.name) b.setAttribute("aria-label", "See all: " + action.name);
+    b.onclick = () => {
+      show(action.tab);
+      const panel = $(`[data-panel="${action.tab}"]`);
+      const target = (panel && panel.querySelector(".sechead h2")) || panel;
+      if (target) { target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: true }); }
+      const tb = $(`#tabs [data-tab="${action.tab}"]`);
+      if (tb) tb.scrollIntoView({ block: "nearest", inline: "nearest" });
+      tabHint();
+    };
     h.insertBefore(b, h.querySelector("p"));
   }
   return h;
@@ -1545,6 +1562,7 @@ function buildTabs() {
     bar.appendChild(b);
   });
   tabHint();
+  document.fonts && document.fonts.ready.then(tabHint);
   if (!bar.dataset.hint) {
     bar.dataset.hint = "1";
     bar.addEventListener("scroll", tabHint, { passive: true });
@@ -1631,7 +1649,7 @@ function weekStrip(w) {
         <span class="wp">${f2(s.pts)}</span></span>`;
     };
     const margin = Math.abs(game.a.pts - game.b.pts);
-    card.innerHTML = side(game.a) + side(game.b) +
+    card.innerHTML = side(game.a) + side(game.b) + `<span class="wdash" aria-hidden="true">–</span>` +
       `<span class="wf">${w.live
         ? `<span class="livedot"></span>live · by ${f1(margin)}`
         : `${game.a.pts === best || game.b.pts === best ? "top score · " : ""}by ${f1(margin)}`}</span>`;
@@ -1741,7 +1759,7 @@ async function ensureHomeWeek() {
         w.live
           ? "Being played right now. Scores are live; nothing counts as a win until every starter has played."
           : "The last week in the book. Tap any game for the full scoreboard.",
-        { tab: "scores" }));
+        { tab: "scores", name: "Scoreboard" }));
       host.appendChild(weekStrip(w));
     }
 
@@ -1764,7 +1782,7 @@ async function ensureHomeWeek() {
       const bm = boardMovers(model, sim, lsim);
       if (bm) {
         host.appendChild(sechead("Whose season has changed",
-          `How far each team's playoff price has moved since the draft, off ${live.decided} finished games and the real schedule still to come. The Odds tab shows the whole board.`, { tab: "odds" }));
+          `How far each team's playoff price has moved since the draft, off ${live.decided} finished games and the real schedule still to come. The Odds tab shows the whole board.`, { tab: "odds", name: "Odds" }));
         host.appendChild(bm);
       }
     }
@@ -1783,7 +1801,7 @@ async function ensureHomeWeek() {
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 2);
     if (arts.length) {
       host.appendChild(sechead("From the desk",
-        "The latest long reads. Tap to read in full.", { tab: "recaps" }));
+        "The latest long reads. Tap to read in full.", { tab: "recaps", name: "News" }));
       const list = el("div", "tlist home");
       for (const a of arts) list.appendChild(articleTeaser(a));
       host.appendChild(list);
@@ -2223,9 +2241,9 @@ function panelMatchups(AT) {
       const proj = el("div");
       proj.style.cssText = "margin-top:15px;padding-top:14px;border-top:1px solid var(--grid);text-align:center";
       const fav = wp >= 0.5 ? a : b, favP = Math.max(wp, 1 - wp);
-      proj.innerHTML = `<div style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700">
+      proj.innerHTML = `<div style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600">
           If they played this week</div>
-        <div style="font-size:27px;font-weight:900;letter-spacing:-.02em;margin-top:5px">
+        <div style="font-size:27px;font-weight:600;letter-spacing:-.02em;margin-top:5px">
           ${esc(nameOf(fav))} <span style="color:var(--blue)">${pct(favP)}</span></div>
         <div style="font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5">
           Based only on how much each has scored per week and how much that bounces around.
