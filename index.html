@@ -578,36 +578,31 @@
   }
 
   /* ============ cover plate ============ */
-  .cover{position:relative;overflow:hidden;min-height:132px;display:flex;align-items:flex-end;
-    background:linear-gradient(135deg,rgba(57,135,229,.42),rgba(144,133,233,.18) 60%,var(--raised))}
-  .cover.t-red{background:linear-gradient(135deg,rgba(230,103,103,.42),rgba(201,133,0,.16) 60%,var(--raised))}
-  .cover.t-gold{background:linear-gradient(135deg,rgba(201,133,0,.42),rgba(230,103,103,.16) 60%,var(--raised))}
-  .cover .faces{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;
-    gap:-10px;padding-right:12px}
-  .cover .faces img{width:82px;height:82px;border-radius:50%;object-fit:cover;object-position:top center;
-    border:2px solid rgba(255,255,255,.22);margin-left:-18px;background:var(--raised);
-    box-shadow:0 6px 18px rgba(0,0,0,.45)}
-  .cover .ccap{position:relative;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
-    font-weight:700;color:rgba(255,255,255,.86);padding:9px 12px;text-shadow:0 1px 6px rgba(0,0,0,.7)}
-  .cover.big{min-height:210px;border-radius:var(--rs);margin-bottom:20px}
-  .cover.big .faces img{width:128px;height:128px;margin-left:-26px}
-  @media(max-width:620px){
-    .cover{min-height:118px}
-    .cover .faces img{width:66px;height:66px;margin-left:-14px}
-    .cover.big{min-height:150px}
-    .cover.big .faces img{width:88px;height:88px;margin-left:-18px}
-  }
-  /* No headshots (none listed, or every one failed to load): the league mark instead. */
-  .cover .cfall{position:absolute;top:50%;right:18px;transform:translateY(-50%);display:none;
-    font-size:44px;font-weight:900;letter-spacing:-.035em;line-height:1;opacity:.55;
-    background:linear-gradient(96deg,#fff 20%,var(--blue) 70%,var(--violet) 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .cover.big .cfall{font-size:72px;right:26px}
-  .cover:not(:has(.faces img)) .cfall{display:block}
-  @media(max-width:620px){
-    .cover .cfall{font-size:34px}
-    .cover.big .cfall{font-size:48px}
-  }
+  /* The art is an SVG drawn by coverSVG(); the ratio is fixed so nothing moves as
+     headshots load or fail. --fw/--fo/--fp (headshot width, overlap, right inset, as
+     a share of the width) must match COVER_GEOM in the script. */
+  .cover{position:relative;overflow:hidden;width:100%;aspect-ratio:8/5;background:var(--raised);
+    --fw:17%;--fo:4%;--fp:4.5%}
+  .cover svg{display:block;width:100%;height:100%}
+  .cover .faces{position:absolute;top:0;left:0;width:100%;aspect-ratio:8/5;
+    display:flex;align-items:center;justify-content:flex-end}
+  .cover .faces img{width:var(--fw);aspect-ratio:1;height:auto;border-radius:50%;object-fit:cover;
+    object-position:top center;border:2px solid rgba(255,255,255,.22);margin-left:calc(-1 * var(--fo));
+    background:var(--raised);box-shadow:0 6px 18px rgba(0,0,0,.45)}
+  .cover .faces img:last-child{margin-right:var(--fp)}
+  /* Four on a card go two by two. Grid items resolve % margins against their own cell,
+     so the cluster is sized in cqw (a share of the cover's width), same numbers as above. */
+  .cover:has(.faces.two){container-type:inline-size}
+  .cover .faces.two{display:grid;grid-template-columns:auto auto;justify-content:end;align-content:center;
+    padding-right:4.5cqw}
+  .cover .faces.two img{width:17cqw;margin:0}
+  .cover .faces.two img:nth-child(even){margin-left:-4cqw}
+  .cover .faces.two img:nth-child(n+3){margin-top:-4cqw}
+  .cover.big{aspect-ratio:16/7;border-radius:var(--rs);margin-bottom:20px;--fw:13%;--fo:3%;--fp:4%}
+  .cover.big .faces{aspect-ratio:16/7}
+  /* Beside a taller text column the art stays at the top and its own base colour runs on below. */
+  .teaser > .cover{align-self:stretch}
+  .teaser > .cover svg{height:auto}
 
   /* ============ bracket ============ */
   .bracket{margin:24px 0}
@@ -1045,6 +1040,11 @@ function mgrOf(uid, seedName) {
  * afternoon, and the matchup rows do not say which.
  *
  * Anything outside the season being played right now is final by definition.
+ *
+ * DB.state is the *effective* state (see effectiveState below): once the
+ * GitHub Action has marked the week Sleeper still calls current as final in
+ * data/latest.json, the week counts as over here too, instead of waiting hours
+ * for Sleeper to flip. The email snapshot reads this page, so they agree.
  */
 function weekIsFinal(lg, wk) {
   if (lg.status === "complete") return true;
@@ -1054,6 +1054,28 @@ function weekIsFinal(lg, wk) {
   if (!isFinite(cur)) return true;
   return wk < cur;
 }
+
+/**
+ * The effective current week. Sleeper advances state.week hours after Monday
+ * night's last game; build-week.mjs marks the week final in data/latest.json as
+ * soon as every NFL game is complete and every matchup scored. If latest.json
+ * says the week Sleeper still calls current is final, act as though Sleeper had
+ * already advanced. A copy of effective-week.mjs — test-effective-week.mjs
+ * checks the two stay identical.
+ */
+/* effective-week:begin */
+function effectiveState(state, latest) {
+  if (!state || !latest || latest.final !== true) return state;
+  const sw = Number(state.week), lw = Number(latest.week);
+  if (!Number.isInteger(sw) || sw < 1 || lw !== sw) return state;
+  if (String(latest.season) !== String(state.season)) return state;
+  const bump = v => (Number(v) === sw ? sw + 1 : v);
+  return Object.assign({}, state, {
+    week: sw + 1, leg: bump(state.leg), display_week: bump(state.display_week),
+    sleeper_week: sw, advanced_by: "latest.json",
+  });
+}
+/* effective-week:end */
 
 async function loadSeason(lg) {
   const id = lg.league_id;
@@ -2314,20 +2336,262 @@ const artText = t => esc(String(t ?? ""))
   .replace(/&lt;(\/?)([bi])&gt;/g, "<$1$2>");
 
 /**
- * The cover plate. Headshots come from the same Sleeper CDN the manager
- * avatars already use; any that 404 simply remove themselves rather than
- * leaving a broken frame on the page.
+ * The cover plate. Every piece gets art drawn from its own data: the kind of
+ * piece picks the palette and the emblem, the copy supplies the words, and a
+ * hash of the slug moves the field markings, so an article always draws the
+ * same cover and no two draw alike. Headshots, where a piece lists players,
+ * sit over the right-hand side as plain <img>s from the Sleeper CDN; any that
+ * 404 remove themselves and the emblem drawn underneath still fills the space.
  */
+const COVER_ACCENTS = { blue: "#3987e5", violet: "#9085e9", aqua: "#199e70", gold: "#c98500", red: "#e66767" };
+// First match wins (after an explicit a.cover.type). t is kicker + slug + headline, lowercased.
+const COVER_KINDS = [
+  { kind: "trade",    from: "gold",   to: "red",    test: (a, t) => /trade/.test(t) },
+  { kind: "waivers",  from: "aqua",   to: "gold",   test: (a, t) => /waiver|faab/.test(t) },
+  { kind: "rankings", from: "aqua",   to: "blue",   test: (a, t) => /power|ranking/.test(t) },
+  { kind: "preview",  from: "violet", to: "aqua",   test: (a, t) => /preview/.test(t) },
+  { kind: "draft",    from: "blue",   to: "aqua",   test: (a, t) => /draft/.test(t) },
+  { kind: "odds",     from: "violet", to: "red",    test: (a, t) => /odds/.test(t) || a.source === "saturday" },
+  { kind: "column",   from: "red",    to: "gold",   test: a => a.kind === "opinion" },
+  { kind: "recap",    from: "blue",   to: "violet",
+    test: (a, t) => /^\d{4} · week \d+$/i.test(plainText(a.kicker)) || /game by game|recap/.test(t) },
+  { kind: "analysis", from: "violet", to: "blue",   test: (a, t) => /analysis/.test(t) },
+  { kind: "feature",  from: "blue",   to: "violet", test: () => true },
+];
+const mixHex = (hex, base, t) => "#" + [1, 3, 5].map(i => Math.round(
+  parseInt(hex.slice(i, i + 2), 16) * t + parseInt(base.slice(i, i + 2), 16) * (1 - t))
+  .toString(16).padStart(2, "0")).join("");
+// Each accent pulled most of the way to --plane, so #fff and --ink-2 clear 4.5:1 on either stop.
+const COVER_PALETTE = Object.fromEntries(COVER_KINDS.map(k => [k.kind, {
+  from: mixHex(COVER_ACCENTS[k.from], "#0b0b0f", .36), to: mixHex(COVER_ACCENTS[k.to], "#0b0b0f", .26),
+  accent: COVER_ACCENTS[k.from], accent2: COVER_ACCENTS[k.to] }]));
+
+/** Copy as plain words: the <b>/<i> the files allow go, anything else stays as text. */
+const plainText = s => String(s ?? "").replace(/<\/?[bi]>/gi, "").replace(/\s+/g, " ").trim();
+
+function coverKind(a) {
+  const want = a.cover && a.cover.type;
+  if (COVER_KINDS.some(k => k.kind === want)) return want;
+  const t = [a.kicker, a.slug, a.headline].map(plainText).join(" ").toLowerCase();
+  return COVER_KINDS.find(k => k.test(a, t)).kind;
+}
+
+// One drawing at two scales. fw/fo/fp are the headshot width, overlap and right
+// inset as a share of the width: the same numbers as --fw/--fo/--fp in the CSS.
+const COVER_GEOM = {
+  card: { W: 320, H: 200, pad: 16, label: 13, title: [34, 30, 27, 24], stat: [72, 60, 50, 40],
+    sub: [24], row: [30, 27, 24, 22, 21], who: 15, faces: 4, perRow: 3, fw: .17, fo: .04, fp: .045 },
+  hero: { W: 640, H: 280, pad: 28, label: 20, title: [60, 52, 46, 40], stat: [120, 100, 84, 68],
+    sub: [36, 32], row: [48, 42, 36], who: 22, faces: 4, perRow: 4, fw: .13, fo: .03, fp: .04 },
+};
+// Line-drawn emblems in a 100-unit box, one per kind.
+const COVER_EMBLEMS = {
+  recap: "M8 50Q50 6 92 50Q50 94 8 50ZM34 50H66M41 43V57M50 43V57M59 43V57",
+  trade: "M16 36H82M68 22L82 36L68 50M84 64H18M32 50L18 64L32 78",
+  waivers: "M50 14V86M66 32Q50 20 36 30Q26 42 42 48L58 54Q74 60 62 72Q48 82 32 68",
+  rankings: "M12 88H88M20 88V62H38V88M41 88V42H59V88M62 88V20H80V88",
+  preview: "M14 20L34 40M34 20L14 40M24 50Q28 80 58 76M50 68L60 76L51 85M86 76A10 10 0 1 1 86 75.9",
+  draft: "M14 14h20v20h-20zM40 14h20v20h-20zM66 14h20v20h-20zM14 40h20v20h-20zM40 40h20v20h-20z" +
+    "M66 40h20v20h-20zM14 66h20v20h-20zM40 66h20v20h-20zM66 66h20v20h-20zM45 45l10 10M55 45l-10 10",
+  odds: "M80 16L20 84M42 30A12 12 0 1 1 42 29.9M82 70A12 12 0 1 1 82 69.9",
+  column: "M20 62Q18 32 44 22M56 62Q54 32 80 22M40 64A10 10 0 1 1 40 63.9M76 64A10 10 0 1 1 76 63.9",
+  analysis: "M12 86H88M12 86V12M20 70L40 48L56 60L84 24",
+  feature: "M50 92V58M18 58H82M18 58V8M82 58V8",
+};
+const COVER_CACHE = new Map();
+// The dark wash behind the words; the .cover under the art carries it too, so the two meet without a seam.
+const COVER_SCRIM = "linear-gradient(90deg,rgba(11,11,15,.5),rgba(11,11,15,0) 72%)";
+
+// Estimated advance widths, in em, for heavy system-ui. Deliberately a touch generous.
+const coverCharW = ch => /[\sIil1.,:;'’|!]/.test(ch) ? .3 : /[fjrt()\-−/]/.test(ch) ? .42 :
+  /[MW…]/.test(ch) ? .9 : /[mw]/.test(ch) ? .84 : /[a-z]/.test(ch) ? .57 : /\d/.test(ch) ? .62 : .67;
+const coverW = (s, fs, ls = 0) => [...s].reduce((n, ch) => n + coverCharW(ch) + ls, 0) * fs;
+// Truncate to fit: whole words first, and only cut inside a word when one word alone is too long.
+function coverFit(s, fs, maxW, ls = 0) {
+  if (coverW(s, fs, ls) <= maxW) return s;
+  const words = s.split(" ");
+  while (words.length > 1) {
+    words.pop();
+    const t = words.join(" ").replace(/[\s,;:·—–-]+$/, "");
+    if (coverW(t + "…", fs, ls) <= maxW) return t + "…";
+  }
+  let t = words[0];
+  while (t && coverW(t.trimEnd() + "…", fs, ls) > maxW) t = t.slice(0, -1);
+  return t.trimEnd() + "…";
+}
+function coverWrap(text, fs, maxW, maxLines, ls = 0) {
+  const lines = [];
+  for (const w of text.split(" ").filter(Boolean)) {
+    const n = lines.length;
+    if (n && coverW(lines[n - 1] + " " + w, fs, ls) <= maxW) lines[n - 1] += " " + w;
+    else lines.push(w);
+  }
+  const kept = lines.slice(0, maxLines);
+  if (lines.length > maxLines) kept[maxLines - 1] += " " + lines.slice(maxLines).join(" ");
+  const out = kept.map(l => coverFit(l, fs, maxW, ls));
+  return { lines: out, cut: out.some((l, i) => l !== kept[i]) };
+}
+// The biggest size that fits untruncated, else the smallest size, truncated.
+function coverSize(text, sizes, maxW, maxLines, ls = 0) {
+  let r;
+  for (const fs of sizes) { r = { fs, ...coverWrap(text, fs, maxW, maxLines, ls) }; if (!r.cut) break; }
+  return r;
+}
+const cr = n => Math.round(n * 10) / 10;
+const coverText = (x, y, s, fs, fill, attrs = "") =>
+  `<text x="${cr(x)}" y="${cr(y)}" font-size="${fs}" fill="${fill}"${attrs}>${esc(s)}</text>`;
+const coverNum = s => parseFloat(String(s).replace(/[−–]/g, "-").replace(/[^\d.\-]+/g, " ").trim());
+function coverSeed(s) {                     // FNV-1a, then mulberry32 off it
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 0x01000193) >>> 0;
+  return () => {
+    h = (h + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(h ^ (h >>> 15), 1 | h);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Where the big words come from: an explicit trade or matchup, a scoreline, a two-card face-off. */
+function coverSubject(a, kind) {
+  const c = a.cover || {}, blocks = (a.blocks || []).filter(Boolean);
+  if (c.trade && c.trade.a && c.trade.b) return { layout: "trade", ...c.trade };
+  if (c.matchup && c.matchup.a && c.matchup.b) return { layout: "versus", ...c.matchup };
+  if (kind === "recap" || kind === "preview") {
+    for (const b of blocks.filter(b => b.type === "p")) {
+      const m = String(b.text || "").match(/<b>\s*([^<,]+?)\s+(\d+(?:\.\d+)?),\s*([^<,]+?)\s+(\d+(?:\.\d+)?)\.?\s*<\/b>/);
+      if (m) return { layout: "versus", a: m[1], aPts: m[2], b: m[3], bPts: m[4] };
+    }
+  }
+  if (kind === "odds" || kind === "analysis") {
+    const cards = blocks.find(b => b.type === "cards" && (b.items || []).length === 2);
+    if (cards) {
+      const [x, y] = cards.items;
+      return { layout: "versus", a: x.title, aPts: x.big, b: y.title, bPts: y.big };
+    }
+  }
+  const stat = blocks.find(b => b.type === "stat");
+  if (stat && plainText(stat.n) && plainText(stat.n).length <= 8) return { layout: "stat", n: stat.n };
+  return { layout: "title" };
+}
+
+/** The cover art as an inline SVG string: a pure function of the article, cached per article and size. */
+function coverSVG(a, big) {
+  const key = (a.slug || `${a.headline}|${a.date}`) + (big ? "|hero" : "|card");
+  if (COVER_CACHE.has(key)) return COVER_CACHE.get(key);
+  const G = big ? COVER_GEOM.hero : COVER_GEOM.card, { W, H, pad } = G;
+  const c = a.cover || {}, kind = coverKind(a), P = COVER_PALETTE[kind];
+  const rnd = coverSeed(`${a.slug || a.headline}|${a.season}|${a.date}`);
+  const WHITE = "#ffffff", INK2 = "#c6c5cf";
+
+  // Headshots take the right-hand side (more than a row's worth go two by two);
+  // the text column stops short of them.
+  const nf = Math.min((c.players || []).length, G.faces), cols = nf > G.perRow ? Math.ceil(nf / 2) : nf;
+  const facesW = nf ? W * (cols * G.fw - (cols - 1) * G.fo) : 0;
+  const tw = nf ? W - pad - facesW - W * G.fp - pad * .75 : W - 2 * pad;
+
+  // Ground: the gradient, a scrim behind the words, and the base colour at the foot.
+  const ang = Math.round(115 + rnd() * 50);
+  const bg = `${COVER_SCRIM},linear-gradient(180deg,rgba(0,0,0,0) 62%,${P.to}),linear-gradient(${ang}deg,${P.from},${P.to})`;
+
+  // Field: yard lines (straight or raked), hash marks, an end zone. Drawn to twice
+  // the height so that beside a taller teaser the field runs on below the art
+  // (the svg overflows; .cover clips it).
+  const step = W / 8, ph = rnd() * step, rake = [0, .16, -.16][Math.floor(rnd() * 3)], H2 = H * 2;
+  let lines = "", hashes = "";
+  for (let x = ph - 3 * step; x < W + 3 * step; x += step) {
+    lines += `M${cr(x)} 0L${cr(x + rake * H2)} ${H2}`;
+    for (let k = 1; k < 5; k++) for (const hy of [.3, .66, 1.3, 1.66]) {
+      const hx = x + k * step / 5 + rake * H * hy;
+      if (hx > 0 && hx < W) hashes += `M${cr(hx)} ${cr(H * hy)}v${cr(H * .045)}`;
+    }
+  }
+  const ez = step * (.55 + rnd() * .3);
+  const field = `<path d="${lines}" stroke="${WHITE}" stroke-opacity=".1" stroke-width="${big ? 1.6 : 1}"/>` +
+    `<path d="${hashes}" stroke="${WHITE}" stroke-opacity=".12" stroke-width="${big ? 1.6 : 1}"/>` +
+    `<rect x="${cr(W - ez)}" y="0" width="${cr(ez)}" height="${H2}" fill="${P.accent2}" fill-opacity=".1"/>`;
+
+  // Emblem: faint, on the right, under the headshots when there are any.
+  const R = H * .3;
+  const ex = nf ? W - W * G.fp - facesW / 2 : W - pad - R * .95, ey = nf ? H / 2 : H * .54;
+  const emblem = `<path d="${COVER_EMBLEMS[kind]}" transform="translate(${cr(ex - R)} ${cr(ey - R)}) scale(${cr(R / 50 * 100) / 100})"` +
+    ` fill="none" stroke="${P.accent}" stroke-opacity=".24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  // Label and wordmark.
+  const lsL = .12, wmW = coverW("DFFL", G.label, .1);
+  const labelRaw = plainText(c.caption || a.kicker ||
+    [a.season, a.week != null ? `week ${a.week}` : ""].filter(Boolean).join(" · ") || "DFFL").toUpperCase();
+  const yL = pad + G.label * .75;
+  const label = coverText(pad, yL, coverFit(labelRaw, G.label, W - 3 * pad - wmW, lsL), G.label, INK2,
+    ` font-weight="700" letter-spacing="${cr(G.label * lsL)}"`) +
+    `<path d="M${pad} ${cr(yL + G.label * .6)}h${cr(G.label * 2.2)}" stroke="${P.accent}" stroke-width="${big ? 3 : 2}"/>` +
+    coverText(W - pad, yL, "DFFL", G.label, INK2, ` font-weight="900" letter-spacing="${cr(G.label * .1)}" text-anchor="end"`);
+
+  // Subject.
+  const S = coverSubject(a, kind), yB = H - pad - 2;
+  const head = plainText(a.headline).toUpperCase();
+  let main = "", layout = S.layout;
+  if (layout === "versus") {
+    const rows = [[S.a, S.aPts], [S.b, S.bPts]].map(([n, p]) => [plainText(n), plainText(p)]);
+    let fs, numW, names;
+    for (fs of G.row) {
+      numW = Math.max(...rows.map(r => coverW(r[1], fs)));
+      names = rows.map(r => coverFit(r[0], fs, tw - numW - fs * .6));
+      if (names.every((n, i) => n === rows[i][0])) break;
+    }
+    const va = coverNum(rows[0][1]), vb = coverNum(rows[1][1]);
+    const y2 = H - pad - fs * .22, y1 = y2 - fs * 1.4, ry = (y1 + fs * .22 + y2 - fs * .74) / 2;
+    main = rows.map((r, i) => {
+      const lost = i === 0 ? vb > va : va > vb, fill = lost ? INK2 : WHITE, y = i ? y2 : y1;
+      return coverText(pad, y, names[i], fs, fill, ` font-weight="800"`) +
+        coverText(pad + tw, y, r[1], fs, fill, ` font-weight="900" text-anchor="end"`);
+    }).join("") + `<path d="M${pad} ${cr(ry)}H${cr(pad + tw)}" stroke="${P.accent}" stroke-opacity=".8" stroke-width="${big ? 2 : 1.5}"/>`;
+  } else if (layout === "trade") {
+    const gets = [S.aGets, S.bGets].map(g => (Array.isArray(g) ? g : []).slice(0, 2).map(plainText));
+    const np = Math.max(1, ...gets.map(g => g.length));
+    let fs, colW, teams;
+    for (fs of G.row) {
+      colW = (tw - fs * 1.5) / 2;
+      teams = [S.a, S.b].map(t => coverFit(plainText(t), fs, colW));
+      if (teams.every((t, i) => t === plainText([S.a, S.b][i]))) break;
+    }
+    const pl = G.who * 1.35, yT = yB - np * pl - G.who * .2;
+    const cx = pad + colW + fs * .75, cy = yT - fs * .36, aw = fs * .5, ah = fs * .13;
+    main = [0, 1].map(i => {
+      const x = pad + i * (colW + fs * 1.5);
+      return coverText(x, yT, teams[i], fs, WHITE, ` font-weight="800"`) +
+        gets[i].map((p, j) => coverText(x, yT + pl * (j + 1), coverFit(p, G.who, colW), G.who, INK2, ` font-weight="650"`)).join("");
+    }).join("") +
+      `<path d="M${cr(cx - aw)} ${cr(cy - ah)}H${cr(cx + aw)}m${cr(-ah * 1.4)} ${cr(-ah * 1.4)}l${cr(ah * 1.4)} ${cr(ah * 1.4)}l${cr(-ah * 1.4)} ${cr(ah * 1.4)}` +
+      `M${cr(cx + aw)} ${cr(cy + ah)}H${cr(cx - aw)}m${cr(ah * 1.4)} ${cr(-ah * 1.4)}l${cr(-ah * 1.4)} ${cr(ah * 1.4)}l${cr(ah * 1.4)} ${cr(ah * 1.4)}"` +
+      ` fill="none" stroke="${P.accent}" stroke-width="${cr(fs * .09)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  } else if (layout === "stat") {
+    const N = coverSize(plainText(S.n), G.stat, tw, 1, -.02), T = coverSize(head, G.sub, tw, 2);
+    const sl = T.fs * 1.08, ys = yB - (T.lines.length - 1) * sl, yN = ys - T.fs * .74 - N.fs * .16;
+    main = coverText(pad, yN, N.lines[0], N.fs, WHITE, ` font-weight="900" letter-spacing="${cr(N.fs * -.02)}"`) +
+      T.lines.map((l, i) => coverText(pad, ys + i * sl, l, T.fs, INK2, ` font-weight="800"`)).join("");
+  } else {
+    const T = coverSize(head, G.title, tw, 3), lh = T.fs * 1.02, y0 = yB - (T.lines.length - 1) * lh;
+    main = T.lines.map((l, i) => coverText(pad, y0 + i * lh, l, T.fs, WHITE, ` font-weight="900"`)).join("");
+  }
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet" overflow="visible"` +
+    ` aria-hidden="true" focusable="false" data-kind="${kind}" data-layout="${layout}"` +
+    ` font-family="system-ui,-apple-system,'Segoe UI',sans-serif" style="background:${bg}">` +
+    `${field}${emblem}${label}${main}</svg>`;
+  COVER_CACHE.set(key, svg);
+  return svg;
+}
+coverSVG.cache = COVER_CACHE;
+
 function coverHTML(a, big) {
-  const c = a.cover || {};
-  const tone = ["blue", "red", "gold"].includes(c.tone) ? c.tone : "blue";
-  const faces = (c.players || []).slice(0, 4).map(id =>
+  const kind = coverKind(a), G = big ? COVER_GEOM.hero : COVER_GEOM.card;
+  const ids = ((a.cover || {}).players || []).slice(0, G.faces);
+  const faces = ids.map(id =>
     `<img src="https://sleepercdn.com/content/nfl/players/${esc(String(id))}.jpg" alt=""
       loading="lazy" onerror="this.remove()">`).join("");
-  return `<div class="cover t-${tone}${big ? " big" : ""}">
-    <div class="faces">${faces}</div>
-    <div class="cfall" aria-hidden="true">DFFL</div>
-    ${c.caption ? `<div class="ccap">${esc(c.caption)}</div>` : ""}</div>`;
+  return `<div class="cover k-${kind}${big ? " big" : ""}" style="background:${COVER_SCRIM},${COVER_PALETTE[kind].to}">${coverSVG(a, big)}${
+    faces ? `<div class="faces${ids.length > G.perRow ? " two" : ""}">${faces}</div>` : ""}</div>`;
 }
 
 /** A postseason bracket, exactly as it was played. */
@@ -2453,7 +2717,7 @@ function articleCard(a, full) {
   const box = el("article", `artl${a.kind === "opinion" ? " op" : ""}`);
   const when = a.date ? new Date(a.date + "T12:00:00Z").toLocaleDateString(undefined,
     { day: "numeric", month: "long", year: "numeric" }) : "";
-  box.innerHTML = `${full && a.cover ? coverHTML(a, true) : ""}
+  box.innerHTML = `${full ? coverHTML(a, true) : ""}
     <header class="ahdr">
       ${a.kind === "opinion" ? `<div class="oflag">Column</div>` : ""}
       ${a.kicker ? `<div class="ak">${esc(a.kicker)}</div>` : ""}
@@ -6837,6 +7101,14 @@ async function boot() {
   try {
     if (MOCK) await mockInit();
     try { DB.state = MOCK ? null : await jget(`${API}/state/nfl`); } catch (e) { DB.state = null; }
+    // Everything below reads DB.state, so the effective week is applied once,
+    // here. A missing or unreadable latest.json changes nothing.
+    if (DB.state) {
+      const latest = await fetch("data/latest.json", { cache: "no-cache" })
+        .then(r => (r.ok ? r.json() : null)).catch(() => null);
+      DB.sleeperState = DB.state;
+      DB.state = effectiveState(DB.state, latest);
+    }
 
     const chain = await loadChain();
     if (!chain.length) throw new Error("Could not load the league from Sleeper.");
@@ -6909,12 +7181,13 @@ async function boot() {
       weekMovers, panelRecaps, allPowerRankings, keepersOf, keepersFor, loadStatedKeepers,
       preDraftOwners, playerModal, openPlayer, posClass,
       articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
+      coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
       raceData, raceAsOf, seedField, pairSchedule,
       ensurePicture, renderPicture, computePicture, exactClinch, leagueRules, pictureJob, pictureRun,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
-      weekIsFinal, allWeeks,
+      weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
       injuryDetail, returnLabel,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,

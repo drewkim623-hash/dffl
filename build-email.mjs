@@ -46,6 +46,18 @@ if (useLocal) {
 /* ------------------------------------------------------- read the site */
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+// The page decides which week is live from Sleeper plus data/latest.json (see
+// effective-week.mjs). The published copy of latest.json is whatever was last
+// committed, but this run has usually just rebuilt it — at 1 AM Tuesday that
+// is the file saying last week is final — so hand the page the local one and
+// the snapshot's week agrees with the data it ships beside.
+if (!useLocal) {
+  await page.route(/\/data\/latest\.json(\?.*)?$/, async route => {
+    const body = await readFile("data/latest.json", "utf8").catch(() => null);
+    if (body) await route.fulfill({ status: 200, contentType: "application/json", body });
+    else await route.continue();
+  });
+}
 await page.goto(base, { waitUntil: "domcontentloaded" });
 await page.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 120000 });
 await page.click('#tabs button[data-tab="odds"]');
