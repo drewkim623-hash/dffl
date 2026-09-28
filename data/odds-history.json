@@ -1,0 +1,1110 @@
+{
+ "_comment": "Written by build-odds-history.mjs from the git history of data/odds-snapshot.json. One row per matchup per committed snapshot; pA is the chance manager a beats manager b as the site priced it at that moment.",
+ "generated": "2026-09-28T22:36:51.539Z",
+ "weeks": {
+  "2026-1": [
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6625894116522322,
+    "aPts": 114.72,
+    "bPts": 50.48,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.22223554417489189,
+    "aPts": 117.76,
+    "bPts": 95.44,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.15958848265278347,
+    "aPts": 67.24,
+    "bPts": 97.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.974526934205649,
+    "aPts": 110.26,
+    "bPts": 64,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9992242097510662,
+    "aPts": 141.5,
+    "bPts": 116.8,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:10:34.666Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9998234111814223,
+    "aPts": 162.16,
+    "bPts": 96.46,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6964429704734187,
+    "aPts": 123.22,
+    "bPts": 57.02,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.20450913345453875,
+    "aPts": 70.14,
+    "bPts": 97.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.16558932540897187,
+    "aPts": 120.76,
+    "bPts": 101.3,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9630884809529547,
+    "aPts": 110.26,
+    "bPts": 66.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9992051800807643,
+    "aPts": 141.5,
+    "bPts": 116.9,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:34:29.830Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9994868886605723,
+    "aPts": 166.16,
+    "bPts": 105.46,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6964429704734187,
+    "aPts": 123.22,
+    "bPts": 57.02,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.281412565292445,
+    "aPts": 73.34,
+    "bPts": 96.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.09475250458717932,
+    "aPts": 120.76,
+    "bPts": 106,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9630884809529547,
+    "aPts": 110.26,
+    "bPts": 66.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9992051800807643,
+    "aPts": 141.5,
+    "bPts": 116.9,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:47:19.015Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9993708462282863,
+    "aPts": 166.16,
+    "bPts": 106.46,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6964429704734187,
+    "aPts": 123.22,
+    "bPts": 57.02,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.281412565292445,
+    "aPts": 73.34,
+    "bPts": 96.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.09475250458717932,
+    "aPts": 120.76,
+    "bPts": 106,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9630884809529547,
+    "aPts": 110.26,
+    "bPts": 66.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9992051800807643,
+    "aPts": 141.5,
+    "bPts": 116.9,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T21:53:00.750Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9993708462282863,
+    "aPts": 166.16,
+    "bPts": 106.46,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6841819867085197,
+    "aPts": 123.52,
+    "bPts": 58.04,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.3015849773998116,
+    "aPts": 74.34,
+    "bPts": 96.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.05806177927820044,
+    "aPts": 121.76,
+    "bPts": 110.58,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9619703418480006,
+    "aPts": 110.26,
+    "bPts": 66.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9712188143508276,
+    "aPts": 167.16,
+    "bPts": 130.36,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:10:59.753Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9989407775420318,
+    "aPts": 141.5,
+    "bPts": 118.1,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.24313419935053449,
+    "aPts": 71.34,
+    "bPts": 96.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.7845179036323784,
+    "aPts": 136.62,
+    "bPts": 64.76,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.8925666339765983,
+    "aPts": 110.26,
+    "bPts": 74.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.04441673389724171,
+    "aPts": 121.76,
+    "bPts": 112.38,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9712188143508276,
+    "aPts": 167.16,
+    "bPts": 130.36,
+    "settled": false
+   },
+   {
+    "at": "2026-09-13T22:24:04.841Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.998237589615306,
+    "aPts": 141.5,
+    "bPts": 120.3,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.28720916673185565,
+    "aPts": 86.64,
+    "bPts": 99.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.7838573208629598,
+    "aPts": 144.52,
+    "bPts": 78.86,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.019329266677022283,
+    "aPts": 124.76,
+    "bPts": 127.62,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9932181839412787,
+    "aPts": 110.26,
+    "bPts": 75.1,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9958133351802938,
+    "aPts": 170.16,
+    "bPts": 147.76,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T00:12:51.259Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 0.9999866800229062,
+    "aPts": 141.5,
+    "bPts": 125.1,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "chassinator",
+    "b": "sizzlemc2",
+    "pA": 0.6201964180896629,
+    "aPts": 144.52,
+    "bPts": 115.96,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "bertalicious",
+    "b": "bradyrife",
+    "pA": 0.21552271958089453,
+    "aPts": 87.64,
+    "bPts": 105.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "jskule23",
+    "b": "saucebossandrew",
+    "pA": 0.019329266677022283,
+    "aPts": 124.76,
+    "bPts": 127.62,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "wesley55",
+    "b": "victorthompson",
+    "pA": 0.9999865084239393,
+    "aPts": 110.26,
+    "bPts": 90.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "Domo112",
+    "b": "moseslin",
+    "pA": 0.9999990005524613,
+    "aPts": 183.06,
+    "bPts": 161.86,
+    "settled": false
+   },
+   {
+    "at": "2026-09-14T11:04:25.588Z",
+    "a": "jadencha",
+    "b": "drewkim",
+    "pA": 1,
+    "aPts": 195.9,
+    "bPts": 125.1,
+    "settled": true
+   }
+  ],
+  "2026-2": [
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.41192278682187866,
+    "aPts": 0,
+    "bPts": 21.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.3895480980336245,
+    "aPts": 0,
+    "bPts": 22.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.3682009961011252,
+    "aPts": 5.3,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.6753719776751177,
+    "aPts": 47.62,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.6948257462466911,
+    "aPts": 35.1,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-18T11:04:23.231Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.7472368728384948,
+    "aPts": 20.3,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.41192278682187866,
+    "aPts": 0,
+    "bPts": 21.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.3895480980336245,
+    "aPts": 0,
+    "bPts": 22.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.3682009961011252,
+    "aPts": 5.3,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.6753719776751177,
+    "aPts": 47.62,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.6948257462466911,
+    "aPts": 35.1,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T11:03:37.842Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.7472368728384948,
+    "aPts": 20.3,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.3895480980336245,
+    "aPts": 0,
+    "bPts": 22.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.3682009961011252,
+    "aPts": 5.3,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.6753719776751177,
+    "aPts": 47.62,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.6948257462466911,
+    "aPts": 35.1,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.28082095250761085,
+    "aPts": 0,
+    "bPts": 21.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-19T22:03:33.723Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.7472368728384948,
+    "aPts": 20.3,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.41192278682187866,
+    "aPts": 0,
+    "bPts": 21.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.3682009961011252,
+    "aPts": 5.3,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.6753719776751177,
+    "aPts": 47.62,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.6948257462466911,
+    "aPts": 35.1,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.28397386572844635,
+    "aPts": 0,
+    "bPts": 22.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T11:03:37.943Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.7472368728384948,
+    "aPts": 20.3,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.5478720978476711,
+    "aPts": 0,
+    "bPts": 22.5,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.41192278682187866,
+    "aPts": 0,
+    "bPts": 21.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.3682009961011252,
+    "aPts": 5.3,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.6753719776751177,
+    "aPts": 47.62,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.6948257462466911,
+    "aPts": 35.1,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-20T15:36:42.560Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.7472368728384948,
+    "aPts": 20.3,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.9122901883188679,
+    "aPts": 105.92,
+    "bPts": 93.56,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.06719652918780217,
+    "aPts": 84.22,
+    "bPts": 110.54,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 0.9999892772350316,
+    "aPts": 140.78,
+    "bPts": 107.86,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0.0000067173004715259665,
+    "aPts": 74.98,
+    "bPts": 126.26,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.9999935277595826,
+    "aPts": 108.8,
+    "bPts": 70.8,
+    "settled": false
+   },
+   {
+    "at": "2026-09-21T00:25:36.536Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0.000002469521908632366,
+    "aPts": 75.52,
+    "bPts": 138.58,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0.0033351093861599956,
+    "aPts": 110.92,
+    "bPts": 134.06,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0.0009247184368620931,
+    "aPts": 85.32,
+    "bPts": 112.64,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 6.68347838628236e-7,
+    "aPts": 103.92,
+    "bPts": 138.58,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 1.744814261406269e-7,
+    "aPts": 110.98,
+    "bPts": 129.26,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 0.9999999999999887,
+    "aPts": 145.1,
+    "bPts": 78.3,
+    "settled": false
+   },
+   {
+    "at": "2026-09-22T03:02:49.712Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 1,
+    "aPts": 131.78,
+    "bPts": 120.16,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "Domo112",
+    "b": "drewkim",
+    "pA": 0,
+    "aPts": 85.32,
+    "bPts": 112.64,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "jadencha",
+    "b": "moseslin",
+    "pA": 1,
+    "aPts": 145.1,
+    "bPts": 78.3,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "chassinator",
+    "b": "wesley55",
+    "pA": 0,
+    "aPts": 104.62,
+    "bPts": 138.58,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "bertalicious",
+    "b": "saucebossandrew",
+    "pA": 1,
+    "aPts": 131.78,
+    "bPts": 120.16,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "jskule23",
+    "b": "bradyrife",
+    "pA": 0,
+    "aPts": 110.92,
+    "bPts": 134.06,
+    "settled": true
+   },
+   {
+    "at": "2026-09-22T03:15:38.697Z",
+    "a": "sizzlemc2",
+    "b": "victorthompson",
+    "pA": 0,
+    "aPts": 110.98,
+    "bPts": 129.26,
+    "settled": true
+   }
+  ],
+  "2026-3": [
+   {
+    "at": "2026-09-25T11:04:30.373Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 0.4479192255152467,
+    "aPts": 36.3,
+    "bPts": 22,
+    "settled": false
+   },
+   {
+    "at": "2026-09-25T11:04:30.373Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0.38692232694607065,
+    "aPts": 1.5,
+    "bPts": 6.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-25T11:04:30.373Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.33976215130039833,
+    "aPts": 0,
+    "bPts": 30.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-25T11:04:30.373Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.21595051782056807,
+    "aPts": -2,
+    "bPts": 22.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T11:03:50.273Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0.4847909009807757,
+    "aPts": 1.5,
+    "bPts": 6.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T11:03:50.273Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.33976215130039833,
+    "aPts": 0,
+    "bPts": 30.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T11:03:50.273Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.21595051782056807,
+    "aPts": -2,
+    "bPts": 22.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T11:03:50.273Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 0.21580069259938384,
+    "aPts": 36.3,
+    "bPts": 22,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T22:03:32.938Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0.4847909009807757,
+    "aPts": 1.5,
+    "bPts": 6.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T22:03:32.938Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 0.4479192255152467,
+    "aPts": 36.3,
+    "bPts": 22,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T22:03:32.938Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.33976215130039833,
+    "aPts": 0,
+    "bPts": 30.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-26T22:03:32.938Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.21595051782056807,
+    "aPts": -2,
+    "bPts": 22.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T11:03:52.446Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0.4847909009807757,
+    "aPts": 1.5,
+    "bPts": 6.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T11:03:52.446Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.33976215130039833,
+    "aPts": 0,
+    "bPts": 30.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T11:03:52.446Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 0.3108142104979876,
+    "aPts": 36.3,
+    "bPts": 22,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T11:03:52.446Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.21595051782056807,
+    "aPts": -2,
+    "bPts": 22.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T15:37:31.697Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0.4847909009807757,
+    "aPts": 1.5,
+    "bPts": 6.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T15:37:31.697Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.33976215130039833,
+    "aPts": 0,
+    "bPts": 30.4,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T15:37:31.697Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 0.3050871701790362,
+    "aPts": 36.3,
+    "bPts": 22,
+    "settled": false
+   },
+   {
+    "at": "2026-09-27T15:37:31.697Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.21595051782056807,
+    "aPts": -2,
+    "bPts": 22.6,
+    "settled": false
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "drewkim",
+    "b": "moseslin",
+    "pA": 0.26744224063694466,
+    "aPts": 114.68,
+    "bPts": 121.34,
+    "settled": false
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "chassinator",
+    "b": "victorthompson",
+    "pA": 0.8292740954302159,
+    "aPts": 107.54,
+    "bPts": 114.14,
+    "settled": false
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "bradyrife",
+    "b": "saucebossandrew",
+    "pA": 0.9997936952031616,
+    "aPts": 150.78,
+    "bPts": 100.1,
+    "settled": false
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "bertalicious",
+    "b": "jskule23",
+    "pA": 0.9999131457023942,
+    "aPts": 129.86,
+    "bPts": 87.26,
+    "settled": false
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "Domo112",
+    "b": "jadencha",
+    "pA": 1,
+    "aPts": 134.06,
+    "bPts": 132.34,
+    "settled": true
+   },
+   {
+    "at": "2026-09-28T11:04:25.345Z",
+    "a": "wesley55",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 131.28,
+    "bPts": 148.6,
+    "settled": true
+   }
+  ]
+ }
+}
