@@ -60,7 +60,11 @@ if (has("--record")) {
       noRecap: has("--no-recap"),
       allowOlder: has("--allow-older-week"),
     });
-  } catch (err) { console.error(err.message); process.exit(2); }
+  } catch (err) {
+    console.error(err.message);
+    console.error("The email has already been sent. Do not send it again. Only fix the flag and re-run --record.");
+    process.exit(2);
+  }
   ledger.sent.push(entry);
   ledger.sent.sort((a, b) => String(a.at).localeCompare(String(b.at)));
   await writeFile(LEDGER, JSON.stringify(ledger, null, 1) + "\n");
