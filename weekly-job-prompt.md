@@ -130,8 +130,19 @@ After the send actually succeeds, record it and commit:
 
 ```
 node blast-status.mjs --record --subject "<subject>" --lead <slug> \
-  --also <slug,slug> --season 2026 --week <n> --to 12 --sha <sha256> --by routine
+  --also <slug,slug> --to 12 --sha <sha256> --by routine
 ```
+
+Leave `--week` off. The recap is recorded automatically as the newest week in `recaps.json`, which
+is the one compose-email put in the email. If you do pass `--week`, it is the recap week just
+played — **not** the upcoming week in the subject. An email titled "DFFL Week 3: ..." carries the
+week 2 recap, so it is recorded with `--week 2`, or with no `--week` at all.
+
+A wrong week is refused with an error (exit 2) and nothing is written. **If `--record` exits 2, the
+email has already been sent. Do not send it again.** Only fix the flag and re-run `--record`; do not
+work around it. `--no-recap` records a send that carried no recap, which is rare: compose-email always
+includes the newest recap if one exists. `--allow-older-week` is only for backfilling a send that
+really went out before a newer recap was written.
 
 A send that is not recorded will be sent again next time. Recording is part of sending, not an
 afterthought.
