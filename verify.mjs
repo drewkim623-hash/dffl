@@ -3118,10 +3118,43 @@ const injPlan = await page.evaluate(() => {
   const fin = { byTeam: new Map([["AAA", { rem: 0, state: "complete" }]]) };
   const even = [0.25, 0.25, 0.25, 0.25], lu = ["q1", "q2", "q3", "q4"];
   const L = (games, pts, hurt) => D.lineupState(lu, pts, 100, 30, rostered, games, even, hurt);
-  const healthy = L(pre, 0), outL = L(pre, 0, new Map([["q1", 0]]));
-  const qL = L(pre, 0, new Map([["q1", D.INJ_AVAIL.Questionable]]));
-  const allOutL = L(pre, 0, new Map(lu.map(p => [p, 0])));
-  const playedL = L(fin, 50, new Map([["q1", 0]]));
+  // hurt maps carry each starter's cut in team terms: share × (1 − avail) × 0.45 × scale.
+  const cutOut = 0.25 * 1 * gap, cutQ = 0.25 * (1 - D.INJ_AVAIL.Questionable) * gap;
+  const healthy = L(pre, 0), outL = L(pre, 0, new Map([["q1", cutOut]]));
+  const qL = L(pre, 0, new Map([["q1", cutQ]]));
+  const allOutL = L(pre, 0, new Map(lu.map(p => [p, cutOut])));
+  const playedL = L(fin, 50, new Map([["q1", cutOut]]));
+
+  // 9. Kickoff equals the opener: the shrunk injury from case 4, fed through the
+  // same helper the live board uses, with the whole lineup still to play.
+  const rost4 = { map: new Map(four.map(p => [p, { n: p, p: "RB", t: "AAA" }])) };
+  const hm4 = D.injuryHurtMap(p4, 1, p4.W0);
+  const kick4 = D.lineupState(four, 0, 100, 30, rost4, pre, even, hm4);
+  const kickoff = { live: kick4.expected, opener: 100 * D.injuryMult(p4, 1, p4.W0), scale: h4.scale,
+    raw: 100 * (1 - h4.loss) };
+
+  // 10. The bracket: a synthetic live state off the real model, healthy vs a
+  // season-ending cut on one team (regular season and playoffs) vs the same cut
+  // stopping at the regular season.
+  const M = window.__ODDS;
+  const nT = M.teams.length, zeros = () => new Array(nT).fill(0);
+  const baseLive = () => ({
+    teams: M.teams.map(t => ({ ...t, levelSd: 8 })), W0: zeros(), PF0: zeros(), pending: [],
+    weeks: M.sched.map((pairs, i) => ({ week: i + 1, pairs })), pws: M.sched.length + 1,
+  });
+  const favIdx = M.teams.reduce((b, t, i) => (t.mean > M.teams[b].mean ? i : b), 0);
+  const cutArr = () => M.teams.map((_, i) => (i === favIdx ? 0.85 : 1));
+  const regOnly = new Map(M.sched.map((_, i) => [i + 1, cutArr()]));
+  const withPO = new Map(regOnly);
+  for (let r = 0; r < 3; r++) withPO.set(M.sched.length + 1 + r, cutArr());
+  const run = mbw => {
+    const sim = D.simulateSeason(M, 20000, { ...baseLive(), multByWeek: mbw });
+    return { title: sim.title[favIdx] / sim.sims, playoff: sim.playoff[favIdx] / sim.sims };
+  };
+  const bracket = { healthy: run(new Map()), reg: run(regOnly), full: run(withPO) };
+  const s10 = mkSeason(four, [1, 2, 3]);
+  const p10 = P(s10, { a1: { s: "IR", n: "X", ret: "2027-02-15" } });
+  bracket.planWeeks = H(p10, "a1").weeks; bracket.lastWeek = p10.lastWeek;
 
   // 8. A week in flight: a1 scored in it before getting hurt, a2 has not played yet.
   const s8 = mkSeason(four, [1, 2, 3]);
@@ -3134,7 +3167,7 @@ const injPlan = await page.evaluate(() => {
   const flight = { W0: p8.W0, a1: H(p8, "a1").weeks, a2: H(p8, "a2").weeks };
 
   return {
-    gap, floor: D.INJ_FLOOR, flight,
+    gap, floor: D.INJ_FLOOR, flight, kickoff, bracket,
     one: { W0: p1.W0, weeks: h1.weeks, share: h1.share, scale: h1.scale,
       m1: D.injuryMult(p1, 1, 1), m2: D.injuryMult(p1, 1, 2), other: D.injuryMult(p1, 2, 1),
       excluded: D.injuryMult(p1, 1, 1, ["a1"]), note: D.injuryFuturesNote(p1, 1, 1) },
@@ -3142,7 +3175,7 @@ const injPlan = await page.evaluate(() => {
       m3: D.injuryMult(p2, 1, 3), note: D.injuryFuturesNote(p2, 1, 1),
       tomorrow: H(p2b, "a1").weeks, noRet: H(pNoRet, "a1").weeks, questionable: H(pQ, "a1").weeks },
     end: { weeks: h3.weeks, lastReg: p3.lastReg, seasonEnding: h3.seasonEnding,
-      mLast: D.injuryMult(p3, 1, p3.lastReg), mPost: D.injuryMult(p3, 1, p3.lastReg + 1),
+      lastWeek: p3.lastWeek, mLast: D.injuryMult(p3, 1, p3.lastWeek), mPost: D.injuryMult(p3, 1, p3.lastWeek + 1),
       note: D.injuryFuturesNote(p3, 1, 1) },
     shrink: { W0: p4.W0, onset: h4.onset, missed: h4.missed, scale: h4.scale, loss: h4.loss,
       cut: 1 - D.injuryMult(p4, 1, p4.W0), expect: 1 - (2 * op) / (pp + 3 * op),
@@ -3179,9 +3212,20 @@ check("a return date is always charged at least the next week", JSON.stringify(I
 check("no return date, or a questionable tag, is next week only",
   JSON.stringify(IP.ret.noRet) === "[1]" && JSON.stringify(IP.ret.questionable) === "[1]",
   `${JSON.stringify(IP.ret.noRet)} / ${JSON.stringify(IP.ret.questionable)}`);
-check("a season-ending date carries the cut through the last regular-season week",
-  IP.end.seasonEnding && IP.end.weeks.length === IP.end.lastReg && IP.end.weeks[IP.end.weeks.length - 1] === IP.end.lastReg
+check("a season-ending date carries the cut through the championship week",
+  IP.end.seasonEnding && IP.end.lastWeek === IP.end.lastReg + 3 && IP.end.weeks.length === IP.end.lastWeek
+    && IP.end.weeks[IP.end.weeks.length - 1] === IP.end.lastWeek
     && IP.end.mLast < 1 && IP.end.mPost === 1, `${IP.end.weeks.length} weeks, last ${IP.end.mLast}`);
+check("at kickoff, a shrunk injury gives the live board the pregame line's expected score",
+  IP.kickoff.scale < 1 && near(IP.kickoff.live, IP.kickoff.opener, 1e-9) && IP.kickoff.live > IP.kickoff.raw,
+  JSON.stringify(IP.kickoff));
+check("a season-ending injury cuts the bracket: title odds fall more than playoff odds",
+  (IP.bracket.healthy.title - IP.bracket.full.title) / IP.bracket.healthy.title
+    > (IP.bracket.healthy.playoff - IP.bracket.full.playoff) / IP.bracket.healthy.playoff
+    && IP.bracket.full.title < IP.bracket.reg.title && IP.bracket.full.playoff === IP.bracket.reg.playoff,
+  JSON.stringify(IP.bracket));
+check("the plan runs a season-ending injury through the playoff weeks",
+  IP.bracket.planWeeks[IP.bracket.planWeeks.length - 1] === IP.bracket.lastWeek, JSON.stringify(IP.bracket.planWeeks));
 check("the futures note says how long",
   /next week \(Achane out\)$/.test(IP.one.note) && /for 2 weeks/.test(IP.ret.note) && /rest of season/.test(IP.end.note),
   `${IP.one.note} | ${IP.ret.note} | ${IP.end.note}`);
