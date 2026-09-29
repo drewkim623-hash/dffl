@@ -698,6 +698,9 @@
   .cover .faces.two img:nth-child(n+3){margin-top:-4cqw}
   .cover.big{aspect-ratio:16/7;border-radius:var(--rs);margin-bottom:20px;--fw:13%;--fo:3%;--fp:4%}
   .cover.big .faces{aspect-ratio:16/7}
+  /* The desktop hero (COVER_GEOM.wide): wider and shorter, so the headline isn't pushed off the first screen. */
+  .cover.big.wide{aspect-ratio:1000/290;--fw:14.5%;--fo:3%;--fp:3.5%}
+  .cover.big.wide .faces{aspect-ratio:1000/290}
   /* Beside a taller text column the art stays at the top and its own base colour runs on below. */
   .teaser > .cover{align-self:stretch}
   .teaser > .cover svg{height:auto}
@@ -2423,47 +2426,90 @@ const artText = t => esc(String(t ?? ""))
  * sit over the right-hand side as plain <img>s from the Sleeper CDN; any that
  * 404 remove themselves and the emblem drawn underneath still fills the space.
  */
-const COVER_ACCENTS = { blue: "#3987e5", violet: "#9085e9", aqua: "#199e70", gold: "#c98500", red: "#e66767" };
-// First match wins (after an explicit a.cover.type). t is kicker + slug + headline, lowercased.
+// Colours come off the page's own custom properties, so restyling :root restyles the
+// covers too; the literals are what those properties hold today, for when they can't be read.
+const COVER_VAR_DEFAULTS = { ink: "#ffffff", "ink-2": "#c6c5cf", plane: "#0b0b0f", blue: "#3987e5",
+  violet: "#9085e9", aqua: "#199e70", gold: "#c98500", red: "#e66767" };
+/** A CSS colour as lowercase #rrggbb, or the fallback when it isn't a plain opaque hex or rgb(). */
+function coverHex(v, fallback) {
+  const s = String(v ?? "").trim().toLowerCase();
+  if (/^#[0-9a-f]{6}$/.test(s)) return s;
+  if (/^#[0-9a-f]{3}$/.test(s)) return "#" + [...s.slice(1)].map(ch => ch + ch).join("");
+  const m = s.match(/^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)\s*(?:[,/]\s*1(?:\.0*)?\s*)?\)$/);
+  return m ? "#" + m.slice(1, 4).map(n => Math.min(255, +n).toString(16).padStart(2, "0")).join("") : fallback;
+}
+const COVER_VARS = (() => {
+  let cs = null;
+  try { cs = getComputedStyle(document.documentElement); } catch (e) { /* no page: the defaults stand */ }
+  return Object.fromEntries(Object.entries(COVER_VAR_DEFAULTS).map(([k, d]) =>
+    [k, coverHex(cs && cs.getPropertyValue("--" + k), d)]));
+})();
+const COVER_ACCENTS = Object.fromEntries(["blue", "violet", "aqua", "gold", "red"].map(k => [k, COVER_VARS[k]]));
+// The kinds, in the order their words are tried (see coverKind). Words match whole.
 const COVER_KINDS = [
-  { kind: "trade",    from: "gold",   to: "red",    test: (a, t) => /trade/.test(t) },
-  { kind: "waivers",  from: "aqua",   to: "gold",   test: (a, t) => /waiver|faab/.test(t) },
-  { kind: "rankings", from: "aqua",   to: "blue",   test: (a, t) => /power|ranking/.test(t) },
-  { kind: "preview",  from: "violet", to: "aqua",   test: (a, t) => /preview/.test(t) },
-  { kind: "draft",    from: "blue",   to: "aqua",   test: (a, t) => /draft/.test(t) },
-  { kind: "odds",     from: "violet", to: "red",    test: (a, t) => /odds/.test(t) || a.source === "saturday" },
-  { kind: "column",   from: "red",    to: "gold",   test: a => a.kind === "opinion" },
-  { kind: "recap",    from: "blue",   to: "violet",
-    test: (a, t) => /^\d{4} · week \d+$/i.test(plainText(a.kicker)) || /game by game|recap/.test(t) },
-  { kind: "analysis", from: "violet", to: "blue",   test: (a, t) => /analysis/.test(t) },
-  { kind: "feature",  from: "blue",   to: "violet", test: () => true },
+  { kind: "trade",    from: "gold",   to: "red",    words: /\btrades?\b|\btraded\b/ },
+  { kind: "waivers",  from: "aqua",   to: "gold",   words: /\bwaivers?\b|\bfaab\b/ },
+  { kind: "rankings", from: "aqua",   to: "blue",   words: /\bpower rankings?\b|\brankings?\b/ },
+  { kind: "preview",  from: "violet", to: "aqua",   words: /\bpreviews?\b/ },
+  { kind: "draft",    from: "blue",   to: "aqua",   words: /\bdraft\b/ },
+  { kind: "odds",     from: "violet", to: "red",    words: /\bodds\b/ },
+  { kind: "column",   from: "red",    to: "gold",   words: /\bcolumns?\b/ },
+  { kind: "recap",    from: "blue",   to: "violet", words: /\brecaps?\b|\bgame by game\b/ },
+  { kind: "analysis", from: "violet", to: "blue",   words: /\banalysis\b/ },
+  { kind: "feature",  from: "blue",   to: "violet", words: null },
 ];
+const COVER_SOURCES = { saturday: "odds", watch: "waivers" };   // a.source: the job that filed it
+const COVER_ARTKINDS = { opinion: "column" };                   // a.kind: the voice it is written in
 const mixHex = (hex, base, t) => "#" + [1, 3, 5].map(i => Math.round(
   parseInt(hex.slice(i, i + 2), 16) * t + parseInt(base.slice(i, i + 2), 16) * (1 - t))
   .toString(16).padStart(2, "0")).join("");
 // Each accent pulled most of the way to --plane, so #fff and --ink-2 clear 4.5:1 on either stop.
 const COVER_PALETTE = Object.fromEntries(COVER_KINDS.map(k => [k.kind, {
-  from: mixHex(COVER_ACCENTS[k.from], "#0b0b0f", .36), to: mixHex(COVER_ACCENTS[k.to], "#0b0b0f", .26),
+  from: mixHex(COVER_ACCENTS[k.from], COVER_VARS.plane, .36), to: mixHex(COVER_ACCENTS[k.to], COVER_VARS.plane, .26),
   accent: COVER_ACCENTS[k.from], accent2: COVER_ACCENTS[k.to] }]));
 
 /** Copy as plain words: the <b>/<i> the files allow go, anything else stays as text. */
 const plainText = s => String(s ?? "").replace(/<\/?[bi]>/gi, "").replace(/\s+/g, " ").trim();
 
+/*
+ * Which cover a piece gets, strongest evidence first:
+ *   1. a.cover.type, when it names a kind;
+ *   2. a.source, the job that filed it (saturday → odds, watch → waivers). This outranks
+ *      a.kind, which only says the voice: the Saturday odds column is filed as an opinion
+ *      piece ("The Steepest Fall on the Board") but it is an odds piece;
+ *   3. a.kind (opinion → column);
+ *   4. the kicker: a recap's "2026 · week 1", else the first kind whose words it uses;
+ *   5. the slug and headline's words, last, so "Draft Day Regrets" under a recap kicker is a recap.
+ */
 function coverKind(a) {
   const want = a.cover && a.cover.type;
   if (COVER_KINDS.some(k => k.kind === want)) return want;
-  const t = [a.kicker, a.slug, a.headline].map(plainText).join(" ").toLowerCase();
-  return COVER_KINDS.find(k => k.test(a, t)).kind;
+  if (COVER_SOURCES[a.source]) return COVER_SOURCES[a.source];
+  if (COVER_ARTKINDS[a.kind]) return COVER_ARTKINDS[a.kind];
+  const byWords = t => (COVER_KINDS.find(k => k.words && k.words.test(t)) || {}).kind;
+  const kick = plainText(a.kicker).toLowerCase();
+  if (/^\d{4} · week \d+$/.test(kick)) return "recap";
+  return byWords(kick) ||
+    byWords(`${String(a.slug || "").replace(/[-_]+/g, " ")} ${plainText(a.headline)}`.toLowerCase()) || "feature";
 }
 
-// One drawing at two scales. fw/fo/fp are the headshot width, overlap and right
-// inset as a share of the width: the same numbers as --fw/--fo/--fp in the CSS.
+// One drawing at three sizes: the index card, the article hero on a phone, and a
+// wider, shorter hero for desktop. fw/fo/fp are the headshot width, overlap and
+// right inset as a share of the width: the same numbers as --fw/--fo/--fp in the CSS.
 const COVER_GEOM = {
-  card: { W: 320, H: 200, pad: 16, label: 13, title: [34, 30, 27, 24], stat: [72, 60, 50, 40],
-    sub: [24], row: [30, 27, 24, 22, 21], who: 15, faces: 4, perRow: 3, fw: .17, fo: .04, fp: .045 },
-  hero: { W: 640, H: 280, pad: 28, label: 20, title: [60, 52, 46, 40], stat: [120, 100, 84, 68],
-    sub: [36, 32], row: [48, 42, 36], who: 22, faces: 4, perRow: 4, fw: .13, fo: .03, fp: .04 },
+  card: { W: 320, H: 200, pad: 16, label: 13, title: [34, 30, 27, 24, 21, 19], stat: [72, 60, 50, 40, 34],
+    sub: [24, 21, 19, 17, 15], row: [30, 27, 24, 22, 20, 18], who: 15, faces: 4, perRow: 3, fw: .17, fo: .04, fp: .045 },
+  hero: { W: 640, H: 280, pad: 28, label: 20, title: [60, 52, 46, 40, 35, 31], stat: [120, 100, 84, 68, 56],
+    sub: [36, 32, 28, 25, 22], row: [48, 42, 36, 32, 28], who: 22, faces: 4, perRow: 4, fw: .13, fo: .03, fp: .04 },
+  wide: { W: 1000, H: 290, pad: 32, label: 20, title: [60, 52, 46, 40, 35], stat: [120, 100, 84, 68],
+    sub: [34, 30, 26, 23, 20], row: [50, 44, 38, 32], who: 22, faces: 4, perRow: 4, fw: .145, fo: .03, fp: .035 },
 };
+// The article hero goes wide at desktop widths, where 16:7 would stand taller than a screen's worth of headline.
+const COVER_WIDE_MQ = "(min-width: 760px)";
+const coverHeroVariant = () =>
+  typeof matchMedia === "function" && matchMedia(COVER_WIDE_MQ).matches ? "wide" : "hero";
+const coverVariant = big => COVER_GEOM[big] ? big : big ? coverHeroVariant() : "card";
+const coverPlayers = a => Array.isArray((a.cover || {}).players) ? a.cover.players : [];
 // Line-drawn emblems in a 100-unit box, one per kind.
 const COVER_EMBLEMS = {
   recap: "M8 50Q50 6 92 50Q50 94 8 50ZM34 50H66M41 43V57M50 43V57M59 43V57",
@@ -2480,47 +2526,120 @@ const COVER_EMBLEMS = {
 };
 const COVER_CACHE = new Map();
 // The dark wash behind the words; the .cover under the art carries it too, so the two meet without a seam.
-const COVER_SCRIM = "linear-gradient(90deg,rgba(11,11,15,.5),rgba(11,11,15,0) 72%)";
+const COVER_SCRIM = (rgb => `linear-gradient(90deg,rgba(${rgb},.5),rgba(${rgb},0) 72%)`)(
+  [1, 3, 5].map(i => parseInt(COVER_VARS.plane.slice(i, i + 2), 16)).join(","));
 
-// Estimated advance widths, in em, for heavy system-ui. Deliberately a touch generous.
+// How each kind of line is set: weight, and letter-spacing in em. Nothing heavier than 700.
+const COVER_TYPE = { label: { wt: 700, ls: .12 }, mark: { wt: 700, ls: .1 }, head: { wt: 700, ls: 0 },
+  stat: { wt: 700, ls: -.02 }, sub: { wt: 700, ls: 0 }, row: { wt: 700, ls: 0 }, who: { wt: 600, ls: 0 } };
+const COVER_FONT = "system-ui,-apple-system,'Segoe UI',sans-serif";
+// Every line is fitted to 92% of its room: headroom for whatever font the reader's machine falls back to.
+const COVER_SAFE = .92;
+// Estimated advance widths, in em, for bold system-ui, padded 10%: only for when nothing can be measured.
 const coverCharW = ch => /[\sIil1.,:;'’|!]/.test(ch) ? .3 : /[fjrt()\-−/]/.test(ch) ? .42 :
   /[MW…]/.test(ch) ? .9 : /[mw]/.test(ch) ? .84 : /[a-z]/.test(ch) ? .57 : /\d/.test(ch) ? .62 : .67;
-const coverW = (s, fs, ls = 0) => [...s].reduce((n, ch) => n + coverCharW(ch) + ls, 0) * fs;
-// Truncate to fit: whole words first, and only cut inside a word when one word alone is too long.
-function coverFit(s, fs, maxW, ls = 0) {
-  if (coverW(s, fs, ls) <= maxW) return s;
+const coverEst = (s, fs, ls) => [...s].reduce((n, ch) => n + coverCharW(ch) + ls, 0) * fs * 1.1;
+const COVER_WIDTHS = new Map();
+let coverRuler = null;
+/** How wide s really sets in the cover's font, in user units; 0 when there's no page to measure in. */
+function coverMeasure(s, fs, wt, ls) {
+  if (typeof document === "undefined" || !document.body) return 0;
+  const key = `${fs}|${wt}|${ls}|${s}`;
+  if (COVER_WIDTHS.has(key)) return COVER_WIDTHS.get(key);
+  let w = 0;
+  try {
+    if (!coverRuler || !coverRuler.isConnected) {
+      // One hidden svg, reused: zero-sized and fixed, so it never adds to the page's width.
+      const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", "cover-ruler");
+      svg.setAttribute("aria-hidden", "true");
+      svg.setAttribute("font-family", COVER_FONT);
+      svg.style.cssText = "position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;visibility:hidden;pointer-events:none";
+      coverRuler = svg.appendChild(document.createElementNS(NS, "text"));
+      document.body.appendChild(svg);
+    }
+    const r = coverRuler;
+    r.setAttribute("font-size", fs);
+    r.setAttribute("font-weight", wt);
+    r.setAttribute("letter-spacing", cr(fs * ls));
+    r.textContent = s;
+    w = Math.max(r.getComputedTextLength(), r.getBBox().width);
+    r.textContent = "";
+  } catch (e) { w = 0; }
+  if (w > 0) COVER_WIDTHS.set(key, w);
+  return w;
+}
+const coverWidth = (s, fs, st) => coverMeasure(s, fs, st.wt, st.ls) || coverEst(s, fs, st.ls);
+const coverFits = (s, fs, maxW, st) => coverWidth(s, fs, st) <= maxW * COVER_SAFE;
+// Cut back to whole words and an ellipsis; never inside a word. A first word too long
+// on its own comes back whole, and coverText squeezes it.
+function coverFit(s, fs, maxW, st) {
+  if (coverFits(s, fs, maxW, st)) return s;
   const words = s.split(" ");
   while (words.length > 1) {
     words.pop();
     const t = words.join(" ").replace(/[\s,;:·—–-]+$/, "");
-    if (coverW(t + "…", fs, ls) <= maxW) return t + "…";
+    if (t && coverFits(t + "…", fs, maxW, st)) return t + "…";
   }
-  let t = words[0];
-  while (t && coverW(t.trimEnd() + "…", fs, ls) > maxW) t = t.slice(0, -1);
-  return t.trimEnd() + "…";
+  return s.includes(" ") ? words[0] + "…" : s;
 }
-function coverWrap(text, fs, maxW, maxLines, ls = 0) {
+function coverWrap(text, fs, maxW, maxLines, st) {
   const lines = [];
   for (const w of text.split(" ").filter(Boolean)) {
     const n = lines.length;
-    if (n && coverW(lines[n - 1] + " " + w, fs, ls) <= maxW) lines[n - 1] += " " + w;
+    if (n && coverFits(lines[n - 1] + " " + w, fs, maxW, st)) lines[n - 1] += " " + w;
     else lines.push(w);
   }
   const kept = lines.slice(0, maxLines);
   if (lines.length > maxLines) kept[maxLines - 1] += " " + lines.slice(maxLines).join(" ");
-  const out = kept.map(l => coverFit(l, fs, maxW, ls));
-  return { lines: out, cut: out.some((l, i) => l !== kept[i]) };
+  const out = kept.map(l => coverFit(l, fs, maxW, st));
+  return { lines: out, cut: out.some((l, i) => l !== kept[i] || !coverFits(l, fs, maxW, st)) };
 }
-// The biggest size that fits untruncated, else the smallest size, truncated.
-function coverSize(text, sizes, maxW, maxLines, ls = 0) {
+// The biggest size that fits whole (and, if asked, in the height there is), else the smallest, cut.
+function coverSize(text, sizes, maxW, maxLines, st, room = () => true) {
   let r;
-  for (const fs of sizes) { r = { fs, ...coverWrap(text, fs, maxW, maxLines, ls) }; if (!r.cut) break; }
+  for (const fs of sizes) { r = { fs, ...coverWrap(text, fs, maxW, maxLines, st) }; if (!r.cut && room(r)) break; }
   return r;
 }
 const cr = n => Math.round(n * 10) / 10;
-const coverText = (x, y, s, fs, fill, attrs = "") =>
-  `<text x="${cr(x)}" y="${cr(y)}" font-size="${fs}" fill="${fill}"${attrs}>${esc(s)}</text>`;
+// A line of cover text in maxW of room. Anything still over (one word too long for the
+// smallest size) is squeezed to fit rather than cut.
+function coverText(x, y, s, fs, fill, st, maxW, attrs = "") {
+  const fit = maxW * COVER_SAFE, squeeze = coverWidth(s, fs, st) > fit
+    ? ` textLength="${cr(fit)}" lengthAdjust="spacingAndGlyphs"` : "";
+  return `<text x="${cr(x)}" y="${cr(y)}" font-size="${cr(fs)}" font-weight="${st.wt}"` +
+    `${st.ls ? ` letter-spacing="${cr(fs * st.ls)}"` : ""} fill="${fill}"${attrs}${squeeze}>${esc(s)}</text>`;
+}
 const coverNum = s => parseFloat(String(s).replace(/[−–]/g, "-").replace(/[^\d.\-]+/g, " ").trim());
+// A figure as something to compare: a record ("37-19", "8–5–1") by its win share, anything
+// else by the number in it. A leading minus ("−20.0 pts") makes a number, not a record.
+function coverVal(s) {
+  const m = plainText(s).match(/^(\d+)\s*[-–−]\s*(\d+)(?:\s*[-–−]\s*(\d+))?$/);
+  if (!m) return coverNum(plainText(s));
+  const [w, l, d = 0] = m.slice(1).map(n => +(n || 0));
+  return w + l + d ? (w + d / 2) / (w + l + d) : NaN;
+}
+const COVER_FALL = /\b(?:falls?|fell|falling|drops?|dropped|loss|losses|slides?|slid|plunges?|plunged|slump|sinks?|sank|collapse)\b/;
+/**
+ * Which scoreboard row is the story, and is drawn in white: the one name of the
+ * two that the copy (headline, kicker, dek, first paragraph) mentions. When it
+ * names both or neither, the figures decide: the lower in a story about a fall,
+ * else the higher (a record by its win share); -1 when nothing picks one. A final
+ * score (result) skips the names: the winner is lit, whoever the copy talks about.
+ */
+function coverLead(a, names, vals, result) {
+  const para = (a.blocks || []).find(b => b && b.type === "p");
+  const copy = [a.headline, a.kicker, a.dek, para && para.text].map(plainText).join(" \n ").toLowerCase();
+  const named = names.map(n => {
+    const q = n.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return !!q && new RegExp(`(^|[^\\p{L}\\p{N}_])${q}(?![\\p{L}\\p{N}_])`, "u").test(copy);
+  });
+  if (!result && named[0] !== named[1]) return named[0] ? 0 : 1;
+  const [x, y] = vals;
+  if (!Number.isFinite(x) || !Number.isFinite(y) || x === y) return -1;
+  const fall = COVER_FALL.test([a.headline, a.kicker, (a.cover || {}).caption].map(plainText).join(" ").toLowerCase());
+  return (fall ? x < y : x > y) ? 0 : 1;
+}
 function coverSeed(s) {                     // FNV-1a, then mulberry32 off it
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 0x01000193) >>> 0;
@@ -2532,22 +2651,28 @@ function coverSeed(s) {                     // FNV-1a, then mulberry32 off it
   };
 }
 
-/** Where the big words come from: an explicit trade or matchup, a scoreline, a two-card face-off. */
+/**
+ * Where the big words come from: an explicit trade or matchup, a scoreline, a
+ * two-card face-off. A face-off missing a name or a figure on either side draws
+ * the headline instead of a half-empty scoreboard.
+ */
 function coverSubject(a, kind) {
   const c = a.cover || {}, blocks = (a.blocks || []).filter(Boolean);
+  const versus = (n1, v1, n2, v2) => [n1, v1, n2, v2].every(x => plainText(x))
+    ? { layout: "versus", a: n1, aPts: v1, b: n2, bPts: v2 } : { layout: "title" };
   if (c.trade && c.trade.a && c.trade.b) return { layout: "trade", ...c.trade };
-  if (c.matchup && c.matchup.a && c.matchup.b) return { layout: "versus", ...c.matchup };
+  if (c.matchup && c.matchup.a && c.matchup.b) return versus(c.matchup.a, c.matchup.aPts, c.matchup.b, c.matchup.bPts);
   if (kind === "recap" || kind === "preview") {
     for (const b of blocks.filter(b => b.type === "p")) {
       const m = String(b.text || "").match(/<b>\s*([^<,]+?)\s+(\d+(?:\.\d+)?),\s*([^<,]+?)\s+(\d+(?:\.\d+)?)\.?\s*<\/b>/);
-      if (m) return { layout: "versus", a: m[1], aPts: m[2], b: m[3], bPts: m[4] };
+      if (m) return { ...versus(m[1], m[2], m[3], m[4]), result: true };
     }
   }
   if (kind === "odds" || kind === "analysis") {
     const cards = blocks.find(b => b.type === "cards" && (b.items || []).length === 2);
     if (cards) {
-      const [x, y] = cards.items;
-      return { layout: "versus", a: x.title, aPts: x.big, b: y.title, bPts: y.big };
+      const [x, y] = cards.items.map(i => i || {});
+      return versus(x.title, x.big, y.title, y.big);
     }
   }
   const stat = blocks.find(b => b.type === "stat");
@@ -2557,16 +2682,16 @@ function coverSubject(a, kind) {
 
 /** The cover art as an inline SVG string: a pure function of the article, cached per article and size. */
 function coverSVG(a, big) {
-  const key = (a.slug || `${a.headline}|${a.date}`) + (big ? "|hero" : "|card");
+  const v = coverVariant(big), key = (a.slug || `${a.headline}|${a.date}`) + "|" + v;
   if (COVER_CACHE.has(key)) return COVER_CACHE.get(key);
-  const G = big ? COVER_GEOM.hero : COVER_GEOM.card, { W, H, pad } = G;
+  const G = COVER_GEOM[v], { W, H, pad } = G, small = v === "card", T = COVER_TYPE;
   const c = a.cover || {}, kind = coverKind(a), P = COVER_PALETTE[kind];
   const rnd = coverSeed(`${a.slug || a.headline}|${a.season}|${a.date}`);
-  const WHITE = "#ffffff", INK2 = "#c6c5cf";
+  const WHITE = COVER_VARS.ink, INK2 = COVER_VARS["ink-2"];
 
   // Headshots take the right-hand side (more than a row's worth go two by two);
   // the text column stops short of them.
-  const nf = Math.min((c.players || []).length, G.faces), cols = nf > G.perRow ? Math.ceil(nf / 2) : nf;
+  const nf = Math.min(coverPlayers(a).length, G.faces), cols = nf > G.perRow ? Math.ceil(nf / 2) : nf;
   const facesW = nf ? W * (cols * G.fw - (cols - 1) * G.fo) : 0;
   const tw = nf ? W - pad - facesW - W * G.fp - pad * .75 : W - 2 * pad;
 
@@ -2587,77 +2712,107 @@ function coverSVG(a, big) {
     }
   }
   const ez = step * (.55 + rnd() * .3);
-  const field = `<path d="${lines}" stroke="${WHITE}" stroke-opacity=".1" stroke-width="${big ? 1.6 : 1}"/>` +
-    `<path d="${hashes}" stroke="${WHITE}" stroke-opacity=".12" stroke-width="${big ? 1.6 : 1}"/>` +
+  const field = `<path d="${lines}" stroke="${WHITE}" stroke-opacity=".1" stroke-width="${small ? 1 : 1.6}"/>` +
+    `<path d="${hashes}" stroke="${WHITE}" stroke-opacity=".12" stroke-width="${small ? 1 : 1.6}"/>` +
     `<rect x="${cr(W - ez)}" y="0" width="${cr(ez)}" height="${H2}" fill="${P.accent2}" fill-opacity=".1"/>`;
 
-  // Emblem: faint, on the right, under the headshots when there are any.
-  const R = H * .3;
-  const ex = nf ? W - W * G.fp - facesW / 2 : W - pad - R * .95, ey = nf ? H / 2 : H * .54;
-  const emblem = `<path d="${COVER_EMBLEMS[kind]}" transform="translate(${cr(ex - R)} ${cr(ey - R)}) scale(${cr(R / 50 * 100) / 100})"` +
-    ` fill="none" stroke="${P.accent}" stroke-opacity=".24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // Label and wordmark. A card sits beside its own kicker, so its label is just the
+  // week and the kind; the hero says the caption, or the kicker, in full.
+  const kick = plainText(a.kicker), wk = a.week != null ? a.week : (kick.match(/\bweek (\d+)\b/i) || [])[1];
+  const labelRaw = (small ? [wk != null ? `week ${wk}` : "", kind].filter(Boolean).join(" · ")
+    : plainText(c.caption) || kick || [a.season, wk != null ? `week ${wk}` : ""].filter(Boolean).join(" · ") || kind)
+    .toUpperCase();
+  const yL = pad + G.label * .75, ruleY = yL + G.label * .6, ceil = ruleY + pad * .6;
+  const wmW = coverWidth("DFFL", G.label, T.mark), labelW = W - 3 * pad - wmW;
+  const L = coverSize(labelRaw, [1, .92, .84, .76].map(k => cr(G.label * k)), labelW, 1, T.label);
+  const label = coverText(pad, yL, L.lines[0], L.fs, INK2, T.label, labelW, ` class="cv-label"`) +
+    `<path d="M${pad} ${cr(ruleY)}h${cr(G.label * 2.2)}" stroke="${P.accent}" stroke-width="${small ? 2 : 3}"/>` +
+    coverText(W - pad, yL, "DFFL", G.label, INK2, T.mark, W - 2 * pad, ` class="cv-mark" text-anchor="end"`);
 
-  // Label and wordmark.
-  const lsL = .12, wmW = coverW("DFFL", G.label, .1);
-  const labelRaw = plainText(c.caption || a.kicker ||
-    [a.season, a.week != null ? `week ${a.week}` : ""].filter(Boolean).join(" · ") || "DFFL").toUpperCase();
-  const yL = pad + G.label * .75;
-  const label = coverText(pad, yL, coverFit(labelRaw, G.label, W - 3 * pad - wmW, lsL), G.label, INK2,
-    ` font-weight="700" letter-spacing="${cr(G.label * lsL)}"`) +
-    `<path d="M${pad} ${cr(yL + G.label * .6)}h${cr(G.label * 2.2)}" stroke="${P.accent}" stroke-width="${big ? 3 : 2}"/>` +
-    coverText(W - pad, yL, "DFFL", G.label, INK2, ` font-weight="900" letter-spacing="${cr(G.label * .1)}" text-anchor="end"`);
-
-  // Subject.
+  // Subject. put() also keeps track of how high the words reach, for the emblem.
   const S = coverSubject(a, kind), yB = H - pad - 2;
   const head = plainText(a.headline).toUpperCase();
-  let main = "", layout = S.layout;
+  let main = "", layout = S.layout, top = yB, statBox = null;
+  const put = (x, y, s, fs, ...rest) => { top = Math.min(top, y - fs * .76); return coverText(x, y, s, fs, ...rest); };
   if (layout === "versus") {
     const rows = [[S.a, S.aPts], [S.b, S.bPts]].map(([n, p]) => [plainText(n), plainText(p)]);
-    let fs, numW, names;
+    let fs, numW, numMax, nameW, names;
     for (fs of G.row) {
-      numW = Math.max(...rows.map(r => coverW(r[1], fs)));
-      names = rows.map(r => coverFit(r[0], fs, tw - numW - fs * .6));
-      if (names.every((n, i) => n === rows[i][0])) break;
+      numW = Math.max(...rows.map(r => coverWidth(r[1], fs, T.row)));
+      numMax = Math.min(numW, tw * .45 * COVER_SAFE) / COVER_SAFE;
+      nameW = tw - numMax * COVER_SAFE - fs * .6;
+      names = rows.map(r => coverFit(r[0], fs, nameW, T.row));
+      if (numW <= tw * .45 * COVER_SAFE &&
+        names.every((n, i) => n === rows[i][0] && coverFits(n, fs, nameW, T.row))) break;
     }
-    const va = coverNum(rows[0][1]), vb = coverNum(rows[1][1]);
+    const lead = coverLead(a, rows.map(r => r[0]), rows.map(r => coverVal(r[1])), S.result);
     const y2 = H - pad - fs * .22, y1 = y2 - fs * 1.4, ry = (y1 + fs * .22 + y2 - fs * .74) / 2;
     main = rows.map((r, i) => {
-      const lost = i === 0 ? vb > va : va > vb, fill = lost ? INK2 : WHITE, y = i ? y2 : y1;
-      return coverText(pad, y, names[i], fs, fill, ` font-weight="800"`) +
-        coverText(pad + tw, y, r[1], fs, fill, ` font-weight="900" text-anchor="end"`);
-    }).join("") + `<path d="M${pad} ${cr(ry)}H${cr(pad + tw)}" stroke="${P.accent}" stroke-opacity=".8" stroke-width="${big ? 2 : 1.5}"/>`;
+      const fill = lead === -1 || lead === i ? WHITE : INK2, y = i ? y2 : y1;
+      return put(pad, y, names[i], fs, fill, T.row, nameW, ` class="cv-name"`) +
+        put(pad + tw, y, r[1], fs, fill, T.row, numMax, ` class="cv-num" text-anchor="end"`);
+    }).join("") + `<path d="M${pad} ${cr(ry)}H${cr(pad + tw)}" stroke="${P.accent}" stroke-opacity=".8" stroke-width="${small ? 1.5 : 2}"/>`;
   } else if (layout === "trade") {
     const gets = [S.aGets, S.bGets].map(g => (Array.isArray(g) ? g : []).slice(0, 2).map(plainText));
-    const np = Math.max(1, ...gets.map(g => g.length));
+    const np = Math.max(1, ...gets.map(g => g.length)), sides = [S.a, S.b].map(plainText);
     let fs, colW, teams;
     for (fs of G.row) {
       colW = (tw - fs * 1.5) / 2;
-      teams = [S.a, S.b].map(t => coverFit(plainText(t), fs, colW));
-      if (teams.every((t, i) => t === plainText([S.a, S.b][i]))) break;
+      teams = sides.map(t => coverFit(t, fs, colW, T.row));
+      if (teams.every((t, i) => t === sides[i] && coverFits(t, fs, colW, T.row))) break;
     }
     const pl = G.who * 1.35, yT = yB - np * pl - G.who * .2;
     const cx = pad + colW + fs * .75, cy = yT - fs * .36, aw = fs * .5, ah = fs * .13;
     main = [0, 1].map(i => {
       const x = pad + i * (colW + fs * 1.5);
-      return coverText(x, yT, teams[i], fs, WHITE, ` font-weight="800"`) +
-        gets[i].map((p, j) => coverText(x, yT + pl * (j + 1), coverFit(p, G.who, colW), G.who, INK2, ` font-weight="650"`)).join("");
+      return put(x, yT, teams[i], fs, WHITE, T.row, colW, ` class="cv-team"`) + gets[i].map((p, j) => {
+        const Q = coverSize(p, [1, .9, .8].map(k => cr(G.who * k)), colW, 1, T.who);
+        return put(x, yT + pl * (j + 1), Q.lines[0], Q.fs, INK2, T.who, colW, ` class="cv-who"`);
+      }).join("");
     }).join("") +
       `<path d="M${cr(cx - aw)} ${cr(cy - ah)}H${cr(cx + aw)}m${cr(-ah * 1.4)} ${cr(-ah * 1.4)}l${cr(ah * 1.4)} ${cr(ah * 1.4)}l${cr(-ah * 1.4)} ${cr(ah * 1.4)}` +
       `M${cr(cx + aw)} ${cr(cy + ah)}H${cr(cx - aw)}m${cr(ah * 1.4)} ${cr(-ah * 1.4)}l${cr(-ah * 1.4)} ${cr(ah * 1.4)}l${cr(ah * 1.4)} ${cr(ah * 1.4)}"` +
       ` fill="none" stroke="${P.accent}" stroke-width="${cr(fs * .09)}" stroke-linecap="round" stroke-linejoin="round"/>`;
   } else if (layout === "stat") {
-    const N = coverSize(plainText(S.n), G.stat, tw, 1, -.02), T = coverSize(head, G.sub, tw, 2);
-    const sl = T.fs * 1.08, ys = yB - (T.lines.length - 1) * sl, yN = ys - T.fs * .74 - N.fs * .16;
-    main = coverText(pad, yN, N.lines[0], N.fs, WHITE, ` font-weight="900" letter-spacing="${cr(N.fs * -.02)}"`) +
-      T.lines.map((l, i) => coverText(pad, ys + i * sl, l, T.fs, INK2, ` font-weight="800"`)).join("");
-  } else {
-    const T = coverSize(head, G.title, tw, 3), lh = T.fs * 1.02, y0 = yB - (T.lines.length - 1) * lh;
-    main = T.lines.map((l, i) => coverText(pad, y0 + i * lh, l, T.fs, WHITE, ` font-weight="900"`)).join("");
+    // The headline gets up to three lines, as small as it takes to read in full, so long
+    // as the smallest figure still fits above it; then the figure is as big as the rest allows.
+    const n = plainText(S.n), minN = G.stat[G.stat.length - 1];
+    const subTop = r => yB - (r.lines.length - 1) * r.fs * 1.08 - r.fs * .74;
+    const subRoom = r => subTop(r) - minN * .98 >= ceil, Sub2 = coverSize(head, G.sub, tw, 2, T.sub, subRoom);
+    const Sub = Sub2.cut || !subRoom(Sub2) ? coverSize(head, G.sub, tw, 3, T.sub, subRoom) : Sub2;
+    const sl = Sub.fs * 1.08, ys = yB - (Sub.lines.length - 1) * sl;
+    const yN = fs => subTop(Sub) - fs * .22;   // clear of the sub line, even under a "/" or a "$"
+    const N = coverSize(n, G.stat, tw, 1, T.stat, r => yN(r.fs) - r.fs * .76 >= ceil);
+    statBox = { right: pad + Math.min(coverWidth(N.lines[0], N.fs, T.stat), tw * COVER_SAFE), bottom: subTop(Sub) };
+    main = put(pad, yN(N.fs), N.lines[0], N.fs, WHITE, T.stat, tw, ` class="cv-stat"`) +
+      Sub.lines.map((l, i) => put(pad, ys + i * sl, l, Sub.fs, INK2, T.sub, tw, ` class="cv-sub"`)).join("");
+  } else if (head) {
+    // Up to three lines, as small as it takes to read in full before anything is cut.
+    const Hd = coverSize(head, G.title, tw, 3, T.head, r => r.fs * .76 + (r.lines.length - 1) * r.fs * 1.02 <= yB - ceil);
+    const lh = Hd.fs * 1.02, y0 = yB - (Hd.lines.length - 1) * lh;
+    main = Hd.lines.map((l, i) => put(pad, y0 + i * lh, l, Hd.fs, WHITE, T.head, tw, ` class="cv-title"`)).join("");
+  }
+
+  // Emblem: faint. Under the headshots when there are any; otherwise up on the right,
+  // in the clear band between the label row and the words, or, on a stat cover, beside
+  // the figure (clear of its measured width) and above the lines under it. Left out
+  // when neither has room, so it never sits under the text.
+  const emblemAt = (ex, ey, R) => `<path d="${COVER_EMBLEMS[kind]}" transform="translate(${cr(ex - R)} ${cr(ey - R)}) scale(${cr(R / 50 * 100) / 100})"` +
+    ` fill="none" stroke="${P.accent}" stroke-opacity=".24" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  let emblem = "";
+  if (nf) emblem = emblemAt(W - W * G.fp - facesW / 2, H / 2, H * .3);
+  else {
+    const lo = ruleY + pad * .5, hi = top - pad * .5, R = Math.min(H * .3, (hi - lo) / 2);
+    if (R >= H * .08) emblem = emblemAt(W - pad - R, (lo + hi) / 2, R);
+    else if (statBox) {
+      const sHi = statBox.bottom - pad * .5, sR = Math.min(H * .3, (sHi - lo) / 2, (W - pad - statBox.right - pad) / 2);
+      if (sR >= H * .08) emblem = emblemAt(W - pad - sR, (lo + sHi) / 2, sR);
+    }
   }
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet" overflow="visible"` +
-    ` aria-hidden="true" focusable="false" data-kind="${kind}" data-layout="${layout}"` +
-    ` font-family="system-ui,-apple-system,'Segoe UI',sans-serif" style="background:${bg}">` +
+    ` aria-hidden="true" focusable="false" data-kind="${kind}" data-layout="${layout}" data-variant="${v}"` +
+    ` font-family="${COVER_FONT}" style="background:${bg}">` +
     `${field}${emblem}${label}${main}</svg>`;
   COVER_CACHE.set(key, svg);
   return svg;
@@ -2665,14 +2820,24 @@ function coverSVG(a, big) {
 coverSVG.cache = COVER_CACHE;
 
 function coverHTML(a, big) {
-  const kind = coverKind(a), G = big ? COVER_GEOM.hero : COVER_GEOM.card;
-  const ids = ((a.cover || {}).players || []).slice(0, G.faces);
+  const v = coverVariant(big), kind = coverKind(a), G = COVER_GEOM[v];
+  const ids = coverPlayers(a).slice(0, G.faces);
   const faces = ids.map(id =>
     `<img src="https://sleepercdn.com/content/nfl/players/${esc(String(id))}.jpg" alt=""
       loading="lazy" onerror="this.remove()">`).join("");
-  return `<div class="cover k-${kind}${big ? " big" : ""}" style="background:${COVER_SCRIM},${COVER_PALETTE[kind].to}">${coverSVG(a, big)}${
+  return `<div class="cover k-${kind}${v !== "card" ? " big" : ""}${v === "wide" ? " wide" : ""}" style="background:${COVER_SCRIM},${COVER_PALETTE[kind].to}">${coverSVG(a, v)}${
     faces ? `<div class="faces${ids.length > G.perRow ? " two" : ""}">${faces}</div>` : ""}</div>`;
 }
+// Crossing the desktop breakpoint redraws an open article's hero at the other shape.
+if (typeof matchMedia === "function") matchMedia(COVER_WIDE_MQ).addEventListener("change", () => {
+  for (const old of document.querySelectorAll(".cover.big")) {
+    if (!old._art) continue;
+    const box = document.createElement("div");
+    box.innerHTML = coverHTML(old._art, true);
+    box.firstElementChild._art = old._art;
+    old.replaceWith(box.firstElementChild);
+  }
+});
 
 /** A postseason bracket, exactly as it was played. */
 function bracketHTML(b) {
@@ -2808,6 +2973,8 @@ function articleCard(a, full) {
         ${a.standfirst ? `<span>${esc(a.standfirst)}</span>` : ""}</div>
     </header>
     <div class="abd">${(a.blocks || []).map(articleBlock).join("")}</div>`;
+  const hero = box.querySelector(".cover.big");
+  if (hero) hero._art = a;   // for the redraw when the window crosses COVER_WIDE_MQ
   return box;
 }
 
