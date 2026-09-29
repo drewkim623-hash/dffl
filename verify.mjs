@@ -422,6 +422,75 @@ check("all three division names appear", dom.divNamesShown);
 check("all five markets present", dom.markets.length === 4, dom.markets.join(" / "));
 check("methodology section present", dom.hasMethod);
 
+group("Odds: game lines");
+await page.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
+const gl = await page.evaluate(() => {
+  const D = window.__DFFL, p = document.querySelector('[data-panel="odds"]');
+  const sec = p.querySelector('[data-board="gamelines"]');
+  const season = D.DB.seasons[0], B = window.__BOARD, L = window.__LINES;
+  const expected = (season.live || []).length || (B && B.ok ? B.games.length : null) || (L ? L.games.length : 0);
+  const cards = [...(sec ? sec.querySelectorAll('[data-card="gameline"]') : [])].map(c => {
+    const ml = [...c.querySelectorAll('[data-mkt="ml"]')];
+    const odds = [...c.querySelectorAll('[data-mkt="ml"] [data-odds]')].map(e => +e.dataset.odds);
+    const priced = odds.length === 2;
+    return {
+      state: c.dataset.state, rids: !!(c.dataset.a && c.dataset.b),
+      mlBoth: ml.length === 2 && ml.every(m => m.textContent.trim() && m.textContent.trim() !== "—"),
+      priced, sum: priced ? odds.reduce((a, o) => a + D.impliedProb(o), 0) : null,
+      resultOnly: !priced && ml.every(m => /Won|Lost|Tie|OTB/.test(m.textContent)),
+      spreads: [...c.querySelectorAll('[data-mkt="spread"]')].map(e => +e.dataset.line),
+      totals: [...c.querySelectorAll('[data-mkt="total"]')].map(e => +e.dataset.line),
+      oddsNumeric: [...c.querySelectorAll("[data-odds]")].every(e => /^-?\d+$/.test(e.dataset.odds) && Math.abs(+e.dataset.odds) >= 100),
+    };
+  });
+  const { gameLine, fmtSpread, coverResult, ODDS_HOLD } = D;
+  const eq = gameLine({ expected: 120, sd: 30 }, { expected: 120, sd: 30 });
+  const fav = gameLine({ expected: 132, sd: 30 }, { expected: 118, sd: 30 });
+  const done = gameLine({ expected: 101, sd: 0 }, { expected: 99, sd: 0 });
+  const even = D.roundOdds(D.americanOdds(D.addVig([0.5, 0.5], ODDS_HOLD)[0]));
+  return {
+    // sub-nav first, then the game lines, then the futures board's own heading
+    inOdds: !!sec, first: !!sec && p.firstElementChild.classList.contains("glnav") &&
+      !!(sec.compareDocumentPosition(p.querySelector(".sechead")) & Node.DOCUMENT_POSITION_FOLLOWING),
+    nav: [...p.querySelectorAll(".glnav button")].map(b => b.textContent.trim()),
+    expected, cards, status: L && L.status,
+    eq: { spread: eq.spread, label: fmtSpread(eq.spread), ml: eq.ml, total: eq.total },
+    fav: { ml: fav.ml, spreadA: -fav.spread, pA: fav.pA, total: fav.total,
+      pAok: Math.abs(fav.pA - D.liveWinProb({ expected: 132, sd: 30 }, { expected: 118, sd: 30 })) < 1e-12 },
+    done: { decided: done.decided, ml: done.ml },
+    even, evenOk: eq.spreadPrice === even && eq.totalPrice === even,
+    cover: [coverResult(6.5, 10), coverResult(6.5, 3), coverResult(-3, -3), coverResult(0, 5), coverResult(6.5, 6.5000000001)],
+    opener: (L ? L.games : []).filter(g => g.open).map(g => !!(g.path[0] && g.path[0].pre && !g.path[0].live
+      && g.path[0].p === g.open.pA && g.path.every((q, i) => i === 0 || q.t > g.path[0].t))),
+    openers: (L ? L.games : []).filter(g => g.open).length,
+  };
+});
+check("odds tab contains the game-lines board", gl.inOdds);
+check("game lines sit above the futures with a two-pill sub-nav", gl.first && gl.nav.join("/") === "Game lines/Futures", gl.nav.join("/"));
+check("one card per matchup this week", gl.cards.length === gl.expected && gl.expected > 0, `${gl.cards.length} cards vs ${gl.expected} matchups`);
+check("every card carries both managers' rids", gl.cards.every(c => c.rids));
+check("every card shows a moneyline (or result) for both teams", gl.cards.every(c => c.mlBoth && (c.priced || c.resultOnly)),
+  JSON.stringify(gl.cards.map(c => [c.state, c.priced, c.resultOnly])));
+check("undecided cards post two moneyline prices", gl.cards.filter(c => c.state === "live" || c.state === "upcoming")
+  .every(c => c.priced || c.resultOnly), JSON.stringify(gl.cards.map(c => c.state)));
+check("posted moneylines imply between 1.00 and 1.12", gl.cards.filter(c => c.priced).every(c => c.sum >= 1 && c.sum <= 1.12),
+  gl.cards.filter(c => c.priced).map(c => c.sum.toFixed(3)).join(","));
+check("every card has a spread and a total on both sides", gl.cards.every(c => c.spreads.length === 2 && c.totals.length === 2));
+check("spreads and totals are multiples of 0.5", gl.cards.every(c => [...c.spreads, ...c.totals].every(x => Number.isFinite(x) && Math.abs(x * 2 - Math.round(x * 2)) < 1e-9)));
+check("the two sides of a spread mirror each other", gl.cards.every(c => c.spreads[0] === -c.spreads[1]));
+check("every data-odds is a whole American price", gl.cards.every(c => c.oddsNumeric));
+check("gameLine: equal teams are a pick'em at near-even money", gl.eq.spread === 0 && gl.eq.label === "PK" &&
+  gl.eq.ml[0] === gl.eq.ml[1] && gl.eq.ml[0] <= -100 && gl.eq.ml[0] >= -125, JSON.stringify(gl.eq));
+check("gameLine: the stronger team is the moneyline favourite with a negative spread",
+  gl.fav.ml[0] < 0 && gl.fav.ml[1] > 0 && gl.fav.spreadA < 0 && gl.fav.spreadA === -14 && gl.fav.total === 250, JSON.stringify(gl.fav));
+check("gameLine: win chance is liveWinProb's", gl.fav.pAok);
+check("gameLine: spread and total both post the vigged 50/50 price", gl.evenOk && gl.even === -115, `${gl.even}`);
+check("gameLine: a decided game gets no price", gl.done.decided && gl.done.ml.every(x => x == null));
+check("coverResult: covered / didn't / push / no favourite / push through float noise", JSON.stringify(gl.cover) === JSON.stringify(["covered", "missed", "push", null, "push"]), JSON.stringify(gl.cover));
+check("each path opens on the card's pregame model line", gl.openers > 0 && gl.opener.every(Boolean),
+  `${gl.opener.filter(Boolean).length}/${gl.openers}`);
+check("no uncaught page errors after game lines", errors.length === 0, errors.slice(0, 2).join(" | "));
+
 group("ADP snapshot");
 const adp = await page.evaluate(async () => {
   const { loadADP, adpValue, adpKey, ADP_CURVE, DB } = window.__DFFL;
@@ -2358,6 +2427,58 @@ if (ledgerFile.missing) {
   }
 }
 
+/* The Tuesday build and the "which week" guard. The unit tests run in node;
+ * the prompt and the workflow are read as text. Nothing here requires today's
+ * data/latest.json to carry final or generated_at yet — files written before
+ * build-week.mjs learned to add them still pass, and the guard just says hold. */
+{
+  const { spawnSync } = await import("node:child_process");
+  const node = args => spawnSync(process.execPath, args, { cwd: ROOT, encoding: "utf8", timeout: 60000 });
+  for (const [file, name] of [
+    ["test-email-week.mjs", "the ledger-week and send-guard unit tests pass"],
+    ["test-week-final.mjs", "the week-finality unit tests pass"],
+    ["test-effective-week.mjs", "the effective-week unit tests pass, and index.html's copy matches"],
+  ]) {
+    const r = node(["--test", file]);
+    const m = /# pass (\d+)[\s\S]*?# fail (\d+)/.exec(r.stdout || "");
+    check(name, r.status === 0, m ? `${m[1]} pass, ${m[2]} fail` : String(r.stderr || r.error || "").slice(0, 200));
+  }
+
+  const prompt = await readFile(join(ROOT, "weekly-job-prompt.md"), "utf8");
+  const recordCmd = (prompt.match(/node blast-status\.mjs --record[^`]*/) || [""])[0];
+  check("the prompt's record command passes neither --season nor --week",
+    !!recordCmd && !/--(season|week)\b/.test(recordCmd), recordCmd.replace(/\s+/g, " ").slice(0, 140));
+  check("the prompt still says a refused --record means the email already went out",
+    /If `--record` exits 2, the\s+email has already been sent\. Do not send it again\./.test(prompt));
+  check("the prompt carries the which-week guard",
+    /node recap-guard\.mjs/.test(prompt) && /"final": true/.test(prompt) && /latest\.week \+ 1/.test(prompt)
+      && /generated_at/.test(prompt) && /12 hours/.test(prompt) && /data\/sent-emails\.json/.test(prompt)
+      && /send nothing/i.test(prompt));
+
+  const wf = await readFile(join(ROOT, ".github/workflows/weekly-data.yml"), "utf8");
+  const crons = [...wf.matchAll(/cron:\s*"([^"]+)"/g)].map(m => m[1]);
+  check("the Tuesday build runs just after midnight ET in both EDT and EST",
+    crons.includes("30 4 * * 2") && crons.includes("30 5 * * 2") && !crons.includes("30 12 * * 2"), crons.join(" | "));
+  const pushLines = wf.split("\n").filter(l => /^\s*git (push|pull)\b/.test(l) || /git pull --rebase/.test(l));
+  check("the data push rebases onto main first and never forces",
+    /git pull --rebase/.test(wf) && /git rebase --abort/.test(wf) && !/--force|\s-f\b|push\s+\+/.test(pushLines.join("\n"))
+      && wf.indexOf("git pull --rebase") < wf.lastIndexOf("git push"), pushLines.map(l => l.trim()).join(" | "));
+
+  const g = node(["recap-guard.mjs", "--json"]);
+  let verdict = null;
+  try { verdict = JSON.parse(g.stdout); } catch {}
+  check("the send guard reads the real latest.json and ledger and names all four conditions",
+    (g.status === 0 || g.status === 1) && verdict && verdict.checks.length === 4 && verdict.ok === (g.status === 0),
+    verdict ? (verdict.ok ? "would send" : `would hold: ${verdict.failed.join(", ")}`) : String(g.stderr).slice(0, 200));
+
+  const latestNow = JSON.parse(await readFile(join(ROOT, "data/latest.json"), "utf8"));
+  check("latest.json's new fields, where present, are well-formed",
+    !("generated_at" in latestNow) || (Number.isFinite(Date.parse(latestNow.generated_at))
+      && typeof latestNow.final === "boolean" && !!latestNow.sleeper_state
+      && Number.isFinite(Number(latestNow.sleeper_state.week))),
+    "generated_at" in latestNow ? `${latestNow.generated_at}, final ${latestNow.final}` : "not written by the new build-week yet");
+}
+
 group("Injuries");
 
 const injFile = await page.evaluate(async () => {
@@ -3071,6 +3192,21 @@ check("document does not scroll horizontally at 390px", narrow.docScroll <= narr
 check("body does not scroll horizontally at 390px", narrow.bodyScroll <= narrow.inner, `${narrow.bodyScroll} > ${narrow.inner}`);
 check("no element overflows the viewport at 390px", narrow.overflowing.length === 0, narrow.overflowing.join(" | "));
 check("prices still render at 390px", narrow.priceCount > 60, `${narrow.priceCount}`);
+await mobile.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
+const glNarrow = await mobile.evaluate(() => {
+  const sec = document.querySelector('[data-board="gamelines"]');
+  const over = [];
+  // Scoped to the game lines: the rest of the panel has its own overflow check above.
+  for (const n of document.querySelectorAll('[data-board="gamelines"] *')) {
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return { doc: document.documentElement.scrollWidth, inner: window.innerWidth, over: over.slice(0, 6),
+    cards: sec ? sec.querySelectorAll('[data-card="gameline"]').length : 0 };
+});
+check("game lines: no horizontal overflow at 390px", glNarrow.doc <= glNarrow.inner && glNarrow.over.length === 0,
+  `${glNarrow.doc} > ${glNarrow.inner} ${glNarrow.over.join(" | ")}`);
+check("game lines: cards render at 390px", glNarrow.cards > 0, `${glNarrow.cards}`);
 
 // the trade block, fully loaded, at phone width
 await mobile.click('#tabs button[data-tab="trades"]');
@@ -3178,6 +3314,52 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
   await mobile.waitForTimeout(80);
   const w = await mobile.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   check(`${id}: no horizontal overflow at 390px`, w);
+}
+
+/* ------------------------------------------------------------------------
+ * 1 AM Tuesday, simulated: Sleeper still says week 2 while data/latest.json
+ * already marks week 2 final. The site must treat week 2 as finished and week
+ * 3 as the live one — the same rule the email snapshot reads (effective-week).
+ * Mocks only Sleeper's state and latest.json; everything else is live.
+ * ---------------------------------------------------------------------- */
+group("Effective week (simulated 1 AM Tuesday)");
+{
+  const simCtx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await simCtx.route(/api\.sleeper\.app\/v1\/state\/nfl/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ week: 2, leg: 2, display_week: 2, season: "2026", season_type: "regular",
+      league_season: "2026", previous_season: "2025", season_start_date: "2026-09-09",
+      league_create_season: "2026", season_has_scores: true }),
+  }));
+  await simCtx.route(/\/data\/latest\.json(\?.*)?$/, r => r.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({ season: "2026", week: 2, file: "data/week-2026-02.json",
+      generated: new Date().toISOString(), generated_at: new Date().toISOString(), final: true,
+      sleeper_state: { week: 2, leg: 2, display_week: 2, season_type: "regular", season: "2026" } }),
+  }));
+  const sim = await simCtx.newPage();
+  await sim.goto(BASE, { waitUntil: "domcontentloaded" });
+  await sim.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const S = await sim.evaluate(() => {
+    const D = window.__DFFL, s = D.DB.seasons.find(x => x.season === "2026") || {};
+    return {
+      ready: document.body.dataset.ready,
+      sleeperWeek: D.DB.sleeperState ? D.DB.sleeperState.week : null,
+      week: D.DB.state ? D.DB.state.week : null,
+      liveWeek: s.liveWeek ?? null,
+      liveWeek2: D.DB.live.filter(g => g.season === "2026" && g.week === 2).length,
+      final2: D.DB.games.filter(g => g.season === "2026" && g.week === 2).length,
+      foot: (document.querySelector("#footNote") || {}).textContent || "",
+    };
+  });
+  check("simulated 1 AM Tuesday: the site takes the effective week, latest.week + 1",
+    S.ready === "1" && S.sleeperWeek === 2 && S.week === 3 && /week 3\b/.test(S.foot),
+    `sleeper ${S.sleeperWeek}, effective ${S.week}, foot "${S.foot.trim()}"`);
+  check("simulated 1 AM Tuesday: the finished week is not shown as live",
+    S.liveWeek2 === 0 && S.liveWeek !== 2, `liveWeek ${S.liveWeek}, ${S.liveWeek2} week-2 games live`);
+  check("simulated 1 AM Tuesday: the finished week counts as played",
+    S.final2 === 6, `${S.final2} week-2 games in the book`);
+  await simCtx.close();
 }
 
 group("Screenshots");
