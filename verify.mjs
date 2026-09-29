@@ -1821,6 +1821,83 @@ if (ppRefresh.skip) {
   check("refreshes still run in the worker", ppRefresh.one.via === "worker" && ppRefresh.two.via === "worker", `${ppRefresh.one.via}/${ppRefresh.two.via}`);
 }
 
+// A poll that changes nothing must not rebuild the table and throw away where
+// it was scrolled; a poll that does change it keeps the scroll position.
+// Narrow the page so the seed table actually scrolls sideways.
+await page.setViewportSize({ width: 600, height: 900 });
+const ppScroll = await page.evaluate(async () => {
+  const D = window.__DFFL, games = D.DB.seasons[0].live || [];
+  if (!games.length || document.body.dataset.pictureReady !== "1") return { skip: true };
+  const g = games[0], seedScroll = () => document.querySelector("#pictureHost .pp .scroll");
+  const refresh = async d => {
+    const prev = window.__PICTURE;
+    g.a.pts += d;
+    LIVE_P = null;
+    await D.liveOnce();
+    D.emitLive();
+    for (let t = 0; t < 150 && window.__PICTURE === prev; t++) await new Promise(r => setTimeout(r, 100));
+    return window.__PICTURE !== prev;
+  };
+  const s0 = seedScroll(), t0 = s0.querySelector("table");
+  s0.scrollLeft = s0.scrollWidth;
+  const left = s0.scrollLeft;
+  const quietPass = await refresh(0);
+  const quiet = { pass: quietPass, sameTable: seedScroll().querySelector("table") === t0, left: seedScroll().scrollLeft };
+  const movedPass = await refresh(60);
+  const moved = { pass: movedPass, redrawn: seedScroll().querySelector("table") !== t0, left: seedScroll().scrollLeft };
+  await refresh(-60);   // the real score back
+  return { left, quiet, moved };
+});
+await page.setViewportSize({ width: 1280, height: 900 });
+if (ppScroll.skip) {
+  check("live refresh keeps the table's sideways scroll (skipped: no live week)", true);
+} else {
+  check("the seed table scrolls sideways on a narrow page", ppScroll.left > 0, String(ppScroll.left));
+  check("an unchanged refresh leaves the seed table alone (same node, same scroll)",
+    ppScroll.quiet.pass && ppScroll.quiet.sameTable && ppScroll.quiet.left === ppScroll.left, JSON.stringify(ppScroll));
+  check("a changed refresh redraws the seed table and keeps its scroll",
+    ppScroll.moved.pass && ppScroll.moved.redrawn && ppScroll.moved.left === ppScroll.left, JSON.stringify(ppScroll));
+}
+
+// While the tab is hidden a reprice is not worked out; coming back catches up once.
+const ppLiveGames = await page.evaluate(() => (window.__DFFL.DB.seasons[0].live || []).length > 0 && document.body.dataset.pictureReady === "1");
+if (!ppLiveGames) {
+  check("a hidden picture waits for the next visit (skipped: no live week)", true);
+} else {
+  await page.click('#tabs button[data-tab="odds"]');
+  const hid = await page.evaluate(async () => {
+    const D = window.__DFFL, g = D.DB.seasons[0].live[0], prev = window.__PICTURE;
+    const t0 = document.querySelector("#pictureHost .pp table");
+    g.a.pts += 60;
+    LIVE_P = null;
+    await D.liveOnce();
+    D.emitLive();
+    await new Promise(r => setTimeout(r, 2000));
+    window.__ppHidPrev = prev; window.__ppHidTable = t0;
+    return { untouched: window.__PICTURE === prev && document.querySelector("#pictureHost .pp table") === t0 };
+  });
+  await page.click('#tabs button[data-tab="picture"]');
+  const back = await page.evaluate(async () => {
+    const prev = window.__ppHidPrev;
+    for (let t = 0; t < 150 && window.__PICTURE === prev; t++) await new Promise(r => setTimeout(r, 100));
+    const P = window.__PICTURE, L = window.__LSIM;
+    const out = { redrawn: P !== prev && document.querySelector("#pictureHost .pp table") !== window.__ppHidTable,
+      exact: P.playoff.every((p, i) => p === L.playoff[i] / L.sims) };
+    // the real score back
+    const D = window.__DFFL, before = window.__PICTURE;
+    D.DB.seasons[0].live[0].a.pts -= 60;
+    LIVE_P = null;
+    await D.liveOnce();
+    D.emitLive();
+    for (let t = 0; t < 150 && window.__PICTURE === before; t++) await new Promise(r => setTimeout(r, 100));
+    delete window.__ppHidPrev; delete window.__ppHidTable;
+    return out;
+  });
+  check("a reprice while the picture is hidden does not redraw it", hid.untouched);
+  check("returning to the picture redraws it once", back.redrawn);
+  check("after catching up, Playoffs still equals the Odds tab's run exactly", back.exact);
+}
+
 group("Playoff Picture: the empty state");
 const ppEmpty = await page.evaluate(() => {
   const box = window.__DFFL.pictureEmpty("not-started", "2026");
@@ -3327,6 +3404,32 @@ check("picture: nothing outside a scroller overflows at 390px", ppNarrow.over.le
 check("picture: the whole board renders at 390px", ppNarrow.rows >= 18, `${ppNarrow.rows} rows`);
 check("picture: the manager column stays pinned and compact at 390px",
   ppNarrow.sticky === "sticky" && ppNarrow.nameW > 60 && ppNarrow.nameW <= 170, `${ppNarrow.sticky}, ${Math.round(ppNarrow.nameW)}px`);
+
+// Clinch badges at 390px, on a week late enough that somebody has clinched.
+const ppBadges = await mobile.evaluate(async () => {
+  const D = window.__DFFL, M = window.__ODDS, se = D.DB.seasons.find(x => x.season === "2025"), R = D.raceAsOf(se, 13);
+  const live = D.liveState(M, se, R, null, null, 13);
+  const PP = await D.computePicture(M, live, R, se, { whatIfSims: 300, main: true });
+  D.renderPicture(document.querySelector("#pictureHost"), PP);
+  const inside = n => {
+    const td = n.closest("td"), tr = td.getBoundingClientRect();
+    return n.getBoundingClientRect().right <= tr.right - parseFloat(getComputedStyle(td).paddingRight) + 1;
+  };
+  const badges = [...document.querySelectorAll("#pictureHost .pp .badge")];
+  const names = [...document.querySelectorAll("#pictureHost .pp .nm")];
+  return {
+    n: badges.length,
+    badBadges: badges.filter(b => !inside(b) || b.scrollWidth > b.clientWidth + 1).map(b => b.dataset.short),
+    badTitles: badges.filter(b => !/^(Clinched |Eliminated)/.test(b.title) || b.title === b.dataset.short).map(b => b.title),
+    badShort: badges.filter(b => !getComputedStyle(b, "::after").content.includes(b.dataset.short)).map(b => b.dataset.short),
+    badNames: names.filter(n => !inside(n) || n.title !== n.textContent).map(n => n.textContent),
+  };
+});
+check("picture: week 13 of 2025 shows clinch badges", ppBadges.n > 0, `${ppBadges.n} badges`);
+check("picture: every badge fits its cell unclipped at 390px", ppBadges.badBadges.length === 0, ppBadges.badBadges.join(","));
+check("picture: badges keep the full text in their title", ppBadges.badTitles.length === 0, ppBadges.badTitles.join(","));
+check("picture: badges show the short label on a phone", ppBadges.badShort.length === 0, ppBadges.badShort.join(","));
+check("picture: every name fits its cell and carries its full name as a title", ppBadges.badNames.length === 0, ppBadges.badNames.join(","));
 
 // the power board at phone width, on a week with movement in it
 await mobile.click('#tabs button[data-tab="power"]');
