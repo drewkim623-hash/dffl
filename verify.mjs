@@ -3034,6 +3034,164 @@ for (const [url, want] of [
   await p2.close();
 }
 
+/* ------------------------------------------------------------------------
+ * Futures markets: the sportsbook-style browser over the opening simulation.
+ * Presentation only, so every price is checked against SIM run through the
+ * page's own priceMarket / winTotals / fmtOdds, not against a second copy.
+ * ---------------------------------------------------------------------- */
+group("Futures markets");
+const fxErr0 = errors.length;
+const FX_MARKETS = ["title", "divWin", "playoff", "bye", "wins", "divLast", "last"];
+await page.click('#tabs button[data-tab="odds"]');
+await page.waitForSelector('[data-panel="odds"] .fxm', { timeout: 30000 });
+const fx = await page.evaluate(() => {
+  const D = window.__DFFL, M = D.ODDS, S = D.SIM, n = S.sims, T = M.teams;
+  const root = document.querySelector('[data-panel="odds"] .fxm');
+  const pct = p => `${(p * 100).toFixed(1)}%`;
+  const exp = {};
+  const put = (mk, uid, list) => ((exp[mk] = exp[mk] || {})[uid] = list.map(r => ({ o: D.fmtOdds(r.price), tp: pct(r.p) })));
+  const all = T.map((_, i) => i);
+  const race = (mk, ids) => D.priceMarket(ids.map(i => ({ uid: T[i].uid, p: S[mk][i] / n }))).forEach(r => put(mk, r.uid, [r]));
+  race("title", all); race("last", all);
+  for (const d of new Set(T.map(t => t.div))) {
+    const ids = all.filter(i => T[i].div === d);
+    race("divWin", ids); race("divLast", ids);
+  }
+  for (const mk of ["playoff", "bye"]) all.forEach(i => { const p = S[mk][i] / n; put(mk, T[i].uid, D.priceMarket([{ p }, { p: 1 - p }])); });
+  D.winTotals(M, S).forEach(w => put("wins", w.uid, D.priceMarket([{ p: w.pOver }, { p: w.pUnder }])));
+  const markets = {};
+  for (const sec of root.querySelectorAll(".fxm-mkt")) {
+    const mk = sec.dataset.market, rows = [...sec.querySelectorAll(".fxm-row")], uids = rows.map(r => r.dataset.uid);
+    const bad = [];
+    for (const r of rows) {
+      const shown = [...r.querySelectorAll(".price")].map(x => ({ o: x.querySelector(".o").textContent.trim(), tp: x.querySelector(".tp").textContent.trim() }));
+      const want = (exp[mk] || {})[r.dataset.uid];
+      if (!want || JSON.stringify(shown) !== JSON.stringify(want)) bad.push(`${r.dataset.name}: ${JSON.stringify(shown)} vs ${JSON.stringify(want)}`);
+    }
+    markets[mk] = { rows: rows.length, unique: new Set(uids).size, allTeams: T.every(t => uids.includes(t.uid)),
+      groups: sec.querySelectorAll(".board").length, bad: bad.slice(0, 3), badN: bad.length };
+  }
+  return {
+    chips: [...root.querySelectorAll(".fxm-chip")].map(c => c.dataset.market),
+    selected: [...root.querySelectorAll('.fxm-chip[aria-selected="true"]')].map(c => c.dataset.market),
+    visible: [...root.querySelectorAll(".fxm-mkt")].filter(s => !s.hidden).map(s => s.dataset.market),
+    markets, teams: T.length, divs: new Set(T.map(t => t.div)).size,
+  };
+});
+check("futures: one chip per market the simulation computes, in order", JSON.stringify(fx.chips) === JSON.stringify(FX_MARKETS), fx.chips.join(","));
+check("futures: opens on the championship, and only that market shows", fx.selected.join() === "title" && fx.visible.join() === "title",
+  `selected ${fx.selected} visible ${fx.visible}`);
+for (const mk of FX_MARKETS) {
+  const m = fx.markets[mk] || {};
+  check(`futures ${mk}: one row per team`, m.rows === fx.teams && m.unique === fx.teams && m.allTeams, `${m.rows} rows, ${m.unique} unique of ${fx.teams}`);
+  check(`futures ${mk}: every price is the simulation's after the 6% hold`, m.rows > 0 && m.badN === 0, `${m.badN} off: ${(m.bad || []).join(" | ")}`);
+}
+check("futures: division markets carry one group per division",
+  fx.markets.divWin && fx.markets.divWin.groups === fx.divs && fx.markets.divLast.groups === fx.divs,
+  `${fx.markets.divWin && fx.markets.divWin.groups} / ${fx.markets.divLast && fx.markets.divLast.groups} of ${fx.divs}`);
+
+const fxRows = mk => page.evaluate(mk => {
+  const rows = [...document.querySelectorAll(`.fxm-mkt[data-market="${mk}"] .fxm-row`)].filter(r => !r.hidden && r.offsetParent)
+    .map(r => ({ uid: r.dataset.uid, name: r.dataset.name, key: +r.dataset.key, price: +r.dataset.price, div: r.dataset.div,
+      rk: r.querySelector(".rk").textContent.trim(), board: r.closest(".board").dataset.div || "" }));
+  const names = rows.map(r => r.name);
+  return { rows, alpha: names.join("|") === names.slice().sort((a, b) => a.localeCompare(b)).join("|") };
+}, mk);
+const byBoard = rows => Object.values(rows.reduce((a, r) => ((a[r.board] = a[r.board] || []).push(r), a), {}));
+const ranked = rows => byBoard(rows).every(g => g.every((r, i) => r.rk === String(i + 1)));
+const oddsOrdered = (rows, priced = true) => byBoard(rows).every(g =>
+  g.every((r, i) => i === 0 || (g[i - 1].key >= r.key && (!priced || g[i - 1].price <= r.price))));
+
+let so = {};
+for (const mk of ["title", "playoff", "divWin", "wins"]) {
+  await page.click(`.fxm-chip[data-market="${mk}"]`);
+  so[mk] = await fxRows(mk);
+}
+check("sort by odds: shortest price first in every market", ["title", "playoff", "divWin"].every(mk => oddsOrdered(so[mk].rows)) && oddsOrdered(so.wins.rows, false),
+  ["title", "playoff", "divWin", "wins"].map(mk => `${mk}:${so[mk].rows.map(r => r.price).join(",")}`).join(" "));
+check("sort by odds: every team visible and ranked 1..n", so.title.rows.length === fx.teams && ranked(so.title.rows) && ranked(so.divWin.rows));
+await page.click('.fxm-chip[data-market="title"]');
+await page.click('.fxm-seg button[data-sort="name"]');
+const soName = { title: await fxRows("title") };
+await page.click('.fxm-chip[data-market="divWin"]');
+soName.divWin = await fxRows("divWin");
+check("sort by name: alphabetical, and it survives a market switch",
+  soName.title.alpha && soName.title.rows.length === fx.teams && byBoard(soName.divWin.rows).every(g => g.map(r => r.name).join("|") === g.map(r => r.name).sort((a, b) => a.localeCompare(b)).join("|")),
+  soName.title.rows.map(r => r.name).join(","));
+await page.click('.fxm-seg button[data-sort="odds"]');
+await page.click('.fxm-chip[data-market="title"]');
+check("sort back to odds restores the odds order", oddsOrdered((await fxRows("title")).rows));
+
+const fxDivs = await page.evaluate(() => [...document.querySelectorAll('.fxm select[data-fxm="div"] option')].map(o => o.value).filter(Boolean));
+const divRes = [];
+for (const d of fxDivs) {
+  await page.selectOption('.fxm select[data-fxm="div"]', d);
+  const t = await fxRows("title");
+  await page.click('.fxm-chip[data-market="divWin"]');
+  const g = await page.evaluate(() => [...document.querySelectorAll('.fxm-mkt[data-market="divWin"] .board')].filter(b => !b.hidden).map(b => b.dataset.div));
+  await page.click('.fxm-chip[data-market="title"]');
+  divRes.push({ d, n: t.rows.length, same: t.rows.every(r => r.div === d), ranked: ranked(t.rows), g });
+}
+await page.selectOption('.fxm select[data-fxm="div"]', "");
+check("division filter: every division narrows the list to its own four", fxDivs.length === fx.divs && divRes.every(x => x.n === 4 && x.same && x.ranked),
+  JSON.stringify(divRes));
+check("division filter: division markets show only that division's group", divRes.every(x => x.g.join() === x.d), JSON.stringify(divRes.map(x => x.g)));
+check("division filter: All brings every team back", (await fxRows("title")).rows.length === fx.teams);
+
+const pickTeam = async () => page.evaluate(() => {
+  const root = document.querySelector(".fxm"), card = root.querySelector(".fxm-card");
+  if (!card || !card.offsetParent) return { shown: false };
+  const uid = card.dataset.uid;
+  const rows = [...card.querySelectorAll(".fxm-trow")].map(r => {
+    const mk = r.dataset.market;
+    const src = root.querySelector(`.fxm-mkt[data-market="${mk}"] .fxm-row[data-uid="${uid}"]`);
+    const txt = e => [...e.querySelectorAll(".price")].map(x => x.querySelector(".o").textContent.trim() + "@" + x.querySelector(".tp").textContent.trim()).join(" ");
+    return { mk, same: !!src && txt(src) === txt(r) && txt(r).length > 0 };
+  });
+  return { shown: true, uid, rows, marketsHidden: [...root.querySelectorAll(".fxm-mkt")].every(s => s.hidden), sel: root.querySelector('select[data-fxm="team"]').value };
+});
+const fxTeam = await page.evaluate(() => [...document.querySelectorAll('.fxm select[data-fxm="team"] option')].map(o => o.value).filter(Boolean)[3]);
+await page.selectOption('.fxm select[data-fxm="team"]', fxTeam);
+const tp = await pickTeam();
+check("team pick: one manager's card replaces the lists", tp.shown && tp.uid === fxTeam && tp.marketsHidden, JSON.stringify({ shown: tp.shown, uid: tp.uid }));
+check("team pick: a row for every market", tp.shown && JSON.stringify(tp.rows.map(r => r.mk)) === JSON.stringify(FX_MARKETS), tp.rows && tp.rows.map(r => r.mk).join(","));
+check("team pick: each price is the one the market list posts", tp.shown && tp.rows.every(r => r.same), tp.rows && tp.rows.filter(r => !r.same).map(r => r.mk).join(","));
+await page.click('.fxm-chip[data-market="last"]');
+const lastUid = await page.evaluate(() => { const r = [...document.querySelectorAll('.fxm-mkt[data-market="last"] .fxm-row')].find(x => !x.hidden); return r.dataset.uid; });
+await page.click(`.fxm-mkt[data-market="last"] .fxm-row[data-uid="${lastUid}"]`);
+const tp2 = await pickTeam();
+check("team pick: tapping a team row opens that manager's card", tp2.shown && tp2.uid === lastUid && tp2.sel === lastUid, `${tp2.uid} vs ${lastUid}`);
+await page.click('.fxm-chip[data-market="title"]');
+const back = await page.evaluate(() => ({ team: document.querySelector(".fxm").dataset.team, sel: document.querySelector('.fxm select[data-fxm="team"]').value,
+  card: !!(document.querySelector(".fxm .fxm-card") || {}).offsetParent }));
+check("team pick: choosing a market goes back to the lists", back.team === "" && back.sel === "" && !back.card, JSON.stringify(back));
+
+await page.waitForFunction(() => document.body.dataset.liveReady, null, { timeout: 180000 });
+const reach = await page.evaluate(() => {
+  const p = document.querySelector('[data-panel="odds"]'), fxm = p.querySelector(".fxm");
+  const after = sel => { const t = p.querySelector(sel); return !!t && !!(fxm.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING); };
+  return {
+    jumps: [...fxm.querySelectorAll(".fxm-links [data-jump]")].map(b => b.dataset.jump),
+    targets: ["liveHost", "fxmNotice", "fxmHow"].every(id => p.querySelector("#" + id)),
+    below: after("#liveHost") && after("#fxmNotice") && after("#fxmHow"),
+    live: document.body.dataset.liveReady, liveKids: p.querySelector("#liveHost") ? p.querySelector("#liveHost").children.length : 0,
+    notice: /These are not real betting lines/.test((p.querySelector("#fxmNotice") || {}).textContent || ""),
+    method: /What the model is told/.test(p.textContent) && /The prices/.test(p.textContent),
+    quirk: /How last place is decided/.test((p.querySelector('.fxm-mkt[data-market="last"]') || {}).textContent || ""),
+    blurbs: !!fxm.querySelector(".fxm-blurb") && fxm.querySelector(".fxm-blurb").textContent.includes("6% hold"),
+  };
+});
+check("explanation and live board: moved below the markets, not removed",
+  reach.targets && reach.below && reach.notice && reach.method && reach.quirk && reach.blurbs, JSON.stringify(reach));
+check("explanation and live board: the markets link to each of them", ["liveHost", "fxmNotice", "fxmHow"].every(j => reach.jumps.includes(j)), reach.jumps.join(","));
+check("the live board still renders under the markets", reach.live === "waiting" || (reach.live === "1" && reach.liveKids > 2), `${reach.live}, ${reach.liveKids} children`);
+await page.click('.fxm-links [data-jump="liveHost"]');
+await page.waitForTimeout(1200);
+const liveTop = await page.evaluate(() => Math.round(document.querySelector("#liveHost").getBoundingClientRect().top));
+check("the Live board link scrolls to it", liveTop > -10 && liveTop < 300, `top ${liveTop}`);
+check("no uncaught page errors in the futures markets", errors.length === fxErr0, errors.slice(fxErr0, fxErr0 + 2).join(" | "));
+await page.evaluate(() => window.scrollTo(0, 0));
+
 group("Layout at 390px");
 const mobile = await ctx.newPage();
 await mobile.goto(BASE, { waitUntil: "domcontentloaded" });
@@ -3046,6 +3204,8 @@ const narrow = await mobile.evaluate(() => {
   const panel = document.querySelector('[data-panel="odds"]');
   const over = [];
   for (const n of panel.querySelectorAll("*")) {
+    // The futures market chips scroll sideways inside their own row by design.
+    if (n.closest(".fxm-chips")) continue;
     const r = n.getBoundingClientRect();
     if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
   }
@@ -3060,6 +3220,44 @@ check("document does not scroll horizontally at 390px", narrow.docScroll <= narr
 check("body does not scroll horizontally at 390px", narrow.bodyScroll <= narrow.inner, `${narrow.bodyScroll} > ${narrow.inner}`);
 check("no element overflows the viewport at 390px", narrow.overflowing.length === 0, narrow.overflowing.join(" | "));
 check("prices still render at 390px", narrow.priceCount > 60, `${narrow.priceCount}`);
+// The futures markets at phone width: chips scroll sideways inside their own
+// row; nothing else may be wider than the screen, and every price box is whole.
+const fxNarrow = await mobile.evaluate(async () => {
+  const root = document.querySelector('[data-panel="odds"] .fxm');
+  const chips = root.querySelector(".fxm-chips");
+  const W = window.innerWidth, out = { views: [], over: [], clipped: [], prices: 0 };
+  const tick = () => new Promise(r => setTimeout(r, 40));
+  const measure = label => {
+    for (const n of root.querySelectorAll("*")) {
+      if (n.closest(".fxm-chips") && n !== chips) continue;
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > W + 1 || r.left < -1)) out.over.push(`${label}: ${n.className || n.tagName} ${Math.round(r.left)}..${Math.round(r.right)}`);
+    }
+    for (const p of root.querySelectorAll(".price")) {
+      const r = p.getBoundingClientRect();
+      if (!r.width) continue;
+      out.prices++;
+      const o = p.querySelector(".o");
+      if (r.left < 0 || r.right > W || o.scrollWidth > o.clientWidth + 1 || p.scrollWidth > p.clientWidth + 1) out.clipped.push(`${label}: ${o.textContent.trim()}`);
+    }
+    out.views.push(label);
+    out.doc = Math.max(out.doc || 0, document.documentElement.scrollWidth);
+  };
+  for (const c of root.querySelectorAll(".fxm-chip")) { c.click(); await tick(); measure(c.dataset.market); }
+  const sel = root.querySelector('select[data-fxm="team"]');
+  sel.value = sel.options[1].value; sel.dispatchEvent(new Event("change")); await tick(); measure("team");
+  root.querySelector('.fxm-chip[data-market="title"]').click(); await tick();
+  const cr = chips.getBoundingClientRect();
+  return { ...out, W, chipsScroll: chips.scrollWidth > chips.clientWidth, chipsFit: cr.left >= -1 && cr.right <= W + 1,
+    chipsOverflow: getComputedStyle(chips).overflowX };
+});
+check("futures at 390px: page never scrolls sideways in any market", fxNarrow.doc <= fxNarrow.W, `${fxNarrow.doc} > ${fxNarrow.W}`);
+check("futures at 390px: no element wider than the viewport, in every market and the team card",
+  fxNarrow.views.length === 8 && fxNarrow.over.length === 0, fxNarrow.over.slice(0, 5).join(" | "));
+check("futures at 390px: every price box fully visible and unclipped", fxNarrow.prices > 100 && fxNarrow.clipped.length === 0,
+  `${fxNarrow.prices} boxes; ${fxNarrow.clipped.slice(0, 5).join(" | ")}`);
+check("futures at 390px: the chip row scrolls sideways inside the screen", fxNarrow.chipsFit && fxNarrow.chipsOverflow === "auto" && fxNarrow.chipsScroll,
+  JSON.stringify({ fit: fxNarrow.chipsFit, ov: fxNarrow.chipsOverflow, scroll: fxNarrow.chipsScroll }));
 await mobile.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
 const glNarrow = await mobile.evaluate(() => {
   const sec = document.querySelector('[data-board="gamelines"]');
