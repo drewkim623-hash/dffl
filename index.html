@@ -544,10 +544,12 @@
     letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
   .fxm-sel select{font:inherit;font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);
     background:var(--surface);border:1px solid var(--ring);border-radius:9px;padding:6px 8px;min-width:0;max-width:100%}
-  .fxm-bar [disabled]{opacity:.45;cursor:default}
-  .fxm-src{margin:0 0 10px;font-size:12.5px;color:var(--muted);line-height:1.5}
-  .fxm-src b{color:var(--ink-2);font-weight:700}
-  .fxm-src button{font:inherit;font-weight:700;color:var(--blue);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+  .fxm-bar [disabled],.fxm-src [disabled]{opacity:.45;cursor:default}
+  .fxm-src{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 10px}
+  .fxm-srctxt{margin:0;flex:1 1 240px;min-width:0;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .fxm-srctxt b{color:var(--ink-2);font-weight:700}
+  .fxm-lineseg button[data-line="live"][aria-pressed="true"]{color:var(--gold);box-shadow:inset 0 -2px 0 var(--gold)}
+  .fxm-srctxt button{font:inherit;font-weight:700;color:var(--blue);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
   .fxm-blurb{margin:0 0 12px;color:var(--muted);font-size:13.5px;line-height:1.55;max-width:78ch}
   .fxm .price{border-radius:8px;background:var(--surface);min-height:42px;display:flex;flex-direction:column;justify-content:center}
   .fxm .price .o{color:var(--blue)}
@@ -4952,17 +4954,20 @@ async function ensureLiveOdds() {
     if (!live || !lsim) {
       renderLiveWaiting(host, R, inj, avail, board);
       document.body.dataset.liveReady = "waiting";
+      fxmLive("waiting");
       return;
     }
     LIVE_NOW = { live, lsim, inj, avail, board, R };
     renderLive(host, model, sim, live, lsim, inj, avail, board, R);
     document.body.dataset.liveReady = "1";
+    fxmLive("ready");
     startLivePolling();
   } catch (e) {
     host.innerHTML = "";
     host.appendChild(el("div", "empty",
       `<b>Couldn't reprice the board</b>${esc(e.message)}<br>The opening line below still stands.`));
     document.body.dataset.liveReady = "error";
+    fxmLive("error");
     console.error(e);
   }
 }
@@ -5269,81 +5274,104 @@ async function ensureGameLines() {
 
 /**
  * The futures, laid out like a sportsbook's futures page: a row of market chips,
- * one clean list of teams per market, sort / division / team controls.
+ * one clean list of teams per market, sort / division / team controls, and a
+ * Live / Opening switch.
  *
- * Presentation only. Every probability is read straight off simulateSeason's
- * output and priced with the same priceMarket / winTotals / priceTile the
- * boards it replaced used, so no number on the page moves. Division filtering
- * hides rows; it never re-prices a market.
+ * Presentation only. Each line is one simulateSeason run read through the same
+ * priceMarket / winTotals / priceTile the boards always used: Opening is the
+ * draft-day SIM, Live is LIVE_NOW.lsim, the very run the live board below is
+ * drawn from, so the two can never disagree. Division filtering hides rows; it
+ * never re-prices a market.
  */
+const FXM_VIEWS = new Set();
+/** The live board hands every futures view its line: "ready", "waiting" or "error". */
+function fxmLive(status) {
+  for (const v of FXM_VIEWS) {
+    if (v.root.isConnected) v.setLive(status === "ready" ? LIVE_NOW : null, status);
+    else FXM_VIEWS.delete(v);
+  }
+}
+
 function futuresMarkets(model, sim) {
-  const T = model.teams, n = sim.sims;
+  const T = model.teams;
   const all = T.map((t, i) => i);
   const divs = [...model.divNames.keys()].sort((a, b) => a - b);
   const byDiv = d => all.filter(i => T[i].div === d);
   const pc = x => `${(x * 100).toFixed(0)}%`;
-  const proj = i => `projects ${f1(sim.wins[i] / n)} wins`;
   const flatHold = `Hold ${(ODDS_HOLD * 100).toFixed(1)}%`;
 
-  // One winner from the field: priced as a race, exactly as oddsBoard's callers did.
-  const raceBoard = (title, sub, ids, key, note, div) => {
-    const priced = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: sim[key][i] / n })));
-    return { title, sub, div, hold: `Hold ${(marketHold(priced) * 100).toFixed(1)}%`,
-      rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i) })) };
-  };
-  // Every manager is his own yes/no book, as the playoff board always priced it.
-  const yesNoBoard = (title, sub, key, note) => ({ title, sub, hold: flatHold,
-    rows: all.map(i => {
-      const p = sim[key][i] / n;
-      return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i) };
-    }) });
-
-  const MK = [
+  const CHIPS = [
     { id: "title", chip: "Championship",
-      blurb: "Every price carries a 6% hold, the way a real book's does. The small figure under each price is the model's own probability, with the vig taken back out — the number a sportsbook keeps to itself.",
-      boards: [raceBoard("To win the DFFL championship", `${model.season} season · ${n.toLocaleString()} simulations`,
-        all, "title", i => `Makes the playoffs ${pc(sim.playoff[i] / n)} · ${proj(i)}`)] },
+      blurb: "Every price carries a 6% hold, the way a real book's does. The small figure under each price is the model's own probability, with the vig taken back out — the number a sportsbook keeps to itself." },
     { id: "divWin", chip: "Division winners", grid: true,
-      blurb: "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board.",
-      boards: divs.map(d => raceBoard(`${model.divNames.get(d)} — to win`, "division title", byDiv(d), "divWin", proj, d)) },
+      blurb: "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board." },
     { id: "playoff", chip: "Make playoffs", two: true,
-      blurb: "Six of twelve get in: the three division winners take seeds 1-3, then the best three records left over. Priced both ways — every manager has a yes and a no.",
-      boards: [yesNoBoard("Playoff qualification", "yes / no · six of twelve qualify", "playoff",
-        i => `wins the division ${pc(sim.divWin[i] / n)} · first-round bye ${pc(sim.bye[i] / n)}`)] },
+      blurb: "Six of twelve get in: the three division winners take seeds 1-3, then the best three records left over. Priced both ways — every manager has a yes and a no." },
     { id: "bye", chip: "First-round bye", two: true,
-      blurb: "Seeds 1 and 2 sit out the first playoff round. Priced both ways off the same simulated seasons, the same way as the playoff market.",
-      boards: [yesNoBoard("First-round bye", "yes / no · the top two seeds skip round one", "bye",
-        i => `makes the playoffs ${pc(sim.playoff[i] / n)} · ${proj(i)}`)] },
+      blurb: "Seeds 1 and 2 sit out the first playoff round. Priced both ways off the same simulated seasons, the same way as the playoff market." },
     { id: "wins", chip: "Win totals", two: true,
-      blurb: "Fourteen games. Each line sits where the simulation is closest to a coin flip, always on the half-win so there's no push. Sorting by odds orders this market by projected wins.",
-      boards: [{ title: "Regular-season wins", sub: `over / under · ${model.weeks} games`, hold: flatHold,
-        rows: winTotals(model, sim).map(w => {
+      blurb: "Fourteen games. Each line sits where the simulation is closest to a coin flip, always on the half-win so there's no push. Sorting by odds orders this market by projected wins." },
+    { id: "divLast", chip: "Division cellar", grid: true,
+      blurb: "To finish last in your own division, on regular-season record." },
+    { id: "last", chip: "Last place",
+      blurb: "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it." },
+  ];
+
+  // Every market for one line, read off one simulation's counts.
+  const boardsFor = (S, kind, stamp) => {
+    const n = S.sims;
+    const proj = i => `projects ${f1(S.wins[i] / n)} wins`;
+    // One winner from the field: priced as a race, exactly as the opening and
+    // live boards price it (priceMarket over the field, marketHold for the hold).
+    const race = (title, sub, ids, key, note, div) => {
+      const priced = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: S[key][i] / n })));
+      return { title, sub, div, hold: `Hold ${(marketHold(priced) * 100).toFixed(1)}%`,
+        rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i) })) };
+    };
+    // Every manager is his own yes/no book, as the playoff board always priced it.
+    const yesNo = (title, sub, key, note) => ({ title, sub, hold: flatHold,
+      rows: all.map(i => {
+        const p = S[key][i] / n;
+        return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i) };
+      }) });
+    const lineSub = kind === "live" ? `live line · ${stamp}` : `opening line · ${n.toLocaleString()} simulations`;
+    return {
+      title: [race("To win the DFFL championship", `${model.season} season · ${lineSub}`,
+        all, "title", i => `Makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
+      divWin: divs.map(d => race(`${model.divNames.get(d)} — to win`, `division title · ${lineSub}`, byDiv(d), "divWin", proj, d)),
+      playoff: [yesNo("Playoff qualification", `yes / no · six of twelve qualify · ${lineSub}`, "playoff",
+        i => `wins the division ${pc(S.divWin[i] / n)} · first-round bye ${pc(S.bye[i] / n)}`)],
+      bye: [yesNo("First-round bye", `yes / no · the top two seeds skip round one · ${lineSub}`, "bye",
+        i => `makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
+      wins: [{ title: "Regular-season wins", sub: `over / under · ${model.weeks} games · ${lineSub}`, hold: flatHold,
+        rows: winTotals(model, S).map(w => {
           const L = w.line.toFixed(1);
           return { i: w.i, key: w.avg, prices: priceMarket([{ p: w.pOver }, { p: w.pUnder }]),
             labels: [`Over ${L}`, `Under ${L}`], note: `line ${L} · projects ${f1(w.avg)} wins` };
-        }) }] },
-    { id: "divLast", chip: "Division cellar", grid: true,
-      blurb: "To finish last in your own division, on regular-season record.",
-      boards: divs.map(d => raceBoard(`${model.divNames.get(d)} — to finish last`, "within the division", byDiv(d), "divLast", proj, d)) },
-    { id: "last", chip: "Last place",
-      blurb: "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it.",
-      boards: [raceBoard("To finish 12th", "loser of the consolation elimination game", all, "last", proj)] },
-  ];
+        }) }],
+      divLast: divs.map(d => race(`${model.divNames.get(d)} — to finish last`, `within the division · ${lineSub}`, byDiv(d), "divLast", proj, d)),
+      last: [race("To finish 12th", `loser of the consolation elimination game · ${lineSub}`, all, "last", proj)],
+    };
+  };
 
-  const st = { market: "title", sort: "odds", div: "", team: "" };
+  const st = { line: "opening", market: "title", sort: "odds", div: "", team: "" };
+  const lines = { opening: null, live: null };
+  let liveStatus = "pending", liveInfo = null;
   const root = el("div", "fxm");
   root.id = "fxmMarkets";
   const tiles = r => r.prices.map((x, k) => priceTile(x, r.labels[k])).join("");
 
-  const src = el("p", "fxm-src");
-  src.innerHTML = `<b>Opening line</b> · priced when the draft finished and not moved by results since. Prices that
-    move with the season are on the <button type="button" data-jump="liveHost">live board</button>.`;
+  const src = el("div", "fxm-src");
+  src.innerHTML = `<div class="fxm-seg fxm-lineseg" role="group" aria-label="Price line">
+      <button type="button" data-line="live">Live</button><button type="button" data-line="opening">Opening</button></div>
+    <p class="fxm-srctxt"></p>`;
   root.appendChild(src);
+  const lineBtns = [...src.querySelectorAll("[data-line]")], srcTxt = src.querySelector(".fxm-srctxt");
 
   const chips = el("div", "fxm-chips");
   chips.setAttribute("role", "tablist");
   chips.setAttribute("aria-label", "Futures markets");
-  chips.innerHTML = MK.map(m =>
+  chips.innerHTML = CHIPS.map(m =>
     `<button type="button" class="fxm-chip" role="tab" data-market="${m.id}">${esc(m.chip)}</button>`).join("");
   root.appendChild(chips);
 
@@ -5361,46 +5389,59 @@ function futuresMarkets(model, sim) {
 
   const blurb = el("p", "fxm-blurb");
   root.appendChild(blurb);
+  const linesHost = el("div", "fxm-lines");
+  root.appendChild(linesHost);
 
-  for (const m of MK) {
-    m.sec = el("div", "fxm-mkt");
-    m.sec.dataset.market = m.id;
-    const wrap = m.grid ? el("div", "bgrid") : m.sec;
-    for (const bd of m.boards) {
-      bd.el = el("div", "board");
-      bd.el.dataset.board = "opening";
-      if (bd.div != null) bd.el.dataset.div = bd.div;
-      bd.el.innerHTML = `<div class="bhead">
-        <span class="bt">${esc(bd.title)}<span class="bs">${esc(bd.sub)}</span></span>
-        <span class="hold">${bd.hold}</span></div>`;
-      bd.items = bd.rows.map(r => {
-        const uid = T[r.i].uid, row = el("button", `orow fxm-row${m.two ? " two" : ""}`);
-        row.type = "button";
-        Object.assign(row.dataset, { uid, div: T[r.i].div, key: r.key, name: nameOf(uid), price: r.prices[0].price });
-        row.innerHTML = `<span class="rk"></span>${avatarHTML(uid, "sm avcell")}
-          <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span></span>
-          ${m.two ? `<span class="prices">${tiles(r)}</span>` : tiles(r)}`;
-        row.title = `All of ${nameOf(uid)}'s prices`;
-        row.onclick = () => { st.team = uid; apply(); };
-        return { r, row, name: nameOf(uid) };
-      });
-      wrap.appendChild(bd.el);
+  // One line's worth of market lists. Both lines stay in the page so switching
+  // between them is instant and every control keeps its state.
+  const makeLine = (kind, S, stamp) => {
+    const view = el("div", "fxm-line-view");
+    view.dataset.line = kind;
+    const B = boardsFor(S, kind, stamp), secs = {};
+    for (const m of CHIPS) {
+      const sec = el("div", "fxm-mkt");
+      sec.dataset.market = m.id;
+      const wrap = m.grid ? el("div", "bgrid") : sec;
+      for (const bd of B[m.id]) {
+        bd.el = el("div", "board");
+        // The opening boards keep the name the rest of the tab (and verify) knows them by.
+        bd.el.dataset.board = kind === "live" ? "fxm-live" : "opening";
+        if (bd.div != null) bd.el.dataset.div = bd.div;
+        bd.el.innerHTML = `<div class="bhead">
+          <span class="bt">${esc(bd.title)}<span class="bs">${esc(bd.sub)}</span></span>
+          <span class="hold">${bd.hold}</span></div>`;
+        bd.items = bd.rows.map(r => {
+          const uid = T[r.i].uid, row = el("button", `orow fxm-row${m.two ? " two" : ""}`);
+          row.type = "button";
+          Object.assign(row.dataset, { uid, div: T[r.i].div, key: r.key, name: nameOf(uid), price: r.prices[0].price });
+          row.innerHTML = `<span class="rk"></span>${avatarHTML(uid, "sm avcell")}
+            <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span></span>
+            ${m.two ? `<span class="prices">${tiles(r)}</span>` : tiles(r)}`;
+          row.title = `All of ${nameOf(uid)}'s prices`;
+          row.onclick = () => { st.team = uid; apply(); };
+          return { r, row, name: nameOf(uid) };
+        });
+        wrap.appendChild(bd.el);
+      }
+      if (m.grid) sec.appendChild(wrap);
+      view.appendChild(sec);
+      secs[m.id] = { sec, boards: B[m.id] };
     }
-    if (m.grid) m.sec.appendChild(wrap);
-    if (m.id === "last") {
-      const quirk = el("div", "method");
-      quirk.innerHTML = `<h3>How last place is decided</h3>
-        <p>The six teams that miss the playoffs go into a toilet bowl, and it runs backwards: you advance by
-           losing. The four best of them play the first round, and the two that lose it carry on. The two
-           worst records sit that round out and enter next, already one defeat from the final — and losing
-           the final is twelfth.</p>
-        <p>So the bottom of this league is played for rather than awarded, and the seeding pushes the worst
-           two teams towards it rather than away. It has landed on the worst record in the league twice in
-           four seasons, and on a middling one twice.</p>`;
-      m.sec.appendChild(quirk);
-    }
-    root.appendChild(m.sec);
-  }
+    return { kind, S, view, secs };
+  };
+  lines.opening = makeLine("opening", sim);
+  linesHost.appendChild(lines.opening.view);
+
+  const quirk = el("div", "method fxm-quirk");
+  quirk.innerHTML = `<h3>How last place is decided</h3>
+    <p>The six teams that miss the playoffs go into a toilet bowl, and it runs backwards: you advance by
+       losing. The four best of them play the first round, and the two that lose it carry on. The two
+       worst records sit that round out and enter next, already one defeat from the final — and losing
+       the final is twelfth.</p>
+    <p>So the bottom of this league is played for rather than awarded, and the seeding pushes the worst
+       two teams towards it rather than away. It has landed on the worst record in the league twice in
+       four seasons, and on a middling one twice.</p>`;
+  root.appendChild(quirk);
 
   const teamHost = el("div", "fxm-teamhost");
   root.appendChild(teamHost);
@@ -5410,25 +5451,27 @@ function futuresMarkets(model, sim) {
     <button type="button" data-jump="liveHost">Live board</button>
     <button type="button" data-jump="fxmNotice">House notice</button>
     <button type="button" data-jump="fxmHow">How it's priced</button>`;
+  root.appendChild(links);
   root.addEventListener("click", e => {
     const b = e.target.closest("button[data-jump]");
     const t = b && document.getElementById(b.dataset.jump);
     if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
   });
-  root.appendChild(links);
 
   const paintTeam = uid => {
-    const i = T.findIndex(t => t.uid === uid);
+    const i = T.findIndex(t => t.uid === uid), L = lines[st.line];
     teamHost.innerHTML = "";
-    if (i < 0) return;
+    if (i < 0 || !L) return;
+    const n = L.S.sims;
     const card = el("div", "board fxm-card");
     card.dataset.uid = uid;
+    card.dataset.line = st.line;
     card.innerHTML = `<div class="bhead"><span class="bt fxm-th">${avatarHTML(uid, "sm")}
-      <span class="fxm-tn">${esc(nameOf(uid))}<span class="bs">${esc(model.divNames.get(T[i].div))} · ${proj(i)} · every market</span></span></span>
+      <span class="fxm-tn">${esc(nameOf(uid))}<span class="bs">${esc(model.divNames.get(T[i].div))} · projects ${f1(L.S.wins[i] / n)} wins · ${st.line === "live" ? "live" : "opening"} line</span></span></span>
       <button type="button" class="fxm-prof">Profile</button></div>`;
     card.querySelector(".fxm-prof").onclick = () => openProfile(uid);
-    for (const m of MK) {
-      for (const bd of m.boards) {
+    for (const m of CHIPS) {
+      for (const bd of L.secs[m.id].boards) {
         const r = bd.rows.find(x => x.i === i);
         if (!r) continue;
         const row = el("div", `fxm-trow${m.two ? " two" : ""}`);
@@ -5441,35 +5484,81 @@ function futuresMarkets(model, sim) {
     teamHost.appendChild(card);
   };
 
+  const srcText = () => {
+    if (st.line === "live" && liveInfo) {
+      const d = liveInfo.decided, left = liveInfo.remaining + (liveInfo.pending || []).length;
+      return `<b>Live line</b> · repriced off ${d} finished game${d === 1 ? "" : "s"} with ${left} still to play —
+        the same prices as the <button type="button" data-jump="liveHost">live board</button>.
+        ${esc(updatedAt(liveInfo.at || Date.now()))}.`;
+    }
+    const why = { pending: "Live prices are on their way.",
+      waiting: "There's no live line to show yet, so this is the only one.",
+      error: "The live line couldn't be priced, so this is the only one.",
+      ready: "Switch to Live for the prices that move with the season." }[liveStatus] || "";
+    return `<b>Opening line</b> · priced when the draft finished and not moved by results since. ${why}`;
+  };
+
   function apply() {
     const cmp = st.sort === "name"
       ? (a, b) => a.name.localeCompare(b.name) || b.r.key - a.r.key
       : (a, b) => b.r.key - a.r.key || a.name.localeCompare(b.name);
-    for (const m of MK) {
-      m.sec.hidden = !!st.team || m.id !== st.market;
-      for (const bd of m.boards) {
-        bd.items.sort(cmp).forEach(it => bd.el.appendChild(it.row));
-        let k = 0;
-        for (const it of bd.items) {
-          const show = !st.div || String(T[it.r.i].div) === st.div;
-          it.row.hidden = !show;
-          // A rank only means something when the list is in price order.
-          if (show) { k++; it.row.querySelector(".rk").textContent = st.sort === "odds" ? k : ""; }
+    for (const L of Object.values(lines)) {
+      if (!L) continue;
+      L.view.hidden = L.kind !== st.line;
+      for (const m of CHIPS) {
+        const { sec, boards } = L.secs[m.id];
+        sec.hidden = !!st.team || m.id !== st.market;
+        for (const bd of boards) {
+          bd.items.sort(cmp).forEach(it => bd.el.appendChild(it.row));
+          let k = 0;
+          for (const it of bd.items) {
+            const show = !st.div || String(T[it.r.i].div) === st.div;
+            it.row.hidden = !show;
+            // A rank only means something when the list is in price order.
+            if (show) { k++; it.row.querySelector(".rk").textContent = st.sort === "odds" ? k : ""; }
+          }
+          bd.el.hidden = k === 0;
         }
-        bd.el.hidden = k === 0;
       }
     }
+    quirk.hidden = !!st.team || st.market !== "last";
     for (const c of chips.children) c.setAttribute("aria-selected", String(!st.team && c.dataset.market === st.market));
     for (const b of sortBtns) { b.setAttribute("aria-pressed", String(b.dataset.sort === st.sort)); b.disabled = !!st.team; }
+    for (const b of lineBtns) {
+      b.setAttribute("aria-pressed", String(b.dataset.line === st.line));
+      b.disabled = b.dataset.line === "live" && !lines.live;
+    }
+    lineBtns[0].title = lines.live ? "" : "The live line isn't available yet";
+    srcTxt.innerHTML = srcText();
     divSel.value = st.div; divSel.disabled = !!st.team;
     teamSel.value = st.team;
     teamHost.hidden = !st.team;
     if (st.team) paintTeam(st.team);
-    const m = MK.find(x => x.id === st.market);
+    const m = CHIPS.find(x => x.id === st.market);
     blurb.textContent = st.team
       ? `Every market, one manager. Pick a market above or "All teams" to go back to the full lists.`
       : m.blurb;
-    Object.assign(root.dataset, { market: st.market, sort: st.sort, div: st.div, team: st.team });
+    Object.assign(root.dataset, { line: st.line, market: st.market, sort: st.sort, div: st.div, team: st.team, live: liveStatus });
+  }
+
+  // A new live line (first arrival, or a poll that repriced it) swaps in its
+  // lists and leaves every control, and the reader's scroll, where it was.
+  function setLive(N, status) {
+    if (status) liveStatus = status;
+    if (N && N.lsim && (!lines.live || lines.live.S !== N.lsim)) {
+      const y = window.scrollY, first = !lines.live;
+      liveInfo = N.live || null;
+      const fresh = makeLine("live", N.lsim, updatedAt((N.live && N.live.at) || Date.now()));
+      if (lines.live) lines.live.view.replaceWith(fresh.view); else linesHost.appendChild(fresh.view);
+      lines.live = fresh;
+      liveStatus = "ready";
+      // Live leads once it exists: the first arrival switches to it on its own.
+      if (first) st.line = "live";
+      apply();
+      if (window.scrollY !== y) window.scrollTo(0, y);
+      return;
+    }
+    apply();
   }
 
   chips.addEventListener("click", e => {
@@ -5484,9 +5573,21 @@ function futuresMarkets(model, sim) {
     st.sort = b.dataset.sort;
     apply();
   });
+  src.addEventListener("click", e => {
+    const b = e.target.closest("[data-line]");
+    if (!b || b.disabled) return;
+    st.line = b.dataset.line;
+    apply();
+  });
   divSel.onchange = () => { st.div = divSel.value; apply(); };
   teamSel.onchange = () => { st.team = teamSel.value; apply(); };
-  apply();
+
+  const view = { root, setLive, state: () => ({ ...st, liveStatus }) };
+  root._fxm = view;
+  FXM_VIEWS.add(view);
+  // Polls re-read the live board's own line, so the two stay in step.
+  onLive(() => { if (root.isConnected && LIVE_NOW) setLive(LIVE_NOW); });
+  if (LIVE_NOW) setLive(LIVE_NOW, "ready"); else apply();
   return root;
 }
 
@@ -7656,7 +7757,7 @@ async function boot() {
       DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,
-      fmtOdds, futuresMarkets,
+      fmtOdds, futuresMarkets, liveNow: () => LIVE_NOW,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,

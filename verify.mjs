@@ -3167,20 +3167,31 @@ for (const [url, want] of [
 }
 
 /* ------------------------------------------------------------------------
- * Futures markets: the sportsbook-style browser over the opening simulation.
- * Presentation only, so every price is checked against SIM run through the
- * page's own priceMarket / winTotals / fmtOdds, not against a second copy.
+ * Futures markets: the sportsbook-style browser, on both lines. Presentation
+ * only, so every price is checked against the simulation it claims to show —
+ * Opening against SIM, Live against LIVE_NOW.lsim (the run the live board is
+ * drawn from) — through the page's own priceMarket / winTotals / fmtOdds.
  * ---------------------------------------------------------------------- */
 group("Futures markets");
 const fxErr0 = errors.length;
 const FX_MARKETS = ["title", "divWin", "playoff", "bye", "wins", "divLast", "last"];
 await page.click('#tabs button[data-tab="odds"]');
 await page.waitForSelector('[data-panel="odds"] .fxm', { timeout: 30000 });
-const fx = await page.evaluate(() => {
-  const D = window.__DFFL, M = D.ODDS, S = D.SIM, n = S.sims, T = M.teams;
-  const root = document.querySelector('[data-panel="odds"] .fxm');
-  const pct = p => `${(p * 100).toFixed(1)}%`;
-  const exp = {};
+await page.waitForFunction(() => document.body.dataset.liveReady, null, { timeout: 180000 });
+const fxLive = await page.evaluate(() => {
+  const N = window.__DFFL.liveNow();
+  return { status: document.body.dataset.liveReady, ok: document.body.dataset.liveReady === "1" && !!(N && N.lsim) };
+});
+const FX_SKIP = `skipped: no live sim on this run (liveReady=${fxLive.status}) — offseason or no live data`;
+const liveCheck = (name, fn) => fxLive.ok ? fn() : check(name, true, FX_SKIP);
+
+// Rows and prices of one line, against the simulation behind it.
+const fxLine = kind => page.evaluate(kind => {
+  const D = window.__DFFL, M = D.ODDS, T = M.teams;
+  const S = kind === "live" ? (D.liveNow() || {}).lsim : D.SIM;
+  const view = document.querySelector(`[data-panel="odds"] .fxm .fxm-line-view[data-line="${kind}"]`);
+  if (!S || !view) return { missing: true };
+  const n = S.sims, pct = p => `${(p * 100).toFixed(1)}%`, exp = {};
   const put = (mk, uid, list) => ((exp[mk] = exp[mk] || {})[uid] = list.map(r => ({ o: D.fmtOdds(r.price), tp: pct(r.p) })));
   const all = T.map((_, i) => i);
   const race = (mk, ids) => D.priceMarket(ids.map(i => ({ uid: T[i].uid, p: S[mk][i] / n }))).forEach(r => put(mk, r.uid, [r]));
@@ -3192,7 +3203,7 @@ const fx = await page.evaluate(() => {
   for (const mk of ["playoff", "bye"]) all.forEach(i => { const p = S[mk][i] / n; put(mk, T[i].uid, D.priceMarket([{ p }, { p: 1 - p }])); });
   D.winTotals(M, S).forEach(w => put("wins", w.uid, D.priceMarket([{ p: w.pOver }, { p: w.pUnder }])));
   const markets = {};
-  for (const sec of root.querySelectorAll(".fxm-mkt")) {
+  for (const sec of view.querySelectorAll(".fxm-mkt")) {
     const mk = sec.dataset.market, rows = [...sec.querySelectorAll(".fxm-row")], uids = rows.map(r => r.dataset.uid);
     const bad = [];
     for (const r of rows) {
@@ -3203,24 +3214,74 @@ const fx = await page.evaluate(() => {
     markets[mk] = { rows: rows.length, unique: new Set(uids).size, allTeams: T.every(t => uids.includes(t.uid)),
       groups: sec.querySelectorAll(".board").length, bad: bad.slice(0, 3), badN: bad.length };
   }
+  return { markets, teams: T.length, divs: new Set(T.map(t => t.div)).size };
+}, kind);
+const fxState = () => page.evaluate(() => {
+  const root = document.querySelector('[data-panel="odds"] .fxm');
+  const vis = [...root.querySelectorAll(".fxm-mkt")].filter(s => s.offsetParent).map(s => s.dataset.market);
+  const card = root.querySelector(".fxm-card");
   return {
+    ...root.dataset, visible: vis,
     chips: [...root.querySelectorAll(".fxm-chip")].map(c => c.dataset.market),
     selected: [...root.querySelectorAll('.fxm-chip[aria-selected="true"]')].map(c => c.dataset.market),
-    visible: [...root.querySelectorAll(".fxm-mkt")].filter(s => !s.hidden).map(s => s.dataset.market),
-    markets, teams: T.length, divs: new Set(T.map(t => t.div)).size,
+    pressed: [...root.querySelectorAll('.fxm-lineseg [aria-pressed="true"]')].map(b => b.dataset.line),
+    liveDisabled: root.querySelector('.fxm-lineseg [data-line="live"]').disabled,
+    note: root.querySelector(".fxm-srctxt").textContent.replace(/\s+/g, " ").trim(),
+    shownLine: [...root.querySelectorAll(".fxm-line-view")].filter(v => !v.hidden).map(v => v.dataset.line).join(),
+    card: card && card.offsetParent ? { uid: card.dataset.uid, line: card.dataset.line } : null,
+    sel: { div: root.querySelector('select[data-fxm="div"]').value, team: root.querySelector('select[data-fxm="team"]').value },
   };
 });
-check("futures: one chip per market the simulation computes, in order", JSON.stringify(fx.chips) === JSON.stringify(FX_MARKETS), fx.chips.join(","));
-check("futures: opens on the championship, and only that market shows", fx.selected.join() === "title" && fx.visible.join() === "title",
-  `selected ${fx.selected} visible ${fx.visible}`);
+
+const fx0 = await fxState();
+check("futures: one chip per market the simulation computes, in order", JSON.stringify(fx0.chips) === JSON.stringify(FX_MARKETS), fx0.chips.join(","));
+check("futures: opens on the championship, and only that market shows", fx0.selected.join() === "title" && fx0.visible.join() === "title",
+  `selected ${fx0.selected} visible ${fx0.visible}`);
+if (fxLive.ok) {
+  check("futures: the toggle defaults to Live once the live sim is ready",
+    fx0.line === "live" && fx0.pressed.join() === "live" && fx0.shownLine === "live" && !fx0.liveDisabled && /^Live line/.test(fx0.note), JSON.stringify({ line: fx0.line, pressed: fx0.pressed, note: fx0.note }));
+} else {
+  check("futures: the toggle defaults to Live once the live sim is ready", true, FX_SKIP);
+  check("futures: with no live sim it stays on Opening, says so, and Live is off",
+    fx0.line === "opening" && fx0.liveDisabled && /^Opening line/.test(fx0.note), JSON.stringify({ line: fx0.line, note: fx0.note }));
+}
+
+const fxO = await fxLine("opening");
 for (const mk of FX_MARKETS) {
-  const m = fx.markets[mk] || {};
-  check(`futures ${mk}: one row per team`, m.rows === fx.teams && m.unique === fx.teams && m.allTeams, `${m.rows} rows, ${m.unique} unique of ${fx.teams}`);
-  check(`futures ${mk}: every price is the simulation's after the 6% hold`, m.rows > 0 && m.badN === 0, `${m.badN} off: ${(m.bad || []).join(" | ")}`);
+  const m = (fxO.markets || {})[mk] || {};
+  check(`futures ${mk} (opening): one row per team`, m.rows === fxO.teams && m.unique === fxO.teams && m.allTeams, `${m.rows} rows, ${m.unique} unique of ${fxO.teams}`);
+  check(`futures ${mk} (opening): every price is __SIM's after the 6% hold`, m.rows > 0 && m.badN === 0, `${m.badN} off: ${(m.bad || []).join(" | ")}`);
 }
 check("futures: division markets carry one group per division",
-  fx.markets.divWin && fx.markets.divWin.groups === fx.divs && fx.markets.divLast.groups === fx.divs,
-  `${fx.markets.divWin && fx.markets.divWin.groups} / ${fx.markets.divLast && fx.markets.divLast.groups} of ${fx.divs}`);
+  fxO.markets && fxO.markets.divWin.groups === fxO.divs && fxO.markets.divLast.groups === fxO.divs);
+const fxL = fxLive.ok ? await fxLine("live") : null;
+for (const mk of FX_MARKETS) {
+  liveCheck(`futures ${mk} (live): one row per team`, () => {
+    const m = (fxL.markets || {})[mk] || {};
+    check(`futures ${mk} (live): one row per team`, m.rows === fxL.teams && m.unique === fxL.teams && m.allTeams, `${m.rows} rows, ${m.unique} unique of ${fxL.teams}`);
+  });
+  liveCheck(`futures ${mk} (live): every price is lsim's after the 6% hold`, () => {
+    const m = (fxL.markets || {})[mk] || {};
+    check(`futures ${mk} (live): every price is lsim's after the 6% hold`, m.rows > 0 && m.badN === 0, `${m.badN} off: ${(m.bad || []).join(" | ")}`);
+  });
+}
+
+// The live championship is the live board's championship, team for team.
+if (fxLive.ok) {
+  const vs = await page.evaluate(() => {
+    const sel = document.querySelector("#liveHost .asofbar select");
+    const rewound = sel && sel.value !== "";
+    const lb = [...document.querySelectorAll('#liveHost [data-board="live"]')]
+      .find(b => /To win the DFFL championship/.test(b.querySelector(".bt").textContent));
+    const txt = r => [...r.querySelectorAll(".price")].map(x => x.querySelector(".o").textContent.trim() + "@" + x.querySelector(".tp").textContent.trim()).join(" ");
+    const board = new Map(lb ? [...lb.querySelectorAll(".orow")].map(r => [r.querySelector(".who .n").textContent.trim(), txt(r)]) : []);
+    const fxm = [...document.querySelectorAll('.fxm .fxm-line-view[data-line="live"] .fxm-mkt[data-market="title"] .fxm-row')]
+      .map(r => ({ name: r.dataset.name, t: txt(r) }));
+    return { rewound, found: !!lb, n: board.size, fxn: fxm.length, off: fxm.filter(r => board.get(r.name) !== r.t).map(r => `${r.name}: ${r.t} vs ${board.get(r.name)}`) };
+  });
+  check("futures: the live championship posts exactly the live board's prices",
+    vs.found && !vs.rewound && vs.n === 12 && vs.fxn === 12 && vs.off.length === 0, JSON.stringify(vs).slice(0, 300));
+} else check("futures: the live championship posts exactly the live board's prices", true, FX_SKIP);
 
 const fxRows = mk => page.evaluate(mk => {
   const rows = [...document.querySelectorAll(`.fxm-mkt[data-market="${mk}"] .fxm-row`)].filter(r => !r.hidden && r.offsetParent)
@@ -3241,14 +3302,14 @@ for (const mk of ["title", "playoff", "divWin", "wins"]) {
 }
 check("sort by odds: shortest price first in every market", ["title", "playoff", "divWin"].every(mk => oddsOrdered(so[mk].rows)) && oddsOrdered(so.wins.rows, false),
   ["title", "playoff", "divWin", "wins"].map(mk => `${mk}:${so[mk].rows.map(r => r.price).join(",")}`).join(" "));
-check("sort by odds: every team visible and ranked 1..n", so.title.rows.length === fx.teams && ranked(so.title.rows) && ranked(so.divWin.rows));
+check("sort by odds: every team visible and ranked 1..n", so.title.rows.length === fxO.teams && ranked(so.title.rows) && ranked(so.divWin.rows));
 await page.click('.fxm-chip[data-market="title"]');
 await page.click('.fxm-seg button[data-sort="name"]');
 const soName = { title: await fxRows("title") };
 await page.click('.fxm-chip[data-market="divWin"]');
 soName.divWin = await fxRows("divWin");
 check("sort by name: alphabetical, and it survives a market switch",
-  soName.title.alpha && soName.title.rows.length === fx.teams && byBoard(soName.divWin.rows).every(g => g.map(r => r.name).join("|") === g.map(r => r.name).sort((a, b) => a.localeCompare(b)).join("|")),
+  soName.title.alpha && soName.title.rows.length === fxO.teams && byBoard(soName.divWin.rows).every(g => g.map(r => r.name).join("|") === g.map(r => r.name).sort((a, b) => a.localeCompare(b)).join("|")),
   soName.title.rows.map(r => r.name).join(","));
 await page.click('.fxm-seg button[data-sort="odds"]');
 await page.click('.fxm-chip[data-market="title"]');
@@ -3260,27 +3321,27 @@ for (const d of fxDivs) {
   await page.selectOption('.fxm select[data-fxm="div"]', d);
   const t = await fxRows("title");
   await page.click('.fxm-chip[data-market="divWin"]');
-  const g = await page.evaluate(() => [...document.querySelectorAll('.fxm-mkt[data-market="divWin"] .board')].filter(b => !b.hidden).map(b => b.dataset.div));
+  const g = await page.evaluate(() => [...document.querySelectorAll('.fxm-mkt[data-market="divWin"] .board')].filter(b => b.offsetParent).map(b => b.dataset.div));
   await page.click('.fxm-chip[data-market="title"]');
   divRes.push({ d, n: t.rows.length, same: t.rows.every(r => r.div === d), ranked: ranked(t.rows), g });
 }
 await page.selectOption('.fxm select[data-fxm="div"]', "");
-check("division filter: every division narrows the list to its own four", fxDivs.length === fx.divs && divRes.every(x => x.n === 4 && x.same && x.ranked),
+check("division filter: every division narrows the list to its own four", fxDivs.length === fxO.divs && divRes.every(x => x.n === 4 && x.same && x.ranked),
   JSON.stringify(divRes));
 check("division filter: division markets show only that division's group", divRes.every(x => x.g.join() === x.d), JSON.stringify(divRes.map(x => x.g)));
-check("division filter: All brings every team back", (await fxRows("title")).rows.length === fx.teams);
+check("division filter: All brings every team back", (await fxRows("title")).rows.length === fxO.teams);
 
 const pickTeam = async () => page.evaluate(() => {
   const root = document.querySelector(".fxm"), card = root.querySelector(".fxm-card");
   if (!card || !card.offsetParent) return { shown: false };
-  const uid = card.dataset.uid;
+  const uid = card.dataset.uid, view = root.querySelector(`.fxm-line-view[data-line="${root.dataset.line}"]`);
+  const txt = e => [...e.querySelectorAll(".price")].map(x => x.querySelector(".o").textContent.trim() + "@" + x.querySelector(".tp").textContent.trim()).join(" ");
   const rows = [...card.querySelectorAll(".fxm-trow")].map(r => {
-    const mk = r.dataset.market;
-    const src = root.querySelector(`.fxm-mkt[data-market="${mk}"] .fxm-row[data-uid="${uid}"]`);
-    const txt = e => [...e.querySelectorAll(".price")].map(x => x.querySelector(".o").textContent.trim() + "@" + x.querySelector(".tp").textContent.trim()).join(" ");
-    return { mk, same: !!src && txt(src) === txt(r) && txt(r).length > 0 };
+    const src = view.querySelector(`.fxm-mkt[data-market="${r.dataset.market}"] .fxm-row[data-uid="${uid}"]`);
+    return { mk: r.dataset.market, same: !!src && txt(src) === txt(r) && txt(r).length > 0, t: txt(r) };
   });
-  return { shown: true, uid, rows, marketsHidden: [...root.querySelectorAll(".fxm-mkt")].every(s => s.hidden), sel: root.querySelector('select[data-fxm="team"]').value };
+  return { shown: true, uid, line: card.dataset.line, rows, marketsHidden: [...root.querySelectorAll(".fxm-mkt")].every(s => !s.offsetParent),
+    sel: root.querySelector('select[data-fxm="team"]').value };
 });
 const fxTeam = await page.evaluate(() => [...document.querySelectorAll('.fxm select[data-fxm="team"] option')].map(o => o.value).filter(Boolean)[3]);
 await page.selectOption('.fxm select[data-fxm="team"]', fxTeam);
@@ -3289,16 +3350,76 @@ check("team pick: one manager's card replaces the lists", tp.shown && tp.uid ===
 check("team pick: a row for every market", tp.shown && JSON.stringify(tp.rows.map(r => r.mk)) === JSON.stringify(FX_MARKETS), tp.rows && tp.rows.map(r => r.mk).join(","));
 check("team pick: each price is the one the market list posts", tp.shown && tp.rows.every(r => r.same), tp.rows && tp.rows.filter(r => !r.same).map(r => r.mk).join(","));
 await page.click('.fxm-chip[data-market="last"]');
-const lastUid = await page.evaluate(() => { const r = [...document.querySelectorAll('.fxm-mkt[data-market="last"] .fxm-row')].find(x => !x.hidden); return r.dataset.uid; });
-await page.click(`.fxm-mkt[data-market="last"] .fxm-row[data-uid="${lastUid}"]`);
+const lastUid = await page.evaluate(() => [...document.querySelectorAll('.fxm-mkt[data-market="last"] .fxm-row')].find(x => x.offsetParent).dataset.uid);
+await page.click(`.fxm-line-view:not([hidden]) .fxm-mkt[data-market="last"] .fxm-row[data-uid="${lastUid}"]`);
 const tp2 = await pickTeam();
 check("team pick: tapping a team row opens that manager's card", tp2.shown && tp2.uid === lastUid && tp2.sel === lastUid, `${tp2.uid} vs ${lastUid}`);
 await page.click('.fxm-chip[data-market="title"]');
-const back = await page.evaluate(() => ({ team: document.querySelector(".fxm").dataset.team, sel: document.querySelector('.fxm select[data-fxm="team"]').value,
-  card: !!(document.querySelector(".fxm .fxm-card") || {}).offsetParent }));
-check("team pick: choosing a market goes back to the lists", back.team === "" && back.sel === "" && !back.card, JSON.stringify(back));
+const back = await fxState();
+check("team pick: choosing a market goes back to the lists", back.team === "" && back.sel.team === "" && !back.card, JSON.stringify({ team: back.team, card: back.card }));
 
-await page.waitForFunction(() => document.body.dataset.liveReady, null, { timeout: 180000 });
+// Opening <-> Live keeps every control where the reader left it.
+if (fxLive.ok) {
+  await page.click('.fxm-chip[data-market="divWin"]');
+  await page.click('.fxm-seg button[data-sort="name"]');
+  await page.selectOption('.fxm select[data-fxm="div"]', fxDivs[1]);
+  const keep = s => ({ market: s.market, sort: s.sort, div: s.div, team: s.team, visible: s.visible.join(), selDiv: s.sel.div, selTeam: s.sel.team, selected: s.selected.join() });
+  const s0 = await fxState();
+  const r0 = await fxRows("divWin");
+  await page.click('.fxm-lineseg [data-line="opening"]');
+  const s1 = await fxState(), r1 = await fxRows("divWin");
+  await page.click('.fxm-lineseg [data-line="live"]');
+  const s2 = await fxState(), r2 = await fxRows("divWin");
+  check("toggle: switching Live -> Opening -> Live keeps market, sort and division filter",
+    s1.line === "opening" && s1.shownLine === "opening" && /^Opening line/.test(s1.note) && s2.line === "live" && s2.shownLine === "live" &&
+    JSON.stringify(keep(s1)) === JSON.stringify(keep(s0)) && JSON.stringify(keep(s2)) === JSON.stringify(keep(s0)) &&
+    r1.rows.length === 4 && r1.rows.every(r => r.div === fxDivs[1]) && r1.alpha && r2.alpha && r2.rows.length === 4,
+    JSON.stringify({ s0: keep(s0), s1: keep(s1), s2: keep(s2) }));
+  await page.selectOption('.fxm select[data-fxm="team"]', fxTeam);
+  const t0 = await pickTeam();
+  await page.click('.fxm-lineseg [data-line="opening"]');
+  const t1 = await pickTeam();
+  await page.click('.fxm-lineseg [data-line="live"]');
+  const t2 = await pickTeam();
+  check("toggle: the team pick survives the switch and reprices from the line shown",
+    t0.shown && t1.shown && t2.shown && t0.uid === fxTeam && t1.uid === fxTeam && t2.uid === fxTeam &&
+    t0.line === "live" && t1.line === "opening" && t2.line === "live" && [t0, t1, t2].every(t => t.rows.every(r => r.same)) &&
+    JSON.stringify(t0.rows.map(r => r.t)) === JSON.stringify(t2.rows.map(r => r.t)),
+    JSON.stringify({ t0: [t0.uid, t0.line], t1: [t1.uid, t1.line], t2: [t2.uid, t2.line] }));
+
+  // A poll that reprices the live line swaps the lists in place: controls and
+  // scroll stay put, and the prices follow the new run. Simulated by handing
+  // the view another run, then the real one back.
+  const redraw = await page.evaluate(async () => {
+    const D = window.__DFFL, root = document.querySelector(".fxm"), N = D.liveNow();
+    const before = { ...root.dataset }, y0 = (window.scrollTo(0, root.getBoundingClientRect().top + scrollY + 120), window.scrollY);
+    root._fxm.setLive({ ...N, lsim: D.SIM }, "ready");
+    const mid = { ...root.dataset }, y1 = window.scrollY;
+    const card = root.querySelector(".fxm-card");
+    const champ = card && card.querySelector('.fxm-trow[data-market="title"] .price .tp').textContent.trim();
+    const T = D.ODDS.teams, i = T.findIndex(t => t.uid === before.team);
+    const wantSim = `${(D.SIM.title[i] / D.SIM.sims * 100).toFixed(1)}%`;
+    root._fxm.setLive(N, "ready");
+    const after = { ...root.dataset }, champBack = root.querySelector('.fxm-card .fxm-trow[data-market="title"] .price .tp').textContent.trim();
+    const wantLive = `${(N.lsim.title[i] / N.lsim.sims * 100).toFixed(1)}%`;
+    const same = (a, b) => ["line", "market", "sort", "div", "team"].every(k => a[k] === b[k]);
+    return { keep: same(before, mid) && same(before, after), y0, y1, y2: window.scrollY, champ, wantSim, champBack, wantLive };
+  });
+  check("live redraw: a repriced live line keeps market, sort, filter, team and scroll",
+    redraw.keep && Math.abs(redraw.y1 - redraw.y0) <= 1 && Math.abs(redraw.y2 - redraw.y0) <= 1, JSON.stringify(redraw));
+  check("live redraw: the prices follow the new run, and come back with the real one",
+    redraw.champ === redraw.wantSim && redraw.champBack === redraw.wantLive, JSON.stringify(redraw));
+  await page.selectOption('.fxm select[data-fxm="team"]', "");
+  await page.selectOption('.fxm select[data-fxm="div"]', "");
+  await page.click('.fxm-seg button[data-sort="odds"]');
+  await page.click('.fxm-chip[data-market="title"]');
+} else {
+  for (const n of ["toggle: switching Live -> Opening -> Live keeps market, sort and division filter",
+    "toggle: the team pick survives the switch and reprices from the line shown",
+    "live redraw: a repriced live line keeps market, sort, filter, team and scroll",
+    "live redraw: the prices follow the new run, and come back with the real one"]) check(n, true, FX_SKIP);
+}
+
 const reach = await page.evaluate(() => {
   const p = document.querySelector('[data-panel="odds"]'), fxm = p.querySelector(".fxm");
   const after = sel => { const t = p.querySelector(sel); return !!t && !!(fxm.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING); };
@@ -3309,7 +3430,7 @@ const reach = await page.evaluate(() => {
     live: document.body.dataset.liveReady, liveKids: p.querySelector("#liveHost") ? p.querySelector("#liveHost").children.length : 0,
     notice: /These are not real betting lines/.test((p.querySelector("#fxmNotice") || {}).textContent || ""),
     method: /What the model is told/.test(p.textContent) && /The prices/.test(p.textContent),
-    quirk: /How last place is decided/.test((p.querySelector('.fxm-mkt[data-market="last"]') || {}).textContent || ""),
+    quirk: /How last place is decided/.test((fxm.querySelector(".fxm-quirk") || {}).textContent || ""),
     blurbs: !!fxm.querySelector(".fxm-blurb") && fxm.querySelector(".fxm-blurb").textContent.includes("6% hold"),
   };
 });
@@ -3352,11 +3473,13 @@ check("document does not scroll horizontally at 390px", narrow.docScroll <= narr
 check("body does not scroll horizontally at 390px", narrow.bodyScroll <= narrow.inner, `${narrow.bodyScroll} > ${narrow.inner}`);
 check("no element overflows the viewport at 390px", narrow.overflowing.length === 0, narrow.overflowing.join(" | "));
 check("prices still render at 390px", narrow.priceCount > 60, `${narrow.priceCount}`);
-// The futures markets at phone width: chips scroll sideways inside their own
-// row; nothing else may be wider than the screen, and every price box is whole.
+// The futures markets at phone width, on both lines: chips scroll sideways
+// inside their own row; nothing else, the Live/Opening toggle included, may be
+// wider than the screen, and every price box is whole.
+await mobile.waitForFunction(() => document.body.dataset.liveReady, null, { timeout: 180000 });
 const fxNarrow = await mobile.evaluate(async () => {
   const root = document.querySelector('[data-panel="odds"] .fxm');
-  const chips = root.querySelector(".fxm-chips");
+  const chips = root.querySelector(".fxm-chips"), seg = root.querySelector(".fxm-lineseg");
   const W = window.innerWidth, out = { views: [], over: [], clipped: [], prices: 0 };
   const tick = () => new Promise(r => setTimeout(r, 40));
   const measure = label => {
@@ -3375,21 +3498,29 @@ const fxNarrow = await mobile.evaluate(async () => {
     out.views.push(label);
     out.doc = Math.max(out.doc || 0, document.documentElement.scrollWidth);
   };
-  for (const c of root.querySelectorAll(".fxm-chip")) { c.click(); await tick(); measure(c.dataset.market); }
-  const sel = root.querySelector('select[data-fxm="team"]');
-  sel.value = sel.options[1].value; sel.dispatchEvent(new Event("change")); await tick(); measure("team");
+  const lines = [...seg.querySelectorAll("[data-line]")].filter(b => !b.disabled).map(b => b.dataset.line);
+  for (const line of lines) {
+    seg.querySelector(`[data-line="${line}"]`).click(); await tick();
+    for (const c of root.querySelectorAll(".fxm-chip")) { c.click(); await tick(); measure(`${line}/${c.dataset.market}`); }
+    const sel = root.querySelector('select[data-fxm="team"]');
+    sel.value = sel.options[1].value; sel.dispatchEvent(new Event("change")); await tick(); measure(`${line}/team`);
+    sel.value = ""; sel.dispatchEvent(new Event("change"));
+  }
+  seg.querySelector('[data-line="live"]').disabled || seg.querySelector('[data-line="live"]').click();
   root.querySelector('.fxm-chip[data-market="title"]').click(); await tick();
-  const cr = chips.getBoundingClientRect();
-  return { ...out, W, chipsScroll: chips.scrollWidth > chips.clientWidth, chipsFit: cr.left >= -1 && cr.right <= W + 1,
-    chipsOverflow: getComputedStyle(chips).overflowX };
+  const cr = chips.getBoundingClientRect(), sr = seg.getBoundingClientRect();
+  return { ...out, W, lines, chipsScroll: chips.scrollWidth > chips.clientWidth, chipsFit: cr.left >= -1 && cr.right <= W + 1,
+    chipsOverflow: getComputedStyle(chips).overflowX, segFit: sr.width > 0 && sr.left >= -1 && sr.right <= W + 1 };
 });
-check("futures at 390px: page never scrolls sideways in any market", fxNarrow.doc <= fxNarrow.W, `${fxNarrow.doc} > ${fxNarrow.W}`);
+check("futures at 390px: page never scrolls sideways in any market, on either line", fxNarrow.doc <= fxNarrow.W, `${fxNarrow.doc} > ${fxNarrow.W}`);
 check("futures at 390px: no element wider than the viewport, in every market and the team card",
-  fxNarrow.views.length === 8 && fxNarrow.over.length === 0, fxNarrow.over.slice(0, 5).join(" | "));
+  fxNarrow.views.length === 8 * fxNarrow.lines.length && fxNarrow.views.length >= 8 && fxNarrow.over.length === 0,
+  `${fxNarrow.views.length} views (${fxNarrow.lines}); ${fxNarrow.over.slice(0, 5).join(" | ")}`);
 check("futures at 390px: every price box fully visible and unclipped", fxNarrow.prices > 100 && fxNarrow.clipped.length === 0,
   `${fxNarrow.prices} boxes; ${fxNarrow.clipped.slice(0, 5).join(" | ")}`);
 check("futures at 390px: the chip row scrolls sideways inside the screen", fxNarrow.chipsFit && fxNarrow.chipsOverflow === "auto" && fxNarrow.chipsScroll,
   JSON.stringify({ fit: fxNarrow.chipsFit, ov: fxNarrow.chipsOverflow, scroll: fxNarrow.chipsScroll }));
+check("futures at 390px: the Live / Opening toggle sits fully on screen", fxNarrow.segFit);
 await mobile.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
 const glNarrow = await mobile.evaluate(() => {
   const sec = document.querySelector('[data-board="gamelines"]');
