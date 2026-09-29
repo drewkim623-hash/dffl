@@ -13,6 +13,60 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 3,
+   "teams": [
+    {
+     "manager": "bradyrife",
+     "blurb": "Added Jake Bates and Ted Hurst as free-agent pickups this week and has already spent $36 in FAAB this season — more roster tinkering than a 3-0 start usually invites."
+    },
+    {
+     "manager": "jadencha",
+     "blurb": "Has scored more points than any other team in the league this season, 473.34, and still lost this week — Jaxon Smith-Njigba has been his best player two weeks running."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "422.24 points scored this season is second-most in the league, and this week's win came with six different starters in double figures."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Made eight separate free-agent moves this week without spending a dollar of FAAB, the same week Jahmyr Gibbs and Bijan Robinson combined for the two best running back scores in the league."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "131.28 points and a loss — that total would have beaten three of the six winning scores across the league this week."
+    },
+    {
+     "manager": "willie12w",
+     "blurb": "Ja'Marr Chase's 24.8 carried the scoring again; Bucky Irving and TreVeyon Henderson combined for 10.2 out of the backfield, still the thinner spot on the roster."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "The week's low score, 113.72, arrived the same week De'Von Achane's ACL tear ended his season — the running back room needs an actual answer, not more free-agent shuffling."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "First win of the season, built on five starters in double figures rather than one big number — Harold Fannin's 24.1 the closest thing to a standout."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "First win of the season, and it came with the second-most FAAB spent in the league already, $38 — the roster is being built through free agency more than any other team's besides jskule23's."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "Left only 10.7 points on the bench this week, the tightest lineup in the league, and still lost — there wasn't a bad decision to point to, just a bad matchup."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "Three roster moves this week, including a new defense and a new kicker, and Drake London's 30.4 was the best individual score of the game anyway — didn't matter."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "0-3, and has already spent $62 in FAAB this season, more than any other manager in the league — the moves haven't translated to wins yet."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 2,
    "teams": [
     {

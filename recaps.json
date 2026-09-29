@@ -43,6 +43,84 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 3,
+   "note": "",
+   "lede": "Six games produced 1,546.7 points, 145 more than the week before. bradyrife put up the week's high score, 152.78, and beat saucebossandrew — who posted the week's low, 113.72 — by 39.06, the widest margin of the day, putting the week's best and worst outings in the same matchup. The rest of the slate ran tight: Domo112 outlasted jadencha by 1.72 in a game that carried the week's two best individual scores, Jahmyr Gibbs's 37.9 and Jaxon Smith-Njigba's 35.36, and moseslin beat drewkim by 2.66. Three weeks in, bradyrife is alone without a loss, jskule23 is alone without a win, and the other ten teams split evenly between 2-1 and 1-2.",
+   "games": [
+    {
+     "headline": "sizzlemc2 wins the week's highest-scoring game",
+     "winner": "sizzlemc2",
+     "winner_points": 148.6,
+     "loser": "wesley55",
+     "loser_points": 131.28,
+     "body": "Tyler Shough's 24.8 anchored a balanced sizzlemc2 lineup that also got 21.2 from CeeDee Lamb, 20.3 from Kenneth Walker and 19 from the Minnesota defense. Joe Burrow's 22.58 and Derrick Henry's 21.4 kept wesley55 within range, but the margin held at 17.32. Matthew Stafford's 22.9 sat unused on the wesley55 bench, fractionally ahead of what Burrow delivered at the position."
+    },
+    {
+     "headline": "bradyrife's high score buries saucebossandrew's low",
+     "winner": "bradyrife",
+     "winner_points": 152.78,
+     "loser": "saucebossandrew",
+     "loser_points": 113.72,
+     "body": "Garrett Wilson's 26.7 and George Kittle's 26.2 led bradyrife to the week's high score, with Davante Adams (21.7) and Trevor Lawrence (20.78) also cracking 20. saucebossandrew's 113.72 was the week's low despite Michael Wilson's 25.9 leading the way, and the 39.06-point margin was the widest of the week. The week's best and worst scores met in the same game."
+    },
+    {
+     "headline": "Domo112 survives jadencha by 1.72",
+     "winner": "Domo112",
+     "winner_points": 134.06,
+     "loser": "jadencha",
+     "loser_points": 132.34,
+     "body": "Jahmyr Gibbs's 37.9 and Bijan Robinson's 35.3 were the two best running back scores of the week, and together they covered most of Domo112's total by themselves. Jaxon Smith-Njigba answered with 35.36, the best number on the losing side, but jadencha still had 49.82 sitting on the bench — more than any other manager left unused this week. The margin was 1.72 points, the closest of the six games."
+    },
+    {
+     "headline": "moseslin edges drewkim by 2.66",
+     "winner": "moseslin",
+     "winner_points": 129.84,
+     "loser": "drewkim",
+     "loser_points": 127.18,
+     "body": "Harold Fannin's 24.1 led a spread-out moseslin lineup that also got 22.6 from Christian Watson and 22 from Jordan Addison. Brock Purdy's 31.28 was the best individual score in the game and it belonged to drewkim, who left only 10.7 on the bench — the least of any manager this week — and still came up 2.66 points short."
+    },
+    {
+     "headline": "willie12w beats jskule23, who falls to 0-3",
+     "winner": "willie12w",
+     "winner_points": 129.86,
+     "loser": "jskule23",
+     "loser_points": 115.56,
+     "body": "Ja'Marr Chase's 24.8 led willie12w, with Jared Goff (19.36) and the Kansas City defense (12) filling out the rest. Luther Burden's 19.8 and Josh Allen's 18.46 kept jskule23 competitive but not close enough to erase a 14.3-point gap. The loss drops jskule23 to 0-3, with $62 in FAAB already spent this season, more than any other manager in the league."
+    },
+    {
+     "headline": "chassinator holds off victorthompson by 3.2",
+     "winner": "chassinator",
+     "winner_points": 117.34,
+     "loser": "victorthompson",
+     "loser_points": 114.14,
+     "body": "Kyren Williams's 18.8 and Zay Flowers's 15.4 gave chassinator a lead it never lost. Drake London's 30.4 was the best individual score in the game for victorthompson, and Spencer Shrader added 17 in his first week on the roster as a free-agent pickup, but it added up to a 3.2-point loss."
+    }
+   ],
+   "around": [
+    {
+     "kind": "note",
+     "headline": "jadencha outscores the league; bradyrife doesn't need to",
+     "body": "jadencha has scored 473.34 points through three weeks, 51.1 more than second-highest sizzlemc2's 422.24, while sitting at 2-1. bradyrife's 3-0 record has come on 392.04 points, less than three other teams — jadencha, sizzlemc2 and Domo112 — have scored this season."
+    },
+    {
+     "kind": "waivers",
+     "headline": "A $3 week, and eight moves that cost nothing",
+     "body": "The league combined to spend $3 in FAAB all week, all of it jadencha's waiver claim on Malik Washington. Domo112 worked the free-agent pool eight separate times — swapping in Sam Darnold, Oronde Gadsden and Rashid Shaheed among others — without spending a dollar of FAAB all season. saucebossandrew ran a similar carousel at running back, cycling through Rodney Hammond, Tyler Badie and Braelon Allen via free agency without starting any of them."
+    },
+    {
+     "kind": "injury",
+     "headline": "Achane lands on IR after ACL tear",
+     "body": "De'Von Achane went on injured reserve this week with a torn ACL and is not expected back before 15 February 2027 — a lost season. He was still in the saucebossandrew lineup this week, good for 1.7 points in the league's lowest team score."
+    },
+    {
+     "kind": "race",
+     "headline": "One unbeaten, one winless, ten in between",
+     "body": "Three weeks in, bradyrife is the league's only unbeaten team and jskule23 its only winless one. The other ten are split evenly, five at 2-1 and five at 1-2."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 2,
    "note": "",
    "lede": "Six games and 1401.7 points between them, 235.6 fewer than the opening week, and the week was the better for it. jadencha put up 145.1 and beat moseslin by 66.8, the only blowout on the slate; four of the other five were settled by fewer than 28. bertalicious and saucebossandrew needed 251.94 between them to separate by 11.62. Domo112 went from the second-best score in the league to 85.32 and lost by 27.32. Three teams are 2-0, three are 0-2, and the six in between are all 1-1 — and the points-for table does not agree with any of it.",
