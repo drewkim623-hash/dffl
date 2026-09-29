@@ -947,6 +947,12 @@
     th,td{padding-left:10px;padding-right:10px}
     .card th:first-child,.card td:first-child{padding-left:12px}
     .card th:last-child,.card td:last-child{padding-right:12px}
+    /* every cell stays readable beside the pinned first column: headers wrap, and long text
+       cells wrap at a capped width (pinned + any one cell always fits the scroller) */
+    .card th:not(:first-child){white-space:normal}
+    .cw{display:inline-block;white-space:normal;width:max-content;min-width:min-content;
+      max-width:calc(50vw - 70px);vertical-align:middle}
+    td:first-child > .cw{max-width:calc(50vw - 30px)}
   }
 
   /* row-cards: this week's games */
@@ -1608,6 +1614,13 @@ function tableCard(headers, rows) {
   t.innerHTML = `<thead><tr>${headers.map(h =>
     `<th class="${h.num ? "num" : ""}"${h.title ? ` title="${esc(h.title)}"` : ""}>${esc(h.label)}</th>`).join("")}</tr></thead>`;
   const tb = el("tbody"); tb.innerHTML = rows.join("");
+  // Text cells get an inner wrapper so that on phones a long one can wrap at a capped
+  // width instead of running under the pinned first column (see .cw in the CSS).
+  for (const td of tb.querySelectorAll("td:not(.num)")) {
+    const w = document.createElement("span"); w.className = "cw";
+    while (td.firstChild) w.appendChild(td.firstChild);
+    td.appendChild(w);
+  }
   t.appendChild(tb); s.appendChild(t); c.appendChild(s);
   return c;
 }
