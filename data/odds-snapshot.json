@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-09-29T05:38:43.901Z",
- "at": 1790660323901,
+ "generated": "2026-09-29T11:04:04.100Z",
+ "at": 1790679844100,
  "season": "2026",
  "week": 4,
  "liveWeek": null,
