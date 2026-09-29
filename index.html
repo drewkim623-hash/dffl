@@ -2610,6 +2610,25 @@ function coverWrap(text, fs, maxW, maxLines, st) {
   const out = kept.map(l => coverFit(l, fs, maxW, st));
   return { lines: out, cut: out.some((l, i) => l !== kept[i] || !coverFits(l, fs, maxW, st)) };
 }
+// A label on one line, or broken in two where it reads best: after a comma if both
+// halves fit, else where the halves come out most even, and never so that line one ends
+// on a little word (THE, BY, OF, A, AN, AND) or a separator, or line two starts on one.
+// Greedy wrapping (and its whole-word cut) only when no such break fits.
+const COVER_LEAD = 2.5;   // a stat cover's figure stands at least this many times its headline's size
+const COVER_NOBREAK = /^(?:the|by|of|a|an|and|·|—|–|-|&)$/i;
+function coverLabelLines(text, fs, maxW, st) {
+  if (coverFits(text, fs, maxW, st)) return { lines: [text], cut: false };
+  const words = text.split(" ").filter(Boolean);
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    if (COVER_NOBREAK.test(words[i - 1]) || /^[·—–\-&]$/.test(words[i])) continue;
+    const a = words.slice(0, i).join(" "), b = words.slice(i).join(" ");
+    if (!coverFits(a, fs, maxW, st) || !coverFits(b, fs, maxW, st)) continue;
+    const score = Math.abs(coverWidth(a, fs, st) - coverWidth(b, fs, st)) - (/,$/.test(a) ? 1e6 : 0);
+    if (!best || score < best.score) best = { score, lines: [a, b] };
+  }
+  return best ? { lines: best.lines, cut: false } : coverWrap(text, fs, maxW, 2, st);
+}
 // The biggest size that fits whole (and, if asked, in the height there is), else the smallest, cut.
 function coverSize(text, sizes, maxW, maxLines, st, room = () => true) {
   let r;
@@ -2737,13 +2756,12 @@ function coverSVG(a, big) {
   const labelRaw = (small ? [wk != null ? `week ${wk}` : "", kind].filter(Boolean).join(" · ")
     : plainText(c.caption) || kick || [a.season, wk != null ? `week ${wk}` : ""].filter(Boolean).join(" · ") || kind)
     .toUpperCase();
-  // One line if it fits at a size no smaller than the floor, else two lines; cut (on a
-  // whole word) only if two lines aren't enough. The rule and everything under it move down.
+  // Set at the wordmark's size (never smaller: a label that doesn't fit wraps rather
+  // than shrinking), on one line or two balanced ones; cut, on a whole word, only if
+  // two lines aren't enough. The rule and everything under it move down.
   const yL = pad + G.label * .75;
   const wmW = coverWidth("DFFL", G.label, T.mark), labelW = W - 3 * pad - wmW;
-  const lsizes = coverSizes(G, [1, .92, .85].map(k => G.label * k));
-  const L1 = coverSize(labelRaw, lsizes, labelW, 1, T.label);
-  const L = L1.cut ? coverSize(labelRaw, lsizes, labelW, 2, T.label) : L1, ll = L.fs * 1.25;
+  const L = { fs: Math.max(G.label, G.min), ...coverLabelLines(labelRaw, Math.max(G.label, G.min), labelW, T.label) }, ll = L.fs * 1.25;
   const ruleY = yL + (L.lines.length - 1) * ll + G.label * .6, ceil = ruleY + pad * .6;
   const label = L.lines.map((l, i) => coverText(pad, yL + i * ll, l, L.fs, INK2, T.label, labelW, ` class="cv-label"`)).join("") +
     `<path d="M${pad} ${cr(ruleY)}h${cr(G.label * 2.2)}" stroke="${P.accent}" stroke-width="${small ? 2 : 3}"/>` +
@@ -2801,10 +2819,22 @@ function coverSVG(a, big) {
   } else if (layout === "stat") {
     // The headline gets up to three lines, as small as it takes to read in full, so long
     // as the smallest figure still fits above it; then the figure is as big as the rest allows.
+    // The headline gets up to three lines, as big as it can while the smallest figure
+    // still fits above it; then the figure is as big as the rest allows. If that leaves the
+    // figure under COVER_LEAD times the headline's size (a two-line label has eaten the
+    // height), the headline steps down until the figure leads again.
     const n = plainText(S.n), stats = coverSizes(G, G.stat), subs = coverSizes(G, G.sub), minN = stats[stats.length - 1];
     const subTop = r => yB - (r.lines.length - 1) * r.fs * 1.08 - r.fs * .74;
+    const figFor = r => stats.find(nf => subTop(r) - nf * .98 >= ceil && !coverSize(n, [nf], tw, 1, T.stat).cut);
+    const leads = r => { const nf = figFor(r); return !!nf && nf >= Math.min(stats[0], r.fs * COVER_LEAD); };
     const subRoom = r => subTop(r) - minN * .98 >= ceil, Sub2 = coverSize(head, subs, tw, 2, T.sub, subRoom);
-    const Sub = Sub2.cut || !subRoom(Sub2) ? coverSize(head, subs, tw, 3, T.sub, subRoom) : Sub2;
+    let Sub = Sub2.cut || !subRoom(Sub2) ? coverSize(head, subs, tw, 3, T.sub, subRoom) : Sub2;
+    if (!Sub.cut && !leads(Sub)) {
+      search: for (const fs of subs.filter(f => f < Sub.fs)) for (const lines of [2, 3]) {
+        const r = { fs, ...coverWrap(head, fs, tw, lines, T.sub) };
+        if (!r.cut && leads(r)) { Sub = r; break search; }
+      }
+    }
     const sl = Sub.fs * 1.08, ys = yB - (Sub.lines.length - 1) * sl;
     const yN = fs => subTop(Sub) - fs * .22;   // clear of the sub line, even under a "/" or a "$"
     const N = coverSize(n, stats, tw, 1, T.stat, r => yN(r.fs) - r.fs * .76 >= ceil);
