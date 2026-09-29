@@ -2077,6 +2077,114 @@ if (!ppLiveGames) {
   check("after catching up, Playoffs still equals the Odds tab's run exactly", back.exact);
 }
 
+group("Playoff bracket: played fixed, the way Sleeper builds it");
+const fb = await page.evaluate(async () => {
+  const D = window.__DFFL, M = D.ODDS, B = M && M.bracket;
+  if (!B) return { none: true };
+  const strip = t => JSON.stringify({ winners: t.winners, losers: t.losers });
+  const prev = D.DB.seasons.find(s => s.season === "2025");
+  const t25 = prev ? D.bracketFromSleeper(prev.wb, prev.lb, D.bracketSeeds(prev), 6, 12) : null;
+  // Structure, in seed slots.
+  const W = B.winners, Lb = B.losers;
+  const r1 = side => side.filter(g => g.r === 1).map(g => [g.a.seed, g.b.seed].sort((x, y) => x - y).join("v")).sort();
+  const oppOf = (side, k) => { const g = side.find(g => g.r === 2 && (g.a.seed === k || g.b.seed === k)); if (!g) return null;
+    const o = g.a.seed === k ? g.b : g.a; const src = side.find(x => x.m === o.w);
+    return src ? [src.a.seed, src.b.seed].sort((x, y) => x - y).join("v") : null; };
+  const structure = { wr1: r1(W), lr1: r1(Lb), s1: oppOf(W, 1), s2: oppOf(W, 2), s12: oppOf(Lb, 12), s11: oppOf(Lb, 11) };
+
+  // A deterministic run of the real simulator: no regular season left, the table
+  // banked, every level pinned, so the higher level always wins its game.
+  const det = (se, W0, PF0, level) => {
+    const rs = se.rosters, idx = new Map(rs.map((r, i) => [r.roster_id, i]));
+    const model = { ok: true, weekSd: 1e-9, seasonSd: 1e-9, playoffTeams: 6, weeks: 14, sched: [], bracket: B,
+      teams: rs.map(r => ({ mean: level(r.roster_id), div: se.divOf.get(r.roster_id) })) };
+    const live = { teams: rs.map(r => ({ mean: level(r.roster_id), levelSd: 1e-9, div: se.divOf.get(r.roster_id) })),
+      weeks: [], W0: rs.map(r => W0(r.roster_id)), PF0: rs.map(r => PF0(r.roster_id)), pending: [],
+      mult: rs.map(() => 1), adjWeek: null, pws: 15, multByWeek: null };
+    const trace = [], C = D.simulateSeason(model, 1, live, { trace });
+    const rid = i => rs[i].roster_id;
+    return { trace: trace.map(g => ({ ...g, a: rid(g.a), b: rid(g.b), won: rid(g.won) })),
+      champ: rid(C.title.indexOf(1)), last: rid(C.last.indexOf(1)), idx };
+  };
+
+  // 1. 2025, replayed: its real table and its real winners, through the template
+  // the board plays today. Every game must be Sleeper's game.
+  let y25 = null;
+  if (prev) {
+    const st = new Map(prev.rosters.map(r => [r.roster_id, r.settings]));
+    const beats = new Map();
+    const won = (w, l) => { if (!beats.has(w)) beats.set(w, []); beats.get(w).push(l); };
+    for (const g of prev.wb) if (!g.p || g.p === 1) won(g.w, g.l);
+    for (const g of prev.lb) if (!g.p || g.p === 1) won(g.l, g.w);   // toilet bowl: Sleeper's w lost the game
+    const depth = new Map(), dep = x => depth.has(x) ? depth.get(x)
+      : (depth.set(x, 1 + Math.max(0, ...(beats.get(x) || []).map(dep))), depth.get(x));
+    const run = det(prev, r => st.get(r).wins + (st.get(r).ties || 0) / 2,
+      r => st.get(r).fpts + (st.get(r).fpts_decimal || 0) / 100, r => 100 + 10 * dep(r));
+    const sleeper = { winners: prev.wb, losers: prev.lb };
+    const rows = run.trace.map(g => {
+      const s = sleeper[g.bracket].find(x => x.m === g.m);
+      const same = !!s && new Set([s.t1, s.t2, g.a, g.b]).size === 2;
+      const sw = s ? (g.bracket === "winners" ? s.w : s.l) : null;
+      return { ...g, same, wonSame: sw === g.won, t1: s && s.t1, t2: s && s.t2 };
+    });
+    const pl = prev.places || {};
+    y25 = { rows, allSame: rows.length === 10 && rows.every(r => r.same && r.wonSame),
+      champ: run.champ, last: run.last, sleeperChamp: pl[1], sleeperLast: pl[12] };
+  }
+
+  // 2. A result a re-seeded bracket would play differently: seeds 5 and 6 win
+  // round one. Fixed, seed 1 meets the 4/5 winner (seed 5) and seed 2 the 3/6
+  // winner (seed 6); re-seeded, seed 1 would have drawn seed 6.
+  const cur = D.DB.seasons[0], seedOf = D.bracketSeeds(cur), bySeed = new Map([...seedOf].map(([r, k]) => [k, r]));
+  const lvl = { 1: 200, 2: 190, 3: 100, 4: 110, 5: 150, 6: 140, 7: 60, 8: 50, 9: 40, 10: 30, 11: 20, 12: 10 };
+  const fx = det(cur, r => 20 - seedOf.get(r), () => 1000, r => lvl[seedOf.get(r)]);
+  const g2 = fx.trace.filter(g => g.bracket === "winners" && g.r === 2).map(g => [seedOf.get(g.a), seedOf.get(g.b)].sort((x, y) => x - y).join("v")).sort();
+  const t1 = fx.trace.filter(g => g.bracket === "losers" && g.r === 2).map(g => [seedOf.get(g.a), seedOf.get(g.b)].sort((x, y) => x - y).join("v")).sort();
+
+  // 3. The worker gets the template with the job, and its run is the page's run.
+  const L = await D.liveOnce();
+  const job = D.pictureJob(M, L.live || null, 200, 2000);
+  const url = URL.createObjectURL(new Blob([D.pictureWorkerSource()], { type: "text/javascript" }));
+  const w = new Worker(url);
+  const out = await new Promise((res, rej) => { w.onmessage = e => res(e.data); w.onerror = e => rej(String(e.message)); w.postMessage({ id: 1, job }); });
+  w.terminate(); URL.revokeObjectURL(url);
+  const direct = D.simulateSeason(M, 2000, L.live || null);
+  return {
+    source: B.source, season: B.season, sameAsFallback: strip(B) === strip(D.FALLBACK_BRACKET),
+    same25: t25 ? strip(t25) === strip(B) : null, structure, y25,
+    fixedR2: g2, toiletR2: t1,
+    jobCarries: strip(job.model.bracket) === strip(B),
+    workerOk: out.ok, workerTitle: out.ok && out.out.main.title.every((x, i) => x === direct.title[i]),
+    workerPlayoff: out.ok && out.out.main.playoff.every((x, i) => x === direct.playoff[i]),
+  };
+});
+if (fb.none) check("the odds model carries a bracket template", false);
+else {
+  check("the bracket template is read from Sleeper, not the fallback", fb.source === "current" || fb.source === "previous", `${fb.source} ${fb.season}`);
+  check("this season's bracket and 2025's give the same template", fb.same25 === true, String(fb.same25));
+  check("the labeled fallback is the same template Sleeper draws", fb.sameAsFallback);
+  check("winners round one is 4 v 5 and 3 v 6; seeds 1 and 2 sit out",
+    JSON.stringify(fb.structure.wr1) === '["3v6","4v5"]', JSON.stringify(fb.structure.wr1));
+  check("seed 1 meets the 4/5 winner and seed 2 the 3/6 winner (by slot, not re-seeded)",
+    fb.structure.s1 === "4v5" && fb.structure.s2 === "3v6", JSON.stringify(fb.structure));
+  check("toilet bowl round one is 7 v 10 and 8 v 9; 12 meets the 8/9 loser and 11 the 7/10 loser",
+    JSON.stringify(fb.structure.lr1) === '["7v10","8v9"]' && fb.structure.s12 === "8v9" && fb.structure.s11 === "7v10", JSON.stringify(fb.structure));
+  check("fixed: when seeds 5 and 6 win round one, seed 1 plays 5 and seed 2 plays 6",
+    JSON.stringify(fb.fixedR2) === '["1v5","2v6"]', JSON.stringify(fb.fixedR2));
+  check("toilet bowl: the 8/9 and 7/10 losers go on to meet 12 and 11 (9 v 12, 10 v 11 here)",
+    JSON.stringify(fb.toiletR2) === '["10v11","9v12"]', JSON.stringify(fb.toiletR2));
+  if (!fb.y25) check("2025 replays through the template (skipped: no 2025 season)", true);
+  else {
+    check("2025 replayed with its real seeds and winners: every game is Sleeper's game, both brackets",
+      fb.y25.allSame, JSON.stringify(fb.y25.rows.filter(r => !r.same || !r.wonSame)));
+    check("2025 replayed: the champion and last place are Sleeper's",
+      fb.y25.champ === fb.y25.sleeperChamp && fb.y25.last === fb.y25.sleeperLast, JSON.stringify([fb.y25.champ, fb.y25.sleeperChamp, fb.y25.last, fb.y25.sleeperLast]));
+  }
+  check("the Playoff Picture's worker job carries the bracket template", fb.jobCarries);
+  check("the worker's title and playoff odds equal the page's run exactly", fb.workerOk && fb.workerTitle && fb.workerPlayoff,
+    JSON.stringify({ ok: fb.workerOk, t: fb.workerTitle, p: fb.workerPlayoff }));
+}
+
 group("Playoff Picture: the empty state");
 const ppEmpty = await page.evaluate(() => {
   const box = window.__DFFL.pictureEmpty("not-started", "2026");
