@@ -1,54 +1,45 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-28T11:03:56.226Z",
- "at": 1790593436226,
+ "generated": "2026-09-29T04:44:23.250Z",
+ "at": 1790657063250,
  "season": "2026",
- "nfl_week": 3,
+ "nfl_week": 4,
  "season_type": "regular",
  "week_in_progress": true,
  "standings": [
   {
-   "manager": "jadencha",
-   "wins": 2,
-   "losses": 0,
-   "points_for": 341,
-   "points_against": 203.4,
-   "faab_spent": 10,
-   "starters_hurt": []
-  },
-  {
-   "manager": "wesley55",
-   "wins": 2,
-   "losses": 0,
-   "points_for": 250.04,
-   "points_against": 195.12,
-   "faab_spent": 21,
-   "starters_hurt": []
-  },
-  {
    "manager": "bradyrife",
-   "wins": 2,
+   "wins": 3,
    "losses": 0,
-   "points_for": 239.26,
-   "points_against": 201.66,
+   "points_for": 392.04,
+   "points_against": 315.38,
    "faab_spent": 36,
    "starters_hurt": []
   },
   {
-   "manager": "sizzlemc2",
-   "wins": 1,
+   "manager": "jadencha",
+   "wins": 2,
    "losses": 1,
-   "points_for": 273.64,
-   "points_against": 273.78,
+   "points_for": 473.34,
+   "points_against": 337.46,
+   "faab_spent": 0,
+   "starters_hurt": []
+  },
+  {
+   "manager": "sizzlemc2",
+   "wins": 2,
+   "losses": 1,
+   "points_for": 422.24,
+   "points_against": 405.06,
    "faab_spent": 4,
    "starters_hurt": []
   },
   {
    "manager": "Domo112",
-   "wins": 1,
+   "wins": 2,
    "losses": 1,
-   "points_for": 272.38,
-   "points_against": 274.5,
+   "points_for": 406.44,
+   "points_against": 406.84,
    "faab_spent": 0,
    "starters_hurt": [
     "Jalen Coker (Out)",
@@ -56,75 +47,85 @@
    ]
   },
   {
-   "manager": "saucebossandrew",
-   "wins": 1,
+   "manager": "wesley55",
+   "wins": 2,
    "losses": 1,
-   "points_for": 257.68,
-   "points_against": 256.54,
-   "faab_spent": 0,
-   "starters_hurt": [
-    "De'Von Achane (Out)",
-    "Breece Hall (Out)"
-   ]
-  },
-  {
-   "manager": "drewkim",
-   "wins": 1,
-   "losses": 1,
-   "points_for": 237.74,
-   "points_against": 281.22,
-   "faab_spent": 33,
+   "points_for": 381.32,
+   "points_against": 343.72,
+   "faab_spent": 21,
    "starters_hurt": []
   },
   {
-   "manager": "bertalicious",
-   "wins": 1,
+   "manager": "willie12w",
+   "wins": 2,
    "losses": 1,
-   "points_for": 222.52,
-   "points_against": 225.36,
+   "points_for": 352.38,
+   "points_against": 340.92,
    "faab_spent": 16,
    "starters_hurt": []
   },
   {
-   "manager": "victorthompson",
+   "manager": "saucebossandrew",
    "wins": 1,
-   "losses": 1,
-   "points_for": 219.76,
-   "points_against": 222.44,
-   "faab_spent": 25,
+   "losses": 2,
+   "points_for": 371.4,
+   "points_against": 409.32,
+   "faab_spent": 0,
    "starters_hurt": [
-    "Spencer Shrader (Questionable)"
+    "De'Von Achane (IR)",
+    "Breece Hall (Out)"
    ]
   },
   {
-   "manager": "chassinator",
-   "wins": 0,
-   "losses": 2,
-   "points_for": 249.14,
-   "points_against": 301.24,
-   "faab_spent": 38,
-   "starters_hurt": []
-  },
-  {
    "manager": "moseslin",
-   "wins": 0,
+   "wins": 1,
    "losses": 2,
-   "points_for": 240.16,
-   "points_against": 332.16,
+   "points_for": 370,
+   "points_against": 459.34,
    "faab_spent": 5,
    "starters_hurt": [
     "Justin Jefferson (Out)"
    ]
   },
   {
+   "manager": "chassinator",
+   "wins": 1,
+   "losses": 2,
+   "points_for": 366.48,
+   "points_against": 415.38,
+   "faab_spent": 38,
+   "starters_hurt": []
+  },
+  {
+   "manager": "drewkim",
+   "wins": 1,
+   "losses": 2,
+   "points_for": 364.92,
+   "points_against": 411.06,
+   "faab_spent": 33,
+   "starters_hurt": []
+  },
+  {
+   "manager": "victorthompson",
+   "wins": 1,
+   "losses": 2,
+   "points_for": 333.9,
+   "points_against": 339.78,
+   "faab_spent": 25,
+   "starters_hurt": [
+    "Spencer Shrader (Questionable)"
+   ]
+  },
+  {
    "manager": "jskule23",
    "wins": 0,
-   "losses": 2,
-   "points_for": 235.68,
-   "points_against": 271.58,
+   "losses": 3,
+   "points_for": 351.24,
+   "points_against": 401.44,
    "faab_spent": 62,
    "starters_hurt": [
-    "Travis Etienne (Questionable)",
+    "Josh Allen (Questionable)",
+    "Travis Etienne (Out)",
     "Mark Andrews (Questionable)",
     "Puka Nacua (Out)"
    ]
@@ -134,370 +135,78 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 134.06,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "jadencha",
-    "points": 132.34,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
+    "manager": "jadencha",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
     "manager": "chassinator",
-    "points": 107.54,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "willie12w",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
-    "points": 114.14,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "bertalicious",
-    "points": 129.86,
-    "startersLeftToPlay": 0
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "jskule23",
-    "points": 87.26,
-    "startersLeftToPlay": 1
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 131.28,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "sizzlemc2",
-    "points": 148.6,
-    "startersLeftToPlay": 0
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 114.68,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "moseslin",
-    "points": 121.34,
-    "startersLeftToPlay": 1
-   }
-  },
-  {
-   "a": {
-    "manager": "bradyrife",
-    "points": 150.78,
-    "startersLeftToPlay": 1
-   },
-   "b": {
-    "manager": "saucebossandrew",
-    "points": 100.1,
-    "startersLeftToPlay": 1
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
- "trades": [
-  {
-   "week": 2,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "DJ Moore",
-     "pos": "WR",
-     "team": "BUF",
-     "status": null,
-     "to": "chassinator"
-    },
-    {
-     "name": "D'Andre Swift",
-     "pos": "RB",
-     "team": "CHI",
-     "status": null,
-     "to": "chassinator"
-    },
-    {
-     "name": "Ashton Jeanty",
-     "pos": "RB",
-     "team": "LV",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "DJ Moore",
-     "pos": "WR",
-     "team": "BUF",
-     "status": null,
-     "from": "jadencha"
-    },
-    {
-     "name": "D'Andre Swift",
-     "pos": "RB",
-     "team": "CHI",
-     "status": null,
-     "from": "jadencha"
-    },
-    {
-     "name": "Ashton Jeanty",
-     "pos": "RB",
-     "team": "LV",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": null,
-   "picks": []
-  }
- ],
+ "trades": [],
  "waivers": [
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Patrick Mahomes",
-     "pos": "QB",
-     "team": "KC",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kenyon Sadiq",
-     "pos": "TE",
-     "team": "NYJ",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": 51,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Adonai Mitchell",
-     "pos": "WR",
-     "team": "NYJ",
-     "status": "Out",
-     "to": "drewkim"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "team": "WAS",
-     "status": null,
-     "from": "drewkim"
-    }
-   ],
-   "faab": 31,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Bryce Young",
-     "pos": "QB",
-     "team": "CAR",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Jordan Love",
-     "pos": "QB",
-     "team": "GB",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 23,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "victorthompson"
-   ],
-   "adds": [
-    {
-     "name": "Emanuel Wilson",
-     "pos": "RB",
-     "team": "SEA",
-     "status": null,
-     "to": "victorthompson"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Devin Singletary",
-     "pos": "RB",
-     "team": "NYG",
-     "status": "Out",
-     "from": "victorthompson"
-    }
-   ],
-   "faab": 14,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "bertalicious"
-   ],
-   "adds": [
-    {
-     "name": "Jared Goff",
-     "pos": "QB",
-     "team": "DET",
-     "status": null,
-     "to": "bertalicious"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Baker Mayfield",
-     "pos": "QB",
-     "team": "TB",
-     "status": "Questionable",
-     "from": "bertalicious"
-    }
-   ],
-   "faab": 8,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "victorthompson"
-   ],
-   "adds": [
-    {
-     "name": "Devaughn Vele",
-     "pos": "WR",
-     "team": "NO",
-     "status": null,
-     "to": "victorthompson"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Patrick Mahomes",
-     "pos": "QB",
-     "team": "KC",
-     "status": null,
-     "from": "victorthompson"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "New York Giants",
-     "pos": "DEF",
-     "team": "NYG",
-     "status": null,
-     "to": "moseslin"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Baltimore Ravens",
-     "pos": "DEF",
-     "team": "BAL",
-     "status": null,
-     "from": "moseslin"
-    }
-   ],
-   "faab": 5,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "victorthompson"
-   ],
-   "adds": [
-    {
-     "name": "Tank Bigsby",
-     "pos": "RB",
-     "team": "PHI",
-     "status": null,
-     "to": "victorthompson"
-    }
-   ],
-   "drops": [
-    {
-     "name": "DeMario Douglas",
-     "pos": "WR",
-     "team": "NE",
-     "status": null,
-     "from": "victorthompson"
-    }
-   ],
-   "faab": 4,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "sizzlemc2"
-   ],
-   "adds": [
-    {
-     "name": "Minnesota Vikings",
-     "pos": "DEF",
-     "team": "MIN",
-     "status": null,
-     "to": "sizzlemc2"
-    }
-   ],
-   "drops": [],
-   "faab": 4,
-   "picks": []
-  },
   {
    "week": 3,
    "type": "waiver",
@@ -516,80 +225,7 @@
    "drops": [],
    "faab": 3,
    "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "C.J. Stroud",
-     "pos": "QB",
-     "team": "HOU",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [],
-   "faab": 3,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Makai Lemon",
-     "pos": "WR",
-     "team": "PHI",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Devaughn Vele",
-     "pos": "WR",
-     "team": "NO",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": 1,
-   "picks": []
-  },
-  {
-   "week": 2,
-   "type": "waiver",
-   "managers": [
-    "victorthompson"
-   ],
-   "adds": [
-    {
-     "name": "Jalen Nailor",
-     "pos": "WR",
-     "team": "LV",
-     "status": null,
-     "to": "victorthompson"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Woody Marks",
-     "pos": "RB",
-     "team": "HOU",
-     "status": null,
-     "from": "victorthompson"
-    }
-   ],
-   "faab": 1,
-   "picks": []
   }
  ],
- "free_agent_moves": 42
+ "free_agent_moves": 22
 }
