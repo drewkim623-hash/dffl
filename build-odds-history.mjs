@@ -45,6 +45,10 @@ if (existsSync(OUT)) {
     warn(`${OUT} has no weeks object; left untouched.`);
     process.exit(0);
   }
+  // A week that isn't a list is as unreadable as a bad file: merging would
+  // replace it with an empty list, so leave everything alone instead.
+  const badWeek = Object.keys(existing.weeks).find(k => !Array.isArray(existing.weeks[k]));
+  if (badWeek) { warn(`${OUT} week ${badWeek} is not a list; left untouched.`); process.exit(0); }
 }
 
 const incoming = [];

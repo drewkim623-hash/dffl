@@ -176,7 +176,7 @@ test("end to end: a corrupt history file is left untouched and the exit code is 
   const repo = join(tmp, "repo");
   initRepo(repo);
   write(repo, "data/odds-snapshot.json", SNAP("2026-09-20T12:00:00.000Z", 2, [G("a", "b", 0.5)]));
-  for (const bad of ['{ "weeks": { "2026-1": [', '{"_comment":"no weeks"}\n', "[]\n"]) {
+  for (const bad of ['{ "weeks": { "2026-1": [', '{"_comment":"no weeks"}\n', "[]\n", '{"weeks":{"2026-1":{"at":"x"}}}\n']) {
     write(repo, "data/odds-history.json", bad);
     const r = run(repo);
     assert.equal(r.status, 0, r.stderr);
