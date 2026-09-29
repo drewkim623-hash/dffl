@@ -818,7 +818,10 @@
   .pp .ppwi.muted{color:var(--muted)}
   @media(max-width:560px){
     .pp td:first-child{max-width:128px}
-    .pp .ppn .nm{max-width:64px}
+    .pp .ppn .nm{max-width:68px}
+    /* short badge labels (In / Bye / Top seed / Out) so the clipped name cell never cuts them */
+    .pp .ppn .badge{font-size:0;white-space:nowrap}
+    .pp .ppn .badge::after{content:attr(data-short);font-size:9.5px}
     .pp td,.pp th{padding-top:8px;padding-bottom:8px}
   }
 
@@ -6618,12 +6621,15 @@ function pictureEmpty(why, seasonName) {
 const heat = v => v <= 0 ? "" : ` style="background:rgba(57,135,229,${(0.06 + 0.5 * v).toFixed(3)})"`;
 const cellPct = v => v <= 0 ? "·" : v >= 1 ? "100" : v < 0.005 ? "<1" : v > 0.995 ? ">99" : (v * 100).toFixed(0);
 
+// Full label in the text (and title/aria-label); phones show the short one via CSS.
+const ppBadge = (cls, full, short) =>
+  `<span class="badge ${cls}" title="${full}" aria-label="${full}" data-short="${short}">${full}</span>`;
 function clinchBadge(c) {
   if (!c) return "";
-  if (c.clinchedTop) return '<span class="badge gold">Clinched top seed</span>';
-  if (c.clinchedBye) return '<span class="badge gold">Clinched bye</span>';
-  if (c.clinchedPlayoff) return '<span class="badge blue">Clinched playoffs</span>';
-  if (c.eliminated) return '<span class="badge red">Eliminated</span>';
+  if (c.clinchedTop) return ppBadge("gold", "Clinched top seed", "Top seed");
+  if (c.clinchedBye) return ppBadge("gold", "Clinched bye", "Bye");
+  if (c.clinchedPlayoff) return ppBadge("blue", "Clinched playoffs", "In");
+  if (c.eliminated) return ppBadge("red", "Eliminated", "Out");
   return "";
 }
 
@@ -6681,7 +6687,7 @@ function renderPicture(host, PP) {
       ...seedHeads, { label: "Out", num: 1, title: "Miss the playoffs" },
       { label: "What-if", num: 1, title: `Playoff odds if this team wins / loses its week ${PP.week} game` }],
     sorted.map(r => `<tr data-rid="${esc(String(r.rid))}">
-      <td><span class="nmcell">${avatarHTML(r.uid, "sm")}<span class="ppn"><span class="nm">${esc(nameOf(r.uid))}</span>${clinchBadge(r.clinch)}</span></span></td>
+      <td><span class="nmcell">${avatarHTML(r.uid, "sm")}<span class="ppn"><span class="nm" title="${esc(nameOf(r.uid))}">${esc(nameOf(r.uid))}</span>${clinchBadge(r.clinch)}</span></span></td>
       <td class="num"><b>${esc(pctf(r.playoff))}</b></td>
       <td class="num">${r.w}–${r.l}${r.t ? `–${r.t}` : ""}</td>
       <td class="num">${f1(r.pf)}</td>
