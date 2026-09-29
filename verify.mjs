@@ -1637,6 +1637,66 @@ check("a face-off with an empty side draws the headline instead", coverEdge.empt
 check("players given as a string are ignored, not thrown on", coverEdge.strPlayers === "ok", coverEdge.strPlayers);
 check("no cover text is set heavier than 700", both.every(c => c.weights.length === 0), both.flatMap(c => c.weights).slice(0, 6).join(" ; "));
 
+// Every word on a cover, as the reader sees it, clears the site's 11px floor. The svg
+// scales with its width, so what lands on screen is font-size x (shown width / viewBox
+// width): measured on the covers as laid out, on the Home "From the desk" cards, the
+// News cards and all nine article heroes, at a phone width and at desktop.
+const sizePage = await ctx.newPage();
+sizePage.on("pageerror", e => errors.push(String(e)));
+const coverTextSizes = async (width, height) => {
+  await sizePage.setViewportSize({ width, height });
+  await sizePage.goto(BASE + "#home", { waitUntil: "domcontentloaded" });
+  await sizePage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  await sizePage.waitForFunction(() => document.body.dataset.homeWeek, null, { timeout: 30000 }).catch(() => {});
+  return sizePage.evaluate(async () => {
+    const seen = [];
+    const measure = (where, root) => {
+      for (const svg of root.querySelectorAll(".cover svg")) {
+        const w = svg.getBoundingClientRect().width;
+        if (!w) continue;
+        const k = w / svg.viewBox.baseVal.width;
+        for (const t of svg.querySelectorAll("text")) {
+          if (!t.textContent.trim()) continue;
+          const px = parseFloat(getComputedStyle(t).fontSize) * k;
+          seen.push({ where, role: (t.getAttribute("class") || "text").replace("cv-", ""), txt: t.textContent, px });
+        }
+      }
+    };
+    const homeWeek = document.body.dataset.homeWeek || null;
+    const hw = document.querySelector("#homeWeek");
+    if (hw) measure("home", hw);
+    const homeCovers = hw ? hw.querySelectorAll(".teaser .cover").length : 0;
+    document.querySelector('#tabs button[data-tab="recaps"]').click();
+    for (let i = 0; i < 100 && !document.querySelector('[data-panel="recaps"] .teaser'); i++) await new Promise(r => setTimeout(r, 100));
+    const news = document.querySelector('[data-panel="recaps"]');
+    measure("news", news);
+    const teasers = [...news.querySelectorAll(".teaser")];
+    let heroes = 0;
+    for (const h of teasers.map(t => t.querySelector("h3").textContent)) {
+      const back = document.querySelector('[data-panel="article"] .back');
+      if (back) back.click();
+      [...document.querySelectorAll('[data-panel="recaps"] .teaser')].find(x => x.querySelector("h3").textContent === h).click();
+      const art = document.querySelector('[data-panel="article"]');
+      heroes += art.querySelectorAll(".cover.big svg").length;
+      measure("article: " + h, art);
+    }
+    const low = seen.filter(r => r.px < 11).sort((a, b) => a.px - b.px);
+    const minBy = {};
+    for (const r of seen) if (!(r.role in minBy) || r.px < minBy[r.role]) minBy[r.role] = r.px;
+    return { n: seen.length, homeWeek, homeCovers, cards: teasers.length, heroes, low: low.map(r => `${r.where} ${r.role} "${r.txt}" ${r.px.toFixed(1)}px`),
+      minBy: Object.entries(minBy).map(([k, v]) => `${k} ${v.toFixed(1)}`).join(", ") };
+  });
+};
+const size390 = await coverTextSizes(390, 844);
+const size1280 = await coverTextSizes(1280, 900);
+await sizePage.close();
+for (const [w, z] of [[390, size390], [1280, size1280]]) {
+  check(`every cover word renders at least 11px at ${w}px (home, news and all article covers)`,
+    z.low.length === 0 && z.n > 0 && z.cards >= 9 && z.heroes === z.cards && (z.homeWeek !== "1" || z.homeCovers >= 1),
+    z.low.length ? z.low.slice(0, 6).join(" ; ")
+      : `${z.n} texts on ${z.homeCovers} home + ${z.cards} news + ${z.heroes} article covers; smallest: ${z.minBy}`);
+}
+
 const noArt = await page.evaluate(async () => {
   const D = window.__DFFL;
   const realFetch = window.fetch;
