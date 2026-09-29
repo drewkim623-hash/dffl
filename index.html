@@ -7069,7 +7069,7 @@ const cellPct = v => v <= 0 ? "·" : v >= 1 ? "100" : v < 0.005 ? "<1" : v > 0.9
 
 // Full label in the text (and title/aria-label); phones show the short one via CSS.
 const ppBadge = (cls, full, short) =>
-  `<span class="badge ${cls}" title="${full}" aria-label="${full}" data-short="${short}">${full}</span>`;
+  `<span class="badge ${cls}" role="img" title="${full}" aria-label="${full}" data-short="${short}">${full}</span>`;
 function clinchBadge(c) {
   if (!c) return "";
   if (c.clinchedTop) return ppBadge("gold", "Clinched top seed", "Top seed");
@@ -7211,11 +7211,13 @@ async function ensurePicture() {
 
 /** Everything renderPicture shows, rounded as shown — equal means nothing to repaint. */
 function pictureSig(PP) {
-  const r1 = v => Math.round(v * 1000);
+  // Exact values, in row order, never rounded: a cell that shows whole percents
+  // flips on a hair (12.48% → 12.52% is "12" → "13", 0 → 0.4% is "·" → "<1"),
+  // so any change at all counts. An identical refresh is still byte-identical.
   return JSON.stringify([PP.week, PP.inFlight, PP.sims, PP.whatIfSims, PP.remaining, PP.tied,
-    PP.rows.map(r => [r.rid, r.w, r.l, r.t, f1(r.pf), r.seed.map(r1), r1(r.miss), r1(r.playoff),
-      r.whatIf ? [r1(r.whatIf.win), r1(r.whatIf.lose)] : null, !!r.final, r.clinch]),
-    PP.swings.map(g => [g.a, g.b, r1(g.aSwing), r1(g.bSwing), r1(g.total), g.other && [g.other.j, r1(g.other.d)]])]);
+    PP.rows.map(r => [r.rid, r.w, r.l, r.t, r.pf, r.seed, r.miss, r.playoff,
+      r.whatIf ? [r.whatIf.win, r.whatIf.lose] : null, !!r.final, r.clinch]),
+    PP.swings.map(g => [g.a, g.b, g.aSwing, g.bSwing, g.total, g.other && [g.other.j, g.other.d]])]);
 }
 
 /** One pass of the tab. Only the newest pass may paint; older ones drop out. */
@@ -8097,7 +8099,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun,
+      ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,

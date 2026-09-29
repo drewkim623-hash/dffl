@@ -2020,6 +2020,24 @@ if (ppScroll.skip) {
     ppScroll.moved.pass && ppScroll.moved.redrawn && ppScroll.moved.left === ppScroll.left, JSON.stringify(ppScroll));
 }
 
+// The skip-if-unchanged signature must see any change a cell can show: whole
+// percents flip on a hair, "·" becomes "<1", and two near-tied rows can swap.
+const ppSig = await page.evaluate(async () => {
+  const D = window.__DFFL, M = window.__ODDS, se = D.DB.seasons.find(x => x.season === "2025"), R = D.raceAsOf(se, 13);
+  const live = D.liveState(M, se, R, null, null, 13);
+  const PP = await D.computePicture(M, live, R, se, { whatIfSims: 300, main: true });
+  const clone = () => ({ ...PP, rows: PP.rows.map(r => ({ ...r, seed: r.seed.slice(), whatIf: r.whatIf && { ...r.whatIf } })), swings: PP.swings.map(g => ({ ...g })) });
+  const sig = x => D.pictureSig(x);
+  const a = clone(), b = clone(); a.rows[0].playoff = 0.1248; b.rows[0].playoff = 0.1252;
+  const c = clone(), d = clone(); c.rows[1].seed[0] = 0; d.rows[1].seed[0] = 0.004;
+  const e = clone(); [e.rows[2], e.rows[3]] = [e.rows[3], e.rows[2]];
+  return { same: sig(clone()) === sig(PP), flip: sig(a) !== sig(b), dot: sig(c) !== sig(d), swap: sig(e) !== sig(PP) };
+});
+check("an identical refresh has the same redraw signature (0 redraws)", ppSig.same);
+check("a change that only flips a shown cell (12.48% to 12.52%) redraws", ppSig.flip);
+check('a change from "·" to "<1" redraws', ppSig.dot);
+check("two rows swapping places redraws", ppSig.swap);
+
 // While the tab is hidden a reprice is not worked out; coming back catches up once.
 const ppLiveGames = await page.evaluate(() => (window.__DFFL.DB.seasons[0].live || []).length > 0 && document.body.dataset.pictureReady === "1");
 if (!ppLiveGames) {
@@ -3803,6 +3821,7 @@ const ppBadges = await mobile.evaluate(async () => {
     badBadges: badges.filter(b => !inside(b) || b.scrollWidth > b.clientWidth + 1).map(b => b.dataset.short),
     badTitles: badges.filter(b => !/^(Clinched |Eliminated)/.test(b.title) || b.title === b.dataset.short).map(b => b.title),
     badShort: badges.filter(b => !getComputedStyle(b, "::after").content.includes(b.dataset.short)).map(b => b.dataset.short),
+    badRole: badges.filter(b => b.getAttribute("role") !== "img" || b.getAttribute("aria-label") !== b.title).map(b => b.dataset.short),
     badNames: names.filter(n => !inside(n) || n.title !== n.textContent).map(n => n.textContent),
   };
 });
@@ -3810,6 +3829,7 @@ check("picture: week 13 of 2025 shows clinch badges", ppBadges.n > 0, `${ppBadge
 check("picture: every badge fits its cell unclipped at 390px", ppBadges.badBadges.length === 0, ppBadges.badBadges.join(","));
 check("picture: badges keep the full text in their title", ppBadges.badTitles.length === 0, ppBadges.badTitles.join(","));
 check("picture: badges show the short label on a phone", ppBadges.badShort.length === 0, ppBadges.badShort.join(","));
+check("picture: badges read their full text to screen readers (role=img + aria-label)", ppBadges.badRole.length === 0, ppBadges.badRole.join(","));
 check("picture: every name fits its cell and carries its full name as a title", ppBadges.badNames.length === 0, ppBadges.badNames.join(","));
 
 // the power board at phone width, on a week with movement in it
