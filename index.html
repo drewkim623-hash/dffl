@@ -7512,7 +7512,7 @@ async function ensurePicture() {
   startLivePolling();
 }
 
-/** Everything renderPicture shows, rounded as shown — equal means nothing to repaint. */
+/** Everything renderPicture shows, as exact values in row order — equal means nothing to repaint. */
 function pictureSig(PP) {
   // Exact values, in row order, never rounded: a cell that shows whole percents
   // flips on a hair (12.48% → 12.52% is "12" → "13", 0 → 0.4% is "·" → "<1"),
