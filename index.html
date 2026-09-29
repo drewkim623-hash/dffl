@@ -565,6 +565,8 @@
   .fxm-trow .mk{font-weight:700;font-size:14.5px;display:block}
   .fxm-trow .s{font-size:11.5px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .fxm-tm{min-width:0}
+  .fxm .fxm-inj{display:block;margin-top:2px;font-size:11.5px;line-height:1.35;color:var(--red);
+    white-space:normal;overflow-wrap:anywhere}
   .fxm-links{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:2px 0 0;font-size:12px;color:var(--muted)}
   .fxm-links button{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer;
     background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 12px}
@@ -5590,35 +5592,39 @@ function futuresMarkets(model, sim) {
   ];
 
   // Every market for one line, read off one simulation's counts.
-  const boardsFor = (S, kind, stamp) => {
+  const boardsFor = (S, kind, stamp, LV) => {
     const n = S.sims;
+    // The live board's own injury note, on the Live line's championship and
+    // playoff rows only — the opening line knows nothing about injuries.
+    const inj = i => kind === "live" && LV && LV.plan && LV.adjWeek != null
+      ? injuryFuturesNote(LV.plan, T[i].rid, LV.adjWeek) : "";
     const proj = i => `projects ${f1(S.wins[i] / n)} wins`;
     // One winner from the field: priced as a race, exactly as the opening and
     // live boards price it (priceMarket over the field, marketHold for the hold).
-    const race = (title, sub, ids, key, note, div) => {
+    const race = (title, sub, ids, key, note, div, injured) => {
       const priced = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: S[key][i] / n })));
       return { title, sub, div, hold: `Hold ${(marketHold(priced) * 100).toFixed(1)}%`,
-        rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i) })) };
+        rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i), inj: injured ? inj(r.i) : "" })) };
     };
     // A yes/no book holds on each runner separately: the label is marketHold's
     // average two-way overround, exactly as the live board's playoff board posts it.
     const twoWayHold = rows => `Hold ${(marketHold(rows.map(r =>
       ({ postedP: r.prices[0].postedP, noPostedP: r.prices[1].postedP }))) * 100).toFixed(1)}%`;
     // Every manager is his own yes/no book, as the playoff board always priced it.
-    const yesNo = (title, sub, key, note) => {
+    const yesNo = (title, sub, key, note, injured) => {
       const rows = all.map(i => {
         const p = S[key][i] / n;
-        return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i) };
+        return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i), inj: injured ? inj(i) : "" };
       });
       return { title, sub, hold: twoWayHold(rows), rows };
     };
     const lineSub = kind === "live" ? `live line · ${stamp}` : `opening line · ${n.toLocaleString()} simulations`;
     return {
       title: [race("To win the DFFL championship", `${model.season} season · ${lineSub}`,
-        all, "title", i => `Makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
+        all, "title", i => `Makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`, undefined, true)],
       divWin: divs.map(d => race(`${model.divNames.get(d)} — to win`, `division title · ${lineSub}`, byDiv(d), "divWin", proj, d)),
       playoff: [yesNo("Playoff qualification", `yes / no · six of twelve qualify · ${lineSub}`, "playoff",
-        i => `wins the division ${pc(S.divWin[i] / n)} · first-round bye ${pc(S.bye[i] / n)}`)],
+        i => `wins the division ${pc(S.divWin[i] / n)} · first-round bye ${pc(S.bye[i] / n)}`, true)],
       bye: [yesNo("First-round bye", `yes / no · the top two seeds skip round one · ${lineSub}`, "bye",
         i => `makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
       wins: [(() => {
@@ -5674,10 +5680,10 @@ function futuresMarkets(model, sim) {
 
   // One line's worth of market lists. Both lines stay in the page so switching
   // between them is instant and every control keeps its state.
-  const makeLine = (kind, S, stamp) => {
+  const makeLine = (kind, S, stamp, LV) => {
     const view = el("div", "fxm-line-view");
     view.dataset.line = kind;
-    const B = boardsFor(S, kind, stamp), secs = {};
+    const B = boardsFor(S, kind, stamp, LV), secs = {};
     for (const m of CHIPS) {
       const sec = el("div", "fxm-mkt");
       sec.dataset.market = m.id;
@@ -5695,7 +5701,7 @@ function futuresMarkets(model, sim) {
           row.type = "button";
           Object.assign(row.dataset, { uid, div: T[r.i].div, key: r.key, name: nameOf(uid), price: r.prices[0].price });
           row.innerHTML = `<span class="rk"></span>${avatarHTML(uid, "sm avcell")}
-            <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span></span>
+            <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
             ${m.two ? `<span class="prices">${tiles(r)}</span>` : tiles(r)}`;
           row.title = `All of ${nameOf(uid)}'s prices`;
           row.onclick = () => { st.team = uid; apply(); };
@@ -5756,7 +5762,7 @@ function futuresMarkets(model, sim) {
         if (!r) continue;
         const row = el("div", `fxm-trow${m.two ? " two" : ""}`);
         row.dataset.market = m.id;
-        row.innerHTML = `<span class="fxm-tm"><span class="mk">${esc(m.chip)}</span><span class="s">${esc(bd.title)}</span></span>
+        row.innerHTML = `<span class="fxm-tm"><span class="mk">${esc(m.chip)}</span><span class="s">${esc(bd.title)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
           <span class="prices">${tiles(r)}</span>`;
         card.appendChild(row);
       }
@@ -5828,7 +5834,7 @@ function futuresMarkets(model, sim) {
     if (N && N.lsim && (!lines.live || lines.live.S !== N.lsim)) {
       const y = window.scrollY, first = !lines.live;
       liveInfo = N.live || null;
-      const fresh = makeLine("live", N.lsim, updatedAt((N.live && N.live.at) || Date.now()));
+      const fresh = makeLine("live", N.lsim, updatedAt((N.live && N.live.at) || Date.now()), N.live);
       if (lines.live) lines.live.view.replaceWith(fresh.view); else linesHost.appendChild(fresh.view);
       lines.live = fresh;
       liveStatus = "ready";

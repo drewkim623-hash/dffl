@@ -3503,6 +3503,59 @@ if (fxLive.ok) {
     vs.found && !vs.rewound && vs.n === 12 && vs.fxn === 12 && vs.off.length === 0, JSON.stringify(vs).slice(0, 300));
 } else check("futures: the live championship posts exactly the live board's prices", true, FX_SKIP);
 
+// Injury notes: the Live line carries the live board's own note, row for row;
+// the Opening line never carries one.
+if (fxLive.ok) {
+  const inj = await page.evaluate(() => {
+    const noteOf = s => { const m = (s || "").match(/ · (Injuries: .*)$/); return m ? m[1].trim() : ""; };
+    const board = title => {
+      const b = [...document.querySelectorAll('#liveHost [data-board="live"]')].find(x => x.querySelector(".bt").textContent.includes(title));
+      return new Map(b ? [...b.querySelectorAll(".orow")].map(r => [r.querySelector(".who .n").textContent.trim(), noteOf(r.querySelector(".who .s").textContent.replace(/\s+/g, " "))]) : []);
+    };
+    const mine = mk => new Map([...document.querySelectorAll(`.fxm .fxm-line-view[data-line="live"] .fxm-mkt[data-market="${mk}"] .fxm-row`)]
+      .map(r => [r.dataset.name, ((r.querySelector(".fxm-inj") || {}).textContent || "").replace(/\s+/g, " ").trim()]));
+    const cmp = (a, b) => [...a.keys()].filter(k => a.get(k) !== b.get(k)).map(k => `${k}: "${a.get(k)}" vs "${b.get(k)}"`);
+    const tB = board("To win the DFFL championship"), pB = board("To make the playoffs"), tM = mine("title"), pM = mine("playoff");
+    return { tn: tB.size, pn: pB.size, tm: tM.size, pm: pM.size, tOff: cmp(tM, tB), pOff: cmp(pM, pB),
+      withNote: [...tB.entries()].filter(([, v]) => v).map(([k]) => k),
+      otherMarkets: [...document.querySelectorAll('.fxm .fxm-line-view[data-line="live"] .fxm-mkt:not([data-market="title"]):not([data-market="playoff"]) .fxm-inj')].length };
+  });
+  check("injury notes: live Championship rows carry the live board's note, team for team",
+    inj.tn === 12 && inj.tm === 12 && inj.tOff.length === 0, `${inj.withNote.length} with notes; ${inj.tOff.slice(0, 3).join(" | ")}`);
+  check("injury notes: live Make playoffs rows carry the live playoff board's note, team for team",
+    inj.pn === 12 && inj.pm === 12 && inj.pOff.length === 0, inj.pOff.slice(0, 3).join(" | "));
+  check("injury notes: only the championship and playoff markets carry them", inj.otherMarkets === 0, `${inj.otherMarkets}`);
+  if (inj.withNote.length) {
+    const uid = await page.evaluate(n => [...document.querySelectorAll('.fxm-line-view[data-line="live"] .fxm-mkt[data-market="title"] .fxm-row')].find(r => r.dataset.name === n).dataset.uid, inj.withNote[0]);
+    await page.selectOption('.fxm select[data-fxm="team"]', uid);
+    const cardLive = await page.evaluate(() => [...document.querySelectorAll(".fxm .fxm-card .fxm-trow")].map(r => [r.dataset.market, ((r.querySelector(".fxm-inj") || {}).textContent || "").trim()]));
+    const listLive = await page.evaluate(u => ["title", "playoff"].map(mk => ((document.querySelector(`.fxm-line-view[data-line="live"] .fxm-mkt[data-market="${mk}"] .fxm-row[data-uid="${u}"] .fxm-inj`) || {}).textContent || "").trim()), uid);
+    await page.click('.fxm-lineseg [data-line="opening"]');
+    const cardOpen = await page.evaluate(() => document.querySelectorAll(".fxm .fxm-card .fxm-inj").length);
+    await page.click('.fxm-lineseg [data-line="live"]');
+    await page.selectOption('.fxm select[data-fxm="team"]', "");
+    const byMk = new Map(cardLive);
+    check("injury notes: the Live team card shows them on Championship and Make playoffs, and nowhere else",
+      byMk.get("title") === listLive[0] && byMk.get("playoff") === listLive[1] && !!listLive[0] &&
+      cardLive.filter(([mk, t]) => t && mk !== "title" && mk !== "playoff").length === 0, JSON.stringify(cardLive));
+    check("injury notes: the Opening team card shows none", cardOpen === 0, `${cardOpen}`);
+  } else {
+    check("injury notes: the Live team card shows them on Championship and Make playoffs, and nowhere else", true, "skipped: no team carries an injury note on this run");
+    check("injury notes: the Opening team card shows none", true, "skipped: no team carries an injury note on this run");
+  }
+} else {
+  for (const n of ["injury notes: live Championship rows carry the live board's note, team for team",
+    "injury notes: live Make playoffs rows carry the live playoff board's note, team for team",
+    "injury notes: only the championship and playoff markets carry them",
+    "injury notes: the Live team card shows them on Championship and Make playoffs, and nowhere else",
+    "injury notes: the Opening team card shows none"]) check(n, true, FX_SKIP);
+}
+const openInj = await page.evaluate(() => {
+  const v = document.querySelector('.fxm .fxm-line-view[data-line="opening"]');
+  return { spans: v.querySelectorAll(".fxm-inj").length, text: /Injuries:/.test(v.textContent) };
+});
+check("injury notes: Opening rows never show one", openInj.spans === 0 && !openInj.text, JSON.stringify(openInj));
+
 // Yes/no holds: the Live playoff label is the live playoff board's label.
 if (fxLive.ok) {
   const hv = await page.evaluate(() => {
@@ -3714,6 +3767,12 @@ const fxNarrow = await mobile.evaluate(async () => {
   const W = window.innerWidth, out = { views: [], over: [], clipped: [], prices: 0 };
   const tick = () => new Promise(r => setTimeout(r, 40));
   const measure = label => {
+    for (const s of root.querySelectorAll(".fxm-inj")) {
+      const r = s.getBoundingClientRect();
+      if (!r.width) continue;
+      out.notes = (out.notes || 0) + 1;
+      if (r.left < 0 || r.right > W + 1 || s.scrollWidth > s.clientWidth + 1 || getComputedStyle(s).whiteSpace === "nowrap") out.noteClipped = (out.noteClipped || []).concat(`${label}: ${s.textContent.trim().slice(0, 40)}`);
+    }
     for (const n of root.querySelectorAll("*")) {
       if (n.closest(".fxm-chips") && n !== chips) continue;
       const r = n.getBoundingClientRect();
@@ -3734,7 +3793,10 @@ const fxNarrow = await mobile.evaluate(async () => {
     seg.querySelector(`[data-line="${line}"]`).click(); await tick();
     for (const c of root.querySelectorAll(".fxm-chip")) { c.click(); await tick(); measure(`${line}/${c.dataset.market}`); }
     const sel = root.querySelector('select[data-fxm="team"]');
-    sel.value = sel.options[1].value; sel.dispatchEvent(new Event("change")); await tick(); measure(`${line}/team`);
+    // A manager with an injury note, when there is one, so the card is measured with it showing.
+    const hurt = root.querySelector('.fxm-line-view[data-line="live"] .fxm-mkt[data-market="title"] .fxm-row .fxm-inj');
+    sel.value = hurt ? hurt.closest(".fxm-row").dataset.uid : sel.options[1].value;
+    sel.dispatchEvent(new Event("change")); await tick(); measure(`${line}/team`);
     sel.value = ""; sel.dispatchEvent(new Event("change"));
   }
   seg.querySelector('[data-line="live"]').disabled || seg.querySelector('[data-line="live"]').click();
@@ -3752,6 +3814,9 @@ check("futures at 390px: every price box fully visible and unclipped", fxNarrow.
 check("futures at 390px: the chip row scrolls sideways inside the screen", fxNarrow.chipsFit && fxNarrow.chipsOverflow === "auto" && fxNarrow.chipsScroll,
   JSON.stringify({ fit: fxNarrow.chipsFit, ov: fxNarrow.chipsOverflow, scroll: fxNarrow.chipsScroll }));
 check("futures at 390px: the Live / Opening toggle sits fully on screen", fxNarrow.segFit);
+check("futures at 390px: injury notes wrap on screen, nothing clipped or overflowing",
+  !(fxNarrow.noteClipped || []).length && fxNarrow.over.length === 0,
+  fxNarrow.notes ? `${fxNarrow.notes} notes measured; ${(fxNarrow.noteClipped || []).slice(0, 3).join(" | ")}` : "no injury notes on this run to measure");
 await mobile.waitForFunction(() => document.body.dataset.linesReady, null, { timeout: 180000 });
 const glNarrow = await mobile.evaluate(() => {
   const sec = document.querySelector('[data-board="gamelines"]');
