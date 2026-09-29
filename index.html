@@ -2527,12 +2527,18 @@ function coverKind(a) {
 // One drawing at three sizes: the index card, the article hero on a phone, and a
 // wider, shorter hero for desktop. fw/fo/fp are the headshot width, overlap and
 // right inset as a share of the width: the same numbers as --fw/--fo/--fp in the CSS.
+// min is the smallest font size, in viewBox units, any text may be set at: the svg
+// scales with its width, so min is 11px (the site's floor) over the narrowest scale
+// the shape is shown at. A card is never under 264px wide (x.825, 1280 desktop grid;
+// x.89 on a 320px phone); the phone hero is 320px wide at 390 (x.5; x.456 at 360);
+// the wide hero is 674px at its 760px breakpoint (x.674). A label that doesn't fit
+// at its size wraps to a second line rather than shrinking.
 const COVER_GEOM = {
-  card: { W: 320, H: 200, pad: 16, label: 13, title: [34, 30, 27, 24, 21, 19], stat: [72, 60, 50, 40, 34],
+  card: { W: 320, H: 200, pad: 16, min: 14, label: 14, title: [34, 30, 27, 24, 21, 19], stat: [72, 60, 50, 40, 34],
     sub: [24, 21, 19, 17, 15], row: [30, 27, 24, 22, 20, 18], who: 15, faces: 4, perRow: 3, fw: .17, fo: .04, fp: .045 },
-  hero: { W: 640, H: 280, pad: 28, label: 20, title: [60, 52, 46, 40, 35, 31], stat: [120, 100, 84, 68, 56],
+  hero: { W: 640, H: 280, pad: 28, min: 25, label: 25, title: [60, 52, 46, 40, 35, 31], stat: [120, 100, 84, 68, 56],
     sub: [36, 32, 28, 25, 22], row: [48, 42, 36, 32, 28], who: 22, faces: 4, perRow: 4, fw: .13, fo: .03, fp: .04 },
-  wide: { W: 1000, H: 290, pad: 32, label: 20, title: [60, 52, 46, 40, 35], stat: [120, 100, 84, 68],
+  wide: { W: 1000, H: 290, pad: 32, min: 17, label: 20, title: [60, 52, 46, 40, 35], stat: [120, 100, 84, 68],
     sub: [34, 30, 26, 23, 20], row: [50, 44, 38, 32], who: 22, faces: 4, perRow: 4, fw: .145, fo: .03, fp: .035 },
 };
 // The article hero goes wide at desktop widths, where 16:7 would stand taller than a screen's worth of headline.
@@ -2540,6 +2546,8 @@ const COVER_WIDE_MQ = "(min-width: 760px)";
 const coverHeroVariant = () =>
   typeof matchMedia === "function" && matchMedia(COVER_WIDE_MQ).matches ? "wide" : "hero";
 const coverVariant = big => COVER_GEOM[big] ? big : big ? coverHeroVariant() : "card";
+// A size ladder with nothing under the shape's floor (the floor itself when every step is under it).
+const coverSizes = (G, list) => { const ok = list.map(cr).filter(f => f >= G.min); return ok.length ? ok : [G.min]; };
 const coverPlayers = a => Array.isArray((a.cover || {}).players) ? a.cover.players : [];
 // Line-drawn emblems in a 100-unit box, one per kind.
 const COVER_EMBLEMS = {
@@ -2625,6 +2633,25 @@ function coverWrap(text, fs, maxW, maxLines, st) {
   if (lines.length > maxLines) kept[maxLines - 1] += " " + lines.slice(maxLines).join(" ");
   const out = kept.map(l => coverFit(l, fs, maxW, st));
   return { lines: out, cut: out.some((l, i) => l !== kept[i] || !coverFits(l, fs, maxW, st)) };
+}
+// A label on one line, or broken in two where it reads best: after a comma if both
+// halves fit, else where the halves come out most even, and never so that line one ends
+// on a little word (THE, BY, OF, A, AN, AND) or a separator, or line two starts on one.
+// Greedy wrapping (and its whole-word cut) only when no such break fits.
+const COVER_LEAD = 2.5;   // a stat cover's figure stands at least this many times its headline's size
+const COVER_NOBREAK = /^(?:the|by|of|a|an|and|·|—|–|-|&)$/i;
+function coverLabelLines(text, fs, maxW, st) {
+  if (coverFits(text, fs, maxW, st)) return { lines: [text], cut: false };
+  const words = text.split(" ").filter(Boolean);
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    if (COVER_NOBREAK.test(words[i - 1]) || /^[·—–\-&]$/.test(words[i])) continue;
+    const a = words.slice(0, i).join(" "), b = words.slice(i).join(" ");
+    if (!coverFits(a, fs, maxW, st) || !coverFits(b, fs, maxW, st)) continue;
+    const score = Math.abs(coverWidth(a, fs, st) - coverWidth(b, fs, st)) - (/,$/.test(a) ? 1e6 : 0);
+    if (!best || score < best.score) best = { score, lines: [a, b] };
+  }
+  return best ? { lines: best.lines, cut: false } : coverWrap(text, fs, maxW, 2, st);
 }
 // The biggest size that fits whole (and, if asked, in the height there is), else the smallest, cut.
 function coverSize(text, sizes, maxW, maxLines, st, room = () => true) {
@@ -2753,10 +2780,14 @@ function coverSVG(a, big) {
   const labelRaw = (small ? [wk != null ? `week ${wk}` : "", kind].filter(Boolean).join(" · ")
     : plainText(c.caption) || kick || [a.season, wk != null ? `week ${wk}` : ""].filter(Boolean).join(" · ") || kind)
     .toUpperCase();
-  const yL = pad + G.label * .75, ruleY = yL + G.label * .6, ceil = ruleY + pad * .6;
+  // Set at the wordmark's size (never smaller: a label that doesn't fit wraps rather
+  // than shrinking), on one line or two balanced ones; cut, on a whole word, only if
+  // two lines aren't enough. The rule and everything under it move down.
+  const yL = pad + G.label * .75;
   const wmW = coverWidth("DFFL", G.label, T.mark), labelW = W - 3 * pad - wmW;
-  const L = coverSize(labelRaw, [1, .92, .84, .76].map(k => cr(G.label * k)), labelW, 1, T.label);
-  const label = coverText(pad, yL, L.lines[0], L.fs, INK2, T.label, labelW, ` class="cv-label"`) +
+  const L = { fs: Math.max(G.label, G.min), ...coverLabelLines(labelRaw, Math.max(G.label, G.min), labelW, T.label) }, ll = L.fs * 1.25;
+  const ruleY = yL + (L.lines.length - 1) * ll + G.label * .6, ceil = ruleY + pad * .6;
+  const label = L.lines.map((l, i) => coverText(pad, yL + i * ll, l, L.fs, INK2, T.label, labelW, ` class="cv-label"`)).join("") +
     `<path d="M${pad} ${cr(ruleY)}h${cr(G.label * 2.2)}" stroke="${P.accent}" stroke-width="${small ? 2 : 3}"/>` +
     coverText(W - pad, yL, "DFFL", G.label, INK2, T.mark, W - 2 * pad, ` class="cv-mark" text-anchor="end"`);
 
@@ -2768,7 +2799,7 @@ function coverSVG(a, big) {
   if (layout === "versus") {
     const rows = [[S.a, S.aPts], [S.b, S.bPts]].map(([n, p]) => [plainText(n), plainText(p)]);
     let fs, numW, numMax, nameW, names;
-    for (fs of G.row) {
+    for (fs of coverSizes(G, G.row)) {
       numW = Math.max(...rows.map(r => coverWidth(r[1], fs, T.row)));
       numMax = Math.min(numW, tw * .45 * COVER_SAFE) / COVER_SAFE;
       nameW = tw - numMax * COVER_SAFE - fs * .6;
@@ -2786,18 +2817,23 @@ function coverSVG(a, big) {
   } else if (layout === "trade") {
     const gets = [S.aGets, S.bGets].map(g => (Array.isArray(g) ? g : []).slice(0, 2).map(plainText));
     const np = Math.max(1, ...gets.map(g => g.length)), sides = [S.a, S.b].map(plainText);
+    // Player lines step down no further than the floor; the team names give up size
+    // (and so width) first, until every player also fits whole at the floor.
+    const who = Math.max(G.who, G.min), whoSizes = coverSizes(G, [1, .9, .8].map(k => who * k).concat(G.min));
+    const whoMin = whoSizes[whoSizes.length - 1];
     let fs, colW, teams;
-    for (fs of G.row) {
+    for (fs of coverSizes(G, G.row)) {
       colW = (tw - fs * 1.5) / 2;
       teams = sides.map(t => coverFit(t, fs, colW, T.row));
-      if (teams.every((t, i) => t === sides[i] && coverFits(t, fs, colW, T.row))) break;
+      if (teams.every((t, i) => t === sides[i] && coverFits(t, fs, colW, T.row)) &&
+        gets.every(g => g.every(p => coverFits(p, whoMin, colW, T.who)))) break;
     }
-    const pl = G.who * 1.35, yT = yB - np * pl - G.who * .2;
+    const pl = who * 1.35, yT = yB - np * pl - who * .2;
     const cx = pad + colW + fs * .75, cy = yT - fs * .36, aw = fs * .5, ah = fs * .13;
     main = [0, 1].map(i => {
       const x = pad + i * (colW + fs * 1.5);
       return put(x, yT, teams[i], fs, WHITE, T.row, colW, ` class="cv-team"`) + gets[i].map((p, j) => {
-        const Q = coverSize(p, [1, .9, .8].map(k => cr(G.who * k)), colW, 1, T.who);
+        const Q = coverSize(p, whoSizes, colW, 1, T.who);
         return put(x, yT + pl * (j + 1), Q.lines[0], Q.fs, INK2, T.who, colW, ` class="cv-who"`);
       }).join("");
     }).join("") +
@@ -2807,19 +2843,31 @@ function coverSVG(a, big) {
   } else if (layout === "stat") {
     // The headline gets up to three lines, as small as it takes to read in full, so long
     // as the smallest figure still fits above it; then the figure is as big as the rest allows.
-    const n = plainText(S.n), minN = G.stat[G.stat.length - 1];
+    // The headline gets up to three lines, as big as it can while the smallest figure
+    // still fits above it; then the figure is as big as the rest allows. If that leaves the
+    // figure under COVER_LEAD times the headline's size (a two-line label has eaten the
+    // height), the headline steps down until the figure leads again.
+    const n = plainText(S.n), stats = coverSizes(G, G.stat), subs = coverSizes(G, G.sub), minN = stats[stats.length - 1];
     const subTop = r => yB - (r.lines.length - 1) * r.fs * 1.08 - r.fs * .74;
-    const subRoom = r => subTop(r) - minN * .98 >= ceil, Sub2 = coverSize(head, G.sub, tw, 2, T.sub, subRoom);
-    const Sub = Sub2.cut || !subRoom(Sub2) ? coverSize(head, G.sub, tw, 3, T.sub, subRoom) : Sub2;
+    const figFor = r => stats.find(nf => subTop(r) - nf * .98 >= ceil && !coverSize(n, [nf], tw, 1, T.stat).cut);
+    const leads = r => { const nf = figFor(r); return !!nf && nf >= Math.min(stats[0], r.fs * COVER_LEAD); };
+    const subRoom = r => subTop(r) - minN * .98 >= ceil, Sub2 = coverSize(head, subs, tw, 2, T.sub, subRoom);
+    let Sub = Sub2.cut || !subRoom(Sub2) ? coverSize(head, subs, tw, 3, T.sub, subRoom) : Sub2;
+    if (!Sub.cut && !leads(Sub)) {
+      search: for (const fs of subs.filter(f => f < Sub.fs)) for (const lines of [2, 3]) {
+        const r = { fs, ...coverWrap(head, fs, tw, lines, T.sub) };
+        if (!r.cut && leads(r)) { Sub = r; break search; }
+      }
+    }
     const sl = Sub.fs * 1.08, ys = yB - (Sub.lines.length - 1) * sl;
     const yN = fs => subTop(Sub) - fs * .22;   // clear of the sub line, even under a "/" or a "$"
-    const N = coverSize(n, G.stat, tw, 1, T.stat, r => yN(r.fs) - r.fs * .76 >= ceil);
+    const N = coverSize(n, stats, tw, 1, T.stat, r => yN(r.fs) - r.fs * .76 >= ceil);
     statBox = { right: pad + Math.min(coverWidth(N.lines[0], N.fs, T.stat), tw * COVER_SAFE), bottom: subTop(Sub) };
     main = put(pad, yN(N.fs), N.lines[0], N.fs, WHITE, T.stat, tw, ` class="cv-stat"`) +
       Sub.lines.map((l, i) => put(pad, ys + i * sl, l, Sub.fs, INK2, T.sub, tw, ` class="cv-sub"`)).join("");
   } else if (head) {
     // Up to three lines, as small as it takes to read in full before anything is cut.
-    const Hd = coverSize(head, G.title, tw, 3, T.head, r => r.fs * .76 + (r.lines.length - 1) * r.fs * 1.02 <= yB - ceil);
+    const Hd = coverSize(head, coverSizes(G, G.title), tw, 3, T.head, r => r.fs * .76 + (r.lines.length - 1) * r.fs * 1.02 <= yB - ceil);
     const lh = Hd.fs * 1.02, y0 = yB - (Hd.lines.length - 1) * lh;
     main = Hd.lines.map((l, i) => put(pad, y0 + i * lh, l, Hd.fs, WHITE, T.head, tw, ` class="cv-title"`)).join("");
   }
