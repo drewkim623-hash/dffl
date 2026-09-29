@@ -1908,6 +1908,35 @@ if (ppLive.state === "empty") {
   check("live: the picture ran in a worker", ppLive.via === "worker", ppLive.via);
 }
 
+// The job handed to the worker must carry the injury plan's per-week cuts, or the
+// Picture's own runs (and every win/lose-this-week run) would be healthy.
+const ppInj = await page.evaluate(async () => {
+  const D = window.__DFFL, L = await D.liveOnce();
+  if (!L.live || !L.model) return { skip: true };
+  const cut = L.live.teams.map((_, i) => (i === 0 ? 0.6 : 1)), pws = L.live.pws;
+  const multByWeek = new Map([...L.live.weeks.map(w => w.week), pws, pws + 1, pws + 2].map(w => [w, cut]));
+  const live2 = { ...L.live, multByWeek };
+  const job = structuredClone(D.pictureJob(L.model, live2, 400, 3000));   // what the worker receives
+  const run = D.pictureRun(job);
+  const direct = D.simulateSeason(L.model, 3000, live2);
+  const g = job.games[0];
+  const dForced = g ? D.simulateSeason(L.model, 400, live2, { force: { a: g[0], b: g[1], winner: g[0] } }) : null;
+  const healthy = D.simulateSeason(L.model, 3000, { ...L.live, multByWeek: null });
+  return {
+    carries: job.live.multByWeek instanceof Map && job.live.multByWeek.size === multByWeek.size && job.live.pws === pws,
+    mainExact: run.main.playoff.every((p, i) => p === direct.playoff[i]),
+    forcedExact: !g || run.forced[0].ifA.playoff.every((p, i) => p === dForced.playoff[i]),
+    cutBites: direct.wins[0] < healthy.wins[0],
+  };
+});
+if (ppInj.skip) {
+  check("the worker's job carries the injury cuts (skipped: no live week)", true);
+} else {
+  check("the worker's job carries the injury cuts per week and the playoff start week", ppInj.carries);
+  check("the Picture's own run includes the injury cuts, exactly as the Odds engine", ppInj.mainExact && ppInj.cutBites, JSON.stringify(ppInj));
+  check("the win/lose-this-week runs include the injury cuts too", ppInj.forcedExact, JSON.stringify(ppInj));
+}
+
 group("Playoff Picture: follows the live board");
 // Move a live score and reprice the way the 60s poll does: the tab must redraw
 // off the new run, in the one worker it already has.

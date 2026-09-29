@@ -6867,6 +6867,12 @@ function pictureJob(model, live, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS) {
     weeks: live.weeks.map(w => ({ week: w.week, pairs: w.pairs.map(p => p.slice()) })),
     W0: live.W0.slice(), PF0: live.PF0.slice(), mult: live.mult.slice(), adjWeek: live.adjWeek,
     pending: (live.pending || []).map(g => ({ a: g.a, b: g.b, eA: g.eA, eB: g.eB, sdA: g.sdA, sdB: g.sdB })),
+    // The injury plan as the simulator reads it: a cut per week, bracket weeks
+    // included (a Map survives the post to the worker). The plan itself is not
+    // needed here; everything the sim takes from it is in multByWeek.
+    multByWeek: live.multByWeek instanceof Map
+      ? new Map([...live.multByWeek].map(([w, m]) => [w, m.slice()])) : null,
+    pws: live.pws,
   } : null;
   const games = currentGames(m, l).filter(g => !g.final).map(g => [g.a, g.b]);
   return { model: m, live: l, sims, whatIfSims, games };
