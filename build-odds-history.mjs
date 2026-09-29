@@ -1,67 +1,91 @@
 /**
- * How each matchup's line moved during a week, read back out of git.
+ * How each matchup's line moved during a week, kept as a running log.
  *
- *   node build-odds-history.mjs
+ *   node build-odds-history.mjs [--root <dir>]
  *
  * data/odds-snapshot.json is rewritten by build-email.mjs several times a week,
- * and every committed copy of it is a reading of what the site believed at that
- * moment. Nothing else keeps that record, so this walks the file's history and
- * lays the matchup rows side by side:
+ * and every copy of it is a reading of what the site believed at that moment.
+ * Nothing else keeps that record, so this adds each reading's matchup rows to
+ * data/odds-history.json:
  *
  *   data/odds-history.json = { _comment, generated,
  *     weeks: { "<season>-<week>": [ { at, a, b, pA, aPts, bPts, settled }, ... ] } }
  *
- * Read-only against git. The only thing it writes is data/odds-history.json.
+ * It MERGES: rows already in the file are never removed or rewritten, and new
+ * ones come from every commit of the snapshot git can see plus the working-tree
+ * copy (in the data job, written moments before and not committed yet). So a
+ * shallow checkout, which sees one commit or none, still only ever adds.
+ *
+ * Read-only against git. The only thing it writes is data/odds-history.json,
+ * and only when there is something new. Every problem is a warning and exit 0:
+ * this must never stop the data commit.
  */
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { mergeHistory, rowKey, rowsFromSnapshot } from "./odds-history.mjs";
 
-const ROOT = resolve(new URL(".", import.meta.url).pathname);
+const argv = process.argv.slice(2);
+const at = argv.indexOf("--root");
+const ROOT = at >= 0 && argv[at + 1] ? resolve(argv[at + 1]) : dirname(fileURLToPath(import.meta.url));
 const SNAP = "data/odds-snapshot.json";
 const OUT = join(ROOT, "data/odds-history.json");
 
-const git = args => execFileSync("git", args, { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+const warn = msg => console.log(`::warning::odds history: ${msg}`);
+const git = args => execFileSync("git", args, {
+  cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"],
+});
 
-const log = git(["log", "--format=%H%x09%cI", "--", SNAP]).trim().split("\n").filter(Boolean);
-const weeks = {};
-const seen = new Set();
-let read = 0, skipped = 0;
-
-for (const line of log) {
-  const [sha, committed] = line.split("\t");
-  let snap;
-  try { snap = JSON.parse(git(["show", `${sha}:${SNAP}`])); }
-  catch { skipped++; continue; }
-  read++;
-  const games = Array.isArray(snap.games) ? snap.games : [];
-  // The games on a snapshot belong to the week in flight; fall back to the
-  // snapshot's own week when nothing was live.
-  const week = snap.liveWeek ?? snap.week;
-  if (!games.length || week == null || !snap.season) continue;
-  const key = `${snap.season}-${week}`;
-  // The snapshot's own clock, not the commit's: a copy can be committed well
-  // after it was taken.
-  const at = snap.generated || committed;
-  for (const g of games) {
-    if (!g || !g.a || !g.b || typeof g.pA !== "number") continue;
-    const dup = `${key}|${at}|${g.a}|${g.b}`;
-    if (seen.has(dup)) continue;
-    seen.add(dup);
-    (weeks[key] ||= []).push({
-      at, a: g.a, b: g.b, pA: g.pA,
-      aPts: g.aPts ?? 0, bPts: g.bPts ?? 0, settled: !!g.settled,
-    });
+let existing = null;
+if (existsSync(OUT)) {
+  try { existing = JSON.parse(readFileSync(OUT, "utf8")); }
+  catch (e) { warn(`${OUT} is not valid JSON (${e.message}); left untouched.`); process.exit(0); }
+  if (!existing || typeof existing !== "object" || !existing.weeks || typeof existing.weeks !== "object" || Array.isArray(existing.weeks)) {
+    warn(`${OUT} has no weeks object; left untouched.`);
+    process.exit(0);
   }
 }
-for (const k of Object.keys(weeks)) weeks[k].sort((x, y) => Date.parse(x.at) - Date.parse(y.at));
 
-const out = {
-  _comment: "Written by build-odds-history.mjs from the git history of data/odds-snapshot.json. " +
-    "One row per matchup per committed snapshot; pA is the chance manager a beats manager b as the site priced it at that moment.",
-  generated: new Date().toISOString(),
-  weeks: Object.fromEntries(Object.keys(weeks).sort().map(k => [k, weeks[k]])),
-};
-writeFileSync(OUT, JSON.stringify(out, null, 1) + "\n");
-const rows = Object.values(weeks).reduce((n, w) => n + w.length, 0);
-console.log(`read ${read} snapshots (${skipped} unreadable) → ${Object.keys(weeks).length} weeks, ${rows} rows → ${OUT}`);
+const incoming = [];
+let log = [];
+try { log = git(["log", "--format=%H%x09%cI", "--", SNAP]).trim().split("\n").filter(Boolean); }
+catch { log = []; }
+for (const line of log) {
+  const [sha, committed] = line.split("\t");
+  try { incoming.push(...rowsFromSnapshot(JSON.parse(git(["show", `${sha}:${SNAP}`])), committed)); }
+  catch { /* an unreadable copy adds nothing */ }
+}
+const working = join(ROOT, SNAP);
+if (existsSync(working)) {
+  try {
+    const snap = JSON.parse(readFileSync(working, "utf8"));
+    // Without its own clock a working copy has no stable time, and stamping it
+    // with "now" would re-add the same reading on every run.
+    if (snap && snap.generated) incoming.push(...rowsFromSnapshot(snap, snap.generated));
+    else warn(`working-tree ${SNAP} has no generated time; skipped.`);
+  }
+  catch (e) { warn(`working-tree ${SNAP} unreadable (${e.message}); skipped.`); }
+}
+
+const { out, added } = mergeHistory(existing, incoming);
+const count = h => Object.values(h?.weeks || {}).reduce((n, w) => n + (Array.isArray(w) ? w.length : 0), 0);
+const before = count(existing), total = count(out);
+
+const kept = new Set(Object.entries(out.weeks).flatMap(([k, rows]) => rows.map(r => rowKey(k, r))));
+const lost = Object.entries(existing?.weeks || {}).some(([k, rows]) =>
+  Array.isArray(rows) && rows.some(r => !kept.has(rowKey(k, r))));
+if (lost || total < before) {
+  warn(`merge would drop rows (${before} → ${total}); left untouched.`);
+  process.exit(0);
+}
+
+if (added > 0) {
+  out._comment = "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. " +
+    "Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; " +
+    "pA is the chance manager a beats manager b as the site priced it at that moment.";
+  out.generated = new Date().toISOString();
+  const { _comment, generated, weeks, ...rest } = out;
+  writeFileSync(OUT, JSON.stringify({ _comment, generated, weeks, ...rest }, null, 1) + "\n");
+}
+console.log(`odds history: ${before} existing rows, ${added} added, ${total} total${added ? "" : " (file unchanged)"}`);
