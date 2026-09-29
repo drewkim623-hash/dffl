@@ -998,6 +998,24 @@
   select,.asofbar select{background:var(--raised);border-color:transparent;border-radius:var(--rs);
     font-size:14px;font-weight:500;min-height:40px;color:var(--ink)}
   @media(max-width:759px){.back,select,.asofbar select{min-height:44px}}
+
+  /* Odds game lines (#6): flat cards, SemiBold at most, 11px floor, mono prices */
+  .glnav button{border-color:transparent;background:var(--raised);font-size:13px;font-weight:500;padding:8px 14px}
+  .glnav button[aria-current="true"]{background:var(--blue);color:#fff}
+  .glcard,.glbtn{border-color:transparent}
+  .glcard{padding:12px}
+  .glcard .glst{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none}
+  .glrow.glhd{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+  .glwho .n{font-weight:500}
+  .glbtn .l{font-family:var(--mono);font-weight:600}
+  .glbtn .o{font-weight:600}
+  .glbtn .r{font-weight:500}
+  .glres .cv{font-weight:600}
+  @media(max-width:420px){
+    .glcard{padding:10px 8px}
+    .glwho .n{font-size:13px}
+    .glwho .sc,.glwho.won .sc{font-size:11px}
+  }
 </style>
 </head>
 <body>
