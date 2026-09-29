@@ -1008,7 +1008,7 @@
        cells wrap at a capped width (pinned + any one cell always fits the scroller) */
     .card th:not(:first-child){white-space:normal}
     .cw{display:inline-block;white-space:normal;width:max-content;min-width:min-content;
-      max-width:calc(50vw - 70px);vertical-align:middle}
+      max-width:min(50vw - 50px, 100vw - 245px);vertical-align:middle}
     td:first-child > .cw{max-width:calc(50vw - 30px)}
   }
 
@@ -1083,6 +1083,14 @@
     .glwho .n{font-size:13px}
     .glwho .sc,.glwho.won .sc{font-size:11px}
   }
+
+  /* Odds futures markets (#12): SemiBold max, 11px floor, flat chips and selects */
+  .fxm-chip,.fxm-links button{border-color:transparent;background:var(--raised);font-weight:500}
+  .fxm-chip[aria-selected="true"]{background:var(--blue);color:#fff}
+  .fxm-seg button,.fxm-srctxt button,.fxm-prof{font-weight:500}
+  .fxm-sel{font-size:11px;font-weight:500}
+  .fxm-sel select{border-color:transparent;background:var(--raised)}
+  .fxm-srctxt b,.fxm-trow .mk{font-weight:600}
 </style>
 </head>
 <body>
