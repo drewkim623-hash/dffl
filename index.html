@@ -488,6 +488,7 @@
   .glpath b{color:var(--ink-2)}
   .glpath svg{flex:none;display:block}
   .glres{margin-top:6px;font-size:12px;color:var(--ink-2)}
+  .inj-tag{font-size:11px;color:var(--muted);line-height:1.35;margin:-1px 0 3px;overflow-wrap:anywhere}
   .glres .cv{font-weight:800} .glres .cv.yes{color:var(--plus)} .glres .cv.no{color:var(--red)} .glres .cv.push{color:var(--muted)}
   .glbye{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:2px 4px}
   details.gloss.glhow{margin:0 12px 12px}
@@ -520,6 +521,63 @@
   .method code{font-family:var(--mono);font-size:12.5px;background:var(--raised);border-radius:5px;padding:1px 5px;color:var(--ink)}
   .method dl{margin:0 0 13px;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
   .method dt{color:var(--muted)} .method dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* ============ futures markets — sportsbook-style browser; every rule is scoped under .fxm ============ */
+  .fxm{margin:0 0 6px;min-width:0}
+  .fxm [hidden]{display:none!important}
+  .fxm-chips{display:flex;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;margin:0 0 10px;padding:2px 1px 4px}
+  .fxm-chips::-webkit-scrollbar{display:none}
+  .fxm-chip{flex:none;font:inherit;font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap;
+    background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:7px 13px;scroll-snap-align:start;
+    transition:background .13s,color .13s}
+  .fxm-chip:hover{background:var(--hover);color:var(--ink)}
+  .fxm-chip[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+  .fxm-chip:focus-visible,.fxm-seg button:focus-visible,.fxm-sel select:focus-visible,.fxm-links button:focus-visible,
+  .fxm-prof:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .fxm-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 10px}
+  .fxm-seg{display:inline-flex;border:1px solid var(--ring);border-radius:9px;overflow:hidden;flex:none}
+  .fxm-seg button{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--surface);
+    border:0;padding:7px 11px;cursor:pointer}
+  .fxm-seg button+button{border-left:1px solid var(--ring)}
+  .fxm-seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:inset 0 -2px 0 var(--blue)}
+  .fxm-sel{display:inline-flex;align-items:center;gap:7px;min-width:0;font-size:10.5px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .fxm-sel select{font:inherit;font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);
+    background:var(--surface);border:1px solid var(--ring);border-radius:9px;padding:6px 8px;min-width:0;max-width:100%}
+  .fxm-bar [disabled],.fxm-src [disabled]{opacity:.45;cursor:default}
+  .fxm-src{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 10px}
+  .fxm-srctxt{margin:0;flex:1 1 240px;min-width:0;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .fxm-srctxt b{color:var(--ink-2);font-weight:700}
+  .fxm-lineseg button[data-line="live"][aria-pressed="true"]{color:var(--gold);box-shadow:inset 0 -2px 0 var(--gold)}
+  .fxm-srctxt button{font:inherit;font-weight:700;color:var(--blue);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+  .fxm-blurb{margin:0 0 12px;color:var(--muted);font-size:13.5px;line-height:1.55;max-width:78ch}
+  .fxm .price{border-radius:8px;background:var(--surface);min-height:42px;display:flex;flex-direction:column;justify-content:center}
+  .fxm .price .o{color:var(--blue)}
+  .fxm .price.plus .o{color:var(--plus)}
+  .fxm-th{display:flex;align-items:center;gap:10px;min-width:0}
+  .fxm-tn{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .fxm-prof{flex:none;font:inherit;font-size:12px;font-weight:700;color:var(--blue);background:transparent;
+    border:1px solid rgba(57,135,229,.45);border-radius:8px;padding:5px 9px;cursor:pointer}
+  .fxm-trow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;
+    padding:9px 15px;border-top:1px solid var(--grid)}
+  .fxm-card .bhead+.fxm-trow{border-top:0}
+  .fxm-trow .mk{font-weight:700;font-size:14.5px;display:block}
+  .fxm-trow .s{font-size:11.5px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fxm-tm{min-width:0}
+  .fxm .fxm-inj{display:block;margin-top:2px;font-size:11.5px;line-height:1.35;color:var(--red);
+    white-space:normal;overflow-wrap:anywhere}
+  .fxm-links{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:2px 0 0;font-size:12px;color:var(--muted)}
+  .fxm-links button{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer;
+    background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 12px}
+  .fxm-links button:hover{background:var(--hover);color:var(--ink)}
+  @media(max-width:560px){
+    .fxm-sel{flex:1 1 150px}
+    .fxm-sel select{flex:1;width:100%}
+    .fxm-trow.two{grid-template-columns:minmax(0,1fr)}
+    .fxm-trow.two .prices .price{flex:1;min-width:0}
+  }
+  @media(prefers-reduced-motion:reduce){.fxm-chip{transition:none}}
 
   /* ============ draft board ============ */
   .pos-dot{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:19px;
@@ -1541,13 +1599,15 @@ function liveOnce(opts) {
     const R = await raceDataOnce();
     const inj = await loadInjuries({ full: LIVE_FULL });
     const avail = availability(season, inj);
+    // One injury plan for the futures, the game lines and the live win chances.
+    const plan = injuryPlan(season, inj, model);
     const posterior = (model && model.ok) ? livePosterior(model, season) : null;
-    const board = posterior ? await liveWeekBoard(season, posterior, model.weekSd) : null;
-    const live = (model && model.ok && sim) ? liveState(model, season, R, avail, board) : null;
+    const board = posterior ? await liveWeekBoard(season, posterior, model.weekSd, plan) : null;
+    const live = (model && model.ok && sim) ? liveState(model, season, R, avail, board, null, plan) : null;
     const lsim = live ? simulateSeason(model, ODDS_SIMS, live) : null;
     window.__INJ = inj; window.__AVAIL = avail; window.__LIVE = live;
-    window.__LSIM = lsim; window.__BOARD = board;
-    return { R, inj, avail, live, lsim, model, sim, season, board };
+    window.__LSIM = lsim; window.__BOARD = board; window.__PLAN = plan;
+    return { R, inj, avail, plan, live, lsim, model, sim, season, board };
   })());
 }
 
@@ -3708,8 +3768,8 @@ function seedField(rank, divOfIdx, playoffTeams) {
  *
  * With `live` state it is the same machine started partway through — the real
  * wins and points already banked, the real fixtures still to come, each team's
- * level drawn from its posterior rather than its projection, and next week's
- * injuries taken off next week only. Both paths share every line below the
+ * level drawn from its posterior rather than its projection, and each injury
+ * taken off the weeks the injury plan charges it to. Both paths share every line below the
  * regular season, which is the point: the preseason board and the live board
  * cannot seed, bracket or price a toilet bowl differently from one another.
  */
@@ -3717,7 +3777,7 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
   if (!model || !model.ok) return null;
   const { weekSd, seasonSd, playoffTeams } = model;
   const teams = live ? live.teams : model.teams;
-  // Both paths walk [{week, pairs}] so an injury can be charged to one week.
+  // Both paths walk [{week, pairs}] so an injury can be charged to the weeks it covers.
   const slate = live ? live.weeks
     : model.sched.map((pairs, i) => ({ week: i + 1, pairs }));
   const maxWins = model.weeks || model.sched.length;
@@ -3747,7 +3807,11 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
       if (sa > sb) W[g.a]++; else W[g.b]++;
     }
     for (const wk of slate) {
-      const hit = live && wk.week === live.adjWeek ? live.mult : null;
+      // The injury plan's per-week cuts when there is one; otherwise (a rewound
+      // board, an older caller) the single next-week haircut.
+      const hit = !live ? null
+        : live.multByWeek instanceof Map ? (live.multByWeek.get(wk.week) || null)
+        : wk.week === live.adjWeek ? live.mult : null;
       const sc = lvl.map((m, i) => gau(hit ? m * hit[i] : m, weekSd));
       for (let i = 0; i < N; i++) PF[i] += sc[i];
       for (const [a, b] of wk.pairs) { if (sc[a] > sc[b]) W[a]++; else W[b]++; }
@@ -3771,8 +3835,15 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     for (const i of seeds) C.playoff[i]++;
     C.bye[seeds[0]]++; C.bye[seeds[1]]++;
 
-    const roll = i => gau(lvl[i], weekSd);
-    const duel = (a, b) => roll(a) > roll(b) ? [a, b] : [b, a];
+    // Playoff rounds are weeks pws, pws+1, pws+2; an injury plan that runs into
+    // them (a return date past the regular season, or season-ending) cuts them too.
+    const PW = live && live.pws ? live.pws : maxWins + 1;
+    const pcut = (i, r) => {
+      const m = live && live.multByWeek instanceof Map ? live.multByWeek.get(PW + r) : null;
+      return m ? m[i] : 1;
+    };
+    const roll = (i, r) => gau(lvl[i] * pcut(i, r), weekSd);
+    const duel = (a, b, r = 0) => roll(a, r) > roll(b, r) ? [a, b] : [b, a];
     const sp = new Map(seeds.map((x, i) => [x, i]));
 
     // Winners bracket, weeks 15-17. Seeds 1-2 sit out the first round.
@@ -3780,9 +3851,9 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     const [w2] = duel(seeds[3], seeds[4]);
     const low = sp.get(w1) > sp.get(w2) ? w1 : w2;
     const high = low === w1 ? w2 : w1;
-    const [f1] = duel(seeds[0], low);
-    const [f2] = duel(seeds[1], high);
-    const [champ] = duel(f1, f2);
+    const [f1] = duel(seeds[0], low, 1);
+    const [f2] = duel(seeds[1], high, 1);
+    const [champ] = duel(f1, f2, 2);
     C.title[champ]++;
 
     // The toilet bowl, as DFFL actually runs it. Seeds 7-12 by record. The four
@@ -3793,9 +3864,9 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     const L = rest.slice(wilds);
     const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
     const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
-    const [, b1] = duel(L[5], a1);          // worst seed meets one of them
-    const [, b2] = duel(L[4], a2);          // second worst meets the other
-    const [, dead] = duel(b1, b2);          // and the loser of that is twelfth
+    const [, b1] = duel(L[5], a1, 1);       // worst seed meets one of them
+    const [, b2] = duel(L[4], a2, 1);       // second worst meets the other
+    const [, dead] = duel(b1, b2, 2);       // and the loser of that is twelfth
     C.last[dead]++;
   }
   return C;
@@ -3993,6 +4064,197 @@ function availability(season, inj) {
   return out;
 }
 
+/** An ESPN return date as a local midnight, built from parts like returnLabel. */
+function injRetDate(iso) {
+  const [y, m, d] = String(iso || "").split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d);
+}
+
+/**
+ * Roughly when week `week` kicks off, taking the Sunday main slate as the week.
+ * The first unfinished week W0 is the coming Sunday (today, if today is
+ * Sunday) — unless W0 is already in flight, in which case its Sunday may be
+ * behind us: Monday and Tuesday of a live week belong to the Sunday just gone.
+ * Seven days later per week after W0. Thursday and Monday games are ignored,
+ * which is close enough to decide whether a return date lands before a week.
+ */
+function approxKickoff(week, W0, now = new Date(), inFlight = false) {
+  const d = new Date(now.getTime());
+  d.setHours(13, 0, 0, 0);
+  const day = d.getDay();
+  const toSunday = inFlight && day >= 1 && day <= 2 ? -day : (7 - day) % 7;
+  d.setDate(d.getDate() + toSunday + 7 * (week - W0));
+  return d;
+}
+
+/**
+ * Every injury, charged to the weeks it actually costs.
+ *
+ * Built on availability(): the same starters, shares and per-player loss. What
+ * it adds is how long each one lasts and how much of it the projection already
+ * knows about.
+ *
+ * weeks — from W0, the first week not yet finished (the week in flight, if any).
+ *   A starter who has already scored in the week in flight was fit at its
+ *   kickoff — typically he was hurt in that game — so his charge starts the
+ *   week after. A doubtful or questionable tag, or any status without an ESPN
+ *   return date, is charged to that one starting week only. With a date, he is
+ *   charged for every week that kicks off before it; a date more than 110 days
+ *   out (returnLabel's "rest of season") or after the championship week charges
+ *   every week left. Weeks run through the three playoff weeks, so a
+ *   season-ending injury also cuts the bracket.
+ *
+ * scale — so the cut is not counted twice. A team's level is the precision-
+ *   weighted blend of its draft prior and its finished weeks, and the weeks he
+ *   has already missed are in that blend without him. With onset = the first
+ *   finished week after the last one in which he scored (week 1 if he never
+ *   has), missed = finished weeks >= onset, n = the team's finished games:
+ *
+ *     scale = 1 - (missed / weekSd²) / (1 / seasonSd² + n / weekSd²)
+ *
+ *   i.e. the share of the projection built on weeks when he was still playing,
+ *   the draft prior counting as "with him". missed = 0 gives scale 1. This is
+ *   exact first-order because livePosterior is a plain precision blend of the
+ *   prior and every finished regular-season week, equally weighted — no
+ *   recency weighting.
+ *
+ * opts.now overrides the clock, for tests.
+ */
+function injuryPlan(season, inj, model, opts = {}) {
+  const now = opts.now instanceof Date ? opts.now : new Date();
+  const avail = availability(season, inj);
+  const lastReg = ((season && season.pws) || 15) - 1;
+  const done = [...((season && season.finalWeeks) || [])]
+    .filter(w => w <= lastReg).sort((a, b) => a - b);
+  const W0 = season && season.liveWeek ? season.liveWeek
+    : (done.length ? done[done.length - 1] + 1 : 1);
+  const post = model && model.ok ? livePosterior(model, season) : null;
+  const byRid = new Map((post || []).map(t => [t.rid, t]));
+  const wk2 = model && model.weekSd > 0 ? model.weekSd * model.weekSd : null;
+  const pp = model && model.seasonSd > 0 ? 1 / (model.seasonSd * model.seasonSd) : null;
+  const pw = (season && season.playerWeek) || new Map();
+  const ptsIn = (w, pid) => {
+    const wm = pw.get(w);
+    if (!wm) return 0;
+    return Number(wm.has(pid) ? wm.get(pid) : wm.get(String(pid))) || 0;
+  };
+  const inFlight = !!(season && season.liveWeek && season.liveWeek === W0);
+  // The bracket is part of the season: three playoff weeks from playoff_week_start.
+  const lastWeek = lastReg + 3;
+  const kick = w => approxKickoff(w, W0, now, inFlight);
+  const teams = new Map();
+  for (const [rid, a] of avail) {
+    const t = byRid.get(rid);
+    const n = t ? t.n : 0;
+    const hurt = a.hurt.map(x => {
+      const soft = x.status === "Doubtful" || x.status === "Questionable";
+      const ret = soft ? null : injRetDate(x.rec && x.rec.ret);
+      const start = inFlight && ptsIn(W0, x.pid) !== 0 ? W0 + 1 : W0;
+      let weeks = start <= lastWeek ? [start] : [], seasonEnding = false;
+      if (ret && start <= lastWeek) {
+        seasonEnding = (ret - now) / 86400000 > 110 || ret > kick(lastWeek);
+        weeks = [];
+        for (let w = start; w <= lastWeek; w++) {
+          if (seasonEnding || w === start || kick(w) < ret) weeks.push(w);
+        }
+      }
+      let last = 0;
+      for (const w of done) if (ptsIn(w, x.pid) !== 0) last = w;
+      const after = done.filter(w => w > last);
+      const onset = !last ? 1 : (after.length ? after[0] : last + 1);
+      const missed = Math.min(n, done.filter(w => w >= onset).length);
+      const scale = missed > 0 && wk2 && pp != null
+        ? Math.max(0, 1 - (missed / wk2) / (pp + n / wk2)) : 1;
+      return { ...x, start, weeks, seasonEnding, ret: ret ? x.rec.ret : null, onset, missed, scale };
+    });
+    teams.set(rid, { rid, n, basis: a.basis, starters: a.starters, hurt });
+  }
+  return { W0, lastReg, lastWeek, now, teams, avail };
+}
+
+/** The hurt starters charged to a team in a week, less anyone excluded. */
+function injuryCharged(plan, rid, week, excludePids) {
+  const t = plan && plan.teams && plan.teams.get(rid);
+  if (!t) return [];
+  const ex = excludePids ? new Set([...excludePids].map(String)) : null;
+  return t.hurt.filter(h => h.weeks.includes(week)
+    && !(ex && ex.has(String(h.pid))) && h.loss * h.scale > 0);
+}
+
+/**
+ * The in-game form of the same cut, for lineupState: pid -> loss × scale for
+ * each hurt starter charged that week. Null when there is none.
+ */
+function injuryHurtMap(plan, rid, week) {
+  const hs = injuryCharged(plan, rid, week);
+  if (!hs.length) return null;
+  return new Map(hs.map(h => [String(h.pid), h.loss * h.scale]));
+}
+
+/** What a team's injuries leave of its expected score in a given week. */
+function injuryMult(plan, rid, week, excludePids) {
+  const loss = injuryCharged(plan, rid, week, excludePids)
+    .reduce((a, h) => a + h.loss * h.scale, 0);
+  return Math.max(INJ_FLOOR, 1 - loss);
+}
+
+/** "De'Von Achane" -> "Achane", "Kenneth Walker III" -> "Walker". */
+function lastNameOf(full) {
+  const parts = String(full || "").trim().split(/\s+/).filter(Boolean);
+  while (parts.length > 1 && /^(jr\.?|sr\.?|ii|iii|iv)$/i.test(parts[parts.length - 1])) parts.pop();
+  return parts.length ? parts[parts.length - 1] : "";
+}
+
+/** Out covers every designation that means not playing. */
+function injuryWord(status) {
+  return status === "Doubtful" ? "doubtful" : status === "Questionable" ? "questionable" : "out";
+}
+
+/**
+ * "Injuries: −9% (Achane, Hall out)", from a cut and the people behind it.
+ * Null under half a percent, which is not worth a line.
+ */
+function injuryLabelText(cut, people) {
+  if (!(cut >= 0.005)) return null;
+  const by = new Map();
+  for (const p of people || []) {
+    const w = injuryWord(p.status);
+    if (!by.has(w)) by.set(w, []);
+    by.get(w).push(p.name);
+  }
+  const detail = ["out", "doubtful", "questionable"].filter(w => by.has(w))
+    .map(w => `${by.get(w).join(", ")} ${w}`).join(", ");
+  const p = cut * 100;
+  const pct = `−${p < 1 ? p.toFixed(1) : Math.round(p)}%`;
+  return {
+    cut, pct, detail, names: (people || []).map(x => x.name),
+    text: `Injuries: ${pct}${detail ? ` (${detail})` : ""}`,
+  };
+}
+
+function injuryName(h) {
+  return lastNameOf((h.rec && h.rec.n) || (injPlayer(h.pid) || {}).n || String(h.pid));
+}
+
+/** A team's injury cut in a week, labelled; null when there is none worth saying. */
+function injuryLabel(plan, rid, week, excludePids) {
+  const hs = injuryCharged(plan, rid, week, excludePids);
+  if (!hs.length) return null;
+  return injuryLabelText(1 - injuryMult(plan, rid, week, excludePids),
+    hs.map(h => ({ name: injuryName(h), status: h.status })));
+}
+
+/** " · Injuries: −9% next week (Achane, Hall out)" for a futures row, or "". */
+function injuryFuturesNote(plan, rid, week) {
+  const lab = injuryLabel(plan, rid, week);
+  if (!lab) return "";
+  const hs = injuryCharged(plan, rid, week);
+  const n = Math.max(...hs.map(h => h.weeks.filter(w => w >= week).length));
+  const span = hs.some(h => h.seasonEnding) ? "rest of season" : n > 1 ? `for ${n} weeks` : "next week";
+  return ` · Injuries: ${lab.pct} ${span}${lab.detail ? ` (${lab.detail})` : ""}`;
+}
+
 /**
  * The preseason projection, updated by what has actually been scored.
  *
@@ -4061,7 +4323,7 @@ function weeksOf(upcoming, idx) {
  * Returns null before the season has produced anything to update on, which is
  * the signal to keep posting the preseason board.
  */
-function liveState(model, season, R, avail, board, throughWeek = null) {
+function liveState(model, season, R, avail, board, throughWeek = null, plan = null) {
   if (!model || !model.ok || !R) return null;
   const teams = livePosterior(model, season, throughWeek);
   if (!teams) return null;
@@ -4094,15 +4356,30 @@ function liveState(model, season, R, avail, board, throughWeek = null) {
   // Nothing banked and nothing in flight means there is nothing to reprice from.
   if (!played && !pending.length) return null;
   if (!weeks.length && !pending.length) return null;
-  // Injuries are known for the week about to be played and nowhere else. A
-  // hamstring in week 3 says nothing about week 11, so the haircut is applied to
-  // the next week only and every week after it is simulated healthy.
+  // The single next-week haircut, kept for callers without an injury plan.
   const mult = teams.map(t => {
     const a = avail && avail.get(t.rid);
     return a ? a.mult : 1;
   });
+  // With an injury plan, each remaining week carries its own cut: through an
+  // ESPN return date, or to the end for a season-ending one. Weeks nobody is
+  // charged for are left out and simulated healthy.
+  let multByWeek = null;
+  if (plan) {
+    multByWeek = new Map();
+    for (const wk of weeks) {
+      const m = teams.map(t => injuryMult(plan, t.rid, wk.week));
+      if (m.some(x => x < 1)) multByWeek.set(wk.week, m);
+    }
+    // The bracket weeks too, which simulateSeason plays from lvl.
+    for (let w = (season.pws || 15); w <= (season.pws || 15) + 2; w++) {
+      const m = teams.map(t => injuryMult(plan, t.rid, w));
+      if (m.some(x => x < 1)) multByWeek.set(w, m);
+    }
+  }
   return {
-    teams, idx, W0, PF0, weeks, mult, pending, liveWeek: liveWk, throughWeek,
+    teams, idx, W0, PF0, weeks, mult, multByWeek, plan, pending, liveWeek: liveWk, throughWeek,
+    pws: season.pws || 15,
     // Injuries bite on the next week nobody has started. A week already in
     // flight is priced off who has actually played, not off a status.
     adjWeek: weeks.length ? weeks[0].week : null,
@@ -4305,11 +4582,22 @@ function slotShares() {
  * its lineup still to play; the spread is week-to-week noise scaled by the root
  * of that same share, so a lineup with nothing left has no uncertainty and a
  * lineup with everything left has all of it.
+ *
+ * `hurt` (optional) maps pid -> that starter's cut from the injury plan, in
+ * team terms: loss × scale, where loss = share × (1 − avail) × (1 − REPLACEMENT).
+ * So a ruled-out starter brings 55% of his share, the bench man's, and a
+ * doubtful or questionable one keeps his INJ_AVAIL weight. While his game has
+ * not started, that cut comes off the expected score as mu × cut. Using the
+ * plan's own number — shares, shrink and all — is what makes the line at
+ * kickoff, with the whole lineup still to play, exactly the pregame line
+ * (mu × injuryMult). The expectation never drops below INJ_FLOOR of the healthy
+ * remainder, and the spread stays on the real share left, since the replacement
+ * is still playing.
  */
-function lineupState(starters, points, mu, weekSd, rostered, games, shares) {
+function lineupState(starters, points, mu, weekSd, rostered, games, shares, hurt = null) {
   const rows = (starters || []).filter(p => p && p !== "0");
-  let left = 0, unknown = 0;
-  const detail = [];
+  let left = 0, cut = 0, unknown = 0;
+  const detail = [], hurtLeft = [];
   rows.forEach((pid, i) => {
     const rec = rostered.map.get(String(pid));
     const club = rec && rec.t ? rec.t : null;
@@ -4320,14 +4608,22 @@ function lineupState(starters, points, mu, weekSd, rostered, games, shares) {
     if (!g && club) unknown++;
     const w = shares && shares[i] != null ? shares[i] : (1 / rows.length);
     left += w * rem;
+    const c = hurt ? hurt.get(String(pid)) : undefined;
+    const benched = c != null && c > 0 && rem >= 0.999;
+    if (benched) { cut += c; hurtLeft.push(String(pid)); }
     detail.push({ pid, name: rec ? rec.n : String(pid), pos: rec ? rec.p : "",
       club, rem, weight: w, state: g ? g.state : "none" });
   });
   const frac = Math.max(0, Math.min(1, left));
+  const effFrac = Math.max(0, frac - cut);
+  const healthy = points + mu * frac;
+  const expected = hurtLeft.length
+    ? Math.max(points + mu * effFrac, points + mu * frac * INJ_FLOOR) : healthy;
   return {
     scored: points,
-    frac,
-    expected: points + mu * frac,
+    frac, effFrac, hurtLeft,
+    injCut: healthy > 0 ? 1 - expected / healthy : 0,
+    expected,
     sd: weekSd * Math.sqrt(frac),
     toPlay: detail.filter(d => d.rem >= 0.999).length,
     inPlay: detail.filter(d => d.rem > 0.001 && d.rem < 0.999).length,
@@ -4349,13 +4645,26 @@ function liveWinProb(A, B) {
  * Returns null when there is no live week, which is the normal state from
  * Tuesday to Thursday and all through the off-season.
  */
-async function liveWeekBoard(season, teams, weekSd) {
+async function liveWeekBoard(season, teams, weekSd, plan) {
   const wk = season.liveWeek;
   if (!wk || !(season.live || []).length) return null;
   const [rostered, games] = await Promise.all([loadRostered(), loadNflGames()]);
   if (!games.ok || !rostered.map.size) {
     return { week: wk, ok: false, why: !games.ok ? "no-espn" : "no-rosters", games: [], at: Date.now() };
   }
+  // A caller that did not bring the injury plan gets one built from the cheap feed.
+  if (plan === undefined) {
+    try { plan = injuryPlan(season, await loadInjuries(), window.__ODDS); } catch (e) { plan = null; }
+  }
+  const hurtOf = rid => injuryHurtMap(plan, rid, wk);
+  // The in-game cut, naming only the hurt starters whose game is still to come.
+  const labelOf = (rid, S) => {
+    const t = plan && plan.teams.get(rid);
+    if (!t || !S.hurtLeft.length) return null;
+    const people = S.hurtLeft.map(pid => t.hurt.find(h => String(h.pid) === pid)).filter(Boolean)
+      .map(h => ({ name: injuryName(h), status: h.status }));
+    return injuryLabelText(S.injCut, people);
+  };
   const shares = slotShares();
   const byRid = new Map(teams.map(t => [t.rid, t]));
   const starters = new Map((season.rosters || []).map(r => [r.roster_id, r.starters || []]));
@@ -4363,8 +4672,10 @@ async function liveWeekBoard(season, teams, weekSd) {
   for (const g of season.live) {
     const ta = byRid.get(g.a.rid), tb = byRid.get(g.b.rid);
     if (!ta || !tb) continue;
-    const A = lineupState(starters.get(g.a.rid), g.a.pts, ta.mean, weekSd, rostered, games, shares);
-    const B = lineupState(starters.get(g.b.rid), g.b.pts, tb.mean, weekSd, rostered, games, shares);
+    const A = lineupState(starters.get(g.a.rid), g.a.pts, ta.mean, weekSd, rostered, games, shares, hurtOf(g.a.rid));
+    const B = lineupState(starters.get(g.b.rid), g.b.pts, tb.mean, weekSd, rostered, games, shares, hurtOf(g.b.rid));
+    A.inj = labelOf(g.a.rid, A);
+    B.inj = labelOf(g.b.rid, B);
     const p = liveWinProb(A, B);
     rows.push({
       week: wk, a: g.a, b: g.b, A, B, pA: p, pB: 1 - p,
@@ -4675,18 +4986,21 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
   const openPlay = new Map(priceBinary(T.map((t, i) => ({ uid: t.uid, p: sim.playoff[i] / o })))
     .map(r => [r.uid, { p: r.p, price: r.price }]));
 
+  // The cut on the next simulated week, and how long it runs.
+  const injNote = r => live.plan && live.adjWeek != null
+    ? injuryFuturesNote(live.plan, T[r.i].rid, live.adjWeek) : "";
   const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.title[i] / n }))
     .sort((a, b) => b.p - a.p));
   host.appendChild(liveBoard("To win the DFFL championship",
     esc(updatedAt(live.at || Date.now())), title, openTitle,
-    r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins`));
+    r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins${injNote(r)}`));
 
   // Six of twelve make it, so this is twelve yes/no books, not one race.
   const play = priceBinary(T.map((t, i) => ({ uid: t.uid, i, p: lsim.playoff[i] / n }))
     .sort((a, b) => b.p - a.p));
   host.appendChild(liveBoard("To make the playoffs",
     `six of twelve · ${updatedAt(live.at || Date.now(), "updated")}`, play, openPlay,
-    r => `${f1(lsim.wins[r.i] / n)} projected wins`));
+    r => `${f1(lsim.wins[r.i] / n)} projected wins${injNote(r)}`));
 
   // Every other market, now priced off the same simulation rather than off the
   // draft-day line it used to be stuck on.
@@ -4701,12 +5015,16 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
        points. The draft-day projection carries ±${f1(model.seasonSd)}. The board is the
        precision-weighted blend of the two, which is why one big Sunday barely moves a price and
        six of them move it a long way.</p>
-    <p><b>Injuries are charged to one week only.</b> A starter ruled out costs his team
+    <p><b>Injuries are charged for as long as they last.</b> A starter ruled out costs his team
        ${((1 - REPLACEMENT) * 100).toFixed(0)}% of his share of the lineup — not all of it, because
        somebody comes off the bench and scores. Questionable is priced at
        ${(INJ_AVAIL.Questionable * 100).toFixed(0)}% availability, doubtful at
-       ${(INJ_AVAIL.Doubtful * 100).toFixed(0)}%. Nothing is assumed about the week after: a
-       hamstring today says nothing about November, so every later week is simulated healthy.</p>
+       ${(INJ_AVAIL.Doubtful * 100).toFixed(0)}%. With no return date the cut is for one week only.
+       When ESPN gives a return date, every week that kicks off before it is cut; a season-ending
+       injury is cut for the rest of the season, playoffs included. The cut shrinks as weeks played without
+       him are finished, because those weeks are already in the team's average and would
+       otherwise be counted twice. During a game, a ruled-out starter whose game has not
+       started counts as ${(REPLACEMENT * 100).toFixed(0)}% of his slot.</p>
     <p><b>Still not known:</b> who gets claimed off waivers, who gets traded, and which bench
        player is about to become a starter.</p>`;
   host.appendChild(meth);
@@ -4917,17 +5235,20 @@ async function ensureLiveOdds() {
     if (!live || !lsim) {
       renderLiveWaiting(host, R, inj, avail, board);
       document.body.dataset.liveReady = "waiting";
+      fxmLive("waiting");
       return;
     }
     LIVE_NOW = { live, lsim, inj, avail, board, R };
     renderLive(host, model, sim, live, lsim, inj, avail, board, R);
     document.body.dataset.liveReady = "1";
+    fxmLive("ready");
     startLivePolling();
   } catch (e) {
     host.innerHTML = "";
     host.appendChild(el("div", "empty",
       `<b>Couldn't reprice the board</b>${esc(e.message)}<br>The opening line below still stands.`));
     document.body.dataset.liveReady = "error";
+    fxmLive("error");
     console.error(e);
   }
 }
@@ -5066,7 +5387,7 @@ function pathHTML(pts, uid) {
  * The week's matchups with a pregame and a current line each. The week in flight
  * if there is one, otherwise the next week on the schedule, otherwise nothing.
  */
-function gameLinesData(R, hist) {
+function gameLinesData(R, hist, plan = window.__PLAN) {
   const model = window.__ODDS, season = DB.seasons[0];
   const out = { week: null, status: "none", games: [], byes: [], at: Date.now() };
   if (!season) return out;
@@ -5093,13 +5414,20 @@ function gameLinesData(R, hist) {
   if (board) out.at = board.at;
   // Pregame sd = √(weekSd² + levelSd²): week-to-week noise plus uncertainty in the
   // team's level, the same per-game spread the futures sim draws from.
-  const pre = t => t && isFinite(t.mean) && weekSd > 0
-    ? { expected: t.mean, sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
+  // The level is cut by that week's injuries. Anyone who has already scored this
+  // week was available at kickoff, so an injury suffered during the game does not
+  // rewrite the opener after the fact.
+  const wm = (season.playerWeek && season.playerWeek.get(out.week)) || new Map();
+  const excl = new Set([...wm].filter(([, v]) => Number(v) !== 0).map(([pid]) => String(pid)));
+  const cutOf = rid => plan ? injuryMult(plan, rid, out.week, excl) : 1;
+  const preLabel = rid => plan ? injuryLabel(plan, rid, out.week, excl) : null;
+  const pre = (t, rid) => t && isFinite(t.mean) && weekSd > 0
+    ? { expected: t.mean * cutOf(rid), sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
   const played = new Set();
   for (const g of pairs) {
     played.add(g.a.rid); played.add(g.b.rid);
     const bg = board ? board.games.find(x => x.a.rid === g.a.rid && x.b.rid === g.b.rid) : null;
-    const A0 = pre(byRid.get(g.a.rid)), B0 = pre(byRid.get(g.b.rid));
+    const A0 = pre(byRid.get(g.a.rid), g.a.rid), B0 = pre(byRid.get(g.b.rid), g.b.rid);
     const open = A0 && B0 ? gameLine(A0, B0) : null;
     const now = bg ? gameLine(bg.A, bg.B) : open;
     const aPts = bg ? bg.A.scored : (g.a.pts || 0), bPts = bg ? bg.B.scored : (g.b.pts || 0);
@@ -5107,8 +5435,12 @@ function gameLinesData(R, hist) {
     const settled = !!(bg && bg.settled);
     const path = linePath(hist, season.season, out.week, g.a.uid, g.b.uid,
       now ? now.pA : null, board ? board.at : Date.now(), started, open ? open.pA : null);
+    // Once the game is under way the card shows the live cut (hurt starters still
+    // to play); before that, the pregame one. Copies, so season.live is untouched.
+    const a = { ...g.a, inj: bg && started ? (bg.A.inj || null) : preLabel(g.a.rid) };
+    const b = { ...g.b, inj: bg && started ? (bg.B.inj || null) : preLabel(g.b.rid) };
     out.games.push({
-      a: g.a, b: g.b, aPts, bPts, open, now, settled, started, path,
+      a, b, aPts, bPts, open, now, settled, started, path,
       cover: settled && open ? coverResult(open.spread, aPts - bPts) : null,
     });
   }
@@ -5143,7 +5475,7 @@ function gameCardHTML(g) {
       ${cell("ml", null, null, L && !done ? L.ml[i] : null, mlExtra)}
       ${cell("total", S ? `${i ? "U" : "O"} ${S.total.toFixed(1)}` : "—", S ? S.total : null,
         done ? null : S && S.totalPrice, done ? " " : "")}
-    </div>`;
+    </div>${side.inj && !g.settled ? `<div class="inj-tag" data-inj="${side.rid}" data-cut="${side.inj.cut.toFixed(4)}">${esc(side.inj.text)}</div>` : ""}`;
   };
   const status = state === "final" ? "Final" : state === "decided" ? "Decided"
     : state === "live" ? `<span class="live">Live</span>` : state === "upcoming" ? "Upcoming" : "—";
@@ -5193,7 +5525,8 @@ function paintGameLines(data) {
     <p>Nothing new is modelled. Before kickoff each lineup is expected to score its team's weekly
       level on the power model (through last week), with a spread of √(weekSd² + levelSd²): the model's
       week-to-week noise of ±${f1((window.__ODDS || {}).weekSd || 0)} pts plus how unsure it still is of the
-      team's level — the same per-game spread the futures simulation uses. Once games start it's what's already scored plus that level times the share of the lineup still to play,
+      team's level — the same per-game spread the futures simulation uses. That level is cut for the
+      week's injuries, the same cut the futures use, and the cut is printed under the team. Once games start it's what's already scored plus that level times the share of the lineup still to play,
       and the spread shrinks with the square root of that share — the same numbers as the live board below.</p>
     <p><b>Money:</b> win chance <code>Φ((expA − expB) / √(sdA² + sdB²))</code>, a ${(ODDS_HOLD * 100).toFixed(0)}%
       hold added across both sides, rounded to the prices a book posts.
@@ -5230,6 +5563,336 @@ async function ensureGameLines() {
   paint();
   onLive(paint);
   document.body.dataset.linesReady = "1";
+}
+
+/**
+ * The futures, laid out like a sportsbook's futures page: a row of market chips,
+ * one clean list of teams per market, sort / division / team controls, and a
+ * Live / Opening switch.
+ *
+ * Presentation only. Each line is one simulateSeason run read through the same
+ * priceMarket / winTotals / priceTile the boards always used: Opening is the
+ * draft-day SIM, Live is LIVE_NOW.lsim, the very run the live board below is
+ * drawn from, so the two can never disagree. Division filtering hides rows; it
+ * never re-prices a market.
+ */
+const FXM_VIEWS = new Set();
+/** The live board hands every futures view its line: "ready", "waiting" or "error". */
+function fxmLive(status) {
+  for (const v of FXM_VIEWS) {
+    if (v.root.isConnected) v.setLive(status === "ready" ? LIVE_NOW : null, status);
+    else FXM_VIEWS.delete(v);
+  }
+}
+
+function futuresMarkets(model, sim) {
+  const T = model.teams;
+  const all = T.map((t, i) => i);
+  const divs = [...model.divNames.keys()].sort((a, b) => a - b);
+  const byDiv = d => all.filter(i => T[i].div === d);
+  const pc = x => `${(x * 100).toFixed(0)}%`;
+
+  const CHIPS = [
+    { id: "title", chip: "Championship",
+      blurb: "Every price carries a 6% hold, the way a real book's does. The small figure under each price is the model's own probability, with the vig taken back out — the number a sportsbook keeps to itself." },
+    { id: "divWin", chip: "Division winners", grid: true,
+      blurb: "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board." },
+    { id: "playoff", chip: "Make playoffs", two: true,
+      blurb: "Six of twelve get in: the three division winners take seeds 1-3, then the best three records left over. Priced both ways — every manager has a yes and a no." },
+    { id: "bye", chip: "First-round bye", two: true,
+      blurb: "Seeds 1 and 2 sit out the first playoff round. Priced both ways off the same simulated seasons, the same way as the playoff market." },
+    { id: "wins", chip: "Win totals", two: true,
+      blurb: "Fourteen games. Each line sits where the simulation is closest to a coin flip, always on the half-win so there's no push. Sorting by odds orders this market by projected wins." },
+    { id: "divLast", chip: "Division cellar", grid: true,
+      blurb: "To finish last in your own division, on regular-season record." },
+    { id: "last", chip: "Last place",
+      blurb: "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it." },
+  ];
+
+  // Every market for one line, read off one simulation's counts.
+  const boardsFor = (S, kind, stamp, LV) => {
+    const n = S.sims;
+    // The live board's own injury note, on the Live line's championship and
+    // playoff rows only — the opening line knows nothing about injuries.
+    const inj = i => kind === "live" && LV && LV.plan && LV.adjWeek != null
+      ? injuryFuturesNote(LV.plan, T[i].rid, LV.adjWeek) : "";
+    const proj = i => `projects ${f1(S.wins[i] / n)} wins`;
+    // One winner from the field: priced as a race, exactly as the opening and
+    // live boards price it (priceMarket over the field, marketHold for the hold).
+    const race = (title, sub, ids, key, note, div, injured) => {
+      const priced = priceMarket(ids.map(i => ({ uid: T[i].uid, i, p: S[key][i] / n })));
+      return { title, sub, div, hold: `Hold ${(marketHold(priced) * 100).toFixed(1)}%`,
+        rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i), inj: injured ? inj(r.i) : "" })) };
+    };
+    // A yes/no book holds on each runner separately: the label is marketHold's
+    // average two-way overround, exactly as the live board's playoff board posts it.
+    const twoWayHold = rows => `Hold ${(marketHold(rows.map(r =>
+      ({ postedP: r.prices[0].postedP, noPostedP: r.prices[1].postedP }))) * 100).toFixed(1)}%`;
+    // Every manager is his own yes/no book, as the playoff board always priced it.
+    const yesNo = (title, sub, key, note, injured) => {
+      const rows = all.map(i => {
+        const p = S[key][i] / n;
+        return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i), inj: injured ? inj(i) : "" };
+      });
+      return { title, sub, hold: twoWayHold(rows), rows };
+    };
+    const lineSub = kind === "live" ? `live line · ${stamp}` : `opening line · ${n.toLocaleString()} simulations`;
+    return {
+      title: [race("To win the DFFL championship", `${model.season} season · ${lineSub}`,
+        all, "title", i => `Makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`, undefined, true)],
+      divWin: divs.map(d => race(`${model.divNames.get(d)} — to win`, `division title · ${lineSub}`, byDiv(d), "divWin", proj, d)),
+      playoff: [yesNo("Playoff qualification", `yes / no · six of twelve qualify · ${lineSub}`, "playoff",
+        i => `wins the division ${pc(S.divWin[i] / n)} · first-round bye ${pc(S.bye[i] / n)}`, true)],
+      bye: [yesNo("First-round bye", `yes / no · the top two seeds skip round one · ${lineSub}`, "bye",
+        i => `makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
+      wins: [(() => {
+        const rows = winTotals(model, S).map(w => {
+          const L = w.line.toFixed(1);
+          return { i: w.i, key: w.avg, prices: priceMarket([{ p: w.pOver }, { p: w.pUnder }]),
+            labels: [`Over ${L}`, `Under ${L}`], note: `line ${L} · projects ${f1(w.avg)} wins` };
+        });
+        return { title: "Regular-season wins", sub: `over / under · ${model.weeks} games · ${lineSub}`, hold: twoWayHold(rows), rows };
+      })()],
+      divLast: divs.map(d => race(`${model.divNames.get(d)} — to finish last`, `within the division · ${lineSub}`, byDiv(d), "divLast", proj, d)),
+      last: [race("To finish 12th", `loser of the consolation elimination game · ${lineSub}`, all, "last", proj)],
+    };
+  };
+
+  const st = { line: "opening", market: "title", sort: "odds", div: "", team: "" };
+  const lines = { opening: null, live: null };
+  let liveStatus = "pending", liveInfo = null;
+  const root = el("div", "fxm");
+  root.id = "fxmMarkets";
+  const tiles = r => r.prices.map((x, k) => priceTile(x, r.labels[k])).join("");
+
+  const src = el("div", "fxm-src");
+  src.innerHTML = `<div class="fxm-seg fxm-lineseg" role="group" aria-label="Price line">
+      <button type="button" data-line="live">Live</button><button type="button" data-line="opening">Opening</button></div>
+    <p class="fxm-srctxt"></p>`;
+  root.appendChild(src);
+  const lineBtns = [...src.querySelectorAll("[data-line]")], srcTxt = src.querySelector(".fxm-srctxt");
+
+  const chips = el("div", "fxm-chips");
+  chips.setAttribute("role", "tablist");
+  chips.setAttribute("aria-label", "Futures markets");
+  chips.innerHTML = CHIPS.map(m =>
+    `<button type="button" class="fxm-chip" role="tab" data-market="${m.id}">${esc(m.chip)}</button>`).join("");
+  root.appendChild(chips);
+
+  const byName = all.slice().sort((a, b) => nameOf(T[a].uid).localeCompare(nameOf(T[b].uid)));
+  const bar = el("div", "fxm-bar");
+  bar.innerHTML = `<div class="fxm-seg" role="group" aria-label="Sort">
+      <button type="button" data-sort="odds">Best odds</button><button type="button" data-sort="name">Name</button></div>
+    <label class="fxm-sel">Division<select data-fxm="div"><option value="">All</option>${divs.map(d =>
+      `<option value="${d}">${esc(model.divNames.get(d))}</option>`).join("")}</select></label>
+    <label class="fxm-sel">Team<select data-fxm="team"><option value="">All teams</option>${byName.map(i =>
+      `<option value="${esc(T[i].uid)}">${esc(nameOf(T[i].uid))}</option>`).join("")}</select></label>`;
+  root.appendChild(bar);
+  const divSel = bar.querySelector('[data-fxm="div"]'), teamSel = bar.querySelector('[data-fxm="team"]');
+  const sortBtns = [...bar.querySelectorAll("[data-sort]")];
+
+  const blurb = el("p", "fxm-blurb");
+  root.appendChild(blurb);
+  const linesHost = el("div", "fxm-lines");
+  root.appendChild(linesHost);
+
+  // One line's worth of market lists. Both lines stay in the page so switching
+  // between them is instant and every control keeps its state.
+  const makeLine = (kind, S, stamp, LV) => {
+    const view = el("div", "fxm-line-view");
+    view.dataset.line = kind;
+    const B = boardsFor(S, kind, stamp, LV), secs = {};
+    for (const m of CHIPS) {
+      const sec = el("div", "fxm-mkt");
+      sec.dataset.market = m.id;
+      const wrap = m.grid ? el("div", "bgrid") : sec;
+      for (const bd of B[m.id]) {
+        bd.el = el("div", "board");
+        // The opening boards keep the name the rest of the tab (and verify) knows them by.
+        bd.el.dataset.board = kind === "live" ? "fxm-live" : "opening";
+        if (bd.div != null) bd.el.dataset.div = bd.div;
+        bd.el.innerHTML = `<div class="bhead">
+          <span class="bt">${esc(bd.title)}<span class="bs">${esc(bd.sub)}</span></span>
+          <span class="hold">${bd.hold}</span></div>`;
+        bd.items = bd.rows.map(r => {
+          const uid = T[r.i].uid, row = el("button", `orow fxm-row${m.two ? " two" : ""}`);
+          row.type = "button";
+          Object.assign(row.dataset, { uid, div: T[r.i].div, key: r.key, name: nameOf(uid), price: r.prices[0].price });
+          row.innerHTML = `<span class="rk"></span>${avatarHTML(uid, "sm avcell")}
+            <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
+            ${m.two ? `<span class="prices">${tiles(r)}</span>` : tiles(r)}`;
+          row.title = `All of ${nameOf(uid)}'s prices`;
+          row.onclick = () => { st.team = uid; apply(); };
+          return { r, row, name: nameOf(uid) };
+        });
+        wrap.appendChild(bd.el);
+      }
+      if (m.grid) sec.appendChild(wrap);
+      view.appendChild(sec);
+      secs[m.id] = { sec, boards: B[m.id] };
+    }
+    return { kind, S, view, secs };
+  };
+  lines.opening = makeLine("opening", sim);
+  linesHost.appendChild(lines.opening.view);
+
+  const quirk = el("div", "method fxm-quirk");
+  quirk.innerHTML = `<h3>How last place is decided</h3>
+    <p>The six teams that miss the playoffs go into a toilet bowl, and it runs backwards: you advance by
+       losing. The four best of them play the first round, and the two that lose it carry on. The two
+       worst records sit that round out and enter next, already one defeat from the final — and losing
+       the final is twelfth.</p>
+    <p>So the bottom of this league is played for rather than awarded, and the seeding pushes the worst
+       two teams towards it rather than away. It has landed on the worst record in the league twice in
+       four seasons, and on a middling one twice.</p>`;
+  root.appendChild(quirk);
+
+  const teamHost = el("div", "fxm-teamhost");
+  root.appendChild(teamHost);
+
+  const links = el("div", "fxm-links");
+  links.innerHTML = `<span>Also on this board:</span>
+    <button type="button" data-jump="liveHost">Live board</button>
+    <button type="button" data-jump="fxmNotice">House notice</button>
+    <button type="button" data-jump="fxmHow">How it's priced</button>`;
+  root.appendChild(links);
+  root.addEventListener("click", e => {
+    const b = e.target.closest("button[data-jump]");
+    const t = b && document.getElementById(b.dataset.jump);
+    if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  const paintTeam = uid => {
+    const i = T.findIndex(t => t.uid === uid), L = lines[st.line];
+    teamHost.innerHTML = "";
+    if (i < 0 || !L) return;
+    const n = L.S.sims;
+    const card = el("div", "board fxm-card");
+    card.dataset.uid = uid;
+    card.dataset.line = st.line;
+    card.innerHTML = `<div class="bhead"><span class="bt fxm-th">${avatarHTML(uid, "sm")}
+      <span class="fxm-tn">${esc(nameOf(uid))}<span class="bs">${esc(model.divNames.get(T[i].div))} · projects ${f1(L.S.wins[i] / n)} wins · ${st.line === "live" ? "live" : "opening"} line</span></span></span>
+      <button type="button" class="fxm-prof">Profile</button></div>`;
+    card.querySelector(".fxm-prof").onclick = () => openProfile(uid);
+    for (const m of CHIPS) {
+      for (const bd of L.secs[m.id].boards) {
+        const r = bd.rows.find(x => x.i === i);
+        if (!r) continue;
+        const row = el("div", `fxm-trow${m.two ? " two" : ""}`);
+        row.dataset.market = m.id;
+        row.innerHTML = `<span class="fxm-tm"><span class="mk">${esc(m.chip)}</span><span class="s">${esc(bd.title)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
+          <span class="prices">${tiles(r)}</span>`;
+        card.appendChild(row);
+      }
+    }
+    teamHost.appendChild(card);
+  };
+
+  const srcText = () => {
+    if (st.line === "live" && liveInfo) {
+      const d = liveInfo.decided, left = liveInfo.remaining + (liveInfo.pending || []).length;
+      return `<b>Live line</b> · repriced off ${d} finished game${d === 1 ? "" : "s"} with ${left} still to play —
+        the same prices as the <button type="button" data-jump="liveHost">live board</button>.
+        ${esc(updatedAt(liveInfo.at || Date.now()))}.`;
+    }
+    const why = { pending: "Live prices are on their way.",
+      waiting: "There's no live line to show yet, so this is the only one.",
+      error: "The live line couldn't be priced, so this is the only one.",
+      ready: "Switch to Live for the prices that move with the season." }[liveStatus] || "";
+    return `<b>Opening line</b> · priced when the draft finished and not moved by results since. ${why}`;
+  };
+
+  function apply() {
+    const cmp = st.sort === "name"
+      ? (a, b) => a.name.localeCompare(b.name) || b.r.key - a.r.key
+      : (a, b) => b.r.key - a.r.key || a.name.localeCompare(b.name);
+    for (const L of Object.values(lines)) {
+      if (!L) continue;
+      L.view.hidden = L.kind !== st.line;
+      for (const m of CHIPS) {
+        const { sec, boards } = L.secs[m.id];
+        sec.hidden = !!st.team || m.id !== st.market;
+        for (const bd of boards) {
+          bd.items.sort(cmp).forEach(it => bd.el.appendChild(it.row));
+          let k = 0;
+          for (const it of bd.items) {
+            const show = !st.div || String(T[it.r.i].div) === st.div;
+            it.row.hidden = !show;
+            // A rank only means something when the list is in price order.
+            if (show) { k++; it.row.querySelector(".rk").textContent = st.sort === "odds" ? k : ""; }
+          }
+          bd.el.hidden = k === 0;
+        }
+      }
+    }
+    quirk.hidden = !!st.team || st.market !== "last";
+    for (const c of chips.children) c.setAttribute("aria-selected", String(!st.team && c.dataset.market === st.market));
+    for (const b of sortBtns) { b.setAttribute("aria-pressed", String(b.dataset.sort === st.sort)); b.disabled = !!st.team; }
+    for (const b of lineBtns) {
+      b.setAttribute("aria-pressed", String(b.dataset.line === st.line));
+      b.disabled = b.dataset.line === "live" && !lines.live;
+    }
+    lineBtns[0].title = lines.live ? "" : "The live line isn't available yet";
+    srcTxt.innerHTML = srcText();
+    divSel.value = st.div; divSel.disabled = !!st.team;
+    teamSel.value = st.team;
+    teamHost.hidden = !st.team;
+    if (st.team) paintTeam(st.team);
+    const m = CHIPS.find(x => x.id === st.market);
+    blurb.textContent = st.team
+      ? `Every market, one manager. Pick a market above or "All teams" to go back to the full lists.`
+      : m.blurb;
+    Object.assign(root.dataset, { line: st.line, market: st.market, sort: st.sort, div: st.div, team: st.team, live: liveStatus });
+  }
+
+  // A new live line (first arrival, or a poll that repriced it) swaps in its
+  // lists and leaves every control, and the reader's scroll, where it was.
+  function setLive(N, status) {
+    if (status) liveStatus = status;
+    if (N && N.lsim && (!lines.live || lines.live.S !== N.lsim)) {
+      const y = window.scrollY, first = !lines.live;
+      liveInfo = N.live || null;
+      const fresh = makeLine("live", N.lsim, updatedAt((N.live && N.live.at) || Date.now()), N.live);
+      if (lines.live) lines.live.view.replaceWith(fresh.view); else linesHost.appendChild(fresh.view);
+      lines.live = fresh;
+      liveStatus = "ready";
+      // Live leads once it exists: the first arrival switches to it on its own.
+      if (first) st.line = "live";
+      apply();
+      if (window.scrollY !== y) window.scrollTo(0, y);
+      return;
+    }
+    apply();
+  }
+
+  chips.addEventListener("click", e => {
+    const c = e.target.closest(".fxm-chip");
+    if (!c) return;
+    st.market = c.dataset.market; st.team = "";
+    apply();
+  });
+  bar.addEventListener("click", e => {
+    const b = e.target.closest("[data-sort]");
+    if (!b || b.disabled) return;
+    st.sort = b.dataset.sort;
+    apply();
+  });
+  src.addEventListener("click", e => {
+    const b = e.target.closest("[data-line]");
+    if (!b || b.disabled) return;
+    st.line = b.dataset.line;
+    apply();
+  });
+  divSel.onchange = () => { st.div = divSel.value; apply(); };
+  teamSel.onchange = () => { st.team = teamSel.value; apply(); };
+
+  const view = { root, setLive, state: () => ({ ...st, liveStatus }) };
+  root._fxm = view;
+  FXM_VIEWS.add(view);
+  // Polls re-read the live board's own line, so the two stay in step.
+  onLive(() => { if (root.isConnected && LIVE_NOW) setLive(LIVE_NOW); });
+  if (LIVE_NOW) setLive(LIVE_NOW, "ready"); else apply();
+  return root;
 }
 
 function panelOdds(model, sim) {
@@ -5277,9 +5940,8 @@ function panelOdds(model, sim) {
   // remaining schedule and the injury feed, neither of which should hold up the
   // first paint of the whole site.
   const liveHost = el("div"); liveHost.id = "liveHost";
-  p.appendChild(liveHost);
 
-  const notice = el("div", "notice");
+  const notice = el("div", "notice"); notice.id = "fxmNotice";
   notice.innerHTML = `<div class="nt">House notice</div>
     <p><b>These are not real betting lines.</b> No sportsbook offers markets on a
        twelve-man friend league, nothing here is accepting a wager, and every price
@@ -5299,9 +5961,10 @@ function panelOdds(model, sim) {
     <p><b>It is pre-draft.</b> DFFL re-drafts every season and carries only three keepers
        forward, so most of what decides the year still hasn't happened.</p>
     <p>Read this as a prior on the managers, not a projection of the season.</p>`}`;
-  p.appendChild(notice);
 
   if (!model || !model.ok || !sim) {
+    p.appendChild(liveHost);
+    p.appendChild(notice);
     p.appendChild(el("div", "empty",
       `<b>No board today</b>The simulation only prices the format it has been checked
        against — twelve teams, three divisions, six playoff teams, a fourteen-week
@@ -5310,18 +5973,13 @@ function panelOdds(model, sim) {
     return p;
   }
 
-  const T = model.teams, n = sim.sims;
-  const nm = i => nameOf(T[i].uid);
-  const idxByDiv = d => T.map((t, i) => i).filter(i => T[i].div === d);
-  const divs = [...model.divNames.keys()].sort((a, b) => a - b);
+  const n = sim.sims;
 
-  /* ---- championship ---- */
-  p.appendChild(sechead("Championship",
-    "Every price carries a 6% hold, the way a real book's does. The small figure under each price is the model's own probability, with the vig taken back out — the number a sportsbook keeps to itself."));
-  const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: sim.title[i] / n }))
-    .sort((a, b) => b.p - a.p));
-  p.appendChild(oddsBoard("To win the DFFL championship", `${model.season} season · ${n.toLocaleString()} simulations`,
-    title, r => `Makes the playoffs ${(sim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(sim.wins[r.i] / n)} wins`));
+  // A sportsbook's futures page first: every season market as chips and lists.
+  // The live board and the house notice follow it, moved below rather than removed.
+  p.appendChild(futuresMarkets(model, sim));
+  p.appendChild(liveHost);
+  p.appendChild(notice);
 
   /* ---- what the draft did (only once there is a draft) ---- */
   if (post) {
@@ -5363,91 +6021,9 @@ function panelOdds(model, sim) {
     }
   }
 
-  /* ---- make / miss the playoffs ---- */
-  p.appendChild(sechead("To make the playoffs",
-    "Six of twelve get in: the three division winners take seeds 1-3, then the best three records left over. Priced both ways — every manager has a yes and a no."));
-  const pb = el("div", "board");
-  pb.innerHTML = `<div class="bhead"><span class="bt">Playoff qualification
-    <span class="bs">yes / no · six of twelve qualify</span></span>
-    <span class="hold">Hold ${(ODDS_HOLD * 100).toFixed(1)}%</span></div>`;
-  T.map((t, i) => ({ uid: t.uid, i, p: sim.playoff[i] / n }))
-    .sort((a, b) => b.p - a.p)
-    .forEach((w, i) => {
-      const [yes, no] = priceMarket([{ p: w.p }, { p: 1 - w.p }]);
-      const btn = el("button", "orow two");
-      btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(w.uid, "sm avcell")}
-        <span class="who"><span class="n">${esc(nameOf(w.uid))}</span>
-        <span class="s">wins the division ${(sim.divWin[w.i] / n * 100).toFixed(0)}% · first-round bye ${(sim.bye[w.i] / n * 100).toFixed(0)}%</span></span>
-        <span class="prices">${priceTile(yes, "Yes")}${priceTile(no, "No")}</span>`;
-      btn.onclick = () => openProfile(w.uid);
-      pb.appendChild(btn);
-    });
-  p.appendChild(pb);
-
-  /* ---- division winners ---- */
-  p.appendChild(sechead("Division winners",
-    "Four-team divisions, and the three winners take the top three playoff seeds. A soft division is worth more than a good record — which is why these prices don't line up with the title board."));
-  const dw = el("div", "bgrid");
-  for (const d of divs) {
-    const rows = priceMarket(idxByDiv(d).map(i => ({ uid: T[i].uid, i, p: sim.divWin[i] / n }))
-      .sort((a, b) => b.p - a.p));
-    dw.appendChild(oddsBoard(`${model.divNames.get(d)} — to win`, "division title",
-      rows, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
-  }
-  p.appendChild(dw);
-
-  /* ---- division cellar ---- */
-  p.appendChild(sechead("Division cellar",
-    "To finish last in your own division, on regular-season record."));
-  const dl = el("div", "bgrid");
-  for (const d of divs) {
-    const rows = priceMarket(idxByDiv(d).map(i => ({ uid: T[i].uid, i, p: sim.divLast[i] / n }))
-      .sort((a, b) => b.p - a.p));
-    dl.appendChild(oddsBoard(`${model.divNames.get(d)} — to finish last`, "within the division",
-      rows, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
-  }
-  p.appendChild(dl);
-
-  /* ---- last overall ---- */
-  p.appendChild(sechead("Last place overall",
-    "Twelfth is settled in the consolation bracket, not the standings — and Sleeper builds that bracket so the two worst records in the league are never in it."));
-  const last = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: sim.last[i] / n }))
-    .sort((a, b) => b.p - a.p));
-  p.appendChild(oddsBoard("To finish 12th", "loser of the consolation elimination game",
-    last, r => `projects ${f1(sim.wins[r.i] / n)} wins`));
-  const quirk = el("div", "method");
-  quirk.innerHTML = `<h3>How last place is decided</h3>
-    <p>The six teams that miss the playoffs go into a toilet bowl, and it runs backwards: you advance by
-       losing. The four best of them play the first round, and the two that lose it carry on. The two
-       worst records sit that round out and enter next, already one defeat from the final — and losing
-       the final is twelfth.</p>
-    <p>So the bottom of this league is played for rather than awarded, and the seeding pushes the worst
-       two teams towards it rather than away. It has landed on the worst record in the league twice in
-       four seasons, and on a middling one twice.</p>`
-  p.appendChild(quirk);
-
-  /* ---- win totals ---- */
-  p.appendChild(sechead("Season win totals",
-    `Fourteen games. Each line sits where the simulation is closest to a coin flip, always on the half-win so there's no push.`));
-  const wt = el("div", "board");
-  wt.innerHTML = `<div class="bhead"><span class="bt">Regular-season wins
-    <span class="bs">over / under · ${model.weeks} games</span></span>
-    <span class="hold">Hold ${(ODDS_HOLD * 100).toFixed(1)}%</span></div>`;
-  const totals = winTotals(model, sim).sort((a, b) => b.avg - a.avg);
-  totals.forEach((w, i) => {
-    const [over, under] = priceMarket([{ p: w.pOver }, { p: w.pUnder }]);
-    const btn = el("button", "orow two");
-    btn.innerHTML = `<span class="rk">${i + 1}</span>${avatarHTML(w.uid, "sm avcell")}
-      <span class="who"><span class="n">${esc(nameOf(w.uid))}</span>
-      <span class="s">line ${w.line.toFixed(1)} · projects ${f1(w.avg)} wins</span></span>
-      <span class="prices">${priceTile(over, `Over ${w.line.toFixed(1)}`)}${priceTile(under, `Under ${w.line.toFixed(1)}`)}</span>`;
-    btn.onclick = () => openProfile(w.uid);
-    wt.appendChild(btn);
-  });
-  p.appendChild(wt);
-
   /* ---- methodology ---- */
-  p.appendChild(sechead("How the board is priced"));
+  const how = sechead("How the board is priced"); how.id = "fxmHow";
+  p.appendChild(how);
   const m = el("div", "method");
   const yrs = `${model.seasons[0]}–${model.seasons[model.seasons.length - 1]}`;
   m.innerHTML = `
@@ -7485,6 +8061,7 @@ async function boot() {
       DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,
+      fmtOdds, futuresMarkets, liveNow: () => LIVE_NOW,
       ODDS_HOLD, ODDS_SIMS, panelOdds, loadADP, adpValue, adpKey, rosterValue,
       ADP_CURVE, W_ROSTER, W_HIST_POST, SHOCK_PRE, SHOCK_POST,
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
@@ -7497,6 +8074,8 @@ async function boot() {
       weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
       injuryDetail, returnLabel,
+      injuryPlan, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
+      approxKickoff, lastNameOf, gameCardHTML,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
