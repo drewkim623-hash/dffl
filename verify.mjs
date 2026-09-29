@@ -2905,6 +2905,182 @@ if (sealed.liveGames === 0) {
 }
 check("wins and losses still balance league-wide", sealed.winsBalance);
 
+/* ------------------------------------------------------------------------
+ * The injury plan: one set of cuts, shared by the futures, the game lines and
+ * the live win chances. Everything here runs on a synthetic two-team league
+ * and a fixed clock, so it means the same thing in September and December.
+ * ---------------------------------------------------------------------- */
+group("Injuries are charged for as long as they last");
+
+const injPlan = await page.evaluate(() => {
+  const D = window.__DFFL;
+  // Friday 2 October 2026, noon local: the coming Sunday is 4 October.
+  const now = new Date(2026, 9, 2, 12, 0, 0);
+  const iso = days => {
+    const x = new Date(now.getTime() + days * 86400000);
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+  };
+  const model = { ok: true, weekSd: 30, seasonSd: 15, teams: [{ rid: 1, mean: 100 }, { rid: 2, mean: 100 }] };
+  const four = ["a1", "a2", "a3", "a4"], ten = Array.from({ length: 10 }, (_, i) => "a" + (i + 1));
+  const other = ["b1", "b2", "b3", "b4"];
+  // done: finished weeks; pts: pid -> points per finished week (default 20).
+  const mkSeason = (st, done = [], pts = {}) => {
+    const playerWeek = new Map();
+    done.forEach((w, i) => {
+      const wm = new Map();
+      for (const pid of [...st, ...other]) wm.set(pid, pid in pts ? pts[pid][i] : 20);
+      playerWeek.set(w, wm);
+    });
+    return {
+      pws: 15, liveWeek: null,
+      rosters: [{ roster_id: 1, starters: st }, { roster_id: 2, starters: other }],
+      finalWeeks: new Set(done), playerWeek,
+      games: done.map(w => ({ week: w, playoff: false, a: { rid: 1, pts: 100 }, b: { rid: 2, pts: 100 } })),
+    };
+  };
+  const inj = rows => ({ map: new Map(Object.entries(rows)), at: now.getTime(), source: "test" });
+  const P = (season, rows) => D.injuryPlan(season, inj(rows), model, { now });
+  const H = (plan, pid) => plan.teams.get(1).hurt.find(h => h.pid === pid);
+  const gap = 1 - D.REPLACEMENT;
+
+  // 1. One starter out, no return date: next week only.
+  const p1 = P(mkSeason(four), { a1: { s: "Out", n: "De'Von Achane" } });
+  const h1 = H(p1, "a1");
+  // 2. Back in ten days: Sunday 4 Oct and Sunday 11 Oct kick off before 12 Oct.
+  const p2 = P(mkSeason(four), { a1: { s: "Out", n: "X", ret: iso(10) } });
+  const p2b = P(mkSeason(four), { a1: { s: "IR", n: "X", ret: iso(1) } });
+  const pNoRet = P(mkSeason(four), { a1: { s: "IR", n: "X" } });
+  const pQ = P(mkSeason(four), { a1: { s: "Questionable", n: "X", ret: iso(30) } });
+  // 3. Season-ending: ESPN dates it to next February.
+  const p3 = P(mkSeason(four), { a1: { s: "IR", n: "X", ret: "2027-02-15" } });
+  const h3 = H(p3, "a1");
+  // 4. Out for the last two of three finished weeks, against one who played them all.
+  const s4 = mkSeason(four, [1, 2, 3], { a1: [20, 0, 0] });
+  const p4 = P(s4, { a1: { s: "Out", n: "X" } });
+  const h4 = H(p4, "a1");
+  const p4h = P(mkSeason(four, [1, 2, 3]), { a1: { s: "Out", n: "X" } });
+  const h4h = H(p4h, "a1");
+  const pp = 1 / (15 * 15), op = 1 / (30 * 30);
+  // 5. The whole lineup out.
+  const p5 = P(mkSeason(four), Object.fromEntries(four.map(p => [p, { s: "Out", n: p }])));
+
+  // 7. The label, on a ten-man lineup so each starter is a tenth of it.
+  const lab = D.injuryLabel(P(mkSeason(ten), {
+    a1: { s: "Out", n: "De'Von Achane" }, a2: { s: "IR", n: "Breece Hall" } }), 1, 1);
+  const labMix = D.injuryLabel(P(mkSeason(ten), {
+    a1: { s: "Out", n: "De'Von Achane" }, a2: { s: "Doubtful", n: "Jaylen Smith Jr." } }), 1, 1);
+  const labQ = D.injuryLabel(P(mkSeason(ten), { a1: { s: "Questionable", n: "Travis Kelce" } }), 1, 1);
+  const T = window.__ODDS.teams;
+  const line = D.gameLine({ expected: 100 * (1 - lab.cut), sd: 30 }, { expected: 95, sd: 30 });
+  const html = D.gameCardHTML({
+    a: { rid: 1, uid: T[0].uid, pts: 0, inj: lab }, b: { rid: 2, uid: T[1].uid, pts: 0, inj: null },
+    aPts: 0, bPts: 0, open: line, now: line, settled: false, started: false, path: [], cover: null,
+  });
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const tags = [...div.querySelectorAll('[data-card="gameline"] .inj-tag')];
+
+  // 6. In-game: a ruled-out starter whose game has not started.
+  const rostered = { map: new Map(["q1", "q2", "q3", "q4"].map(p => [p, { n: p, p: "WR", t: "AAA" }])) };
+  const pre = { byTeam: new Map([["AAA", { rem: 1, state: "pre_game" }]]) };
+  const fin = { byTeam: new Map([["AAA", { rem: 0, state: "complete" }]]) };
+  const even = [0.25, 0.25, 0.25, 0.25], lu = ["q1", "q2", "q3", "q4"];
+  const L = (games, pts, hurt) => D.lineupState(lu, pts, 100, 30, rostered, games, even, hurt);
+  const healthy = L(pre, 0), outL = L(pre, 0, new Map([["q1", 0]]));
+  const qL = L(pre, 0, new Map([["q1", D.INJ_AVAIL.Questionable]]));
+  const allOutL = L(pre, 0, new Map(lu.map(p => [p, 0])));
+  const playedL = L(fin, 50, new Map([["q1", 0]]));
+
+  // 8. A week in flight: a1 scored in it before getting hurt, a2 has not played yet.
+  const s8 = mkSeason(four, [1, 2, 3]);
+  s8.liveWeek = 4;
+  s8.playerWeek.set(4, new Map([["a1", 3.5], ["a2", 0], ["a3", 11], ["a4", 0]]));
+  // Monday 5 October: week 4's Sunday was yesterday, so a date of Sunday 11 Oct
+  // is after week 4 kicked off but not after week 5 — he misses week 4 only.
+  const mon = new Date(2026, 9, 5, 20, 0, 0);
+  const p8 = D.injuryPlan(s8, inj({ a1: { s: "Out", n: "X" }, a2: { s: "Out", n: "Y", ret: "2026-10-11" } }), model, { now: mon });
+  const flight = { W0: p8.W0, a1: H(p8, "a1").weeks, a2: H(p8, "a2").weeks };
+
+  return {
+    gap, floor: D.INJ_FLOOR, flight,
+    one: { W0: p1.W0, weeks: h1.weeks, share: h1.share, scale: h1.scale,
+      m1: D.injuryMult(p1, 1, 1), m2: D.injuryMult(p1, 1, 2), other: D.injuryMult(p1, 2, 1),
+      excluded: D.injuryMult(p1, 1, 1, ["a1"]), note: D.injuryFuturesNote(p1, 1, 1) },
+    ret: { weeks: H(p2, "a1").weeks, m1: D.injuryMult(p2, 1, 1), m2: D.injuryMult(p2, 1, 2),
+      m3: D.injuryMult(p2, 1, 3), note: D.injuryFuturesNote(p2, 1, 1),
+      tomorrow: H(p2b, "a1").weeks, noRet: H(pNoRet, "a1").weeks, questionable: H(pQ, "a1").weeks },
+    end: { weeks: h3.weeks, lastReg: p3.lastReg, seasonEnding: h3.seasonEnding,
+      mLast: D.injuryMult(p3, 1, p3.lastReg), mPost: D.injuryMult(p3, 1, p3.lastReg + 1),
+      note: D.injuryFuturesNote(p3, 1, 1) },
+    shrink: { W0: p4.W0, onset: h4.onset, missed: h4.missed, scale: h4.scale, loss: h4.loss,
+      cut: 1 - D.injuryMult(p4, 1, p4.W0), expect: 1 - (2 * op) / (pp + 3 * op),
+      healthyMissed: h4h.missed, healthyScale: h4h.scale, healthyLoss: h4h.loss,
+      healthyCut: 1 - D.injuryMult(p4h, 1, p4h.W0) },
+    floorMult: D.injuryMult(p5, 1, 1), floorRaw: 1 - four.length * 0.25 * gap,
+    live: { healthy: healthy.expected, out: outL.expected, q: qL.expected, allOut: allOutL.expected,
+      sdSame: healthy.sd === outL.sd, played: playedL.expected, playedHealthy: L(fin, 50).expected,
+      hurtLeft: outL.hurtLeft, injCut: outL.injCut },
+    label: { text: lab && lab.text, cut: lab && lab.cut, names: lab && lab.names,
+      mix: labMix && labMix.text, q: labQ && labQ.text,
+      small: (D.injuryLabelText(0.0072, [{ name: "Kelce", status: "Questionable" }]) || {}).text,
+      tiny: D.injuryLabelText(0.004, [{ name: "Kelce", status: "Questionable" }]),
+      suffix: D.lastNameOf("Kenneth Walker III") },
+    card: { tags: tags.length, text: tags[0] && tags[0].textContent.trim(),
+      rid: tags[0] && tags[0].dataset.inj },
+  };
+});
+const IP = injPlan;
+check("an Out starter cuts his team by share × 0.45 in the next week",
+  IP.one.W0 === 1 && near(IP.one.m1, 1 - IP.one.share * IP.gap, 1e-12) && near(1 - IP.one.m1, 0.25 * 0.45, 1e-12),
+  `${IP.one.m1} (share ${IP.one.share})`);
+check("with no return date, the week after is uncut and the other team untouched",
+  IP.one.m2 === 1 && IP.one.other === 1 && JSON.stringify(IP.one.weeks) === "[1]", JSON.stringify(IP.one));
+check("a starter who has already played this week is not charged", IP.one.excluded === 1);
+check("a starter hurt in the game in flight is charged from next week, one still to play from this week",
+  IP.flight.W0 === 4 && JSON.stringify(IP.flight.a1) === "[5]" && JSON.stringify(IP.flight.a2) === "[4]",
+  JSON.stringify(IP.flight));
+check("a return date 10 days out charges the two weeks that kick off before it",
+  JSON.stringify(IP.ret.weeks) === "[1,2]" && IP.ret.m1 < 1 && IP.ret.m2 < 1, JSON.stringify(IP.ret.weeks));
+check("and not the week after it expires", IP.ret.m3 === 1, `${IP.ret.m3}`);
+check("a return date is always charged at least the next week", JSON.stringify(IP.ret.tomorrow) === "[1]",
+  JSON.stringify(IP.ret.tomorrow));
+check("no return date, or a questionable tag, is next week only",
+  JSON.stringify(IP.ret.noRet) === "[1]" && JSON.stringify(IP.ret.questionable) === "[1]",
+  `${JSON.stringify(IP.ret.noRet)} / ${JSON.stringify(IP.ret.questionable)}`);
+check("a season-ending date carries the cut through the last regular-season week",
+  IP.end.seasonEnding && IP.end.weeks.length === IP.end.lastReg && IP.end.weeks[IP.end.weeks.length - 1] === IP.end.lastReg
+    && IP.end.mLast < 1 && IP.end.mPost === 1, `${IP.end.weeks.length} weeks, last ${IP.end.mLast}`);
+check("the futures note says how long",
+  /next week \(Achane out\)$/.test(IP.one.note) && /for 2 weeks/.test(IP.ret.note) && /rest of season/.test(IP.end.note),
+  `${IP.one.note} | ${IP.ret.note} | ${IP.end.note}`);
+check("weeks already missed are counted from the first finished week he did not score",
+  IP.shrink.W0 === 4 && IP.shrink.onset === 2 && IP.shrink.missed === 2, JSON.stringify(IP.shrink));
+check("the cut shrinks by the share of the average built without him",
+  IP.shrink.scale < 1 && near(IP.shrink.scale, IP.shrink.expect, 1e-12)
+    && near(IP.shrink.cut, IP.shrink.loss * IP.shrink.scale, 1e-12) && IP.shrink.cut < IP.shrink.loss,
+  `scale ${IP.shrink.scale} vs ${IP.shrink.expect}`);
+check("with no weeks missed the cut is not shrunk",
+  IP.shrink.healthyMissed === 0 && IP.shrink.healthyScale === 1 && near(IP.shrink.healthyCut, IP.shrink.healthyLoss, 1e-12),
+  JSON.stringify(IP.shrink));
+check("the 0.80 floor holds with the whole lineup out",
+  IP.floorRaw < IP.floor && IP.floorMult === IP.floor, `${IP.floorMult}`);
+check("in-game, an Out starter still to play is 55% of his slot",
+  near(IP.live.healthy - IP.live.out, 100 * 0.25 * IP.gap, 1e-9) && IP.live.sdSame
+    && JSON.stringify(IP.live.hurtLeft) === '["q1"]', `${IP.live.healthy} → ${IP.live.out}`);
+check("a questionable one keeps his availability weight",
+  near(IP.live.healthy - IP.live.q, 100 * 0.25 * (1 - 0.75) * IP.gap, 1e-9), `${IP.live.q}`);
+check("the in-game cut respects the floor", near(IP.live.allOut, 100 * IP.floor, 1e-9), `${IP.live.allOut}`);
+check("once his game is over, the injury changes nothing", IP.live.played === IP.live.playedHealthy && IP.live.played === 50);
+check("the label reads like a book's",
+  IP.label.text === "Injuries: −9% (Achane, Hall out)", IP.label.text);
+check("statuses are grouped and suffixes dropped",
+  IP.label.mix === "Injuries: −8% (Achane out, Smith doubtful)" && IP.label.q === "Injuries: −1% (Kelce questionable)"
+    && IP.label.suffix === "Walker", `${IP.label.mix} | ${IP.label.q} | ${IP.label.suffix}`);
+check("under 1% gets a decimal, under half a percent gets nothing",
+  IP.label.small === "Injuries: −0.7% (Kelce questionable)" && IP.label.tiny === null, `${IP.label.small}`);
+check("a game-line card with a label carries an .inj-tag",
+  IP.card.tags === 1 && IP.card.text === IP.label.text && IP.card.rid === "1", JSON.stringify(IP.card));
+
 group("The front page leads with this season");
 
 const home = await page.evaluate(() => {
