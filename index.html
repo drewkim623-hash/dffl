@@ -488,6 +488,7 @@
   .glpath b{color:var(--ink-2)}
   .glpath svg{flex:none;display:block}
   .glres{margin-top:6px;font-size:12px;color:var(--ink-2)}
+  .inj-tag{font-size:11px;color:var(--muted);line-height:1.35;margin:-1px 0 3px;overflow-wrap:anywhere}
   .glres .cv{font-weight:800} .glres .cv.yes{color:var(--plus)} .glres .cv.no{color:var(--red)} .glres .cv.push{color:var(--muted)}
   .glbye{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:2px 4px}
   details.gloss.glhow{margin:0 12px 12px}
@@ -1596,13 +1597,15 @@ function liveOnce(opts) {
     const R = await raceDataOnce();
     const inj = await loadInjuries({ full: LIVE_FULL });
     const avail = availability(season, inj);
+    // One injury plan for the futures, the game lines and the live win chances.
+    const plan = injuryPlan(season, inj, model);
     const posterior = (model && model.ok) ? livePosterior(model, season) : null;
-    const board = posterior ? await liveWeekBoard(season, posterior, model.weekSd) : null;
-    const live = (model && model.ok && sim) ? liveState(model, season, R, avail, board) : null;
+    const board = posterior ? await liveWeekBoard(season, posterior, model.weekSd, plan) : null;
+    const live = (model && model.ok && sim) ? liveState(model, season, R, avail, board, null, plan) : null;
     const lsim = live ? simulateSeason(model, ODDS_SIMS, live) : null;
     window.__INJ = inj; window.__AVAIL = avail; window.__LIVE = live;
-    window.__LSIM = lsim; window.__BOARD = board;
-    return { R, inj, avail, live, lsim, model, sim, season, board };
+    window.__LSIM = lsim; window.__BOARD = board; window.__PLAN = plan;
+    return { R, inj, avail, plan, live, lsim, model, sim, season, board };
   })());
 }
 
@@ -3745,8 +3748,8 @@ function seedField(rank, divOfIdx, playoffTeams) {
  *
  * With `live` state it is the same machine started partway through — the real
  * wins and points already banked, the real fixtures still to come, each team's
- * level drawn from its posterior rather than its projection, and next week's
- * injuries taken off next week only. Both paths share every line below the
+ * level drawn from its posterior rather than its projection, and each injury
+ * taken off the weeks the injury plan charges it to. Both paths share every line below the
  * regular season, which is the point: the preseason board and the live board
  * cannot seed, bracket or price a toilet bowl differently from one another.
  */
@@ -3754,7 +3757,7 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
   if (!model || !model.ok) return null;
   const { weekSd, seasonSd, playoffTeams } = model;
   const teams = live ? live.teams : model.teams;
-  // Both paths walk [{week, pairs}] so an injury can be charged to one week.
+  // Both paths walk [{week, pairs}] so an injury can be charged to the weeks it covers.
   const slate = live ? live.weeks
     : model.sched.map((pairs, i) => ({ week: i + 1, pairs }));
   const maxWins = model.weeks || model.sched.length;
@@ -3784,7 +3787,11 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
       if (sa > sb) W[g.a]++; else W[g.b]++;
     }
     for (const wk of slate) {
-      const hit = live && wk.week === live.adjWeek ? live.mult : null;
+      // The injury plan's per-week cuts when there is one; otherwise (a rewound
+      // board, an older caller) the single next-week haircut.
+      const hit = !live ? null
+        : live.multByWeek instanceof Map ? (live.multByWeek.get(wk.week) || null)
+        : wk.week === live.adjWeek ? live.mult : null;
       const sc = lvl.map((m, i) => gau(hit ? m * hit[i] : m, weekSd));
       for (let i = 0; i < N; i++) PF[i] += sc[i];
       for (const [a, b] of wk.pairs) { if (sc[a] > sc[b]) W[a]++; else W[b]++; }
@@ -3808,8 +3815,15 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     for (const i of seeds) C.playoff[i]++;
     C.bye[seeds[0]]++; C.bye[seeds[1]]++;
 
-    const roll = i => gau(lvl[i], weekSd);
-    const duel = (a, b) => roll(a) > roll(b) ? [a, b] : [b, a];
+    // Playoff rounds are weeks pws, pws+1, pws+2; an injury plan that runs into
+    // them (a return date past the regular season, or season-ending) cuts them too.
+    const PW = live && live.pws ? live.pws : maxWins + 1;
+    const pcut = (i, r) => {
+      const m = live && live.multByWeek instanceof Map ? live.multByWeek.get(PW + r) : null;
+      return m ? m[i] : 1;
+    };
+    const roll = (i, r) => gau(lvl[i] * pcut(i, r), weekSd);
+    const duel = (a, b, r = 0) => roll(a, r) > roll(b, r) ? [a, b] : [b, a];
     const sp = new Map(seeds.map((x, i) => [x, i]));
 
     // Winners bracket, weeks 15-17. Seeds 1-2 sit out the first round.
@@ -3817,9 +3831,9 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     const [w2] = duel(seeds[3], seeds[4]);
     const low = sp.get(w1) > sp.get(w2) ? w1 : w2;
     const high = low === w1 ? w2 : w1;
-    const [f1] = duel(seeds[0], low);
-    const [f2] = duel(seeds[1], high);
-    const [champ] = duel(f1, f2);
+    const [f1] = duel(seeds[0], low, 1);
+    const [f2] = duel(seeds[1], high, 1);
+    const [champ] = duel(f1, f2, 2);
     C.title[champ]++;
 
     // The toilet bowl, as DFFL actually runs it. Seeds 7-12 by record. The four
@@ -3830,9 +3844,9 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null) {
     const L = rest.slice(wilds);
     const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
     const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
-    const [, b1] = duel(L[5], a1);          // worst seed meets one of them
-    const [, b2] = duel(L[4], a2);          // second worst meets the other
-    const [, dead] = duel(b1, b2);          // and the loser of that is twelfth
+    const [, b1] = duel(L[5], a1, 1);       // worst seed meets one of them
+    const [, b2] = duel(L[4], a2, 1);       // second worst meets the other
+    const [, dead] = duel(b1, b2, 2);       // and the loser of that is twelfth
     C.last[dead]++;
   }
   return C;
@@ -4030,6 +4044,197 @@ function availability(season, inj) {
   return out;
 }
 
+/** An ESPN return date as a local midnight, built from parts like returnLabel. */
+function injRetDate(iso) {
+  const [y, m, d] = String(iso || "").split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d);
+}
+
+/**
+ * Roughly when week `week` kicks off, taking the Sunday main slate as the week.
+ * The first unfinished week W0 is the coming Sunday (today, if today is
+ * Sunday) — unless W0 is already in flight, in which case its Sunday may be
+ * behind us: Monday and Tuesday of a live week belong to the Sunday just gone.
+ * Seven days later per week after W0. Thursday and Monday games are ignored,
+ * which is close enough to decide whether a return date lands before a week.
+ */
+function approxKickoff(week, W0, now = new Date(), inFlight = false) {
+  const d = new Date(now.getTime());
+  d.setHours(13, 0, 0, 0);
+  const day = d.getDay();
+  const toSunday = inFlight && day >= 1 && day <= 2 ? -day : (7 - day) % 7;
+  d.setDate(d.getDate() + toSunday + 7 * (week - W0));
+  return d;
+}
+
+/**
+ * Every injury, charged to the weeks it actually costs.
+ *
+ * Built on availability(): the same starters, shares and per-player loss. What
+ * it adds is how long each one lasts and how much of it the projection already
+ * knows about.
+ *
+ * weeks — from W0, the first week not yet finished (the week in flight, if any).
+ *   A starter who has already scored in the week in flight was fit at its
+ *   kickoff — typically he was hurt in that game — so his charge starts the
+ *   week after. A doubtful or questionable tag, or any status without an ESPN
+ *   return date, is charged to that one starting week only. With a date, he is
+ *   charged for every week that kicks off before it; a date more than 110 days
+ *   out (returnLabel's "rest of season") or after the championship week charges
+ *   every week left. Weeks run through the three playoff weeks, so a
+ *   season-ending injury also cuts the bracket.
+ *
+ * scale — so the cut is not counted twice. A team's level is the precision-
+ *   weighted blend of its draft prior and its finished weeks, and the weeks he
+ *   has already missed are in that blend without him. With onset = the first
+ *   finished week after the last one in which he scored (week 1 if he never
+ *   has), missed = finished weeks >= onset, n = the team's finished games:
+ *
+ *     scale = 1 - (missed / weekSd²) / (1 / seasonSd² + n / weekSd²)
+ *
+ *   i.e. the share of the projection built on weeks when he was still playing,
+ *   the draft prior counting as "with him". missed = 0 gives scale 1. This is
+ *   exact first-order because livePosterior is a plain precision blend of the
+ *   prior and every finished regular-season week, equally weighted — no
+ *   recency weighting.
+ *
+ * opts.now overrides the clock, for tests.
+ */
+function injuryPlan(season, inj, model, opts = {}) {
+  const now = opts.now instanceof Date ? opts.now : new Date();
+  const avail = availability(season, inj);
+  const lastReg = ((season && season.pws) || 15) - 1;
+  const done = [...((season && season.finalWeeks) || [])]
+    .filter(w => w <= lastReg).sort((a, b) => a - b);
+  const W0 = season && season.liveWeek ? season.liveWeek
+    : (done.length ? done[done.length - 1] + 1 : 1);
+  const post = model && model.ok ? livePosterior(model, season) : null;
+  const byRid = new Map((post || []).map(t => [t.rid, t]));
+  const wk2 = model && model.weekSd > 0 ? model.weekSd * model.weekSd : null;
+  const pp = model && model.seasonSd > 0 ? 1 / (model.seasonSd * model.seasonSd) : null;
+  const pw = (season && season.playerWeek) || new Map();
+  const ptsIn = (w, pid) => {
+    const wm = pw.get(w);
+    if (!wm) return 0;
+    return Number(wm.has(pid) ? wm.get(pid) : wm.get(String(pid))) || 0;
+  };
+  const inFlight = !!(season && season.liveWeek && season.liveWeek === W0);
+  // The bracket is part of the season: three playoff weeks from playoff_week_start.
+  const lastWeek = lastReg + 3;
+  const kick = w => approxKickoff(w, W0, now, inFlight);
+  const teams = new Map();
+  for (const [rid, a] of avail) {
+    const t = byRid.get(rid);
+    const n = t ? t.n : 0;
+    const hurt = a.hurt.map(x => {
+      const soft = x.status === "Doubtful" || x.status === "Questionable";
+      const ret = soft ? null : injRetDate(x.rec && x.rec.ret);
+      const start = inFlight && ptsIn(W0, x.pid) !== 0 ? W0 + 1 : W0;
+      let weeks = start <= lastWeek ? [start] : [], seasonEnding = false;
+      if (ret && start <= lastWeek) {
+        seasonEnding = (ret - now) / 86400000 > 110 || ret > kick(lastWeek);
+        weeks = [];
+        for (let w = start; w <= lastWeek; w++) {
+          if (seasonEnding || w === start || kick(w) < ret) weeks.push(w);
+        }
+      }
+      let last = 0;
+      for (const w of done) if (ptsIn(w, x.pid) !== 0) last = w;
+      const after = done.filter(w => w > last);
+      const onset = !last ? 1 : (after.length ? after[0] : last + 1);
+      const missed = Math.min(n, done.filter(w => w >= onset).length);
+      const scale = missed > 0 && wk2 && pp != null
+        ? Math.max(0, 1 - (missed / wk2) / (pp + n / wk2)) : 1;
+      return { ...x, start, weeks, seasonEnding, ret: ret ? x.rec.ret : null, onset, missed, scale };
+    });
+    teams.set(rid, { rid, n, basis: a.basis, starters: a.starters, hurt });
+  }
+  return { W0, lastReg, lastWeek, now, teams, avail };
+}
+
+/** The hurt starters charged to a team in a week, less anyone excluded. */
+function injuryCharged(plan, rid, week, excludePids) {
+  const t = plan && plan.teams && plan.teams.get(rid);
+  if (!t) return [];
+  const ex = excludePids ? new Set([...excludePids].map(String)) : null;
+  return t.hurt.filter(h => h.weeks.includes(week)
+    && !(ex && ex.has(String(h.pid))) && h.loss * h.scale > 0);
+}
+
+/**
+ * The in-game form of the same cut, for lineupState: pid -> loss × scale for
+ * each hurt starter charged that week. Null when there is none.
+ */
+function injuryHurtMap(plan, rid, week) {
+  const hs = injuryCharged(plan, rid, week);
+  if (!hs.length) return null;
+  return new Map(hs.map(h => [String(h.pid), h.loss * h.scale]));
+}
+
+/** What a team's injuries leave of its expected score in a given week. */
+function injuryMult(plan, rid, week, excludePids) {
+  const loss = injuryCharged(plan, rid, week, excludePids)
+    .reduce((a, h) => a + h.loss * h.scale, 0);
+  return Math.max(INJ_FLOOR, 1 - loss);
+}
+
+/** "De'Von Achane" -> "Achane", "Kenneth Walker III" -> "Walker". */
+function lastNameOf(full) {
+  const parts = String(full || "").trim().split(/\s+/).filter(Boolean);
+  while (parts.length > 1 && /^(jr\.?|sr\.?|ii|iii|iv)$/i.test(parts[parts.length - 1])) parts.pop();
+  return parts.length ? parts[parts.length - 1] : "";
+}
+
+/** Out covers every designation that means not playing. */
+function injuryWord(status) {
+  return status === "Doubtful" ? "doubtful" : status === "Questionable" ? "questionable" : "out";
+}
+
+/**
+ * "Injuries: −9% (Achane, Hall out)", from a cut and the people behind it.
+ * Null under half a percent, which is not worth a line.
+ */
+function injuryLabelText(cut, people) {
+  if (!(cut >= 0.005)) return null;
+  const by = new Map();
+  for (const p of people || []) {
+    const w = injuryWord(p.status);
+    if (!by.has(w)) by.set(w, []);
+    by.get(w).push(p.name);
+  }
+  const detail = ["out", "doubtful", "questionable"].filter(w => by.has(w))
+    .map(w => `${by.get(w).join(", ")} ${w}`).join(", ");
+  const p = cut * 100;
+  const pct = `−${p < 1 ? p.toFixed(1) : Math.round(p)}%`;
+  return {
+    cut, pct, detail, names: (people || []).map(x => x.name),
+    text: `Injuries: ${pct}${detail ? ` (${detail})` : ""}`,
+  };
+}
+
+function injuryName(h) {
+  return lastNameOf((h.rec && h.rec.n) || (injPlayer(h.pid) || {}).n || String(h.pid));
+}
+
+/** A team's injury cut in a week, labelled; null when there is none worth saying. */
+function injuryLabel(plan, rid, week, excludePids) {
+  const hs = injuryCharged(plan, rid, week, excludePids);
+  if (!hs.length) return null;
+  return injuryLabelText(1 - injuryMult(plan, rid, week, excludePids),
+    hs.map(h => ({ name: injuryName(h), status: h.status })));
+}
+
+/** " · Injuries: −9% next week (Achane, Hall out)" for a futures row, or "". */
+function injuryFuturesNote(plan, rid, week) {
+  const lab = injuryLabel(plan, rid, week);
+  if (!lab) return "";
+  const hs = injuryCharged(plan, rid, week);
+  const n = Math.max(...hs.map(h => h.weeks.filter(w => w >= week).length));
+  const span = hs.some(h => h.seasonEnding) ? "rest of season" : n > 1 ? `for ${n} weeks` : "next week";
+  return ` · Injuries: ${lab.pct} ${span}${lab.detail ? ` (${lab.detail})` : ""}`;
+}
+
 /**
  * The preseason projection, updated by what has actually been scored.
  *
@@ -4098,7 +4303,7 @@ function weeksOf(upcoming, idx) {
  * Returns null before the season has produced anything to update on, which is
  * the signal to keep posting the preseason board.
  */
-function liveState(model, season, R, avail, board, throughWeek = null) {
+function liveState(model, season, R, avail, board, throughWeek = null, plan = null) {
   if (!model || !model.ok || !R) return null;
   const teams = livePosterior(model, season, throughWeek);
   if (!teams) return null;
@@ -4131,15 +4336,30 @@ function liveState(model, season, R, avail, board, throughWeek = null) {
   // Nothing banked and nothing in flight means there is nothing to reprice from.
   if (!played && !pending.length) return null;
   if (!weeks.length && !pending.length) return null;
-  // Injuries are known for the week about to be played and nowhere else. A
-  // hamstring in week 3 says nothing about week 11, so the haircut is applied to
-  // the next week only and every week after it is simulated healthy.
+  // The single next-week haircut, kept for callers without an injury plan.
   const mult = teams.map(t => {
     const a = avail && avail.get(t.rid);
     return a ? a.mult : 1;
   });
+  // With an injury plan, each remaining week carries its own cut: through an
+  // ESPN return date, or to the end for a season-ending one. Weeks nobody is
+  // charged for are left out and simulated healthy.
+  let multByWeek = null;
+  if (plan) {
+    multByWeek = new Map();
+    for (const wk of weeks) {
+      const m = teams.map(t => injuryMult(plan, t.rid, wk.week));
+      if (m.some(x => x < 1)) multByWeek.set(wk.week, m);
+    }
+    // The bracket weeks too, which simulateSeason plays from lvl.
+    for (let w = (season.pws || 15); w <= (season.pws || 15) + 2; w++) {
+      const m = teams.map(t => injuryMult(plan, t.rid, w));
+      if (m.some(x => x < 1)) multByWeek.set(w, m);
+    }
+  }
   return {
-    teams, idx, W0, PF0, weeks, mult, pending, liveWeek: liveWk, throughWeek,
+    teams, idx, W0, PF0, weeks, mult, multByWeek, plan, pending, liveWeek: liveWk, throughWeek,
+    pws: season.pws || 15,
     // Injuries bite on the next week nobody has started. A week already in
     // flight is priced off who has actually played, not off a status.
     adjWeek: weeks.length ? weeks[0].week : null,
@@ -4342,11 +4562,22 @@ function slotShares() {
  * its lineup still to play; the spread is week-to-week noise scaled by the root
  * of that same share, so a lineup with nothing left has no uncertainty and a
  * lineup with everything left has all of it.
+ *
+ * `hurt` (optional) maps pid -> that starter's cut from the injury plan, in
+ * team terms: loss × scale, where loss = share × (1 − avail) × (1 − REPLACEMENT).
+ * So a ruled-out starter brings 55% of his share, the bench man's, and a
+ * doubtful or questionable one keeps his INJ_AVAIL weight. While his game has
+ * not started, that cut comes off the expected score as mu × cut. Using the
+ * plan's own number — shares, shrink and all — is what makes the line at
+ * kickoff, with the whole lineup still to play, exactly the pregame line
+ * (mu × injuryMult). The expectation never drops below INJ_FLOOR of the healthy
+ * remainder, and the spread stays on the real share left, since the replacement
+ * is still playing.
  */
-function lineupState(starters, points, mu, weekSd, rostered, games, shares) {
+function lineupState(starters, points, mu, weekSd, rostered, games, shares, hurt = null) {
   const rows = (starters || []).filter(p => p && p !== "0");
-  let left = 0, unknown = 0;
-  const detail = [];
+  let left = 0, cut = 0, unknown = 0;
+  const detail = [], hurtLeft = [];
   rows.forEach((pid, i) => {
     const rec = rostered.map.get(String(pid));
     const club = rec && rec.t ? rec.t : null;
@@ -4357,14 +4588,22 @@ function lineupState(starters, points, mu, weekSd, rostered, games, shares) {
     if (!g && club) unknown++;
     const w = shares && shares[i] != null ? shares[i] : (1 / rows.length);
     left += w * rem;
+    const c = hurt ? hurt.get(String(pid)) : undefined;
+    const benched = c != null && c > 0 && rem >= 0.999;
+    if (benched) { cut += c; hurtLeft.push(String(pid)); }
     detail.push({ pid, name: rec ? rec.n : String(pid), pos: rec ? rec.p : "",
       club, rem, weight: w, state: g ? g.state : "none" });
   });
   const frac = Math.max(0, Math.min(1, left));
+  const effFrac = Math.max(0, frac - cut);
+  const healthy = points + mu * frac;
+  const expected = hurtLeft.length
+    ? Math.max(points + mu * effFrac, points + mu * frac * INJ_FLOOR) : healthy;
   return {
     scored: points,
-    frac,
-    expected: points + mu * frac,
+    frac, effFrac, hurtLeft,
+    injCut: healthy > 0 ? 1 - expected / healthy : 0,
+    expected,
     sd: weekSd * Math.sqrt(frac),
     toPlay: detail.filter(d => d.rem >= 0.999).length,
     inPlay: detail.filter(d => d.rem > 0.001 && d.rem < 0.999).length,
@@ -4386,13 +4625,26 @@ function liveWinProb(A, B) {
  * Returns null when there is no live week, which is the normal state from
  * Tuesday to Thursday and all through the off-season.
  */
-async function liveWeekBoard(season, teams, weekSd) {
+async function liveWeekBoard(season, teams, weekSd, plan) {
   const wk = season.liveWeek;
   if (!wk || !(season.live || []).length) return null;
   const [rostered, games] = await Promise.all([loadRostered(), loadNflGames()]);
   if (!games.ok || !rostered.map.size) {
     return { week: wk, ok: false, why: !games.ok ? "no-espn" : "no-rosters", games: [], at: Date.now() };
   }
+  // A caller that did not bring the injury plan gets one built from the cheap feed.
+  if (plan === undefined) {
+    try { plan = injuryPlan(season, await loadInjuries(), window.__ODDS); } catch (e) { plan = null; }
+  }
+  const hurtOf = rid => injuryHurtMap(plan, rid, wk);
+  // The in-game cut, naming only the hurt starters whose game is still to come.
+  const labelOf = (rid, S) => {
+    const t = plan && plan.teams.get(rid);
+    if (!t || !S.hurtLeft.length) return null;
+    const people = S.hurtLeft.map(pid => t.hurt.find(h => String(h.pid) === pid)).filter(Boolean)
+      .map(h => ({ name: injuryName(h), status: h.status }));
+    return injuryLabelText(S.injCut, people);
+  };
   const shares = slotShares();
   const byRid = new Map(teams.map(t => [t.rid, t]));
   const starters = new Map((season.rosters || []).map(r => [r.roster_id, r.starters || []]));
@@ -4400,8 +4652,10 @@ async function liveWeekBoard(season, teams, weekSd) {
   for (const g of season.live) {
     const ta = byRid.get(g.a.rid), tb = byRid.get(g.b.rid);
     if (!ta || !tb) continue;
-    const A = lineupState(starters.get(g.a.rid), g.a.pts, ta.mean, weekSd, rostered, games, shares);
-    const B = lineupState(starters.get(g.b.rid), g.b.pts, tb.mean, weekSd, rostered, games, shares);
+    const A = lineupState(starters.get(g.a.rid), g.a.pts, ta.mean, weekSd, rostered, games, shares, hurtOf(g.a.rid));
+    const B = lineupState(starters.get(g.b.rid), g.b.pts, tb.mean, weekSd, rostered, games, shares, hurtOf(g.b.rid));
+    A.inj = labelOf(g.a.rid, A);
+    B.inj = labelOf(g.b.rid, B);
     const p = liveWinProb(A, B);
     rows.push({
       week: wk, a: g.a, b: g.b, A, B, pA: p, pB: 1 - p,
@@ -4712,18 +4966,21 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
   const openPlay = new Map(priceBinary(T.map((t, i) => ({ uid: t.uid, p: sim.playoff[i] / o })))
     .map(r => [r.uid, { p: r.p, price: r.price }]));
 
+  // The cut on the next simulated week, and how long it runs.
+  const injNote = r => live.plan && live.adjWeek != null
+    ? injuryFuturesNote(live.plan, T[r.i].rid, live.adjWeek) : "";
   const title = priceMarket(T.map((t, i) => ({ uid: t.uid, i, p: lsim.title[i] / n }))
     .sort((a, b) => b.p - a.p));
   host.appendChild(liveBoard("To win the DFFL championship",
     esc(updatedAt(live.at || Date.now())), title, openTitle,
-    r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins`));
+    r => `Makes the playoffs ${(lsim.playoff[r.i] / n * 100).toFixed(0)}% · projects ${f1(lsim.wins[r.i] / n)} wins${injNote(r)}`));
 
   // Six of twelve make it, so this is twelve yes/no books, not one race.
   const play = priceBinary(T.map((t, i) => ({ uid: t.uid, i, p: lsim.playoff[i] / n }))
     .sort((a, b) => b.p - a.p));
   host.appendChild(liveBoard("To make the playoffs",
     `six of twelve · ${updatedAt(live.at || Date.now(), "updated")}`, play, openPlay,
-    r => `${f1(lsim.wins[r.i] / n)} projected wins`));
+    r => `${f1(lsim.wins[r.i] / n)} projected wins${injNote(r)}`));
 
   // Every other market, now priced off the same simulation rather than off the
   // draft-day line it used to be stuck on.
@@ -4738,12 +4995,16 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
        points. The draft-day projection carries ±${f1(model.seasonSd)}. The board is the
        precision-weighted blend of the two, which is why one big Sunday barely moves a price and
        six of them move it a long way.</p>
-    <p><b>Injuries are charged to one week only.</b> A starter ruled out costs his team
+    <p><b>Injuries are charged for as long as they last.</b> A starter ruled out costs his team
        ${((1 - REPLACEMENT) * 100).toFixed(0)}% of his share of the lineup — not all of it, because
        somebody comes off the bench and scores. Questionable is priced at
        ${(INJ_AVAIL.Questionable * 100).toFixed(0)}% availability, doubtful at
-       ${(INJ_AVAIL.Doubtful * 100).toFixed(0)}%. Nothing is assumed about the week after: a
-       hamstring today says nothing about November, so every later week is simulated healthy.</p>
+       ${(INJ_AVAIL.Doubtful * 100).toFixed(0)}%. With no return date the cut is for one week only.
+       When ESPN gives a return date, every week that kicks off before it is cut; a season-ending
+       injury is cut for the rest of the season, playoffs included. The cut shrinks as weeks played without
+       him are finished, because those weeks are already in the team's average and would
+       otherwise be counted twice. During a game, a ruled-out starter whose game has not
+       started counts as ${(REPLACEMENT * 100).toFixed(0)}% of his slot.</p>
     <p><b>Still not known:</b> who gets claimed off waivers, who gets traded, and which bench
        player is about to become a starter.</p>`;
   host.appendChild(meth);
@@ -5106,7 +5367,7 @@ function pathHTML(pts, uid) {
  * The week's matchups with a pregame and a current line each. The week in flight
  * if there is one, otherwise the next week on the schedule, otherwise nothing.
  */
-function gameLinesData(R, hist) {
+function gameLinesData(R, hist, plan = window.__PLAN) {
   const model = window.__ODDS, season = DB.seasons[0];
   const out = { week: null, status: "none", games: [], byes: [], at: Date.now() };
   if (!season) return out;
@@ -5133,13 +5394,20 @@ function gameLinesData(R, hist) {
   if (board) out.at = board.at;
   // Pregame sd = √(weekSd² + levelSd²): week-to-week noise plus uncertainty in the
   // team's level, the same per-game spread the futures sim draws from.
-  const pre = t => t && isFinite(t.mean) && weekSd > 0
-    ? { expected: t.mean, sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
+  // The level is cut by that week's injuries. Anyone who has already scored this
+  // week was available at kickoff, so an injury suffered during the game does not
+  // rewrite the opener after the fact.
+  const wm = (season.playerWeek && season.playerWeek.get(out.week)) || new Map();
+  const excl = new Set([...wm].filter(([, v]) => Number(v) !== 0).map(([pid]) => String(pid)));
+  const cutOf = rid => plan ? injuryMult(plan, rid, out.week, excl) : 1;
+  const preLabel = rid => plan ? injuryLabel(plan, rid, out.week, excl) : null;
+  const pre = (t, rid) => t && isFinite(t.mean) && weekSd > 0
+    ? { expected: t.mean * cutOf(rid), sd: isFinite(t.levelSd) ? Math.sqrt(weekSd ** 2 + t.levelSd ** 2) : weekSd } : null;
   const played = new Set();
   for (const g of pairs) {
     played.add(g.a.rid); played.add(g.b.rid);
     const bg = board ? board.games.find(x => x.a.rid === g.a.rid && x.b.rid === g.b.rid) : null;
-    const A0 = pre(byRid.get(g.a.rid)), B0 = pre(byRid.get(g.b.rid));
+    const A0 = pre(byRid.get(g.a.rid), g.a.rid), B0 = pre(byRid.get(g.b.rid), g.b.rid);
     const open = A0 && B0 ? gameLine(A0, B0) : null;
     const now = bg ? gameLine(bg.A, bg.B) : open;
     const aPts = bg ? bg.A.scored : (g.a.pts || 0), bPts = bg ? bg.B.scored : (g.b.pts || 0);
@@ -5147,8 +5415,12 @@ function gameLinesData(R, hist) {
     const settled = !!(bg && bg.settled);
     const path = linePath(hist, season.season, out.week, g.a.uid, g.b.uid,
       now ? now.pA : null, board ? board.at : Date.now(), started, open ? open.pA : null);
+    // Once the game is under way the card shows the live cut (hurt starters still
+    // to play); before that, the pregame one. Copies, so season.live is untouched.
+    const a = { ...g.a, inj: bg && started ? (bg.A.inj || null) : preLabel(g.a.rid) };
+    const b = { ...g.b, inj: bg && started ? (bg.B.inj || null) : preLabel(g.b.rid) };
     out.games.push({
-      a: g.a, b: g.b, aPts, bPts, open, now, settled, started, path,
+      a, b, aPts, bPts, open, now, settled, started, path,
       cover: settled && open ? coverResult(open.spread, aPts - bPts) : null,
     });
   }
@@ -5183,7 +5455,7 @@ function gameCardHTML(g) {
       ${cell("ml", null, null, L && !done ? L.ml[i] : null, mlExtra)}
       ${cell("total", S ? `${i ? "U" : "O"} ${S.total.toFixed(1)}` : "—", S ? S.total : null,
         done ? null : S && S.totalPrice, done ? " " : "")}
-    </div>`;
+    </div>${side.inj && !g.settled ? `<div class="inj-tag" data-inj="${side.rid}" data-cut="${side.inj.cut.toFixed(4)}">${esc(side.inj.text)}</div>` : ""}`;
   };
   const status = state === "final" ? "Final" : state === "decided" ? "Decided"
     : state === "live" ? `<span class="live">Live</span>` : state === "upcoming" ? "Upcoming" : "—";
@@ -5233,7 +5505,8 @@ function paintGameLines(data) {
     <p>Nothing new is modelled. Before kickoff each lineup is expected to score its team's weekly
       level on the power model (through last week), with a spread of √(weekSd² + levelSd²): the model's
       week-to-week noise of ±${f1((window.__ODDS || {}).weekSd || 0)} pts plus how unsure it still is of the
-      team's level — the same per-game spread the futures simulation uses. Once games start it's what's already scored plus that level times the share of the lineup still to play,
+      team's level — the same per-game spread the futures simulation uses. That level is cut for the
+      week's injuries, the same cut the futures use, and the cut is printed under the team. Once games start it's what's already scored plus that level times the share of the lineup still to play,
       and the spread shrinks with the square root of that share — the same numbers as the live board below.</p>
     <p><b>Money:</b> win chance <code>Φ((expA − expB) / √(sdA² + sdB²))</code>, a ${(ODDS_HOLD * 100).toFixed(0)}%
       hold added across both sides, rounded to the prices a book posts.
@@ -7777,6 +8050,8 @@ async function boot() {
       weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
       injuryDetail, returnLabel,
+      injuryPlan, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
+      approxKickoff, lastNameOf, gameCardHTML,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
