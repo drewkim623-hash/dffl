@@ -5298,7 +5298,6 @@ function futuresMarkets(model, sim) {
   const divs = [...model.divNames.keys()].sort((a, b) => a - b);
   const byDiv = d => all.filter(i => T[i].div === d);
   const pc = x => `${(x * 100).toFixed(0)}%`;
-  const flatHold = `Hold ${(ODDS_HOLD * 100).toFixed(1)}%`;
 
   const CHIPS = [
     { id: "title", chip: "Championship",
@@ -5328,12 +5327,18 @@ function futuresMarkets(model, sim) {
       return { title, sub, div, hold: `Hold ${(marketHold(priced) * 100).toFixed(1)}%`,
         rows: priced.map(r => ({ i: r.i, key: r.p, prices: [r], labels: [null], note: note(r.i) })) };
     };
+    // A yes/no book holds on each runner separately: the label is marketHold's
+    // average two-way overround, exactly as the live board's playoff board posts it.
+    const twoWayHold = rows => `Hold ${(marketHold(rows.map(r =>
+      ({ postedP: r.prices[0].postedP, noPostedP: r.prices[1].postedP }))) * 100).toFixed(1)}%`;
     // Every manager is his own yes/no book, as the playoff board always priced it.
-    const yesNo = (title, sub, key, note) => ({ title, sub, hold: flatHold,
-      rows: all.map(i => {
+    const yesNo = (title, sub, key, note) => {
+      const rows = all.map(i => {
         const p = S[key][i] / n;
         return { i, key: p, prices: priceMarket([{ p }, { p: 1 - p }]), labels: ["Yes", "No"], note: note(i) };
-      }) });
+      });
+      return { title, sub, hold: twoWayHold(rows), rows };
+    };
     const lineSub = kind === "live" ? `live line · ${stamp}` : `opening line · ${n.toLocaleString()} simulations`;
     return {
       title: [race("To win the DFFL championship", `${model.season} season · ${lineSub}`,
@@ -5343,12 +5348,14 @@ function futuresMarkets(model, sim) {
         i => `wins the division ${pc(S.divWin[i] / n)} · first-round bye ${pc(S.bye[i] / n)}`)],
       bye: [yesNo("First-round bye", `yes / no · the top two seeds skip round one · ${lineSub}`, "bye",
         i => `makes the playoffs ${pc(S.playoff[i] / n)} · ${proj(i)}`)],
-      wins: [{ title: "Regular-season wins", sub: `over / under · ${model.weeks} games · ${lineSub}`, hold: flatHold,
-        rows: winTotals(model, S).map(w => {
+      wins: [(() => {
+        const rows = winTotals(model, S).map(w => {
           const L = w.line.toFixed(1);
           return { i: w.i, key: w.avg, prices: priceMarket([{ p: w.pOver }, { p: w.pUnder }]),
             labels: [`Over ${L}`, `Under ${L}`], note: `line ${L} · projects ${f1(w.avg)} wins` };
-        }) }],
+        });
+        return { title: "Regular-season wins", sub: `over / under · ${model.weeks} games · ${lineSub}`, hold: twoWayHold(rows), rows };
+      })()],
       divLast: divs.map(d => race(`${model.divNames.get(d)} — to finish last`, `within the division · ${lineSub}`, byDiv(d), "divLast", proj, d)),
       last: [race("To finish 12th", `loser of the consolation elimination game · ${lineSub}`, all, "last", proj)],
     };

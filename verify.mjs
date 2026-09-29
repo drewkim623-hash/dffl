@@ -3283,6 +3283,17 @@ if (fxLive.ok) {
     vs.found && !vs.rewound && vs.n === 12 && vs.fxn === 12 && vs.off.length === 0, JSON.stringify(vs).slice(0, 300));
 } else check("futures: the live championship posts exactly the live board's prices", true, FX_SKIP);
 
+// Yes/no holds: the Live playoff label is the live playoff board's label.
+if (fxLive.ok) {
+  const hv = await page.evaluate(() => {
+    const lb = [...document.querySelectorAll('#liveHost [data-board="live"]')]
+      .find(b => /To make the playoffs/.test(b.querySelector(".bt").textContent));
+    const fx = document.querySelector('.fxm .fxm-line-view[data-line="live"] .fxm-mkt[data-market="playoff"] .hold');
+    return { board: lb && lb.querySelector(".hold").textContent.trim(), fxm: fx && fx.textContent.trim() };
+  });
+  check("futures: the live Make playoffs hold label equals the live playoff board's", !!hv.board && hv.fxm === hv.board, `${hv.fxm} vs ${hv.board}`);
+} else check("futures: the live Make playoffs hold label equals the live playoff board's", true, FX_SKIP);
+
 const fxRows = mk => page.evaluate(mk => {
   const rows = [...document.querySelectorAll(`.fxm-mkt[data-market="${mk}"] .fxm-row`)].filter(r => !r.hidden && r.offsetParent)
     .map(r => ({ uid: r.dataset.uid, name: r.dataset.name, key: +r.dataset.key, price: +r.dataset.price, div: r.dataset.div,
