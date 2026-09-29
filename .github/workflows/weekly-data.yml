@@ -100,6 +100,13 @@ jobs:
       - name: Snapshot what the site is showing
         run: node build-email.mjs
 
+      # The snapshot just written joins data/odds-history.json. The script
+      # merges into the committed file (never rebuilds it), so the default
+      # shallow checkout is safe and no fetch-depth change is needed. It must
+      # never stop the commit below, which the Tuesday recap depends on.
+      - name: Add this run's odds reading to the line history
+        run: node build-odds-history.mjs || echo "::warning::odds history not updated"
+
       - name: Commit anything that changed
         run: |
           git config user.name  "dffl-data[bot]"
