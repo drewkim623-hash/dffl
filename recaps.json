@@ -3181,6 +3181,314 @@
      "text": "Manager profiles run midweek, one manager at a time, picked at random. Every figure is from the league's own data through week 3."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "week-4-the-lines-and-what-every-game-is-worth",
+   "date": "2026-09-30",
+   "source": "watch",
+   "kicker": "2026 · week 4 preview",
+   "headline": "The Lines, and What Every Game Is Worth",
+   "dek": "One pick'em, one near coin flip, and a 20-point favourite. All six matchups broken down, with the line on each and what a win or a loss does to both teams' playoff chances.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · lines from the Odds tab · stakes from the Playoff Picture",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Week 4 opens with the league's only unbeaten team in a straight pick'em, and closes with its best team laying 20 points. In between, four games are priced within 11 points, and every one of them moves somebody's playoff odds by at least ten points in either direction. The lines below are the site's opening numbers; the stakes are the Playoff Picture's, which plays out the rest of the season with each game going both ways."
+    },
+    {
+     "type": "stat",
+     "n": "21.4",
+     "text": "Points of playoff chance riding on <b>sizzlemc2</b>'s game, the most on any team this week: 62.1% with a win over drewkim, 40.7% with a loss."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "wesley55 v bradyrife",
+       "big": "PK",
+       "sub": "total 251.5",
+       "lead": true,
+       "rows": [
+        {
+         "label": "wesley55",
+         "value": "-115"
+        },
+        {
+         "label": "bradyrife",
+         "value": "-115"
+        }
+       ]
+      },
+      {
+       "title": "drewkim v sizzlemc2",
+       "big": "sizzlemc2 -2",
+       "sub": "total 245",
+       "rows": [
+        {
+         "label": "drewkim",
+         "value": "+100"
+        },
+        {
+         "label": "sizzlemc2",
+         "value": "-125"
+        }
+       ]
+      },
+      {
+       "title": "willie12w v victorthompson",
+       "big": "willie12w -11",
+       "sub": "total 252.5",
+       "rows": [
+        {
+         "label": "willie12w",
+         "value": "-190"
+        },
+        {
+         "label": "victorthompson",
+         "value": "+150"
+        }
+       ]
+      },
+      {
+       "title": "Domo112 v saucebossandrew",
+       "big": "Domo112 -6.5",
+       "sub": "total 260.5",
+       "rows": [
+        {
+         "label": "Domo112",
+         "value": "-155"
+        },
+        {
+         "label": "saucebossandrew",
+         "value": "+120"
+        }
+       ]
+      },
+      {
+       "title": "jskule23 v moseslin",
+       "big": "moseslin -7",
+       "sub": "total 240.5",
+       "rows": [
+        {
+         "label": "jskule23",
+         "value": "+125"
+        },
+        {
+         "label": "moseslin",
+         "value": "-155"
+        }
+       ]
+      },
+      {
+       "title": "jadencha v chassinator",
+       "big": "jadencha -20",
+       "sub": "total 266",
+       "rows": [
+        {
+         "label": "jadencha",
+         "value": "-310"
+        },
+        {
+         "label": "chassinator",
+         "value": "+230"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Moneylines are the price to win outright; the big number is the spread, and both sides of every spread and total are priced at -115. Games below run in order of how much playoff chance is riding on them, both teams combined."
+    },
+    {
+     "type": "h",
+     "eyebrow": "game of the week",
+     "text": "wesley55 v bradyrife: The Unbeaten Team Is a Pick'em"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> pick'em, -115 each way, total 251.5. The site projects bradyrife for 125.72 and wesley55 for 125.67. Five hundredths of a point separate them."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> bradyrife is 3-0 and has improved every week, 105.2 to 134.06 to 152.78, the high score of week 3. <b>Davante Adams</b> leads the roster with 67.8, most of it in a 40.5 in week 2, with <b>Garrett Wilson</b> (57.3) and <b>Trevor Lawrence</b> (54.04) behind him. wesley55 is built on the ground: <b>Derrick Henry</b> has 73.4 and <b>James Cook</b> 50.2, with <b>Joe Burrow</b> at 53.92. Jaylen Waddle is listed questionable, which the line has already charged at about 1%."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> the most of any game, 38.6 points of playoff chance between the two teams. A wesley55 win takes him to 72.3%; a loss drops him to 52.1%. bradyrife goes to 83.7% with a fourth win and falls to 65.4% with a first loss. bradyrife has also had the league's softest schedule, 315.38 points against, and wesley55 is not soft: his 131.28 in week 3 would have beaten three of that week's six winners."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the swing game",
+     "text": "drewkim v sizzlemc2: Two Points and the Biggest Stake"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> sizzlemc2 -2, sizzlemc2 -125, drewkim +100, total 245. Projections: sizzlemc2 123.50, drewkim 121.36."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> sizzlemc2 has scored 422.24 points, second only to jadencha, and has left 155.12 on the bench, the most in the league. <b>Kenneth Walker</b> (77.7) and <b>CeeDee Lamb</b> (71.9) carry it. drewkim is the opposite case: steady, without a big week yet, at 125.1, 112.64 and 127.18, with <b>Brock Purdy</b> (53.38 in two starts), <b>DeVonta Smith</b> (48.5) and <b>Juwan Johnson</b> (48.3) at the top. He left 10.7 on the bench in week 3, the least of anyone, and still lost by 2.66."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> 37.6 points combined, and the single biggest swing on any one team. sizzlemc2 sits right on the line at 52.4%: a win makes it 62.1%, a loss 40.7%. drewkim goes to 29.9% with a win or 13.6% at 1-3."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the favourite",
+     "text": "willie12w v victorthompson: Eleven Points and Two Hot Receivers"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> willie12w -11, -190 against +150, total 252.5. Projections: willie12w 131.70, victorthompson 120.87."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> willie12w has won two straight at 131.78 and 129.86. <b>Trey McBride</b> leads the roster with 59.1 and <b>Ja'Marr Chase</b> has 26.5 and 24.8 in the last two weeks after a 3.2 opener. victorthompson's scoring runs through <b>Dak Prescott</b> (64.1) and <b>Dalton Kincaid</b> (45.3), and <b>Drake London</b> just posted 30.4 after 5.5 and 8.9 in the first two weeks."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> 33.7 points combined. willie12w moves to 80.1% with a win and falls to 62.0% with a loss. victorthompson is at 20.0%: a win makes it 29.3%, a loss 13.6%."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the shootout",
+     "text": "Domo112 v saucebossandrew: Two Running Backs and a Slide"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> Domo112 -6.5, -155 against +120, total 260.5, the second-highest total of the week. Projections: Domo112 133.39, saucebossandrew 126.91. Domo112's projection carries a 3% injury cut, for Jalen Coker and Mike Evans, both questionable."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> Domo112's season has been a swing, 187.06, then 85.32, then 134.06, and it runs through two backs: <b>Jahmyr Gibbs</b> has 90.3 and <b>Bijan Robinson</b> 72.2. saucebossandrew's scores have fallen every week, 137.52, 120.16, 113.72, and he is without <b>De'Von Achane</b> for the season. <b>Chris Olave</b> (72.5) and <b>Jalen Hurts</b> (56.5) are what is left to lean on."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> 31.8 points combined, most of it on saucebossandrew. A win takes him from 40.1% to 52.6%, back above even; a loss leaves him at 32.1%. Domo112 is 93.0% with a win and 81.7% with a loss."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the must-win",
+     "text": "jskule23 v moseslin: 0-4 or a Pulse"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> moseslin -7, -155 against +125, total 240.5, the lowest of the week. Projections: moseslin 123.55, jskule23 116.71. Both lineups carry injury cuts: 4% for jskule23, with Josh Allen and Puka Nacua questionable, and 2% for moseslin, with Justin Jefferson and Nico Collins questionable."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> jskule23 is the only winless team, and <b>Josh Allen</b> has scored 94.94 of his 351.24 points. Allen's knee is the week's biggest question for either side. moseslin has had 459.34 points scored against him, the most in the league; <b>Christian Watson</b> (71.4) and <b>Lamar Jackson</b> (61.2) are his top scorers."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> 29.7 points combined. A loss leaves jskule23 0-4 and at 6.1%; a win gets him to 16.3%. moseslin goes to 44.0% with a win and 24.6% with a loss."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the mismatch",
+     "text": "jadencha v chassinator: The Biggest Number on the Board"
+    },
+    {
+     "type": "p",
+     "text": "<b>The line:</b> jadencha -20, -310 against +230, total 266, the highest of the week. Projections: jadencha 142.84, chassinator 123.05."
+    },
+    {
+     "type": "p",
+     "text": "<b>The matchup:</b> jadencha has scored 473.34 points, the most in the league, and <b>Jaxon Smith-Njigba</b> has 108.06 of them, more than any other starter in the league. <b>Amon-Ra St. Brown</b> adds 75.8. chassinator has spread his scoring out, with <b>Parker Washington</b> (49.1), <b>Kyren Williams</b> (47.5) and <b>Zay Flowers</b> (44.4 in two starts) at the top, and has left 146.26 on the bench this season, the third-most in the league."
+    },
+    {
+     "type": "p",
+     "text": "<b>What's at stake:</b> the least of the six for the favourite. jadencha is 97.1% with a win and still 91.5% with a loss. For chassinator it is 17.5 points: 39.6% with the upset, 22.1% without it."
+    },
+    {
+     "type": "bars",
+     "title": "What a win is worth",
+     "sub": "playoff chance with a week 4 win minus with a loss, in points",
+     "rows": [
+      {
+       "label": "sizzlemc2",
+       "sub": "62.1% or 40.7%",
+       "value": 21.4,
+       "group": 1
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "52.6% or 32.1%",
+       "value": 20.5,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "sub": "72.3% or 52.1%",
+       "value": 20.2,
+       "group": 1
+      },
+      {
+       "label": "moseslin",
+       "sub": "44.0% or 24.6%",
+       "value": 19.4,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "sub": "83.7% or 65.4%",
+       "value": 18.4,
+       "group": 1
+      },
+      {
+       "label": "willie12w",
+       "sub": "80.1% or 62.0%",
+       "value": 18.0,
+       "group": 1
+      },
+      {
+       "label": "chassinator",
+       "sub": "39.6% or 22.1%",
+       "value": 17.5,
+       "group": 1
+      },
+      {
+       "label": "drewkim",
+       "sub": "29.9% or 13.6%",
+       "value": 16.2,
+       "group": 1
+      },
+      {
+       "label": "victorthompson",
+       "sub": "29.3% or 13.6%",
+       "value": 15.7,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "93.0% or 81.7%",
+       "value": 11.3,
+       "group": 1
+      },
+      {
+       "label": "jskule23",
+       "sub": "16.3% or 6.1%",
+       "value": 10.3,
+       "group": 1
+      },
+      {
+       "label": "jadencha",
+       "sub": "97.1% or 91.5%",
+       "value": 5.7,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Lines are the site's opening numbers for week 4 and carry the same 6% hold the Odds tab posts. Stakes come from the Playoff Picture tab, which plays the rest of the season 5,000 times with each week 4 result forced both ways. Injury cuts are the site's, from the listed statuses as of 30 September."
+    }
+   ]
   }
  ]
 }

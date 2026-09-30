@@ -30,6 +30,11 @@ const linkTo = a => a && a.slug ? `${SITE}?a=${encodeURIComponent(a.slug)}` : `$
 const D = JSON.parse(await readFile("data/odds-snapshot.json", "utf8"));
 const recaps = JSON.parse(await readFile("recaps.json", "utf8").catch(() => "{}"));
 const sentLog = JSON.parse(await readFile("data/sent-emails.json", "utf8").catch(() => "{}"));
+const pollsFile = JSON.parse(await readFile("polls.json", "utf8").catch(() => '{"polls":[]}'));
+// The newest open poll rides along in every email until it closes; a closed poll's
+// results are printed once, in the first email after the tally, then marked announced.
+const openPoll = (pollsFile.polls || []).filter(p => p.status === "open").slice(-1)[0] || null;
+const pollResult = (pollsFile.polls || []).filter(p => p.status === "closed" && p.results && !p.announced).slice(-1)[0] || null;
 
 /**
  * The week that just finished, if it has been written up.
@@ -42,8 +47,11 @@ const sentLog = JSON.parse(await readFile("data/sent-emails.json", "utf8").catch
 const lastWeek = (recaps.weeks || []).slice()
   .sort((a, b) => Number(b.season) - Number(a.season) || b.week - a.week)[0] || null;
 
-const byDate = (recaps.articles || []).slice()
-  .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+// Newest first. Two pieces filed the same day are told apart by position:
+// articles[] is append-only, so the later one in the file is the newer one.
+const byDate = (recaps.articles || []).map((a, i) => ({ a, i }))
+  .sort((x, y) => String(y.a.date || "").localeCompare(String(x.a.date || "")) || y.i - x.i)
+  .map(x => x.a);
 // The week's column leads the email; anything else recent rides along under it.
 const lead = byDate[0] || null;
 /**
@@ -113,7 +121,8 @@ const C = { ink: "#14141a", mid: "#5c5c68", faint: "#8a8a95", line: "#e4e4ea",
   green: "#137a45", gold: "#9a6600" };
 const F = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
 
-const fmtOdds = o => o == null ? "—" : (o > 0 ? "+" : "") + Math.round(o);
+// -100 and +100 are the same price, even money, and books print it +100.
+const fmtOdds = o => { if (o == null) return "—"; const r = Math.round(o); return r === -100 || r === 100 ? "+100" : (r > 0 ? "+" : "") + r; };
 const oddsColour = o => o == null ? C.faint : o < 0 ? C.green : C.ink;
 
 const shell = inner => `<!doctype html>
@@ -350,6 +359,49 @@ const columnText = a => [
 
 const isMidweek = !!(lead && lead.source === "watch");
 
+/* ------------------------------------------------------------- the poll */
+/**
+ * Voting is a reply. No links, no forms: Gmail strips forms, and a link is one
+ * more thing to tap. People hit reply and type one word.
+ */
+const pollBlock = p => `
+  <tr><td style="padding:14px 0 0">
+    ${box(`
+      <div style="font:800 9.5px/1 ${F};letter-spacing:.09em;text-transform:uppercase;color:${C.gold}">This week's poll</div>
+      <div style="font:800 17px/1.3 ${F};color:${C.ink};margin-top:7px">${esc(p.question)}</div>
+      <div style="font:400 13.5px/1.55 ${F};color:${C.ink};margin-top:9px"><b>Just reply to this email</b> with one word:</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:8px"><tr>
+        ${p.options.map(o => `<td style="padding:0 8px 0 0"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate">
+          <tr><td style="border:1px solid ${C.line};border-radius:6px;padding:7px 11px;font:800 13px/1 ${F};color:${C.ink};white-space:nowrap">
+          ${esc(o.key)} <span style="font:400 11.5px/1 ${F};color:${C.faint}">${esc(o.label)}</span></td></tr></table></td>`).join("")}
+      </tr></table>
+      <div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:9px">Voting closes ${esc(p.closes)}. One vote each; if you reply twice, the last one counts. Results in the next email.</div>
+    `, "15px 16px")}
+  </td></tr>`;
+
+const pollResultBlock = p => {
+  const n = p.results.voters || 0;
+  return `
+  <tr><td style="padding:14px 0 0">
+    ${box(`
+      <div style="font:800 9.5px/1 ${F};letter-spacing:.09em;text-transform:uppercase;color:${C.gold}">Poll results</div>
+      <div style="font:800 15px/1.3 ${F};color:${C.ink};margin-top:7px">${esc(p.question)}</div>
+      ${p.options.map(o => {
+        const c = p.results[o.key] || 0, pct = n ? Math.round(c / n * 100) : 0;
+        return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px"><tr>
+          <td style="font:600 12.5px/1.3 ${F};color:${C.ink};white-space:nowrap" width="34%">${esc(o.label)}</td>
+          <td><table role="presentation" width="${Math.max(2, pct)}%" cellpadding="0" cellspacing="0"><tr>
+            <td bgcolor="${C.blue}" style="background:${C.blue};height:10px;border-radius:3px;font-size:0;line-height:0">&nbsp;</td></tr></table></td>
+          <td align="right" style="font:700 12.5px/1.3 ${F};color:${C.ink};white-space:nowrap" width="18%">${c} · ${pct}%</td></tr></table>`;
+      }).join("")}
+      <div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:9px">${n} ${n === 1 ? "vote" : "votes"}, by reply.</div>
+    `, "15px 16px")}
+  </td></tr>`;
+};
+
+const pollText = p => `\nTHIS WEEK'S POLL\n${p.question}\nJust reply to this email with one word: ${p.options.map(o => `${o.key} (${o.label})`).join(" or ")}.\nVoting closes ${p.closes}. If you reply twice, the last one counts.`;
+const pollResultText = p => `\nPOLL RESULTS\n${p.question}\n` + p.options.map(o => `  ${o.label}: ${p.results[o.key] || 0}`).join("\n") + `\n  ${p.results.voters || 0} votes`;
+
 /* --------------------------------------------------------- the week's recap */
 /** Six results, two across, with the lede above them. */
 const recapBlock = wk => {
@@ -480,6 +532,8 @@ const inner = `
   ${strip}
   ${lead ? (isMidweek ? fullColumnBlock(lead) : columnBlock(lead)) : ""}
   ${lastWeek ? recapBlock(lastWeek) : ""}
+  ${pollResult ? pollResultBlock(pollResult) : ""}
+  ${openPoll ? pollBlock(openPoll) : ""}
   ${marquee ? head2("Match of the week",
     marquee.settled ? "the closest thing the week had" : "closest to a coin flip") : ""}
   ${marquee ? `<tr><td>${marqueeBlock(marquee)}</td></tr>` : ""}
@@ -537,11 +591,14 @@ const midweekInner = `
     </tr></table>
   </td></tr>
   ${isMidweek ? fullColumnBlock(lead) : ""}
+  ${pollResult ? pollResultBlock(pollResult) : ""}
+  ${openPoll ? pollBlock(openPoll) : ""}
   ${footerNote}`;
 
 const html = minify(shell(isMidweek ? midweekInner : inner));
 
-const text = isMidweek ? [`DFFL — Midweek, Week ${D.week}, ${D.season}`, `\n${columnText(lead)}`].join("\n") : [
+const text = isMidweek ? [`DFFL — Midweek, Week ${D.week}, ${D.season}`, `\n${columnText(lead)}`,
+  pollResult ? pollResultText(pollResult) : "", openPoll ? pollText(openPoll) : ""].filter(Boolean).join("\n") : [
   `DFFL — Week ${D.week}, ${D.season}`,
   lead ? (isMidweek ? `\n${columnText(lead)}`
     : `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}`) : "",
@@ -552,6 +609,8 @@ const text = isMidweek ? [`DFFL — Midweek, Week ${D.week}, ${D.season}`, `\n${
     `${m.manager}: ${pc(m.playoffWas)} -> ${pc(m.playoffNow)} (${m.d > 0 ? "+" : ""}${(m.d * 100).toFixed(0)}pt)`).join("\n") : "",
   race.length ? `\nTO MAKE THE PLAYOFFS\n` + race.map(t =>
     `${t.manager}: ${fmtOdds(t.playoffOdds)} (${pc(t.playoffNow)}) · title ${fmtOdds(t.titleOdds)}`).join("\n") : "",
+  pollResult ? pollResultText(pollResult) : "",
+  openPoll ? pollText(openPoll) : "",
   `\n${SITE}`,
 ].filter(Boolean).join("\n");
 

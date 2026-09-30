@@ -3563,7 +3563,8 @@ function roundOdds(o) {
   const r = Math.round(Math.abs(o) / step) * step;
   return o < 0 ? -r : r;
 }
-const fmtOdds = o => o == null ? "—" : (o > 0 ? "+" : "") + Math.round(o);
+// -100 and +100 are the same price, even money, and books print it +100.
+const fmtOdds = o => { if (o == null) return "—"; const r = Math.round(o); return r === -100 || r === 100 ? "+100" : (r > 0 ? "+" : "") + r; };
 
 /** Scale a market so its probabilities sum to 1+hold. This is the vig. */
 function addVig(ps, hold = ODDS_HOLD) {

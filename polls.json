@@ -1,0 +1,32 @@
+{
+ "_comment": "Reply-to-vote polls. Each email may carry the newest open poll; people answer by replying to the email with one of the option keys. A routine with Gmail read access tallies the replies, closes the poll and writes results here; the next email prints them once and marks them announced. One vote per sender address, and the latest reply from an address is the one that counts.",
+ "_schema": {
+  "polls[]": {
+   "id": "unique, e.g. 2026-w4-gotw",
+   "question": "the question, one sentence",
+   "options": "[{key, label}] - key is the one word people reply with",
+   "opened": "YYYY-MM-DD",
+   "closes": "YYYY-MM-DD - tallied on the first run on or after this date",
+   "subject": "the subject line of the email that asked it, so replies can be found",
+   "status": "open | closed",
+   "results": "{<key>: count} once closed, plus voters (count) and invalid (count)",
+   "announced": "true once an email has printed the results"
+  }
+ },
+ "polls": [
+  {
+   "id": "2026-w4-gotw",
+   "question": "Game of the week is a pick'em. Who wins it, wesley55 or bradyrife?",
+   "options": [
+    { "key": "WESLEY", "label": "wesley55" },
+    { "key": "BRADY", "label": "bradyrife" }
+   ],
+   "opened": "2026-09-30",
+   "closes": "2026-10-03",
+   "subject": "DFFL Week 4: The Lines, and What Every Game Is Worth",
+   "status": "open",
+   "results": null,
+   "announced": false
+  }
+ ]
+}

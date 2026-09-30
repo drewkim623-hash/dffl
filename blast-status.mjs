@@ -75,8 +75,11 @@ if (has("--record")) {
 /* ----------------------------------------------------------------- reading */
 // Exactly the selection compose-email.mjs makes, so this cannot disagree with
 // what would actually be composed.
-const byDate = (recaps.articles || []).slice()
-  .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+// Newest first. Two pieces filed the same day are told apart by position:
+// articles[] is append-only, so the later one in the file is the newer one.
+const byDate = (recaps.articles || []).map((a, i) => ({ a, i }))
+  .sort((x, y) => String(y.a.date || "").localeCompare(String(x.a.date || "")) || y.i - x.i)
+  .map(x => x.a);
 const lead = byDate[0] || null;
 const week = (recaps.weeks || []).slice()
   .sort((a, b) => Number(b.season) - Number(a.season) || b.week - a.week)[0] || null;
