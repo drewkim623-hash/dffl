@@ -97,6 +97,20 @@
    "sha256": "c4001b779da7be5aed5058f8dae545a495a248a9901d6f6a69340d545995844d",
    "by": "hand",
    "note": ""
+  },
+  {
+   "at": "2026-09-30T20:01:38.945Z",
+   "subject": "DFFL Week 4: The Lines, and What Every Game Is Worth",
+   "lead": "week-4-the-lines-and-what-every-game-is-worth",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 3
+   },
+   "to": 12,
+   "sha256": "b0d85c228e30fdc70582d7906710379c7c25116a8cc69a83243859dac9d1eac1",
+   "by": "hand",
+   "note": ""
   }
  ]
 }

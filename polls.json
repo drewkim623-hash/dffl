@@ -10,7 +10,8 @@
    "subject": "the subject line of the email that asked it, so replies can be found",
    "status": "open | closed",
    "results": "{<key>: count} once closed, plus voters (count) and invalid (count)",
-   "announced": "true once an email has printed the results"
+   "announced": "true once an email has printed the results",
+   "thread_id": "Gmail thread id of the send, where replies land"
   }
  },
  "polls": [
@@ -18,15 +19,22 @@
    "id": "2026-w4-gotw",
    "question": "Game of the week is a pick'em. Who wins it, wesley55 or bradyrife?",
    "options": [
-    { "key": "WESLEY", "label": "wesley55" },
-    { "key": "BRADY", "label": "bradyrife" }
+    {
+     "key": "WESLEY",
+     "label": "wesley55"
+    },
+    {
+     "key": "BRADY",
+     "label": "bradyrife"
+    }
    ],
    "opened": "2026-09-30",
    "closes": "2026-10-03",
    "subject": "DFFL Week 4: The Lines, and What Every Game Is Worth",
    "status": "open",
    "results": null,
-   "announced": false
+   "announced": false,
+   "thread_id": "1a0f3e858c022b90"
   }
  ]
 }
