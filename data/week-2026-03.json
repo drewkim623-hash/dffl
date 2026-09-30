@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 3,
- "generated": "2026-09-30T01:49:12.571Z",
- "generated_at": "2026-09-30T01:49:12.571Z",
+ "generated": "2026-09-30T11:03:56.360Z",
+ "generated_at": "2026-09-30T11:03:56.360Z",
  "final": true,
  "standings_through_week": 3,
  "standings_folded": false,
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 392.04,
    "points_against": 315.38,
-   "waiver_budget_used": 31
+   "waiver_budget_used": 72
   },
   {
    "manager": "jadencha",
@@ -1162,7 +1162,7 @@
    "ties": 0,
    "points_for": 406.44,
    "points_against": 406.84,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 38
   },
   {
    "manager": "wesley55",
@@ -1217,7 +1217,7 @@
    "ties": 0,
    "points_for": 366.48,
    "points_against": 415.38,
-   "waiver_budget_used": 38
+   "waiver_budget_used": 47
   },
   {
    "manager": "drewkim",
@@ -1239,7 +1239,7 @@
    "ties": 0,
    "points_for": 333.9,
    "points_against": 339.78,
-   "waiver_budget_used": 25
+   "waiver_budget_used": 100
   },
   {
    "manager": "jskule23",
@@ -1250,10 +1250,171 @@
    "ties": 0,
    "points_for": 351.24,
    "points_against": 401.44,
-   "waiver_budget_used": 62
+   "waiver_budget_used": 68
   }
  ],
  "transactions": [
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Buffalo Bills",
+     "pos": "DEF",
+     "team": "BUF",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "New Orleans Saints",
+     "pos": "DEF",
+     "team": "NO",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Braelon Allen",
+     "pos": "RB",
+     "team": "NYJ",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Ted Hurst",
+     "pos": "WR",
+     "team": "TB",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 41,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Baltimore Ravens",
+     "pos": "DEF",
+     "team": "BAL",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "San Francisco 49ers",
+     "pos": "DEF",
+     "team": "SF",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 9,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Ollie Gordon",
+     "pos": "RB",
+     "team": "MIA",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Tank Bigsby",
+     "pos": "RB",
+     "team": "PHI",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 75,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Kenyon Sadiq",
+     "pos": "TE",
+     "team": "NYJ",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Oronde Gadsden",
+     "pos": "TE",
+     "team": "LAC",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 38,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Jaylen Wright",
+     "pos": "RB",
+     "team": "MIA",
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Malachi Fields",
+     "pos": "WR",
+     "team": "NYG",
+     "from": "jskule23"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
