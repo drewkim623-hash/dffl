@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-29T11:03:34.697Z",
- "at": 1790679814697,
+ "generated": "2026-09-30T01:49:14.433Z",
+ "at": 1790732954433,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 0,
    "points_for": 392.04,
    "points_against": 315.38,
-   "faab_spent": 36,
+   "faab_spent": 31,
    "starters_hurt": []
   },
   {
@@ -53,7 +53,9 @@
    "points_for": 381.32,
    "points_against": 343.72,
    "faab_spent": 21,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jaylen Waddle (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -71,10 +73,7 @@
    "points_for": 371.4,
    "points_against": 409.32,
    "faab_spent": 0,
-   "starters_hurt": [
-    "De'Von Achane (IR)",
-    "Breece Hall (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -84,7 +83,8 @@
    "points_against": 459.34,
    "faab_spent": 5,
    "starters_hurt": [
-    "Justin Jefferson (Out)"
+    "Justin Jefferson (Out)",
+    "Nico Collins (Out)"
    ]
   },
   {
@@ -125,7 +125,6 @@
    "faab_spent": 62,
    "starters_hurt": [
     "Josh Allen (Questionable)",
-    "Travis Etienne (Out)",
     "Mark Andrews (Questionable)",
     "Puka Nacua (Out)"
    ]
