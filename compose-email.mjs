@@ -523,9 +523,25 @@ function minify(h) {
     .trim();
 }
 
-const html = minify(shell(inner));
+/**
+ * A midweek email is the column, nothing else. The recap and the board went out
+ * on Tuesday and will again on Saturday; repeating them here would bury the one
+ * thing this email is for under two screens of numbers the league has seen.
+ */
+const midweekInner = `
+  <tr><td style="padding:0 2px 12px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font:800 27px/1 ${F};letter-spacing:-.03em;color:${C.ink}">DFFL</td>
+      <td align="right" style="font:600 11.5px/1.4 ${F};color:${C.faint};text-transform:uppercase;letter-spacing:.07em">
+        Midweek · Week ${D.week} · ${D.season}</td>
+    </tr></table>
+  </td></tr>
+  ${isMidweek ? fullColumnBlock(lead) : ""}
+  ${footerNote}`;
 
-const text = [
+const html = minify(shell(isMidweek ? midweekInner : inner));
+
+const text = isMidweek ? [`DFFL — Midweek, Week ${D.week}, ${D.season}`, `\n${columnText(lead)}`].join("\n") : [
   `DFFL — Week ${D.week}, ${D.season}`,
   lead ? (isMidweek ? `\n${columnText(lead)}`
     : `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}`) : "",
