@@ -2994,6 +2994,193 @@
      "text": "The whole league spent $3 in FAAB this week, all of it on jadencha's claim for <b>Malik Washington</b>. Everything else went through free agency. Domo112 made eight moves on his own, and has not spent a dollar of FAAB all season."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "sizzlemc2-has-too-many-good-players",
+   "date": "2026-09-30",
+   "source": "watch",
+   "kicker": "Manager profile · sizzlemc2",
+   "headline": "sizzlemc2 Has Too Many Good Players",
+   "dek": "The second-most points in the league, and the most left on the bench. Three weeks into the season, every one of Managerial Wizard's results has turned on a lineup call.",
+   "byline": "DFFL desk",
+   "standfirst": "2-1 · 422.24 points for · 155.12 on the bench",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "<b>sizzlemc2</b> is 2-1, which undersells the team. Managerial Wizard has scored 422.24 points, second only to jadencha, and against the whole league its three weekly scores are worth a <b>23-10</b> record, also second only to jadencha. The problem, such as it is, is on the other side of the lineup card: no roster in the league has left more points on its bench."
+    },
+    {
+     "type": "stat",
+     "n": "155.12",
+     "text": "Points <b>sizzlemc2</b> has left on the bench through three weeks, the most in the league. jadencha is next at 151.12. moseslin has left the fewest, 57.10."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the roster",
+     "text": "Two Stars and Three Keepers"
+    },
+    {
+     "type": "p",
+     "text": "The team runs through two players. <b>Kenneth Walker</b>, one of three keepers alongside Javonte Williams and Justin Herbert, has scored 77.7 in three weeks, the most on the roster. <b>CeeDee Lamb</b> has 71.9. Together they account for 149.6 of the 422.24, more than a third of everything Managerial Wizard has scored."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Kenneth Walker",
+       "big": "77.7",
+       "sub": "RB · keeper",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Week 1",
+         "value": "35.6"
+        },
+        {
+         "label": "Week 2",
+         "value": "21.8"
+        },
+        {
+         "label": "Week 3",
+         "value": "20.3"
+        }
+       ]
+      },
+      {
+       "title": "CeeDee Lamb",
+       "big": "71.9",
+       "sub": "WR",
+       "rows": [
+        {
+         "label": "Week 1",
+         "value": "15.4"
+        },
+        {
+         "label": "Week 2",
+         "value": "35.3"
+        },
+        {
+         "label": "Week 3",
+         "value": "21.2"
+        }
+       ]
+      },
+      {
+       "title": "Javonte Williams",
+       "big": "45.5",
+       "sub": "RB · keeper",
+       "rows": [
+        {
+         "label": "Week 1",
+         "value": "21.7"
+        },
+        {
+         "label": "Week 2",
+         "value": "6.5"
+        },
+        {
+         "label": "Week 3",
+         "value": "17.3"
+        }
+       ]
+      },
+      {
+       "title": "David Montgomery",
+       "big": "36.6",
+       "sub": "RB · started all three",
+       "rows": [
+        {
+         "label": "Week 1",
+         "value": "27.4"
+        },
+        {
+         "label": "Week 2",
+         "value": "3.4"
+        },
+        {
+         "label": "Week 3",
+         "value": "5.8"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "three weeks",
+     "text": "Three Lineup Calls"
+    },
+    {
+     "type": "p",
+     "text": "<b>Week 1, a win by 18.14.</b> Justin Herbert started at quarterback and scored 14.26. <b>Tyler Shough</b> sat on the bench with 27.2, the best bench score on the roster. It did not cost anything, because Walker's 35.6 and Kelce's 11.1 on Monday night turned a 28.56-point deficit against chassinator into a 162.66 to 144.52 win."
+    },
+    {
+     "type": "p",
+     "text": "<b>Week 2, a loss by 18.28.</b> The one that got away. Dallas Goedert, picked up that week for Rashid Shaheed, started at tight end and scored 1.4. <b>Travis Kelce</b> scored 25.1 on the bench. That swap alone was worth 23.7 points, against a margin of 18.28 to victorthompson. sizzlemc2 left 69.98 on the bench that week, more than anyone in the league."
+    },
+    {
+     "type": "p",
+     "text": "<b>Week 3, a win by 17.32.</b> Shough got the start and scored 24.8, the best score in the lineup; Herbert's 13.74 was the best thing left on the bench. Kelce was back in the lineup for 14.9. Seven starters reached double figures and 148.6 was the second-best score of the week."
+    },
+    {
+     "type": "bars",
+     "title": "Every result, and the call behind it",
+     "sub": "final margin each week; the bench call that mattered",
+     "rows": [
+      {
+       "label": "Week 1 v chassinator",
+       "sub": "Shough 27.2 on the bench, won anyway",
+       "value": 18.14,
+       "group": 1
+      },
+      {
+       "label": "Week 2 v victorthompson",
+       "sub": "Kelce 25.1 on the bench, Goedert 1.4 started",
+       "value": -18.28,
+       "group": 2
+      },
+      {
+       "label": "Week 3 v wesley55",
+       "sub": "Shough started, 24.8",
+       "value": 17.32,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the soft spots",
+     "text": "Where the Points Stop"
+    },
+    {
+     "type": "p",
+     "text": "The depth that fills the bench has not reached every lineup slot. <b>David Montgomery</b> opened with 27.4 and has managed 3.4 and 5.8 since, and he has started all three weeks. <b>Tucker Kraft</b> has started all three as well, for 9.5, 3.5 and 6.6. The waiver wire has cost almost nothing: sizzlemc2 has spent $4 of FAAB all season, on the Minnesota defense, which scored 19 in week 3, the best defensive score of the week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the board",
+     "text": "Right on the Line"
+    },
+    {
+     "type": "p",
+     "text": "The site priced Managerial Wizard at 33.7% to make the playoffs on draft day. It is 52.6% now, a rise of 18.9 points, second only to bradyrife's. The title price has come in from +3540 to +1820, and the model projects about 7.0 wins. Six of twelve teams make the playoffs, and 52.6% is the sixth-best chance in the league: saucebossandrew is next at 43.1%."
+    },
+    {
+     "type": "stat",
+     "n": "23-10",
+     "text": "sizzlemc2's record if every team played all eleven others every week, second only to jadencha's 30-3. The actual record is 2-1."
+    },
+    {
+     "type": "p",
+     "text": "Next up is <b>drewkim</b> in week 4. The roster is not the question. The lineup card is."
+    },
+    {
+     "type": "note",
+     "text": "Manager profiles run midweek, one manager at a time, picked at random. Every figure is from the league's own data through week 3."
+    }
+   ]
   }
  ]
 }

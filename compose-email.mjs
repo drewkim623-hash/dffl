@@ -232,6 +232,124 @@ const columnBlock = a => {
   </td></tr>`;
 };
 
+/* ----------------------------------------------------- the whole column */
+/**
+ * A midweek column goes out in full.
+ *
+ * The Tuesday and Saturday emails are digests — the week, the board, and a
+ * column teaser that sends you to the site. A midweek piece is the whole reason
+ * that email exists, so it carries every block, with links to the piece and the
+ * site at the top and again at the bottom. Same block types as the site's
+ * renderer; bars become tables because email has nothing better.
+ */
+const blockHtml = b => {
+  const P = `font:400 14px/1.6 ${F};color:${C.ink};margin-top:12px`;
+  if (b.type === "p") return `<div style="${P}">${rich(b.text)}</div>`;
+  if (b.type === "h") return `
+    <div style="margin-top:22px">
+      ${b.eyebrow ? `<div style="font:700 10px/1.3 ${F};color:${C.blue};text-transform:uppercase;letter-spacing:.07em">${esc(b.eyebrow)}</div>` : ""}
+      <div style="font:800 18px/1.25 ${F};color:${C.ink};letter-spacing:-.01em;margin-top:3px">${esc(b.text)}</div>
+    </div>`;
+  if (b.type === "stat") return `
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:14px">
+      <tr><td style="padding-right:12px;font:800 30px/1 ${F};color:${C.blue};letter-spacing:-.02em;vertical-align:middle;white-space:nowrap">${esc(b.n)}</td>
+          <td style="font:400 12.5px/1.45 ${F};color:${C.mid};vertical-align:middle">${rich(b.text)}</td></tr>
+    </table>`;
+  if (b.type === "note") return `<div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:14px;border-top:1px solid ${C.line};padding-top:10px">${rich(b.text)}</div>`;
+  if (b.type === "bars") {
+    const rows = b.rows || [];
+    const max = Math.max(...rows.map(r => Math.abs(Number(r.value) || 0)), 1e-9);
+    const colour = g => g === 1 ? C.green : g === 3 ? C.gold : C.red;
+    return `
+    <div style="margin-top:16px">
+      ${b.title ? `<div style="font:700 13px/1.3 ${F};color:${C.ink}">${esc(b.title)}</div>` : ""}
+      ${b.sub ? `<div style="font:400 11.5px/1.4 ${F};color:${C.faint};margin-top:2px">${esc(b.sub)}</div>` : ""}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px">
+      ${rows.map(r => {
+        const v = Number(r.value) || 0;
+        const w = Math.max(2, Math.round(Math.abs(v) / max * 100));
+        return `<tr>
+          <td style="padding:5px 8px 5px 0;font:600 12px/1.3 ${F};color:${C.ink};white-space:nowrap;vertical-align:top" width="38%">${esc(r.label)}
+            ${r.sub ? `<div style="font:400 10.5px/1.3 ${F};color:${C.faint}">${esc(r.sub)}</div>` : ""}</td>
+          <td style="padding:5px 0;vertical-align:middle">
+            <table role="presentation" width="${w}%" cellpadding="0" cellspacing="0"><tr>
+              <td bgcolor="${colour(r.group)}" style="background:${colour(r.group)};height:10px;border-radius:3px;font-size:0;line-height:0">&nbsp;</td></tr></table></td>
+          <td align="right" style="padding:5px 0 5px 8px;font:700 12px/1.3 ${F};color:${C.ink};white-space:nowrap;vertical-align:middle" width="14%">${v > 0 ? "+" : ""}${esc(r.value)}</td>
+        </tr>`;
+      }).join("")}
+      </table>
+    </div>`;
+  }
+  if (b.type === "cards") {
+    const card = c => c ? box(`
+      <div style="font:700 12.5px/1.3 ${F};color:${C.ink}">${esc(c.title)}</div>
+      ${c.big != null ? `<div style="font:800 22px/1.2 ${F};color:${c.lead ? C.blue : C.ink};margin-top:4px">${esc(c.big)}</div>` : ""}
+      ${c.sub ? `<div style="font:400 11px/1.4 ${F};color:${C.faint};margin-top:2px">${esc(c.sub)}</div>` : ""}
+      ${(c.rows || []).map(r => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px"><tr>
+        <td style="font:400 11.5px/1.35 ${F};color:${C.mid}">${esc(r.label)}</td>
+        <td align="right" style="font:700 11.5px/1.35 ${F};color:${C.ink};white-space:nowrap">${esc(r.value)}</td></tr></table>`).join("")}
+    `, "11px 13px") : "";
+    const items = b.items || [];
+    const pairs = [];
+    for (let i = 0; i < items.length; i += 2) pairs.push([items[i], items[i + 1]]);
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px">
+      ${pairs.map(([x, y]) => `<tr>
+        <td class="col" width="50%" valign="top" style="padding:0 4px 8px 0">${card(x)}</td>
+        <td class="col" width="50%" valign="top" style="padding:0 0 8px 4px">${card(y)}</td></tr>`).join("")}
+    </table>`;
+  }
+  if (b.type === "picks") return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px">
+      ${(b.items || []).map(p => `<tr>
+        <td style="padding:5px 8px 5px 0;font:700 11px/1.3 ${F};color:${C.faint};white-space:nowrap">${esc(p.slot)}</td>
+        <td style="padding:5px 0;font:600 12.5px/1.3 ${F};color:${C.ink}">${esc(p.name)}
+          ${p.sub ? `<span style="font:400 11px/1.3 ${F};color:${C.faint};padding-left:6px">${esc(p.sub)}</span>` : ""}</td>
+        <td align="right" style="padding:5px 0;font:700 12px/1.3 ${F};color:${C.ink};white-space:nowrap">${esc(p.delta ?? "")}</td></tr>`).join("")}
+    </table>`;
+  return "";
+};
+
+const linkRow = a => `
+  <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+    <td style="padding-right:16px"><a href="${linkTo(a)}" style="font:700 13px/1 ${F};color:${C.blue};text-decoration:none">Read it on the site →</a></td>
+    <td><a href="${SITE}" style="font:700 13px/1 ${F};color:${C.blue};text-decoration:none">Open the league site →</a></td>
+  </tr></table>`;
+
+const fullColumnBlock = a => `
+  <tr><td style="padding:14px 0 0">
+    ${box(`
+      ${linkRow(a)}
+      <div style="height:14px;border-bottom:1px solid ${C.line};margin-bottom:14px"></div>
+      ${a.kind === "opinion" ? `<span style="display:inline-block;font:800 9.5px/1 ${F};letter-spacing:.09em;
+        text-transform:uppercase;color:${C.red};border:1px solid ${C.red};border-radius:3px;padding:4px 6px;margin-bottom:9px">Column</span>` : ""}
+      ${a.kicker ? `<div style="font:700 10px/1.3 ${F};color:${C.blue};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">${esc(a.kicker)}</div>` : ""}
+      <div class="big" style="font:800 26px/1.15 ${F};color:${C.ink};letter-spacing:-.022em">${esc(a.headline)}</div>
+      ${a.dek ? `<div style="font:400 14px/1.5 ${F};color:${C.mid};margin-top:7px">${esc(a.dek)}</div>` : ""}
+      ${a.byline || a.standfirst ? `<div style="font:600 11.5px/1.4 ${F};color:${C.faint};margin-top:9px">${esc([a.byline, a.standfirst].filter(Boolean).join(" · "))}</div>` : ""}
+      ${(a.blocks || []).map(blockHtml).join("")}
+      <div style="height:18px;border-bottom:1px solid ${C.line};margin-bottom:14px"></div>
+      ${linkRow(a)}
+    `, "18px 18px 18px")}
+  </td></tr>`;
+
+/** Plain-text version of a whole column, for the fallback body. */
+const plain = s => String(s ?? "").replace(/<\/?b>/g, "");
+const columnText = a => [
+  (a.kicker || "COLUMN").toUpperCase(), a.headline, a.dek || "",
+  `Read it on the site: ${linkTo(a)}`, "",
+  ...(a.blocks || []).map(b =>
+    b.type === "p" ? plain(b.text) :
+    b.type === "h" ? `\n${plain(b.text).toUpperCase()}` :
+    b.type === "stat" ? `${b.n} — ${plain(b.text)}` :
+    b.type === "note" ? `(${plain(b.text)})` :
+    b.type === "bars" ? [b.title, ...(b.rows || []).map(r => `  ${r.label}: ${r.value}${r.sub ? ` (${r.sub})` : ""}`)].filter(Boolean).join("\n") :
+    b.type === "cards" ? (b.items || []).map(c => `  ${c.title}: ${c.big ?? ""}${c.sub ? ` — ${c.sub}` : ""}`).join("\n") :
+    b.type === "picks" ? (b.items || []).map(p => `  ${p.slot} ${p.name} ${p.delta ?? ""}`).join("\n") : ""),
+  "", `Read it on the site: ${linkTo(a)}`, `The league site: ${SITE}`,
+].join("\n");
+
+const isMidweek = !!(lead && lead.source === "watch");
+
 /* --------------------------------------------------------- the week's recap */
 /** Six results, two across, with the lede above them. */
 const recapBlock = wk => {
@@ -341,7 +459,8 @@ const alsoBlock = a => box(`
 const footerNote = `
   <tr><td style="padding:22px 0 0">
     ${box(`
-      <div style="font:700 13px/1.35 ${F};color:${C.ink}">Written by the DFFL desk, Saturday evening.</div>
+      <div style="font:700 13px/1.35 ${F};color:${C.ink}">Written by the DFFL desk, ${
+        lead && lead.source === "tuesday" ? "Tuesday morning" : isMidweek ? "midweek" : "Saturday evening"}.</div>
       <div style="font:400 12px/1.55 ${F};color:${C.mid};margin-top:6px">
         Every number is computed from Sleeper's own data by
         <a href="${SITE}" style="color:${C.blue};text-decoration:none">the league site</a>, so this and
@@ -359,7 +478,7 @@ const inner = `
     </tr></table>
   </td></tr>
   ${strip}
-  ${lead ? columnBlock(lead) : ""}
+  ${lead ? (isMidweek ? fullColumnBlock(lead) : columnBlock(lead)) : ""}
   ${lastWeek ? recapBlock(lastWeek) : ""}
   ${marquee ? head2("Match of the week",
     marquee.settled ? "the closest thing the week had" : "closest to a coin flip") : ""}
@@ -408,7 +527,8 @@ const html = minify(shell(inner));
 
 const text = [
   `DFFL — Week ${D.week}, ${D.season}`,
-  lead ? `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}` : "",
+  lead ? (isMidweek ? `\n${columnText(lead)}`
+    : `\n${(lead.kicker || "COLUMN").toUpperCase()}\n${lead.headline}\n${lead.dek || ""}\n${linkTo(lead)}`) : "",
   lastWeek ? `\nWEEK ${lastWeek.week} IN THE BOOK\n` + lastWeek.games.map(g =>
     `${g.winner} ${g.winner_points} def ${g.loser} ${g.loser_points} — ${g.headline}`).join("\n") : "",
   marquee ? `\nMATCH OF THE WEEK\n${marquee.a} ${marquee.aPts.toFixed(1)} (${pc(marquee.pA)}) v ${marquee.b} ${marquee.bPts.toFixed(1)} (${pc(marquee.pB)})` : "",
