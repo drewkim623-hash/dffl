@@ -104,6 +104,19 @@ One article, appended to `articles[]`, that is both the column and the recap —
 **Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append to it, and leave
 every existing article exactly as found. Dropping the key deletes writing nothing else regenerates.
 
+## Polls: the league votes by replying
+
+Every email carries the open poll from `polls.json`, and people answer by **replying to the email
+with one word**, with no links and no forms. Gmail strips forms, and a link is one more thing to tap.
+
+- **Tuesday** opens the week's poll: one question, two to four one-word keys, closing that Saturday.
+  After the send, it saves the send's `threadId` on the poll as `thread_id`.
+- **Saturday** tallies before composing: it reads the replies from Gmail, writes them to
+  `votes.json`, and runs `node poll-tally.mjs --close <id> --votes votes.json`. The email then prints
+  the result, and `node poll-tally.mjs --announce <id>` marks it printed.
+- The script owns the counting rules: only the twelve league addresses count, a reply must start
+  with an option key, one vote per address, and the latest reply counts. No routine counts votes itself.
+
 ## The two hard rules
 
 **Never state a rank or a movement.** Not in the lede, not in a game recap, not in the notebook, not
