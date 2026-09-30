@@ -421,6 +421,39 @@
 
   .board{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);
     overflow:hidden;margin-bottom:11px}
+
+  /* trade machine */
+  .tmnote{font-size:12.5px;color:var(--muted);line-height:1.55;margin:0 0 12px;max-width:80ch}
+  .tmgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  @media (max-width:640px){.tmgrid{grid-template-columns:1fr}}
+  .tmsel{padding:10px 12px;border-bottom:1px solid var(--grid)}
+  .tmsel select{width:100%;background:var(--raised);color:var(--ink);border:1px solid var(--ring);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px}
+  .tmlist{max-height:430px;overflow-y:auto}
+  .tmp{display:grid;grid-template-columns:18px 38px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--grid);cursor:pointer;font-size:13.5px}
+  .tmp:last-child{border-bottom:0}
+  .tmp.on{background:rgba(57,135,229,.12)}
+  .tmp input{margin:0;accent-color:var(--blue)}
+  .tmp .pos{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:700}
+  .tmp .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tmp .cl{color:var(--muted);font-size:11.5px;margin-left:6px}
+  .tmp .v{font-variant-numeric:tabular-nums;font-weight:700}
+  .tmp .u{color:var(--muted);font-weight:400;font-size:11px}
+  .tmrun{margin:12px 0;width:100%;background:var(--blue);color:#fff;border:0;border-radius:10px;padding:13px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+  .tmrun:hover{filter:brightness(1.08)}
+  .tmverdict{font-size:15px;margin:4px 0 12px;line-height:1.5}
+  .tmpair{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  @media (max-width:640px){.tmpair{grid-template-columns:1fr}}
+  .tmstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--grid)}
+  .tmstats>div{background:var(--surface);padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+  .tmstats .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+  .tmstats .n{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .tmstats .d{font-size:12px;font-weight:700;color:var(--muted)}
+  .tmstats .d.up{color:var(--plus)} .tmstats .d.dn{color:var(--red)}
+  .tmline{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px}
+  .tms{font-size:12px;background:var(--raised);border:1px solid var(--ring);border-radius:7px;padding:4px 7px;color:var(--ink-2)}
+  .tms b{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-right:3px}
+  .tms i{font-style:normal;color:var(--muted);margin-left:3px}
+  .tms.new{border-color:rgba(57,135,229,.6);color:var(--ink);background:rgba(57,135,229,.12)}
   .bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:12px 15px;background:var(--raised);border-bottom:1px solid var(--grid)}
   .bhead .bt{font-size:14.5px;font-weight:800;letter-spacing:-.01em;min-width:0}
@@ -1551,6 +1584,7 @@ const TABS = [
   { id: "picture", label: "Playoff Picture" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
+  { id: "trade", label: "Trade Machine" },
   // The id stays "recaps" so links people have already shared keep working.
   { id: "recaps", label: "News & Articles" },
 ];
@@ -1582,6 +1616,7 @@ function show(id) {
   // The trade block reads five seasons of transactions and a 5MB name file.
   // Nobody pays for that until they ask to see it.
   if (id === "trades") ensureTrades();
+  if (id === "trade") ensureTradeMachine();
   // The Playoff Picture replaced the Race tab; old links still land on it.
   if (id === "race") id = "picture";
   // Same deal for the playoff picture: it reads the rest of the schedule and
@@ -8354,6 +8389,257 @@ function panelTrades() {
   return p;
 }
 
+/* ===================================================== TRADE MACHINE */
+/*
+ * Propose a trade and see what it does to both teams' seasons before anyone
+ * offers it in Sleeper.
+ *
+ * The method, in the order it runs:
+ *   1. Every rostered player is valued at his points per week this season: the
+ *      mean over the finished weeks in which he recorded a score.
+ *   2. Each team's best legal lineup is built from those values, before and
+ *      after the trade, using the league's own starting slots. The change in
+ *      that lineup's weekly total is the trade's effect on the team.
+ *   3. That change is added to the team's scoring level in the live model — the
+ *      same state the Odds tab and the Playoff Picture run — and the rest of the
+ *      season is played out both ways with the same random numbers, so the only
+ *      difference between the two runs is the trade.
+ *
+ * It says what the numbers say, not what a player is "worth": three weeks of
+ * points is a small sample, and the card says so.
+ */
+const TM_SIMS = 10000;
+const TM_FLEX = { FLEX: ["RB", "WR", "TE"], SUPER_FLEX: ["QB", "RB", "WR", "TE"],
+  REC_FLEX: ["WR", "TE"], WRRB_FLEX: ["RB", "WR"] };
+const TM_SLOTS = ["QB", "RB", "RB", "WR", "WR", "TE", "FLEX", "FLEX", "K", "DEF"];
+let TM_STARTED = false;
+
+/** The finished weeks this season, the ones a player's average is taken over. */
+function tmWeeks(season) {
+  const pw = season.playerWeek;
+  if (!pw) return [];
+  const live = season.liveWeek ? Number(season.liveWeek) : null;
+  const f = season.finalWeeks;
+  const fin = f instanceof Set ? [...f] : Array.isArray(f) ? f : null;
+  return [...pw.keys()].map(Number)
+    .filter(w => fin ? fin.map(Number).includes(w) : w !== live)
+    .sort((a, b) => a - b);
+}
+
+/** Points per week over the finished weeks in which the player recorded a score. */
+function tmValue(season, pid, weeks) {
+  let s = 0, n = 0;
+  for (const w of weeks) {
+    const m = season.playerWeek.get(w) || season.playerWeek.get(String(w));
+    const v = m && (m.has(String(pid)) ? m.get(String(pid)) : m.get(pid));
+    if (v != null && isFinite(Number(v))) { s += Number(v); n++; }
+  }
+  return { avg: n ? s / n : 0, n, total: s };
+}
+
+/**
+ * The best lineup a roster can start, from per-week values. Fixed slots take the
+ * best player at their position first, then each flex slot takes the best
+ * eligible player left — which is optimal for a QB/RB/WR/TE/FLEX/K/DEF layout.
+ */
+function tmLineup(players, slots) {
+  const pool = players.slice().sort((a, b) => b.avg - a.avg);
+  const used = new Set(), picks = [];
+  let total = 0;
+  const take = (slot, ok) => {
+    const p = pool.find(x => !used.has(x.pid) && ok(x.pos));
+    if (!p) { picks.push({ slot, p: null }); return; }
+    used.add(p.pid); total += p.avg; picks.push({ slot, p });
+  };
+  for (const s of slots.filter(s => !TM_FLEX[s])) take(s, pos => pos === s);
+  for (const s of slots.filter(s => TM_FLEX[s])) take(s, pos => TM_FLEX[s].includes(pos));
+  return { total, picks };
+}
+
+/**
+ * Names for players the roster map does not carry yet (a pickup since the last
+ * Action run). The draft board covers most; Sleeper's player file is fetched
+ * only if someone is still missing. Kept apart from loadPlayerNames, which
+ * caches the first set it is asked for and serves the Trades tab.
+ */
+async function tmNames(season, rostered) {
+  const out = new Map();
+  const missing = (season.rosters || []).flatMap(r => r.players || []).map(String).filter(p => !rostered.map.has(p));
+  if (!missing.length) return out;
+  const dm = draftNameMap();
+  for (const pid of missing) if (dm.has(pid)) { const d = dm.get(pid); out.set(pid, { n: d.name, p: d.pos, t: d.team }); }
+  const still = missing.filter(p => !out.has(p));
+  if (still.length && !MOCK) {
+    try {
+      const all = await jget(`${API}/players/nfl`);
+      for (const pid of still) {
+        const p = all[pid];
+        if (p) out.set(pid, { n: (p.full_name || `${p.first_name || ""} ${p.last_name || ""}`).trim() || pid, p: p.position || "?", t: p.team || "" });
+      }
+    } catch (e) { /* an unnamed player shows as his id, not a broken tab */ }
+  }
+  return out;
+}
+
+/** Every roster as {rid, uid, name, players:[{pid, name, pos, club, avg, n}]}. */
+function tmRosters(season, rostered, weeks, extra = new Map()) {
+  return (season.rosters || []).map(r => {
+    const uid = r.owner_id;
+    const players = (r.players || []).map(pid => {
+      const info = rostered.map.get(String(pid)) || extra.get(String(pid)) || {};
+      const v = tmValue(season, pid, weeks);
+      return { pid: String(pid), name: info.n || String(pid), pos: info.p || "?", club: info.t || "", ...v };
+    }).sort((a, b) => b.avg - a.avg);
+    return { rid: r.roster_id, uid, name: nameOf(uid), players };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Play the rest of the season with and without the trade. */
+function tmSimulate(model, live, changes) {
+  const base = simulateSeason(model, TM_SIMS, live);
+  const teams = live.teams.map((t, i) => changes.has(i) ? { ...t, mean: t.mean + changes.get(i) } : t);
+  const after = simulateSeason(model, TM_SIMS, { ...live, teams });
+  return { base, after };
+}
+
+function panelTradeMachine() {
+  const p = el("div", "panel"); p.dataset.panel = "trade";
+  p.appendChild(sechead("Trade machine",
+    "Build a trade between any two teams and see what it does to both seasons: the starting lineup each team could field, and its chance of making the playoffs and winning it all."));
+  const host = el("div"); host.id = "tmHost";
+  host.appendChild(el("div", "empty", "<b>Loading rosters…</b>Every roster, every player's points this season, and the live season model."));
+  p.appendChild(host);
+  return p;
+}
+
+async function ensureTradeMachine() {
+  if (TM_STARTED) return;
+  TM_STARTED = true;
+  const host = $("#tmHost");
+  try {
+    const [L, rostered] = await Promise.all([liveOnce(), loadRostered()]);
+    const season = DB.seasons[0];
+    if (!L.live || !L.model || !L.model.ok) {
+      host.innerHTML = "";
+      host.appendChild(el("div", "empty", "<b>No season to trade in</b>The trade machine runs on the live season model, which starts once week 1 is played."));
+      document.body.dataset.tmReady = "empty";
+      return;
+    }
+    const weeks = tmWeeks(season);
+    const rosters = tmRosters(season, rostered, weeks, await tmNames(season, rostered));
+    const slots = (rostered.slots && rostered.slots.length ? rostered.slots : TM_SLOTS)
+      .filter(s => !["BN", "IR", "TAXI"].includes(s));
+    renderTradeMachine(host, { L, season, weeks, rosters, slots });
+    document.body.dataset.tmReady = "1";
+  } catch (e) {
+    host.innerHTML = "";
+    host.appendChild(el("div", "empty", `<b>The trade machine couldn't load</b>${esc(e.message)}`));
+    document.body.dataset.tmReady = "error";
+    console.error(e);
+  }
+}
+
+function renderTradeMachine(host, ctx) {
+  const { L, weeks, rosters, slots } = ctx;
+  const st = { a: rosters[0] && rosters[0].rid, b: rosters[1] && rosters[1].rid, give: new Set(), get: new Set() };
+  host.innerHTML = "";
+  const note = el("p", "tmnote",
+    `Players are valued at their points per week over weeks ${weeks.length ? `${weeks[0]}–${weeks[weeks.length - 1]}` : "played so far"}.
+     Tick the players each side sends, then run it. Rosters are as Sleeper has them now; roster limits are not checked.`);
+  host.appendChild(note);
+  const grid = el("div", "tmgrid");
+  host.appendChild(grid);
+  const out = el("div", "tmout");
+  const btn = el("button", "tmrun", "Run the trade");
+  host.appendChild(btn);
+  host.appendChild(out);
+
+  const side = key => {
+    const box = el("div", "board tmside");
+    const pick = key === "a" ? "give" : "get";
+    const draw = () => {
+      const r = rosters.find(x => x.rid === st[key]);
+      box.innerHTML = `<div class="bhead"><span class="bt">${key === "a" ? "Team one sends" : "Team two sends"}</span></div>
+        <div class="tmsel"><select aria-label="${key === "a" ? "Team one" : "Team two"}">${rosters.map(x =>
+          `<option value="${x.rid}"${x.rid === st[key] ? " selected" : ""}${x.rid === st[key === "a" ? "b" : "a"] ? " disabled" : ""}>${esc(x.name)}</option>`).join("")}</select></div>
+        <div class="tmlist">${r ? r.players.map(pl => `<label class="tmp${st[pick].has(pl.pid) ? " on" : ""}">
+          <input type="checkbox" value="${esc(pl.pid)}"${st[pick].has(pl.pid) ? " checked" : ""}>
+          <span class="pos">${esc(pl.pos)}</span><span class="nm">${esc(pl.name)}<span class="cl">${esc(pl.club)}</span></span>
+          <span class="v">${pl.n ? f2(pl.avg) : "—"}<span class="u">${pl.n ? "/wk" : ""}</span></span></label>`).join("") : ""}</div>`;
+      box.querySelector("select").onchange = e => {
+        st[key] = Number(e.target.value); st[pick].clear(); out.innerHTML = "";
+        drawAll();
+      };
+      box.querySelectorAll("input[type=checkbox]").forEach(cb => cb.onchange = () => {
+        cb.checked ? st[pick].add(cb.value) : st[pick].delete(cb.value);
+        cb.closest(".tmp").classList.toggle("on", cb.checked);
+      });
+    };
+    box._draw = draw;
+    return box;
+  };
+  const A = side("a"), B = side("b");
+  grid.appendChild(A); grid.appendChild(B);
+  const drawAll = () => { A._draw(); B._draw(); };
+  drawAll();
+
+  btn.onclick = () => {
+    const ra = rosters.find(x => x.rid === st.a), rb = rosters.find(x => x.rid === st.b);
+    if (!ra || !rb || !st.give.size || !st.get.size) {
+      out.innerHTML = `<div class="empty"><b>Pick at least one player on each side.</b>A trade needs something going both ways.</div>`;
+      return;
+    }
+    out.innerHTML = `<div class="empty"><b>Running…</b>Playing out the rest of the season ${TM_SIMS.toLocaleString()} times each way.</div>`;
+    setTimeout(() => {
+      try { out.innerHTML = ""; out.appendChild(tradeResult(ra, rb, st.give, st.get, slots, L)); }
+      catch (e) { out.innerHTML = `<div class="empty"><b>That didn't run</b>${esc(e.message)}</div>`; console.error(e); }
+    }, 20);
+  };
+}
+
+function tradeResult(ra, rb, give, get, slots, L) {
+  const { model, live } = L;
+  const sent = (r, ids) => r.players.filter(p => ids.has(p.pid));
+  const afterRoster = (r, out, inn) => [...r.players.filter(p => !out.has(p.pid)), ...inn];
+  const aOut = sent(ra, give), bOut = sent(rb, get);
+  const aBefore = tmLineup(ra.players, slots), bBefore = tmLineup(rb.players, slots);
+  const aAfter = tmLineup(afterRoster(ra, give, bOut), slots), bAfter = tmLineup(afterRoster(rb, get, aOut), slots);
+  const ia = live.idx.get(ra.rid), ib = live.idx.get(rb.rid);
+  const dA = aAfter.total - aBefore.total, dB = bAfter.total - bBefore.total;
+  const { base, after } = tmSimulate(model, live, new Map([[ia, dA], [ib, dB]]));
+  const P = (C, i) => C.playoff[i] / C.sims, T = (C, i) => C.title[i] / C.sims;
+  const pc = x => `${(x * 100).toFixed(1)}%`;
+  const sg = (x, d = 1) => `${x > 0 ? "+" : x < 0 ? "−" : ""}${Math.abs(x).toFixed(d)}`;
+  const cls = x => x > 0.0005 ? "up" : x < -0.0005 ? "dn" : "";
+  const card = (r, i, gets, gives, before, aft, d) => {
+    const p0 = P(base, i), p1 = P(after, i), t0 = T(base, i), t1 = T(after, i);
+    const newIn = new Set(gets.map(p => p.pid));
+    return `<div class="board tmres">
+      <div class="bhead"><span class="bt">${esc(r.name)}<span class="bs">gets ${gets.map(p => esc(p.name)).join(", ")} · sends ${gives.map(p => esc(p.name)).join(", ")}</span></span></div>
+      <div class="tmstats">
+        <div><span class="k">Best lineup</span><span class="n">${f2(before.total)} → ${f2(aft.total)}</span><span class="d ${cls(d)}">${sg(d, 2)} a week</span></div>
+        <div><span class="k">Playoffs</span><span class="n">${pc(p0)} → ${pc(p1)}</span><span class="d ${cls(p1 - p0)}">${sg((p1 - p0) * 100)} pts</span></div>
+        <div><span class="k">Title</span><span class="n">${pc(t0)} → ${pc(t1)}</span><span class="d ${cls(t1 - t0)}">${sg((t1 - t0) * 100)} pts</span></div>
+      </div>
+      <div class="tmline">${aft.picks.map(x => `<span class="tms${x.p && newIn.has(x.p.pid) ? " new" : ""}"><b>${esc(x.slot === "SUPER_FLEX" ? "SF" : x.slot)}</b> ${x.p ? `${esc(x.p.name)} <i>${f2(x.p.avg)}</i>` : "—"}</span>`).join("")}</div>
+    </div>`;
+  };
+  const wrap = el("div", "tmresults");
+  const gA = P(after, ia) - P(base, ia), gB = P(after, ib) - P(base, ib);
+  const nA = esc(ra.name), nB = esc(rb.name), pts = x => `${sg(x * 100)} points`;
+  const verdict = gA > 0.005 && gB > 0.005 ? `On these numbers <b>both teams get better</b>: ${nA} ${pts(gA)} of playoff chance, ${nB} ${pts(gB)}.`
+    : gA < -0.005 && gB < -0.005 ? `On these numbers <b>this trade makes both teams worse</b>: ${nA} ${pts(gA)} of playoff chance, ${nB} ${pts(gB)}.`
+    : Math.abs(gA - gB) < 0.005 ? "On these numbers it is close to even for both teams."
+    : `On these numbers <b>${gA > gB ? nA : nB}</b> wins the trade: ${pts(Math.max(gA, gB))} of playoff chance, against ${pts(Math.min(gA, gB))} for ${gA > gB ? nB : nA}.`;
+  wrap.innerHTML = `<div class="tmverdict">${verdict}</div>
+    <div class="tmpair">${card(ra, ia, bOut, aOut, aBefore, aAfter, dA)}${card(rb, ib, aOut, bOut, bBefore, bAfter, dB)}</div>
+    <p class="tmnote">Each lineup is the best one the roster could start on season averages; players new to it are highlighted.
+      The change in that lineup is added to the team's scoring level in the live model, and the rest of the season is played
+      ${TM_SIMS.toLocaleString()} times with and without the trade using the same random draws. Three weeks of points is a small sample:
+      read this as what the season so far says, not as a player's true value.</p>`;
+  return wrap;
+}
+
 /* ---------------------------------------------------------------- boot */
 async function boot() {
   try {
@@ -8406,6 +8692,7 @@ async function boot() {
     app.appendChild(panelPicture());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
+    app.appendChild(panelTradeMachine());
     app.appendChild(await panelRecaps());
 
     buildTabs();
