@@ -3805,10 +3805,12 @@ async function oddsModel() {
 
   // The consolation bracket below is the one Sleeper actually builds for a
   // 12-team, 6-playoff-team league. Anything else and we don't post a board.
-  const ok = !!sched && teams.length === 12 && playoffTeams === 6 && cur.divCount === 3;
+  // The brackets are played fixed, from Sleeper's own structure (bracketTemplate).
+  const bracket = bracketTemplate(DB.seasons, playoffTeams, teams.length);
+  const ok = !!sched && teams.length === 12 && playoffTeams === 6 && cur.divCount === 3 && !!bracket;
 
   return {
-    ok, postDraft, teams, sched, weeks, playoffTeams, weekSd,
+    ok, postDraft, teams, sched, weeks, playoffTeams, weekSd, bracket,
     // Knowing the roster shrinks how far a season can land from the projection.
     seasonSd: postDraft ? SHOCK_POST : SHOCK_PRE,
     skillSd: Math.sqrt(skillVar), carry, base,
@@ -3850,6 +3852,135 @@ function seedField(rank, divOfIdx, playoffTeams) {
   return { champs, rest, wilds, pos, seeds: [...champs, ...rest.slice(0, wilds)] };
 }
 
+/* ------------------------------------------------------------ brackets */
+
+/*
+ * The playoff brackets as Sleeper draws them, in seed slots, so the simulator
+ * plays them FIXED — exactly the way Sleeper builds them — instead of re-seeding
+ * after every round.
+ *
+ * A template is { source, season, winners: [...], losers: [...] }, each game
+ * { m, r, p?, a, b } with a slot being { seed: k } (overall seed, 1..12), or
+ * { w: m } / { l: m } for whoever came out of game m that way. Only the games on
+ * the road to the title and to last place are kept (Sleeper's p=3 and p=5
+ * placement games decide nothing the board prices). Games run in Sleeper's own
+ * order: round, then m.
+ *
+ * In the losers bracket Sleeper's "w" is the team that ADVANCED, and DFFL's is a
+ * toilet bowl: you advance by losing (see placementsOf). So there { w: m } is
+ * the loser of game m's game, and the team that "wins" the p=1 game — loses it,
+ * on the scoreboard — is last.
+ */
+
+/**
+ * The labeled fallback, used only when neither this season's nor last season's
+ * Sleeper bracket can be read. It is the template Sleeper draws for a 12-team,
+ * 6-team-playoff league — the one read off the 2025 and 2026 brackets — so the
+ * fallback can never play a different bracket from the real one:
+ *   winners: 4 v 5 and 6 v 3; seed 1 meets the 4/5 winner, seed 2 the 3/6 winner.
+ *   losers:  9 v 8 and 7 v 10, losers advance; 12 meets the 8/9 loser, 11 the 7/10 loser.
+ */
+const FALLBACK_BRACKET = {
+  source: "fallback", season: null,
+  winners: [
+    { m: 1, r: 1, a: { seed: 4 }, b: { seed: 5 } },
+    { m: 2, r: 1, a: { seed: 6 }, b: { seed: 3 } },
+    { m: 3, r: 2, a: { seed: 1 }, b: { w: 1 } },
+    { m: 4, r: 2, a: { seed: 2 }, b: { w: 2 } },
+    { m: 6, r: 3, p: 1, a: { w: 3 }, b: { w: 4 } },
+  ],
+  losers: [
+    { m: 1, r: 1, a: { seed: 9 }, b: { seed: 8 } },
+    { m: 2, r: 1, a: { seed: 7 }, b: { seed: 10 } },
+    { m: 3, r: 2, a: { seed: 12 }, b: { w: 1 } },
+    { m: 4, r: 2, a: { seed: 11 }, b: { w: 2 } },
+    { m: 6, r: 3, p: 1, a: { w: 3 }, b: { w: 4 } },
+  ],
+};
+
+/**
+ * roster_id → overall seed (1..N) for a season, from Sleeper's own standings on
+ * its rosters (wins, ties as half, then points for) and the league's rule:
+ * division winners first in record order, then everyone else by record. For a
+ * finished season that is the final regular-season table (Sleeper's roster
+ * totals leave the playoffs out); mid-season it is the table Sleeper draws its
+ * provisional bracket from.
+ */
+function bracketSeeds(season) {
+  const rs = (season && season.rosters) || [];
+  if (!rs.length) return null;
+  const st = rs.map(r => {
+    const x = r.settings || {};
+    const div = season.divOf && season.divOf.has(r.roster_id) ? season.divOf.get(r.roster_id) : Number(x.division);
+    return {
+      rid: r.roster_id, div,
+      w: (Number(x.wins) || 0) + (Number(x.ties) || 0) / 2,
+      pf: (Number(x.fpts) || 0) + (Number(x.fpts_decimal) || 0) / 100,
+    };
+  });
+  if (st.some(t => t.div == null || !isFinite(t.div))) return null;
+  const rank = st.map((_, i) => i).sort((a, b) => st[b].w - st[a].w || st[b].pf - st[a].pf);
+  const { seeds, rest, wilds } = seedField(rank, i => st[i].div, season.playoffTeams || 6);
+  return new Map([...seeds, ...rest.slice(wilds)].map((i, k) => [st[i].rid, k + 1]));
+}
+
+/**
+ * One Sleeper bracket pair → a template, or null if it can't be read cleanly:
+ * every seed of the bracket exactly once, every { w } / { l } pointing back at
+ * an earlier round, every game but the final feeding exactly one later game,
+ * and one final. Rosters are mapped to seed slots with `seedOf`.
+ */
+function bracketFromSleeper(wb, lb, seedOf, P, N) {
+  if (!seedOf) return null;
+  const side = (arr, lo, hi) => {
+    if (!Array.isArray(arr) || !arr.length) return null;
+    const games = arr.filter(g => g && g.m != null && g.r != null && (!g.p || g.p === 1))
+      .sort((x, y) => x.r - y.r || x.m - y.m);
+    const roundOf = new Map(), fed = new Map(), seen = new Set(), out = [];
+    for (const g of games) {
+      const slot = (t, from) => {
+        if (from && (from.w != null || from.l != null)) {
+          const src = from.w != null ? from.w : from.l;
+          if (!roundOf.has(src) || roundOf.get(src) >= g.r) return null;
+          if (from.w != null) fed.set(src, (fed.get(src) || 0) + 1);
+          return from.w != null ? { w: src } : { l: src };
+        }
+        const k = seedOf.get(t);
+        if (k == null || k < lo || k > hi || seen.has(k)) return null;
+        seen.add(k);
+        return { seed: k };
+      };
+      const a = slot(g.t1, g.t1_from), b = slot(g.t2, g.t2_from);
+      if (!a || !b) return null;
+      roundOf.set(g.m, g.r);
+      out.push(g.p === 1 ? { m: g.m, r: g.r, p: 1, a, b } : { m: g.m, r: g.r, a, b });
+    }
+    const finals = out.filter(g => g.p === 1);
+    if (seen.size !== hi - lo + 1 || out.length !== hi - lo || finals.length !== 1) return null;
+    if (out.some(g => g.p !== 1 && fed.get(g.m) !== 1)) return null;
+    return out;
+  };
+  const winners = side(wb, 1, P), losers = side(lb, P + 1, N);
+  return winners && losers ? { winners, losers } : null;
+}
+
+/**
+ * The template the simulator plays. This season's bracket when Sleeper has drawn
+ * it (it draws a provisional one from the current table long before the
+ * playoffs); otherwise last completed season's, mapped by seed; otherwise the
+ * labeled fallback above, which is the same template.
+ */
+function bracketTemplate(seasons, P = 6, N = 12) {
+  const cur = seasons && seasons[0];
+  const prev = (seasons || []).find(s => s !== cur && s.complete && (s.wb || []).length);
+  for (const [s, source] of [[cur, "current"], [prev, "previous"]]) {
+    if (!s || (s.playoffTeams || 6) !== P || (s.rosters || []).length !== N) continue;
+    const t = bracketFromSleeper(s.wb, s.lb, bracketSeeds(s), P, N);
+    if (t) return { source, season: s.season, ...t };
+  }
+  return P === 6 && N === 12 ? FALLBACK_BRACKET : null;
+}
+
 /**
  * Run the season out and count what happens.
  *
@@ -3870,9 +4001,16 @@ function seedField(rank, divOfIdx, playoffTeams) {
  * many numbers are drawn: a forced run walks the same random stream as the
  * default one. The bracket is always played, even when only seeds are wanted,
  * because skipping its draws would shift every later season's stream.
+ *
+ * The brackets are `model.bracket` (see bracketTemplate): Sleeper's own
+ * structure in seed slots, played fixed — never re-seeded. It travels on the
+ * model, so the Playoff Picture's worker gets it with the job. Every template
+ * has P-1 games a side, so a season draws exactly as many numbers as before.
+ * `opts.trace`, an array, collects every bracket game played (for checks).
  */
 function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
-  if (!model || !model.ok) return null;
+  if (!model || !model.ok || !model.bracket) return null;
+  const BR = model.bracket, TR = opts && Array.isArray(opts.trace) ? opts.trace : null;
   const { weekSd, seasonSd, playoffTeams } = model;
   const teams = live ? live.teams : model.teams;
   // Both paths walk [{week, pairs}] so an injury can be charged to the weeks it covers.
@@ -3962,30 +4100,33 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
     };
     const roll = (i, r) => gau(lvl[i] * pcut(i, r), weekSd);
     const duel = (a, b, r = 0) => roll(a, r) > roll(b, r) ? [a, b] : [b, a];
-    const sp = new Map(seeds.map((x, i) => [x, i]));
 
-    // Winners bracket, weeks 15-17. Seeds 1-2 sit out the first round.
-    const [w1] = duel(seeds[2], seeds[5]);
-    const [w2] = duel(seeds[3], seeds[4]);
-    const low = sp.get(w1) > sp.get(w2) ? w1 : w2;
-    const high = low === w1 ? w2 : w1;
-    const [f1] = duel(seeds[0], low, 1);
-    const [f2] = duel(seeds[1], high, 1);
-    const [champ] = duel(f1, f2, 2);
-    C.title[champ]++;
-
-    // The toilet bowl, as DFFL actually runs it. Seeds 7-12 by record. The four
-    // best of them play round one — 7v10 and 8v9 — and the two that LOSE carry
-    // on. The two worst records sit out that round and enter next, already one
-    // game from the bottom. Losing again puts you in the final, and losing the
-    // final is last place. You fall by losing, all the way down.
+    // Both brackets, fixed, game by game in Sleeper's order. Round r of a
+    // bracket is week pws + r - 1. A { seed: k } slot is overall seed k: 1-6
+    // from the seeding, 7-12 the rest by record.
     const L = rest.slice(wilds);
-    const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
-    const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
-    const [, b1] = duel(L[5], a1, 1);       // worst seed meets one of them
-    const [, b2] = duel(L[4], a2, 1);       // second worst meets the other
-    const [, dead] = duel(b1, b2, 2);       // and the loser of that is twelfth
-    C.last[dead]++;
+    const slot = k => (k <= playoffTeams ? seeds[k - 1] : L[k - playoffTeams - 1]);
+    const play = (games, byLosing, name) => {
+      const adv = {}, out = {};
+      let top = -1;
+      for (const g of games) {
+        const at = x => (x.seed != null ? slot(x.seed) : x.w != null ? adv[x.w] : out[x.l]);
+        const a = at(g.a), b = at(g.b);
+        const [win, lose] = duel(a, b, g.r - 1);
+        // Winners bracket: the winner goes on. Toilet bowl: the loser does.
+        adv[g.m] = byLosing ? lose : win; out[g.m] = byLosing ? win : lose;
+        if (g.p === 1) top = adv[g.m];
+        if (TR) TR.push({ bracket: name, m: g.m, r: g.r, a, b, won: win });
+      }
+      return top;
+    };
+    // The title: seeds 1-2 sit out round one and meet the round-one winners
+    // their bracket slot says, whoever those turn out to be.
+    C.title[play(BR.winners, false, "winners")]++;
+    // The toilet bowl, as DFFL actually runs it: you advance by losing, the two
+    // worst records sit out round one, and "winning" the final — losing it on
+    // the scoreboard — is last place.
+    C.last[play(BR.losers, true, "losers")]++;
   }
   return C;
 }
@@ -7248,6 +7389,8 @@ function pictureJob(model, live, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS) {
   const m = {
     ok: model.ok, weekSd: model.weekSd, seasonSd: model.seasonSd, playoffTeams: model.playoffTeams,
     weeks: model.weeks, sched: model.sched, teams: model.teams.map(t => ({ mean: t.mean, div: t.div })),
+    // The bracket template the simulator plays (plain data, so it survives the post).
+    bracket: model.bracket ? JSON.parse(JSON.stringify(model.bracket)) : null,
   };
   const l = live ? {
     teams: live.teams.map(t => ({ mean: t.mean, levelSd: t.levelSd, div: t.div })),
@@ -7267,7 +7410,7 @@ function pictureJob(model, live, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS) {
 
 /** The runs themselves. Self-contained: this function is also the worker's body. */
 function pictureRun(job) {
-  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss });
+  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss, title: C.title });
   // The live board's own run, when the caller already has it: only the what-ifs are new work.
   const main = job.main || pick(simulateSeason(job.model, job.sims, job.live));
   const forced = job.games.map(([a, b]) => ({
@@ -8739,6 +8882,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
       raceData, raceAsOf, seedField, pairSchedule,
+      bracketTemplate, bracketFromSleeper, bracketSeeds, FALLBACK_BRACKET,
       ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
