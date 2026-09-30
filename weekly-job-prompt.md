@@ -1,7 +1,21 @@
 # The weekly job
 
 `recaps.json` and `rankings.json` are not written by the site. They are written once a week by a
-scheduled cloud agent — routine **DFFL Tuesday recaps**, Tuesdays at 1:00 AM Eastern.
+scheduled cloud agent — routine **DFFL Tuesday recaps**, Tuesdays at 12:00 UTC (8:00 AM Eastern in
+EDT, 7:00 AM in EST), after every Tuesday build and the daily 07:00 ET refresh have landed.
+
+## The week's three pieces
+
+Every week the league gets exactly three articles, each emailed as it is published:
+
+| When | Routine | The piece | `source` |
+|---|---|---|---|
+| Tuesday | DFFL Tuesday recaps | **the recap and a column in one article**: an argument off the finished week up top, then every game in full | `"tuesday"` |
+| Thursday or Friday | DFFL story watch | **one** midweek column — never zero, never two. Thursday only for a genuine story; otherwise Friday files | `"watch"` |
+| Saturday | DFFL Saturday blast | the Saturday column | `"saturday"` |
+
+Every routine pushes straight to `main`. None of them uses a session branch: a commit that is not on
+`main` is not on the site, and an email that links to it links to nothing.
 
 The site never depends on either file. A missing, empty or stale `rankings.json` costs nothing: the
 power rankings are computed in the browser from the game log, and each team falls back to showing
@@ -46,13 +60,14 @@ it: do not quote a record or points-for from it. The games themselves are final 
 
 ## What the job writes
 
-Two things, both committed straight to `main`:
+Three things, all committed straight to `main`:
 
 1. **`recaps.json` → `weeks[]`** — the week's write-up.
 2. **`rankings.json` → `weeks[]`** — one sentence of colour per manager.
+3. **`recaps.json` → `articles[]`** — one new article, `"source": "tuesday"`: the recap and the
+   column together. See **The Tuesday article** below.
 
-This job does not touch `articles[]` — but it does send, which used to be somebody
-else's job. See **Sending the blast** below.
+Then it sends that article. See **Sending the blast** below.
 
 ### The contract for `weeks[]`
 
@@ -69,14 +84,25 @@ injury, race, note`. Replace a week that already exists rather than duplicating 
 all twelve managers, every week. The site matches on that string and falls back silently if it does
 not match.
 
-### `articles[]` is not this job's to *write*
+### The Tuesday article
 
-The weekly column lives in `recaps.json` → `articles[]`, but the Tuesday job doesn't write it: the
-Saturday blast writes the week's column, and a separate midweek story watch files one or two more
-through the week. Every one of those jobs now *sends* what it filed — see below.
+One article, appended to `articles[]`, that is both the column and the recap — the shape of
+*One Game Was on the Bench* (week 2) and *The Schedule Is Keeping Score* (week 3):
 
-**Never drop `articles[]` when rewriting `recaps.json`.** Read the file, write `weeks[]` back, and
-leave `articles[]` exactly as found. Dropping the key deletes writing nothing else regenerates.
+- **The column first.** An argument the finished week supports and the standings alone do not
+  show: a lead paragraph, a `stat` block, two or three `h` sections, a `bars` or `cards` block. The
+  email pulls the first `stat` and the first paragraph, so both must carry weight. Read every
+  headline and dek already in `articles[]` and do not repeat an angle — in particular, not the
+  previous Saturday's.
+- **Then "The Week in Full".** An `h` with eyebrow `every game`, a short paragraph on the slate,
+  then every game in order of how close it finished: an `h` per game and one or two paragraphs,
+  opening with the score in `<b>`.
+- Fields: unique `slug`, today's `date`, `kind: "opinion"` if it argues, `kicker`
+  `"<season> · week <n>"`, `headline`, `dek`, `byline: "DFFL desk"`, `standfirst`, and
+  `"source": "tuesday"`.
+
+**Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append to it, and leave
+every existing article exactly as found. Dropping the key deletes writing nothing else regenerates.
 
 ## The two hard rules
 
