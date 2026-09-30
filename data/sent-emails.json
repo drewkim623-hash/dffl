@@ -69,6 +69,20 @@
    "sha256": "10d7b41d9ffd0590d9a2e63afed4c22926402bb486eef7363a2b44d7453c0186",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-09-30T02:07:18.019Z",
+   "subject": "DFFL Week 4: The Schedule Is Keeping Score",
+   "lead": "the-schedule-is-keeping-score",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 3
+   },
+   "to": 12,
+   "sha256": "7687948f80ffbd655c2e72ae60329777f433446e198808c9184d9b4c4ea1c789",
+   "by": "hand",
+   "note": ""
   }
  ]
 }
