@@ -2636,7 +2636,7 @@
       {
        "label": "wesley55",
        "sub": "2-0",
-       "value": 74.0,
+       "value": 74,
        "group": 1
       },
       {
@@ -2672,7 +2672,7 @@
       {
        "label": "moseslin",
        "sub": "0-2",
-       "value": 39.0,
+       "value": 39,
        "group": 3
       },
       {
@@ -2755,6 +2755,243 @@
     {
      "type": "note",
      "text": "All probabilities and odds from the site's own live board as of Saturday, comparing the preseason line to the current snapshot. Nothing here is a power ranking or a projection of final standings."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-schedule-is-keeping-score",
+   "date": "2026-09-29",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 3",
+   "headline": "The Schedule Is Keeping Score",
+   "dek": "bradyrife is 3-0 having faced 315.38 points, the fewest in the league. jadencha would be 30-3 against the whole league and is 2-1. Three weeks in, who you drew is doing a lot of the work. Every game in full, below.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · 1,546.7 points · every schedule checked",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "A head-to-head record answers one question: did you outscore the one team you happened to play? Three weeks is not long enough for that question to stop mattering. There is a fairer version, the one every league argues about and nobody keeps: play every team every week. Score each week against all eleven opponents, add it up, and the table comes out different. <b>bradyrife</b> is the only unbeaten team in the league and has the easiest schedule anyone has drawn. <b>jadencha</b> has beaten almost everybody and has a loss to show for it."
+    },
+    {
+     "type": "stat",
+     "n": "315.38",
+     "text": "Points scored against <b>bradyrife</b> in three weeks, the fewest in the league. <b>moseslin</b> has had 459.34 put up against him, the most — 143.96 more, in the same number of games."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the unbeaten",
+     "text": "Three and Oh, Two Wins Earned"
+    },
+    {
+     "type": "p",
+     "text": "Take bradyrife week by week. In week 1 he scored 105.2, which would have beaten two of his eleven possible opponents. He drew one of them: bertalicious, now willie12w, on 90.74, the second-lowest score of the week. In week 2 his 134.06 beat nine of eleven, and he drew jskule23 on 110.92. In week 3 he posted the best score in the league, 152.78, and would have beaten anybody."
+    },
+    {
+     "type": "p",
+     "text": "Add those up — 2 wins out of 11, then 9, then 11 — and his scoring is worth <b>22-11</b> against the whole league, or two wins in three weeks. He has three. The extra one came in week 1, and week 3 says it was not a fluke of a team: 152.78 is a real number. But his three opponents have averaged 105.13, and the league has averaged 127.38. Nobody else has had it that soft."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the unlucky",
+     "text": "Thirty Wins and a Loss"
+    },
+    {
+     "type": "p",
+     "text": "jadencha posted the best score in the league in week 1 (195.9) and again in week 2 (145.1). In week 3 his 132.34 was the fourth-best of the twelve, would have beaten eight teams, and lost by 1.72 to the one he drew. Against the whole league he is <b>30-3</b>, the best mark anyone has, and his scoring is worth 2.73 wins. He has two."
+    },
+    {
+     "type": "p",
+     "text": "The loss was not only the schedule. Jonathan Taylor started at running back and scored 8.2; <b>Bhayshul Tuten</b> sat on the bench with 16. That swap alone is worth 7.8 points against a 1.72 margin. jadencha left 49.82 on his bench, more than anyone this week."
+    },
+    {
+     "type": "p",
+     "text": "At the other end is <b>jskule23</b>, 0-3 and the only team without a win. His scoring is worth 0.82 wins against the whole league, so the record flatters no one: this is a team that has not scored enough. But it has not had a gentle week either. His three opponents scored 137.52, 134.06 and 129.86, every one of them above what he managed, and every one of them above the league's average for that week."
+    },
+    {
+     "type": "bars",
+     "title": "Wins above what the scoring earned",
+     "sub": "actual wins minus expected wins, where expected wins count each week's score against all eleven other teams",
+     "rows": [
+      {
+       "label": "bradyrife",
+       "sub": "3-0 · 22-11 against the league",
+       "value": 1,
+       "group": 1
+      },
+      {
+       "label": "willie12w",
+       "sub": "2-1 · 15-18",
+       "value": 0.64,
+       "group": 1
+      },
+      {
+       "label": "victorthompson",
+       "sub": "1-2 · 8-25",
+       "value": 0.27,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "2-1 · 20-13",
+       "value": 0.18,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "sub": "2-1 · 20-13",
+       "value": 0.18,
+       "group": 1
+      },
+      {
+       "label": "chassinator",
+       "sub": "1-2 · 12-21",
+       "value": -0.09,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "1-2 · 12-21",
+       "value": -0.09,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "2-1 · 23-10",
+       "value": -0.09,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "1-2 · 13-20",
+       "value": -0.18,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "1-2 · 14-19",
+       "value": -0.27,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "sub": "2-1 · 30-3",
+       "value": -0.73,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "sub": "0-3 · 9-24",
+       "value": -0.82,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of this changes a result. A win over 90.74 counts the same as a win over 187.06, and bradyrife beat everybody put in front of him. What it changes is what the records predict. Three weeks of schedule is three coin tosses, and over fourteen weeks much of it tends to even out. The teams below the line on that chart are the ones the standings are underselling, and none more than jadencha, whose scoring is the best in the league."
+    },
+    {
+     "type": "note",
+     "text": "Against-the-league records count, for each week, how many of the other eleven teams a score would have beaten; expected wins are that total divided by eleven. bertalicious and willie12w are the same roster, renamed after week 2."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games and 1,546.7 points, 145 more than week 2. Three were settled by fewer than four points, and two of those three losers had a like-for-like swap on the bench worth more than the margin. In order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Two Running Backs and a Free-Agent Quarterback"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 134.06, jadencha 132.34.</b> <b>Jahmyr Gibbs</b> scored 37.9, the best individual score of the week, and <b>Bijan Robinson</b> added 35.3. <b>Sam Darnold</b>, picked up as a free agent this week for Malik Willis, went for 29.66 in his first start on the roster. Those three made 102.86 of Domo112's 134.06; the other seven starters managed 31.2 between them, and <b>Oronde Gadsden</b>, another pickup this week, scored nothing at tight end."
+    },
+    {
+     "type": "p",
+     "text": "jadencha had the answer at receiver — <b>Jaxon Smith-Njigba</b> 35.36, <b>Matthew Golden</b> 22 — plus 20.1 from <b>Jaylen Warren</b>. Isaiah Likely managed 3.3 at tight end and Jonathan Taylor 8.2 at running back, with Bhayshul Tuten's 16 on the bench. It is the best losing score of the week, and jadencha's first loss."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the tight ends",
+     "text": "Three Tight Ends and a Minus Two"
+    },
+    {
+     "type": "p",
+     "text": "<b>moseslin 129.84, drewkim 127.18.</b> Four moseslin starters landed between 20 and 25: <b>Harold Fannin</b> 24.1, <b>Christian Watson</b> 22.6, <b>Jordan Addison</b> 22, <b>Lamar Jackson</b> 20.44. It was enough on a day when <b>Justin Jefferson</b> managed 5.2 and <b>Saquon Barkley</b> 8.5. It is his first win, and he has had 459.34 scored against him on the way to it."
+    },
+    {
+     "type": "p",
+     "text": "drewkim got 31.28 from <b>Brock Purdy</b> and started three tight ends: <b>Brock Bowers</b> 27.6, <b>Juwan Johnson</b> 23.3 and <b>Dalton Schultz</b> 6. The <b>Green Bay</b> defence finished on -2 and <b>Jadarian Price</b> on 0.7. He left 10.7 on the bench, the least of any manager this week, and the best player on it scored 4.2. There was very little left to find."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the bench",
+     "text": "Keaton Mitchell Watched It Happen"
+    },
+    {
+     "type": "p",
+     "text": "<b>chassinator 117.34, victorthompson 114.14.</b> chassinator won without a single big number. <b>Kyren Williams</b>'s 18.8 was his best score, the lowest top score of any team in the league this week, but seven of his starters reached double figures, including <b>Matt Gay</b>'s 12 in his first week after replacing Cameron Dicker at kicker. His first win of the season."
+    },
+    {
+     "type": "p",
+     "text": "victorthompson had the best player in the game, <b>Drake London</b> at 30.4, plus <b>Jeremiyah Love</b> 19.4 and <b>Dak Prescott</b> 18.94. <b>Spencer Shrader</b>, a kicker picked up this week, added 17. He lost at running back: <b>Emanuel Wilson</b> started and scored 1.4, while <b>Keaton Mitchell</b> scored 12.2 on the bench. That swap is worth 10.8 points against a 3.2 margin."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the winless",
+     "text": "The Fifty-One Dollar Quarterback Sat, Correctly"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 129.86, jskule23 115.56.</b> <b>Ja'Marr Chase</b> led willie12w with 24.8 for the second week running, and <b>Jared Goff</b> (19.36), <b>Trey McBride</b> (16.5) and <b>Deebo Samuel</b> (16.4) followed. Seven starters reached double figures. The backfield did not: <b>Bucky Irving</b> 6.8, <b>TreVeyon Henderson</b> 3.4."
+    },
+    {
+     "type": "p",
+     "text": "jskule23 started <b>Josh Allen</b>, who scored 18.46, and benched <b>Patrick Mahomes</b>, the $51 claim, who scored 16.94. That was the right call and it did not matter. <b>Luther Burden</b>'s 19.8 led the lineup and <b>Will Reichard</b> kicked 16, but <b>Khalil Shakir</b> managed 1.6. jskule23 is 0-3, and has spent $62 in FAAB this season, more than any other manager."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the high score",
+     "text": "sizzlemc2 Wins the Week's Biggest Game"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 148.6, wesley55 131.28.</b> 279.88 points between them, the highest-scoring game of the week. <b>Tyler Shough</b> led sizzlemc2 with 24.8, <b>CeeDee Lamb</b> added 21.2 and <b>Kenneth Walker</b> 20.3, and the <b>Minnesota</b> defence scored 19, the best defensive score in the league this week. Seven of his starters reached double figures."
+    },
+    {
+     "type": "p",
+     "text": "wesley55 had four starters past 20 — <b>Joe Burrow</b> 22.58, <b>Derrick Henry</b> 21.4, <b>Tee Higgins</b> 21, <b>James Cook</b> 20.4 — and lost it at the bottom of the lineup, where <b>Kyle Pitts</b> managed 1.5 and <b>Jaylen Waddle</b> 6.4. His 131.28 would have beaten three of the six winners."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the rout",
+     "text": "The Best Score Met the Worst"
+    },
+    {
+     "type": "p",
+     "text": "<b>bradyrife 152.78, saucebossandrew 113.72.</b> The week's high score against its low, and the widest margin of the week at 39.06. <b>Garrett Wilson</b> 26.7 and <b>George Kittle</b> 26.2 led it, with <b>Davante Adams</b> 21.7, <b>Trevor Lawrence</b> 20.78 and <b>Christian McCaffrey</b> 19.6 behind them. Jakobi Meyers scored 19.4 on the bench and was not needed."
+    },
+    {
+     "type": "p",
+     "text": "saucebossandrew got 25.9 from <b>Michael Wilson</b> and 19.7 from <b>Chris Olave</b>, and 1.7 from <b>De'Von Achane</b>, who tore his ACL and has since gone on injured reserve. He is not expected back before 15 February 2027, which ends his season for this league."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the wire",
+     "text": "A Three-Dollar Week"
+    },
+    {
+     "type": "p",
+     "text": "The whole league spent $3 in FAAB this week, all of it on jadencha's claim for <b>Malik Washington</b>. Everything else went through free agency. Domo112 made eight moves on his own, and has not spent a dollar of FAAB all season."
     }
    ]
   }
