@@ -83,6 +83,20 @@
    "sha256": "7687948f80ffbd655c2e72ae60329777f433446e198808c9184d9b4c4ea1c789",
    "by": "hand",
    "note": ""
+  },
+  {
+   "at": "2026-09-30T19:45:15.440Z",
+   "subject": "DFFL Week 4: sizzlemc2 Has Too Many Good Players",
+   "lead": "sizzlemc2-has-too-many-good-players",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 3
+   },
+   "to": 12,
+   "sha256": "c4001b779da7be5aed5058f8dae545a495a248a9901d6f6a69340d545995844d",
+   "by": "hand",
+   "note": ""
   }
  ]
 }
