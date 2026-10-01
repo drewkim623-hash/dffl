@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-09-30T11:03:57.855Z",
- "at": 1790766237855,
+ "generated": "2026-10-01T11:03:45.618Z",
+ "at": 1790852625618,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -43,6 +43,7 @@
    "faab_spent": 38,
    "starters_hurt": [
     "Jalen Coker (Questionable)",
+    "Kenyon Sadiq (Questionable)",
     "Mike Evans (Questionable)"
    ]
   },
@@ -53,9 +54,7 @@
    "points_for": 381.32,
    "points_against": 343.72,
    "faab_spent": 21,
-   "starters_hurt": [
-    "Jaylen Waddle (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -64,7 +63,9 @@
    "points_for": 352.38,
    "points_against": 340.92,
    "faab_spent": 16,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Bucky Irving (Questionable)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -73,7 +74,9 @@
    "points_for": 371.4,
    "points_against": 409.32,
    "faab_spent": 0,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Tony Pollard (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -83,6 +86,7 @@
    "points_against": 459.34,
    "faab_spent": 5,
    "starters_hurt": [
+    "Lamar Jackson (Questionable)",
     "Justin Jefferson (Questionable)",
     "Nico Collins (Questionable)"
    ]
@@ -94,7 +98,10 @@
    "points_for": 366.48,
    "points_against": 415.38,
    "faab_spent": 47,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Zay Flowers (Questionable)",
+    "DJ Moore (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -103,7 +110,10 @@
    "points_for": 364.92,
    "points_against": 411.06,
    "faab_spent": 33,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jadarian Price (Questionable)",
+    "DeVonta Smith (Questionable)"
+   ]
   },
   {
    "manager": "victorthompson",
@@ -112,7 +122,9 @@
    "points_for": 333.9,
    "points_against": 339.78,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Ladd McConkey (Questionable)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -122,7 +134,7 @@
    "points_against": 401.44,
    "faab_spent": 68,
    "starters_hurt": [
-    "Josh Allen (Questionable)",
+    "Jaylen Wright (Questionable)",
     "Puka Nacua (Questionable)"
    ]
   }
@@ -149,7 +161,7 @@
    "b": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -161,7 +173,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -268,7 +280,7 @@
      "name": "Kenyon Sadiq",
      "pos": "TE",
      "team": "NYJ",
-     "status": null,
+     "status": "Questionable",
      "to": "Domo112"
     }
    ],
@@ -358,5 +370,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 24
+ "free_agent_moves": 36
 }
