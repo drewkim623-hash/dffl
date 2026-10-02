@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-01T11:03:45.618Z",
- "at": 1790852625618,
+ "generated": "2026-10-02T11:03:39.352Z",
+ "at": 1790939019352,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -43,8 +43,7 @@
    "faab_spent": 38,
    "starters_hurt": [
     "Jalen Coker (Questionable)",
-    "Kenyon Sadiq (Questionable)",
-    "Mike Evans (Questionable)"
+    "Kenyon Sadiq (Questionable)"
    ]
   },
   {
@@ -74,9 +73,7 @@
    "points_for": 371.4,
    "points_against": 409.32,
    "faab_spent": 0,
-   "starters_hurt": [
-    "Tony Pollard (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -86,7 +83,6 @@
    "points_against": 459.34,
    "faab_spent": 5,
    "starters_hurt": [
-    "Lamar Jackson (Questionable)",
     "Justin Jefferson (Questionable)",
     "Nico Collins (Questionable)"
    ]
@@ -99,7 +95,7 @@
    "points_against": 415.38,
    "faab_spent": 47,
    "starters_hurt": [
-    "Zay Flowers (Questionable)",
+    "D'Andre Swift (Questionable)",
     "DJ Moore (Questionable)"
    ]
   },
@@ -112,7 +108,7 @@
    "faab_spent": 33,
    "starters_hurt": [
     "Jadarian Price (Questionable)",
-    "DeVonta Smith (Questionable)"
+    "Keenan Allen (Questionable)"
    ]
   },
   {
@@ -134,7 +130,6 @@
    "points_against": 401.44,
    "faab_spent": 68,
    "starters_hurt": [
-    "Jaylen Wright (Questionable)",
     "Puka Nacua (Questionable)"
    ]
   }
@@ -155,8 +150,8 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 14.1,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "chassinator",
@@ -184,15 +179,15 @@
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 11.7,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 36.1,
+    "startersLeftToPlay": 7
    },
    "b": {
     "manager": "bradyrife",
@@ -334,7 +329,7 @@
      "name": "Jaylen Wright",
      "pos": "RB",
      "team": "MIA",
-     "status": "Questionable",
+     "status": null,
      "to": "jskule23"
     }
    ],
@@ -370,5 +365,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 36
+ "free_agent_moves": 37
 }
