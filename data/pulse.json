@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-02T11:03:39.352Z",
- "at": 1790939019352,
+ "generated": "2026-10-03T11:08:31.727Z",
+ "at": 1791025711727,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -62,9 +62,7 @@
    "points_for": 352.38,
    "points_against": 340.92,
    "faab_spent": 16,
-   "starters_hurt": [
-    "Bucky Irving (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -83,8 +81,7 @@
    "points_against": 459.34,
    "faab_spent": 5,
    "starters_hurt": [
-    "Justin Jefferson (Questionable)",
-    "Nico Collins (Questionable)"
+    "Justin Jefferson (Out)"
    ]
   },
   {
@@ -95,8 +92,8 @@
    "points_against": 415.38,
    "faab_spent": 47,
    "starters_hurt": [
-    "D'Andre Swift (Questionable)",
-    "DJ Moore (Questionable)"
+    "Zay Flowers (Questionable)",
+    "Terry McLaurin (Questionable)"
    ]
   },
   {
@@ -107,7 +104,6 @@
    "points_against": 411.06,
    "faab_spent": 33,
    "starters_hurt": [
-    "Jadarian Price (Questionable)",
     "Keenan Allen (Questionable)"
    ]
   },
@@ -129,9 +125,7 @@
    "points_for": 351.24,
    "points_against": 401.44,
    "faab_spent": 68,
-   "starters_hurt": [
-    "Puka Nacua (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -187,7 +181,7 @@
    "a": {
     "manager": "wesley55",
     "points": 36.1,
-    "startersLeftToPlay": 7
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "bradyrife",
@@ -208,7 +202,49 @@
    }
   }
  ],
- "trades": [],
+ "trades": [
+  {
+   "week": 4,
+   "type": "trade",
+   "managers": [
+    "willie12w",
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Woody Marks",
+     "pos": "RB",
+     "team": "HOU",
+     "status": null,
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Woody Marks",
+     "pos": "RB",
+     "team": "HOU",
+     "status": null,
+     "from": "willie12w"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 11,
+     "from": "willie12w",
+     "to": "drewkim"
+    },
+    {
+     "season": "2027",
+     "round": 9,
+     "from": "drewkim",
+     "to": "willie12w"
+    }
+   ]
+  }
+ ],
  "waivers": [
   {
    "week": 3,
@@ -365,5 +401,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 37
+ "free_agent_moves": 41
 }
