@@ -31,10 +31,17 @@
    "opened": "2026-09-30",
    "closes": "2026-10-03",
    "subject": "DFFL Week 4: The Lines, and What Every Game Is Worth",
-   "status": "open",
-   "results": null,
+   "status": "closed",
+   "results": {
+    "WESLEY": 0,
+    "BRADY": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
    "announced": false,
-   "thread_id": "1a0f3e858c022b90"
+   "thread_id": "1a0f3e858c022b90",
+   "closed_at": "2026-10-03T23:20:08.374Z"
   }
  ]
 }
