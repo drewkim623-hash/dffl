@@ -3489,6 +3489,203 @@
      "text": "Lines are the site's opening numbers for week 4 and carry the same 6% hold the Odds tab posts. Stakes come from the Playoff Picture tab, which plays the rest of the season 5,000 times with each week 4 result forced both ways. Injury cuts are the site's, from the listed statuses as of 30 September."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-hundred-dollar-fall",
+   "date": "2026-10-03",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "Manager watch · victorthompson",
+   "headline": "The Hundred-Dollar Fall",
+   "dek": "No manager has put more into the waiver wire this season than victorthompson's $100, and no manager's playoff odds have fallen further since the draft. The two numbers are supposed to point the other way.",
+   "byline": "DFFL desk",
+   "standfirst": "1-2 · $100 in FAAB, the most in the league · -19.5 points of playoff odds, the steepest fall of any manager",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "<b>victorthompson</b> is 1-2, which is the least interesting thing about the team's season. Through three weeks, victorthompson has spent $100 in FAAB on the waiver wire, more than any other manager in the league, and the board has priced the roster worse for it: no team's playoff odds have fallen further since the draft."
+    },
+    {
+     "type": "stat",
+     "n": "$100",
+     "text": "FAAB victorthompson has spent this season, the most of any manager in the league. bradyrife is next at $72, then jskule23 at $68."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the claims",
+     "text": "Four Small Bids, Then One Big One"
+    },
+    {
+     "type": "p",
+     "text": "The spending came in two bursts. Four claims in week 2 — $4 for <b>Tank Bigsby</b>, $14 for Emanuel Wilson, $6 for Devaughn Vele, $1 for Jalen Nailor — totaled $25. Then in week 3, victorthompson paid <b>$75 for Ollie Gordon</b>, dropping the same Tank Bigsby that $4 claim had brought back. It is the single largest FAAB bid by any manager this season, ahead of jskule23's $51 claim on Patrick Mahomes in week 2."
+    },
+    {
+     "type": "bars",
+     "title": "FAAB spent, every manager",
+     "sub": "season total through week 3",
+     "rows": [
+      {
+       "label": "victorthompson",
+       "value": 100,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "value": 72,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "value": 68,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "value": 47,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "value": 38,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "value": 33,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "value": 21,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "value": 16,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "value": 5,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2",
+       "value": 4,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "value": 0,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "value": 0,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the board",
+     "text": "The Price Moved the Other Way"
+    },
+    {
+     "type": "p",
+     "text": "None of it shows up in the odds yet. victorthompson's playoff probability has gone from 34.6% at the draft-day line to 15.1% now, a fall of 19.5 points — the steepest drop of any manager in the league. The title price has lengthened from +3070 to +9240. Only <b>saucebossandrew</b>, who has spent nothing in FAAB all season, has fallen nearly as far, down 18.0 points to 32.2%."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff odds, change since the draft",
+     "sub": "percentage points, draft-day line to now",
+     "rows": [
+      {
+       "label": "victorthompson",
+       "sub": "34.6% → 15.1%",
+       "value": -19.5,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "50.2% → 32.2%",
+       "value": -18.0,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "sub": "31.4% → 16.7%",
+       "value": -14.8,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "25.4% → 14.9%",
+       "value": -10.5,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "sub": "73.2% → 63.2%",
+       "value": -10.0,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "39.3% → 36.1%",
+       "value": -3.3,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "82.7% → 82.8%",
+       "value": 0.1,
+       "group": 1
+      },
+      {
+       "label": "moseslin",
+       "sub": "43.4% → 44.2%",
+       "value": 0.8,
+       "group": 1
+      },
+      {
+       "label": "jadencha",
+       "sub": "89.6% → 97.0%",
+       "value": 7.4,
+       "group": 1
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "33.7% → 42.2%",
+       "value": 8.5,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "sub": "54.4% → 75.2%",
+       "value": 20.8,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "sub": "42.0% → 80.6%",
+       "value": 38.6,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "stat",
+     "n": "333.9",
+     "text": "Points victorthompson has scored this season, the fewest in the league — fewer even than jskule23's 351.24, and jskule23 is 0-3."
+    },
+    {
+     "type": "p",
+     "text": "The record is one score from 2-1; a different bounce in the week 3 loss to chassinator, decided by 3.2 points, and the whole shape of the season reads differently. But the spending and the board are not telling a close-game story. The roster that cost the most to build, by FAAB, is also the one the market has moved against the most since the draft. The waiver wire was supposed to be where this team found its edge. So far it has mostly found the bill."
+    }
+   ]
   }
  ]
 }
