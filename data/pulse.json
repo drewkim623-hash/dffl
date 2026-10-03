@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-03T11:08:31.727Z",
- "at": 1791025711727,
+ "generated": "2026-10-03T22:53:09.380Z",
+ "at": 1791067989380,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -92,8 +92,7 @@
    "points_against": 415.38,
    "faab_spent": 47,
    "starters_hurt": [
-    "Zay Flowers (Questionable)",
-    "Terry McLaurin (Questionable)"
+    "Zay Flowers (Questionable)"
    ]
   },
   {
@@ -103,9 +102,7 @@
    "points_for": 364.92,
    "points_against": 411.06,
    "faab_spent": 33,
-   "starters_hurt": [
-    "Keenan Allen (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "victorthompson",
@@ -401,5 +398,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 41
+ "free_agent_moves": 44
 }
