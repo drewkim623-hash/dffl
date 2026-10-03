@@ -111,6 +111,20 @@
    "sha256": "b0d85c228e30fdc70582d7906710379c7c25116a8cc69a83243859dac9d1eac1",
    "by": "hand",
    "note": ""
+  },
+  {
+   "at": "2026-10-03T23:23:21.084Z",
+   "subject": "DFFL Week 4: The Hundred-Dollar Fall",
+   "lead": "the-hundred-dollar-fall",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 3
+   },
+   "to": 12,
+   "sha256": "b31e072e4e3c88f832b833f79b06bb90454269336c91a7fcdfcd8d4b5f0c6025",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
