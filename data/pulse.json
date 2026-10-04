@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-04T12:33:11.895Z",
- "at": 1791117191896,
+ "generated": "2026-10-04T16:58:53.505Z",
+ "at": 1791133133506,
  "season": "2026",
  "nfl_week": 4,
  "season_type": "regular",
@@ -41,10 +41,7 @@
    "points_for": 406.44,
    "points_against": 406.84,
    "faab_spent": 38,
-   "starters_hurt": [
-    "Jalen Coker (Questionable)",
-    "Kenyon Sadiq (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -80,9 +77,7 @@
    "points_for": 370,
    "points_against": 459.34,
    "faab_spent": 5,
-   "starters_hurt": [
-    "Justin Jefferson (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -91,9 +86,7 @@
    "points_for": 366.48,
    "points_against": 415.38,
    "faab_spent": 47,
-   "starters_hurt": [
-    "Zay Flowers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -129,8 +122,8 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 11.1,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "saucebossandrew",
@@ -141,13 +134,13 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 14.1,
-    "startersLeftToPlay": 9
+    "points": 36.3,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "chassinator",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 9.1,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -158,8 +151,8 @@
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 16,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -194,8 +187,8 @@
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 4.6,
+    "startersLeftToPlay": 9
    }
   }
  ],
@@ -308,7 +301,7 @@
      "name": "Kenyon Sadiq",
      "pos": "TE",
      "team": "NYJ",
-     "status": "Questionable",
+     "status": null,
      "to": "Domo112"
     }
    ],
@@ -398,5 +391,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 44
+ "free_agent_moves": 46
 }
