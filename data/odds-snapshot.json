@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-03T22:53:41.484Z",
- "at": 1791068021484,
+ "generated": "2026-10-04T12:33:44.754Z",
+ "at": 1791117224754,
  "season": "2026",
  "week": 4,
  "liveWeek": 4,
@@ -219,7 +219,7 @@
   },
   {
    "manager": "Domo112",
-   "cost": 0.02422700435052827,
+   "cost": 0.024454987452948607,
    "players": [
     {
      "name": "Jalen Coker",
@@ -257,9 +257,17 @@
   "pre": 15,
   "live": 0,
   "post": 1,
-  "at": 1791068021066
+  "at": 1791117224177
  },
  "articles": [
+  {
+   "slug": "the-hundred-dollar-fall",
+   "kicker": "Manager watch · victorthompson",
+   "headline": "The Hundred-Dollar Fall",
+   "dek": "No manager has put more into the waiver wire this season than victorthompson's $100, and no manager's playoff odds have fallen further since the draft. The two numbers are supposed to point the other way.",
+   "byline": "DFFL desk",
+   "date": "2026-10-03"
+  },
   {
    "slug": "sizzlemc2-has-too-many-good-players",
    "kicker": "Manager profile · sizzlemc2",
@@ -275,14 +283,6 @@
    "dek": "One pick'em, one near coin flip, and a 20-point favourite. All six matchups broken down, with the line on each and what a win or a loss does to both teams' playoff chances.",
    "byline": "DFFL desk",
    "date": "2026-09-30"
-  },
-  {
-   "slug": "the-schedule-is-keeping-score",
-   "kicker": "2026 · week 3",
-   "headline": "The Schedule Is Keeping Score",
-   "dek": "bradyrife is 3-0 having faced 315.38 points, the fewest in the league. jadencha would be 30-3 against the whole league and is 2-1. Three weeks in, who you drew is doing a lot of the work. Every game in full, below.",
-   "byline": "DFFL desk",
-   "date": "2026-09-29"
   }
  ]
 }
