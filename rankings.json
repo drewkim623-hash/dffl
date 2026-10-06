@@ -13,6 +13,60 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 4,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Was favored by 20 over chassinator and needed every bit of a balanced lineup — six starters between 11 and 23 — to escape by 12.32, the tightest result of the week."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "CeeDee Lamb's 41.3 and Kenneth Walker's 31.4 produced the week's widest margin, 59.22, with Travis Kelce the one quiet spot in the lineup at 3.5."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "Joe Burrow's 27.72 and Tee Higgins's 26.7 ended bradyrife's 3-0 start in the one game on the board nobody favored."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "George Kittle's 19 was the high point in a first loss of the season, a pick'em that broke the other way, 141.92 to 116.28."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Bijan Robinson's 30.2 and Malik Nabers's 23.2 weren't enough as a 6.5-point favorite role turned into a 17.98-point loss."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "Sam LaPorta's 22.4 anchored a lineup that beat Domo112 outright as a 6.5-point underdog, 128.96 to 110.98."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "Tetairoa McMillan's 45.2, the week's best individual score, carried an 11-point underdog to a 35.92-point win over willie12w."
+    },
+    {
+     "manager": "willie12w",
+     "blurb": "Ja'Marr Chase, who had gone for 24.8 and 26.5 the previous two weeks, managed just 5.7 as an 11-point favorite role slipped away."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Puka Nacua's 27.7 and Chuba Hubbard's 26.4 delivered the week's high score, 164.12, and the first win of the season."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "Kyren Williams's 31.7 and Zay Flowers's 26.8 nearly erased a 20-point spread, falling by just 12.32 with Kyle Monangai's 28.5 sitting on the bench the whole time."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Nico Collins's 31.8 was the best number on the losing side, but Saquon Barkley and Blake Corum combined for 4.1 points at running back in a 45.74-point loss."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "Brock Bowers's 20.6 and Brock Purdy's 19.62 led the way, but the 101.12 total was the week's low — in a week nine separate transactions passed through the roster."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 3,
    "teams": [
     {

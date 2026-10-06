@@ -43,6 +43,89 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 4,
+   "note": "",
+   "lede": "Six games produced 1,599.62 points, 52.92 more than week 3, and the board that priced them had a rough Sunday. jskule23 piled up the week's high score, 164.12, on the way to his first win of the season, a 45.74-point rout of moseslin. drewkim's 101.12 was the week's low, and sizzlemc2 handed it to him by the week's widest margin, 59.22. The tightest result was also the week's biggest spread: jadencha was favored by 20 over chassinator and won by just 12.32. Three of the week's five games with a clear favorite went to the underdog outright — willie12w, Domo112 and moseslin all lost as the betting favorite — and wesley55 beat bradyrife in the only game nobody favored, ending bradyrife's 3-0 start.",
+   "games": [
+    {
+     "headline": "jadencha survives a 20-point line, wins by 12.32",
+     "winner": "jadencha",
+     "winner_points": 153.38,
+     "loser": "chassinator",
+     "loser_points": 141.06,
+     "body": "C.J. Stroud's 23.08 and Jonathan Taylor's 22.2 led a balanced jadencha lineup with six starters between 11 and 23. Kyren Williams's 31.7 and Zay Flowers's 26.8 kept chassinator within range, and Kyle Monangai's 28.5 sat unused on the bench — more than the final margin. jadencha was favored by 20 points and won by 12.32, the closest result of the week."
+    },
+    {
+     "headline": "jskule23 posts the week's high score, ends 0-3",
+     "winner": "jskule23",
+     "winner_points": 164.12,
+     "loser": "moseslin",
+     "loser_points": 118.38,
+     "body": "Puka Nacua's 27.7 and Chuba Hubbard's 26.4 led nine jskule23 starters past ten points, and the 164.12 total was the best score anyone posted in week 4. Nico Collins's 31.8 was the best number on the other side, but Saquon Barkley and Blake Corum combined for 4.1 points at running back. It is jskule23's first win of the season."
+    },
+    {
+     "headline": "Tetairoa McMillan's 45.2 lifts victorthompson past willie12w",
+     "winner": "victorthompson",
+     "winner_points": 149.5,
+     "loser": "willie12w",
+     "loser_points": 113.58,
+     "body": "Tetairoa McMillan scored 45.2, the best individual number of the week, and Emanuel Wilson added 25.5 as victorthompson won by 35.92. Jared Goff's 22.48 led willie12w, but Ja'Marr Chase — who had gone for 24.8 and 26.5 the two weeks before — managed just 5.7, and Ladd McConkey finished on zero after leaving the game hurt."
+    },
+    {
+     "headline": "sizzlemc2's 160.34 produces the week's widest margin",
+     "winner": "sizzlemc2",
+     "winner_points": 160.34,
+     "loser": "drewkim",
+     "loser_points": 101.12,
+     "body": "CeeDee Lamb's 41.3 was the best individual score of the week and Kenneth Walker's 31.4 backed it up, and sizzlemc2 won by 59.22, the widest margin of the slate. Brock Bowers's 20.6 and Brock Purdy's 19.62 led drewkim, but nothing else cleared 12.3, and the 101.12 total was the week's low."
+    },
+    {
+     "headline": "wesley55 ends bradyrife's unbeaten start",
+     "winner": "wesley55",
+     "winner_points": 141.92,
+     "loser": "bradyrife",
+     "loser_points": 116.28,
+     "body": "Joe Burrow's 27.72 and Tee Higgins's 26.7 led wesley55 to a 25.64-point win in a game that opened as a true pick'em. George Kittle's 19 topped bradyrife, whose only other scorers in double figures were Christian McCaffrey's 14.5 and Chase Brown's 13.6. It is bradyrife's first loss after opening 3-0."
+    },
+    {
+     "headline": "saucebossandrew tops Domo112 as a 6.5-point underdog",
+     "winner": "saucebossandrew",
+     "winner_points": 128.96,
+     "loser": "Domo112",
+     "loser_points": 110.98,
+     "body": "Sam LaPorta's 22.4, Chris Olave's 20.6 and Alvin Kamara's 20.3 spread the scoring for saucebossandrew. Bijan Robinson's 30.2 and Malik Nabers's 23.2 led Domo112, but Kenyon Sadiq and the Cincinnati defense combined for just 5 points at the bottom of the lineup, and the gap held at 17.98."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "willie12w trades Woody Marks to drewkim for a future pick swap",
+     "body": "willie12w sent Woody Marks to drewkim in exchange for a 2027 ninth-round pick, with a 2027 eleventh-rounder going back the other way. Marks started for drewkim in his first week on the roster and scored 8.2, in a lineup that still posted the week's low score."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Every waiver claim this week cleared for nothing",
+     "body": "wesley55 swapped the Carolina Panthers for the New Orleans Saints at defense and jadencha added Kendre Miller for Kyler Murray, and both claims processed at $0 in FAAB. It ties week 1 as the only other week this season nobody has paid for a waiver claim."
+    },
+    {
+     "kind": "note",
+     "headline": "drewkim's roster went through nine moves and still scored the week's low",
+     "body": "drewkim was involved in nine separate transactions this week, including trading for Woody Marks and cycling Michael Pittman off the roster, back via a commissioner move, and off again. Jauan Jennings was added and dropped twice in the same stretch. The roster that resulted scored 101.12, the week's low."
+    },
+    {
+     "kind": "injury",
+     "headline": "Two zeros, two wins anyway",
+     "body": "Rashee Rice left Sunday's game with a hamstring injury and is not expected back before 18 October; he started for saucebossandrew and scored 0. Ladd McConkey was forced out with a foot injury and also finished on zero, in victorthompson's lineup. Both managers won anyway."
+    },
+    {
+     "kind": "race",
+     "headline": "No unbeaten team left, and no winless one either",
+     "body": "bradyrife's 3-0 start ended against wesley55, leaving jadencha, sizzlemc2, wesley55 and bradyrife tied at 3-1 for the league's best record. jskule23's win over moseslin erased the season's only winless mark — chassinator, moseslin, drewkim and jskule23 are now tied at 1-3 at the bottom."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 3,
    "note": "",
    "lede": "Six games produced 1,546.7 points, 145 more than the week before. bradyrife put up the week's high score, 152.78, and beat saucebossandrew — who posted the week's low, 113.72 — by 39.06, the widest margin of the day, putting the week's best and worst outings in the same matchup. The rest of the slate ran tight: Domo112 outlasted jadencha by 1.72 in a game that carried the week's two best individual scores, Jahmyr Gibbs's 37.9 and Jaxon Smith-Njigba's 35.36, and moseslin beat drewkim by 2.66. Three weeks in, bradyrife is alone without a loss, jskule23 is alone without a win, and the other ten teams split evenly between 2-1 and 1-2.",
@@ -3443,7 +3526,7 @@
       {
        "label": "willie12w",
        "sub": "80.1% or 62.0%",
-       "value": 18.0,
+       "value": 18,
        "group": 1
       },
       {
@@ -3611,7 +3694,7 @@
       {
        "label": "saucebossandrew",
        "sub": "50.2% → 32.2%",
-       "value": -18.0,
+       "value": -18,
        "group": 2
       },
       {
@@ -3629,7 +3712,7 @@
       {
        "label": "willie12w",
        "sub": "73.2% → 63.2%",
-       "value": -10.0,
+       "value": -10,
        "group": 2
       },
       {
@@ -3684,6 +3767,165 @@
     {
      "type": "p",
      "text": "The record is one score from 2-1; a different bounce in the week 3 loss to chassinator, decided by 3.2 points, and the whole shape of the season reads differently. But the spending and the board are not telling a close-game story. The roster that cost the most to build, by FAAB, is also the one the market has moved against the most since the draft. The waiver wire was supposed to be where this team found its edge. So far it has mostly found the bill."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-favorites-had-a-bad-sunday",
+   "date": "2026-10-06",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 4",
+   "headline": "The Favorites Had a Bad Sunday",
+   "dek": "Week 4 priced five games with a real favorite and left one as a true pick'em. The pick'em resolved as advertised. Three of the five favorites did not.",
+   "byline": "DFFL desk",
+   "standfirst": "5 favorites · 3 lost outright · the 20-point favorite won by 12.32",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "The site posted lines on all six week 4 games last Tuesday: one true pick'em, four moneyline favorites with real separation, and one twenty-point mismatch that looked like a formality. The pick'em resolved clean — wesley55 beat bradyrife and ended his 3-0 start. Nothing else did. Three of the four games with a real spread went to the underdog outright, and the twenty-point favorite needed every one of his 153.38 points just to escape by 12.32, the closest final score of the day."
+    },
+    {
+     "type": "stat",
+     "n": "3 of 5",
+     "text": "Games with a clear moneyline favorite this week. Underdogs won three of them outright — victorthompson, saucebossandrew and jskule23 all beat a team favored by at least 6.5 points."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the formality that wasn't",
+     "text": "jadencha's Twenty Points Became Twelve"
+    },
+    {
+     "type": "p",
+     "text": "jadencha opened the week at -310 on the moneyline, laying 20 points on chassinator with the site projecting a final margin of 19.79. The combined score landed almost exactly on the posted total of 266 — 294.44 — but the split between the two sides did not cooperate. Kyren Williams went for 31.7 and Zay Flowers for 26.8, and jadencha won by 12.32, less than two-thirds of the spread and the tightest result of the six games."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the upsets",
+     "text": "Three Favorites, Three Different Ways to Lose"
+    },
+    {
+     "type": "p",
+     "text": "willie12w was -190 and -11 against victorthompson, and lost by 35.92 after Tetairoa McMillan put up 45.2, the best individual score of the week. Domo112 was -155 and -6.5 against saucebossandrew, and lost by 17.98 even with Bijan Robinson's 30.2, because Kenyon Sadiq and the Cincinnati defense combined for 5 points in two starting spots. moseslin was -155 and -7 against jskule23, and lost by 45.74 — the widest margin of any upset — with Saquon Barkley and Blake Corum managing 4.1 points between them at running back. All three favorites lost outright; none of the three underdogs needed a miracle to do it."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the pick'em",
+     "text": "The One Game Nobody Favored Settled Cleanly"
+    },
+    {
+     "type": "p",
+     "text": "wesley55 and bradyrife opened at -115 each way, five hundredths of a projected point apart. Joe Burrow's 27.72 and Tee Higgins's 26.7 led wesley55 to a 25.64-point win, bradyrife's first loss after opening 3-0. It is the one line on the board the market had no business picking a side on, and the market didn't."
+    },
+    {
+     "type": "bars",
+     "title": "How the week's five decided games went",
+     "sub": "Margin of victory; positive means the underdog won outright",
+     "rows": [
+      {
+       "label": "jskule23 d. moseslin",
+       "sub": "+125 underdog",
+       "value": 45.74,
+       "group": 1
+      },
+      {
+       "label": "victorthompson d. willie12w",
+       "sub": "+150 underdog",
+       "value": 35.92,
+       "group": 1
+      },
+      {
+       "label": "saucebossandrew d. Domo112",
+       "sub": "+120 underdog",
+       "value": 17.98,
+       "group": 1
+      },
+      {
+       "label": "jadencha d. chassinator",
+       "sub": "-310 favorite",
+       "value": -12.32,
+       "group": 3
+      },
+      {
+       "label": "sizzlemc2 d. drewkim",
+       "sub": "-125 favorite",
+       "value": -59.22,
+       "group": 3
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2 is the one favorite who won comfortably, by 59.22 over drewkim, the widest margin of the week. Everywhere else the board either got the winner wrong or barely got the margin right. The site's own board has since moved on: jadencha's playoff price sits at 97.3% and chassinator's at 23.5%, saucebossandrew is back to 51.8%, and jskule23 — a week ago the league's only winless team — is at 20.5%."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games, 120 starters and 1,599.62 points. One pick'em, one 20-point mismatch that finished as the closest game of the day, and three upsets in between. In order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Twelve Points, and a Twenty-Point Spread"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 153.38, chassinator 141.06.</b> C.J. Stroud's 23.08 and Jonathan Taylor's 22.2 led a jadencha lineup with no huge number anywhere — six starters between 11 and 23. Kyren Williams answered with 31.7 and Zay Flowers with 26.8, and chassinator still had Kyle Monangai's 28.5 sitting on the bench, more than the final margin. jadencha was favored by 20 points and won by 12.32, the tightest result of the week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the upset",
+     "text": "Bijan Robinson's 30.2 Wasn't Enough"
+    },
+    {
+     "type": "p",
+     "text": "<b>saucebossandrew 128.96, Domo112 110.98.</b> Sam LaPorta's 22.4, Chris Olave's 20.6 and Alvin Kamara's 20.3 spread the scoring for saucebossandrew, who beat a 6.5-point favorite outright. Bijan Robinson's 30.2 led Domo112 and Malik Nabers added 23.2, but Jordan Love managed 14.08 and the bottom of the lineup never arrived — Kenyon Sadiq and the Cincinnati defense combined for 5 points in two starting spots."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the pick'em",
+     "text": "The One Game Nobody Favored Ended bradyrife's Start"
+    },
+    {
+     "type": "p",
+     "text": "<b>wesley55 141.92, bradyrife 116.28.</b> Joe Burrow's 27.72 and Tee Higgins's 26.7 led wesley55 to his third win, with Quinshon Judkins adding 18.6. George Kittle's 19 topped bradyrife, whose only other scorers in double figures were Christian McCaffrey's 14.5 and Chase Brown's 13.6. The game opened as a true pick'em and closed as bradyrife's first loss of the season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the upset",
+     "text": "Tetairoa McMillan's 45.2 Buries an Eleven-Point Favorite"
+    },
+    {
+     "type": "p",
+     "text": "<b>victorthompson 149.5, willie12w 113.58.</b> Tetairoa McMillan scored 45.2, the best individual number of the week, and Emanuel Wilson added 25.5 as an 11-point underdog won by 35.92. Jared Goff's 22.48 led willie12w, but Ja'Marr Chase — who had gone for 24.8 and 26.5 the two weeks before — managed only 5.7, and Ladd McConkey, forced out with a foot injury, finished on zero."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the breakout",
+     "text": "jskule23's First Win Is Also the Week's High Score"
+    },
+    {
+     "type": "p",
+     "text": "<b>jskule23 164.12, moseslin 118.38.</b> Puka Nacua's 27.7 and Chuba Hubbard's 26.4 led nine jskule23 starters past ten points, and the 164.12 total was the best score anyone posted in week 4. Nico Collins's 31.8 kept moseslin competitive, but Saquon Barkley and Blake Corum combined for 4.1 points at running back, and the 45.74-point margin was the second-widest of the week. jskule23 is 1-3, no longer the league's only winless team."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the blowout",
+     "text": "CeeDee Lamb's 41.3 Sets Up the Week's Widest Margin"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 160.34, drewkim 101.12.</b> CeeDee Lamb's 41.3 was the best individual score of the week and Kenneth Walker's 31.4 backed it up, and sizzlemc2 — a 2-point favorite — won by 59.22, the widest margin of the slate. Brock Bowers's 20.6 and Brock Purdy's 19.62 led drewkim, but nothing else cleared 12.3, and the 101.12 total was the week's low."
+    },
+    {
+     "type": "note",
+     "text": "Lines, projections and the 'what's at stake' branches cited above are the site's own week 4 preview, published to this desk on 30 September; every score is the official Sleeper total under this league's scoring, taken from the week's own data file. Current playoff prices are the site's live board as computed after week 4. Playoffs and title odds move with results; records and power rankings do not move until a week is finished."
     }
    ]
   }
