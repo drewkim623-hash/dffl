@@ -1,87 +1,120 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-05T11:03:55.423Z",
- "at": 1791198235423,
+ "generated": "2026-10-06T04:45:25.866Z",
+ "at": 1791261925866,
  "season": "2026",
- "nfl_week": 4,
+ "nfl_week": 5,
  "season_type": "regular",
  "week_in_progress": true,
  "standings": [
   {
-   "manager": "bradyrife",
-   "wins": 3,
-   "losses": 0,
-   "points_for": 392.04,
-   "points_against": 315.38,
-   "faab_spent": 72,
-   "starters_hurt": []
-  },
-  {
    "manager": "jadencha",
-   "wins": 2,
+   "wins": 3,
    "losses": 1,
-   "points_for": 473.34,
-   "points_against": 337.46,
+   "points_for": 626.72,
+   "points_against": 478.52,
    "faab_spent": 0,
    "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
-   "wins": 2,
+   "wins": 3,
    "losses": 1,
-   "points_for": 422.24,
-   "points_against": 405.06,
+   "points_for": 582.58,
+   "points_against": 506.18,
    "faab_spent": 4,
    "starters_hurt": []
   },
   {
-   "manager": "Domo112",
-   "wins": 2,
-   "losses": 1,
-   "points_for": 406.44,
-   "points_against": 406.84,
-   "faab_spent": 38,
-   "starters_hurt": []
-  },
-  {
    "manager": "wesley55",
-   "wins": 2,
+   "wins": 3,
    "losses": 1,
-   "points_for": 381.32,
-   "points_against": 343.72,
+   "points_for": 523.24,
+   "points_against": 460,
    "faab_spent": 21,
    "starters_hurt": [
     "Tee Higgins (Questionable)"
    ]
   },
   {
+   "manager": "bradyrife",
+   "wins": 3,
+   "losses": 1,
+   "points_for": 508.32,
+   "points_against": 457.3,
+   "faab_spent": 72,
+   "starters_hurt": []
+  },
+  {
+   "manager": "Domo112",
+   "wins": 2,
+   "losses": 2,
+   "points_for": 517.42,
+   "points_against": 535.8,
+   "faab_spent": 38,
+   "starters_hurt": []
+  },
+  {
+   "manager": "saucebossandrew",
+   "wins": 2,
+   "losses": 2,
+   "points_for": 500.36,
+   "points_against": 520.3,
+   "faab_spent": 0,
+   "starters_hurt": [
+    "Alvin Kamara (Questionable)",
+    "Rashee Rice (Questionable)"
+   ]
+  },
+  {
+   "manager": "victorthompson",
+   "wins": 2,
+   "losses": 2,
+   "points_for": 483.4,
+   "points_against": 453.36,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "Jeremiyah Love (Questionable)",
+    "Ladd McConkey (Out)"
+   ]
+  },
+  {
    "manager": "willie12w",
    "wins": 2,
-   "losses": 1,
-   "points_for": 352.38,
-   "points_against": 340.92,
+   "losses": 2,
+   "points_for": 465.96,
+   "points_against": 490.42,
    "faab_spent": 16,
    "starters_hurt": [
     "Ja'Marr Chase (Out)"
    ]
   },
   {
-   "manager": "saucebossandrew",
+   "manager": "jskule23",
    "wins": 1,
-   "losses": 2,
-   "points_for": 371.4,
-   "points_against": 409.32,
-   "faab_spent": 0,
+   "losses": 3,
+   "points_for": 515.36,
+   "points_against": 519.82,
+   "faab_spent": 68,
+   "starters_hurt": []
+  },
+  {
+   "manager": "chassinator",
+   "wins": 1,
+   "losses": 3,
+   "points_for": 507.54,
+   "points_against": 568.76,
+   "faab_spent": 47,
    "starters_hurt": [
-    "Rashee Rice (Questionable)"
+    "DJ Moore (Questionable)"
    ]
   },
   {
    "manager": "moseslin",
    "wins": 1,
-   "losses": 2,
-   "points_for": 370,
-   "points_against": 459.34,
+   "losses": 3,
+   "points_for": 488.38,
+   "points_against": 623.46,
    "faab_spent": 5,
    "starters_hurt": [
     "Lamar Jackson (Questionable)",
@@ -89,119 +122,88 @@
    ]
   },
   {
-   "manager": "chassinator",
-   "wins": 1,
-   "losses": 2,
-   "points_for": 366.48,
-   "points_against": 415.38,
-   "faab_spent": 47,
-   "starters_hurt": [
-    "DJ Moore (Questionable)"
-   ]
-  },
-  {
    "manager": "drewkim",
    "wins": 1,
-   "losses": 2,
-   "points_for": 364.92,
-   "points_against": 411.06,
+   "losses": 3,
+   "points_for": 466.04,
+   "points_against": 571.4,
    "faab_spent": 33,
    "starters_hurt": [
     "Mack Hollins (Questionable)"
    ]
-  },
-  {
-   "manager": "victorthompson",
-   "wins": 1,
-   "losses": 2,
-   "points_for": 333.9,
-   "points_against": 339.78,
-   "faab_spent": 100,
-   "starters_hurt": [
-    "Ladd McConkey (Out)"
-   ]
-  },
-  {
-   "manager": "jskule23",
-   "wins": 0,
-   "losses": 3,
-   "points_for": 351.24,
-   "points_against": 401.44,
-   "faab_spent": 68,
-   "starters_hurt": []
   }
  ],
  "this_week": [
   {
    "a": {
     "manager": "Domo112",
-    "points": 80.78,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
-    "points": 88.06,
-    "startersLeftToPlay": 2
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 153.38,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
     "manager": "chassinator",
-    "points": 141.06,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 113.58,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
-    "points": 117.5,
-    "startersLeftToPlay": 2
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "jskule23",
-    "points": 164.12,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 118.38,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "wesley55",
-    "points": 137.22,
-    "startersLeftToPlay": 2
-   },
-   "b": {
-    "manager": "bradyrife",
-    "points": 116.28,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "drewkim",
-    "points": 89.22,
-    "startersLeftToPlay": 1
-   },
-   "b": {
-    "manager": "sizzlemc2",
-    "points": 144.4,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -248,161 +250,6 @@
    ]
   }
  ],
- "waivers": [
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "victorthompson"
-   ],
-   "adds": [
-    {
-     "name": "Ollie Gordon",
-     "pos": "RB",
-     "team": "MIA",
-     "status": null,
-     "to": "victorthompson"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Tank Bigsby",
-     "pos": "RB",
-     "team": "PHI",
-     "status": "Questionable",
-     "from": "victorthompson"
-    }
-   ],
-   "faab": 75,
-   "picks": []
-  },
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Braelon Allen",
-     "pos": "RB",
-     "team": "NYJ",
-     "status": null,
-     "to": "bradyrife"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Ted Hurst",
-     "pos": "WR",
-     "team": "TB",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": 41,
-   "picks": []
-  },
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Kenyon Sadiq",
-     "pos": "TE",
-     "team": "NYJ",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Oronde Gadsden",
-     "pos": "TE",
-     "team": "LAC",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 38,
-   "picks": []
-  },
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Baltimore Ravens",
-     "pos": "DEF",
-     "team": "BAL",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "San Francisco 49ers",
-     "pos": "DEF",
-     "team": "SF",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 9,
-   "picks": []
-  },
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Jaylen Wright",
-     "pos": "RB",
-     "team": "MIA",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Malachi Fields",
-     "pos": "WR",
-     "team": "NYG",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 3,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Malik Washington",
-     "pos": "WR",
-     "team": "MIA",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [],
-   "faab": 3,
-   "picks": []
-  }
- ],
- "free_agent_moves": 46
+ "waivers": [],
+ "free_agent_moves": 23
 }
