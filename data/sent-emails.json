@@ -125,6 +125,20 @@
    "sha256": "b31e072e4e3c88f832b833f79b06bb90454269336c91a7fcdfcd8d4b5f0c6025",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-06T12:19:10.847Z",
+   "subject": "DFFL Week 5: The Favorites Had a Bad Sunday",
+   "lead": "the-favorites-had-a-bad-sunday",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 4
+   },
+   "to": 12,
+   "sha256": "61bcea4cc6edf49d7517c417dc0bbd1c3fb113d7e601cf8748158edc33837833",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
