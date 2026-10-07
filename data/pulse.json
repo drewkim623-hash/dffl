@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-06T11:03:39.912Z",
- "at": 1791284619913,
+ "generated": "2026-10-07T11:03:36.976Z",
+ "at": 1791371016977,
  "season": "2026",
  "nfl_week": 5,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 1,
    "points_for": 626.72,
    "points_against": 478.52,
-   "faab_spent": 0,
+   "faab_spent": 3,
    "starters_hurt": []
   },
   {
@@ -31,9 +31,10 @@
    "losses": 1,
    "points_for": 523.24,
    "points_against": 460,
-   "faab_spent": 21,
+   "faab_spent": 26,
    "starters_hurt": [
-    "Tee Higgins (Questionable)"
+    "Tee Higgins (Questionable)",
+    "Chase McLaughlin (Questionable)"
    ]
   },
   {
@@ -51,7 +52,7 @@
    "losses": 2,
    "points_for": 517.42,
    "points_against": 535.8,
-   "faab_spent": 38,
+   "faab_spent": 56,
    "starters_hurt": []
   },
   {
@@ -60,10 +61,9 @@
    "losses": 2,
    "points_for": 500.36,
    "points_against": 520.3,
-   "faab_spent": 0,
+   "faab_spent": 59,
    "starters_hurt": [
-    "Alvin Kamara (Questionable)",
-    "Rashee Rice (Questionable)"
+    "Breece Hall (Doubtful)"
    ]
   },
   {
@@ -75,7 +75,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Jeremiyah Love (Questionable)",
-    "Ladd McConkey (Out)"
+    "Ladd McConkey (Questionable)"
    ]
   },
   {
@@ -86,7 +86,7 @@
    "points_against": 490.42,
    "faab_spent": 16,
    "starters_hurt": [
-    "Ja'Marr Chase (Out)"
+    "Ja'Marr Chase (Questionable)"
    ]
   },
   {
@@ -95,7 +95,7 @@
    "losses": 3,
    "points_for": 515.36,
    "points_against": 519.82,
-   "faab_spent": 68,
+   "faab_spent": 63,
    "starters_hurt": []
   },
   {
@@ -106,7 +106,7 @@
    "points_against": 568.76,
    "faab_spent": 47,
    "starters_hurt": [
-    "DJ Moore (Questionable)"
+    "Kyle Monangai (Questionable)"
    ]
   },
   {
@@ -118,7 +118,8 @@
    "faab_spent": 5,
    "starters_hurt": [
     "Lamar Jackson (Questionable)",
-    "Saquon Barkley (Out)"
+    "Saquon Barkley (Questionable)",
+    "Justin Jefferson (Questionable)"
    ]
   },
   {
@@ -127,7 +128,7 @@
    "losses": 3,
    "points_for": 466.04,
    "points_against": 571.4,
-   "faab_spent": 33,
+   "faab_spent": 50,
    "starters_hurt": [
     "Mack Hollins (Questionable)"
    ]
@@ -138,7 +139,7 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "jskule23",
@@ -155,7 +156,7 @@
    "b": {
     "manager": "sizzlemc2",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -191,14 +192,14 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "moseslin",
@@ -250,6 +251,188 @@
    ]
   }
  ],
- "waivers": [],
- "free_agent_moves": 23
+ "waivers": [
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Will Shipley",
+     "pos": "RB",
+     "team": "PHI",
+     "status": null,
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jalen Hurts",
+     "pos": "QB",
+     "team": "PHI",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 32,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Keon Coleman",
+     "pos": "WR",
+     "team": "BUF",
+     "status": null,
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "MarShawn Lloyd",
+     "pos": "RB",
+     "team": "GB",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 27,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Allgeier",
+     "pos": "RB",
+     "team": "ARI",
+     "status": null,
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Dalton Schultz",
+     "pos": "TE",
+     "team": "HOU",
+     "status": null,
+     "from": "drewkim"
+    }
+   ],
+   "faab": 17,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Tre' Harris",
+     "pos": "WR",
+     "team": "LAC",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Makai Lemon",
+     "pos": "WR",
+     "team": "PHI",
+     "status": null,
+     "from": "Domo112"
+    }
+   ],
+   "faab": 12,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Jacoby Brissett",
+     "pos": "QB",
+     "team": "ARI",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jordan Love",
+     "pos": "QB",
+     "team": "GB",
+     "status": null,
+     "from": "Domo112"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "T.J. Hockenson",
+     "pos": "TE",
+     "team": "MIN",
+     "status": null,
+     "to": "wesley55"
+    }
+   ],
+   "drops": [],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "week": 4,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Jacksonville Jaguars",
+     "pos": "DEF",
+     "team": "JAX",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  }
+ ],
+ "free_agent_moves": 30
 }

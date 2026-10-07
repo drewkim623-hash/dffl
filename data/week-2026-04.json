@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 4,
- "generated": "2026-10-06T11:03:38.349Z",
- "generated_at": "2026-10-06T11:03:38.349Z",
+ "generated": "2026-10-07T11:03:35.431Z",
+ "generated_at": "2026-10-07T11:03:35.431Z",
  "final": true,
  "standings_through_week": 4,
  "standings_folded": false,
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 626.72,
    "points_against": 478.52,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 3
   },
   {
    "manager": "sizzlemc2",
@@ -1151,7 +1151,7 @@
    "ties": 0,
    "points_for": 523.24,
    "points_against": 460,
-   "waiver_budget_used": 21
+   "waiver_budget_used": 26
   },
   {
    "manager": "bradyrife",
@@ -1173,7 +1173,7 @@
    "ties": 0,
    "points_for": 517.42,
    "points_against": 535.8,
-   "waiver_budget_used": 38
+   "waiver_budget_used": 56
   },
   {
    "manager": "saucebossandrew",
@@ -1184,7 +1184,7 @@
    "ties": 0,
    "points_for": 500.36,
    "points_against": 520.3,
-   "waiver_budget_used": 0
+   "waiver_budget_used": 59
   },
   {
    "manager": "victorthompson",
@@ -1217,7 +1217,7 @@
    "ties": 0,
    "points_for": 515.36,
    "points_against": 519.82,
-   "waiver_budget_used": 68
+   "waiver_budget_used": 63
   },
   {
    "manager": "chassinator",
@@ -1250,10 +1250,277 @@
    "ties": 0,
    "points_for": 466.04,
    "points_against": 571.4,
-   "waiver_budget_used": 33
+   "waiver_budget_used": 50
   }
  ],
  "transactions": [
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Jacoby Brissett",
+     "pos": "QB",
+     "team": "ARI",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jordan Love",
+     "pos": "QB",
+     "team": "GB",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Tre' Harris",
+     "pos": "WR",
+     "team": "LAC",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Makai Lemon",
+     "pos": "WR",
+     "team": "PHI",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 12,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Chris Boswell",
+     "pos": "K",
+     "team": "PIT",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Harrison Butker",
+     "pos": "K",
+     "team": "KC",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "Brenton Strange",
+     "pos": "TE",
+     "team": "JAX",
+     "to": "wesley55"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Quentin Johnston",
+     "pos": "WR",
+     "team": "LAC",
+     "from": "wesley55"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [
+    {
+     "name": "T.J. Hockenson",
+     "pos": "TE",
+     "team": "MIN",
+     "to": "wesley55"
+    }
+   ],
+   "drops": [],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "wesley55"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Terrance Ferguson",
+     "pos": "TE",
+     "team": "LAR",
+     "from": "wesley55"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "New York Jets",
+     "pos": "DEF",
+     "team": "NYJ",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Buffalo Bills",
+     "pos": "DEF",
+     "team": "BUF",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Chad Ryland",
+     "pos": "K",
+     "team": "ARI",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Eddy Pineiro",
+     "pos": "K",
+     "team": "SF",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Darren Waller",
+     "pos": "TE",
+     "team": "CAR",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Loop",
+     "pos": "K",
+     "team": "BAL",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jason Myers",
+     "pos": "K",
+     "team": "SEA",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Will Shipley",
+     "pos": "RB",
+     "team": "PHI",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jalen Hurts",
+     "pos": "QB",
+     "team": "PHI",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 32,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Allgeier",
+     "pos": "RB",
+     "team": "ARI",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Dalton Schultz",
+     "pos": "TE",
+     "team": "HOU",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 17,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
@@ -1263,7 +1530,7 @@
     {
      "name": "Joe Mixon",
      "pos": "RB",
-     "team": "SEA",
+     "team": "FA",
      "to": "saucebossandrew"
     }
    ],
@@ -1276,6 +1543,54 @@
     }
    ],
    "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Keon Coleman",
+     "pos": "WR",
+     "team": "BUF",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "MarShawn Lloyd",
+     "pos": "RB",
+     "team": "GB",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": 27,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Jacksonville Jaguars",
+     "pos": "DEF",
+     "team": "JAX",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 3,
    "picks": []
   },
   {
