@@ -139,6 +139,20 @@
    "sha256": "61bcea4cc6edf49d7517c417dc0bbd1c3fb113d7e601cf8748158edc33837833",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-09T16:26:06.356Z",
+   "subject": "DFFL Week 5: The League Split Into Three Even Thirds",
+   "lead": "the-league-in-thirds",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 4
+   },
+   "to": 12,
+   "sha256": "07ca67d29d9e1e7168d8b0f1a131e11efcafc0ddce53108bf6df0f03fad5e38d",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
