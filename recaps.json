@@ -3928,6 +3928,126 @@
      "text": "Lines, projections and the 'what's at stake' branches cited above are the site's own week 4 preview, published to this desk on 30 September; every score is the official Sleeper total under this league's scoring, taken from the week's own data file. Current playoff prices are the site's live board as computed after week 4. Playoffs and title odds move with results; records and power rankings do not move until a week is finished."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-league-in-thirds",
+   "date": "2026-10-09",
+   "source": "watch",
+   "kicker": "2026 · week 5 · standings",
+   "headline": "The League Split Into Three Even Thirds",
+   "dek": "Four teams are 3-1. Four are 2-2. Four are 1-3. Nobody sits outside those bands — and the points column inside each one tells a different story than the record does.",
+   "byline": "DFFL desk",
+   "standfirst": "4 weeks · 3 bands of 4",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Four weeks into the season, the DFFL standings have split with unusual symmetry: four teams at 3-1, four at 2-2, and four at 1-3, with nobody sitting outside those three groups. The record alone does not explain what has actually happened inside each band — the points column does that instead."
+    },
+    {
+     "type": "stat",
+     "n": "118.40",
+     "text": "The gap in points scored between jadencha and bradyrife — the two teams furthest apart inside the four-way tie at 3-1, the widest spread in any of the league's three bands."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the top band",
+     "text": "One record, four very different seasons"
+    },
+    {
+     "type": "p",
+     "text": "jadencha has scored 626.72 points through four weeks, more than anyone else in the league. sizzlemc2 is next among the 3-1 teams at 582.58, then wesley55 at 523.24 and bradyrife at 508.32. All four are 3-1. Only one of them is clearing 600, and only one is under 510."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "3-1",
+       "big": "118.40",
+       "sub": "separates jadencha's 626.72 from bradyrife's 508.32",
+       "lead": true,
+       "rows": [
+        {
+         "label": "jadencha",
+         "value": "626.72"
+        },
+        {
+         "label": "sizzlemc2",
+         "value": "582.58"
+        },
+        {
+         "label": "wesley55",
+         "value": "523.24"
+        },
+        {
+         "label": "bradyrife",
+         "value": "508.32"
+        }
+       ]
+      },
+      {
+       "title": "2-2",
+       "big": "51.46",
+       "sub": "separates Domo112's 517.42 from willie12w's 465.96",
+       "rows": [
+        {
+         "label": "Domo112",
+         "value": "517.42"
+        },
+        {
+         "label": "saucebossandrew",
+         "value": "500.36"
+        },
+        {
+         "label": "victorthompson",
+         "value": "483.40"
+        },
+        {
+         "label": "willie12w",
+         "value": "465.96"
+        }
+       ]
+      },
+      {
+       "title": "1-3",
+       "big": "49.32",
+       "sub": "separates jskule23's 515.36 from drewkim's 466.04",
+       "rows": [
+        {
+         "label": "jskule23",
+         "value": "515.36"
+        },
+        {
+         "label": "chassinator",
+         "value": "507.54"
+        },
+        {
+         "label": "moseslin",
+         "value": "488.38"
+        },
+        {
+         "label": "drewkim",
+         "value": "466.04"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the disconnect",
+     "text": "jskule23 is 1-3 and has outscored more than half the league"
+    },
+    {
+     "type": "p",
+     "text": "jskule23 has scored 515.36 points this season — more than seven of the other eleven teams, including bradyrife, who is 3-1. Only jadencha, sizzlemc2, wesley55 and Domo112 have scored more than jskule23 has. The record puts him in the bottom band. The points do not."
+    },
+    {
+     "type": "note",
+     "text": "Points-for totals above are through week 4, the last completed week; week 5 is in progress and not included."
+    }
+   ]
   }
  ]
 }
