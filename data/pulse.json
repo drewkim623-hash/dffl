@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-08T11:03:50.167Z",
- "at": 1791457430168,
+ "generated": "2026-10-09T11:03:49.117Z",
+ "at": 1791543829117,
  "season": "2026",
  "nfl_week": 5,
  "season_type": "regular",
@@ -15,6 +15,7 @@
    "points_against": 478.52,
    "faab_spent": 3,
    "starters_hurt": [
+    "Ashton Jeanty (Questionable)",
     "Isaiah Likely (Questionable)"
    ]
   },
@@ -26,7 +27,7 @@
    "points_against": 506.18,
    "faab_spent": 4,
    "starters_hurt": [
-    "Tyler Shough (Questionable)"
+    "CeeDee Lamb (Questionable)"
    ]
   },
   {
@@ -71,7 +72,7 @@
    "faab_spent": 59,
    "starters_hurt": [
     "Alvin Kamara (Questionable)",
-    "Tony Pollard (Questionable)"
+    "Chris Olave (Questionable)"
    ]
   },
   {
@@ -104,7 +105,10 @@
    "points_for": 515.36,
    "points_against": 519.82,
    "faab_spent": 63,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jaylen Wright (Questionable)",
+    "Carnell Tate (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -140,9 +144,7 @@
    "points_for": 466.04,
    "points_against": 571.4,
    "faab_spent": 50,
-   "starters_hurt": [
-    "Brock Bowers (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -166,8 +168,8 @@
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 9
+    "points": 16.1,
+    "startersLeftToPlay": 8
    }
   },
   {
@@ -178,32 +180,32 @@
    },
    "b": {
     "manager": "drewkim",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 17.2,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 38.5,
+    "startersLeftToPlay": 7
    },
    "b": {
     "manager": "wesley55",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 7,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 28,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 14.64,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -445,5 +447,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 42
+ "free_agent_moves": 44
 }
