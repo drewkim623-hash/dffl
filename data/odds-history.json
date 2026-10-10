@@ -1,6 +1,6 @@
 {
  "_comment": "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; pA is the chance manager a beats manager b as the site priced it at that moment.",
- "generated": "2026-10-10T11:04:02.062Z",
+ "generated": "2026-10-10T22:04:17.857Z",
  "weeks": {
   "2026-1": [
    {
@@ -1393,6 +1393,42 @@
     "a": "jadencha",
     "b": "sizzlemc2",
     "pA": 0.8164345355330628,
+    "aPts": 0,
+    "bPts": 16.1,
+    "settled": false
+   },
+   {
+    "at": "2026-10-10T22:04:17.805Z",
+    "a": "chassinator",
+    "b": "drewkim",
+    "pA": 0.4544923037813807,
+    "aPts": 0,
+    "bPts": 17.2,
+    "settled": false
+   },
+   {
+    "at": "2026-10-10T22:04:17.805Z",
+    "a": "willie12w",
+    "b": "wesley55",
+    "pA": 0.6209780726980516,
+    "aPts": 38.5,
+    "bPts": 7,
+    "settled": false
+   },
+   {
+    "at": "2026-10-10T22:04:17.805Z",
+    "a": "bradyrife",
+    "b": "victorthompson",
+    "pA": 0.7626939582882559,
+    "aPts": 28,
+    "bPts": 14.64,
+    "settled": false
+   },
+   {
+    "at": "2026-10-10T22:04:17.805Z",
+    "a": "jadencha",
+    "b": "sizzlemc2",
+    "pA": 0.8277678388893197,
     "aPts": 0,
     "bPts": 16.1,
     "settled": false
