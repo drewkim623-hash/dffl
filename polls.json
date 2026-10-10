@@ -63,10 +63,18 @@
    "opened": "2026-10-06",
    "closes": "2026-10-10",
    "subject": "DFFL Week 5: The Favorites Had a Bad Sunday",
-   "status": "open",
-   "results": null,
+   "status": "closed",
+   "results": {
+    "BRADY": 0,
+    "WESLEY": 0,
+    "NEITHER": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
    "announced": false,
-   "thread_id": "1a1112729973ef3b"
+   "thread_id": "1a1112729973ef3b",
+   "closed_at": "2026-10-10T23:18:51.825Z"
   }
  ]
 }
