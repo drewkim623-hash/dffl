@@ -4048,6 +4048,131 @@
      "text": "Points-for totals above are through week 4, the last completed week; week 5 is in progress and not included."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "every-3-1-team-got-more-likely",
+   "date": "2026-10-10",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "2026 · week 5 · odds",
+   "headline": "Every 3-1 Team Got More Likely. Nobody Else Did.",
+   "dek": "The site's playoff model has moved for every team in the league since the draft. It moved up for all four 3-1 teams, every one of them, and down for all eight others, every one of them.",
+   "byline": "DFFL desk",
+   "standfirst": "4-for-4 up at 3-1 · 8-for-8 down everywhere else",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Four weeks of football, plus a week 5 Sunday still on the board, have moved the site's playoff model for every team in the league — and the direction splits perfectly along the standings. <b>jadencha</b>, <b>sizzlemc2</b>, <b>wesley55</b> and <b>bradyrife</b> are a combined 12-4 and the only four teams at 3-1. Every one of them is more likely to make the playoffs now than the model had them at the draft. The other eight teams, every team at 2-2 or worse, have all moved the other way."
+    },
+    {
+     "type": "stat",
+     "n": "4 for 4",
+     "text": "3-1 teams whose playoff odds have risen since the draft — all of them. The other eight teams in the league have all fallen. Nobody has crossed from one direction to the other."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the top band",
+     "text": "Two Teams Nobody Priced In"
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2 and bradyrife account for the two largest swings on the entire board, in either direction. sizzlemc2 opened the season at a 33.6% chance to make the playoffs — longer than all but two teams in the league — and a 2.58% chance to win the title, the second-longest price behind only drewkim. Both numbers are now the best they have been all year: 70.0% and 7.30%. The 36.4-point jump in the playoff number is the single biggest move of any team. <b>bradyrife</b> is right behind at 34.9 points, a playoff number that has gone from 42.1% to 77.0% while the title price climbed from 4.66% to 8.58%. <b>wesley55</b> and <b>jadencha</b>, the other two 3-1 teams, are up a smaller 22.2 and 8.8 points — jadencha because there was not much room left to climb, sitting at 89.7% to begin with."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff odds, change since the draft",
+     "sub": "percentage points, draft-day line to now",
+     "rows": [
+      {
+       "label": "moseslin",
+       "sub": "43.4% → 14.3%",
+       "value": -29.1,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "sub": "31.4% → 12.4%",
+       "value": -19.0,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "82.8% → 66.8%",
+       "value": -16.0,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "50.2% → 38.2%",
+       "value": -12.0,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "39.3% → 27.9%",
+       "value": -11.4,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "25.3% → 17.1%",
+       "value": -8.2,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "sub": "73.3% → 68.3%",
+       "value": -5.0,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "sub": "34.5% → 33.0%",
+       "value": -1.5,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "sub": "89.7% → 98.5%",
+       "value": 8.8,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "sub": "54.4% → 76.6%",
+       "value": 22.2,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "sub": "42.1% → 77.0%",
+       "value": 34.9,
+       "group": 1
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "33.6% → 70.0%",
+       "value": 36.4,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the other eight",
+     "text": "Nobody Outside the Band Gained Ground"
+    },
+    {
+     "type": "p",
+     "text": "Not one team outside the 3-1 band is more likely to make the playoffs today than it was at the draft. Among the 2-2 teams, <b>Domo112</b> is down 16.0 points and <b>saucebossandrew</b> down 12.0; <b>willie12w</b> and <b>victorthompson</b> have fallen a smaller 5.0 and 1.5. Among the four 1-3 teams, <b>jskule23</b> is down 19.0 points and <b>chassinator</b> down 11.4. <b>moseslin</b> owns the steepest drop anywhere in the league, 29.1 points, from a 43.4% shot at the draft to 14.3% now. <b>drewkim</b>, the fourth 1-3 team, is down a comparatively mild 8.2."
+    },
+    {
+     "type": "p",
+     "text": "None of this means the four 3-1 teams are safe or the other eight are finished — nine weeks remain before the playoff round in week 15, and the model will move again before any of it matters. But for one week, the thing fans always suspect and rarely get to check held up exactly: the board's own reassessment lines up, team for team, with who is actually winning."
+    }
+   ]
   }
  ]
 }
