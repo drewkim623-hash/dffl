@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-09T11:03:49.117Z",
- "at": 1791543829117,
+ "generated": "2026-10-10T11:03:29.218Z",
+ "at": 1791630209219,
  "season": "2026",
  "nfl_week": 5,
  "season_type": "regular",
@@ -15,8 +15,7 @@
    "points_against": 478.52,
    "faab_spent": 3,
    "starters_hurt": [
-    "Ashton Jeanty (Questionable)",
-    "Isaiah Likely (Questionable)"
+    "Ashton Jeanty (Questionable)"
    ]
   },
   {
@@ -57,11 +56,7 @@
    "points_for": 517.42,
    "points_against": 535.8,
    "faab_spent": 56,
-   "starters_hurt": [
-    "Malik Nabers (Questionable)",
-    "Mike Evans (Questionable)",
-    "Jacory Croskey-Merritt (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -71,8 +66,7 @@
    "points_against": 520.3,
    "faab_spent": 59,
    "starters_hurt": [
-    "Alvin Kamara (Questionable)",
-    "Chris Olave (Questionable)"
+    "Alvin Kamara (Questionable)"
    ]
   },
   {
@@ -83,7 +77,6 @@
    "points_against": 453.36,
    "faab_spent": 100,
    "starters_hurt": [
-    "Jeremiyah Love (Questionable)",
     "Ladd McConkey (Questionable)"
    ]
   },
@@ -106,7 +99,6 @@
    "points_against": 519.82,
    "faab_spent": 63,
    "starters_hurt": [
-    "Jaylen Wright (Questionable)",
     "Carnell Tate (Questionable)"
    ]
   },
@@ -118,9 +110,8 @@
    "points_against": 568.76,
    "faab_spent": 47,
    "starters_hurt": [
-    "D'Andre Swift (Questionable)",
     "Zay Flowers (Questionable)",
-    "Kyle Monangai (Questionable)",
+    "Terry McLaurin (Questionable)",
     "Rhamondre Stevenson (Questionable)"
    ]
   },
@@ -132,8 +123,6 @@
    "points_against": 623.46,
    "faab_spent": 5,
    "starters_hurt": [
-    "Saquon Barkley (Questionable)",
-    "Cam Skattebo (Questionable)",
     "Justin Jefferson (Questionable)"
    ]
   },
@@ -447,5 +436,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 44
+ "free_agent_moves": 47
 }
