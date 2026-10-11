@@ -131,7 +131,8 @@ const shell = inner => `<!doctype html>
 <style>
   @media only screen and (max-width:480px){
     .col{display:block!important;width:100%!important;max-width:100%!important}
-    .col+.col{padding-top:10px!important}
+    .col2{padding-top:10px!important}
+    .col{padding-left:0!important;padding-right:0!important}
     .pad{padding-left:14px!important;padding-right:14px!important}
     .big{font-size:21px!important}
   }
@@ -157,7 +158,7 @@ const twoUp = (a, b) => `
   <tr><td>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td class="col" width="50%" valign="top" style="padding-right:5px">${a}</td>
-      <td class="col" width="50%" valign="top" style="padding-left:5px">${b || ""}</td>
+      ${b ? `<td class="col col2" width="50%" valign="top" style="padding-left:5px">${b}</td>` : `<td class="col" width="50%" valign="top" style="padding-left:5px"></td>`}
     </tr></table>
   </td></tr>`;
 
@@ -279,7 +280,7 @@ const blockHtml = b => {
         const w = Math.max(2, Math.round(Math.abs(v) / max * 100));
         return `<tr>
           <td style="padding:5px 8px 5px 0;font:600 12px/1.3 ${F};color:${C.ink};white-space:nowrap;vertical-align:top" width="38%">${esc(r.label)}
-            ${r.sub ? `<div style="font:400 10.5px/1.3 ${F};color:${C.faint}">${esc(r.sub)}</div>` : ""}</td>
+            ${r.sub ? `<div style="font:400 10.5px/1.3 ${F};color:${C.faint};white-space:normal">${esc(r.sub)}</div>` : ""}</td>
           <td style="padding:5px 0;vertical-align:middle">
             <table role="presentation" width="${w}%" cellpadding="0" cellspacing="0"><tr>
               <td bgcolor="${colour(r.group)}" style="background:${colour(r.group)};height:10px;border-radius:3px;font-size:0;line-height:0">&nbsp;</td></tr></table></td>
@@ -302,9 +303,10 @@ const blockHtml = b => {
     const pairs = [];
     for (let i = 0; i < items.length; i += 2) pairs.push([items[i], items[i + 1]]);
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px">
-      ${pairs.map(([x, y]) => `<tr>
+      ${pairs.map(([x, y]) => y ? `<tr>
         <td class="col" width="50%" valign="top" style="padding:0 4px 8px 0">${card(x)}</td>
-        <td class="col" width="50%" valign="top" style="padding:0 0 8px 4px">${card(y)}</td></tr>`).join("")}
+        <td class="col" width="50%" valign="top" style="padding:0 0 8px 4px">${card(y)}</td></tr>` : `<tr>
+        <td colspan="2" valign="top" style="padding:0 0 8px">${card(x)}</td></tr>`).join("")}
     </table>`;
   }
   if (b.type === "picks") return `
@@ -370,11 +372,11 @@ const pollBlock = p => `
       <div style="font:800 9.5px/1 ${F};letter-spacing:.09em;text-transform:uppercase;color:${C.gold}">This week's poll</div>
       <div style="font:800 17px/1.3 ${F};color:${C.ink};margin-top:7px">${esc(p.question)}</div>
       <div style="font:400 13.5px/1.55 ${F};color:${C.ink};margin-top:9px"><b>Just reply to this email</b> with one word:</div>
-      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:8px"><tr>
-        ${p.options.map(o => `<td style="padding:0 8px 0 0"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate">
-          <tr><td style="border:1px solid ${C.line};border-radius:6px;padding:7px 11px;font:800 13px/1 ${F};color:${C.ink};white-space:nowrap">
-          ${esc(o.key)} <span style="font:400 11.5px/1 ${F};color:${C.faint}">${esc(o.label)}</span></td></tr></table></td>`).join("")}
-      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;border-collapse:separate">
+        ${p.options.map(o => `<tr><td style="padding:0 0 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate">
+          <tr><td style="border:1px solid ${C.line};border-radius:6px;padding:8px 11px;font:800 13px/1.35 ${F};color:${C.ink}">
+          ${esc(o.key)} <span style="font:400 12px/1.35 ${F};color:${C.faint}">${esc(o.label)}</span></td></tr></table></td></tr>`).join("")}
+      </table>
       <div style="font:400 11.5px/1.5 ${F};color:${C.faint};margin-top:9px">Voting closes ${esc(p.closes)}. One vote each; if you reply twice, the last one counts. Results in the next email.</div>
     `, "15px 16px")}
   </td></tr>`;
