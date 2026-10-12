@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-11T15:40:02.786Z",
- "at": 1791733202787,
+ "generated": "2026-10-12T11:05:47.947Z",
+ "at": 1791803147947,
  "season": "2026",
  "nfl_week": 5,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 626.72,
    "points_against": 478.52,
    "faab_spent": 3,
-   "starters_hurt": [
-    "Ashton Jeanty (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -26,6 +24,7 @@
    "points_against": 506.18,
    "faab_spent": 4,
    "starters_hurt": [
+    "David Montgomery (Out)",
     "CeeDee Lamb (Questionable)"
    ]
   },
@@ -37,7 +36,8 @@
    "points_against": 460,
    "faab_spent": 26,
    "starters_hurt": [
-    "Tee Higgins (Questionable)"
+    "T.J. Hockenson (Out)",
+    "Quinshon Judkins (Questionable)"
    ]
   },
   {
@@ -57,7 +57,7 @@
    "points_against": 535.8,
    "faab_spent": 56,
    "starters_hurt": [
-    "Marvin Harrison (Out)"
+    "Tre' Harris (Questionable)"
    ]
   },
   {
@@ -68,8 +68,7 @@
    "points_against": 520.3,
    "faab_spent": 59,
    "starters_hurt": [
-    "Will Shipley (Questionable)",
-    "Alvin Kamara (Questionable)"
+    "Will Shipley (Out)"
    ]
   },
   {
@@ -79,7 +78,9 @@
    "points_for": 483.4,
    "points_against": 453.36,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Ollie Gordon (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -89,7 +90,8 @@
    "points_against": 490.42,
    "faab_spent": 16,
    "starters_hurt": [
-    "Ja'Marr Chase (Questionable)"
+    "Aaron Jones (Questionable)",
+    "Deebo Samuel (Out)"
    ]
   },
   {
@@ -99,9 +101,7 @@
    "points_for": 515.36,
    "points_against": 519.82,
    "faab_spent": 63,
-   "starters_hurt": [
-    "Carnell Tate (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -110,11 +110,7 @@
    "points_for": 507.54,
    "points_against": 568.76,
    "faab_spent": 47,
-   "starters_hurt": [
-    "Zay Flowers (Questionable)",
-    "Terry McLaurin (Questionable)",
-    "Rhamondre Stevenson (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -123,9 +119,7 @@
    "points_for": 488.38,
    "points_against": 623.46,
    "faab_spent": 5,
-   "starters_hurt": [
-    "Justin Jefferson (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -134,80 +128,82 @@
    "points_for": 466.04,
    "points_against": 571.4,
    "faab_spent": 50,
-   "starters_hurt": []
+   "starters_hurt": [
+    "KC Concepcion (Out)"
+   ]
   }
  ],
  "this_week": [
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 164.28,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "jskule23",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 64.8,
+    "startersLeftToPlay": 3
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 2,
-    "startersLeftToPlay": 10
+    "points": 193.38,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 16.1,
-    "startersLeftToPlay": 8
+    "points": 68.64,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 18.4,
-    "startersLeftToPlay": 10
+    "points": 173.36,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "drewkim",
-    "points": 17.2,
-    "startersLeftToPlay": 9
+    "points": 101.96,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 38.5,
-    "startersLeftToPlay": 7
+    "points": 155.14,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "wesley55",
-    "points": 7,
-    "startersLeftToPlay": 9
+    "points": 75.6,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 39.3,
-    "startersLeftToPlay": 9
+    "points": 133.94,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "victorthompson",
-    "points": 14.64,
-    "startersLeftToPlay": 9
+    "points": 113.64,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 7.8,
-    "startersLeftToPlay": 10
+    "points": 81.2,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "moseslin",
-    "points": 1,
-    "startersLeftToPlay": 10
+    "points": 122.7,
+    "startersLeftToPlay": 0
    }
   }
  ],
@@ -266,7 +262,7 @@
      "name": "Will Shipley",
      "pos": "RB",
      "team": "PHI",
-     "status": "Questionable",
+     "status": "Out",
      "to": "saucebossandrew"
     }
    ],
@@ -347,7 +343,7 @@
      "name": "Tre' Harris",
      "pos": "WR",
      "team": "LAC",
-     "status": null,
+     "status": "Questionable",
      "to": "Domo112"
     }
    ],
@@ -401,7 +397,7 @@
      "name": "T.J. Hockenson",
      "pos": "TE",
      "team": "MIN",
-     "status": null,
+     "status": "Out",
      "to": "wesley55"
     }
    ],
@@ -437,5 +433,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 50
+ "free_agent_moves": 51
 }
