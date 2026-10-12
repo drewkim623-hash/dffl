@@ -266,6 +266,12 @@
     margin-right:6px;vertical-align:middle;animation:livepulse 1.6s ease-in-out infinite}
   @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.25}}
   @media (prefers-reduced-motion:reduce){.livedot{animation:none}}
+  /* players left and the games that decide a live matchup */
+  .pl{padding:8px 14px;border-top:1px solid var(--grid);font-size:12px;color:var(--ink-2);
+    line-height:1.5;overflow-wrap:anywhere;min-width:0}
+  .pl-dec{margin-top:4px}
+  .pl-dec summary{cursor:pointer;font-size:11.5px;font-weight:700;color:var(--muted)}
+  .pl-dec ol{margin:3px 0 0;padding-left:18px;font-size:12px;font-variant-numeric:tabular-nums}
   /* ---- the live odds board ---- */
   .asofbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 10px}
   .asofbar .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
@@ -1272,9 +1278,10 @@ async function loadSeason(lg) {
   // entirely. Everything downstream reads DB.games, which is why the fix is one
   // decision here rather than a caveat in thirty places.
   const seasonGames = [], liveGames = [];
-  let liveWeek = null;
+  let liveWeek = null, liveStarters = null;
   for (const { wk, d } of raw) {
     const final = weekIsFinal(lg, wk);
+    if (!final) liveStarters = plStartersOf(d);
     for (const [a, b] of pairWeek(d)) {
       const g = {
         season: lg.season, week: wk, playoff: wk >= pws, live: !final,
@@ -1357,7 +1364,7 @@ async function loadSeason(lg) {
     leagueId: id, season: lg.season, name: lg.name, status: lg.status,
     pws, playoffTeams: ptm, rosters, users, uidOf, userById,
     places: placementsOf(wb, lb, ptm, seasonGames), wb, lb, games: seasonGames,
-    live: liveGames, liveWeek, slotPts,
+    live: liveGames, liveWeek, liveStarters, slotPts,
     finalWeeks: new Set(seasonGames.filter(g => !g.playoff).map(g => g.week)),
     complete: lg.status === "complete",
     picks, playerPts, playerWeek, draftId,
@@ -3327,6 +3334,8 @@ function panelScoreboard() {
        are. Nothing here counts as a win or a loss — and no standing, record, streak, power
        ranking or playoff number anywhere on this site moves — until every starter has played.`));
     const grid = el("div", "sbgrid");
+    const pld = (w.live || PL_FIX) ? plData(season, w.week) : null;
+    if (w.live && !pld) plEnsure();
     w.games.slice().sort((x, y) => (y.a.pts + y.b.pts) - (x.a.pts + x.b.pts)).forEach(g => {
       const card = el("div", "game");
       const side = s => {
@@ -3345,7 +3354,7 @@ function panelScoreboard() {
           <span class="gp">${f2(s.pts)}</span></button>`;
       };
       const margin = Math.abs(g.a.pts - g.b.pts);
-      card.innerHTML = side(g.a) + side(g.b) +
+      card.innerHTML = side(g.a) + side(g.b) + (pld ? plCardHTML(g.a, g.b, pld) : "") +
         `<div class="gfoot">
            <span>${w.live
              ? `<span class="livedot"></span>In progress · leading by ${f2(margin)}`
@@ -4627,10 +4636,11 @@ async function loadNflGames(force) {
   }
   try {
     const all = await jget(`${SLEEPER_SCHEDULE}/${season}`);
-    const byTeam = new Map();
+    const byTeam = new Map(), list = [];
     let pre = 0, live = 0, post = 0;
     for (const g of (all || [])) {
       if (Number(g.week) !== week) continue;
+      list.push(g);
       const rem = gameRemaining(g.status);
       if (g.status === "pre_game") pre++;
       else if (g.status === "complete") post++;
@@ -4641,7 +4651,7 @@ async function loadNflGames(force) {
     }
     NFLGAMES_AT = Date.now();
     return (NFLGAMES = {
-      byTeam, ok: byTeam.size > 0, source: "sleeper", at: NFLGAMES_AT,
+      byTeam, list, ok: byTeam.size > 0, source: "sleeper", at: NFLGAMES_AT,
       pre, live, post, week, season,
     });
   } catch (e) {
@@ -5225,6 +5235,163 @@ function updatedAt(ms, label) {
   return `${label || "Odds updated"} ${t}`;
 }
 
+/* ------------------------------------- players left and deciding games */
+
+/**
+ * Who in each live matchup is still to play, and which NFL games settle it.
+ *
+ * Read off three things the site already has: each side's starters from
+ * matchups/{week}, each player's club from rosters.json, and the week's rows
+ * from Sleeper's NFL schedule. Counting only — nothing here feeds the score or
+ * the odds. A player whose game is final is done; one whose club has no game
+ * this week is on a bye; one with no club has no team. Neither of the last two
+ * counts as left.
+ *
+ * PL_FIX, when set through window.__plFixture, stands in for all three so the
+ * verify harness can play out a made-up Sunday on the real scoreboard.
+ */
+let PL_FIX = null;
+
+/** roster_id -> starters, from a raw matchups/{week} response. */
+function plStartersOf(entries) {
+  return new Map((entries || []).map(e => [e.roster_id, e.starters || []]));
+}
+
+/** The week's NFL games, by club, and whether every one of them is final. */
+function plSchedule(rows) {
+  const list = (rows || []).filter(g => g && g.home && g.away);
+  const byTeam = new Map();
+  for (const g of list) { byTeam.set(g.home, g); byTeam.set(g.away, g); }
+  return { list, byTeam, allFinal: list.length > 0 && list.every(g => g.status === "complete") };
+}
+
+/** A game's kickoff as epoch ms, if the row carries a time at all. */
+function plStart(g) {
+  const ms = Number(g.start_time ?? g.kickoff ?? (/T/.test(g.date || "") ? Date.parse(g.date) : NaN));
+  return isFinite(ms) && ms > 0 ? ms : null;
+}
+
+/** Sort key: games in progress first, then by kickoff. */
+function plWhen(g) {
+  if (g.status === "in_game") return -1;
+  const ms = plStart(g);
+  if (ms != null) return ms;
+  const d = Date.parse(g.date || "");
+  return isFinite(d) ? d : Infinity;
+}
+
+const PL_ET = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit", hour12: true,
+});
+const PL_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** Kickoff in ET — "Sun 4:25 PM", "SNF" — or "live", or only the day when the row has no time. */
+function plKickoff(g) {
+  if (!g) return "";
+  if (g.status === "in_game") return "live";
+  const ms = plStart(g);
+  if (ms != null) {
+    const p = Object.fromEntries(PL_ET.formatToParts(new Date(ms)).map(x => [x.type, x.value]));
+    const h24 = (Number(p.hour) % 12) + (p.dayPeriod === "PM" ? 12 : 0);
+    const night = { Sun: "SNF", Mon: "MNF", Thu: "TNF" }[p.weekday];
+    if (night && h24 >= 19) return night;
+    return `${p.weekday} ${p.hour}:${p.minute} ${p.dayPeriod}`;
+  }
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(g.date || "");
+  return m ? PL_DAYS[new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDay()] : "";
+}
+
+/** One side's starters: who is still to play, soonest first, and who never will this week. */
+function plSide(starters, players, sched) {
+  const list = [], idle = [];
+  let n = 0;
+  for (const raw of starters || []) {
+    if (!raw || raw === "0") continue;
+    n++;
+    const pid = String(raw), rec = players.get(pid);
+    const name = (rec && rec.n && lastNameOf(rec.n)) || pid;
+    const club = rec && rec.t ? rec.t : null;
+    if (!club) { idle.push({ pid, name, why: "no team" }); continue; }
+    const g = sched.byTeam.get(club);
+    if (!g) { idle.push({ pid, name, club, why: "bye" }); continue; }
+    if (g.status === "complete") continue;
+    list.push({ pid, name, club, game: g, kick: plKickoff(g) });
+  }
+  list.sort((x, y) => plWhen(x.game) - plWhen(y.game) || x.name.localeCompare(y.name));
+  return { starters: n, left: list.length, list, idle };
+}
+
+/** Unfinished NFL games ranked by how many of both sides' starters are in them. */
+function plDeciding(A, B, k = 3) {
+  const by = new Map();
+  for (const [side, S] of [["a", A], ["b", B]]) {
+    for (const p of S.list) {
+      const key = `${p.game.away}@${p.game.home}`;
+      if (!by.has(key)) by.set(key, { game: p.game, a: 0, b: 0 });
+      by.get(key)[side]++;
+    }
+  }
+  return [...by.values()]
+    .sort((x, y) => (y.a + y.b) - (x.a + x.b) || plWhen(x.game) - plWhen(y.game))
+    .slice(0, k)
+    .map(r => ({ ...r, label: `${r.game.away} @ ${r.game.home}: ${r.a} v ${r.b}` }));
+}
+
+/** One side as a line of text: "Name: 3 left (Lamb Sun 4:25 PM, Kelce SNF, Hill bye)". */
+function plSideText(who, S) {
+  const bits = S.list.map(p => `${p.name}${p.kick ? ` ${p.kick}` : ""}`)
+    .concat(S.idle.map(p => `${p.name} ${p.why}`));
+  return `${who}: ${S.left} left${bits.length ? ` (${bits.join(", ")})` : ""}`;
+}
+
+/** What the scoreboard needs for a week, or null when it is not the week being played. */
+function plData(season, week) {
+  if (PL_FIX) {
+    return {
+      sched: plSchedule(PL_FIX.games),
+      starters: plStartersOf(PL_FIX.matchups),
+      players: PL_FIX.players ? new Map(Object.entries(PL_FIX.players)) : (ROSTERED ? ROSTERED.map : new Map()),
+    };
+  }
+  if (!season || season.liveWeek !== week) return null;
+  if (!NFLGAMES || !NFLGAMES.ok || !ROSTERED || !ROSTERED.map.size) return null;
+  const starters = season.liveStarters
+    || new Map((season.rosters || []).map(r => [r.roster_id, r.starters || []]));
+  return { sched: plSchedule(NFLGAMES.list), starters, players: ROSTERED.map };
+}
+
+/**
+ * The scoreboard can draw a live week before anything has read the roster map
+ * or the NFL schedule. Read both once and repaint through the live path.
+ */
+let PL_LOAD = null;
+function plEnsure() {
+  return PL_LOAD || (PL_LOAD = Promise.all([loadRostered(), loadNflGames()])
+    .then(() => emitLive(), e => console.error(e)));
+}
+
+/** The block under a matchup card's two sides. Empty when neither side's lineup is known. */
+function plCardHTML(a, b, data) {
+  const sa = data.starters.get(a.rid), sb = data.starters.get(b.rid);
+  if (!sa && !sb) return "";
+  const attrs = `class="pl" data-a="${esc(String(a.rid))}" data-b="${esc(String(b.rid))}"`;
+  if (data.sched.allFinal) return `<div ${attrs}><div class="pl-left">Players left: all done</div></div>`;
+  const A = plSide(sa, data.players, data.sched), B = plSide(sb, data.players, data.sched);
+  const dec = plDeciding(A, B);
+  // Phones get the ranking folded away; anything wider shows it open.
+  const open = !(window.matchMedia && matchMedia("(max-width:520px)").matches);
+  return `<div ${attrs}>
+    <div class="pl-left"><span class="pl-a">${esc(plSideText(nameOf(a.uid), A))}</span>
+      · <span class="pl-b">${esc(plSideText(nameOf(b.uid), B))}</span></div>
+    ${dec.length ? `<details class="pl-dec"${open ? " open" : ""}>
+      <summary>Games that decide this</summary>
+      <ol>${dec.map(r => `<li>${esc(r.label)}</li>`).join("")}</ol></details>` : ""}
+  </div>`;
+}
+
+/** Test hook: swap in a mocked live state (or null to clear) and run the live repaint. */
+window.__plFixture = state => { PL_FIX = state || null; emitLive(); return !!PL_FIX; };
+
 /**
  * Every matchup being played, with the chance each side wins it.
  *
@@ -5308,6 +5475,7 @@ async function refreshLive() {
         if (fresh.has(g.a.rid)) g.a.pts = fresh.get(g.a.rid);
         if (fresh.has(g.b.rid)) g.b.pts = fresh.get(g.b.rid);
       }
+      season.liveStarters = plStartersOf(d);
     }
     await loadNflGames(true);
     LIVE_P = null;
@@ -8751,6 +8919,7 @@ async function boot() {
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,
       loadNflGames, gameRemaining, loadRostered, slotShares, lineupState, liveWinProb,
       liveWeekBoard, refreshLive, startLivePolling, liveSignature, onLive, emitLive, GAME_LEFT,
+      plStartersOf, plSchedule, plKickoff, plSide, plDeciding, plSideText, plData, plCardHTML,
       boardAsOf, pricedWeeks,
       gameLine, gameLinesData, ensureGameLines, paintGameLines, oddsHistoryOnce, linePath, coverResult,
       fmtSpread, halfPt,
