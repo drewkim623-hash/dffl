@@ -187,6 +187,20 @@
   tbody tr:last-child td{border-bottom:0}
   tbody tr:hover td,tbody tr:hover td:first-child{background:var(--hover)}
   .nmcell{display:flex;align-items:center;gap:8px}
+  /* Long-text ledger columns wrap instead of running off the card. */
+  table.ledger th.deal,table.ledger td.deal{white-space:normal;text-align:left;min-width:12em}
+  /* Phone cards: on narrow screens each row of these tables stacks into a labelled card. */
+  @media (max-width:620px){
+    table.phone-cards thead{display:none}
+    table.phone-cards,table.phone-cards tbody,table.phone-cards tr,table.phone-cards td{display:block;width:auto}
+    table.phone-cards tr{padding:10px 14px;border-bottom:1px solid var(--grid)}
+    table.phone-cards tbody tr:last-child{border-bottom:0}
+    table.phone-cards td,table.phone-cards td.deal{position:static;min-width:0;padding:3px 0;border:0;white-space:normal;text-align:right;overflow-wrap:anywhere}
+    table.phone-cards td::before{content:attr(data-label);float:left;margin-right:12px;font-size:11px;font-weight:750;
+      text-transform:uppercase;letter-spacing:.07em;color:var(--muted);line-height:20px}
+    table.phone-cards td:first-child{text-align:left;font-weight:700;padding-bottom:6px}
+    table.phone-cards td:first-child::before{content:none}
+  }
   .pos-t{color:var(--good)} .neg-t{color:var(--crit)}
 
   /* ============ h2h ============ */
@@ -1543,11 +1557,14 @@ function divergeColor(v, max) {
 function sechead(title, sub) {
   return el("div", "sechead", `<h2>${esc(title)}</h2>${sub ? `<p>${esc(sub)}</p>` : ""}`);
 }
-function tableCard(headers, rows) {
-  const c = el("div", "card"), s = el("div", "scroll"), t = el("table");
+function tableCard(headers, rows, cls) {
+  const c = el("div", "card"), s = el("div", "scroll"), t = el("table", cls);
   t.innerHTML = `<thead><tr>${headers.map(h =>
-    `<th class="${h.num ? "num" : ""}"${h.title ? ` title="${esc(h.title)}"` : ""}>${esc(h.label)}</th>`).join("")}</tr></thead>`;
+    `<th class="${h.num ? "num" : ""}${h.cls ? " " + h.cls : ""}"${h.title ? ` title="${esc(h.title)}"` : ""}>${esc(h.label)}</th>`).join("")}</tr></thead>`;
   const tb = el("tbody"); tb.innerHTML = rows.join("");
+  // Phone cards show each cell's column name beside it, since the header row is hidden.
+  if (cls && cls.includes("phone-cards"))
+    for (const tr of tb.rows) [...tr.cells].forEach((td, i) => { if (headers[i]) td.dataset.label = headers[i].label; });
   t.appendChild(tb); s.appendChild(t); c.appendChild(s);
   return c;
 }
@@ -2182,9 +2199,9 @@ function panelRecords(RB) {
   const head = [{ label: "Manager" }, { label: "Score", num: 1 }, { label: "Season" },
   { label: "Wk", num: 1 }, { label: "Opponent" }, { label: "They had", num: 1 }, { label: "Result", num: 1 }];
   p.appendChild(sechead("10 best weeks ever"));
-  p.appendChild(tableCard(head, RB.sides.slice().sort((a, b) => b.pts - a.pts).slice(0, 10).map(row)));
+  p.appendChild(tableCard(head, RB.sides.slice().sort((a, b) => b.pts - a.pts).slice(0, 10).map(row), "phone-cards"));
   p.appendChild(sechead("10 worst weeks ever"));
-  p.appendChild(tableCard(head, RB.sides.slice().sort((a, b) => a.pts - b.pts).slice(0, 10).map(row)));
+  p.appendChild(tableCard(head, RB.sides.slice().sort((a, b) => a.pts - b.pts).slice(0, 10).map(row), "phone-cards"));
 
   /* ---- season awards ---- */
   const awarded = DB.seasons.map(s => ({ s, a: seasonAwards(s) })).filter(x => x.a);
@@ -2342,9 +2359,9 @@ function panelMatchups(AT) {
       <td class="num">${f1(r.pf / r.n)} — ${f1(r.pa / r.n)}</td></tr>`;
     const rhead = [{ label: "Matchup" }, { label: "Series", num: 1 }, { label: "Games", num: 1 }, { label: "Avg score", num: 1 }];
     p.appendChild(sechead("Real rivalries", "Dead-even series with at least three meetings."));
-    p.appendChild(tableCard(rhead, pairs.slice().sort((x, y) => x.edge - y.edge || y.n - x.n).slice(0, 6).map(rrow)));
+    p.appendChild(tableCard(rhead, pairs.slice().sort((x, y) => x.edge - y.edge || y.n - x.n).slice(0, 6).map(rrow), "phone-cards"));
     p.appendChild(sechead("Somebody owns somebody", "The most lopsided series in league history."));
-    p.appendChild(tableCard(rhead, pairs.slice().sort((x, y) => y.edge - x.edge || y.n - x.n).slice(0, 6).map(rrow)));
+    p.appendChild(tableCard(rhead, pairs.slice().sort((x, y) => y.edge - x.edge || y.n - x.n).slice(0, 6).map(rrow), "phone-cards"));
   }
 
   /* ---- what-if schedule swap ---- */
@@ -8151,7 +8168,7 @@ function renderTrades(host, L, W) {
       [{ label: "Manager" }, { label: "Trades", num: 1 }, { label: "Net", num: 1, title: "Points gained minus points given up, players and picks together" },
       { label: "From players", num: 1 }, { label: "From picks", num: 1, title: "Picks are worth what the player drafted with them scored" },
       { label: "W–L", num: 1, title: "Trades won and lost by more than 25 points" },
-      { label: "Best" }, { label: "Worst" }],
+      { label: "Best", cls: "deal" }, { label: "Worst", cls: "deal" }],
       L.byMgr.map(m => `<tr>
         <td><span class="nmcell">${avatarHTML(m.uid, "sm")}${esc(nameOf(m.uid))}</span></td>
         <td class="num">${m.n}</td>
@@ -8159,9 +8176,9 @@ function renderTrades(host, L, W) {
         <td class="num ${m.playerNet >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(m.playerNet))}</td>
         <td class="num ${m.pickNet >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(m.pickNet))}</td>
         <td class="num">${m.won}–${m.lostN}</td>
-        <td>${m.best ? `<span class="pos-t">${esc(sgnf(m.best.net))}</span> ${esc(gotNames(m.best))} <span class="pos">${esc(m.best.t.season)}</span>` : "—"}</td>
-        <td>${m.worst ? `<span class="neg-t">${esc(sgnf(m.worst.net))}</span> ${esc(gotNames(m.worst))} <span class="pos">${esc(m.worst.t.season)}</span>` : "—"}</td>
-      </tr>`)));
+        <td class="deal">${m.best ? `<span class="pos-t">${esc(sgnf(m.best.net))}</span> ${esc(gotNames(m.best))} <span class="pos">${esc(m.best.t.season)}</span>` : "—"}</td>
+        <td class="deal">${m.worst ? `<span class="neg-t">${esc(sgnf(m.worst.net))}</span> ${esc(gotNames(m.worst))} <span class="pos">${esc(m.worst.t.season)}</span>` : "—"}</td>
+      </tr>`), "ledger phone-cards"));
   }
 
   /* ---- what the picks turned into ---- */
