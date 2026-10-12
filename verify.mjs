@@ -4378,6 +4378,69 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
   check(`${id}: no horizontal overflow at 390px`, w);
 }
 
+group("Wide tables as phone cards");
+// The trade ledger, best/worst weeks and the rivalry tables stack into
+// labelled cards at phone width: nothing inside is wider than its card, and
+// every field still carries its name.
+{
+  const PHONE_TABLES = [
+    { tab: "trades", head: "All-time trade ledger", labels: ["Trades", "Net", "From players", "From picks", "W–L", "Best", "Worst"] },
+    { tab: "records", head: "10 best weeks ever", labels: ["Score", "Season", "Wk", "Opponent", "They had", "Result"] },
+    { tab: "records", head: "10 worst weeks ever", labels: ["Score", "Season", "Wk", "Opponent", "They had", "Result"] },
+    { tab: "matchups", head: "Real rivalries", labels: ["Series", "Games", "Avg score"] },
+    { tab: "matchups", head: "Somebody owns somebody", labels: ["Series", "Games", "Avg score"] },
+  ];
+  const measureTable = head => {
+    const h = [...document.querySelectorAll(".sechead h2")].find(x => x.textContent.trim() === head && x.offsetParent);
+    const card = h && h.closest(".sechead").nextElementSibling;
+    const t = card && card.querySelector("table");
+    if (!t) return null;
+    const over = [];
+    for (const box of [card, card.querySelector(".scroll"), t]) if (box.scrollWidth > box.clientWidth + 1) over.push(`${box.className || box.tagName} ${box.scrollWidth}>${box.clientWidth}`);
+    const cr = card.getBoundingClientRect();
+    for (const n of t.querySelectorAll("*")) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > cr.right + 1 || r.left < cr.left - 1 || n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).display !== "inline"))
+        over.push(`${n.tagName}.${n.className} ${Math.round(r.left)}..${Math.round(r.right)}`);
+    }
+    // A field's name, as the reader sees it: the ::before label on phones, the header on desktop.
+    const shown = new Set();
+    for (const td of t.querySelectorAll("tbody td")) {
+      const c = getComputedStyle(td, "::before").content;
+      if (c && c !== "none" && c !== "normal") shown.add(c.replace(/^"|"$/g, ""));
+    }
+    const minFont = Math.min(...[...t.querySelectorAll("tbody td")].flatMap(td => [parseFloat(getComputedStyle(td).fontSize), parseFloat(getComputedStyle(td, "::before").fontSize)]));
+    const ths = [...t.querySelectorAll("thead th")];
+    return { over: over.slice(0, 4), shown: [...shown], minFont, rows: t.tBodies[0].rows.length,
+      heads: ths.map(th => th.textContent.trim()), cols: Math.max(0, ...[...t.tBodies[0].rows].map(r => r.cells.length)),
+      headVisible: ths.every(th => th.getBoundingClientRect().width > 0 && th.getBoundingClientRect().right <= cr.right + 1) };
+  };
+  for (const s of PHONE_TABLES) {
+    await mobile.click(`#tabs button[data-tab="${s.tab}"]`);
+    await mobile.waitForTimeout(120);
+    const m = await mobile.evaluate(measureTable, s.head);
+    if (!m) { check(`${s.head}: table found at 390px`, false); continue; }
+    check(`${s.head}: nothing wider than its card at 390px`, m.over.length === 0, m.over.join(" | "));
+    const missing = s.labels.filter(l => !m.shown.includes(l));
+    check(`${s.head}: every field labelled at 390px`, missing.length === 0, `missing ${missing.join(", ")}`);
+    check(`${s.head}: card text stays at 11px or larger`, m.minFont >= 11, `${m.minFont}px`);
+  }
+  // A playoff week keeps its PO tag in the card.
+  await mobile.click('#tabs button[data-tab="records"]');
+  const po = await mobile.evaluate(() => [...document.querySelectorAll('[data-panel="records"] table.phone-cards .badge')]
+    .filter(b => b.textContent.trim() === "PO").map(b => b.getBoundingClientRect().width > 0));
+  check("best/worst weeks: PO tags still show at 390px", po.every(Boolean), `${po.filter(x => !x).length} hidden`);
+
+  // Desktop: the ledger names every column and nothing runs off the card.
+  await page.click('#tabs button[data-tab="trades"]');
+  await page.waitForTimeout(150);
+  const L1280 = await page.evaluate(measureTable, "All-time trade ledger");
+  check("trade ledger at 1280: a header for every column", L1280 && L1280.heads.length === L1280.cols && L1280.heads.every(Boolean),
+    L1280 ? L1280.heads.join("|") : "no table");
+  check("trade ledger at 1280: every header within the card", L1280 && L1280.headVisible);
+  check("trade ledger at 1280: no cell overflows the card", L1280 && L1280.over.length === 0, L1280 ? L1280.over.join(" | ") : "");
+}
+
 /* ------------------------------------------------------------------------
  * 1 AM Tuesday, simulated: Sleeper still says week 2 while data/latest.json
  * already marks week 2 final. The site must treat week 2 as finished and week
