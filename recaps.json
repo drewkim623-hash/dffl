@@ -43,6 +43,79 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 5,
+   "note": "",
+   "lede": "Six games produced 1,604.24 points, up slightly from 1,599.62 the week before, but nothing about how it was divided was close. jadencha's 193.38 was the week's high, beating sizzlemc2's 68.64 by 124.74 — the widest margin of the season — and chassinator's 88-point win over drewkim was nearly as lopsided. The nearest finish was Domo112's 17.28-point escape over jskule23, who put up 147 and still fell to 1-4. jadencha and bradyrife share the league lead at 4-1.",
+   "games": [
+    {
+     "headline": "Domo112 survives jskule23's 147, wins by 17.28",
+     "winner": "Domo112",
+     "winner_points": 164.28,
+     "loser": "jskule23",
+     "loser_points": 147,
+     "body": "Jahmyr Gibbs's 36.2 and Malik Nabers's 29.1 led a Domo112 lineup where eight of ten starters cleared six points, and Jacoby Brissett added 25.28 at quarterback. Puka Nacua answered with 37.7 and Josh Allen with 32.5 for jskule23, who left only 1.1 points on the bench, the least unused by any manager this week. The margin held at 17.28, and jskule23 falls to 1-4."
+    },
+    {
+     "headline": "chassinator's 189.96 buries drewkim by 88",
+     "winner": "chassinator",
+     "winner_points": 189.96,
+     "loser": "drewkim",
+     "loser_points": 101.96,
+     "body": "Drake Maye's 39.46 was the best individual score anywhere in the league this week, and Parker Washington's 32.4 and Tyler Warren's 21.4 built a cushion well past anything drewkim could answer. Brock Bowers's 23 and Emeka Egbuka's 17.2 led drewkim, but Jayden Daniels's 33.26 sat on his bench, more than any starter in his lineup managed. The gap finished at 88, the second-widest of the week."
+    },
+    {
+     "headline": "bradyrife tops victorthompson by 38.7",
+     "winner": "bradyrife",
+     "winner_points": 156.04,
+     "loser": "victorthompson",
+     "loser_points": 117.34,
+     "body": "George Pickens's 28, Garrett Wilson's 23.4 and Trevor Lawrence's 22.74 gave bradyrife seven starters in double figures. Spencer Shrader's 21 and the New York Jets' 19 led victorthompson, but Keaton Mitchell's 4.4 at running back and Dalton Kincaid's 3.7 at tight end left too little behind them. bradyrife wins by 38.7."
+    },
+    {
+     "headline": "jadencha's 193.38 is the week's high, by 124.74",
+     "winner": "jadencha",
+     "winner_points": 193.38,
+     "loser": "sizzlemc2",
+     "loser_points": 68.64,
+     "body": "Jaylen Warren's 38.8 and Isaiah Likely's 32.4 led the week's best score, with Jordan Love adding 25.28 in his first week on the roster after a free-agent swap for C.J. Stroud. sizzlemc2 managed a season-low 68.64, with Denzel Boston's 13.6 the top scorer and five starters finishing under three points. The 124.74-point margin is the widest anyone has posted this season."
+    },
+    {
+     "headline": "willie12w beats wesley55 by 56.24",
+     "winner": "willie12w",
+     "winner_points": 155.14,
+     "loser": "wesley55",
+     "loser_points": 98.9,
+     "body": "Bucky Irving's 31.5, Jared Goff's 28.94 and Ja'Marr Chase's 21.7 gave willie12w six starters in double figures. Joe Burrow's 24.6 and James Cook's 23.3 topped wesley55, but Matthew Stafford's 27.32 — more than Burrow managed as the starter — sat unused on the bench, part of a league-high 72.32 points left behind. willie12w wins by 56.24 and improves to 3-2."
+    },
+    {
+     "headline": "moseslin edges past saucebossandrew, 122.7-88.9",
+     "winner": "moseslin",
+     "winner_points": 122.7,
+     "loser": "saucebossandrew",
+     "loser_points": 88.9,
+     "body": "Christian Watson's 36.3 was the best number on the field, and Aaron Rodgers added 22 at quarterback for moseslin. Sam LaPorta's 19.8 led saucebossandrew, but nothing else in the lineup cleared 14, and Alvin Kamara closed on 1.6. moseslin's second win of the season arrives by 33.8."
+    }
+   ],
+   "around": [
+    {
+     "kind": "waivers",
+     "headline": "jskule23 cycles through five moves at one position",
+     "body": "jskule23 made five roster moves this week, tied for the most in the league, churning through Austin Ekeler, Kendre Miller, Roschon Johnson and Seth McGowan at running back. Kendre Miller and Roschon Johnson both ended up starting in the loss to Domo112, and none of it cost a dollar in FAAB."
+    },
+    {
+     "kind": "note",
+     "headline": "Twenty-one moves, zero trades, zero dollars",
+     "body": "The league made 21 roster moves this week and all of them came off the free-agent wire — no trades, and not a dollar of FAAB changed hands. saucebossandrew matched jskule23's five moves, cycling through four different names without ever settling on one."
+    },
+    {
+     "kind": "race",
+     "headline": "jadencha and bradyrife share first, and jadencha is pulling away on points",
+     "body": "jadencha and bradyrife are both 4-1, but jadencha's 820.1 points for are 122.6 more than anyone else in the league has scored through five weeks — chassinator is next at 697.5."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 4,
    "note": "",
    "lede": "Six games produced 1,599.62 points, 52.92 more than week 3, and the board that priced them had a rough Sunday. jskule23 piled up the week's high score, 164.12, on the way to his first win of the season, a 45.74-point rout of moseslin. drewkim's 101.12 was the week's low, and sizzlemc2 handed it to him by the week's widest margin, 59.22. The tightest result was also the week's biggest spread: jadencha was favored by 20 over chassinator and won by just 12.32. Three of the week's five games with a clear favorite went to the underdog outright — willie12w, Domo112 and moseslin all lost as the betting favorite — and wesley55 beat bradyrife in the only game nobody favored, ending bradyrife's 3-0 start.",
@@ -4094,19 +4167,19 @@
       {
        "label": "jskule23",
        "sub": "31.4% → 12.4%",
-       "value": -19.0,
+       "value": -19,
        "group": 2
       },
       {
        "label": "Domo112",
        "sub": "82.8% → 66.8%",
-       "value": -16.0,
+       "value": -16,
        "group": 2
       },
       {
        "label": "saucebossandrew",
        "sub": "50.2% → 38.2%",
-       "value": -12.0,
+       "value": -12,
        "group": 2
       },
       {
@@ -4124,7 +4197,7 @@
       {
        "label": "willie12w",
        "sub": "73.3% → 68.3%",
-       "value": -5.0,
+       "value": -5,
        "group": 2
       },
       {
@@ -4171,6 +4244,207 @@
     {
      "type": "p",
      "text": "None of this means the four 3-1 teams are safe or the other eight are finished — nine weeks remain before the playoff round in week 15, and the model will move again before any of it matters. But for one week, the thing fans always suspect and rarely get to check held up exactly: the board's own reassessment lines up, team for team, with who is actually winning."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-week-without-a-close-game",
+   "date": "2026-10-13",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 5",
+   "headline": "The Week Without A Close Game",
+   "dek": "Week 5's tightest finish was decided by 17.28 points — wider than the closest game in any of the first four weeks of the season. jadencha's 124.74-point win is the widest anyone has posted this year. Every game in full, below.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · 1,604.24 points · no finish within 17",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Week 5 did not have a close game. Domo112's 17.28-point escape over jskule23 was the nearest thing to drama on the slate, and it was still wider than the tightest finish in any of the first four weeks of the season — 12.76, 11.62, 1.72 and 12.32, in order. jadencha beat sizzlemc2 by 124.74, the widest margin anybody has posted this year, and chassinator was 88 points better than drewkim on the same slate. Three of the six games were decided by at least 56 points."
+    },
+    {
+     "type": "stat",
+     "n": "17.28",
+     "text": "The margin in Domo112's win over jskule23 — the closest game of week 5, and wider than the closest game in any of the previous four weeks this season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the floor",
+     "text": "No Game Came Within Thirty Points, Except One"
+    },
+    {
+     "type": "p",
+     "text": "Take away Domo112's 17.28-point win and every other game this week was decided by at least 33.8. moseslin beat saucebossandrew by that much, bradyrife beat victorthompson by 38.7, willie12w beat wesley55 by 56.24, chassinator beat drewkim by 88, and jadencha beat sizzlemc2 by 124.74."
+    },
+    {
+     "type": "p",
+     "text": "Even that one closer finish wasn't especially competitive by the season's own standard. The tightest result had been 12.76 points in week 1, 11.62 in week 2, 1.72 in week 3 and 12.32 in week 4 — all of them closer than this week's closest game."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the ceiling",
+     "text": "jadencha's Margin Is the Widest of the Season"
+    },
+    {
+     "type": "p",
+     "text": "jadencha's win over sizzlemc2 is comfortably the widest margin anyone has posted this season — 53.94 points clear of the previous high, jadencha's own 70.8-point win over drewkim in week 1. chassinator's 88-point win over drewkim was barely a footnote by comparison, and it still would have been the widest margin of any week before this one."
+    },
+    {
+     "type": "bars",
+     "title": "Closest game, by week",
+     "sub": "Point margin in the week's tightest finish",
+     "rows": [
+      {
+       "label": "Week 1",
+       "value": 12.76,
+       "group": 2
+      },
+      {
+       "label": "Week 2",
+       "value": 11.62,
+       "group": 2
+      },
+      {
+       "label": "Week 3",
+       "value": 1.72,
+       "group": 2
+      },
+      {
+       "label": "Week 4",
+       "value": 12.32,
+       "group": 2
+      },
+      {
+       "label": "Week 5",
+       "value": 17.28,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "bars",
+     "title": "Widest margin, by week",
+     "sub": "Point margin in the week's biggest blowout",
+     "rows": [
+      {
+       "label": "Week 1",
+       "value": 70.8,
+       "group": 2
+      },
+      {
+       "label": "Week 2",
+       "value": 66.8,
+       "group": 2
+      },
+      {
+       "label": "Week 3",
+       "value": 39.06,
+       "group": 2
+      },
+      {
+       "label": "Week 4",
+       "value": 59.22,
+       "group": 2
+      },
+      {
+       "label": "Week 5",
+       "value": 124.74,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of it changed who's good. jadencha and bradyrife are still the only teams without more than one loss, and the records at the bottom haven't moved either. What changed is how those results arrived: no team had to sweat a finish this week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games combined for 1,604.24 points, up slightly from 1,599.62 the week before. Half of them were decided by more than fifty points. They're below in order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Jaylen Wright's 1.1 Was All jskule23 Had Left"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 164.28, jskule23 147.</b> Jahmyr Gibbs's 36.2 and Malik Nabers's 29.1 led a Domo112 lineup where eight of ten starters scored at least six points, and Jacoby Brissett added 25.28 at quarterback — a near-perfect week with no real soft spot."
+    },
+    {
+     "type": "p",
+     "text": "Puka Nacua answered with 37.7 and Josh Allen with 32.5, and jskule23 had almost nothing left to call on: Jaylen Wright's 1.1 was the best thing sitting on his bench, the least unused by any manager this week. His 147 points would have beaten one of the six winners on the slate — moseslin's 122.7 — and it still wasn't enough. jskule23 falls to 1-4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-closest",
+     "text": "Christian Watson's 36.3 Was the Whole Game"
+    },
+    {
+     "type": "p",
+     "text": "<b>moseslin 122.7, saucebossandrew 88.9.</b> Christian Watson scored 36.3, by himself nearly 30 percent of moseslin's 122.7 total, and Aaron Rodgers added 22 at quarterback."
+    },
+    {
+     "type": "p",
+     "text": "Sam LaPorta's 19.8 led saucebossandrew, but nothing else in the lineup cleared 14 and Alvin Kamara closed on 1.6. It's moseslin's second win of the season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the third-closest",
+     "text": "Five bradyrife Starters Reached Double Figures"
+    },
+    {
+     "type": "p",
+     "text": "<b>bradyrife 156.04, victorthompson 117.34.</b> George Pickens's 28, Garrett Wilson's 23.4 and Trevor Lawrence's 22.74 led a bradyrife lineup with seven starters in double figures."
+    },
+    {
+     "type": "p",
+     "text": "Spencer Shrader's 21 and the New York Jets' 19 topped victorthompson, but Keaton Mitchell managed only 4.4 at running back and Dalton Kincaid 3.7 at tight end, and the gap held at 38.7."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fourth-closest",
+     "text": "Matthew Stafford Outscored wesley55's Starting Quarterback, From the Bench"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 155.14, wesley55 98.9.</b> Bucky Irving's 31.5, Jared Goff's 28.94 and Ja'Marr Chase's 21.7 gave willie12w six starters in double figures, enough that nothing on the other side was going to be close."
+    },
+    {
+     "type": "p",
+     "text": "Joe Burrow's 24.6 and James Cook's 23.3 topped wesley55, but Matthew Stafford scored 27.32 — more than Burrow managed as the starter — and never left the bench. wesley55's 72.32 unused points were the most of any manager this week, in a loss decided by 56.24."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-widest",
+     "text": "Drake Maye's 39.46 Was the Best Score in the League"
+    },
+    {
+     "type": "p",
+     "text": "<b>chassinator 189.96, drewkim 101.96.</b> Drake Maye threw and ran his way to 39.46, the best individual score anywhere in the league this week, and Parker Washington's 32.4 and Tyler Warren's 21.4 built the rest of an 88-point win."
+    },
+    {
+     "type": "p",
+     "text": "Brock Bowers's 23 and Emeka Egbuka's 17.2 led drewkim, but Jayden Daniels scored 33.26 on the bench — more than any starter in the lineup managed on the field. drewkim falls to 1-4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "jadencha's 193.38 Is the Week's High, by 124.74"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 193.38, sizzlemc2 68.64.</b> Jaylen Warren's 38.8 and Isaiah Likely's 32.4 led the week's best score, with Jordan Love adding 25.28 in his first week on the roster after a free-agent swap for C.J. Stroud."
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2 managed a season-low 68.64, with Denzel Boston's 13.6 the top scorer and five starters finishing under three points. The 124.74-point margin is the widest anyone has posted this season — and the widest anyone has faced."
     }
    ]
   }

@@ -75,6 +75,30 @@
    "announced": true,
    "thread_id": "1a1112729973ef3b",
    "closed_at": "2026-10-10T23:18:51.825Z"
+  },
+  {
+   "id": "2026-w6-blowout-or-bad-luck",
+   "question": "Which mattered more in week 5: jadencha's 124.74-point win, or jskule23's fourth loss of the season despite scoring 147?",
+   "options": [
+    {
+     "key": "BLOWOUT",
+     "label": "jadencha's win was the story"
+    },
+    {
+     "key": "UNLUCKY",
+     "label": "jskule23's loss was the story"
+    },
+    {
+     "key": "NEITHER",
+     "label": "something else mattered more"
+    }
+   ],
+   "opened": "2026-10-13",
+   "closes": "2026-10-17",
+   "subject": "DFFL Week 6: The Week Without A Close Game",
+   "status": "open",
+   "results": null,
+   "announced": false
   }
  ]
 }
