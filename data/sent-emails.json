@@ -167,6 +167,20 @@
    "sha256": "7b50b5bf771a863514d342c0423817306ed23bcf9450803abfc44800e837f45c",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-13T12:19:02.776Z",
+   "subject": "DFFL Week 6: The Week Without A Close Game",
+   "lead": "the-week-without-a-close-game",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 5
+   },
+   "to": 12,
+   "sha256": "a4d1f1c2c1fd452123520323d6d68f36438eb42da002ec0459d0c8220e7b3edb",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
