@@ -4378,6 +4378,69 @@ for (const id of EXPECT.filter(t => t !== "odds")) {
   check(`${id}: no horizontal overflow at 390px`, w);
 }
 
+group("Wide tables as phone cards");
+// The trade ledger, best/worst weeks and the rivalry tables stack into
+// labelled cards at phone width: nothing inside is wider than its card, and
+// every field still carries its name.
+{
+  const PHONE_TABLES = [
+    { tab: "trades", head: "All-time trade ledger", labels: ["Trades", "Net", "From players", "From picks", "W–L", "Best", "Worst"] },
+    { tab: "records", head: "10 best weeks ever", labels: ["Score", "Season", "Wk", "Opponent", "They had", "Result"] },
+    { tab: "records", head: "10 worst weeks ever", labels: ["Score", "Season", "Wk", "Opponent", "They had", "Result"] },
+    { tab: "matchups", head: "Real rivalries", labels: ["Series", "Games", "Avg score"] },
+    { tab: "matchups", head: "Somebody owns somebody", labels: ["Series", "Games", "Avg score"] },
+  ];
+  const measureTable = head => {
+    const h = [...document.querySelectorAll(".sechead h2")].find(x => x.textContent.trim() === head && x.offsetParent);
+    const card = h && h.closest(".sechead").nextElementSibling;
+    const t = card && card.querySelector("table");
+    if (!t) return null;
+    const over = [];
+    for (const box of [card, card.querySelector(".scroll"), t]) if (box.scrollWidth > box.clientWidth + 1) over.push(`${box.className || box.tagName} ${box.scrollWidth}>${box.clientWidth}`);
+    const cr = card.getBoundingClientRect();
+    for (const n of t.querySelectorAll("*")) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > cr.right + 1 || r.left < cr.left - 1 || n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).display !== "inline"))
+        over.push(`${n.tagName}.${n.className} ${Math.round(r.left)}..${Math.round(r.right)}`);
+    }
+    // A field's name, as the reader sees it: the ::before label on phones, the header on desktop.
+    const shown = new Set();
+    for (const td of t.querySelectorAll("tbody td")) {
+      const c = getComputedStyle(td, "::before").content;
+      if (c && c !== "none" && c !== "normal") shown.add(c.replace(/^"|"$/g, ""));
+    }
+    const minFont = Math.min(...[...t.querySelectorAll("tbody td")].flatMap(td => [parseFloat(getComputedStyle(td).fontSize), parseFloat(getComputedStyle(td, "::before").fontSize)]));
+    const ths = [...t.querySelectorAll("thead th")];
+    return { over: over.slice(0, 4), shown: [...shown], minFont, rows: t.tBodies[0].rows.length,
+      heads: ths.map(th => th.textContent.trim()), cols: Math.max(0, ...[...t.tBodies[0].rows].map(r => r.cells.length)),
+      headVisible: ths.every(th => th.getBoundingClientRect().width > 0 && th.getBoundingClientRect().right <= cr.right + 1) };
+  };
+  for (const s of PHONE_TABLES) {
+    await mobile.click(`#tabs button[data-tab="${s.tab}"]`);
+    await mobile.waitForTimeout(120);
+    const m = await mobile.evaluate(measureTable, s.head);
+    if (!m) { check(`${s.head}: table found at 390px`, false); continue; }
+    check(`${s.head}: nothing wider than its card at 390px`, m.over.length === 0, m.over.join(" | "));
+    const missing = s.labels.filter(l => !m.shown.includes(l));
+    check(`${s.head}: every field labelled at 390px`, missing.length === 0, `missing ${missing.join(", ")}`);
+    check(`${s.head}: card text stays at 11px or larger`, m.minFont >= 11, `${m.minFont}px`);
+  }
+  // A playoff week keeps its PO tag in the card.
+  await mobile.click('#tabs button[data-tab="records"]');
+  const po = await mobile.evaluate(() => [...document.querySelectorAll('[data-panel="records"] table.phone-cards .badge')]
+    .filter(b => b.textContent.trim() === "PO").map(b => b.getBoundingClientRect().width > 0));
+  check("best/worst weeks: PO tags still show at 390px", po.every(Boolean), `${po.filter(x => !x).length} hidden`);
+
+  // Desktop: the ledger names every column and nothing runs off the card.
+  await page.click('#tabs button[data-tab="trades"]');
+  await page.waitForTimeout(150);
+  const L1280 = await page.evaluate(measureTable, "All-time trade ledger");
+  check("trade ledger at 1280: a header for every column", L1280 && L1280.heads.length === L1280.cols && L1280.heads.every(Boolean),
+    L1280 ? L1280.heads.join("|") : "no table");
+  check("trade ledger at 1280: every header within the card", L1280 && L1280.headVisible);
+  check("trade ledger at 1280: no cell overflows the card", L1280 && L1280.over.length === 0, L1280 ? L1280.over.join(" | ") : "");
+}
+
 /* ------------------------------------------------------------------------
  * 1 AM Tuesday, simulated: Sleeper still says week 2 while data/latest.json
  * already marks week 2 final. The site must treat week 2 as finished and week
@@ -4580,6 +4643,154 @@ group("Jargon explainers");
   }
   await mobile.keyboard.press("Escape");
   check("no uncaught page errors from the explainers", errors.length === jxErr0, errors.slice(jxErr0, jxErr0 + 2).join(" | "));
+}
+
+/* ------------------------------------------------------------------------
+ * Players left and the games that decide a matchup. A made-up Sunday is fed
+ * through window.__plFixture onto the real scoreboard: one matchup, with a
+ * final game, a game in progress, kickoffs still to come, a bye, a player with
+ * no team and two empty slots.
+ * ---------------------------------------------------------------------- */
+group("Scoreboard: players left and deciding games");
+{
+  // Real data, fresh page, straight to the scoreboard: the block must appear on
+  // its own, without a fixture or a wait for the minute poll.
+  const realPage = await ctx.newPage();
+  await realPage.goto(BASE, { waitUntil: "domcontentloaded" });
+  await realPage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  await realPage.click('#tabs button[data-tab="scores"]');
+  const realPls = await realPage.waitForFunction(
+    () => document.querySelectorAll('[data-panel="scores"] .pl').length, null, { timeout: 8000 })
+    .then(h => h.jsonValue()).catch(() => 0);
+  const real = await realPage.evaluate(async () => {
+    const s = DB.seasons[0], g = await window.__DFFL.loadNflGames();
+    return { liveWeek: s && s.liveWeek, ok: g.ok, games: s ? s.live.length : 0 };
+  });
+  if (real.liveWeek && real.ok) {
+    check("pl: the real live week shows players-left blocks without a fixture",
+      realPls > 0, `week ${real.liveWeek}: ${realPls} blocks for ${real.games} matchups`);
+  } else {
+    check(`pl: the real live week shows players-left blocks without a fixture (skipped: ${real.liveWeek ? "schedule unavailable" : "no live week"})`, true);
+  }
+  await realPage.close();
+
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.click('#tabs button[data-tab="scores"]');
+  await page.waitForTimeout(150);
+  const pick = await page.evaluate(() => {
+    const p = document.querySelector('[data-panel="scores"]');
+    const [sSel, wSel] = p.querySelectorAll("select");
+    const w = window.__DFFL.allWeeks().find(x => x.season === sSel.value && String(x.week) === String(wSel.value));
+    return w && w.games.length ? { a: w.games[0].a.rid, b: w.games[0].b.rid } : null;
+  });
+  check("pl: the scoreboard shows a week to test against", !!pick);
+
+  const ET = (y, mo, d, h, mi) => Date.UTC(y, mo - 1, d, h + 4, mi);   // EDT is UTC-4
+  const games = [
+    { home: "PHI", away: "DAL", status: "in_game", date: "2026-10-18", start_time: ET(2026, 10, 18, 13, 0) },
+    { home: "WAS", away: "NYG", status: "pre_game", date: "2026-10-18", start_time: ET(2026, 10, 18, 13, 0) },
+    { home: "DEN", away: "LV", status: "pre_game", date: "2026-10-18", start_time: ET(2026, 10, 18, 16, 25) },
+    { home: "BUF", away: "MIA", status: "pre_game", date: "2026-10-18", start_time: ET(2026, 10, 18, 20, 20) },
+    { home: "KC", away: "HOU", status: "complete", date: "2026-10-18", start_time: ET(2026, 10, 18, 13, 0) },
+  ];
+  const players = {
+    p1: { n: "CeeDee Lamb", t: "DAL" }, p2: { n: "Saquon Barkley", t: "PHI" }, p3: { n: "Travis Kelce", t: "KC" },
+    p4: { n: "George Kittle", t: "SF" }, p5: { n: "Free Agent", t: null }, p6: { n: "Brock Bowers", t: "LV" },
+    q1: { n: "Dak Prescott", t: "DAL" }, q2: { n: "Jalen Hurts", t: "PHI" }, q3: { n: "A.J. Brown", t: "PHI" },
+    q4: { n: "Malik Nabers", t: "NYG" }, q5: { n: "Tyreek Hill", t: "MIA" }, q6: { n: "Nico Collins", t: "HOU" },
+  };
+  const startersA = ["p1", "p2", "p3", "p4", "p5", "p6", "0", ""];
+  const startersB = ["q1", "q2", "q3", "q4", "q5", "q6"];
+  const fixture = gs => ({
+    games: gs, players,
+    matchups: pick ? [{ roster_id: pick.a, starters: startersA }, { roster_id: pick.b, starters: startersB }] : [],
+  });
+  // The hand count: real starters, less anyone whose game is final, on a bye or without a club.
+  const handLeft = (starters, gs) => starters.filter(pid => {
+    if (!pid || pid === "0") return false;
+    const club = players[pid] && players[pid].t;
+    const g = club && gs.find(x => x.home === club || x.away === club);
+    return !!g && g.status !== "complete";
+  }).length;
+
+  const readPl = () => page.evaluate(({ a, b }) => {
+    const n = document.querySelector(`[data-panel="scores"] .pl[data-a="${a}"][data-b="${b}"]`);
+    if (!n) return null;
+    const num = s => { const m = /: (\d+) left/.exec(s || ""); return m ? Number(m[1]) : null; };
+    const A = n.querySelector(".pl-a"), B = n.querySelector(".pl-b"), d = n.querySelector(".pl-dec");
+    return {
+      text: n.textContent.replace(/\s+/g, " ").trim(),
+      a: A ? num(A.textContent) : null, b: B ? num(B.textContent) : null,
+      aText: A ? A.textContent : "", bText: B ? B.textContent : "",
+      dec: [...n.querySelectorAll(".pl-dec li")].map(li => li.textContent.trim()),
+      open: d ? d.open : null,
+      pls: document.querySelectorAll('[data-panel="scores"] .pl').length,
+      cards: document.querySelectorAll('[data-panel="scores"] .game').length,
+      marked: window.__plMark === 1,
+    };
+  }, pick);
+
+  await page.evaluate(F => window.__plFixture(F), fixture(games));
+  await page.waitForTimeout(80);
+  const one = pick ? await readPl() : null;
+  check("pl: the matchup card shows a players-left block", !!one, JSON.stringify(one));
+  check("pl: each side's count is its starters less those whose games are final (bye, no team and empty slots count 0)",
+    one && one.a === handLeft(startersA, games) && one.b === handLeft(startersB, games) && one.a === 3 && one.b === 5,
+    one && `${one.a} v ${one.b}, hand ${handLeft(startersA, games)} v ${handLeft(startersB, games)}`);
+  check("pl: byes and clubless players are named as such, final ones are not listed",
+    one && /Kittle bye/.test(one.aText) && /Agent no team/.test(one.aText) && !/Kelce/.test(one.aText) && !/Collins/.test(one.bText),
+    one && one.aText);
+  check("pl: kickoffs read in ET (in progress, 1:00 PM, SNF)",
+    one && /Lamb live/.test(one.aText) && /Nabers Sun 1:00 PM/.test(one.bText) && /Hill SNF/.test(one.bText) && /Bowers Sun 4:25 PM/.test(one.aText),
+    one && `${one.aText} | ${one.bText}`);
+  // By hand: DAL@PHI holds Lamb, Barkley v Prescott, Hurts, Brown; then one each, earliest first; HOU@KC is final.
+  const handDec = ["DAL @ PHI: 2 v 3", "NYG @ WAS: 0 v 1", "LV @ DEN: 1 v 0"];
+  check("pl: deciding games ranked by starters in them, final games dropped, top 3",
+    one && JSON.stringify(one.dec) === JSON.stringify(handDec), one && JSON.stringify(one.dec));
+  check("pl: the deciding games are open on desktop", one && one.open === true);
+
+  // Phone width: re-render so the ranking folds away, then nothing may poke out.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(F => window.__plFixture(F), fixture(games));
+  await page.waitForTimeout(120);
+  const narrowPl = await page.evaluate(() => {
+    const W = document.documentElement.clientWidth;
+    const nodes = [...document.querySelectorAll('[data-panel="scores"] .pl')];
+    const over = nodes.filter(n => n.scrollWidth > n.clientWidth + 1 || n.getBoundingClientRect().right > W + 0.5).length;
+    const small = [...document.querySelectorAll('[data-panel="scores"] .pl, [data-panel="scores"] .pl *')]
+      .filter(n => parseFloat(getComputedStyle(n).fontSize) < 11).length;
+    const d = document.querySelector('[data-panel="scores"] .pl-dec');
+    return { n: nodes.length, over, small, doc: document.documentElement.scrollWidth, W, closed: d ? !d.open : null };
+  });
+  check("pl: no horizontal overflow at 390px", narrowPl.n > 0 && narrowPl.over === 0 && narrowPl.doc <= narrowPl.W,
+    JSON.stringify(narrowPl));
+  check("pl: deciding games collapse behind a toggle at 390px", narrowPl.closed === true);
+  check("pl: nothing in the block is set below 11px", narrowPl.small === 0, `${narrowPl.small}`);
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  // Every game final: "all done", no list.
+  await page.evaluate(F => window.__plFixture(F), fixture(games.map(g => ({ ...g, status: "complete" }))));
+  await page.waitForTimeout(80);
+  const done = pick ? await readPl() : null;
+  check("pl: an all-final week reads \"all done\" with no list",
+    done && /all done/.test(done.text) && !/\(/.test(done.text) && done.dec.length === 0, done && done.text);
+
+  // A refresh with DAL@PHI gone final updates the same card's text without a reload.
+  await page.evaluate(F => window.__plFixture(F), fixture(games));
+  await page.waitForTimeout(80);
+  const before = await readPl();
+  await page.evaluate(() => { window.__plMark = 1; });
+  const later = games.map(g => (g.home === "PHI" ? { ...g, status: "complete" } : g));
+  await page.evaluate(F => window.__plFixture(F), fixture(later));
+  await page.waitForTimeout(80);
+  const after = await readPl();
+  check("pl: a refresh updates the text in place",
+    before && after && after.marked && after.a === handLeft(startersA, later) && after.b === handLeft(startersB, later)
+      && after.text !== before.text && after.pls === before.pls && after.cards === before.cards
+      && !after.dec.some(s => s.startsWith("DAL @ PHI")),
+    after && `${after.a} v ${after.b}; ${JSON.stringify(after.dec)}`);
+
+  await page.evaluate(() => window.__plFixture(null));
 }
 
 group("Screenshots");
