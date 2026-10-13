@@ -160,6 +160,7 @@
   .trophy{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
   .trophy::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),rgba(201,133,0,.2))}
   .trophy .yr{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .trophy .ch{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-top:9px}
   .trophy .win{display:flex;align-items:center;gap:11px;margin:11px 0 3px}
   .trophy .win .nm{font-size:21px;font-weight:850;letter-spacing:-.02em}
   .trophy dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13.5px}
@@ -1018,6 +1019,17 @@
   .tip{position:fixed;pointer-events:none;z-index:99;background:#000;border:1px solid var(--ring);border-radius:9px;
        padding:8px 11px;font-size:12.5px;color:var(--ink);box-shadow:0 8px 26px rgba(0,0,0,.7);opacity:0;transition:opacity .1s;left:0;top:0;max-width:250px}
   @media(hover:none){.tip{display:none}}
+  /* ============ tap-to-explain labels ============ */
+  .jx{font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;line-height:inherit;
+      background:none;border:0;padding:0;margin:0;cursor:help;
+      text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:2px;
+      -webkit-tap-highlight-color:transparent}
+  .jx:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:2px}
+  .jx-pop{position:fixed;left:0;top:0;z-index:100;max-width:min(280px,calc(100vw - 24px));box-sizing:border-box;
+      background:#000;border:1px solid var(--ring);border-radius:9px;padding:9px 12px;
+      font-size:12.5px;font-weight:500;line-height:1.45;letter-spacing:0;text-transform:none;text-align:left;
+      color:var(--ink);box-shadow:0 8px 26px rgba(0,0,0,.7)}
+  .jx-pop[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -2059,7 +2071,7 @@ function buildProfile(uid) {
     { l: "Points per game", v: f1(r.ppg), n: `${f1(r.papg)} allowed per game` },
     { l: "Best finish", v: r.best < 99 ? ord(r.best) : "—", n: r.titles ? "won it all" : "so far" },
     { l: "Luck", v: `${r.luck >= 0 ? "+" : ""}${f1(r.luck)}`, n: r.luck >= 0 ? "wins above what he earned" : "wins below what he earned" },
-  ].map(x => `<div class="tile"><div class="l">${esc(x.l)}</div><div class="v">${esc(x.v)}</div><div class="n">${esc(x.n)}</div></div>`).join("");
+  ].map(x => `<div class="tile"><div class="l">${x.l === "Luck" ? jx("luck", "Luck") : esc(x.l)}</div><div class="v">${esc(x.v)}</div><div class="n">${esc(x.n)}</div></div>`).join("");
   p.appendChild(t);
 
   const mine = RB.sides.filter(s => s.uid === uid);
@@ -2160,7 +2172,7 @@ function panelManagers(AT) {
           <span class="chip"><span class="cv">${r.w}-${r.l}</span><span class="cl">Record</span></span>
           <span class="chip"><span class="cv">${pct(r.winPct)}</span><span class="cl">Win rate</span></span>
           <span class="chip"><span class="cv">${f1(r.ppg)}</span><span class="cl">Pts/gm</span></span>
-          <span class="chip ${r.luck >= 0 ? "pos-v" : "neg-v"}"><span class="cv">${r.luck >= 0 ? "+" : ""}${f1(r.luck)}</span><span class="cl">Luck</span></span>
+          <span class="chip ${r.luck >= 0 ? "pos-v" : "neg-v"}"><span class="cv">${r.luck >= 0 ? "+" : ""}${f1(r.luck)}</span><span class="cl">${jx("luck", "Luck", 1)}</span></span>
         </span>`;
       b.onclick = () => openProfile(r.uid);
       rows.appendChild(b);
@@ -2192,6 +2204,7 @@ function panelRecords(RB) {
     const cu = u(1);
     const card = el("div", "trophy");
     card.innerHTML = `<div class="yr">${esc(s.season)}</div>
+      <div class="ch">Champion</div>
       <div class="win">${avatarHTML(cu)}<span class="nm">${esc(nameOf(cu))}</span></div>
       <dl><dt>Runner-up</dt><dd>${esc(nameOf(u(2)))}</dd>
       <dt>Third</dt><dd>${esc(nameOf(u(3)))}</dd>
@@ -2228,7 +2241,7 @@ function panelRecords(RB) {
     <td><span class="nmcell">${avatarHTML(s.uid, "sm")}${esc(nameOf(s.uid))}</span></td>
     <td class="num"><b>${f2(s.pts)}</b></td>
     <td>${esc(s.season)}</td>
-    <td class="num">${s.week}${s.playoff ? ' <span class="badge blue">PO</span>' : ""}</td>
+    <td class="num">${s.week}${s.playoff ? ` <span class="badge blue">${jx("po", "PO")}</span>` : ""}</td>
     <td>${esc(nameOf(s.opp.uid))}</td>
     <td class="num">${f2(s.opp.pts)}</td>
     <td class="num ${s.pts > s.opp.pts ? "pos-t" : "neg-t"}">${s.pts > s.opp.pts ? "W" : "L"}</td></tr>`;
@@ -5800,7 +5813,7 @@ function gameCardHTML(g) {
     const res = done ? (pts > opp ? "won" : pts < opp ? "lost" : "") : "";
     const sp = S ? (i ? S.spread : -S.spread) : NaN;
     const mlExtra = done ? `<span class="r">${res === "won" ? "Won" : res === "lost" ? "Lost" : "Tie"}</span>`
-      : L && L.offBoard ? `<span class="r" title="Too one-sided to post a two-way price">OTB</span>` : "";
+      : L && L.offBoard ? `<span class="r">${jx("otb", "OTB")}</span>` : "";
     return `<div class="glrow">
       <span class="glwho ${res}">${avatarHTML(side.uid, "xs")}<span class="n">${esc(nameOf(side.uid))}</span>
         ${g.started || done ? `<span class="sc">${f2(pts)}</span>` : ""}</span>
@@ -6593,7 +6606,7 @@ function playerModal(season, pick, analysis) {
     <div class="mhead">
       <span class="pos-dot ${posClass(md.position)}">${esc(md.position || "?")}</span>
       <div class="who">
-        <div class="n">${esc(name)}${kept ? ' <span class="badge gold">K</span>' : ""}</div>
+        <div class="n">${esc(name)}${kept ? ` <span class="badge gold">${jx("keeper", "K")}</span>` : ""}</div>
         <div class="s">${esc(md.team || "free agent")} · pick ${pick.pick_no}, round ${pick.round}
           · ${esc(pick.picked_by ? nameOf(pick.picked_by) : "—")}</div>
       </div>
@@ -6712,7 +6725,7 @@ function panelDraft() {
         const drafter = pk.picked_by || s.uidOf.get(pk.roster_id);
         const traded = drafter && owner && drafter !== owner;
         const b = el("button", `bc ${posClass(md.position)}${traded ? " traded" : ""}`);
-        b.innerHTML = `<span class="no">${pk.pick_no}${kept ? ' <b class="k">K</b>' : ""}</span>
+        b.innerHTML = `<span class="no">${pk.pick_no}${kept ? ` <b class="k">${jx("keeper", "K", 1)}</b>` : ""}</span>
           <span class="nm">${esc(nm)}</span>
           <span class="mt">${esc(md.position || "")}${scored && row ? ` · ${f1(row.pts)}` : ""}</span>
           ${traded ? `<span class="via">${esc(nameOf(drafter))}</span>` : ""}`;
@@ -6727,7 +6740,7 @@ function panelDraft() {
       return o && x.picked_by && x.picked_by !== o;
     }).length;
     const lg = el("div", "legend");
-    lg.innerHTML = `<span class="badge gold">K</span>
+    lg.innerHTML = `<span class="badge gold">${jx("keeper", "K")}</span>
       <span>${s._keeperSource === "stated"
         ? `keeper, from the list in <code>keepers.json</code>`
         : `keeper — <b>worked out, not read off Sleeper</b>, which only records the flag for a
@@ -6764,7 +6777,7 @@ function panelDraft() {
         const b = el("button", "dp");
         b.innerHTML = `<span class="rd">${r.round}</span>
           <span class="pos-dot ${posClass(r.pos)}">${esc(r.pos || "?")}</span>
-          <span class="nm">${esc(r.name)}${kept ? ' <b class="k">K</b>' : ""}</span>
+          <span class="nm">${esc(r.name)}${kept ? ` <b class="k">${jx("keeper", "K", 1)}</b>` : ""}</span>
           ${scored ? `<span class="pts">${f1(r.pts)}</span>` : ""}`;
         if (pk) b.onclick = () => openPlayer(s, pk, A);
         ul.appendChild(b);
@@ -6780,7 +6793,7 @@ function panelDraft() {
     host.innerHTML = "";
     if (!A) { host.appendChild(el("div", "empty", "<b>No picks recorded</b>")); return; }
     const keep = keepersOf(s);
-    const kmark = r => keep.has(String(r.pid)) ? ' <span class="badge gold">K</span>' : "";
+    const kmark = r => keep.has(String(r.pid)) ? ` <span class="badge gold">${jx("keeper", "K")}</span>` : "";
     const prow = r => `<tr>
       <td>${pill(r)}${kmark(r)}</td>
       <td class="num">${r.pick}</td>
@@ -6869,6 +6882,83 @@ function panelDraft() {
  */
 const POWER_W = { allPlay: 0.40, form: 0.25, points: 0.20, record: 0.15 };
 const FORM_WEEKS = 3;
+
+/* ------------------------------------------------------ jargon, explained */
+/**
+ * What each shorthand label means, in the words a league member would use.
+ * Each one is written off the code that computes it, so change them together.
+ */
+const pctW = x => `${Math.round(x * 100)}%`;
+const JARGON = {
+  luck: "Actual wins minus the wins your scoring earned. Earned wins are your all-play win rate times regular-season games played, so +2 means two more wins than your points deserved.",
+  allplay: "Your record if you'd played every other team every week: a win over everyone you outscored that week, a loss to everyone who outscored you. Shown as the share you'd have won.",
+  form: `All-play win rate over the last ${FORM_WEEKS} weeks only — who's playing well right now, whatever the record says.`,
+  rating: `The number the board is sorted by: all-play ${pctW(POWER_W.allPlay)}, form ${pctW(POWER_W.form)}, points for ${pctW(POWER_W.points)} (league top scorer 1, bottom 0) and actual win rate ${pctW(POWER_W.record)}. 1.00 would be best at everything.`,
+  po: "Playoff weeks: this score came after the regular season ended, in a playoff or consolation-bracket game.",
+  otb: "Off the board: the game is so lopsided (favorite 99.5%+ after the house cut) that no sensible moneyline can be posted, so it's pulled. The spread and total still stand.",
+  keeper: "Keeper: a player the manager already owned when the draft began and kept, spending this pick on him instead of a new player. Unless keepers.json lists them, the site infers each manager's keepers as their biggest discounts to the draft market.",
+};
+/** A label that explains itself on tap. Buttons can't nest, so inside one it is a span acting as one. */
+const jx = (key, text, inBtn) => inBtn
+  ? `<span class="jx" role="button" tabindex="0" data-jx="${key}" aria-expanded="false" aria-controls="jxPop">${esc(text)}</span>`
+  : `<button type="button" class="jx" data-jx="${key}" aria-expanded="false" aria-controls="jxPop">${esc(text)}</button>`;
+
+let jxOpen = null;
+function jxPop() {
+  let d = document.getElementById("jxPop");
+  if (!d) {
+    d = el("div", "jx-pop"); d.id = "jxPop"; d.setAttribute("role", "tooltip"); d.hidden = true;
+    document.body.appendChild(d);
+  }
+  return d;
+}
+function jxClose(refocus) {
+  if (!jxOpen) return;
+  const b = jxOpen; jxOpen = null;
+  b.setAttribute("aria-expanded", "false"); b.removeAttribute("aria-describedby");
+  jxPop().hidden = true;
+  if (refocus) b.focus();
+}
+function jxPlace() {
+  if (!jxOpen) return;
+  if (!jxOpen.isConnected) return jxClose();
+  const pop = jxPop(), r = jxOpen.getBoundingClientRect(), m = 12, gap = 6;
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  const x = Math.max(m, Math.min(r.left + r.width / 2 - w / 2, innerWidth - m - w));
+  let y = r.bottom + gap;
+  if (y + h > innerHeight - m) y = r.top - gap - h;
+  y = Math.max(m, Math.min(y, innerHeight - m - h));
+  pop.style.left = x + "px"; pop.style.top = y + "px";
+}
+function jxShow(b) {
+  jxClose();
+  const pop = jxPop();
+  pop.textContent = JARGON[b.dataset.jx] || "";
+  pop.hidden = false;
+  b.setAttribute("aria-expanded", "true"); b.setAttribute("aria-describedby", "jxPop");
+  jxOpen = b;
+  jxPlace();
+}
+// One delegated handler, in the capture phase so the row, card or sortable
+// header a label sits in never hears the tap (or the Escape, in a modal).
+function jxEvent(e) {
+  const b = e.target.closest && e.target.closest(".jx");
+  if (e.type === "keydown") {
+    if (e.key === "Escape" && jxOpen) { e.stopPropagation(); e.preventDefault(); jxClose(true); return; }
+    // A real button turns Enter and Space into a click on its own; the span has to be told.
+    if (b && b.tagName !== "BUTTON" && (e.key === "Enter" || e.key === " ")) {
+      e.stopPropagation(); e.preventDefault();
+      b === jxOpen ? jxClose() : jxShow(b);
+    }
+    return;
+  }
+  if (b) { e.stopPropagation(); e.preventDefault(); b === jxOpen ? jxClose() : jxShow(b); }
+  else if (jxOpen && !e.target.closest(".jx-pop")) jxClose();
+}
+document.addEventListener("click", jxEvent, true);
+document.addEventListener("keydown", jxEvent, true);
+addEventListener("resize", jxPlace);
+addEventListener("scroll", jxPlace, { passive: true, capture: true });
 
 /** Every season's boards, built once and shared by the Power tab and the recaps. */
 let POWERMAP = null;
@@ -7312,9 +7402,9 @@ function panelPower(model, sim) {
         <span class="sp">${rankSpark(R.history.get(r.uid), idx + 1, R.n)}</span>
         <span class="stats">
           <span class="chip"><span class="cv">${r.w}–${r.l}${r.t ? `–${r.t}` : ""}</span><span class="cl">Record</span></span>
-          <span class="chip"><span class="cv">${pct(r.apPct)}</span><span class="cl">All-play</span></span>
-          <span class="chip"><span class="cv">${pct(r.formPct)}</span><span class="cl">Form</span></span>
-          <span class="chip"><span class="cv">${f2(r.score)}</span><span class="cl">Rating</span></span>
+          <span class="chip"><span class="cv">${pct(r.apPct)}</span><span class="cl">${jx("allplay", "All-play")}</span></span>
+          <span class="chip"><span class="cv">${pct(r.formPct)}</span><span class="cl">${jx("form", "Form")}</span></span>
+          <span class="chip"><span class="cv">${f2(r.score)}</span><span class="cl">${jx("rating", "Rating")}</span></span>
         </span>`;
       bindTip(row, `<b>${esc(nameOf(r.uid))}</b><br>
         all-play ${pct(r.apPct)} · form ${pct(r.formPct)}<br>
@@ -9107,7 +9197,7 @@ async function boot() {
       preDraftOwners, playerModal, openPlayer, posClass,
       articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
       coverSVG, coverKind, COVER_PALETTE,
-      POWER_W, FORM_WEEKS,
+      POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
       ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,

@@ -4488,6 +4488,164 @@ group("Effective week (simulated 1 AM Tuesday)");
 }
 
 /* ------------------------------------------------------------------------
+ * Tap-to-explain jargon: LUCK, ALL-PLAY, FORM, RATING, PO, OTB and the
+ * Draft tab's K are buttons (or, inside another button, role="button" spans)
+ * that open one shared popover with the JARGON text. Plus the Records
+ * trophy cards' "Champion" label.
+ * ---------------------------------------------------------------------- */
+group("Jargon explainers");
+{
+  const jxErr0 = errors.length;
+  const jxState = pg => pg.evaluate(() => {
+    const pop = document.getElementById("jxPop");
+    const r = pop && !pop.hidden ? pop.getBoundingClientRect() : null;
+    const open = [...document.querySelectorAll('.jx[aria-expanded="true"]')];
+    return {
+      open: !!(r && r.width && r.height), text: pop ? pop.textContent.trim() : "",
+      role: pop && pop.getAttribute("role"), pos: pop && getComputedStyle(pop).position,
+      rect: r && { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width },
+      vw: innerWidth, vh: innerHeight, expanded: open.length, which: open.map(b => b.dataset.jx),
+      focus: document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.jx || null : null,
+    };
+  });
+  const isLabel = (pg, sel) => pg.evaluate(sel => {
+    const all = [...document.querySelectorAll(sel)];
+    return {
+      n: all.length,
+      ok: all.length > 0 && all.every(b => (b.tagName === "BUTTON" ? b.type === "button" : b.getAttribute("role") === "button" && b.tabIndex === 0)
+        && b.getAttribute("aria-expanded") === "false" && b.getAttribute("aria-controls") === "jxPop"),
+    };
+  }, sel);
+  const fits = s => s.rect && s.rect.l >= 0 && s.rect.r <= s.vw && s.rect.t >= 0 && s.rect.b <= s.vh;
+  const JX = await page.evaluate(() => window.__DFFL.JARGON || {});
+  check("JARGON has a non-empty text for every label",
+    ["luck", "allplay", "form", "rating", "po", "otb", "keeper"].every(k => typeof JX[k] === "string" && JX[k].length > 30),
+    Object.keys(JX).join(","));
+  check("the RATING text carries the live POWER_W weights",
+    /40%/.test(JX.rating || "") && /25%/.test(JX.rating || "") && /20%/.test(JX.rating || "") && /15%/.test(JX.rating || ""), JX.rating);
+
+  // Managers: Luck sits inside a row that is itself a button to the profile.
+  await page.click('#tabs button[data-tab="managers"]');
+  await page.waitForTimeout(200);
+  const luckL = await isLabel(page, '[data-panel="managers"] .rowc .cl .jx[data-jx="luck"]');
+  check("Managers: every Luck chip label is a role=button with aria-expanded", luckL.ok && luckL.n >= 12, `${luckL.n} labels`);
+  await page.locator('[data-panel="managers"] .rowc .jx[data-jx="luck"]').first().click();
+  let st = await jxState(page);
+  check("Managers: clicking Luck opens the popover with the Luck text",
+    st.open && st.text === JX.luck && st.expanded === 1 && st.which[0] === "luck", JSON.stringify(st.which));
+  check("the popover is position:fixed with role=tooltip", st.pos === "fixed" && st.role === "tooltip", `${st.pos} ${st.role}`);
+  check("the popover fits the viewport at 1280px", fits(st), JSON.stringify(st.rect));
+  check("Managers: tapping Luck does not open the profile",
+    await page.evaluate(() => !document.querySelector('[data-panel="profile"]') || document.querySelector('[data-panel="profile"]').hidden));
+  await page.locator('[data-panel="managers"] .rowc .jx[data-jx="luck"]').nth(1).click();
+  st = await jxState(page);
+  check("only one popover open at a time", st.open && st.expanded === 1, `${st.expanded} expanded`);
+  await page.locator('[data-panel="managers"] .sechead h2').first().click();
+  st = await jxState(page);
+  check("clicking outside closes it", !st.open && st.expanded === 0);
+
+  // Power: All-play, Form, Rating chips on a played week (not the projected board).
+  await page.click('#tabs button[data-tab="power"]');
+  await page.waitForTimeout(200);
+  await page.evaluate(() => {
+    const sel = document.querySelector('[data-panel="power"] select[aria-label="Season"]');
+    const real = [...sel.options].find(o => o.value !== "__proj");
+    if (real) { sel.value = real.value; sel.dispatchEvent(new Event("change")); }
+  });
+  await page.waitForTimeout(150);
+  for (const k of ["allplay", "form", "rating"]) {
+    const L = await isLabel(page, `[data-panel="power"] .pwrow .cl button.jx[data-jx="${k}"]`);
+    check(`Power: every ${k} chip label is a <button> with aria-expanded`, L.ok && L.n >= 12, `${L.n} labels`);
+    await page.locator(`[data-panel="power"] .pwrow .jx[data-jx="${k}"]`).first().click();
+    st = await jxState(page);
+    check(`Power: clicking ${k} opens its explanation`, st.open && st.text === JX[k] && st.which[0] === k, st.text.slice(0, 40));
+  }
+  await page.keyboard.press("Escape");
+  st = await jxState(page);
+  check("Escape closes it and returns focus to the label", !st.open && st.expanded === 0 && st.focus === "rating", `focus ${st.focus}`);
+  await page.keyboard.press("Enter");
+  st = await jxState(page);
+  check("keyboard Enter on a focused label opens it", st.open && st.which[0] === "rating");
+  await page.keyboard.press("Escape");
+
+  // Records: PO badges in the best/worst weeks tables, and the trophy cards.
+  await page.click('#tabs button[data-tab="records"]');
+  await page.waitForTimeout(200);
+  const poL = await isLabel(page, '[data-panel="records"] td .badge button.jx[data-jx="po"]');
+  check("Records: every PO badge is a <button> with aria-expanded", poL.ok, `${poL.n} labels`);
+  if (poL.n) {
+    await page.locator('[data-panel="records"] .jx[data-jx="po"]').first().click();
+    st = await jxState(page);
+    check("Records: clicking PO opens its explanation", st.open && st.text === JX.po);
+    await page.keyboard.press("Escape");
+  }
+  const tro = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('[data-panel="records"] .trophy')];
+    return { n: cards.length, ok: cards.every(c => { const ch = c.querySelector(".ch"); return ch && ch.textContent.trim() === "Champion" && ch.getBoundingClientRect().height > 0; }) };
+  });
+  check("Records: every trophy card carries a visible Champion label", tro.n >= 4 && tro.ok, `${tro.n} cards`);
+
+  // Odds: OTB only shows on a game too lopsided to price, so render one.
+  const otb = await page.evaluate(() => {
+    const D = window.__DFFL, T = window.__ODDS.teams;
+    const line = D.gameLine({ expected: 160, sd: 4 }, { expected: 60, sd: 4 });
+    const div = document.createElement("div");
+    div.id = "jxOtbProbe";
+    div.innerHTML = D.gameCardHTML({
+      a: { rid: 1, uid: T[0].uid, pts: 0, inj: null }, b: { rid: 2, uid: T[1].uid, pts: 0, inj: null },
+      aPts: 0, bPts: 0, open: line, now: line, settled: false, started: false, path: [], cover: null,
+    });
+    document.body.prepend(div);
+    return { offBoard: line.offBoard, n: div.querySelectorAll('button.jx[data-jx="otb"][aria-expanded="false"]').length };
+  });
+  check("Odds: an off-the-board moneyline renders OTB as a <button> with aria-expanded", otb.offBoard && otb.n === 2, JSON.stringify(otb));
+  if (otb.n) {
+    await page.locator('#jxOtbProbe .jx[data-jx="otb"]').first().click();
+    st = await jxState(page);
+    check("Odds: clicking OTB opens its explanation", st.open && st.text === JX.otb);
+    await page.keyboard.press("Escape");
+  }
+  await page.evaluate(() => document.getElementById("jxOtbProbe")?.remove());
+
+  // Draft: K on the board sits inside a pick button that opens the player card.
+  await page.click('#tabs button[data-tab="draft"]');
+  await page.waitForFunction(() => document.querySelectorAll('[data-panel="draft"] .bc').length > 0, null, { timeout: 30000 });
+  const kL = await isLabel(page, '[data-panel="draft"] .bc .k .jx[data-jx="keeper"]');
+  const kLeg = await isLabel(page, '[data-panel="draft"] .legend .badge button.jx[data-jx="keeper"]');
+  check("Draft: every board K marker is a role=button with aria-expanded", kL.ok, `${kL.n} markers`);
+  check("Draft: the K legend is a <button> explainer", kLeg.ok && kLeg.n === 1, `${kLeg.n}`);
+  if (kL.n) {
+    await page.locator('[data-panel="draft"] .bc .jx[data-jx="keeper"]').first().click();
+    st = await jxState(page);
+    const modal = await page.evaluate(() => !!document.querySelector(".modal"));
+    check("Draft: clicking K explains keepers and does not open the player card", st.open && st.text === JX.keeper && !modal, `modal ${modal}`);
+    await page.keyboard.press("Escape");
+    await page.locator('[data-panel="draft"] .bc .jx[data-jx="keeper"]').first().focus();
+    await page.keyboard.press("Enter");
+    st = await jxState(page);
+    const modal2 = await page.evaluate(() => !!document.querySelector(".modal"));
+    check("Draft: Enter on a focused K marker opens it, not the player card", st.open && st.which[0] === "keeper" && !modal2);
+    await page.keyboard.press("Escape");
+    st = await jxState(page);
+    check("Draft: Escape closes the K explainer and refocuses the marker", !st.open && st.focus === "keeper", `focus ${st.focus}`);
+  }
+
+  // 390px: the popover is clamped inside a phone screen.
+  await mobile.setViewportSize({ width: 390, height: 844 });
+  await mobile.click('#tabs button[data-tab="managers"]');
+  await mobile.waitForTimeout(200);
+  for (const nth of [0, 5]) {
+    const b = mobile.locator('[data-panel="managers"] .rowc .jx[data-jx="luck"]').nth(nth);
+    await b.scrollIntoViewIfNeeded();
+    await b.click();
+    st = await jxState(mobile);
+    check(`popover fits the viewport at 390px (row ${nth + 1})`, st.open && fits(st) && st.rect.w <= 366, JSON.stringify(st.rect));
+  }
+  await mobile.keyboard.press("Escape");
+  check("no uncaught page errors from the explainers", errors.length === jxErr0, errors.slice(jxErr0, jxErr0 + 2).join(" | "));
+}
+
+/* ------------------------------------------------------------------------
  * Players left and the games that decide a matchup. A made-up Sunday is fed
  * through window.__plFixture onto the real scoreboard: one matchup, with a
  * final game, a game in progress, kickoffs still to come, a bye, a player with
