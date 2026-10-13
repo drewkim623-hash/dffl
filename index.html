@@ -905,6 +905,30 @@
   }
   @media(max-width:420px){.pwrow .sp{display:none}}
 
+  /* ============ position rooms ============ */
+  .rooms{display:grid;gap:7px}
+  .rmrow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(5,minmax(0,1fr));align-items:center;gap:7px 10px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:10px 13px}
+  .rmrow.avg{background:transparent;border-style:dashed}
+  .rmrow .who{display:flex;align-items:center;gap:9px;min-width:0}
+  .rmrow .who .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rmrow.avg .who .n{font-weight:700;color:var(--muted);font-size:13px}
+  .rmc{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0;line-height:1.25;
+    border-radius:6px;padding:4px 2px;font-variant-numeric:tabular-nums}
+  .rmc .rk{font-size:14px;font-weight:800;color:var(--ink)}
+  .rmc .pg{font-size:12px;color:var(--ink-2)}
+  .rmc .df{font-size:11px}
+  .rmc.top{background:rgba(12,163,12,.10)} .rmc.top .rk{color:var(--good)}
+  .rmc.bot{background:rgba(208,59,59,.10)} .rmc.bot .rk{color:var(--crit)}
+  .rmrow:not(.avg) .rmc .pos-dot{display:none}
+  .rmrow .hint{grid-column:1/-1;font-size:12.5px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
+  @media(max-width:699px){
+    .rmrow{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px 5px;padding:10px 11px}
+    .rmrow .who{grid-column:1/-1}
+    .rmrow:not(.avg) .rmc .pos-dot{display:inline-flex}
+    .rmc .pos-dot{min-width:0;max-width:100%}
+  }
+
   /* ============ race ============ */
   .bigg{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin:0 0 18px;
     background:linear-gradient(100deg,rgba(57,135,229,.18),rgba(144,133,233,.06) 58%,transparent);
@@ -1334,8 +1358,12 @@ async function loadSeason(lg) {
   // the quarterback and index 8 the kicker — which is what lets a half-played
   // week be priced as something other than "half the points are in".
   const slotPts = [];
+  // The same finished regular-season rows, kept whole for the Position rooms:
+  // each team's own entry is what ties a player's points to the roster he was on.
+  const regEntries = new Map();
   for (const { wk, d } of raw) {
     if (wk >= pws || !weekIsFinal(lg, wk)) continue;
+    if ((d || []).length) regEntries.set(wk, d);
     for (const e of d || []) {
       const pp = e.players_points || {};
       (e.starters || []).forEach((pid, i) => {
@@ -1378,7 +1406,8 @@ async function loadSeason(lg) {
     leagueId: id, season: lg.season, name: lg.name, status: lg.status,
     pws, playoffTeams: ptm, rosters, users, uidOf, userById,
     places: placementsOf(wb, lb, ptm, seasonGames), wb, lb, games: seasonGames,
-    live: liveGames, liveWeek, liveStarters, slotPts,
+    live: liveGames, liveWeek, liveStarters, slotPts, regEntries,
+    rosterPositions: lg.roster_positions || [],
     finalWeeks: new Set(seasonGames.filter(g => !g.playoff).map(g => g.week)),
     complete: lg.status === "complete",
     picks, playerPts, playerWeek, draftId,
@@ -6940,6 +6969,158 @@ function powerRankings(season) {
   return { season: season.season, weeks, boards, history, n: uids.length };
 }
 
+/* ------------------------------------------------------- position rooms */
+/*
+ * How each team's starters in one kind of lineup slot have scored, per game,
+ * against the rest of the league. Points are read off the team's own matchup
+ * entry each week, so a player is only ever credited to the roster he was on
+ * that week: a trade arrival brings nothing from before he got there.
+ */
+const ROOMS = ["QB", "RB", "WR", "TE", "FLEX"];
+const roomOfSlot = s => (ROOMS.includes(s) ? s : /FLEX/.test(String(s)) ? "FLEX" : null);
+const roomNeed = r => (r === "FLEX" ? "FLEX help" : r === "RB" ? "an RB" : `a ${r}`);
+
+function positionRoomsOf(season, rostered) {
+  const empty = { rows: [], avg: {}, through: null, n: 0 };
+  const weeks = season && season.regEntries ? [...season.regEntries.keys()].sort((a, b) => a - b) : [];
+  if (!weeks.length) return empty;
+  // starters[] follows the league's roster_positions, slot for slot; K and DEF map to no room.
+  const slotRoom = (season.rosterPositions || []).map(roomOfSlot);
+  const played = new Set(season.games.filter(g => !g.playoff)
+    .flatMap(g => [`${g.week}|${g.a.rid}`, `${g.week}|${g.b.rid}`]));
+  const info = pid => (rostered && rostered.map && rostered.map.get(String(pid))) || null;
+  const posOf = pid => String((info(pid) || {}).p || pname(pid).pos || "").toUpperCase();
+  const playerName = pid => (info(pid) || {}).n || (PLAYER_NAMES && PLAYER_NAMES.has(String(pid)) ? pname(pid).name : null);
+
+  const teams = new Map();
+  for (const wk of weeks) {
+    for (const e of season.regEntries.get(wk)) {
+      const uid = season.uidOf.get(e.roster_id);
+      if (!uid || !played.has(`${wk}|${e.roster_id}`)) continue;
+      let t = teams.get(e.roster_id);
+      if (!t) teams.set(e.roster_id, t = { rid: e.roster_id, uid, games: 0, sum: {}, held: new Map(), last: null });
+      t.games++;
+      t.last = e; // weeks ascend, so this ends on the latest finished one
+      const pp = e.players_points || {};
+      (e.starters || []).forEach((pid, i) => {
+        const room = slotRoom[i];
+        if (!room || !pid || pid === "0") return;
+        const v = Number(pp[pid]);
+        if (isFinite(v)) t.sum[room] = (t.sum[room] || 0) + v;
+      });
+      // Everything each rostered player scored while on this roster, for the bench.
+      for (const pid of e.players || []) {
+        const v = Number(pp[pid]);
+        if (isFinite(v)) t.held.set(pid, (t.held.get(pid) || 0) + v);
+      }
+    }
+  }
+  const list = [...teams.values()];
+  const n = list.length;
+  if (!n) return empty;
+
+  const rows = list.map(t => ({ uid: t.uid, rid: t.rid, games: t.games, rooms: {}, bench: {}, hint: "", partners: [] }));
+  const avg = {};
+  for (const room of ROOMS) {
+    const ppg = list.map(t => (t.games ? (t.sum[room] || 0) / t.games : 0));
+    avg[room] = ppg.reduce((a, b) => a + b, 0) / n;
+    // Ties keep a strict order so every position is ranked 1..n exactly once.
+    list.map((_, i) => i).sort((a, b) => ppg[b] - ppg[a] || a - b)
+      .forEach((i, k) => { rows[i].rooms[room] = { ppg: ppg[i], rank: k + 1, diff: ppg[i] - avg[room] }; });
+  }
+
+  // Depth: the latest finished week's non-starters, valued on what each scored for this roster.
+  list.forEach((t, i) => {
+    const starters = new Set(t.last.starters || []);
+    const bench = Object.fromEntries(ROOMS.map(r => [r, { pts: 0, top: null, topPts: 0 }]));
+    for (const pid of t.last.players || []) {
+      if (starters.has(pid)) continue;
+      const pos = posOf(pid);
+      if (!["QB", "RB", "WR", "TE"].includes(pos)) continue;
+      const v = t.held.get(pid) || 0;
+      for (const r of pos === "QB" ? [pos] : [pos, "FLEX"]) {
+        const b = bench[r];
+        b.pts += v;
+        if (v > b.topPts) { b.topPts = v; b.top = playerName(pid); }
+      }
+    }
+    rows[i].bench = Object.fromEntries(ROOMS.map(r => [r, { pts: bench[r].pts, top: bench[r].top }]));
+  });
+
+  // The hint: the weakest room, and who has spare bodies there while needing
+  // help in a room this manager is strong in (top third against bottom third).
+  const third = Math.ceil(n / 3);
+  for (const me of rows) {
+    const weakest = ROOMS.slice().sort((a, b) =>
+      me.rooms[b].rank - me.rooms[a].rank || me.rooms[a].diff - me.rooms[b].diff)[0];
+    const clauses = [];
+    rows.filter(o => o !== me && o.bench[weakest].pts > 0)
+      .sort((a, b) => b.bench[weakest].pts - a.bench[weakest].pts)
+      .slice(0, 3)
+      .forEach((o, k) => {
+        if (clauses.length >= 2) return;
+        const need = ROOMS.filter(x => x !== weakest && o.rooms[x].rank > n - third && me.rooms[x].rank <= third)
+          .sort((a, b) => o.rooms[b].rank - o.rooms[a].rank || me.rooms[a].rank - me.rooms[b].rank)[0];
+        if (!need) return;
+        const top = o.bench[weakest].top;
+        clauses.push(`${nameOf(o.uid)} has the ${k ? `${ord(k + 1)}-deepest` : "deepest"} ${weakest} bench${top ? ` (${top})` : ""}`
+          + ` and needs ${roomNeed(need)}, where you rank ${ord(me.rooms[need].rank)}`);
+        me.partners.push(o.uid);
+      });
+    me.hint = `Weakest room: ${weakest} (${ord(me.rooms[weakest].rank)}).${clauses.length ? ` ${clauses.join("; ")}.` : ""}`;
+  }
+  return { rows, avg, through: weeks[weeks.length - 1], n };
+}
+
+/** The current season's rooms, built once. Needs rosters.json loaded for positions. */
+let ROOMDATA = null;
+const roomsOnce = () => ROOMDATA || (ROOMDATA = positionRoomsOf(DB.seasons[0], ROSTERED));
+
+function roomsSection() {
+  const wrap = el("div", "rooms-sec");
+  wrap.dataset.section = "rooms";
+  const R = roomsOnce();
+  const season = DB.seasons[0];
+  wrap.appendChild(sechead("Position rooms", R.rows.length
+    ? `What each team's starters in each slot have scored per game in ${season.season}, through week ${R.through}, ranked 1 to ${R.n} across the league. Green is a top-three room, red a bottom-three one.`
+    : "What each team's starters in each slot score per game, ranked across the league."));
+  if (!R.rows.length) {
+    wrap.appendChild(el("div", "empty", "<b>Position rooms start after week 1 is final.</b>"));
+    return wrap;
+  }
+
+  // Same order as the newest power board, so the two read side by side.
+  const P = allPowerRankings().get(season.season);
+  const order = P ? new Map(P.boards[P.boards.length - 1].rows.map(r => [r.uid, r.rank])) : new Map();
+  const rows = R.rows.slice().sort((a, b) => (order.get(a.uid) || 99) - (order.get(b.uid) || 99));
+
+  const box = el("div", "rooms");
+  const head = el("div", "rmrow avg");
+  head.innerHTML = `<span class="who"><span class="n">League average</span></span>` + ROOMS.map(room =>
+    `<span class="rmc" data-room="${room}"><span class="pos-dot ${posClass(room)}">${room}</span>
+      <span class="pg">${f1(R.avg[room])}</span></span>`).join("");
+  box.appendChild(head);
+  for (const r of rows) {
+    const row = el("div", "rmrow");
+    row.dataset.uid = r.uid;
+    row.innerHTML = `<span class="who">${avatarHTML(r.uid, "sm")}<span class="n">${esc(nameOf(r.uid))}</span></span>`
+      + ROOMS.map(room => {
+        const x = r.rooms[room];
+        const cls = x.rank <= 3 ? " top" : x.rank > R.n - 3 ? " bot" : "";
+        const d = `${x.diff >= 0 ? "+" : "−"}${f1(Math.abs(x.diff))}`;
+        return `<span class="rmc${cls}" data-room="${room}" title="${room}: ${f1(x.ppg)} a game, ${d} on the league average, ${ord(x.rank)} of ${R.n}">
+          <span class="pos-dot ${posClass(room)}">${room}</span><span class="rk">${ord(x.rank)}</span>
+          <span class="pg">${f1(x.ppg)}</span><span class="df ${x.diff >= 0 ? "pos-t" : "neg-t"}">${d}</span></span>`;
+      }).join("")
+      + `<span class="hint">${esc(r.hint)}</span>`;
+    box.appendChild(row);
+  }
+  wrap.appendChild(box);
+  wrap.appendChild(el("div", "method rooms-note",
+    "<p>Points only count weeks a player was on that roster, so a recent pickup or trade arrival is credited only from the week he joined.</p>"));
+  return wrap;
+}
+
 /* --------------------------------------------------------------- blurbs */
 /**
  * One line per team, written by the weekly job into rankings.json. The site
@@ -7026,6 +7207,7 @@ function panelPower(model, sim) {
   if (!all.size && !proj) {
     p.appendChild(el("div", "empty",
       "<b>No weeks to rank yet</b>The board is built out of results, and there aren't any. It starts the week the season does."));
+    p.appendChild(roomsSection());
     return p;
   }
   window.__POWER = all; window.__PROJ = proj;
@@ -7039,6 +7221,8 @@ function panelPower(model, sim) {
   picks.appendChild(seasonSel); picks.appendChild(weekSel);
   p.appendChild(picks);
   const host = el("div"); p.appendChild(host);
+  // Always the season being played, whichever board is picked above.
+  p.appendChild(roomsSection());
 
   function fillWeeks() {
     if (seasonSel.value === PROJKEY) {
@@ -8871,7 +9055,8 @@ async function boot() {
     app.appendChild(panelManagers(AT));
     app.appendChild(panelRecords(RB));
     app.appendChild(panelMatchups(AT));
-    await loadBlurbs();
+    // rosters.json is a few kilobytes and gives the Position rooms each bench player's position.
+    await Promise.all([loadBlurbs(), loadRostered()]);
     app.appendChild(panelPower(ODDS, SIM));
     app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelPicture());
@@ -8923,6 +9108,7 @@ async function boot() {
       articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS,
+      positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
       ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,

@@ -4635,6 +4635,165 @@ group("Scoreboard: players left and deciding games");
   await page.evaluate(() => window.__plFixture(null));
 }
 
+/* ------------------------------------------------------------------------
+ * Position rooms: each team's starters by slot type, per game, ranked across
+ * the league. One team's numbers are recomputed here straight from Sleeper's
+ * matchup rows and the league's roster_positions, not from anything the page
+ * kept, so a slot mapped to the wrong room or a game miscounted shows up.
+ * ---------------------------------------------------------------------- */
+group("Position rooms");
+{
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.click('#tabs button[data-tab="power"]');
+  await page.waitForTimeout(150);
+  const pr = await page.evaluate(async () => {
+    const D = window.__DFFL, s = D.DB.seasons[0];
+    const POS = ["QB", "RB", "WR", "TE", "FLEX"];
+    const rows = D.positionRooms;
+    const panel = document.querySelector('[data-panel="power"]');
+    const sec = panel.querySelector('[data-section="rooms"]');
+    const board = panel.querySelector(".rows");
+    const regWeeks = [...s.finalWeeks].filter(w => w < s.pws).sort((a, b) => a - b);
+    const out = {
+      isArray: Array.isArray(rows), n: rows ? rows.length : 0, regWeeks: regWeeks.length,
+      sec: !!sec, title: sec ? (sec.querySelector(".sechead h2") || {}).textContent : null,
+      afterBoard: !!(sec && board && (board.compareDocumentPosition(sec) & Node.DOCUMENT_POSITION_FOLLOWING)),
+      text: sec ? sec.innerText : "",
+      emptyOk: D.positionRoomsOf({ regEntries: new Map(), games: [] }, null).rows.length === 0,
+    };
+    if (!out.n) return out;
+
+    out.fiveEach = rows.every(r => Object.keys(r.rooms).length === 5 && POS.every(p => r.rooms[p]
+      && isFinite(r.rooms[p].ppg) && isFinite(r.rooms[p].diff) && Number.isInteger(r.rooms[p].rank)));
+    out.badPerm = POS.filter(p => {
+      const rk = rows.map(r => r.rooms[p].rank).sort((a, b) => a - b);
+      return !rk.every((v, i) => v === i + 1);
+    });
+    // more points never ranks lower, and diff is ppg less the league average
+    out.badOrder = POS.filter(p => rows.some(a => rows.some(b => a.rooms[p].ppg > b.rooms[p].ppg + 1e-9 && a.rooms[p].rank > b.rooms[p].rank)));
+    out.badDiff = POS.filter(p => {
+      const avg = rows.reduce((t, r) => t + r.rooms[p].ppg, 0) / rows.length;
+      return rows.some(r => Math.abs(r.rooms[p].diff - (r.rooms[p].ppg - avg)) > 1e-6);
+    });
+
+    // Independent recompute from Sleeper for the first and last team.
+    const API = "https://api.sleeper.app/v1";
+    const lg = await (await fetch(`${API}/league/${s.leagueId}`)).json();
+    const slots = lg.roster_positions || [];
+    const weekRows = [];
+    for (const w of regWeeks) weekRows.push(await (await fetch(`${API}/league/${s.leagueId}/matchups/${w}`)).json());
+    out.recompute = [rows[0], rows[rows.length - 1]].map(team => {
+      let games = 0;
+      const sum = { QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0 };
+      for (const d of weekRows) {
+        const e = (d || []).find(x => x.roster_id === team.rid);
+        if (!e || e.matchup_id == null) continue;
+        games++;
+        (e.starters || []).forEach((pid, i) => {
+          if (!(slots[i] in sum)) return;
+          const v = Number((e.players_points || {})[pid]);
+          if (isFinite(v)) sum[slots[i]] += v;
+        });
+      }
+      return { rid: team.rid, games, mism: POS.filter(p => !games || Math.abs(sum[p] / games - team.rooms[p].ppg) > 1e-6)
+        .map(p => `${p}: test ${games ? (sum[p] / games).toFixed(3) : "no games"} vs page ${team.rooms[p].ppg.toFixed(3)}`) };
+    });
+    out.slotsRead = slots.join(",");
+
+    // Hints name only real managers, never the manager themself, and only real bench players.
+    const names = new Set([...D.DB.mgr.values()].map(m => m.name));
+    const rostered = await D.loadRostered();
+    const playerNames = new Set([...rostered.map.values()].map(p => p.n));
+    const HEAD = /^Weakest room: (QB|RB|WR|TE|FLEX) \((\d+)(?:st|nd|rd|th)\)\.(?: (.+)\.)?$/;
+    const CLAUSE = /^(.+?) has the (?:\d+(?:st|nd|rd|th)-)?deepest (QB|RB|WR|TE|FLEX) bench(?: \((.+)\))? and needs (?:an? (?:QB|RB|WR|TE)|FLEX help), where you rank \d+(?:st|nd|rd|th)$/;
+    out.badHints = [];
+    out.partnered = 0;
+    for (const r of rows) {
+      const own = nameOf(r.uid);
+      const m = HEAD.exec(r.hint || "");
+      if (!m) { out.badHints.push(`${own}: unparsed "${r.hint}"`); continue; }
+      const worst = Math.max(...POS.map(p => r.rooms[p].rank));
+      if (Number(m[2]) !== r.rooms[m[1]].rank || r.rooms[m[1]].rank !== worst) out.badHints.push(`${own}: ${m[1]} is not the weakest room`);
+      if (!m[3]) continue;
+      const clauses = m[3].split("; ");
+      if (clauses.length > 2) out.badHints.push(`${own}: ${clauses.length} partners`);
+      clauses.forEach((c, i) => {
+        const k = CLAUSE.exec(c);
+        if (!k) { out.badHints.push(`${own}: unparsed clause "${c}"`); return; }
+        if (!names.has(k[1]) || k[1] === own) out.badHints.push(`${own}: names "${k[1]}"`);
+        if (k[2] !== m[1]) out.badHints.push(`${own}: partner bench is ${k[2]}, weakest is ${m[1]}`);
+        const partner = r.partners[i] && nameOf(r.partners[i]);
+        if (partner !== k[1]) out.badHints.push(`${own}: text names ${k[1]}, data ${partner}`);
+        if (k[3] && !playerNames.has(k[3])) out.badHints.push(`${own}: "${k[3]}" is not a rostered player`);
+        out.partnered++;
+      });
+    }
+
+    // The page itself: a row per manager, each with five rooms and its hint; three green and three red per room.
+    if (!sec) return out;
+    const domRows = [...sec.querySelectorAll(".rmrow:not(.avg)")];
+    out.domRows = domRows.length;
+    out.domCells = domRows.every(n => n.querySelectorAll(".rmc").length === 5);
+    out.domHints = domRows.every(n => {
+      const r = rows.find(x => x.uid === n.dataset.uid);
+      return r && n.querySelector(".hint").textContent === r.hint;
+    });
+    out.topBot = POS.map(p => [sec.querySelectorAll(`.rmc.top[data-room="${p}"]`).length, sec.querySelectorAll(`.rmc.bot[data-room="${p}"]`).length]);
+    const first = domRows[0] ? [...domRows[0].querySelectorAll(".rmc")].map(c => Math.round(c.getBoundingClientRect().top)) : [];
+    out.oneLine = first.length === 5 && new Set(first).size === 1;
+    out.avgRow = !!sec.querySelector(".rmrow.avg") && POS.every(p => sec.querySelector(`.rmrow.avg .rmc[data-room="${p}"] .pos-dot`));
+    return out;
+  });
+
+  check("rooms: the section renders on the Power tab", pr.sec && pr.title === "Position rooms", String(pr.title));
+  check("rooms: the section sits after the power rankings", pr.afterBoard);
+  check("rooms: window.__DFFL.positionRooms is an array", pr.isArray);
+  check("rooms: no finished week builds no rooms", pr.emptyOk);
+  if (!pr.regWeeks) {
+    check("rooms: before week 1 is final the section says so", /Position rooms start after week 1 is final\./.test(pr.text) && pr.n === 0, pr.text.slice(0, 120));
+  } else {
+    check("rooms: one entry per manager", pr.n === 12, `${pr.n}`);
+    check("rooms: every manager has 5 rooms with finite numbers", pr.fiveEach);
+    check("rooms: each position's ranks are a permutation of 1..N", pr.badPerm.length === 0, pr.badPerm.join(","));
+    check("rooms: more points per game never ranks lower", pr.badOrder.length === 0, pr.badOrder.join(","));
+    check("rooms: diff is per-game points less the league average", pr.badDiff.length === 0, pr.badDiff.join(","));
+    check("rooms: the league's roster_positions carry every room", ["QB", "RB", "WR", "TE", "FLEX"].every(p => pr.slotsRead.split(",").includes(p)), pr.slotsRead);
+    for (const t of pr.recompute) {
+      check(`rooms: roster ${t.rid}'s per-game points match a fresh recompute from Sleeper's matchups (${t.games} games)`,
+        t.games > 0 && t.mism.length === 0, t.mism.join(" | "));
+    }
+    check("rooms: hints are well formed and name only real managers and rostered players", pr.badHints.length === 0, pr.badHints.slice(0, 4).join(" | "));
+    console.log(`       (${pr.partnered} trade partners named across ${pr.n} hints)`);
+    check("rooms: a row per manager on the page, five rooms each", pr.domRows === pr.n && pr.domCells, `${pr.domRows} rows`);
+    check("rooms: each row shows its own hint", pr.domHints);
+    check("rooms: three top and three bottom rooms marked per position", !!pr.topBot && pr.topBot.every(([t, b]) => t === 3 && b === 3), JSON.stringify(pr.topBot));
+    check("rooms: desktop lays the five rooms on one line", pr.oneLine);
+    check("rooms: the league average is shown for every position", pr.avgRow);
+    check("rooms: the roster-weeks note is present",
+      pr.text.includes("Points only count weeks a player was on that roster, so a recent pickup or trade arrival is credited only from the week he joined."));
+  }
+
+  await mobile.click('#tabs button[data-tab="power"]');
+  await mobile.waitForTimeout(150);
+  const roomsNarrow = await mobile.evaluate(() => {
+    const sec = document.querySelector('[data-panel="power"] [data-section="rooms"]');
+    const W = window.innerWidth, over = [];
+    for (const n of sec ? [sec, ...sec.querySelectorAll("*")] : []) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > W + 1 || r.left < -1 || r.width > W)) over.push(`${n.className || n.tagName} → ${Math.round(r.left)}..${Math.round(r.right)}`);
+      if (n.scrollWidth > n.clientWidth + 1 && getComputedStyle(n).overflowX !== "hidden" && !n.classList.contains("n"))
+        over.push(`${n.className || n.tagName} scrolls ${n.scrollWidth} > ${n.clientWidth}`);
+    }
+    const rows = sec ? [...sec.querySelectorAll(".rmrow:not(.avg)")] : [];
+    return { sec: !!sec, over: over.slice(0, 6), doc: document.documentElement.scrollWidth, W, rows: rows.length,
+      dots: rows.length ? [...rows[0].querySelectorAll(".rmc .pos-dot")].filter(d => d.getBoundingClientRect().width > 0).length : 5 };
+  });
+  check("rooms: the section renders at 390px", roomsNarrow.sec);
+  check("rooms: nothing in the section is wider than the viewport at 390px", roomsNarrow.over.length === 0 && roomsNarrow.doc <= roomsNarrow.W,
+    roomsNarrow.over.join(" | ") || `${roomsNarrow.doc} > ${roomsNarrow.W}`);
+  check("rooms: phone cards label each of the five rooms", roomsNarrow.dots === 5, `${roomsNarrow.dots}`);
+}
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);
