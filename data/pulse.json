@@ -1,39 +1,60 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-12T11:05:47.947Z",
- "at": 1791803147947,
+ "generated": "2026-10-13T04:50:30.446Z",
+ "at": 1791867030446,
  "season": "2026",
- "nfl_week": 5,
+ "nfl_week": 6,
  "season_type": "regular",
  "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 3,
+   "wins": 4,
    "losses": 1,
-   "points_for": 626.72,
-   "points_against": 478.52,
+   "points_for": 820.1,
+   "points_against": 547.16,
    "faab_spent": 3,
+   "starters_hurt": [
+    "Jaxon Smith-Njigba (Questionable)"
+   ]
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 4,
+   "losses": 1,
+   "points_for": 664.36,
+   "points_against": 574.64,
+   "faab_spent": 72,
    "starters_hurt": []
+  },
+  {
+   "manager": "Domo112",
+   "wins": 3,
+   "losses": 2,
+   "points_for": 681.7,
+   "points_against": 682.8,
+   "faab_spent": 56,
+   "starters_hurt": [
+    "Tre' Harris (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
    "wins": 3,
-   "losses": 1,
-   "points_for": 582.58,
-   "points_against": 506.18,
+   "losses": 2,
+   "points_for": 651.22,
+   "points_against": 699.56,
    "faab_spent": 4,
    "starters_hurt": [
-    "David Montgomery (Out)",
     "CeeDee Lamb (Questionable)"
    ]
   },
   {
    "manager": "wesley55",
    "wins": 3,
-   "losses": 1,
-   "points_for": 523.24,
-   "points_against": 460,
+   "losses": 2,
+   "points_for": 622.14,
+   "points_against": 615.14,
    "faab_spent": 26,
    "starters_hurt": [
     "T.J. Hockenson (Out)",
@@ -41,53 +62,11 @@
    ]
   },
   {
-   "manager": "bradyrife",
-   "wins": 3,
-   "losses": 1,
-   "points_for": 508.32,
-   "points_against": 457.3,
-   "faab_spent": 72,
-   "starters_hurt": []
-  },
-  {
-   "manager": "Domo112",
-   "wins": 2,
-   "losses": 2,
-   "points_for": 517.42,
-   "points_against": 535.8,
-   "faab_spent": 56,
-   "starters_hurt": [
-    "Tre' Harris (Questionable)"
-   ]
-  },
-  {
-   "manager": "saucebossandrew",
-   "wins": 2,
-   "losses": 2,
-   "points_for": 500.36,
-   "points_against": 520.3,
-   "faab_spent": 59,
-   "starters_hurt": [
-    "Will Shipley (Out)"
-   ]
-  },
-  {
-   "manager": "victorthompson",
-   "wins": 2,
-   "losses": 2,
-   "points_for": 483.4,
-   "points_against": 453.36,
-   "faab_spent": 100,
-   "starters_hurt": [
-    "Ollie Gordon (Questionable)"
-   ]
-  },
-  {
    "manager": "willie12w",
-   "wins": 2,
+   "wins": 3,
    "losses": 2,
-   "points_for": 465.96,
-   "points_against": 490.42,
+   "points_for": 621.1,
+   "points_against": 589.32,
    "faab_spent": 16,
    "starters_hurt": [
     "Aaron Jones (Questionable)",
@@ -95,38 +74,60 @@
    ]
   },
   {
-   "manager": "jskule23",
-   "wins": 1,
-   "losses": 3,
-   "points_for": 515.36,
-   "points_against": 519.82,
-   "faab_spent": 63,
-   "starters_hurt": []
-  },
-  {
    "manager": "chassinator",
-   "wins": 1,
+   "wins": 2,
    "losses": 3,
-   "points_for": 507.54,
-   "points_against": 568.76,
+   "points_for": 697.5,
+   "points_against": 670.72,
    "faab_spent": 47,
    "starters_hurt": []
   },
   {
    "manager": "moseslin",
-   "wins": 1,
+   "wins": 2,
    "losses": 3,
-   "points_for": 488.38,
-   "points_against": 623.46,
+   "points_for": 611.08,
+   "points_against": 712.36,
    "faab_spent": 5,
+   "starters_hurt": []
+  },
+  {
+   "manager": "victorthompson",
+   "wins": 2,
+   "losses": 3,
+   "points_for": 600.74,
+   "points_against": 609.4,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "Ollie Gordon (Questionable)"
+   ]
+  },
+  {
+   "manager": "saucebossandrew",
+   "wins": 2,
+   "losses": 3,
+   "points_for": 589.26,
+   "points_against": 643,
+   "faab_spent": 59,
+   "starters_hurt": [
+    "Will Shipley (Out)"
+   ]
+  },
+  {
+   "manager": "jskule23",
+   "wins": 1,
+   "losses": 4,
+   "points_for": 662.36,
+   "points_against": 684.1,
+   "faab_spent": 63,
    "starters_hurt": []
   },
   {
    "manager": "drewkim",
    "wins": 1,
-   "losses": 3,
-   "points_for": 466.04,
-   "points_against": 571.4,
+   "losses": 4,
+   "points_for": 568,
+   "points_against": 761.36,
    "faab_spent": 50,
    "starters_hurt": [
     "KC Concepcion (Out)"
@@ -137,301 +138,77 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 164.28,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "jskule23",
-    "points": 64.8,
-    "startersLeftToPlay": 3
+    "manager": "willie12w",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 193.38,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "sizzlemc2",
-    "points": 68.64,
-    "startersLeftToPlay": 0
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 173.36,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "drewkim",
-    "points": 101.96,
-    "startersLeftToPlay": 0
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "willie12w",
-    "points": 155.14,
-    "startersLeftToPlay": 0
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "wesley55",
-    "points": 75.6,
-    "startersLeftToPlay": 1
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 133.94,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "victorthompson",
-    "points": 113.64,
-    "startersLeftToPlay": 1
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 81.2,
-    "startersLeftToPlay": 1
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "moseslin",
-    "points": 122.7,
-    "startersLeftToPlay": 0
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
- "trades": [
-  {
-   "week": 4,
-   "type": "trade",
-   "managers": [
-    "willie12w",
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Woody Marks",
-     "pos": "RB",
-     "team": "HOU",
-     "status": null,
-     "to": "drewkim"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Woody Marks",
-     "pos": "RB",
-     "team": "HOU",
-     "status": null,
-     "from": "willie12w"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 11,
-     "from": "willie12w",
-     "to": "drewkim"
-    },
-    {
-     "season": "2027",
-     "round": 9,
-     "from": "drewkim",
-     "to": "willie12w"
-    }
-   ]
-  }
- ],
- "waivers": [
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Will Shipley",
-     "pos": "RB",
-     "team": "PHI",
-     "status": "Out",
-     "to": "saucebossandrew"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Jalen Hurts",
-     "pos": "QB",
-     "team": "PHI",
-     "status": null,
-     "from": "saucebossandrew"
-    }
-   ],
-   "faab": 32,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Keon Coleman",
-     "pos": "WR",
-     "team": "BUF",
-     "status": null,
-     "to": "saucebossandrew"
-    }
-   ],
-   "drops": [
-    {
-     "name": "MarShawn Lloyd",
-     "pos": "RB",
-     "team": "GB",
-     "status": null,
-     "from": "saucebossandrew"
-    }
-   ],
-   "faab": 27,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Tyler Allgeier",
-     "pos": "RB",
-     "team": "ARI",
-     "status": null,
-     "to": "drewkim"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Dalton Schultz",
-     "pos": "TE",
-     "team": "HOU",
-     "status": null,
-     "from": "drewkim"
-    }
-   ],
-   "faab": 17,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Tre' Harris",
-     "pos": "WR",
-     "team": "LAC",
-     "status": "Questionable",
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Makai Lemon",
-     "pos": "WR",
-     "team": "PHI",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 12,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Jacoby Brissett",
-     "pos": "QB",
-     "team": "ARI",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Jordan Love",
-     "pos": "QB",
-     "team": "GB",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "wesley55"
-   ],
-   "adds": [
-    {
-     "name": "T.J. Hockenson",
-     "pos": "TE",
-     "team": "MIN",
-     "status": "Out",
-     "to": "wesley55"
-    }
-   ],
-   "drops": [],
-   "faab": 5,
-   "picks": []
-  },
-  {
-   "week": 4,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Jacksonville Jaguars",
-     "pos": "DEF",
-     "team": "JAX",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kendre Miller",
-     "pos": "RB",
-     "team": "NO",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 3,
-   "picks": []
-  }
- ],
- "free_agent_moves": 51
+ "trades": [],
+ "waivers": [],
+ "free_agent_moves": 21
 }
