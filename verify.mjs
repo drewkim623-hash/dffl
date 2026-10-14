@@ -4999,7 +4999,7 @@ const INJ_NAMES = ["injuries: the tab reads the published injuries.json and show
   "injuries: odds impact and the statuses explain themselves on tap", "injuries: rows render at 390px",
   "injuries: no element in the tab overflows at 390px", "injuries: stacked rows, not a sideways table",
   "injuries: no text in the tab under 11px at 390px", "injury report: every team lists every injured player on its roster",
-  "injury report: bench injured players are included, at 0%", "injury report: each starter carries the model's charged cut",
+  "injury report: bench injured players are included, at 0%", "injury report: each team's total matches its charged per-player cuts", "injury report: each starter carries the model's charged cut",
   "injuries: no uncaught page errors"];
 if (injDirect.timedOut || injReload.timedOut) {
   for (const n of INJ_NAMES) check(n, false, `skipped: ${injDirect.timedOut || injReload.timedOut}`);
@@ -5142,7 +5142,7 @@ const injBoard = await injPage.evaluate(() => {
   const D = window.__DFFL, inj = window.__INJ, avail = window.__AVAIL;
   const season = D.DB.seasons[0];
   const plan = inj ? D.injuryPlan(season, inj, window.__ODDS) : null;
-  const out = { teams: 0, bench: 0, benchShown: 0, mismatch: [], cutBad: [] };
+  const out = { teams: 0, bench: 0, benchShown: 0, mismatch: [], cutBad: [], totalBad: [] };
   if (!inj || !avail) return { ...out, skipped: true };
   for (const r of season.rosters || []) {
     const ids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
@@ -5156,6 +5156,15 @@ const injBoard = await injPage.evaluate(() => {
     const got = new Set(chips.map(c => c.dataset.pid));
     if (want.length !== got.size || want.some(p => !got.has(p))) out.mismatch.push(`${r.roster_id}: ${got.size}/${want.length}`);
     const hurt = new Map(D.injuryCharged(plan, r.roster_id, plan.W0).map(x => [String(x.pid), x]));
+    if (row) {
+      const cost = row.querySelector(".cost"), k = cost.querySelector(".k").textContent;
+      const got = cost.textContent.slice(0, -k.length).trim();
+      const sum = [...hurt.values()].reduce((s, x) => s + x.loss * x.scale, 0);
+      const m = D.injuryMult(plan, r.roster_id, plan.W0);
+      const exp = m < 1 ? `−${((1 - m) * 100).toFixed(1)}%` : "0%";
+      // INJ_FLOOR aside, the total is the plain sum of the charged cuts.
+      if (got !== exp || (m > 0.5 && Math.abs((1 - m) - sum) > 1e-9)) out.totalBad.push(`${r.roster_id}: ${got} vs ${exp} (sum ${(sum * 100).toFixed(1)})`);
+    }
     for (const c of chips) {
       const pid = c.dataset.pid, cut = c.querySelector(".cut").textContent.trim();
       if (!st.has(pid)) { out.bench++; if (cut === "0% bench") out.benchShown++; else out.cutBad.push(`${pid}: ${cut}`); }
@@ -5172,6 +5181,8 @@ check("injury report: every team lists every injured player on its roster", !inj
   && injBoard.mismatch.length === 0, injBoard.skipped ? "no live board" : injBoard.mismatch.slice(0, 4).join(" ; "));
 check("injury report: bench injured players are included, at 0%", injBoard.bench > 0 && injBoard.benchShown === injBoard.bench,
   `${injBoard.benchShown}/${injBoard.bench}`);
+check("injury report: each team's total matches its charged per-player cuts", !injBoard.skipped && injBoard.totalBad.length === 0,
+  injBoard.skipped ? "no live board" : injBoard.totalBad.slice(0, 4).join(" ; "));
 check("injury report: each starter carries the model's charged cut", injBoard.cutBad.length === 0, injBoard.cutBad.slice(0, 4).join(" ; "));
 check("injuries: no uncaught page errors", injErrs.length === 0, injErrs.slice(0, 2).join(" | "));
 } catch (e) {

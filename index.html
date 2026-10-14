@@ -5029,14 +5029,15 @@ function returnLabel(iso) {
 function injuryBoard(model, avail, inj) {
   const season = DB.seasons[0];
   const rosterOf = new Map(((season && season.rosters) || []).map(r => [r.roster_id, r]));
-  // The per-player cuts are what the sim charges next week. The team figure
-  // on the right is still main's availability() number, left as it was.
+  // The per-player cuts and the team figure are both what the sim charges
+  // next week: injuryCharged() and injuryMult() at plan.W0.
   const plan = injuryPlan(season, inj, model);
   const rows = model.teams
     .map(t => ({ t, a: avail.get(t.rid) }))
     .map(x => ({ ...x, all: rosterInjuries(rosterOf.get(x.t.rid), inj, plan) }))
+    .map(x => ({ ...x, mult: injuryMult(plan, x.t.rid, plan.W0) }))
     .filter(x => x.a && x.all.length)
-    .sort((a, b) => a.a.mult - b.a.mult);
+    .sort((a, b) => a.mult - b.mult);
   const b = el("div", "board");
   b.innerHTML = `<div class="bhead"><span class="bt">The injury report
     <span class="bs">every injured player on each roster · only starters cost anything next week</span></span></div>`;
@@ -5046,7 +5047,7 @@ function injuryBoard(model, avail, inj) {
        priced at full strength.</span>`));
     return b;
   }
-  for (const { t, a, all } of rows) {
+  for (const { t, all, mult } of rows) {
     const r = el("div", "irow");
     r.dataset.rid = t.rid;
     const list = all.map(h => {
@@ -5067,7 +5068,7 @@ function injuryBoard(model, avail, inj) {
     r.innerHTML = `${avatarHTML(t.uid, "sm avcell")}
       <span class="who"><span class="n">${esc(nameOf(t.uid))}</span>
         <span class="plist">${list}</span></span>
-      <span class="cost ${a.mult < 0.97 ? "bite" : ""}">${a.mult < 1 ? `−${((1 - a.mult) * 100).toFixed(1)}%` : "0%"}<span class="k">next week</span></span>`;
+      <span class="cost ${mult < 0.97 ? "bite" : ""}">${mult < 1 ? `−${((1 - mult) * 100).toFixed(1)}%` : "0%"}<span class="k">next week</span></span>`;
     b.appendChild(r);
   }
   return b;
