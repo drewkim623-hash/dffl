@@ -6204,11 +6204,10 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED, opts = {
       const po = x.playoffDelta != null ? fmtInjuryDelta(x.playoffDelta, "%") : calc ? "calculating…" : "not measured";
       const poCls = x.playoffDelta != null ? (Math.abs(x.playoffDelta) < 0.5 ? "zero" : "") : calc ? "pending" : "none";
       const ti = x.titleDelta != null ? `<span class="ti">${esc(fmtInjuryDelta(x.titleDelta, "%"))} title</span>` : "";
-      // A bench player who still costs lineup points: he'd start only when the starters ahead of him are on bye.
+      // A bench player who still costs lineup points: how many of his weeks out he makes his team's best lineup.
       const startWks = Object.values(x.perWeek || {}).filter(v => v >= 0.05);
       const bnote = x.bench && x.weeksOut && x.wouldStart && startWks.length
-        ? `<span class="bnote">he'd start in weeks when the starters ahead of him are on bye (${startWks.length} of ${wks(x.weeksOut)},
-          ${f1(startWks.reduce((a, v) => a + v, 0) / startWks.length)} pts/wk in those)</span>` : "";
+        ? `<span class="bnote">in his team's best lineup in ${startWks.length} of ${x.weeksOut} week${x.weeksOut === 1 ? "" : "s"} out</span>` : "";
       row.innerHTML = `<span class="imp"><span class="po ${poCls}">${esc(po)}</span><span class="pol">playoff odds</span>${ti}</span>
         <span class="nm">${esc(x.name)}</span>
         <span class="meta">${esc([x.pos, x.club].filter(Boolean).join(dot))}${detail ? esc(dot + detail) : ""}</span>
