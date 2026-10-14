@@ -1,0 +1,101 @@
+# Refresh injury return estimates between the weekly builds.
+#
+# consensus.mjs reconciles the audit (injury-returns.json) with Sleeper/ESPN
+# projections and the DraftKings props signal, build-injuries.mjs rewrites the
+# snapshot the site reads, and injury-returns.mjs adds the return dates back.
+#
+# Cron is UTC and does not follow daylight saving, so each slot is listed for
+# both EDT and EST and the gate below lets through only the one that lands
+# within seven minutes of the intended New York time:
+#   09:20 every day, 18:20 Monday and Thursday, 11:50 and 15:50 Sunday.
+#
+# The odds themselves are computed in the browser from index.html and these
+# files, so there is no odds step here; the next page load picks them up.
+
+name: Injury refresh
+
+on:
+  schedule:
+    - cron: "20 13,14 * * *"          # 09:20 EDT / 09:20 EST
+    - cron: "20 22,23 * * 1,4"        # Mon/Thu 18:20 EDT / EST
+    - cron: "50 15,16,19,20 * * 0"    # Sun 11:50 and 15:50, EDT / EST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run everything but skip the commit and push"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: injury-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate on New York local time
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          read -r dow hh mm <<< "$(TZ=America/New_York date '+%u %H %M')"
+          now=$((10#$hh * 60 + 10#$mm))
+          targets="560"                                   # 09:20 any day
+          if [ "$dow" = 1 ] || [ "$dow" = 4 ]; then targets="$targets 1100"; fi  # 18:20 Mon/Thu
+          if [ "$dow" = 7 ]; then targets="$targets 710 950"; fi                 # 11:50, 15:50 Sun
+          go=false
+          for t in $targets; do
+            d=$((now - t)); [ $d -lt 0 ] && d=$((-d))
+            if [ $d -le 7 ]; then go=true; fi
+          done
+          echo "New York $hh:$mm (day $dow): go=$go"
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+
+      - if: steps.gate.outputs.go == 'true'
+        uses: actions/checkout@v7
+
+      - if: steps.gate.outputs.go == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      # Always exits 0; a feed that fails falls back to data/consensus-cache/.
+      - name: Reconcile the injury consensus
+        if: steps.gate.outputs.go == 'true'
+        run: node consensus.mjs
+
+      - name: Refresh the injury snapshot
+        if: steps.gate.outputs.go == 'true'
+        run: node build-injuries.mjs
+
+      # After the snapshot on purpose, as in weekly-data.yml: build-injuries.mjs
+      # rewrites injuries.json without the return fields, so they are added back here.
+      - name: Estimate injury return dates
+        if: steps.gate.outputs.go == 'true'
+        run: node injury-returns.mjs
+
+      - name: Commit anything that changed
+        if: steps.gate.outputs.go == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        run: |
+          git config user.name  "dffl-data[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data injuries.json injury-returns.json injury-returns-cache.json
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Data: injury refresh"
+          # Same no-loop, no-force push as weekly-data.yml.
+          if ! git pull --rebase origin "${GITHUB_REF_NAME:-main}"; then
+            git rebase --abort || true
+            echo "::error::Could not rebase the injury commit onto main; nothing pushed."
+            exit 1
+          fi
+          git push origin "HEAD:${GITHUB_REF_NAME:-main}"
