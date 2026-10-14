@@ -2002,6 +2002,94 @@ if (ppLive.state === "empty") {
   check("live: the picture ran in a worker", ppLive.via === "worker", ppLive.via);
 }
 
+group("Playoff Picture: if the season ended today (v4 board)");
+// Reads the live board as drawn at 1280px and checks every number on it against
+// the sim's own counts and the Odds tab's run, and the order against today's standings.
+const ppV4 = await page.evaluate(() => {
+  const P = window.__PICTURE, L = window.__LSIM, live = window.__LIVE;
+  const host = document.querySelector("#pictureHost"), board = host && host.querySelector(".ppv");
+  if (document.body.dataset.pictureReady !== "1" || !P || !L || !live || !board) return { skip: true };
+  const pctf = v => v <= 0 ? "0%" : v >= 1 ? "100%" : v < 0.005 ? "<1%" : v > 0.995 ? ">99%" : `${(v * 100).toFixed(0)}%`;
+  const N = live.teams.length, PT = P.rules.playoffTeams, B = P.rules.byes;
+  // Today's seeding, worked out here from scratch: rank on wins then points for,
+  // division leaders first in rank order, then everyone else in rank order.
+  const rank = live.teams.map((_, i) => i).sort((a, b) => live.W0[b] - live.W0[a] || live.PF0[b] - live.PF0[a]);
+  const champs = [...new Set(live.teams.map(t => t.div))].map(d => rank.find(i => live.teams[i].div === d));
+  champs.sort((a, b) => rank.indexOf(a) - rank.indexOf(b));
+  const expect = [...champs, ...rank.filter(i => !champs.includes(i))].map(i => String(live.teams[i].rid));
+  const idx = new Map(P.rids.map((rid, i) => [String(rid), i]));
+  const listRows = [...board.querySelectorAll(".pp-seeds .pp-li, .pp-elim .pp-li")];
+  const bySeed = listRows.slice().sort((a, b) => a.dataset.seed - b.dataset.seed);
+  const pbText = (row, k) => { const b = row.querySelector(`.pp-pb[data-k="${k}"] b`); return b ? b.textContent : null; };
+  const allBars = [...board.querySelectorAll(".pp-li, .pp-hero")];
+  const badBye = allBars.filter(r => {
+    const i = idx.get(r.dataset.rid), s = P.seed[i];
+    const share = s.slice(0, B).reduce((a, c) => a + c, 0) / P.sims;
+    return P.bye[i] !== share || pbText(r, "by") !== pctf(share) || (B === 2 && share !== (s[0] + s[1]) / P.sims);
+  }).map(r => r.dataset.rid);
+  const badPo = allBars.filter(r => pbText(r, "po") !== pctf(L.playoff[idx.get(r.dataset.rid)] / L.sims)).map(r => r.dataset.rid);
+  const prevSeed = sel => { const c = board.querySelector(sel), p = c && c.previousElementSibling; return p ? Number(p.dataset.seed) : null; };
+  const dash = sel => { const c = board.querySelector(sel); return c ? getComputedStyle(c, "::before").borderTopStyle : null; };
+  const heroes = [...board.querySelectorAll(".pp-hero")];
+  const legend = board.querySelector(".pp-legend");
+  const lay = getComputedStyle(board.querySelector(".pp-lay")).gridTemplateColumns.split(" ").filter(Boolean);
+  const bcol = board.querySelector(".pp-bcol").getBoundingClientRect(), lcol = board.querySelector(".pp-lcol").getBoundingClientRect();
+  const txt = host.innerText;
+  return {
+    N, PT, B, rows: listRows.length,
+    heroSeeds: heroes.map(h => Number(h.dataset.seed)),
+    heroRids: heroes.map(h => h.dataset.rid), expectTop: expect.slice(0, B),
+    order: bySeed.map(r => r.dataset.rid), expect, sameAsPicture: JSON.stringify(P.order.map(String)) === JSON.stringify(expect),
+    sectionsAscend: [".pp-seeds", ".pp-elim"].every(s => {
+      const seeds = [...board.querySelectorAll(`${s} .pp-li`)].map(r => Number(r.dataset.seed));
+      return seeds.every((v, k) => !k || v > seeds[k - 1]);
+    }),
+    seedsShown: bySeed.every((r, k) => Number(r.dataset.seed) === k + 1 && r.querySelector(".pp-sd").textContent === String(k + 1)),
+    badBye, badPo, checked: allBars.length,
+    byeAfter: prevSeed('.pp-cut[data-line="bye"]'), poAfter: prevSeed('.pp-cut[data-line="playoff"]'),
+    byeDash: dash('.pp-cut[data-line="bye"]'), poDash: dash('.pp-cut[data-line="playoff"]'),
+    divPct: /\bDiv\b|Div %|division[- ]title/i.test(txt) || board.querySelectorAll(".dv3, [data-k='dv']").length,
+    legend: !!legend && ["x", "y", "z"].every(k => [...legend.querySelectorAll(".pp-mk")].some(m => m.textContent === k))
+      && /clinched playoff spot/.test(legend.textContent) && /clinched division/.test(legend.textContent) && /clinched first-round bye/.test(legend.textContent),
+    // every x/y/z on a team is the one its exact clinch flags call for
+    marksOk: [...board.querySelectorAll(".pp-li, .pp-hero")].every(r => {
+      const c = P.clinch.find(x => String(x.rid) === r.dataset.rid), m = r.querySelector(".pp-nm .pp-mk");
+      const want = c.clinchedBye ? "z" : c.clinchedDiv ? "y" : c.clinchedPlayoff ? "x" : "";
+      return (m ? m.textContent : "") === want;
+    }),
+    tag: /If the season ended today/i.test(board.querySelector(".pp-tag")?.textContent || ""),
+    hints: [...board.querySelectorAll(".pp-br .pp-hn")].length,
+    seedsToday: /seeds = today, odds = full season/i.test(txt),
+    reseed: /the sims still reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %/i.test(txt.replace(/\s+/g, " ")),
+    twoCol: lay.length === 2 && bcol.right <= lcol.left + 1, lay: lay.join(" "),
+    // "In the hunt" heads the seeds below the line, unless every one of them is eliminated
+    hunt: /In the hunt/.test(board.textContent) === (board.querySelectorAll(".pp-seeds .pp-li").length > PT), elimHead: [...board.querySelectorAll(".pp-h")].some(h => h.textContent === "Eliminated"),
+    avatars: board.querySelectorAll(".pp-li .av, .pp-hero .av").length,
+  };
+});
+if (ppV4.skip) {
+  check("v4 board checks (skipped: no live picture to read)", true);
+} else {
+  check("v4: the hero cards are seeds 1-" + ppV4.B + ", in order, and the right teams",
+    JSON.stringify(ppV4.heroSeeds) === JSON.stringify(Array.from({ length: ppV4.B }, (_, k) => k + 1))
+    && JSON.stringify(ppV4.heroRids) === JSON.stringify(ppV4.expectTop), `${ppV4.heroSeeds} / ${ppV4.heroRids}`);
+  check("v4: one list row per team, seeds 1..N shown in order", ppV4.rows === ppV4.N && ppV4.seedsShown, `${ppV4.rows} rows`);
+  check("v4: the list order is today's seeding (division leaders, then records, ties on points for)",
+    JSON.stringify(ppV4.order) === JSON.stringify(ppV4.expect) && ppV4.sameAsPicture && ppV4.sectionsAscend, `${ppV4.order} vs ${ppV4.expect}`);
+  check("v4: every Bye % is the sim's seed-1 + seed-2 share, exactly", ppV4.badBye.length === 0 && ppV4.checked >= ppV4.N, ppV4.badBye.join(","));
+  check("v4: every Playoff % is the Odds tab's number", ppV4.badPo.length === 0, ppV4.badPo.join(","));
+  check("v4: the dashed bye line sits right after seed " + ppV4.B, ppV4.byeAfter === ppV4.B && ppV4.byeDash === "dashed", `${ppV4.byeAfter} ${ppV4.byeDash}`);
+  check("v4: the dashed playoff line sits right after seed " + ppV4.PT, ppV4.poAfter === ppV4.PT && ppV4.poDash === "dashed", `${ppV4.poAfter} ${ppV4.poDash}`);
+  check("v4: no Div % anywhere on the tab", !ppV4.divPct);
+  check("v4: the x / y / z legend is there", ppV4.legend);
+  check("v4: every x / y / z mark comes from the exact clinch flags", ppV4.marksOk);
+  check('v4: the bracket is tagged "If the season ended today" with Bye % · PO % slot hints', ppV4.tag && ppV4.hints >= ppV4.PT);
+  check('v4: says "seeds = today, odds = full season" and the reseeding caveat', ppV4.seedsToday && ppV4.reseed);
+  check("v4: In the hunt and Eliminated sections are there", ppV4.hunt && ppV4.elimHead);
+  check("v4: every list row and hero card has a Sleeper avatar", ppV4.avatars === ppV4.N + ppV4.B, `${ppV4.avatars}`);
+  check("v4: two columns at 1280px, bracket left of the list", ppV4.twoCol, ppV4.lay);
+}
+
 // The job handed to the worker must carry the injury plan's per-week cuts, or the
 // Picture's own runs (and every win/lose-this-week run) would be healthy.
 const ppInj = await page.evaluate(async () => {
@@ -4330,6 +4418,66 @@ check("picture: badges keep the full text in their title", ppBadges.badTitles.le
 check("picture: badges show the short label on a phone", ppBadges.badShort.length === 0, ppBadges.badShort.join(","));
 check("picture: badges read their full text to screen readers (role=img + aria-label)", ppBadges.badRole.length === 0, ppBadges.badRole.join(","));
 check("picture: every name fits its cell and carries its full name as a title", ppBadges.badNames.length === 0, ppBadges.badNames.join(","));
+
+// The v4 board at 390px: nothing overflows and no text is under 11px, on an
+// early week (nobody out) and a late one (clinches and an Eliminated list).
+const ppV4Narrow = await mobile.evaluate(async () => {
+  const D = window.__DFFL, M = window.__ODDS, se = D.DB.seasons.find(x => x.season === "2025");
+  const host = document.querySelector("#pictureHost"), panel = document.querySelector('[data-panel="picture"]');
+  const out = [];
+  for (const wk of [10, 13]) {
+    const R = D.raceAsOf(se, wk), live = D.liveState(M, se, R, null, null, wk);
+    const PP = await D.computePicture(M, live, R, se, { whatIfSims: 300, main: true });
+    D.renderPicture(host, PP);
+    const over = [], small = [];
+    for (const n of panel.querySelectorAll("*")) {
+      if (n.closest(".scroll")) continue;
+      const r = n.getBoundingClientRect();
+      if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+    }
+    for (const n of host.querySelectorAll("*")) {
+      const own = [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
+      const cs = getComputedStyle(n), fs = parseFloat(cs.fontSize);
+      if (own && n.getClientRects().length && fs > 0 && fs < 11) small.push(`${n.className || n.tagName} ${fs}px`);
+      const after = getComputedStyle(n, "::after");
+      if (after.content && after.content !== "none" && after.content !== '""' && parseFloat(after.fontSize) < 11)
+        small.push(`${n.className}::after ${after.fontSize}`);
+    }
+    const P = PP.rules.playoffTeams;
+    const elimShown = [...host.querySelectorAll(".pp-elim .pp-li")].map(r => r.dataset.rid).sort();
+    const elimWant = PP.rows.filter(r => r.todaySeed > P && r.clinch.eliminated).map(r => String(r.rid)).sort();
+    out.push({ wk, over: over.slice(0, 6), small: [...new Set(small)].slice(0, 6),
+      doc: document.documentElement.scrollWidth, inner: window.innerWidth,
+      elimOk: JSON.stringify(elimShown) === JSON.stringify(elimWant), elimN: elimWant.length,
+      emptyElim: !elimWant.length === !!host.querySelector(".pp-elim .pp-empty"),
+      oneCol: getComputedStyle(host.querySelector(".pp-lay")).gridTemplateColumns.split(" ").length === 1 });
+  }
+  return out;
+});
+for (const r of ppV4Narrow) {
+  check(`v4 at 390px (2025 week ${r.wk}): nothing overflows`, r.over.length === 0 && r.doc <= r.inner, r.over.join(" | "));
+  check(`v4 at 390px (2025 week ${r.wk}): no text under 11px`, r.small.length === 0, r.small.join(" | "));
+  check(`v4 at 390px (2025 week ${r.wk}): one column`, r.oneCol);
+  check(`v4 (2025 week ${r.wk}): the Eliminated list is exactly the mathematically eliminated teams`, r.elimOk && r.emptyElim, `${r.elimN} eliminated`);
+}
+check("v4: 2025 week 13 has somebody eliminated to show", ppV4Narrow.some(r => r.elimN > 0));
+
+// Opening the site straight on #picture boots into the board.
+{
+  const direct = await ctx.newPage();
+  await direct.goto(BASE + "#picture", { waitUntil: "domcontentloaded" });
+  await direct.waitForFunction(() => document.body.dataset.pictureReady, null, { timeout: 180000 });
+  const d = await direct.evaluate(() => ({
+    state: document.body.dataset.pictureReady,
+    selected: (document.querySelector('#tabs button[aria-selected="true"]') || {}).dataset?.tab || null,
+    visible: !document.querySelector('[data-panel="picture"]').hidden,
+    board: !!document.querySelector("#pictureHost .ppv .pp-seeds"),
+    empty: !!document.querySelector("#pictureHost .empty"),
+  }));
+  check("v4: a direct load of #picture opens the tab and draws the board",
+    d.selected === "picture" && d.visible && ((d.state === "1" && d.board) || (d.state === "empty" && d.empty)), JSON.stringify(d));
+  await direct.close();
+}
 
 // the power board at phone width, on a week with movement in it
 await mobile.click('#tabs button[data-tab="power"]');
