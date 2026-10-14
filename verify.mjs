@@ -2126,6 +2126,24 @@ if (ppV4.skip) {
   check("v4: every Playoff % is the Odds tab's number", ppV4.badPo.length === 0, ppV4.badPo.join(","));
   check("v4: the dashed bye line sits right after seed " + ppV4.B, ppV4.byeAfter === ppV4.B && ppV4.byeDash === "dashed", `${ppV4.byeAfter} ${ppV4.byeDash}`);
   check("v4: the dashed playoff line sits right after seed " + ppV4.PT, ppV4.poAfter === ppV4.PT && ppV4.poDash === "dashed", `${ppV4.poAfter} ${ppV4.poDash}`);
+{
+  // A team level on wins with the last seed in is out on points for, not "0 GB".
+  // Redraw the board with seed 7's record set equal to seed 6's, and seed 8 a win back.
+  const pf = await page.evaluate(() => {
+    const D = window.__DFFL, P0 = window.__PICTURE && window.__PICTURE.full;
+    if (!P0 || !D.pictureBoard) return { skip: true };
+    const PT = P0.rules.playoffTeams, rows = P0.rows.map(r => ({ ...r })), PP = { ...P0, rows };
+    if (rows.length < PT + 2) return { skip: true };
+    const at = k => rows[PP.order[k - 1]], last = at(PT), tie = at(PT + 1), back = at(PT + 2);
+    tie.w = last.w; tie.l = last.l; tie.t = last.t;
+    back.w = last.w - 1; back.l = last.l + 1; back.t = last.t;
+    const b = D.pictureBoard(PP);
+    const txt = rid => (b.querySelector(`.pp-seeds .pp-li[data-rid="${rid}"]`) || {}).textContent || "";
+    return { tie: txt(tie.rid), back: txt(back.rid) };
+  });
+  check("v4: a team tied on wins with the last seed in reads 'out on PF'", !pf.skip && /out on PF/.test(pf.tie) && !/0 GB/.test(pf.tie), pf.skip ? "skipped" : pf.tie.replace(/\s+/g, " ").slice(0, 90));
+  check("v4: a team one win back reads '1 GB'", !pf.skip && /\b1 GB/.test(pf.back), pf.skip ? "skipped" : pf.back.replace(/\s+/g, " ").slice(0, 90));
+}
   check("v4: no Div % anywhere on the tab", !ppV4.divPct);
   check("v4: the x / y / z legend is there", ppV4.legend);
   check("v4: every x / y / z mark comes from the exact clinch flags", ppV4.marksOk);

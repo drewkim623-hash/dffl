@@ -1024,7 +1024,7 @@
   .ppv .pp-tm{display:flex;align-items:center;gap:6px;height:44px;padding:0 7px;min-width:0}
   .ppv .pp-tm+.pp-tm{border-top:1px solid rgba(255,255,255,.06)}
   .ppv .pp-tn{display:flex;flex-direction:column;min-width:0;line-height:1.2}
-  .ppv .pp-tnm{font-size:13px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ppv .pp-tnm{font-size:13px;font-weight:650;white-space:normal;overflow-wrap:anywhere;min-width:0}
   .ppv .pp-hn{font:11px var(--mono);letter-spacing:-.03em;color:#a9c9f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ppv .byeg .pp-hn{color:#ffd27a}
   .ppv .pp-tm.tbd{color:var(--muted);font-size:13px;font-style:italic}
@@ -8077,7 +8077,7 @@ function pictureBoard(PP) {
   const head = `<div class="pp-eye">${esc(wk)}</div>
     <p class="pp-lede">If the season ended today. ${P} of ${N} get in${byeWords}.</p>
     <div class="pp-meta"><span class="pp-pill">Seeds = today · odds = full season</span>
-      <span class="pp-pill">Fixed bracket, no reseeding</span>
+      <span class="pp-pill">Bracket drawn fixed, as Sleeper plays it</span>
       <span class="pp-pill">${PP.sims.toLocaleString()} simulations</span></div>`;
 
   /* heroes: the bye seeds */
@@ -8320,6 +8320,7 @@ async function drawPicture(host) {
       playoff: PP.rows.map(r => r.playoff), rids: PP.rows.map(r => r.rid),
       whatIf: PP.whatIf, clinch: PP.clinch, rules: PP.rules, swings: PP.swings,
       bye: PP.rows.map(r => r.bye), order: PP.order.map(i => PP.rows[i].rid),
+      full: PP,  // the whole run, so verify can redraw the board on edited standings
     };
     // A poll that changed nothing leaves the table (and where it's scrolled) alone.
     if (!PICTURE_DRAWN || pictureSig(PP) !== host._ppSig) {
@@ -9428,7 +9429,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
