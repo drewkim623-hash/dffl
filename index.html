@@ -980,7 +980,7 @@
   /* the pinned name cell clips its own content and sits above the cells scrolling under it */
   .pp td:first-child,.pp th:first-child{overflow:hidden;z-index:1}
   .pp .nmcell{min-width:0}
-  .pp .ppn .badge{font-size:9.5px;padding:1px 6px}
+  .pp .ppn .badge{font-size:11px;padding:1px 6px}
   .pp .ppwi{font-size:12.5px;color:var(--ink-2)}
   .pp .ppwi.muted{color:var(--muted)}
   @media(max-width:560px){
@@ -988,8 +988,110 @@
     .pp .ppn .nm{max-width:68px}
     /* short badge labels (In / Bye / Top seed / Out) so the clipped name cell never cuts them */
     .pp .ppn .badge{font-size:0;white-space:nowrap}
-    .pp .ppn .badge::after{content:attr(data-short);font-size:9.5px}
+    .pp .ppn .badge::after{content:attr(data-short);font-size:11px}
     .pp td,.pp th{padding-top:8px;padding-bottom:8px}
+  }
+  #pictureHost .av.sm,#pictureHost th{font-size:11px}
+
+  /* if the season ended today: hero cards, bracket, seed list */
+  .ppv{font-size:15px;line-height:1.4;margin-bottom:8px}
+  .ppv .pp-eye{font:600 11px var(--mono);letter-spacing:.14em;color:var(--blue);text-transform:uppercase}
+  .ppv .pp-lede{color:var(--ink-2);font-size:14px;margin:4px 0 0}
+  .ppv .pp-meta{display:flex;flex-wrap:wrap;gap:6px 10px;margin:12px 0 4px;font-size:12px;color:var(--ink-2)}
+  .ppv .pp-pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;
+    background:rgba(255,255,255,.05);border:1px solid var(--ring)}
+  .ppv .pp-h{font-size:18px;margin:30px 0 4px;letter-spacing:-.01em;font-weight:800}
+  .ppv .pp-hs{color:var(--ink-2);font-size:13px;margin:8px 0 12px}
+  .ppv .pp-mk{display:inline-block;font:700 11px/1.4 var(--mono);color:#1a1200;background:linear-gradient(#f0b53a,var(--gold));
+    border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:2px}
+  .ppv .pp-sd{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+    font:700 12px var(--mono);color:var(--ink-2);background:rgba(255,255,255,.06)}
+  .ppv .pp-sd.bye{color:#1a1200;background:radial-gradient(circle at 35% 30%,#ffd27a,var(--gold));box-shadow:0 0 12px rgba(201,133,0,.55)}
+  .ppv .pp-sd.div{color:#fff;background:radial-gradient(circle at 35% 30%,#7ab6ff,var(--blue));box-shadow:0 0 10px rgba(57,135,229,.5)}
+  .ppv .pp-sd.wc{color:#cfe2ff;background:rgba(57,135,229,.16);box-shadow:inset 0 0 0 1px rgba(57,135,229,.6)}
+  .ppv .av.pp-xs{width:20px;height:20px;font-size:11px}
+  .ppv .pp-who{min-width:0;flex:1 1 auto}
+  .ppv .pp-nm{font-weight:650;overflow-wrap:anywhere;line-height:1.2}
+  .ppv .pp-sub{font-size:12px;color:var(--ink-2);margin-top:2px}
+  .ppv .pp-nw{white-space:nowrap}
+  .ppv .pp-dt{display:inline-block;max-width:100%;vertical-align:bottom;overflow:hidden;text-overflow:ellipsis;
+    font-size:11px;font-weight:600;padding:0 6px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--ink-2);
+    margin-right:2px;white-space:nowrap}
+  .ppv .pp-dt.lead{background:rgba(57,135,229,.18);color:#cfe2ff}
+  .ppv .pp-bars{display:flex;gap:10px;align-items:flex-end;flex:none}
+  .ppv .pp-pb{width:56px;text-align:right}
+  .ppv .pp-pb span{display:block;font-size:11px;color:var(--ink-2)}
+  .ppv .pp-pb b{font:700 14px var(--mono);font-variant-numeric:tabular-nums}
+  .ppv .pp-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}
+  .ppv .pp-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#7ab6ff)}
+  .ppv .pp-pb.by b{color:#ffd27a}
+  .ppv .pp-pb.by .pp-bar i{background:linear-gradient(90deg,#a86f00,#f0b53a)}
+  .ppv .pp-heros{display:grid;gap:12px;margin-top:18px}
+  .ppv .pp-hero{display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;min-width:0;
+    background:linear-gradient(135deg,rgba(201,133,0,.22),rgba(201,133,0,.04) 55%,rgba(255,255,255,.02));
+    border:1px solid rgba(201,133,0,.35);box-shadow:0 12px 40px -16px rgba(201,133,0,.6)}
+  .ppv .pp-hero .av{width:52px;height:52px;font-size:17px;border:0;box-shadow:0 0 0 2px #e9a93a,0 0 18px rgba(201,133,0,.6)}
+  .ppv .pp-hero .pp-eye{color:#ffd27a}
+  .ppv .pp-hero .pp-nm{font-size:19px}
+  .ppv .pp-hero .pp-bars{margin-left:auto}
+  .ppv .pp-lay{display:grid;gap:0 28px}
+  .ppv .pp-lay>*{min-width:0}
+  .ppv .pp-tag{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:999px;font:700 12px var(--mono);
+    letter-spacing:.08em;text-transform:uppercase;color:#cfe2ff;
+    background:linear-gradient(90deg,rgba(57,135,229,.28),rgba(57,135,229,.08));border:1px solid rgba(57,135,229,.45)}
+  .ppv .pp-br{max-width:380px;margin:18px auto 0}
+  .ppv .pp-rd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .ppv .pp-flat{display:grid;gap:14px}
+  .ppv .pp-mw{min-width:0}
+  .ppv .pp-lb{font:600 11px var(--mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase;
+    white-space:nowrap;margin:0 0 5px 2px}
+  .ppv .pp-mt{border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--ring)}
+  .ppv .pp-mt.byeg{border-color:rgba(201,133,0,.45);box-shadow:0 0 0 1px rgba(201,133,0,.15),0 8px 30px -10px rgba(201,133,0,.45);
+    background:linear-gradient(180deg,rgba(201,133,0,.10),rgba(255,255,255,.015))}
+  .ppv .pp-mt.fin{border-color:rgba(144,133,233,.45);box-shadow:0 10px 40px -12px rgba(144,133,233,.5)}
+  .ppv .pp-tm{display:flex;align-items:center;gap:6px;height:44px;padding:0 7px;min-width:0}
+  .ppv .pp-tm+.pp-tm{border-top:1px solid rgba(255,255,255,.06)}
+  .ppv .pp-tn{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+  .ppv .pp-tnm{font-size:13px;font-weight:650;white-space:normal;overflow-wrap:anywhere;min-width:0}
+  .ppv .pp-hn{font:11px var(--mono);letter-spacing:-.03em;color:#a9c9f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ppv .byeg .pp-hn{color:#ffd27a}
+  .ppv .pp-tm.tbd{color:var(--muted);font-size:13px;font-style:italic}
+  .ppv .pp-q{width:22px;height:22px;border-radius:50%;border:1px dashed rgba(255,255,255,.2);flex:none}
+  .ppv .pp-cn{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:24px}
+  .ppv .pp-cn i{justify-self:center;border-left:1.5px solid rgba(255,255,255,.18)}
+  .ppv .pp-join{position:relative;height:30px}
+  .ppv .pp-join::before{content:"";position:absolute;top:0;height:15px;left:calc(25% - 3px);right:calc(25% - 3px);
+    border:1.5px solid rgba(255,255,255,.18);border-top:0;border-radius:0 0 8px 8px}
+  .ppv .pp-join::after{content:"";position:absolute;left:50%;top:15px;bottom:0;border-left:1.5px solid rgba(255,255,255,.18)}
+  .ppv .pp-fin{width:74%;margin:0 auto}
+  .ppv .pp-troph{text-align:center;font:600 11px var(--mono);letter-spacing:.1em;color:var(--violet);text-transform:uppercase;margin-top:8px}
+  .ppv .pp-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink-2);margin-top:16px}
+  .ppv .pp-legend .pp-mk{margin:0 5px 0 0;vertical-align:0}
+  .ppv .pp-lst{border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--ring);overflow:hidden}
+  .ppv .pp-li{display:grid;grid-template-columns:22px 28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px}
+  .ppv .pp-li+.pp-li{border-top:1px solid rgba(255,255,255,.05)}
+  .ppv .pp-li.byer{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent 65%)}
+  .ppv .pp-cut{position:relative;height:28px;display:flex;align-items:center;padding:0 14px}
+  .ppv .pp-cut::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed}
+  .ppv .pp-cut span{position:relative;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
+    padding:2px 8px;border-radius:999px;background:var(--surface)}
+  .ppv .pp-cut.byl{color:var(--gold)}
+  .ppv .pp-cut.byl span{color:#ffd27a;border:1px solid rgba(201,133,0,.5)}
+  .ppv .pp-cut.pol{color:var(--blue)}
+  .ppv .pp-cut.pol span{color:#cfe2ff;border:1px solid rgba(57,135,229,.6)}
+  .ppv .pp-hh{padding:12px 14px 4px;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+  .ppv .pp-empty{padding:14px 16px;color:var(--ink-2);font-size:13px}
+  .ppv .pp-note{font-size:12px;color:var(--muted);margin:26px 0 0;line-height:1.55;max-width:110ch}
+  @media(min-width:900px){
+    .ppv .pp-heros{grid-template-columns:1fr 1fr}
+    .ppv .pp-lay{grid-template-columns:minmax(0,380px) minmax(0,1fr);align-items:start}
+  }
+  @media(max-width:520px){
+    .ppv .pp-li{grid-template-columns:22px 28px minmax(0,1fr);row-gap:6px}
+    .ppv .pp-li .pp-bars{grid-column:3;justify-content:flex-start;gap:14px}
+    .ppv .pp-pb{text-align:left;width:96px}
+    .ppv .pp-hero{flex-wrap:wrap}
+    .ppv .pp-hero .pp-bars{margin-left:66px;gap:14px}
   }
 
   /* ============ trades ============ */
@@ -8038,20 +8140,31 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   const whatIf = whatIfOf(out);
   // Teams whose game this week is already final: no what-if, but not "no game" either.
   const final = new Set(currentGames(job.model, job.live).filter(g => g.final).flatMap(g => [g.a, g.b]));
+  // Seeds as of today: the standings the simulator ranks by (wins, then points
+  // for) run through the same seedField every simulated season uses.
+  const rank = live.teams.map((_, i) => i).sort((a, b) => live.W0[b] - live.W0[a] || live.PF0[b] - live.PF0[a]);
+  const field = seedField(rank, i => live.teams[i].div, rules.playoffTeams);
+  const order = [...field.seeds, ...rank.filter(i => !field.seeds.includes(i))];
+  const todaySeed = new Array(N);
+  order.forEach((i, k) => { todaySeed[i] = k + 1; });
   const rows = live.teams.map((t, i) => ({
     i, rid: t.rid, uid: t.uid, div: t.div,
     w: live.W0[i] - T[i] / 2, l: L[i], t: T[i], pf: live.PF0[i],
     seed: out.main.seed[i].map(c => c / out.main.sims), miss: out.main.miss[i] / out.main.sims,
     playoff: out.main.playoff[i] / out.main.sims,
+    // Bye % is the run's own top-seed counts: seeds 1 through `byes`, added up.
+    bye: out.main.seed[i].slice(0, rules.byes).reduce((a, c) => a + c, 0) / out.main.sims,
+    todaySeed: todaySeed[i], leader: field.champs.includes(i),
     whatIf: whatIf.get(i) || null, final: final.has(i), clinch: clinch[i],
   }));
   return {
-    rules, rows, clinch, out, via: out.via, sims: out.main.sims, whatIfSims,
+    rules, rows, clinch, out, via: out.via, sims: out.main.sims, whatIfSims, order,
     tied: live.W0.some(w => !Number.isInteger(w)),
     swings: swingBoard(out), remaining: remaining.length,
     week: live.pending && live.pending.length ? live.liveWeek : (live.weeks[0] ? live.weeks[0].week : null),
     inFlight: !!(live.pending && live.pending.length),
     whatIf: Object.fromEntries([...whatIf].map(([i, v]) => [live.teams[i].rid, v])),
+    divNames: (season && season.divNames) || new Map(),
   };
 }
 
@@ -8094,6 +8207,128 @@ function clinchBadge(c) {
   return "";
 }
 
+/* x / y / z off the exact clinch table: the strongest one a team has earned. */
+const PP_MARKS = { x: "clinched playoff spot", y: "clinched division", z: "clinched first-round bye" };
+const ppMark = c => !c ? "" : c.clinchedBye ? "z" : c.clinchedDiv ? "y" : c.clinchedPlayoff ? "x" : "";
+function ppMarkHTML(c) {
+  const k = ppMark(c);
+  return k ? `<span class="pp-mk" role="img" title="${PP_MARKS[k]}" aria-label="${PP_MARKS[k]}">${k}</span>` : "";
+}
+
+/**
+ * The top of the tab: if the season ended today. Seeds come from today's
+ * standings (PP.order); every percentage is the one simulation run — Playoff %
+ * is the Odds tab's number, Bye % the run's own top-seed counts.
+ */
+function pictureBoard(PP) {
+  const { rules, rows } = PP;
+  const P = rules.playoffTeams, B = Math.min(rules.byes, P), N = rows.length;
+  const seedRow = k => rows[PP.order[k - 1]];
+  const name = r => esc(nameOf(r.uid));
+  const divName = d => esc(PP.divNames.get(d) || `Division ${d}`);
+  const sdCls = r => r.todaySeed <= B ? "bye" : r.todaySeed > P ? "" : r.leader ? "div" : "wc";
+  const sd = r => `<span class="pp-sd ${sdCls(r)}">${r.todaySeed}</span>`;
+  const chip = r => `<span class="pp-dt${r.leader ? " lead" : ""}">${divName(r.div)}${r.leader ? " leader" : ""}</span>`;
+  const rec = r => `${r.w}–${r.l}${r.t ? `–${r.t}` : ""} · ${f1(r.pf)} PF`;
+  const lastIn = seedRow(P);
+  const gb = r => {
+    if (!lastIn || r.todaySeed <= P) return "";
+    const d = (lastIn.w + lastIn.t / 2) - (r.w + r.t / 2);
+    return ` · ${d > 0 ? `${d} GB` : "out on PF"}`;
+  };
+  const pb = (label, v, cls) => `<div class="pp-pb ${cls}" data-k="${cls || "po"}"><span>${label}</span><b>${esc(pctf(v))}</b>
+    <div class="pp-bar"><i style="width:${(Math.max(0, Math.min(1, v)) * 100).toFixed(1)}%"></i></div></div>`;
+  const bars = r => `<div class="pp-bars">${B ? pb("Bye", r.bye, "by") : ""}${pb("Playoff", r.playoff, "")}</div>`;
+  const ids = r => `data-rid="${esc(String(r.rid))}" data-seed="${r.todaySeed}"`;
+
+  const wk = PP.week != null ? `Week ${PP.week} ${PP.inFlight ? "in progress" : "up next"}` : "Playoff Picture";
+  const byeWords = !B ? "" : B === 1 ? "; seed 1 skips the first round" : `; seeds 1–${B} skip the first round`;
+  const head = `<div class="pp-eye">${esc(wk)}</div>
+    <p class="pp-lede">If the season ended today. ${P} of ${N} get in${byeWords}.</p>
+    <div class="pp-meta"><span class="pp-pill">Seeds = today · odds = full season</span>
+      <span class="pp-pill">Bracket drawn fixed, as Sleeper plays it</span>
+      <span class="pp-pill">${PP.sims.toLocaleString()} simulations</span></div>`;
+
+  /* heroes: the bye seeds */
+  const heroes = Array.from({ length: B }, (_, k) => seedRow(k + 1)).filter(Boolean).map(r => `
+    <div class="pp-hero" ${ids(r)}>${avatarHTML(r.uid, "lg")}
+      <div class="pp-who"><div class="pp-eye">${r.todaySeed} seed · bye</div>
+        <div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
+        <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}</span></div></div>
+      ${bars(r)}</div>`).join("");
+
+  /* the bracket, as it would be drawn today */
+  const w0 = rules.playoffWeekStart;
+  const slot = r => `<div class="pp-tm">${sd(r)}${avatarHTML(r.uid, "pp-xs")}<div class="pp-tn">
+    <span class="pp-tnm" title="${name(r)}">${name(r)}</span>
+    <span class="pp-hn">${B ? `Bye ${esc(pctf(r.bye))}·` : ""}PO ${esc(pctf(r.playoff))}</span></div></div>`;
+  const tbd = t => `<div class="pp-tm tbd"><span class="pp-q"></span>${esc(t)}</div>`;
+  const match = (lb, inner, cls = "") => `<div class="pp-mw"><div class="pp-lb">${esc(lb)}</div><div class="pp-mt ${cls}">${inner}</div></div>`;
+  // Round one pairs the seeds below the byes top against bottom; bye seed k
+  // meets the winner of the k-th lowest pairing (1 v 4/5, 2 v 3/6 in a 6/2 bracket).
+  const r1 = Array.from({ length: Math.floor((P - B) / 2) }, (_, j) => [seedRow(B + j + 1), seedRow(P - j)]);
+  let bracket;
+  if (B === 2 && r1.length === 2 && r1.flat().every(Boolean)) {
+    const g = k => r1[B - k];   // the game whose winner meets bye seed k
+    const lab = r => `${r[0].todaySeed}/${r[1].todaySeed}`;
+    bracket = `<div class="pp-br">
+      <div class="pp-rd">${[1, 2].map(k => match(`Wk ${w0} · ${g(k)[0].todaySeed} v ${g(k)[1].todaySeed}`, slot(g(k)[0]) + slot(g(k)[1]))).join("")}</div>
+      <div class="pp-cn"><i></i><i></i></div>
+      <div class="pp-rd">${[1, 2].map(k => match(`Wk ${w0 + 1} · Semi`, slot(seedRow(k)) + tbd(`Winner ${lab(g(k)).replace("/", " v ")}`), "byeg")).join("")}</div>
+      <div class="pp-join"></div>
+      <div class="pp-fin">${match(`Wk ${w0 + 2} · Final`, tbd("Semifinal winner") + tbd("Semifinal winner"), "fin")}</div>
+      <div class="pp-troph">🏆 DFFL Champion</div></div>`;
+  } else {
+    // Any other shape: the byes and the round-one games, without the drawn tree.
+    bracket = `<div class="pp-br pp-flat">
+      ${B ? match(`Wk ${w0} · Bye`, Array.from({ length: B }, (_, k) => seedRow(k + 1)).filter(Boolean).map(slot).join(""), "byeg") : ""}
+      ${r1.filter(p => p.every(Boolean)).map(p => match(`Wk ${w0} · ${p[0].todaySeed} v ${p[1].todaySeed}`, slot(p[0]) + slot(p[1]))).join("")}</div>`;
+  }
+  const r1Words = B === 2 && r1.length === 2
+    ? `Fixed: 1 plays the ${r1[1].map(r => r && r.todaySeed).join("/")} winner, 2 plays the ${r1[0].map(r => r && r.todaySeed).join("/")} winner`
+    : `Fixed: seeds 1–${B || 0} wait, the rest play round one top against bottom`;
+  const anyMark = rows.some(r => ppMark(r.clinch));
+  const legend = `<div class="pp-legend">${Object.entries(PP_MARKS).map(([k, t]) =>
+    `<span><span class="pp-mk">${k}</span>${t}</span>`).join("")}${anyMark ? "" : "<span>· none clinched yet</span>"}</div>`;
+
+  /* the list, in seed order today */
+  const li = r => `<div class="pp-li${r.todaySeed <= B ? " byer" : ""}" ${ids(r)}>${sd(r)}${avatarHTML(r.uid, "sm")}
+    <div class="pp-who"><div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
+      <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}${gb(r)}</span></div></div>
+    ${bars(r)}</div>`;
+  const inOrder = PP.order.map(i => rows[i]);
+  const elim = inOrder.filter(r => r.todaySeed > P && r.clinch && r.clinch.eliminated);
+  const hunt = inOrder.filter(r => r.todaySeed > P && !elim.includes(r));
+  let list = "";
+  for (const r of inOrder.filter(r => r.todaySeed <= P)) {
+    list += li(r);
+    if (B && r.todaySeed === B && B < P)
+      list += `<div class="pp-cut byl" data-line="bye"><span>Bye line · top ${B} skip round one</span></div>`;
+  }
+  list += `<div class="pp-cut pol" data-line="playoff"><span>Playoff line</span></div>`;
+  if (hunt.length) list += `<div class="pp-hh">In the hunt</div>${hunt.map(li).join("")}`;
+
+  const note = `Seeds = today, odds = full season. Seeds are today's standings — division leaders first,
+    then the best records left, ties by record and then points for — so the odds won't always follow
+    seed order. Every percentage is the Odds tab's ${PP.sims.toLocaleString()}-season run: Playoff % is
+    the Odds tab's number, and Bye % is how often that run finishes a team in the top ${B} seed${B === 1 ? "" : "s"}.
+    The sims still reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.`;
+
+  return el("div", "ppv", `${head}
+    ${heroes ? `<div class="pp-heros">${heroes}</div>` : ""}
+    <div class="pp-lay">
+      <div class="pp-bcol"><h3 class="pp-h">The bracket</h3><span class="pp-tag">If the season ended today</span>
+        <p class="pp-hs">${esc(r1Words)} · slot hint = ${B ? "Bye % · " : ""}Playoff %</p>${bracket}${legend}</div>
+      <div class="pp-lcol"><h3 class="pp-h">Seeds &amp; the hunt</h3>
+        <p class="pp-hs">Ordered by seed today · ${B ? "Bye % and " : ""}Playoff % bars</p>
+        <div class="pp-lst pp-seeds">${list}</div>
+        <h3 class="pp-h">Eliminated</h3>
+        <div class="pp-lst pp-elim">${elim.length ? elim.map(li).join("") : `<div class="pp-empty">Nobody is mathematically out yet.</div>`}</div>
+      </div>
+    </div>
+    <p class="pp-note">${note}</p>`);
+}
+
 function renderPicture(host, PP) {
   host.innerHTML = "";
   // What this paint shows, so a later poll can tell whether anything changed.
@@ -8102,33 +8337,8 @@ function renderPicture(host, PP) {
   const P = rules.playoffTeams;
   const nameI = i => nameOf(rows[i].uid);
 
-  /* ---- the swing of the week ---- */
-  const big = PP.swings[0];
-  if (big) {
-    const b = el("div", "bigg");
-    const line = (i, sw) => `<div class="side">${avatarHTML(rows[i].uid, "sm")}
-      <span class="n">${esc(nameI(i))}</span>
-      <b class="sw ${sw >= 0 ? "pos-t" : "neg-t"}">${esc(ppf(sw))}</b></div>`;
-    b.innerHTML = `<div class="k">Biggest swing of week ${esc(String(PP.week))}</div>
-      <div class="vs">${line(big.a, big.aSwing)}<span class="x">v</span>${line(big.b, big.bSwing)}</div>
-      <div class="c">That is how much playoff probability winning is worth to each of them. Across all
-        ${rows.length} teams the result moves ${f1(big.total * 100)} percentage points of playoff odds — more
-        than any other game this week.${big.other && Math.abs(big.other.d) > 0.005 ? ` The team it matters most to who isn't
-        even playing: ${esc(nameI(big.other.j))}, ${esc(ppf(big.other.d))} if ${esc(nameI(big.a))} wins.` : ""}</div>`;
-    host.appendChild(b);
-  }
-
-  const clinched = rows.filter(r => r.clinch.clinchedPlayoff).length;
-  const out = rows.filter(r => r.clinch.eliminated).length;
-  const tiles = el("div", "tiles");
-  tiles.innerHTML = [
-    { l: "Week", v: String(PP.week ?? "—"), n: PP.inFlight ? "in progress" : "up next" },
-    { l: "Simulations", v: PP.sims.toLocaleString(), n: "same run as the Odds tab" },
-    { l: "Clinched", v: String(clinched), n: clinched ? "mathematically" : "nobody is safe yet" },
-    { l: "Eliminated", v: String(out), n: out ? "mathematically" : "everybody is still alive" },
-  ].map(t => `<div class="tile"><div class="l">${esc(t.l)}</div><div class="v">${esc(t.v)}</div>
-    <div class="n">${esc(t.n)}</div></div>`).join("");
-  host.appendChild(tiles);
+  /* ---- if the season ended today: heroes, bracket, seed list ---- */
+  host.appendChild(pictureBoard(PP));
 
   /* ---- the seed table ---- */
   const nDiv = new Set(rows.map(r => r.div)).size;
@@ -8160,6 +8370,22 @@ function renderPicture(host, PP) {
   card.classList.add("pp");
   host.appendChild(card);
 
+  /* ---- the swing of the week ---- */
+  const big = PP.swings[0];
+  if (big) {
+    const b = el("div", "bigg");
+    const line = (i, sw) => `<div class="side">${avatarHTML(rows[i].uid, "sm")}
+      <span class="n">${esc(nameI(i))}</span>
+      <b class="sw ${sw >= 0 ? "pos-t" : "neg-t"}">${esc(ppf(sw))}</b></div>`;
+    b.innerHTML = `<div class="k">Biggest swing of week ${esc(String(PP.week))}</div>
+      <div class="vs">${line(big.a, big.aSwing)}<span class="x">v</span>${line(big.b, big.bSwing)}</div>
+      <div class="c">That is how much playoff probability winning is worth to each of them. Across all
+        ${rows.length} teams the result moves ${f1(big.total * 100)} percentage points of playoff odds — more
+        than any other game this week.${big.other && Math.abs(big.other.d) > 0.005 ? ` The team it matters most to who isn't
+        even playing: ${esc(nameI(big.other.j))}, ${esc(ppf(big.other.d))} if ${esc(nameI(big.a))} wins.` : ""}</div>`;
+    host.appendChild(b);
+  }
+
   /* ---- every game this week ---- */
   if (PP.swings.length) {
     host.appendChild(sechead(`Biggest swings this week`,
@@ -8187,9 +8413,10 @@ function renderPicture(host, PP) {
        division), playoff_round_type ${esc(String(r.roundType ?? "not set"))}, playoff_seed_type
        ${esc(String(r.seedType ?? "not set"))}, and ${r.byes} first-round bye${r.byes === 1 ? "" : "s"}
        ${r.byesFrom === "bracket" ? "(read off Sleeper's winners bracket)" : "(Sleeper hasn't drawn the bracket yet, so the standard two for a six-team bracket)"}.</p>
-    <p><b>Assumed:</b> ties in the standings go to record, then points for (Sleeper's default). The
-       bracket is fixed, not reseeded. Division winners are seeded first, in record order, then the
-       best records left — the rule DFFL's past seasons were actually seeded by.</p>
+    <p><b>Assumed:</b> ties in the standings go to record, then points for (Sleeper's default).
+       Division winners are seeded first, in record order, then the best records left — the rule
+       DFFL's past seasons were actually seeded by. The bracket above is drawn fixed; the sims still
+       reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.</p>
     <p><b>Clinched</b> and <b>eliminated</b> are not read off the simulation. They are worked out
        exactly from the win totals still reachable${!PP.tied && PP.remaining <= ENUM_WEEKS * Math.floor(rows.length / 2)
          ? ", and with this few weeks left every combination of remaining results is checked" : ""}.
@@ -8261,6 +8488,8 @@ async function drawPicture(host) {
       seed: PP.out.main.seed, miss: PP.out.main.miss, sims: PP.sims, via: PP.via,
       playoff: PP.rows.map(r => r.playoff), rids: PP.rows.map(r => r.rid),
       whatIf: PP.whatIf, clinch: PP.clinch, rules: PP.rules, swings: PP.swings,
+      bye: PP.rows.map(r => r.bye), order: PP.order.map(i => PP.rows[i].rid),
+      full: PP,  // the whole run, so verify can redraw the board on edited standings
     };
     // A poll that changed nothing leaves the table (and where it's scrolled) alone.
     if (!PICTURE_DRAWN || pictureSig(PP) !== host._ppSig) {
@@ -9370,7 +9599,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
