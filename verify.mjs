@@ -5555,6 +5555,48 @@ await mobile.waitForTimeout(200);
 await mobile.screenshot({ path: "home-mobile.png", fullPage: true });
 check("screenshots written", true);
 
+/* ------------------------------------------ odds history: team rows */
+group("Odds history: per-team odds for each finalized week");
+{
+  const { teamRowsFromSnapshot, mergeTeamWeeks } = await import("./odds-history.mjs");
+  const hist = JSON.parse(await readFile(join(ROOT, "data/odds-history.json"), "utf8"));
+  const snap = JSON.parse(await readFile(join(ROOT, "data/odds-snapshot.json"), "utf8"));
+  const teams = hist.teams || {};
+  const keys = Object.keys(teams);
+  const p01 = x => typeof x === "number" && x >= 0 && x <= 1;
+  const badRow = keys.flatMap(k => teams[k].map(r => [k, r])).find(([k, r]) =>
+    !/^\d{4}-\d+$/.test(k) || typeof r.at !== "string" || Number.isNaN(Date.parse(r.at)) || !r.uid ||
+    !p01(r.playoff) || !p01(r.title) || JSON.stringify(Object.keys(r)) !== '["at","uid","manager","playoff","title"]');
+  check("team rows have shape { at, uid, manager, playoff, title } with chances in [0,1]", keys.length > 0 && !badRow, JSON.stringify(badRow));
+  check("one row per team per week, all from one reading", keys.every(k =>
+    new Set(teams[k].map(r => r.uid)).size === teams[k].length && new Set(teams[k].map(r => r.at)).size === 1));
+  check("matchup line rows untouched alongside", hist.weeks && Object.values(hist.weeks).every(rows =>
+    Array.isArray(rows) && rows.every(r => r.a && r.b && typeof r.pA === "number")));
+
+  // Synthetic: the same week written twice is replaced, never duplicated.
+  const S = (generated, week, pf, tt, over = {}) => ({ generated, season: "2026", week, liveWeek: null, settled: true,
+    teams: [{ uid: "u1", manager: "m1", playoffNow: pf, titleNow: tt }, { uid: "u2", manager: "m2", playoffNow: 1 - pf, titleNow: 1 - tt }], ...over });
+  const first = mergeTeamWeeks(undefined, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  const again = mergeTeamWeeks(first.teams, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  const second = mergeTeamWeeks(first.teams, [teamRowsFromSnapshot(S("2026-10-13T11:00:00.000Z", 6, 0.6, 0.2))]);
+  const stale = mergeTeamWeeks(second.teams, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  check("a finalized week is keyed season-(week before the snapshot's)", JSON.stringify(Object.keys(first.teams)) === '["2026-5"]');
+  check("writing the same reading twice changes nothing", !again.changed && JSON.stringify(again.teams) === JSON.stringify(first.teams));
+  check("a newer reading of the same week replaces its rows, no duplicates", second.changed &&
+    second.teams["2026-5"].length === 2 && second.teams["2026-5"][0].playoff === 0.6 && second.teams["2026-5"][0].title === 0.2);
+  check("an older reading never overwrites a newer one", !stale.changed);
+  check("a snapshot with a week in flight records nothing",
+    teamRowsFromSnapshot(S("2026-10-12T11:00:00.000Z", 5, 0.5, 0.5, { liveWeek: 5, settled: false })) === null);
+
+  // The committed snapshot, when it was read between weeks, must be the latest week on file.
+  const want = teamRowsFromSnapshot(snap);
+  if (want) {
+    const have = teams[want.key];
+    check(`latest finalized week ${want.key} is recorded from the committed snapshot`,
+      keys.at(-1) === want.key && JSON.stringify(have) === JSON.stringify(want.rows), `latest on file ${keys.at(-1)}`);
+  } else check("committed snapshot is mid-week, so no latest-week row is expected from it", true);
+}
+
 /* -------------------------------------------------------------- done */
 await browser.close();
 server.close();

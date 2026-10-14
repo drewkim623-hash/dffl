@@ -3,7 +3,8 @@
  * merge rows into the history without ever losing or rewriting one.
  *
  *   data/odds-history.json = { _comment, generated,
- *     weeks: { "<season>-<week>": [ { at, a, b, pA, aPts, bPts, settled }, ... ] } }
+ *     weeks: { "<season>-<week>": [ { at, a, b, pA, aPts, bPts, settled }, ... ] },
+ *     teams: { "<season>-<week>": [ { at, uid, manager, playoff, title }, ... ] } }
  *
  * No I/O here; test-odds-history.mjs exercises it directly.
  */
@@ -68,4 +69,56 @@ export function mergeHistory(existing, incoming) {
     weeks: Object.fromEntries(Object.keys(weeks).sort().map(k => [k, weeks[k]])),
   };
   return { out, added };
+}
+
+// ---- per-team odds at the end of each finalized week -------------------------
+//
+//   teams: { "<season>-<week>": [ { at, uid, manager, playoff, title }, ... ] }
+//
+// playoff and title are the site's chances (0..1) once <week> was final, read
+// straight off the snapshot. Only a snapshot taken between weeks counts (no
+// week in flight, board settled); its week is the one coming up, so the week it
+// speaks for is the one before.
+
+// The finalized week one snapshot yields, as { key, rows }, or null.
+export function teamRowsFromSnapshot(snap, fallbackAt) {
+  if (!snap || typeof snap !== "object" || !snap.season) return null;
+  if (snap.liveWeek != null || snap.settled !== true) return null;
+  if (typeof snap.week !== "number" || snap.week < 2 || !Array.isArray(snap.teams)) return null;
+  const at = snap.generated || fallbackAt;
+  if (!at) return null;
+  const rows = [];
+  for (const t of snap.teams) {
+    if (!t || !t.uid) continue;
+    // With no week live the site prices off the pre-week sims; so does this.
+    const playoff = t.playoffNow ?? t.playoffWas, title = t.titleNow ?? t.titleWas;
+    if (typeof playoff !== "number" || typeof title !== "number") continue;
+    rows.push({ at, uid: t.uid, manager: t.manager ?? null, playoff, title });
+  }
+  return rows.length ? { key: `${snap.season}-${snap.week - 1}`, rows } : null;
+}
+
+const weekOrder = (x, y) => {
+  const [sx, wx] = x.split("-").map(Number), [sy, wy] = y.split("-").map(Number);
+  return sx - sy || wx - wy;
+};
+
+// existing: the file's teams object (or undefined). incoming: [{ key, rows }].
+// A week's rows are replaced wholesale, never appended to, by the newest
+// reading of that week; a reading older than the one on file is ignored.
+// Weeks nobody sent are kept as they are. Returns { teams, changed }.
+export function mergeTeamWeeks(existing, incoming) {
+  const teams = { ...(existing || {}) };
+  const sorted = (incoming || []).filter(x => x && x.rows && x.rows.length)
+    .slice().sort((x, y) => {
+      const a = time(x.rows[0]), b = time(y.rows[0]);
+      return a === b ? 0 : a < b ? -1 : 1;
+    });
+  for (const { key, rows } of sorted) {
+    const have = teams[key];
+    if (Array.isArray(have) && have.length && time(have[0]) > time(rows[0])) continue;
+    teams[key] = rows.map(r => ({ ...r }));
+  }
+  const out = Object.fromEntries(Object.keys(teams).sort(weekOrder).map(k => [k, teams[k]]));
+  return { teams: out, changed: JSON.stringify(out) !== JSON.stringify(existing || {}) };
 }
