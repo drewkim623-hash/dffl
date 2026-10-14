@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-13T11:05:17.493Z",
- "at": 1791889517493,
+ "generated": "2026-10-14T11:04:16.454Z",
+ "at": 1791975856455,
  "season": "2026",
  "week": 6,
  "liveWeek": null,
@@ -13,11 +13,11 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.28585,
-   "titleNow": 0.39705,
+   "titleNow": 0.4027,
    "playoffWas": 0.89525,
-   "playoffNow": 0.99035,
-   "wins": 10.23075,
-   "titleOdds": 140,
+   "playoffNow": 0.99125,
+   "wins": 10.29425,
+   "titleOdds": 135,
    "titleOddsOpen": 230,
    "playoffOdds": -19900
   },
@@ -26,165 +26,169 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.2025,
-   "titleNow": 0.1792,
+   "titleNow": 0.1793,
    "playoffWas": 0.82595,
-   "playoffNow": 0.888,
-   "wins": 8.57975,
+   "playoffNow": 0.8874,
+   "wins": 8.5457,
    "titleOdds": 430,
    "titleOddsOpen": 370,
-   "playoffOdds": -1600
+   "playoffOdds": -1580
   },
   {
    "uid": "851564369144852480",
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.04655,
-   "titleNow": 0.0255,
+   "titleNow": 0.0246,
    "playoffWas": 0.4348,
-   "playoffNow": 0.3263,
-   "wins": 6.28625,
-   "titleOdds": 3600,
+   "playoffNow": 0.30625,
+   "wins": 6.18355,
+   "titleOdds": 3730,
    "titleOddsOpen": 1930,
-   "playoffOdds": 190
+   "playoffOdds": 210
   },
   {
    "uid": "646481339029475328",
    "rid": 7,
    "manager": "drewkim",
    "titleWas": 0.018,
-   "titleNow": 0.00235,
+   "titleNow": 0.0017,
    "playoffWas": 0.25445,
-   "playoffNow": 0.05445,
-   "wins": 4.5627,
-   "titleOdds": 40040,
+   "playoffNow": 0.04495,
+   "wins": 4.44455,
+   "titleOdds": 55390,
    "titleOddsOpen": 5140,
-   "playoffOdds": 1630
+   "playoffOdds": 2000
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1487,
-   "titleNow": 0.1017,
+   "titleNow": 0.1149,
    "playoffWas": 0.73145,
-   "playoffNow": 0.6676,
-   "wins": 7.6574,
-   "titleOdds": 830,
+   "playoffNow": 0.73315,
+   "wins": 7.902,
+   "titleOdds": 720,
    "titleOddsOpen": 530,
-   "playoffOdds": -240
+   "playoffOdds": -350
   },
   {
    "uid": "850946675743793152",
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.0634,
-   "titleNow": 0.028,
+   "titleNow": 0.0135,
    "playoffWas": 0.50195,
-   "playoffNow": 0.33335,
-   "wins": 6.40045,
-   "titleOdds": 3270,
+   "playoffNow": 0.20655,
+   "wins": 5.8918,
+   "titleOdds": 6890,
    "titleOddsOpen": 1390,
-   "playoffOdds": 185
+   "playoffOdds": 360
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.0472,
-   "titleNow": 0.0933,
+   "titleNow": 0.08105,
    "playoffWas": 0.4206,
-   "playoffNow": 0.78485,
-   "wins": 8.28215,
-   "titleOdds": 910,
+   "playoffNow": 0.7765,
+   "wins": 8.24655,
+   "titleOdds": 1060,
    "titleOddsOpen": 1900,
-   "playoffOdds": -500
+   "playoffOdds": -470
   },
   {
    "uid": "845119622473699328",
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.02965,
-   "titleNow": 0.0133,
+   "titleNow": 0.01445,
    "playoffWas": 0.315,
-   "playoffNow": 0.1665,
-   "wins": 5.1678,
-   "titleOdds": 6990,
+   "playoffNow": 0.17325,
+   "wins": 5.21995,
+   "titleOdds": 6430,
    "titleOddsOpen": 3080,
-   "playoffOdds": 470
+   "playoffOdds": 440
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0653,
-   "titleNow": 0.0625,
+   "titleNow": 0.06255,
    "playoffWas": 0.5436,
-   "playoffNow": 0.59835,
-   "wins": 7.41725,
+   "playoffNow": 0.6114,
+   "wins": 7.46575,
    "titleOdds": 1410,
    "titleOddsOpen": 1340,
-   "playoffOdds": -175
+   "playoffOdds": -185
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.03735,
-   "titleNow": 0.04065,
+   "titleNow": 0.0441,
    "playoffWas": 0.39345,
-   "playoffNow": 0.43565,
-   "wins": 6.3907,
-   "titleOdds": 2220,
+   "playoffNow": 0.4575,
+   "wins": 6.48635,
+   "titleOdds": 2040,
    "titleOddsOpen": 2430,
-   "playoffOdds": 115
+   "playoffOdds": 105
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.0299,
-   "titleNow": 0.0158,
+   "titleNow": 0.01845,
    "playoffWas": 0.3459,
-   "playoffNow": 0.23025,
-   "wins": 5.9109,
-   "titleOdds": 5870,
+   "playoffNow": 0.2657,
+   "wins": 6.12705,
+   "titleOdds": 5010,
    "titleOddsOpen": 3060,
-   "playoffOdds": 310
+   "playoffOdds": 260
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0256,
-   "titleNow": 0.04065,
+   "titleNow": 0.0427,
    "playoffWas": 0.3376,
-   "playoffNow": 0.52435,
-   "wins": 7.1139,
-   "titleOdds": 2220,
+   "playoffNow": 0.5461,
+   "wins": 7.1925,
+   "titleOdds": 2110,
    "titleOddsOpen": 3590,
-   "playoffOdds": -125
+   "playoffOdds": -135
   }
  ],
  "games": [],
  "hurt": [
   {
-   "manager": "willie12w",
-   "cost": 0.05782450298374597,
+   "manager": "Domo112",
+   "cost": 0.09107640712756071,
    "players": [
     {
-     "name": "Deebo Samuel",
+     "name": "Jalen Coker",
      "status": "Out"
     },
     {
-     "name": "Aaron Jones",
-     "status": "Questionable"
+     "name": "Caleb Williams",
+     "status": "Out"
     }
    ]
   },
   {
    "manager": "drewkim",
-   "cost": 0.028435736427946945,
+   "cost": 0.07224977006438194,
    "players": [
+    {
+     "name": "DeVonta Smith",
+     "status": "Out"
+    },
     {
      "name": "KC Concepcion",
      "status": "Out"
@@ -192,8 +196,32 @@
    ]
   },
   {
+   "manager": "willie12w",
+   "cost": 0.060916428279525925,
+   "players": [
+    {
+     "name": "Stefon Diggs",
+     "status": "Out"
+    }
+   ]
+  },
+  {
+   "manager": "saucebossandrew",
+   "cost": 0.04928035043804757,
+   "players": [
+    {
+     "name": "Breece Hall",
+     "status": "Out"
+    },
+    {
+     "name": "Rashee Rice",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "sizzlemc2",
-   "cost": 0.021091706230016438,
+   "cost": 0.02116004600978516,
    "players": [
     {
      "name": "CeeDee Lamb",
@@ -203,7 +231,7 @@
   },
   {
    "manager": "jadencha",
-   "cost": 0.020287673471440115,
+   "cost": 0.01886925361268299,
    "players": [
     {
      "name": "Jaxon Smith-Njigba",
@@ -213,44 +241,20 @@
   },
   {
    "manager": "wesley55",
-   "cost": 0.011077187682003498,
+   "cost": 0.010176809210526327,
    "players": [
     {
      "name": "Quinshon Judkins",
      "status": "Questionable"
-    },
-    {
-     "name": "T.J. Hockenson",
-     "status": "Out"
-    }
-   ]
-  },
-  {
-   "manager": "saucebossandrew",
-   "cost": 0.008093151948351363,
-   "players": [
-    {
-     "name": "Will Shipley",
-     "status": "Out"
     }
    ]
   },
   {
    "manager": "victorthompson",
-   "cost": 0.0072475154181561585,
+   "cost": 0.007598522625781534,
    "players": [
     {
-     "name": "Ollie Gordon",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "Domo112",
-   "cost": 0.0007997946206406148,
-   "players": [
-    {
-     "name": "Tre' Harris",
+     "name": "Ladd McConkey",
      "status": "Questionable"
     }
    ]
@@ -260,28 +264,28 @@
  "nfl": null,
  "articles": [
   {
+   "slug": "the-week-without-a-close-game",
+   "kicker": "2026 · week 5",
+   "headline": "The Week Without A Close Game",
+   "dek": "Week 5's tightest finish was decided by 17.28 points — wider than the closest game in any of the first four weeks of the season. jadencha's 124.74-point win is the widest anyone has posted this year. Every game in full, below.",
+   "byline": "DFFL desk",
+   "date": "2026-10-13"
+  },
+  {
+   "slug": "josh-allen-goes-to-the-leagues-top-scorer",
+   "kicker": "2026 · week 5 · trade",
+   "headline": "Josh Allen Goes to the League's Top Scorer",
+   "dek": "jadencha, the league's top scorer and tied with bradyrife at 4-1, gets Josh Allen from jskule23 in the season's first three-team trade. Jordan Love goes to saucebossandrew; J.K. Dobbins and two 2027 picks go to jskule23.",
+   "byline": "DFFL desk",
+   "date": "2026-10-13"
+  },
+  {
    "slug": "every-3-1-team-got-more-likely",
    "kicker": "2026 · week 5 · odds",
    "headline": "Every 3-1 Team Got More Likely. Nobody Else Did.",
    "dek": "The site's playoff model has moved for every team in the league since the draft. It moved up for all four 3-1 teams, every one of them, and down for all eight others, every one of them.",
    "byline": "DFFL desk",
    "date": "2026-10-10"
-  },
-  {
-   "slug": "the-league-in-thirds",
-   "kicker": "2026 · week 5 · standings",
-   "headline": "The League Split Into Three Even Thirds",
-   "dek": "Four teams are 3-1. Four are 2-2. Four are 1-3. Nobody sits outside those bands — and the points column inside each one tells a different story than the record does.",
-   "byline": "DFFL desk",
-   "date": "2026-10-09"
-  },
-  {
-   "slug": "the-favorites-had-a-bad-sunday",
-   "kicker": "2026 · week 4",
-   "headline": "The Favorites Had a Bad Sunday",
-   "dek": "Week 4 priced five games with a real favorite and left one as a true pick'em. The pick'em resolved as advertised. Three of the five favorites did not.",
-   "byline": "DFFL desk",
-   "date": "2026-10-06"
   }
  ]
 }

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-14T00:16:00.017Z",
- "at": 1791936960017,
+ "generated": "2026-10-14T11:03:51.540Z",
+ "at": 1791975831540,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 1,
    "points_for": 820.1,
    "points_against": 547.16,
-   "faab_spent": 3,
+   "faab_spent": 8,
    "starters_hurt": [
     "Jaxon Smith-Njigba (Questionable)"
    ]
@@ -24,7 +24,7 @@
    "losses": 1,
    "points_for": 664.36,
    "points_against": 574.64,
-   "faab_spent": 72,
+   "faab_spent": 78,
    "starters_hurt": []
   },
   {
@@ -33,10 +33,10 @@
    "losses": 2,
    "points_for": 681.7,
    "points_against": 682.8,
-   "faab_spent": 56,
+   "faab_spent": 62,
    "starters_hurt": [
-    "Caleb Williams (Out)",
-    "Jalen Coker (Out)"
+    "Caleb Williams (Questionable)",
+    "Jalen Coker (Questionable)"
    ]
   },
   {
@@ -45,7 +45,7 @@
    "losses": 2,
    "points_for": 651.22,
    "points_against": 699.56,
-   "faab_spent": 4,
+   "faab_spent": 11,
    "starters_hurt": [
     "CeeDee Lamb (Questionable)"
    ]
@@ -67,9 +67,9 @@
    "losses": 2,
    "points_for": 621.1,
    "points_against": 589.32,
-   "faab_spent": 16,
+   "faab_spent": 57,
    "starters_hurt": [
-    "Stefon Diggs (Out)"
+    "Stefon Diggs (Questionable)"
    ]
   },
   {
@@ -78,7 +78,7 @@
    "losses": 3,
    "points_for": 697.5,
    "points_against": 670.72,
-   "faab_spent": 47,
+   "faab_spent": 51,
    "starters_hurt": []
   },
   {
@@ -109,7 +109,7 @@
    "points_against": 643,
    "faab_spent": 59,
    "starters_hurt": [
-    "Breece Hall (Out)",
+    "Breece Hall (Questionable)",
     "Rashee Rice (Questionable)"
    ]
   },
@@ -119,7 +119,7 @@
    "losses": 4,
    "points_for": 662.36,
    "points_against": 684.1,
-   "faab_spent": 63,
+   "faab_spent": 74,
    "starters_hurt": []
   },
   {
@@ -128,9 +128,10 @@
    "losses": 4,
    "points_for": 568,
    "points_against": 761.36,
-   "faab_spent": 50,
+   "faab_spent": 58,
    "starters_hurt": [
-    "KC Concepcion (Out)"
+    "DeVonta Smith (Questionable)",
+    "KC Concepcion (Questionable)"
    ]
   }
  ],
@@ -139,7 +140,7 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "willie12w",
@@ -163,12 +164,12 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "jskule23",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -180,7 +181,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -204,7 +205,7 @@
    "b": {
     "manager": "sizzlemc2",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   }
  ],
@@ -280,6 +281,253 @@
    ]
   }
  ],
- "waivers": [],
- "free_agent_moves": 24
+ "waivers": [
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "willie12w"
+   ],
+   "adds": [
+    {
+     "name": "MarShawn Lloyd",
+     "pos": "RB",
+     "team": "GB",
+     "status": null,
+     "to": "willie12w"
+    }
+   ],
+   "drops": [],
+   "faab": 41,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Germie Bernard",
+     "pos": "WR",
+     "team": "PIT",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Mark Andrews",
+     "pos": "TE",
+     "team": "BAL",
+     "status": null,
+     "from": "jskule23"
+    }
+   ],
+   "faab": 11,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Jonah Coleman",
+     "pos": "RB",
+     "team": "DEN",
+     "status": "IR",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Tyler Allgeier",
+     "pos": "RB",
+     "team": "ARI",
+     "status": null,
+     "from": "drewkim"
+    }
+   ],
+   "faab": 7,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Darius Cooper",
+     "pos": "WR",
+     "team": "PHI",
+     "status": null,
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Rashod Bateman",
+     "pos": "WR",
+     "team": "BAL",
+     "status": null,
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "New England Patriots",
+     "pos": "DEF",
+     "team": "NE",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Cincinnati Bengals",
+     "pos": "DEF",
+     "team": "CIN",
+     "status": null,
+     "from": "Domo112"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Kansas City Chiefs",
+     "pos": "DEF",
+     "team": "KC",
+     "status": null,
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Jalen Hurts",
+     "pos": "QB",
+     "team": "PHI",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Baltimore Ravens",
+     "pos": "DEF",
+     "team": "BAL",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
+     "status": null,
+     "from": "chassinator"
+    }
+   ],
+   "faab": 4,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Eddy Pineiro",
+     "pos": "K",
+     "team": "SF",
+     "status": null,
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Evan McPherson",
+     "pos": "K",
+     "team": "CIN",
+     "status": null,
+     "from": "drewkim"
+    }
+   ],
+   "faab": 1,
+   "picks": []
+  },
+  {
+   "week": 5,
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Nick Folk",
+     "pos": "K",
+     "team": "ATL",
+     "status": null,
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chad Ryland",
+     "pos": "K",
+     "team": "ARI",
+     "status": null,
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 1,
+   "picks": []
+  }
+ ],
+ "free_agent_moves": 32
 }
