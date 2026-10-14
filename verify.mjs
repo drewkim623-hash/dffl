@@ -4952,6 +4952,193 @@ group("Position rooms");
   check("rooms: phone cards label each of the five rooms", roomsNarrow.dots === 5, `${roomsNarrow.dots}`);
 }
 
+/* The Injuries tab: every injured player on every roster, bench included, with
+ * the Odds model's own cut beside each starter. Run in a fresh context at
+ * phone width so the tab reads injuries.json itself rather than a cache another
+ * page wrote, and so the layout checks see the narrow screen. */
+group("Injuries tab");
+const injCtx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+const injPage = await injCtx.newPage();
+const injErrs = [];
+injPage.on("pageerror", e => injErrs.push(String(e)));
+const injRoute = async () => {
+  await injPage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  await injPage.waitForFunction(() => {
+    const p = document.querySelector('[data-panel="injuries"]');
+    return p && p.dataset.ready === "1";
+  }, null, { timeout: 60000 });
+  return injPage.evaluate(() => {
+    const p = document.querySelector('[data-panel="injuries"]');
+    const b = document.querySelector('#tabs button[data-tab="injuries"]');
+    return { hash: location.hash, tab: !!b, label: b && b.textContent, selected: b && b.getAttribute("aria-selected"),
+      visible: !!p && !p.hidden, others: [...document.querySelectorAll("#app > .panel")].filter(x => x !== p && !x.hidden).length };
+  });
+};
+await injPage.goto(BASE + "#injuries", { waitUntil: "domcontentloaded" });
+const injDirect = await injRoute();
+check("injuries: the tab is in the tab row", injDirect.tab && injDirect.label === "Injuries", `${injDirect.label}`);
+check("injuries: #injuries opens the tab on a direct load", injDirect.visible && injDirect.selected === "true"
+  && injDirect.others === 0 && injDirect.hash === "#injuries", JSON.stringify(injDirect));
+await injPage.reload({ waitUntil: "domcontentloaded" });
+const injReload = await injRoute();
+check("injuries: and again on reload", injReload.visible && injReload.selected === "true" && injReload.hash === "#injuries",
+  JSON.stringify(injReload));
+
+const injData = await injPage.evaluate(async () => {
+  const D = window.__DFFL;
+  const file = await fetch("injuries.json", { cache: "no-cache" }).then(r => r.json());
+  const map = new Map(Object.entries(file.map || {}));
+  const season = D.DB.seasons[0];
+  const avail = D.availability(season, { map });
+  const panel = document.querySelector('[data-panel="injuries"]');
+  const out = { at: Number(panel.querySelector(".srcnote").dataset.at), fileAt: file.at,
+    expected: 0, missing: [], misplaced: [], extra: [], starterBad: [], benchBad: [], starters: 0, benches: 0,
+    noRet: 0, noRetBad: [], retBad: [] };
+  const want = new Map();
+  for (const r of season.rosters || []) {
+    const ids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
+      .filter(p => p && p !== "0").map(String));
+    const hurt = new Map(((avail.get(r.roster_id) || {}).hurt || []).map(x => [String(x.pid), x]));
+    const st = new Set((r.starters || []).map(String));
+    for (const pid of ids) {
+      const rec = map.get(pid);
+      if (!rec) continue;
+      want.set(pid, { rid: String(r.roster_id), starter: st.has(pid), x: hurt.get(pid), rec });
+    }
+  }
+  out.expected = want.size;
+  const shown = new Map();
+  for (const row of panel.querySelectorAll(".injteam .injp")) {
+    shown.set(row.dataset.pid, row);
+  }
+  for (const [pid, w] of want) {
+    const row = shown.get(pid);
+    if (!row) { out.missing.push(`${w.rec.n} (${pid})`); continue; }
+    if (row.closest(".injteam").dataset.rid !== w.rid) out.misplaced.push(w.rec.n);
+    const imp = row.querySelector(".imp");
+    const k = imp.querySelector(".k").textContent.trim();
+    const cut = imp.textContent.trim().slice(0, -k.length).trim();
+    if (w.starter) {
+      out.starters++;
+      const exp = w.x && w.x.loss > 0 ? `−${(w.x.loss * 100).toFixed(1)}%` : "0%";
+      if (cut !== exp || k !== "starter" || row.dataset.starter !== "1") out.starterBad.push(`${w.rec.n}: ${cut} vs ${exp}`);
+    } else {
+      out.benches++;
+      if (cut !== "0%" || k !== "bench" || row.dataset.starter !== "0") out.benchBad.push(`${w.rec.n}: ${cut} ${k}`);
+    }
+    const ret = row.querySelector(".ret").textContent.trim();
+    if (!w.rec.ret) { out.noRet++; if (ret !== "no estimate") out.noRetBad.push(`${w.rec.n}: ${ret}`); }
+    else if (ret !== D.returnLabel(w.rec.ret)) out.retBad.push(`${w.rec.n}: ${ret}`);
+  }
+  for (const pid of shown.keys()) if (!want.has(pid)) out.extra.push(pid);
+
+  // A made-up report, so the no-estimate, starter and empty paths are proven
+  // whatever this week's feed happens to hold.
+  const r0 = (season.rosters || []).find(r => (r.starters || []).some(p => p && p !== "0")
+    && (r.players || []).some(p => !(r.starters || []).includes(p)));
+  // Every starter ruled out, so at least one of them carries a real share.
+  const bp = String(r0.players.find(p => !r0.starters.includes(p)));
+  const fake = { at: Date.now(), source: "file", map: new Map([
+    ...r0.starters.filter(p => p && p !== "0").map((p, i) => [String(p), { s: "Out", n: `Fake Starter ${i}`, p: "WR", t: "KC" }]),
+    [bp, { s: "IR", n: "Fake Bench", p: "RB", t: "SF", ret: "2026-12-01" }],
+  ]) };
+  const host = document.createElement("div");
+  D.renderInjuries(host, fake);
+  const fx = D.availability(season, fake).get(r0.roster_id).hurt[0];
+  const sp = String(fx.pid);
+  const fs = host.querySelector(`.injp[data-pid="${sp}"]`), fb = host.querySelector(`.injp[data-pid="${bp}"]`);
+  const cutOf = row => { const i = row.querySelector(".imp"); const k = i.querySelector(".k").textContent; return i.textContent.slice(0, -k.length).trim(); };
+  out.fake = {
+    starterRet: fs && fs.querySelector(".ret").textContent, starterCut: fs && cutOf(fs),
+    expCut: fx ? `−${(fx.loss * 100).toFixed(1)}%` : null,
+    benchCut: fb && cutOf(fb), benchK: fb && fb.querySelector(".imp .k").textContent,
+    sameTeam: !!fs && !!fb && fs.closest(".injteam") === fb.closest(".injteam")
+      && fs.closest(".injteam").dataset.rid === String(r0.roster_id),
+  };
+  const none = document.createElement("div");
+  D.renderInjuries(none, { at: Date.now(), source: "file", map: new Map() });
+  out.emptyState = !!none.querySelector(".empty") && !none.querySelector(".injteam");
+  out.explainers = ["injimpact", "injstatus"].every(k => panel.querySelector(`.jx[data-jx="${k}"]`) && D.JARGON[k]);
+  return out;
+});
+check("injuries: the tab reads the published injuries.json and shows its timestamp",
+  injData.at === injData.fileAt, `${injData.at} vs ${injData.fileAt}`);
+check("injuries: every injured rostered player in injuries.json appears", injData.expected > 0 && injData.missing.length === 0,
+  `${injData.missing.length}/${injData.expected} missing: ${injData.missing.slice(0, 4).join(", ")}`);
+check("injuries: each one is grouped under his own team", injData.misplaced.length === 0, injData.misplaced.slice(0, 4).join(", "));
+check("injuries: nobody is listed who isn't injured and rostered", injData.extra.length === 0, injData.extra.slice(0, 4).join(", "));
+check("injuries: starters show the same cut the odds model computes", injData.starterBad.length === 0,
+  `${injData.starters} starters; ${injData.starterBad.slice(0, 4).join(" ; ")}`);
+check("injuries: bench players show 0% and a bench label", injData.benchBad.length === 0,
+  `${injData.benches} bench; ${injData.benchBad.slice(0, 4).join(" ; ")}`);
+check("injuries: a player with no return date says no estimate", injData.noRetBad.length === 0
+  && injData.fake.starterRet === "no estimate", `${injData.noRet} without; ${injData.noRetBad.slice(0, 3).join(" ; ")} fake=${injData.fake.starterRet}`);
+check("injuries: a return date reads as the site's return label", injData.retBad.length === 0, injData.retBad.slice(0, 3).join(" ; "));
+check("injuries: a made-up starter carries the model's cut and a bench man 0%",
+  injData.fake.starterCut === injData.fake.expCut && injData.fake.expCut !== "0%"
+  && injData.fake.benchCut === "0%" && injData.fake.benchK === "bench" && injData.fake.sameTeam, JSON.stringify(injData.fake));
+check("injuries: an empty report says nobody is hurt", injData.emptyState);
+check("injuries: odds impact and the statuses explain themselves on tap", injData.explainers);
+
+const injNarrow = await injPage.evaluate(() => {
+  const panel = document.querySelector('[data-panel="injuries"]');
+  const W = window.innerWidth, over = [], small = [];
+  for (const n of panel.querySelectorAll("*")) {
+    const r = n.getBoundingClientRect();
+    if (r.width && (r.right > W + 1 || r.left < -1)) over.push(`${n.className || n.tagName} → ${Math.round(r.left)}..${Math.round(r.right)}`);
+    const text = [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
+    const fs = parseFloat(getComputedStyle(n).fontSize);
+    if (text && r.width && fs < 11) small.push(`${n.className || n.tagName} ${fs}px "${n.textContent.trim().slice(0, 20)}"`);
+  }
+  return { W, over: over.slice(0, 6), small: small.slice(0, 6), doc: document.documentElement.scrollWidth,
+    tables: panel.querySelectorAll("table").length, rows: panel.querySelectorAll(".injp").length };
+});
+check("injuries: rows render at 390px", injNarrow.rows > 0, `${injNarrow.rows}`);
+check("injuries: no element in the tab overflows at 390px", injNarrow.over.length === 0 && injNarrow.doc <= injNarrow.W,
+  injNarrow.over.join(" | ") || `${injNarrow.doc} > ${injNarrow.W}`);
+check("injuries: stacked rows, not a sideways table", injNarrow.tables === 0, `${injNarrow.tables} tables`);
+check("injuries: no text in the tab under 11px at 390px", injNarrow.small.length === 0, injNarrow.small.join(" | "));
+
+// The Odds tab's injury report lists the whole roster's injuries too.
+await injPage.click('#tabs button[data-tab="odds"]');
+await injPage.waitForFunction(() => document.body.dataset.liveReady, null, { timeout: 180000 });
+const injBoard = await injPage.evaluate(() => {
+  const D = window.__DFFL, inj = window.__INJ, avail = window.__AVAIL;
+  const season = D.DB.seasons[0];
+  const out = { teams: 0, bench: 0, benchShown: 0, mismatch: [], cutBad: [] };
+  if (!inj || !avail) return { ...out, skipped: true };
+  for (const r of season.rosters || []) {
+    const ids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
+      .filter(p => p && p !== "0").map(String));
+    const st = new Set((r.starters || []).map(String));
+    const want = [...ids].filter(p => inj.map.has(p));
+    if (!want.length) continue;
+    out.teams++;
+    const row = document.querySelector(`#liveHost .irow[data-rid="${r.roster_id}"]`);
+    const chips = row ? [...row.querySelectorAll(".ip[data-pid]")] : [];
+    const got = new Set(chips.map(c => c.dataset.pid));
+    if (want.length !== got.size || want.some(p => !got.has(p))) out.mismatch.push(`${r.roster_id}: ${got.size}/${want.length}`);
+    const hurt = new Map(((avail.get(r.roster_id) || {}).hurt || []).map(x => [String(x.pid), x]));
+    for (const c of chips) {
+      const pid = c.dataset.pid, cut = c.querySelector(".cut").textContent.trim();
+      if (!st.has(pid)) { out.bench++; if (cut === "0% bench") out.benchShown++; else out.cutBad.push(`${pid}: ${cut}`); }
+      else {
+        const x = hurt.get(pid);
+        const exp = x && x.loss > 0 ? `−${(x.loss * 100).toFixed(1)}%` : "0%";
+        if (cut !== exp) out.cutBad.push(`${pid}: ${cut} vs ${exp}`);
+      }
+    }
+  }
+  return out;
+});
+check("injury report: every team lists every injured player on its roster", !injBoard.skipped && injBoard.teams > 0
+  && injBoard.mismatch.length === 0, injBoard.skipped ? "no live board" : injBoard.mismatch.slice(0, 4).join(" ; "));
+check("injury report: bench injured players are included, at 0%", injBoard.bench > 0 && injBoard.benchShown === injBoard.bench,
+  `${injBoard.benchShown}/${injBoard.bench}`);
+check("injury report: each starter carries the model's cut", injBoard.cutBad.length === 0, injBoard.cutBad.slice(0, 4).join(" ; "));
+check("injuries: no uncaught page errors", injErrs.length === 0, injErrs.slice(0, 2).join(" | "));
+await injCtx.close();
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);
