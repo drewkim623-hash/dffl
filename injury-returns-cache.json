@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-14T11:03:51.085Z",
+ "generated": "2026-10-14T13:31:01.433Z",
  "week": 6,
  "entries": {
   "2449": {
@@ -10,7 +10,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "4199": {
@@ -40,7 +40,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "4983": {
@@ -50,7 +50,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "5844": {
@@ -111,7 +111,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4241389/ceedee-lamb — Quad bruise. 'Not considered serious'; Q for Week 6. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4241389/ceedee-lamb — Quad bruise. 'Not considered serious'; Q for Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "7021": {
@@ -121,7 +121,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Dislocated toe. Missed 3 straight; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Dislocated toe. Missed 3 straight; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "7525": {
@@ -159,11 +159,11 @@
   "8155": {
    "n": "Breece Hall",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-10-18",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: changed from audit [6]; consensus.",
    "retChecked": "2026-10-14"
   },
   "8408": {
@@ -197,7 +197,7 @@
    ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/cowboys-rb-malik-davis-is-out-for-the-year-after-hip-surgery — Hip surgery. Season-ending IR. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/cowboys-rb-malik-davis-is-out-for-the-year-after-hip-surgery — Hip surgery. Season-ending IR. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -232,7 +232,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4430878/jaxon-smith-njigba — Ankle. Limited on estimated reports; Q for Thursday Week 6. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4430878/jaxon-smith-njigba — Ankle. Limited on estimated reports; Q for Thursday Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "9502": {
@@ -242,7 +242,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.rotowire.com/football/player/tank-dell-16935 — Knee (rehab of Dec 2024 ACL/MCL/LCL tear; IR-designated to return Oct 7). 21-day window opened Oct 7; RotoWire est. return Oct 18 (Week 6), SI suggests possibly Week 9 after HOU bye. Sleeper body part is the old injury. Counted Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.rotowire.com/football/player/tank-dell-16935 — Knee (rehab of Dec 2024 ACL/MCL/LCL tear; IR-designated to return Oct 7). 21-day window opened Oct 7; RotoWire est. return Oct 18 (Week 6), SI suggests possibly Week 9 after HOU bye. Sleeper body part is the old injury. Counted Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -287,7 +287,7 @@
    ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nfl.com/news/packers-wr-jayden-reed-to-undergo-neck-surgery-miss-rest-of-2026-season — Neck surgery. LaFleur: season-ending. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nfl.com/news/packers-wr-jayden-reed-to-undergo-neck-surgery-miss-rest-of-2026-season — Neck surgery. LaFleur: season-ending. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -308,17 +308,17 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "11625": {
    "n": "Adonai Mitchell",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-10-18",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit [6]; consensus.",
    "retChecked": "2026-10-14"
   },
   "11635": {
@@ -368,7 +368,7 @@
    ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -389,7 +389,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "12529": {
@@ -452,7 +452,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "13345": {
@@ -480,7 +480,7 @@
    ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks — Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retNote": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks — Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   }
