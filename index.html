@@ -4550,11 +4550,10 @@ function injuryPlan(season, inj, model, opts = {}) {
 
 /**
  * The odds' injury rule when projections are published: an injured player costs
- * his team what he is worth over a replacement-level player at his position —
- * max(0, healthy projection − replacement level) — for every simulated week he
- * is out, bench and IR slot included, times injuryPlan's scale (weeks he has
- * already missed are in the level without him), capped per team-week. Taken off
- * the team's mean score; the spread is unchanged.
+ * his team his full projected healthy weekly points for every simulated week
+ * until his estimated return, bench and IR slot included, times injuryPlan's
+ * scale (weeks he has already missed are in the level without him), capped per
+ * team-week. Taken off the team's mean score; the spread is unchanged.
  */
 const INJ_ODDS = {
   // Share of an injury's value charged, by status; missing = 1. Every status is
@@ -4569,73 +4568,25 @@ const INJ_ODDS = {
 };
 
 /**
- * Replacement level, per position per week: the projection of the Nth-best
- * rostered player at that position league-wide (data/projections.json carries
- * the rostered players), N = the league's starting slots at that position + 1.
- * Fixed slots count in full; each flex slot (FLEX, WRRB_FLEX, REC_FLEX,
- * SUPER_FLEX) is split across the positions it takes in the share the league's
- * current lineups actually put there (season rosters' starters in those slots),
- * evenly when no lineup is set. Weeks past the last published one use its
- * levels. Positions with no lineup slot have no replacement level (null).
- *   replacementLevels(projections, { season, slots, player }) ->
- *     { level(w, pos), N: { pos: n }, teams }
- */
-function replacementLevels(P, opts = {}) {
-  const season = opts.season || { rosters: [] };
-  const slots = (opts.slots || []).filter(s => !["BN", "IR", "TAXI"].includes(s));
-  const teams = (season.rosters || []).length || 12;
-  const posOf = pid => ((opts.player && opts.player(pid)) || {}).p || "";
-  const per = {};
-  const flexUse = {};
-  (season.rosters || []).forEach(r => (r.starters || []).forEach((pid, i) => {
-    const s = (opts.slots || [])[i], p = posOf(String(pid));
-    if (!s || !PTS_LOST.slots[s] || PTS_LOST.slots[s].length < 2 || !p || pid === "0") return;
-    (flexUse[s] = flexUse[s] || {})[p] = ((flexUse[s] || {})[p] || 0) + 1;
-  }));
-  for (const s of slots) {
-    const can = PTS_LOST.slots[s] || [s];
-    if (can.length === 1) { per[can[0]] = (per[can[0]] || 0) + 1; continue; }
-    const use = flexUse[s] || {}, tot = can.reduce((a, p) => a + (use[p] || 0), 0);
-    for (const p of can) per[p] = (per[p] || 0) + (tot ? (use[p] || 0) / tot : 1 / can.length);
-  }
-  const N = Object.fromEntries(Object.entries(per).map(([p, k]) => [p, Math.round(teams * k) + 1]));
-  const pub = Object.keys((P && P.weeks) || {}).map(Number).sort((a, b) => a - b);
-  const cache = new Map();
-  const level = (w, pos) => {
-    if (!N[pos]) return null;
-    const wk = P.weeks[w] ? w : pub.filter(x => x <= w).pop() ?? pub[0];
-    const key = `${wk}|${pos}`;
-    if (!cache.has(key)) {
-      const v = Object.entries(P.weeks[wk] || {}).filter(([pid]) => posOf(pid) === pos)
-        .map(([, x]) => Number(x) || 0).sort((a, b) => b - a);
-      cache.set(key, v.length >= N[pos] ? v[N[pos] - 1] : 0);
-    }
-    return cache.get(key);
-  };
-  return { level, N, teams };
-}
-
-/**
  * One injured player's cost, week by week. Pure.
  *   injuryImpact(pid, rec, projections, opts) -> {
  *     pid, status, pos, value, valueSource ('proj'|'last_nonzero'|'ppg'|'none'),
- *     ptsPerWeek, replLevel, varPerWeek, weeksOut, totalLost, perWeek { w: var },
+ *     ptsPerWeek, weeksOut, totalLost, perWeek { w: pts },
  *     outWeeks [w...], seasonEnding, weight,
  *     ret, retWeeks, retSource, retEstimated, retNote, retChecked,
  *     playoffDelta, titleDelta  (null until the odds worker has measured them) }
  *   opts.weeks         simulated weeks, W0 .. last playoff week
  *   opts.lastReg       last regular-season week
  *   opts.sun(w)        that week's Sunday, ISO
- *   opts.repl(w, pos)  replacement level (replacementLevels().level)
  *   opts.pos           his position
  *   opts.statusWeights INJ_ODDS.statusWeights
  * Healthy value in week w: his projection if above 0; on his club's bye, 0;
- * else projections.last_nonzero, else ppg. Value over replacement = max(0,
- * value − replacement level). Out weeks: before ESPN's/the team's date; else
- * retWeeks weeks from W0 (99 = all, playoffs included); else season-ending
- * (severity, or IR with nothing else) = every week, playoffs included; else
- * W0 only. ptsPerWeek / replLevel / varPerWeek are averages over the out weeks
- * (W0 when there are none) and totalLost = varPerWeek × weeksOut.
+ * else projections.last_nonzero, else ppg. Each out week is charged that value
+ * in full. Out weeks: before ESPN's/the team's date; else retWeeks weeks from
+ * W0 (99 = all, playoffs included); else season-ending (severity, or IR with
+ * nothing else) = every week, playoffs included; else W0 only. ptsPerWeek is
+ * the average over the out weeks (W0 when there are none) and totalLost =
+ * ptsPerWeek × weeksOut.
  */
 function injuryImpact(pid, rec, P, opts = {}) {
   rec = rec || {};
@@ -4662,21 +4613,19 @@ function injuryImpact(pid, rec, P, opts = {}) {
   if (outWeeks.length && outWeeks[outWeeks.length - 1] === weeks[weeks.length - 1]) seasonEnding = true;
   const weight = ((opts.statusWeights || {})[rec.s]) ?? 1;
   const perWeek = {};
-  let sv = 0, sr = 0, sx = 0;
+  let sv = 0;
   const at = outWeeks.length ? outWeeks : (W0 != null ? [W0] : []);
   let value = 0, valueSource = "none";
   at.forEach((w, i) => {
     const [v, src] = valueAt(w);
-    const r = opts.repl ? opts.repl(w, opts.pos) : 0;
-    const x = r == null ? 0 : Math.max(0, v - r);
     if (i === 0) { value = v; valueSource = src; }
-    sv += v; sr += r == null ? v : r; sx += x;
-    if (outWeeks.length) perWeek[w] = x;
+    sv += v;
+    if (outWeeks.length) perWeek[w] = v;
   });
-  const n = at.length || 1, weeksOut = outWeeks.length, varPerWeek = sx / n;
+  const n = at.length || 1, weeksOut = outWeeks.length, ptsPerWeek = sv / n;
   return {
     pid, status: rec.s || null, pos: opts.pos || rec.p || "", value, valueSource,
-    ptsPerWeek: sv / n, replLevel: sr / n, varPerWeek, weeksOut, totalLost: varPerWeek * weeksOut, perWeek,
+    ptsPerWeek, weeksOut, totalLost: ptsPerWeek * weeksOut, perWeek,
     outWeeks, seasonEnding, weight,
     ret: isDate(rec.ret) ? rec.ret : null, retWeeks: rw > 0 ? rw : null, retSource: rec.retSource || null,
     retEstimated: !!rec.retEstimated, retNote: rec.retNote || null, retChecked: rec.retChecked || null,
@@ -4690,7 +4639,7 @@ function injuryImpact(pid, rec, P, opts = {}) {
  *     { byWeek { w: points }, rows [injuryImpact + starter, bench], totalROS, benchROS }
  *   opts: injuryImpact's, plus player (pid -> { p, t }) and includeBench
  *   (default true; false leaves bench players out of byWeek/totalROS, to
- *   measure what they add). byWeek sums var × status weight; benchROS is the
+ *   measure what they add). byWeek sums points × status weight; benchROS is the
  *   bench players' share whether or not they are included.
  */
 function teamInjuryImpact(team, injuries, P, opts = {}) {
@@ -4718,18 +4667,17 @@ function teamInjuryImpact(team, injuries, P, opts = {}) {
 }
 
 /**
- * injuryLossPlan(season, inj, projections, opts) -> { lost, byTeam, source, rids, weeks, repl }
+ * injuryLossPlan(season, inj, projections, opts) -> { lost, byTeam, source, rids, weeks }
  *   lost[w][i]  points off team i's mean (season.rosters order, ids in `rids`)
  *               in week w — W0 .. last regular week and the playoff weeks; cap applied
  *   byTeam      Map rid -> { rid, level, cap, rows (teamInjuryImpact rows + scale,
  *               pctStrength), players: Map pid -> { pid, rec, status, scale, ending,
  *               pts: Map w -> points (var × weight × scale) }, weekLoss(w, excludePids) }
  *   source      "projections"; null when there are no projections
- *   repl        replacementLevels() (N per position)
  * A team with no player in the projections is left out of byTeam and prices on
  * the old multiplier model (injuryMult) unchanged.
  *   opts.plan injuryPlan() result (W0, scale, levels) — required
- *   opts.player, opts.slots, opts.includeBench, opts.statusWeights, opts.repl (tests)
+ *   opts.player, opts.slots, opts.includeBench, opts.statusWeights
  */
 function injuryLossPlan(season, inj, projections, opts = {}) {
   const plan = opts.plan;
@@ -4751,19 +4699,18 @@ function injuryLossPlan(season, inj, projections, opts = {}) {
     return d.toISOString().slice(0, 10);
   };
   const player = pid => (opts.player && opts.player(pid)) || (map instanceof Map ? map.get(pid) : (map || {})[pid]) || null;
-  const repl = opts.repl ? { level: opts.repl, N: null } : replacementLevels(P, { season, slots: opts.slots, player });
   const byTeam = new Map();
   for (const r of season.rosters) {
     const ids = [...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])].map(String);
     if (!ids.some(p => pubIds.has(p))) continue;
     const level = plan.levelOf(r.roster_id);
-    const TI = teamInjuryImpact(r, map, P, { weeks, lastReg, sun, repl: repl.level, player,
+    const TI = teamInjuryImpact(r, map, P, { weeks, lastReg, sun, player,
       statusWeights: opts.statusWeights || INJ_ODDS.statusWeights, includeBench: opts.includeBench });
     const players = new Map();
     for (const row of TI.rows) {
       const { scale } = plan.scaleOf(r.roster_id, row.pid);
       row.scale = scale;
-      row.pctStrength = level > 0 ? row.varPerWeek / level : null;
+      row.pctStrength = level > 0 ? row.ptsPerWeek / level : null;
       // The odds worker's measurement of this one injury, once it has run.
       Object.defineProperty(row, "playoffDelta", { enumerable: true, get: () => injuryDeltaOf(row.pid, "playoffDelta") });
       Object.defineProperty(row, "titleDelta", { enumerable: true, get: () => injuryDeltaOf(row.pid, "titleDelta") });
@@ -4790,7 +4737,7 @@ function injuryLossPlan(season, inj, projections, opts = {}) {
   const rids = season.rosters.map(r => r.roster_id);
   const lost = {};
   for (const w of weeks) lost[w] = rids.map(rid => (byTeam.has(rid) ? byTeam.get(rid).weekLoss(w) : 0));
-  return { lost, byTeam, source: "projections", rids, weeks, repl };
+  return { lost, byTeam, source: "projections", rids, weeks };
 }
 
 /*
@@ -4811,6 +4758,13 @@ function injuryPlayoffDeltas() { return INJ_DELTAS; }
 function injuryDeltaOf(pid, k) {
   const d = INJ_DELTAS && INJ_DELTAS.get(String(pid));
   return d ? d[k] : null;
+}
+/** A per-injury playoffDelta/titleDelta (percentage points) for display: "~0" under 0.5 pp, "" while unmeasured. */
+function fmtInjuryDelta(d) {
+  if (d == null || !Number.isFinite(Number(d))) return "";
+  d = Number(d);
+  if (Math.abs(d) < 0.5) return "~0";
+  return `${d > 0 ? "+" : "−"}${Math.abs(d).toFixed(1)} pp`;
 }
 
 /** The worker job: the live sim as plain data, plus one restored loss vector per injury. */
@@ -6190,9 +6144,8 @@ function renderLive(host, model, sim, live, lsim, inj, avail, board, R, asOf = n
        points. The draft-day projection carries ±${f1(model.seasonSd)}. The board is the
        precision-weighted blend of the two, which is why one big Sunday barely moves a price and
        six of them move it a long way.</p>
-    ${lossPlan ? `<p data-inj-rule="points"><b>An injured player costs his team what he is projected to score above a
-       replacement-level player at his position</b>, bench included, taken off its expected score for every
-       week he is out and never more than ${(INJ_ODDS.cap * 100).toFixed(0)}% of a team's week. With no
+    ${lossPlan ? `<p data-inj-rule="points"><b>An injured player costs his team his full projected weekly points</b>,
+       bench and IR included, taken off its expected score for each week until his estimated return and never more than ${(INJ_ODDS.cap * 100).toFixed(0)}% of a team's week. With no
        return date, out means the coming week only and IR the rest of the regular season (season-ending
        also cuts the playoffs).</p>` : `
     <p><b>Injuries are charged for as long as they last.</b> A starter ruled out costs his team
@@ -10104,7 +10057,7 @@ async function boot() {
       injuryDetail, returnLabel, rosterInjuries, injCutText, ensureInjuries, renderInjuries,
       PTS_LOST, projectedPointsLost, splitLineupDrop, pointsLostOrder, pointsLostOpts, loadProjections, ptsLostText,
       injuryPlan, injuryLossPlan, injuryLossTeam, injuryLostPts, attachLossPlan, INJ_ODDS,
-      injuryImpact, teamInjuryImpact, replacementLevels, injuryPlayoffDeltas, injuryDeltaJob, computeInjuryDeltas, pictureRun, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
+      injuryImpact, teamInjuryImpact, fmtInjuryDelta, injuryPlayoffDeltas, injuryDeltaJob, computeInjuryDeltas, pictureRun, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
       approxKickoff, lastNameOf, gameCardHTML,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,

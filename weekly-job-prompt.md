@@ -37,6 +37,8 @@ Both routes are closed in an unattended cloud session. So the data arrives a dif
   runs `build-week.mjs` and `build-injuries.mjs` at about 12:30 AM Eastern on Tuesday — half an hour
   before the routine — and commits the result. (Two UTC entries cover EDT and EST; see the workflow.)
   `build-week.mjs` only moves `latest.json` once the week is truly over.
+  `injury-returns.mjs` runs right after `build-injuries.mjs` (return dates from ESPN onto `injuries.json`,
+  plus `injury-returns-cache.json`); it never fails the job, falling back to its cache if ESPN is down.
 - **The routine** clones the repo and reads those committed files. It needs no network at all.
 
 If the job ever finds itself reaching for `api.sleeper.app`, something has gone wrong: the answer is

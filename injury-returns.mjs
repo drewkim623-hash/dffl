@@ -118,11 +118,14 @@ export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = nul
  * Reads injuries.json, looks each rostered injured player up on ESPN's injury
  * feed (full comments, not the clipped note), writes the return fields onto his
  * record and the derived result, with its source and date, into
- * injury-returns-cache.json. If ESPN is unreachable, a cached result for the
- * same status is reused.
+ * injury-returns-cache.json. If ESPN is unreachable (20s timeout), a cached
+ * result for the same status is reused. Any other failure logs a warning and
+ * leaves injuries.json and the cache as they were: the weekly job never fails
+ * on this script. ESPN_INJURIES_URL overrides the feed (verify.mjs points it at
+ * a dead port to test the fallback).
  */
 const FIELDS = ["ret", "retWeeks", "retSource", "retEstimated", "retNote", "retChecked"];
-const ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries";
+const ESPN = process.env.ESPN_INJURIES_URL || "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries";
 const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
 const normName = s => String(s || "").toLowerCase().replace(/[^a-z\s]/g, "").split(/\s+/)
   .filter(w => w && !SUFFIXES.has(w)).join("");
@@ -144,7 +147,7 @@ async function main() {
   let feed = null;
   try {
     const { fetchJSON } = await import("./fetch-json.mjs");
-    feed = await fetchJSON(ESPN, { label: "espn/injuries" });
+    feed = await fetchJSON(ESPN, { label: "espn/injuries", tries: 2, timeoutMs: 20000 });
   } catch (e) { console.warn(`ESPN feed unavailable (${e.message}) — reusing cached results where the status matches.`); }
   const byName = new Map();
   for (const team of (feed && feed.injuries) || []) for (const it of team.injuries || []) {
@@ -192,4 +195,9 @@ async function main() {
 }
 
 const { pathToFileURL } = await import("node:url");
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try { await main(); } catch (e) {
+    console.warn(`injury-returns: skipped (${e.message}) — injuries.json and injury-returns-cache.json left as they were.`);
+  }
+  process.exit(0);
+}

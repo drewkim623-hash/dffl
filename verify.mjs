@@ -6098,10 +6098,31 @@ group("Tab bar scroll hint");
   await dctx.close();
 }
 
-group("Injury odds: value over replacement");
+group("Injury odds: full projected value per out week");
 {
   // injury-returns.mjs, in Node.
   const IR = await import(new URL("./injury-returns.mjs", import.meta.url));
+  // Its failure path: ESPN dead (a closed port) -> falls back to the cache, exit 0;
+  // no injuries.json at all -> warning, exit 0, files untouched.
+  {
+    const { spawnSync } = await import("node:child_process");
+    const fs = await import("node:fs"), os = await import("node:os");
+    const dir = fs.mkdtempSync(join(os.tmpdir(), "inj-ret-"));
+    for (const f of ["injury-returns.mjs", "fetch-json.mjs"]) fs.copyFileSync(join(ROOT, f), join(dir, f));
+    const env = { ...process.env, ESPN_INJURIES_URL: "http://127.0.0.1:9/injuries" };
+    const run = () => spawnSync(process.execPath, ["injury-returns.mjs"], { cwd: dir, env, encoding: "utf8", timeout: 60000 });
+    const none = run();
+    fs.writeFileSync(join(dir, "injuries.json"), JSON.stringify({ map: { 9: { n: "Cached Guy", s: "Out", p: "WR" } } }));
+    fs.writeFileSync(join(dir, "injury-returns-cache.json"), JSON.stringify({ entries: { 9: { s: "Out", retWeeks: 3, retSource: "espn-outlook", retEstimated: true } } }));
+    const dead = run();
+    const rec = JSON.parse(fs.readFileSync(join(dir, "injuries.json"), "utf8")).map[9];
+    fs.rmSync(dir, { recursive: true, force: true });
+    check("returns CLI: no injuries.json -> warning, exit 0",
+      none.status === 0 && /skipped/.test(none.stderr), JSON.stringify([none.status, none.stderr.slice(0, 200)]));
+    check("returns CLI: ESPN unreachable -> warning, cached return reused, exit 0",
+      dead.status === 0 && /ESPN feed unavailable/.test(dead.stderr) && rec.retWeeks === 3 && rec.retSource === "espn-outlook",
+      JSON.stringify([dead.status, dead.stderr.slice(0, 200), rec]));
+  }
   const today = "2026-10-13";
   const ol = IR.resolveReturn({ rec: { s: "Out" }, notes: ["He is expected to miss 4-6 weeks with a sprained ankle."], week: 6, today });
   check("returns: 'expected to miss 4-6 weeks' -> retWeeks 6, estimated, espn-outlook",
@@ -6132,51 +6153,53 @@ group("Injury odds: value over replacement");
 
   const io = await page.evaluate(async () => {
     const D = window.__DFFL;
-    // Synthetic: weeks 6-14 regular, 15-17 playoffs, replacement level 8 everywhere.
+    // Synthetic: weeks 6-14 regular, 15-17 playoffs. No replacement offset: full value per out week.
     const reg = [6, 7, 8, 9, 10, 11, 12, 13, 14], all = [...reg, 15, 16, 17];
     const sundays = Object.fromEntries(all.map((w, i) => [w, new Date(Date.UTC(2026, 9, 18 + 7 * i)).toISOString().slice(0, 10)]));
     const P = { current_week: 6, playoff_week_start: 15, sundays: Object.fromEntries(reg.map(w => [w, sundays[w]])),
-      weeks: Object.fromEntries(reg.map(w => [w, { A: 20, BN: 15, Z: 0, L: 0, PP: 0, H: 20, Q: 3 }])),
+      weeks: Object.fromEntries(reg.map(w => [w, { A: 20, BN: 15, B12: 12, Z: 0, L: 0, PP: 0, H: 20, Q: 3 }])),
       last_nonzero: { L: { pts: 12 } }, ppg: { PP: 9, L: 4 }, byes: {} };
-    const base = { weeks: all, lastReg: 14, sun: w => sundays[w], repl: () => 8, pos: "WR" };
+    const base = { weeks: all, lastReg: 14, sun: w => sundays[w], pos: "WR" };
     const imp = (rec, pid = "A") => D.injuryImpact(pid, rec, P, base);
     const out = {};
     const o = imp({ s: "Out", retWeeks: 1 });
-    out.full = [o.ptsPerWeek, o.replLevel, o.varPerWeek, o.weeksOut, o.totalLost, o.valueSource];
-    out.qd = ["Questionable", "Doubtful"].map(s => { const x = imp({ s, retWeeks: 1 }); return x.varPerWeek * x.weight; });
+    out.full = [o.ptsPerWeek, o.weeksOut, o.totalLost, o.valueSource, "replLevel" in o, "varPerWeek" in o];
+    out.qd = ["Questionable", "Doubtful"].map(s => { const x = imp({ s, retWeeks: 1 }); return x.ptsPerWeek * x.weight; });
+    // Bench player projected 12, out 2 weeks -> 24; a zero projection out 2 weeks prices at last_nonzero (12) -> 24.
+    const b2 = D.teamInjuryImpact({ starters: ["A"], players: ["A", "B12"] }, { B12: { s: "Out", p: "WR", retWeeks: 2 } }, P, base).rows[0];
+    const l2 = D.injuryImpact("L", { s: "Out", retWeeks: 2 }, P, base);
+    out.two = [b2.bench, b2.ptsPerWeek, b2.weeksOut, b2.totalLost, l2.ptsPerWeek, l2.totalLost, l2.valueSource];
+    out.fmt = [0.49, -0.49, 0, 0.5, -1.234, 2, null].map(D.fmtInjuryDelta);
     out.fb = [D.injuryImpact("L", { s: "Out", retWeeks: 1 }, P, base), D.injuryImpact("PP", { s: "Out", retWeeks: 1 }, P, base),
       D.injuryImpact("Z", { s: "Out", retWeeks: 1 }, P, base)].map(x => [x.value, x.valueSource]);
     out.date = imp({ s: "IR", ret: sundays[9], retSource: "espn-return-date" }).outWeeks;
     const se = imp({ s: "IR" });
     out.season = [se.outWeeks.join(","), se.seasonEnding];
     out.ir14 = imp({ s: "IR", retWeeks: 9, retSource: "default" }).outWeeks.join(",");
-    out.belowRepl = D.injuryImpact("Q", { s: "Out", retWeeks: 1 }, P, base).varPerWeek;
+    out.low = D.injuryImpact("Q", { s: "Out", retWeeks: 1 }, P, base).totalLost;
     // A team: starter A (20) and bench BN (15) both out a week.
     const team = { roster_id: 1, starters: ["A"], players: ["A", "BN"], reserve: [], taxi: [] };
     const inj = new Map([["A", { s: "Out", n: "A", p: "WR", retWeeks: 1 }], ["BN", { s: "Out", n: "BN", p: "WR", retWeeks: 1 }]]);
     const player = pid => ({ n: pid, p: "WR" });
     const TI = D.teamInjuryImpact(team, inj, P, { ...base, player });
     const TN = D.teamInjuryImpact(team, inj, P, { ...base, player, includeBench: false });
-    out.team = { wk6: TI.byWeek[6], bench: TI.rows.find(r => r.pid === "BN").varPerWeek, benchFlag: TI.rows.find(r => r.pid === "BN").bench,
+    out.team = { wk6: TI.byWeek[6], bench: TI.rows.find(r => r.pid === "BN").ptsPerWeek, benchFlag: TI.rows.find(r => r.pid === "BN").bench,
       noBench: TN.byWeek[6], noBenchROS: TN.totalROS, benchROS: TN.benchROS };
     // The loss plan on top: cap, scale, shape.
-    const plan0 = (scale = 1, level = 100) => ({ W0: 6, lastReg: 14, inFlight: false, ptsIn: () => 0,
+    const plan0 = (scale = 1, level = 200) => ({ W0: 6, lastReg: 14, inFlight: false, ptsIn: () => 0,
       scaleOf: () => ({ scale }), levelOf: () => level });
     const season = { rosters: [team, { roster_id: 2, starters: ["H"], players: ["H"], reserve: [], taxi: [] }] };
-    const lp = (p = plan0()) => D.injuryLossPlan(season, inj, P, { plan: p, player, slots: ["WR", "BN"], repl: () => 8 });
+    const lp = (p = plan0()) => D.injuryLossPlan(season, inj, P, { plan: p, player, slots: ["WR", "BN"] });
     const L1 = lp();
     out.plan = { wk6: L1.byTeam.get(1).weekLoss(6), wk7: L1.byTeam.get(1).weekLoss(7), lost: L1.lost[6], source: L1.source,
       cap: lp(plan0(1, 50)).byTeam.get(1).weekLoss(6), scale: lp(plan0(0.5)).byTeam.get(1).weekLoss(6) };
     out.noProj = D.injuryLossPlan(season, inj, null, { plan: plan0(), player }) === null;
-    // Replacement level: 30 WRs over two teams with slots WR, WR, FLEX -> N = round(2 × (2 + 1/3)) + 1 = 6.
-    const P2 = { weeks: { 6: Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`W${i}`, 30 - i])) } };
-    const RL = D.replacementLevels(P2, { season: { rosters: [{}, {}] }, slots: ["WR", "WR", "FLEX", "BN"], player: () => ({ p: "WR" }) });
-    out.repl = [RL.N.WR, RL.level(6, "WR"), RL.level(6, "QB")];
+    out.noRepl = !("replacementLevels" in D) && !("repl" in L1);
 
     // The real board: totals, sims, deltas.
     const model = window.__ODDS, live = window.__LIVE, plan = window.__PLAN;
     out.realRows = plan && plan.loss ? [...plan.loss.byTeam.values()].flatMap(T => T.rows)
-      .filter(r => Math.abs(r.totalLost - r.ptsPerWeek * 0 - r.varPerWeek * r.weeksOut) > 1e-9).length : null;
+      .filter(r => Math.abs(r.totalLost - r.ptsPerWeek * r.weeksOut) > 1e-9).length : null;
     if (model && model.ok && live) {
       const n = live.teams.length, wk0 = live.weeks.length ? live.weeks[0].week : null;
       const healthy = { ...live, multByWeek: new Map(), lostByWeek: new Map() };
@@ -6209,28 +6232,31 @@ group("Injury odds: value over replacement");
     }
     return out;
   });
-  check("injury impact: full value over replacement, no fill-in (20 vs replacement 8 -> 12 a week)",
-    JSON.stringify(io.full) === JSON.stringify([20, 8, 12, 1, 12, "proj"]), JSON.stringify(io.full));
-  check("injury impact: a player projected under replacement level costs 0", io.belowRepl === 0, String(io.belowRepl));
-  check("injury impact: Questionable and Doubtful charged in full", io.qd.every(x => x === 12), JSON.stringify(io.qd));
+  check("injury impact: full projected value per out week, no replacement offset (20 -> 20 a week)",
+    JSON.stringify(io.full) === JSON.stringify([20, 1, 20, "proj", false, false]), JSON.stringify(io.full));
+  check("injury impact: a low projection still costs its full value (3 -> 3)", io.low === 3, String(io.low));
+  check("injury impact: bench, projection 12, out 2 weeks -> 24; zero projection -> last_nonzero 12 x 2 -> 24",
+    JSON.stringify(io.two) === JSON.stringify([true, 12, 2, 24, 12, 24, "last_nonzero"]), JSON.stringify(io.two));
+  check("injury impact: Questionable and Doubtful charged in full", io.qd.every(x => x === 20), JSON.stringify(io.qd));
+  check("fmtInjuryDelta: '~0' under 0.5 pp, signed pp otherwise, '' unmeasured",
+    JSON.stringify(io.fmt) === JSON.stringify(["~0", "~0", "~0", "+0.5 pp", "−1.2 pp", "+2.0 pp", ""]), JSON.stringify(io.fmt));
+  check("odds loss: no replacement levels anywhere (replacementLevels gone, plan has no repl)", io.noRepl === true, String(io.noRepl));
   check("injury impact: a zero projection falls back to last_nonzero, then ppg, else none",
     JSON.stringify(io.fb) === JSON.stringify([[12, "last_nonzero"], [9, "ppg"], [0, "none"]]), JSON.stringify(io.fb));
   check("injury impact: out-weeks stop at the return date", io.date.join(",") === "6,7,8", JSON.stringify(io.date));
   check("injury impact: season-ending runs through the playoffs; IR default stops at week 14",
     io.season[0] === "6,7,8,9,10,11,12,13,14,15,16,17" && io.season[1] === true && io.ir14 === "6,7,8,9,10,11,12,13,14",
     JSON.stringify([io.season, io.ir14]));
-  check("injury impact: a bench player counts at full value over replacement",
-    io.team.bench === 7 && io.team.benchFlag === true && io.team.wk6 === 19, JSON.stringify(io.team));
+  check("injury impact: a bench player counts at full projected value",
+    io.team.bench === 15 && io.team.benchFlag === true && io.team.wk6 === 35, JSON.stringify(io.team));
   check("injury impact: includeBench false leaves the bench out (benchROS still reported)",
-    io.team.noBench === 12 && io.team.noBenchROS === 12 && io.team.benchROS === 7, JSON.stringify(io.team));
-  check("injury impact: replacement level = Nth best at the position, N = starting slots (flex split) + 1",
-    JSON.stringify(io.repl) === JSON.stringify([6, 25, null]), JSON.stringify(io.repl));
+    io.team.noBench === 20 && io.team.noBenchROS === 20 && io.team.benchROS === 15, JSON.stringify(io.team));
   check("odds loss: team-week loss from teamInjuryImpact, lost[w][teamIdx], source projections",
-    io.plan.wk6 === 19 && io.plan.wk7 === 0 && JSON.stringify(io.plan.lost) === "[19,0]" && io.plan.source === "projections", JSON.stringify(io.plan));
+    io.plan.wk6 === 35 && io.plan.wk7 === 0 && JSON.stringify(io.plan.lost) === "[35,0]" && io.plan.source === "projections", JSON.stringify(io.plan));
   check("odds loss: capped at 30% of the team's level", io.plan.cap === 15, String(io.plan.cap));
-  check("odds loss: injuryPlan's scale applied", io.plan.scale === 9.5, String(io.plan.scale));
+  check("odds loss: injuryPlan's scale applied", io.plan.scale === 17.5, String(io.plan.scale));
   check("odds loss: no projections -> no loss plan", io.noProj);
-  check("odds loss: totalLost = varPerWeek × weeksOut on every real row", io.realRows === 0, String(io.realRows));
+  check("odds loss: totalLost = ptsPerWeek × weeksOut on every real row", io.realRows === 0, String(io.realRows));
   check("odds sim: points come off the mean (hurt team loses wins, nobody else does)",
     io.sim && io.sim.team0[1] < io.sim.team0[0] && io.sim.others === io.sim.n - 1, JSON.stringify(io.sim));
   check("odds fallback: without projections the old multiplier prices the loss",
