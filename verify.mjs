@@ -5298,7 +5298,7 @@ const injData = await injPage.evaluate(async () => {
     if (row.closest(".injteam").dataset.rid !== w.rid) out.misplaced.push(w.rec.n);
     const ret = row.querySelector(".ret").textContent.trim();
     const rw = !/^\d{4}-\d{2}-\d{2}/.test(String(w.rec.ret || "")) && Number(w.rec.retWeeks) > 0 ? Math.round(Number(w.rec.retWeeks)) : 0;
-    if (rw) { if (ret !== `~${rw} wk (est.)`) out.noRetBad.push(`${w.rec.n}: ${ret}`); }
+    if (rw) { if (ret !== (w.rec.retEstimated ? `~${rw} wk (est.)` : `${rw} wk`)) out.noRetBad.push(`${w.rec.n}: ${ret}`); }
     else if (!w.rec.ret) {
       out.noRet++;
       // IR with no date runs to season's end; anything else with no date has no estimate.
@@ -5468,7 +5468,14 @@ const injData = await injPage.evaluate(async () => {
     const rowT = hostT.querySelector(`.injp[data-pid="${tagPid}"]`);
     pl.retTab = { pid: tagPid, src: rowT && (rowT.querySelector(".rsrc") || {}).textContent, est: !!(rowT && rowT.querySelector(".est")),
       title: rowT && rowT.title };
-  } else pl.retTab = null;
+    // An exact-week report (weeks_list / dated ret -> retEstimated false) reads "reported".
+    const m4 = new Map(map);
+    m4.set(tagPid, { ...map.get(tagPid), ret: "2026-11-01", retWeeks: undefined, retWeeksList: undefined, retSource: "report", retEstimated: false, retNote: "synthetic" });
+    const hostR = document.createElement("div");
+    D.renderInjuries(hostR, { at: Date.now(), source: "file", map: m4 }, proj);
+    const rowR = hostR.querySelector(`.injp[data-pid="${tagPid}"]`);
+    pl.repTab = rowR ? [...rowR.querySelectorAll(".est")].map(e => e.textContent.trim()) : null;
+  } else { pl.retTab = null; pl.repTab = null; }
   pl.floor = D.PTS_LOST.displayFloor;
   // ccubed's rest-of-season rule, by hand (week 6 only). (a) S1 (RB 12, IR)
   // starts at RB, S2 (RB 11) at FLEX, bench WR3 9 and no RB: this week the RB
@@ -5608,7 +5615,9 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       const rw = Math.round(Number(rec.retWeeks));
       // PTS_LOST's documented rule: a date wins; else retWeeks = that many weeks
       // starting with this one (retWeeksStartsThisWeek), capped at the season.
-      if (!/^\d{4}-\d{2}-\d{2}/.test(String(rec.ret || "")) && rw > 0) weeks = season.slice(0, rw);
+      // An exact weeks list (retWeeksList) beats everything; then the date.
+      if (Array.isArray(rec.retWeeksList)) weeks = season.filter(w => rec.retWeeksList.map(Number).includes(w));
+      else if (!/^\d{4}-\d{2}-\d{2}/.test(String(rec.ret || "")) && rw > 0) weeks = season.slice(0, rw);
       else if (/season/i.test(rec.sev || "") || (rec.s === "IR" && !rec.ret)) weeks = season;
       else if (rec.ret) weeks = season.filter(w => P.sundays[w] < rec.ret);
       out[p] = { weeks, ros: weeks ? 0 : null, thisWeek: 0 };
@@ -5651,9 +5660,10 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       for (const p of inside) res[p] = drop * (sm > 0 ? m[p] / sm : 1 / inside.length);
       return res;
     };
-    // This week: every injured starter is out; rest of season: whoever's weeks out include w.
+    // This week: every injured starter is out unless his return puts him back
+    // this week (0 weeks out); rest of season: whoever's weeks out include w.
     if (season.includes(wk)) {
-      const tw = weekLoss(wk, hurtAll.filter(p => st.includes(p)));
+      const tw = weekLoss(wk, hurtAll.filter(p => st.includes(p) && (!out[p].weeks || out[p].weeks.includes(wk))));
       for (const p in tw) out[p].thisWeek = tw[p];
     }
     for (const w of season) {
@@ -5737,6 +5747,8 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
         && RF.y[2] === "report" && RF.y[3] === true && RF.y[4] === "per the beat writer"
         && RF.z[2] === null && RF.z[3] === false && RF.z[4] === null
         && !!RT && /report/.test(RT.src || "") && RT.est && /synthetic/.test(RT.title || ""), JSON.stringify({ RF, RT }));
+    check("points lost: an exact-week report (retEstimated false) is tagged 'reported', not 'estimated'",
+      Array.isArray(PL.repTab) && PL.repTab.join() === "reported", JSON.stringify(PL.repTab));
     const F = PL.fallback || {};
     check("points lost: a hurt player projected at 0 uses his last projection above zero, else season PPG; a bye stays 0",
       close(F.tw, 25) && close(F.ros, 40) && F.rows && close(F.rows.P[1], 10) && close(F.rows.Q[1], 18) && close(F.rows.Z[1], 12)
@@ -6132,6 +6144,35 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   check("returns: default flagged estimated, retSource default (Out 1 week, IR minimum 4 weeks)",
     df.retSource === "default" && df.retEstimated === true && df.retWeeks === 1 && dfIR.retWeeks === 4 && dfIR.retSource === "default",
     JSON.stringify([df, dfIR]));
+  // The IR / PUP 4-week minimum counts from irSince, not the coming week.
+  const irAt = (irSince, s = "IR") => IR.resolveReturn({ rec: { s }, notes: [], week: 6, lastReg: 14, today, irSince });
+  const ir3 = irAt(3), ir6 = irAt(6), ir1 = irAt(1), pup4 = irAt(4, "PUP");
+  check("returns: IR/PUP default counts from irSince (wk 3 -> 1 left at wk 6; wk 6 -> 4; wk 1 -> run out = coming week only)",
+    ir3.retWeeks === 1 && ir6.retWeeks === 4 && ir1.retWeeks === 1 && /run out/.test(ir1.retNote) && pup4.retWeeks === 2
+      && [ir3, ir6, ir1, pup4].every(x => x.retSource === "default" && x.retEstimated === true),
+    JSON.stringify([ir3, ir6, ir1, pup4]));
+  {
+    // The CLI persists irSince per pid in the cache and carries it forward.
+    const { spawnSync } = await import("node:child_process");
+    const fs = await import("node:fs"), os = await import("node:os");
+    const dir = fs.mkdtempSync(join(os.tmpdir(), "inj-irs-"));
+    for (const f of ["injury-returns.mjs", "fetch-json.mjs"]) fs.copyFileSync(join(ROOT, f), join(dir, f));
+    fs.mkdirSync(join(dir, "data"));
+    fs.writeFileSync(join(dir, "data", "projections.json"), JSON.stringify({ current_week: 6, playoff_week_start: 15,
+      sundays: { 5: "2026-10-11", 6: "2026-10-18", 7: "2026-10-25", 8: "2026-11-01" } }));
+    fs.writeFileSync(join(dir, "injuries.json"), JSON.stringify({ map: { 7: { n: "Old IR", s: "IR", p: "RB" }, 8: { n: "New IR", s: "IR", p: "RB" },
+      10: { n: "Dated IR", s: "IR", p: "WR", injury_start_date: "2026-10-09" } } }));
+    fs.writeFileSync(join(dir, "injury-returns-cache.json"), JSON.stringify({ week: 5, entries: { 7: { s: "IR", irSince: 3, retWeeks: 4, retSource: "default" } } }));
+    const run = spawnSync(process.execPath, ["injury-returns.mjs"], { cwd: dir, encoding: "utf8", timeout: 60000,
+      env: { ...process.env, ESPN_INJURIES_URL: "http://127.0.0.1:9/injuries" } });
+    const m = JSON.parse(fs.readFileSync(join(dir, "injuries.json"), "utf8")).map;
+    const ce = JSON.parse(fs.readFileSync(join(dir, "injury-returns-cache.json"), "utf8")).entries;
+    fs.rmSync(dir, { recursive: true, force: true });
+    check("returns CLI: irSince carried in the cache (3 kept -> 1 wk left; new -> this week, 4; injury_start_date -> its week)",
+      run.status === 0 && ce[7].irSince === 3 && m[7].retWeeks === 1 && ce[8].irSince === 6 && m[8].retWeeks === 4
+        && ce[10].irSince === 5 && m[10].retWeeks === 3,
+      JSON.stringify([run.status, ce, run.stderr.slice(0, 200)]));
+  }
   const es = IR.resolveReturn({ rec: { s: "IR", ret: "2026-11-20" }, notes: ["out for the season"], week: 6, today });
   check("returns: an ESPN date wins and is not estimated",
     es.retSource === "espn-return-date" && es.retEstimated === false && es.ret === "2026-11-20", JSON.stringify(es));
@@ -6294,6 +6335,17 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     out.listImpact = D.injuryImpact("A", gap, P, { weeks: all, lastReg: 14, sun: w => sundays[w] }).outWeeks.join(",");
     out.listLost = (D.projectedPointsLost({ roster_id: 1, starters: ["A"], players: ["A"], reserve: [], taxi: [] }, { A: gap }, P,
       { week: 6, player, slots: ["WR"] }).rows[0].weeksOut || []).join(",");
+    // 0 weeks out (weeks_list [] -> ret = this Sunday; or an empty retWeeksList):
+    // the Injuries tab and the odds both charge nothing this week. No estimate:
+    // both count the coming week (20 - 12 = 8).
+    const zero = { ret: { s: "Out", n: "A", p: "WR", t: "NYJ", ret: sundays[6], retWeeks: 0 },
+      list: { s: "Out", n: "A", p: "WR", t: "NYJ", retWeeks: 0, retWeeksList: [] }, none: { s: "Out", n: "A", p: "WR", t: "NYJ" } };
+    const team1 = { roster_id: 1, starters: ["A"], players: ["A", "B12"], reserve: [], taxi: [] };
+    out.zero = Object.fromEntries(Object.entries(zero).map(([k, rec]) => {
+      const r = D.projectedPointsLost(team1, { A: rec }, P, { week: 6, player, slots: ["WR"] }).rows[0];
+      const I = D.injuryImpact("A", rec, P, { weeks: all, lastReg: 14, sun: w => sundays[w] });
+      return [k, [r.thisWeek, r.weeksOut ? r.weeksOut.length : null, I.weeksOut, loss(team1, { A: rec }).weekLoss(6)]];
+    }));
     return out;
   });
   check("odds loss: a bench injury that would not start costs 0 in the weekly line", ld.bench === 0, String(ld.bench));
@@ -6303,6 +6355,10 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     ld.cap[0] > 10 && near(ld.cap[1], 10, 1e-9), JSON.stringify(ld.cap));
   check("weeks_list: a gap list is charged on exactly those weeks (injuryImpact and PTS_LOST)",
     ld.listImpact === "6,8" && ld.listLost === "6,8", JSON.stringify(ld));
+  check("0 weeks out (weeks_list [] / ret this Sunday): the Injuries tab shows 0 this week, matching the odds; no estimate still counts this week",
+    JSON.stringify(ld.zero.ret) === "[0,0,0,0]" && JSON.stringify(ld.zero.list) === "[0,0,0,0]"
+      && near(ld.zero.none[0], 8, 1e-9) && ld.zero.none[1] === null && ld.zero.none[2] === 1 && near(ld.zero.none[3], 8, 1e-9),
+    JSON.stringify(ld.zero));
   {
     const sundayOf = w => ({ 6: "2026-10-18", 7: "2026-10-25", 8: "2026-11-01", 9: "2026-11-08", 10: "2026-11-15", 11: "2026-11-22" })[w] || null;
     const rr = (report, week) => IR.resolveReturn({ rec: { s: "Out", t: "NYJ" }, report, week, lastReg: 14, sundayOf, today: "2026-10-14" });
@@ -6312,6 +6368,11 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     check("weeks_list: wins over weeks/unit; contiguous -> ret the Sunday after; a gap -> retWeeksList; [] -> not out",
       r67.ret === "2026-11-01" && r67.retWeeks == null && JSON.stringify(r68.retWeeksList) === "[6,8]" && r0.ret === "2026-10-18",
       JSON.stringify([r67, r68, r0]));
+    const rRet = rr({ kind: "report", ret: "2026-10-25", checked: "2026-10-14" }, 6);
+    const rWk = rr({ kind: "report", weeks: 2, checked: "2026-10-14" }, 6);
+    check("returns: a report with weeks_list or a dated ret is reported (retEstimated false); weeks alone stays estimated",
+      [r67, r68, r0, rRet].every(x => x.retSource === "report" && x.retEstimated === false) && rWk.retEstimated === true,
+      JSON.stringify([r67.retEstimated, r68.retEstimated, r0.retEstimated, rRet.retEstimated, rWk.retEstimated]));
     const old = rr({ kind: "report", weeks_list: [6, 7], checked: "2026-10-14", note: "audit" }, 10);
     const oldW = rr({ kind: "report", weeks: 2, checked: "2026-10-14" }, 10);
     const live = rr({ kind: "report", weeks_list: [6, 11], checked: "2026-10-14" }, 10);
@@ -6355,6 +6416,37 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       run.status === 0 && /^stale: dffl-rosters$/m.test(run.stdout) && /^stale: sleeper-players \(no cache\)$/m.test(run.stdout)
       && /^consensus: \d+ injured/m.test(run.stdout) && after === before,
       JSON.stringify([run.status, run.stdout.slice(-300), run.stderr.slice(0, 200)]));
+    // Not a dry run, every source dead: nothing written (no noise commit).
+    const wdir = fs.mkdtempSync(join(os.tmpdir(), "consensus-w-"));
+    fs.mkdirSync(join(wdir, "cache")); fs.mkdirSync(join(wdir, "data"));
+    fs.copyFileSync(join(ROOT, "consensus.mjs"), join(wdir, "consensus.mjs"));
+    fs.copyFileSync(join(ROOT, "data", "consensus-cache", "dffl-rosters.json"), join(wdir, "cache", "dffl-rosters.json"));
+    fs.copyFileSync(join(ROOT, "injury-returns.json"), join(wdir, "injury-returns.json"));
+    fs.copyFileSync(join(ROOT, "injuries.json"), join(wdir, "injuries.json"));
+    const wBefore = fs.readFileSync(join(wdir, "injury-returns.json"), "utf8");
+    const wrun = spawnSync(process.execPath, ["consensus.mjs", "--cache", "cache", "--from", "6", "--to", "7"],
+      { cwd: wdir, env, encoding: "utf8", timeout: 60000 });
+    const wAfter = fs.readFileSync(join(wdir, "injury-returns.json"), "utf8"), wReport = fs.existsSync(join(wdir, "data", "consensus.json"));
+    fs.rmSync(wdir, { recursive: true, force: true });
+    check("consensus CLI: a stale-only run writes neither injury-returns.json nor the report ('stale/no change, nothing written'), exit 0",
+      wrun.status === 0 && /^consensus: stale\/no change, nothing written$/m.test(wrun.stdout) && wAfter === wBefore && !wReport,
+      JSON.stringify([wrun.status, wrun.stdout.slice(-300), wReport]));
+  }
+  {
+    // injury-refresh.yml: ±30 min gate, its own concurrency group, Sunday skip
+    // while weekly-data runs, one regenerate-and-retry on a rebase failure, no force push.
+    const fs = await import("node:fs");
+    const y = fs.readFileSync(join(ROOT, ".github", "workflows", "injury-refresh.yml"), "utf8");
+    const script = (y.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
+    check("injury-refresh.yml: gate within 30 min, own concurrency group, actions: read + GH_TOKEN",
+      /\[ \$d -lt 30 \]/.test(y) && !/-le 7/.test(y) && /group: injury-refresh/.test(y) && !/group: weekly-data/.test(y)
+        && /^\s+actions: read$/m.test(y) && /GH_TOKEN: \$\{\{ github\.token \}\}/.test(y));
+    check("injury-refresh.yml: Sundays skip while a weekly-data.yml run is in progress or queued",
+      /"\$dow" = 7/.test(y) && /gh run list[^\n]*--workflow weekly-data\.yml[^\n]*--status "\$st"/.test(y) && /for st in in_progress queued/.test(y) && /go=false/.test(y));
+    check("injury-refresh.yml: pull --rebase; on failure abort, reset to origin, rerun the three scripts, retry once, then error; no force push",
+      (script.match(/git pull --rebase/g) || []).length === 2 && /git rebase --abort/.test(script) && /git reset --hard "origin\/\$branch"/.test(script)
+        && ["consensus.mjs", "build-injuries.mjs", "injury-returns.mjs"].every(f => script.includes(`node ${f}`))
+        && /::error::/.test(script) && /exit 1\s*$/.test(script) && !/--force|push -f\b/.test(y));
   }
   check("odds sim: points come off the mean (hurt team loses wins, nobody else does)",
     io.sim && io.sim.team0[1] < io.sim.team0[0] && io.sim.others === io.sim.n - 1, JSON.stringify(io.sim));

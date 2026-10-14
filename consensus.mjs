@@ -28,7 +28,8 @@
  * Every fetch is cached in data/consensus-cache/. A failed fetch falls back to
  * that cache and the run is marked stale ("stale: <key>"); no cache = the
  * signal is missing. Without Sleeper's player file the injured list and names
- * come from injuries.json / rosters.json. The script always exits 0.
+ * come from injuries.json / rosters.json. A run on stale data only, or one
+ * that moves no weeks_list / weeks, writes nothing. The script always exits 0.
  *
  * Options: --league ID  --audit path  --cache dir  --from W  --to W  --dry-run
  * URL overrides (verify.mjs points them at a dead port): CONSENSUS_SLEEPER_API,
@@ -101,14 +102,16 @@ async function main() {
   // Fetch with one retry; on failure the cached copy, marked stale. `slim`
   // trims a response before it is cached, so the cache stays small enough to commit.
   const stale = [];
+  let fresh = 0;
   const get = async (url, key, opts = {}) => {
     const f = path.join(CACHE, key.replace(/[^\w.-]/g, "_") + ".json");
     for (let t = 0; t < 2; t++) {
       try {
         const r = await fetch(url, { headers: opts.headers, signal: AbortSignal.timeout(TIMEOUT) });
-        if (r.status === 404 && opts.allow404) return null;
+        if (r.status === 404 && opts.allow404) { fresh++; return null; }
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const j = await r.json();
+        fresh++;
         fs.writeFileSync(f, JSON.stringify(opts.slim ? opts.slim(j) : j));
         return j;
       } catch (e) { /* retry once, then the cache */ }
@@ -218,6 +221,9 @@ async function main() {
   // Decide.
   const auditFile = read(AUDIT, { entries: {} });
   const audit = auditFile.entries || (auditFile.entries = {});
+  // What counts as a change worth writing: an entry's weeks_list or weeks.
+  const substance = () => JSON.stringify(Object.entries(audit).map(([p, e]) => [p, e.weeks_list ?? null, e.weeks ?? null]));
+  const before = substance();
   const players = [];
   for (const pid of hurt) {
     const me = info(pid), eid = espnIdOf(pid), ae = audit[pid];
@@ -255,7 +261,11 @@ async function main() {
     audit[pid] = e;
   }
 
-  if (!DRY) {
+  // Only stale data (every fetch fell back to the cache), or no weeks_list /
+  // weeks moved: write nothing, so a dead-feed run is not a noise commit.
+  const idle = !fresh || substance() === before;
+  if (idle) console.log("consensus: stale/no change, nothing written");
+  if (!DRY && !idle) {
     fs.writeFileSync(AUDIT, JSON.stringify(auditFile, null, 2) + "\n");
     fs.writeFileSync(path.join("data", "consensus.json"), JSON.stringify({
       generated: new Date().toISOString(), league: LEAGUE, weeks: [FROM, TO], stale,

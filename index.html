@@ -4593,6 +4593,34 @@ const INJ_ODDS = {
  * the average over the out weeks (W0 when there are none) and totalLost =
  * ptsPerWeek × weeksOut.
  */
+/**
+ * The weeks an injury record has him out, of `weeks` (the coming one first).
+ * One rule for the odds (injuryImpact) and the Injuries tab (projectedPointsLost):
+ *   injuryOutWeeks(rec, weeks, sun) -> { weeks, ending, known }
+ * retWeeksList (a weeks_list with a gap) -> exactly those weeks; a date -> the
+ * weeks whose Sunday (sun(w)) is before it; retWeeks -> that many from the
+ * coming week (99 = all); IR or a season-length severity -> all; nothing known
+ * -> the coming week, known false. A list of [] or a date of the coming
+ * Sunday is 0 weeks out: back this week.
+ */
+function injuryOutWeeks(rec, weeks, sun) {
+  rec = rec || {};
+  const C = PTS_LOST, W0 = weeks[0], last = weeks[weeks.length - 1];
+  const date = /^\d{4}-\d{2}-\d{2}/.test(String(rec.ret || "")) ? String(rec.ret) : null;
+  const rw = Math.round(Number(rec.retWeeks));
+  const seasonLong = C.seasonEndingSev.test(String(rec.sev || "")) || C.seasonEndingStatus.has(rec.s);
+  let ws, ending = false, known = true;
+  if (Array.isArray(rec.retWeeksList)) ws = weeks.filter(w => rec.retWeeksList.includes(w));
+  else if (date && !(C.irIgnoresReturnDate && C.seasonEndingStatus.has(rec.s))) ws = weeks.filter(w => sun && sun(w) && sun(w) < date);
+  else if (rw > 0) {
+    const from = C.retWeeksStartsThisWeek === false ? 1 : 0;
+    ws = rw >= 99 ? weeks.slice(from) : weeks.slice(from, from + rw); ending = rw >= 99;
+  } else if (seasonLong) { ws = weeks.slice(); ending = true; }
+  else { ws = W0 != null ? [W0] : []; known = false; }
+  if (ws.length && ws[ws.length - 1] === last) ending = true;
+  return { weeks: ws, ending, known };
+}
+
 function injuryImpact(pid, rec, P, opts = {}) {
   rec = rec || {};
   const weeks = opts.weeks || [], W0 = weeks[0];
@@ -4609,15 +4637,7 @@ function injuryImpact(pid, rec, P, opts = {}) {
   };
   const isDate = v => /^\d{4}-\d{2}-\d{2}/.test(String(v || ""));
   const rw = Math.round(Number(rec.retWeeks));
-  const sevEnd = PTS_LOST.seasonEndingSev.test(String(rec.sev || ""));
-  let outWeeks, seasonEnding = false;
-  // retWeeksList (injury-returns.json weeks_list with a gap): exactly those weeks.
-  if (Array.isArray(rec.retWeeksList)) outWeeks = weeks.filter(w => rec.retWeeksList.includes(w));
-  else if (isDate(rec.ret)) outWeeks = weeks.filter(w => opts.sun && opts.sun(w) && opts.sun(w) < rec.ret);
-  else if (rw > 0) { outWeeks = rw >= 99 ? weeks.slice() : weeks.slice(0, rw); seasonEnding = rw >= 99; }
-  else if (sevEnd || PTS_LOST.seasonEndingStatus.has(rec.s)) { outWeeks = weeks.slice(); seasonEnding = true; }
-  else outWeeks = W0 != null ? [W0] : [];
-  if (outWeeks.length && outWeeks[outWeeks.length - 1] === weeks[weeks.length - 1]) seasonEnding = true;
+  const { weeks: outWeeks, ending: seasonEnding } = injuryOutWeeks(rec, weeks, opts.sun);
   const weight = ((opts.statusWeights || {})[rec.s]) ?? 1;
   const perWeek = {};
   let sv = 0;
@@ -5789,26 +5809,9 @@ function projectedPointsLost(team, injuries, projections, opts = {}) {
     return { total, at };
   };
   const isDate = v => /^\d{4}-\d{2}-\d{2}/.test(String(v || ""));
-  const outWeeks = rec => {
-    // retWeeksList (injury-returns.json weeks_list with a gap): exactly those weeks.
-    if (Array.isArray(rec.retWeeksList)) {
-      const ws = weeks.filter(w => rec.retWeeksList.includes(w));
-      return { weeks: ws, ending: ws.length > 0 && ws[ws.length - 1] === lastWeek };
-    }
-    const date = isDate(rec.ret) ? String(rec.ret) : null;
-    const rw = Number(rec.retWeeks);
-    if (!date && Number.isFinite(rw) && rw > 0) {
-      // retWeeks with no date: that many fantasy weeks from this one.
-      const from = C.retWeeksStartsThisWeek ? 0 : 1, ws = weeks.slice(from, from + Math.round(rw));
-      return { weeks: ws, ending: ws.length > 0 && ws[ws.length - 1] === lastWeek && from + Math.round(rw) >= weeks.length };
-    }
-    const ending = C.seasonEndingSev.test(String(rec.sev || ""))
-      || (C.seasonEndingStatus.has(rec.s) && (!date || C.irIgnoresReturnDate));
-    if (ending) return { weeks, ending: true };
-    if (!date) return null;
-    const sun = (P && P.sundays) || {};
-    return { weeks: weeks.filter(w => sun[w] && sun[w] < date), ending: false };
-  };
+  // The odds' own rule (injuryOutWeeks); nothing known -> null ("no estimate").
+  const sun = w => ((P && P.sundays) || {})[w] || null;
+  const outWeeks = rec => { const o = injuryOutWeeks(rec, weeks, sun); return o.known ? o : null; };
 
   const injured = all.filter(pid => statusOf(pid));
   const span = new Map(injured.map(pid => [pid, outWeeks(recOf(pid))]));
@@ -5854,8 +5857,10 @@ function projectedPointsLost(team, injuries, projections, opts = {}) {
     return res;
   };
 
-  // This week: every injured starter, whatever his status or date, is out.
-  const hurtNow = injured.filter(p => starters.has(p));
+  // This week: every injured starter is out unless his return puts him back
+  // this week (0 weeks out, e.g. weeks_list [] or a return of this Sunday) —
+  // the same weeks the odds charge. No estimate = out this week.
+  const hurtNow = injured.filter(p => starters.has(p) && (!span.get(p) || span.get(p).weeks.includes(week)));
   const thisWk = weeks.includes(week) ? runWeek(week, hurtNow) : new Map();
   const byWeek = new Map(weeks.map(w => [w, runWeek(w, injured.filter(p => outIn(p, w)))]));
 
@@ -6028,7 +6033,7 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED) {
       if (p.note || x.retNote) row.title = [x.retNote, p.note].filter(Boolean).join(" — ");
       const srcLabel = retSourceText(x);
       // A date, else Research's week estimate, else IR to season's end, else nothing known.
-      const retText = back || (x.retWeeks ? `~${x.retWeeks} wk (est.)`
+      const retText = back || (x.retWeeks ? (x.retEstimated ? `~${x.retWeeks} wk (est.)` : `${x.retWeeks} wk`)
         : x.seasonEnding && x.status === "IR" ? "season (IR)" : "no estimate");
       const detail = injuryDetail(p);
       const out = x.weeksOut == null ? "weeks out: no estimate"
@@ -6042,7 +6047,7 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED) {
         : x.perWeek.length ? "wouldn't start while out" : "not in the lineup";
       row.innerHTML = `<span class="nm">${esc(x.name)}</span>
         <span class="meta">${esc([x.pos, x.club].filter(Boolean).join(dot))}${detail ? esc(dot + detail) : ""}</span>
-        <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(retText)}</span>${srcLabel ? `<span class="rsrc"> (${esc(srcLabel)})</span>` : ""}${x.retEstimated && !x.retWeeks ? ` <span class="est">estimated</span>` : ""}${esc(dot)}<span class="wo">${esc(out)}</span></span>
+        <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(retText)}</span>${srcLabel ? `<span class="rsrc"> (${esc(srcLabel)})</span>` : ""}${x.retEstimated && !x.retWeeks ? ` <span class="est">estimated</span>` : x.retSource === "report" && !x.retEstimated ? ` <span class="est rep">reported</span>` : ""}${esc(dot)}<span class="wo">${esc(out)}</span></span>
         <span class="meta repl">${esc(sub)}</span>
         <span class="imp"><span class="tw-pts">${nRow(x.thisWeek)}</span><span class="k">${x.starter ? "pts this week" : "bench · this week"}</span><span class="ros"><span class="ros-pts">${x.ros == null ? "no estimate" : nRow(x.ros)}</span><span class="k">rest of season</span></span></span>`;
       b.appendChild(row);
@@ -10126,7 +10131,7 @@ async function boot() {
       injuryDetail, returnLabel, rosterInjuries, injCutText, ensureInjuries, renderInjuries,
       PTS_LOST, projectedPointsLost, splitLineupDrop, pointsLostOrder, pointsLostOpts, loadProjections, ptsLostText,
       injuryPlan, injuryLossPlan, injuryLossTeam, injuryLostPts, attachLossPlan, INJ_ODDS,
-      injuryImpact, teamInjuryImpact, fmtInjuryDelta, injuryPlayoffDeltas, injuryDeltaJob, computeInjuryDeltas, pictureRun, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
+      injuryOutWeeks, injuryImpact, teamInjuryImpact, fmtInjuryDelta, injuryPlayoffDeltas, injuryDeltaJob, computeInjuryDeltas, pictureRun, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
       approxKickoff, lastNameOf, gameCardHTML,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
       liveOnce, recapsOnce, ensureHomeWeek, weekStrip, moversRow, boardMovers, injuryStrip,

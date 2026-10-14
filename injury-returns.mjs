@@ -22,7 +22,8 @@
 export const RETURN_DEFAULTS = {
   Questionable: { weeks: 1 }, Doubtful: { weeks: 1 },
   Out: { weeks: 1 }, Sus: { weeks: 1 }, NA: { weeks: 1 }, DNR: { weeks: 1 }, COV: { weeks: 1 },
-  // IR / PUP with nothing else known: the NFL minimum stint, 4 games.
+  // IR / PUP with nothing else known: the NFL minimum stint, 4 games, counted
+  // from the week he went on the list (irSince) when that is known.
   IR: { weeks: 4, label: "IR minimum 4 weeks" }, PUP: { weeks: 4, label: "PUP minimum 4 weeks" },
 };
 
@@ -76,10 +77,11 @@ export function parseOutlook(text) {
  *   week     the coming NFL week (projections.current_week)
  *   lastReg  the last regular-season week (playoff_week_start - 1)
  *   sundayOf (w) -> that week's Sunday, ISO, or null
+ *   irSince  IR / PUP: the fantasy week he went on the list, or null
  * retWeeks counts fantasy weeks starting with `week` — what PTS_LOST
  * .retWeeksStartsThisWeek reads; SEASON (99) runs past the regular season.
  */
-export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = null, week, lastReg = 14, sundayOf = null, byes = null, today }) {
+export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = null, week, lastReg = 14, sundayOf = null, byes = null, today, irSince = null }) {
   const retChecked = today || new Date().toISOString().slice(0, 10);
   // A hand entry: { ret } or { weeks }, from the team ("team") or a report ("report").
   // unit "games" (the injury audit): games he misses, his club's bye weeks not
@@ -183,7 +185,8 @@ export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = nul
   // 3. Online reports: ESPN's date, then ESPN's prose, then a hand-curated report.
   // A curated report (injury-returns.json kind "report", e.g. the injury audit)
   // overrides ESPN's date, the prose parser and the defaults.
-  if (entry && entry.kind !== "team") return fromEntry(entry, "report", !entry.ret);
+  // Exact weeks (weeks_list) or a dated ret are reported, not estimated.
+  if (entry && entry.kind !== "team") return fromEntry(entry, "report", !(entry.ret || Array.isArray(entry.weeks_list)));
   if (rec.ret) return withIgnored({ ret: rec.ret, retSource: "espn-return-date", retEstimated: false, retNote: "ESPN return date", retChecked });
   const es = fromProse(notes, "espn-outlook");
   if (es) return withIgnored(es);
@@ -193,8 +196,20 @@ export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = nul
   if (/^(IR|PUP)$/.test(rec.s || "") && /\bACL\b|Achilles/i.test(bp)) return withIgnored({
     retWeeks: SEASON, retSource: "default", retEstimated: true,
     retNote: `default: ${rec.s} with ${bp.trim()} = rest of season`, retChecked });
-  // RETURN_DEFAULTS.
+  // RETURN_DEFAULTS. IR / PUP: the 4-week minimum counts from irSince, the week
+  // he went on the list (the CLI's injury start date, else the first week it saw
+  // him there), not from the coming week, so it runs out. Once it has (left 0)
+  // and Sleeper still lists him, he is out the coming week only.
   const d = RETURN_DEFAULTS[rec.s] || { weeks: 1 };
+  if (/^(IR|PUP)$/.test(rec.s || "") && irSince > 0 && week > 0 && typeof d.weeks === "number") {
+    const left = Math.max(0, irSince + d.weeks - week);
+    return withIgnored({
+      retWeeks: left || 1, retSource: "default", retEstimated: true,
+      retNote: left ? `default: ${d.label || `${rec.s} ${d.weeks} weeks`} from wk ${irSince} (${left} left)`
+        : `default: ${d.label || `${rec.s} ${d.weeks} weeks`} from wk ${irSince} has run out; still ${rec.s}, so the coming week only`,
+      retChecked,
+    });
+  }
   return withIgnored({
     retWeeks: d.weeks === "ros" ? (week != null ? Math.max(1, lastReg - week + 1) : SEASON) : d.weeks,
     retSource: "default", retEstimated: true,
@@ -268,20 +283,33 @@ async function main() {
     if (rec.retSource && rec.retSource !== "espn-return-date") delete rec.ret;
     for (const f of FIELDS) if (f !== "ret") delete rec[f];
     const c = cache.entries && cache.entries[pid];
-    const r = !feed && !rec.ret && c && c.s === rec.s && c.retSource
+    // IR / PUP since: Sleeper's injury start date if it ever carries one, else
+    // the week an earlier run first saw him on IR / PUP (carried in the cache),
+    // else this week. Off the list -> forgotten, so a second stint starts over.
+    const onIR = s => /^(IR|PUP)$/.test(s || "");
+    let irSince = null;
+    if (onIR(rec.s)) {
+      const start = rec.injury_start_date || rec.isd || null;
+      const fromDate = start ? Object.entries(proj.sundays || {}).filter(([, sun]) => sun >= String(start).slice(0, 10))
+        .map(([w]) => Number(w)).sort((a, b) => a - b)[0] : null;
+      irSince = fromDate || (c && onIR(c.s) ? Number(c.irSince) || Number(cache.week) || null : null) || week;
+    }
+    // ESPN down: reuse a cached ESPN-derived result; defaults need no feed.
+    const r = !feed && !rec.ret && c && c.s === rec.s && c.retSource && c.retSource !== "default"
       ? Object.fromEntries(FIELDS.filter(f => c[f] != null).map(f => [f, c[f]]))
       : resolveReturn({ rec, notes: [...((match(rec) || {}).notes || []), rec.note].filter(Boolean),
-        report: reports[pid] || null, week, lastReg, sundayOf, byes: proj.byes || null, today });
+        report: reports[pid] || null, week, lastReg, sundayOf, byes: proj.byes || null, today, irSince });
     if (r.ret == null) delete rec.ret; // a report in weeks replaces ESPN's date
     for (const f of FIELDS) if (r[f] != null) rec[f] = r[f];
     entries[pid] = { n: rec.n, s: rec.s, ret: rec.ret || null, retWeeks: rec.retWeeks ?? null,
       ...(rec.retWeeksList ? { retWeeksList: rec.retWeeksList } : {}), retSource: rec.retSource,
-      retEstimated: !!rec.retEstimated, retNote: rec.retNote, retChecked: rec.retChecked };
+      retEstimated: !!rec.retEstimated, retNote: rec.retNote, retChecked: rec.retChecked,
+      ...(irSince ? { irSince } : {}) };
     tally[rec.retSource] = (tally[rec.retSource] || 0) + 1;
   }
   fs.writeFileSync("injuries.json", JSON.stringify(inj));
   fs.writeFileSync("injury-returns-cache.json", JSON.stringify({
-    _comment: "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up. A record, not an input — hand entries go in injury-returns.json.",
+    _comment: "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
     generated: new Date().toISOString(), week, entries }, null, 1) + "\n");
   console.log(`injury-returns: ${Object.keys(entries).length} rostered injured · `
     + Object.entries(tally).map(([k, v]) => `${v} ${k}`).join(" · "));

@@ -6,8 +6,12 @@
 #
 # Cron is UTC and does not follow daylight saving, so each slot is listed for
 # both EDT and EST and the gate below lets through only the one that lands
-# within seven minutes of the intended New York time:
+# within 30 minutes of the intended New York time (strictly under 30: the
+# paired slots are 60 minutes apart, so the off-hour one passes only if GitHub
+# delays it by more than half an hour):
 #   09:20 every day, 18:20 Monday and Thursday, 11:50 and 15:50 Sunday.
+# On Sundays (New York) the run is skipped while a weekly-data.yml run is
+# queued or in progress: both write injuries.json and push to main.
 #
 # The odds themselves are computed in the browser from index.html and these
 # files, so there is no odds step here; the next page load picks them up.
@@ -29,7 +33,10 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
+# Its own group on purpose: sharing weekly-data's would let a pending refresh
+# replace (cancel) a pending weekly run.
 concurrency:
   group: injury-refresh
   cancel-in-progress: false
@@ -40,6 +47,8 @@ jobs:
     steps:
       - name: Gate on New York local time
         id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "go=true" >> "$GITHUB_OUTPUT"
@@ -53,9 +62,21 @@ jobs:
           go=false
           for t in $targets; do
             d=$((now - t)); [ $d -lt 0 ] && d=$((-d))
-            if [ $d -le 7 ]; then go=true; fi
+            if [ $d -lt 30 ]; then go=true; fi
           done
           echo "New York $hh:$mm (day $dow): go=$go"
+          # Sunday: stay out of the weekly-data run's way.
+          if [ "$go" = true ] && [ "$dow" = 7 ]; then
+            busy=0
+            for st in in_progress queued; do
+              n=$(gh run list --repo "${{ github.repository }}" --workflow weekly-data.yml --status "$st" --json databaseId --jq length) || n=0
+              busy=$((busy + ${n:-0}))
+            done
+            if [ "$busy" -gt 0 ]; then
+              echo "Sunday: $busy weekly-data run(s) queued or in progress; skipping this refresh."
+              go=false
+            fi
+          fi
           echo "go=$go" >> "$GITHUB_OUTPUT"
 
       - if: steps.gate.outputs.go == 'true'
@@ -67,6 +88,7 @@ jobs:
           node-version: "20"
 
       # Always exits 0; a feed that fails falls back to data/consensus-cache/.
+      # A stale or no-change run writes nothing.
       - name: Reconcile the injury consensus
         if: steps.gate.outputs.go == 'true'
         run: node consensus.mjs
@@ -86,16 +108,31 @@ jobs:
         run: |
           git config user.name  "dffl-data[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data injuries.json injury-returns.json injury-returns-cache.json
-          if git diff --staged --quiet; then
+          branch="${GITHUB_REF_NAME:-main}"
+          commit() {
+            git add -A data injuries.json injury-returns.json injury-returns-cache.json
+            if git diff --staged --quiet; then return 1; fi
+            git commit -m "Data: injury refresh"
+          }
+          if ! commit; then
             echo "Nothing changed."
             exit 0
           fi
-          git commit -m "Data: injury refresh"
-          # Same no-loop, no-force push as weekly-data.yml.
-          if ! git pull --rebase origin "${GITHUB_REF_NAME:-main}"; then
-            git rebase --abort || true
-            echo "::error::Could not rebase the injury commit onto main; nothing pushed."
-            exit 1
+          # No force push. On a rebase (or push) failure: abort, start again from
+          # origin, rerun the three scripts, recommit and try once more.
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::warning::Rebase or push failed; regenerating on top of origin/$branch and retrying once."
+          git fetch origin "$branch"
+          git reset --hard "origin/$branch"
+          node consensus.mjs
+          node build-injuries.mjs
+          node injury-returns.mjs
+          if ! commit; then
+            echo "Nothing changed on top of origin/$branch."
+            exit 0
           fi
-          git push origin "HEAD:${GITHUB_REF_NAME:-main}"
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::error::Could not rebase the injury commit onto $branch after one retry; nothing pushed."
+          exit 1
