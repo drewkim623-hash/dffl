@@ -54,9 +54,17 @@
   .tabrow{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:8px 0}
   .tabrow::-webkit-scrollbar{display:none}
   nav.tabs .wrap{position:relative}
-  nav.tabs .wrap::after{content:"";position:absolute;top:0;bottom:0;right:var(--pad);width:32px;pointer-events:none;
-    background:linear-gradient(90deg,transparent,var(--plane));opacity:0;transition:opacity .14s}
-  nav.tabs .wrap.more::after{opacity:1}
+  /* Scroll hint: fades on whichever edge has more tabs past it, plus a chevron on the right.
+     Purely decorative, so none of it takes taps. Nothing shows unless the row overflows. */
+  nav.tabs .wrap::before,nav.tabs .wrap::after{content:"";position:absolute;top:0;bottom:0;width:48px;pointer-events:none;
+    opacity:0;transition:opacity .18s;z-index:1}
+  nav.tabs .wrap::before{left:var(--pad);background:linear-gradient(270deg,transparent,var(--plane) 80%)}
+  nav.tabs .wrap::after{right:var(--pad);background:linear-gradient(90deg,transparent,var(--plane) 70%)}
+  nav.tabs .wrap.more::after,nav.tabs .wrap.less::before{opacity:1}
+  .tabchev{position:absolute;top:50%;right:calc(var(--pad) + 2px);transform:translateY(-50%);z-index:2;pointer-events:none;
+    width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:17px;font-weight:700;line-height:1;
+    color:var(--ink-2);background:var(--raised);border:1px solid var(--grid);opacity:0;transition:opacity .18s}
+  nav.tabs .wrap.more .tabchev{opacity:1}
   .tabrow button{
     background:transparent;border:1px solid transparent;border-radius:999px;color:var(--muted);
     font-weight:650;font-size:14.5px;padding:8px 15px;cursor:pointer;white-space:nowrap;transition:.14s}
@@ -1172,7 +1180,7 @@
   </div>
 </header>
 
-<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div></div></nav>
+<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><span class="tabchev" aria-hidden="true">›</span></div></nav>
 
 <main class="wrap">
   <div id="loader">
@@ -1797,12 +1805,38 @@ function buildTabs() {
     bar.dataset.hint = "1";
     bar.addEventListener("scroll", tabHint, { passive: true });
     window.addEventListener("resize", tabHint, { passive: true });
+    setTimeout(tabNudge, 700);
   }
 }
-/** Fades the right edge of the tab row while there are more tabs off to the right. */
+/**
+ * Fades whichever edge of the tab row has tabs past it: the right (with a
+ * chevron) until the row is scrolled to its end, the left once it's scrolled
+ * past its start. A row that fits shows neither.
+ */
 function tabHint() {
+  const bar = $("#tabs"), w = bar.parentElement;
+  const over = bar.scrollWidth > bar.clientWidth + 2;
+  w.classList.toggle("over", over);
+  w.classList.toggle("more", over && bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
+  w.classList.toggle("less", over && bar.scrollLeft > 2);
+}
+/**
+ * The first time somebody sees a row that scrolls, slide it a little and back
+ * so it's obvious there is more. Once per visitor, and never under reduced motion.
+ */
+const TAB_NUDGE_KEY = "tabNudgeSeen";
+function tabNudge() {
   const bar = $("#tabs");
-  bar.parentElement.classList.toggle("more", bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
+  if (bar.scrollWidth <= bar.clientWidth + 2) return;
+  let seen = false;
+  try { seen = localStorage.getItem(TAB_NUDGE_KEY) === "1"; } catch (e) { /* private mode: just nudge */ }
+  if (seen) { document.body.dataset.tabNudge = "seen"; return; }
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { document.body.dataset.tabNudge = "reduced"; return; }
+  try { localStorage.setItem(TAB_NUDGE_KEY, "1"); } catch (e) { /* fine */ }
+  document.body.dataset.tabNudge = "ran";
+  const start = bar.scrollLeft;
+  bar.scrollTo({ left: start + 40, behavior: "smooth" });
+  setTimeout(() => bar.scrollTo({ left: start, behavior: "smooth" }), 550);
 }
 function show(id) {
   const prof = $('[data-panel="profile"]');
