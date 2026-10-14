@@ -6045,17 +6045,20 @@ group("Tab bar scroll hint");
   await tp.waitForFunction(() => document.body.dataset.tabNudge, null, { timeout: 10000 }).catch(() => {});
   await tp.waitForTimeout(1400);
   const first = await tp.evaluate(() => {
-    const bar = document.querySelector("#tabs"), w = bar.parentElement, chev = w.querySelector(".tabchev");
+    const bar = document.querySelector("#tabs"), w = bar.parentElement, chev = w.querySelector(".tabarr-r");
     return { over: bar.scrollWidth > bar.clientWidth, more: w.classList.contains("more"), nudge: document.body.dataset.tabNudge || "",
       stored: localStorage.getItem("tabNudgeSeen"), left: bar.scrollLeft,
-      pe: [getComputedStyle(w, "::after").pointerEvents, getComputedStyle(w, "::before").pointerEvents, chev ? getComputedStyle(chev).pointerEvents : "missing"],
+      pe: [getComputedStyle(w, "::after").pointerEvents, getComputedStyle(w, "::before").pointerEvents],
+      arrow: chev ? { hidden: chev.hidden, label: chev.getAttribute("aria-label"), tag: chev.tagName, w: chev.getBoundingClientRect().width, h: chev.getBoundingClientRect().height } : null,
       sticky: getComputedStyle(document.querySelector("nav.tabs")).position };
   });
   check("tab hint: at 390 the tab row overflows", first.over);
   check("tab hint: the right fade shows when the row overflows", first.more && await op(tp, "nav.tabs .wrap", "::after") > 0.9);
-  check("tab hint: the chevron shows when the row overflows", await op(tp, ".tabchev") > 0.9);
+  check("tab hint: a right arrow button shows when the row overflows", first.arrow && !first.arrow.hidden && first.arrow.tag === "BUTTON" && first.arrow.label === "Scroll tabs right", JSON.stringify(first.arrow));
+  check("tab hint: the arrow is a 32px+ tap target", first.arrow && first.arrow.w >= 32 && first.arrow.h >= 32, JSON.stringify(first.arrow));
+  check("tab hint: no left arrow at the start", await tp.evaluate(() => document.querySelector(".tabarr-l").hidden));
   check("tab hint: no left fade at the start", await op(tp, "nav.tabs .wrap", "::before") < 0.1);
-  check("tab hint: fades and chevron never take taps", first.pe.every(v => v === "none"), first.pe.join(","));
+  check("tab hint: the fades never take taps", first.pe.every(v => v === "none"), first.pe.join(","));
   check("tab hint: the tab bar is still sticky", first.sticky === "sticky", first.sticky);
   check("tab hint: the first visit nudges once and remembers it", first.nudge === "ran" && first.stored === "1" && first.left < 2,
     `${first.nudge} ${first.stored} left=${first.left}`);
@@ -6072,6 +6075,17 @@ group("Tab bar scroll hint");
   }
   const tapped = lastVisible ? await tp.evaluate(t => document.querySelector(`#tabs button[data-tab="${t}"]`).getAttribute("aria-selected"), lastVisible) : null;
   check("tab hint: a tab under the right fade still takes a tap", tapped === "true", `${lastVisible} ${tapped}`);
+  const tapped0 = await tp.evaluate(() => document.querySelector('#tabs [aria-selected="true"]').dataset.tab);
+  // The right arrow pages the row; the left arrow pages it back.
+  await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = 0; b.dispatchEvent(new Event("scroll")); });
+  await tp.waitForTimeout(250);
+  await tp.click(".tabarr-r");
+  await tp.waitForTimeout(700);
+  const paged = await tp.evaluate(() => { const b = document.querySelector("#tabs"); return { left: b.scrollLeft, cw: b.clientWidth, sel: document.querySelector('#tabs [aria-selected="true"]').dataset.tab }; });
+  check("tab hint: tapping the right arrow pages the row and changes no tab", paged.left >= paged.cw * 0.5 && paged.sel === tapped0, JSON.stringify(paged));
+  await tp.click(".tabarr-l");
+  await tp.waitForTimeout(700);
+  check("tab hint: the left arrow pages it back", await tp.evaluate(l => document.querySelector("#tabs").scrollLeft < l, paged.left));
   // Scrolled partway: the left fade shows. Scrolled to the end: right fade and chevron hide.
   await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = 60; b.dispatchEvent(new Event("scroll")); });
   await tp.waitForTimeout(300);
@@ -6079,7 +6093,21 @@ group("Tab bar scroll hint");
   await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = b.scrollWidth; b.dispatchEvent(new Event("scroll")); });
   await tp.waitForTimeout(300);
   check("tab hint: at the end the right fade hides", await op(tp, "nav.tabs .wrap", "::after") < 0.1);
-  check("tab hint: at the end the chevron hides", await op(tp, ".tabchev") < 0.1);
+  check("tab hint: at the end the right arrow hides and the left one shows", await tp.evaluate(() => document.querySelector(".tabarr-r").hidden && !document.querySelector(".tabarr-l").hidden));
+  // A direct load of the last tab scrolls the row so that tab is in view.
+  const lastId = await tp.evaluate(() => [...document.querySelectorAll("#tabs button")].pop().dataset.tab);
+  const rp0 = await tctx.newPage();
+  await rp0.goto(BASE + "#" + lastId, { waitUntil: "domcontentloaded" });
+  await settle(rp0);
+  await rp0.waitForTimeout(1500);
+  const vis = await rp0.evaluate(id => { const bar = document.querySelector("#tabs"), b = bar.querySelector(`[data-tab="${id}"]`), r = b.getBoundingClientRect(), q = bar.getBoundingClientRect();
+    return { sel: b.getAttribute("aria-selected"), inView: r.left >= q.left - 1 && r.right <= q.right + 1, left: bar.scrollLeft }; }, lastId);
+  check("tab hint: on load the selected tab is scrolled into view", vis.sel === "true" && vis.inView && vis.left > 0, JSON.stringify(vis));
+  // Switching tabs keeps the new one in view.
+  await rp0.evaluate(() => document.querySelector('#tabs button[data-tab="home"]').click());
+  await rp0.waitForTimeout(700);
+  check("tab hint: changing tab scrolls the new one into view", await rp0.evaluate(() => { const b = document.querySelector('#tabs [aria-selected="true"]'), r = b.getBoundingClientRect(), q = document.querySelector("#tabs").getBoundingClientRect(); return b.dataset.tab === "home" && r.left >= q.left - 1 && r.right <= q.right + 1; }));
+  await rp0.close();
   // A second visit in the same browser: no nudge.
   await tp.reload({ waitUntil: "domcontentloaded" });
   await settle(tp);
@@ -6116,7 +6144,7 @@ group("Tab bar scroll hint");
     await new Promise(r => setTimeout(r, 300));
     const op = (n, p) => Number(getComputedStyle(n, p).opacity);
     return { over: bar.scrollWidth > bar.clientWidth + 2, cls: ["over", "more", "less"].filter(c => w.classList.contains(c)).join(","),
-      after: op(w, "::after"), before: op(w, "::before"), chev: op(w.querySelector(".tabchev")) };
+      after: op(w, "::after"), before: op(w, "::before"), chev: w.querySelector(".tabarr-r").hidden && w.querySelector(".tabarr-l").hidden ? 0 : 1 };
   });
   check("tab hint: on desktop with a row that fits, no fade or chevron", !fit.over && !fit.cls && fit.after < 0.1 && fit.before < 0.1 && fit.chev < 0.1, JSON.stringify(fit));
   await dctx.close();
