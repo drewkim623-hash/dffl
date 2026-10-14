@@ -1301,7 +1301,7 @@ group("News: the Allen three-team trade");
   const pulse = JSON.parse(await readFile(join(ROOT, "data/pulse.json"), "utf8"));
   const wk = await Promise.all([1, 2, 3, 4, 5].map(async w =>
     JSON.parse(await readFile(join(ROOT, `data/week-2026-0${w}.json`), "utf8"))));
-  const art = (rj.articles || []).find(a => a.slug === "josh-allen-goes-to-the-league-leader");
+  const art = (rj.articles || []).find(a => a.slug === "josh-allen-goes-to-the-leagues-top-scorer");
   check("the trade piece is published", !!art);
   if (art) {
     const text = JSON.stringify(art);
@@ -1559,7 +1559,7 @@ const COVER_KIND_TABLE = {
   "i-owe-the-toilet-bowl-an-apology": "column", "the-nine-game-difference": "analysis",
   "week-1-game-by-game": "recap", "the-steepest-fall-on-the-board": "odds",
   "one-game-was-on-the-bench": "column", "the-fifty-one-dollar-quarterback": "waivers",
-  "same-record-different-board": "odds", "josh-allen-goes-to-the-league-leader": "trade",
+  "same-record-different-board": "odds", "josh-allen-goes-to-the-leagues-top-scorer": "trade",
 };
 const coverPage = await ctx.newPage();
 coverPage.on("pageerror", e => errors.push(String(e)));
