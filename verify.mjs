@@ -88,6 +88,29 @@ for (const id of EXPECT) {
   check(`${id}: panel renders and is selectable`, shown.exists && shown.visible && shown.selected && shown.kids > 0, JSON.stringify(shown));
 }
 check("hash routing follows the tab", (await page.evaluate(() => location.hash)) === "#recaps");
+check("the Trade Machine is gone: no tab, no panel", await page.evaluate(() =>
+  !document.querySelector('#tabs button[data-tab="trade"]') && !document.querySelector('[data-panel="trade"]') &&
+  ![...document.querySelectorAll("#tabs button")].some(b => /trade machine/i.test(b.textContent))));
+// Old Trade Machine links land on Trades, on a direct load and on a hash change.
+const onTrades = p => p.evaluate(() => ({
+  hash: location.hash,
+  selected: (document.querySelector('#tabs button[aria-selected="true"]') || {}).dataset?.tab || null,
+  visible: [...document.querySelectorAll("#app > [data-panel]")].filter(x => !x.hidden).map(x => x.dataset.panel).join(","),
+  machine: !!document.querySelector('[data-panel="trade"], #tabs button[data-tab="trade"]'),
+}));
+const landedOnTrades = d => d.hash === "#trades" && d.selected === "trades" && d.visible === "trades" && !d.machine;
+for (const old of ["trade", "machine"]) {
+  const direct = await ctx.newPage();
+  await direct.goto(BASE + "#" + old, { waitUntil: "domcontentloaded" });
+  await direct.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const d = await onTrades(direct);
+  check(`a direct load of #${old} lands on Trades`, landedOnTrades(d), JSON.stringify(d));
+  await direct.close();
+  await page.evaluate(h => { location.hash = h; }, old);
+  await page.waitForFunction(() => location.hash === "#trades", null, { timeout: 5000 }).catch(() => {});
+  const h = await onTrades(page);
+  check(`changing the hash to #${old} lands on Trades`, landedOnTrades(h), JSON.stringify(h));
+}
 
 group("Existing stats still compute");
 const stats = await page.evaluate(() => {
