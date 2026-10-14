@@ -1,0 +1,427 @@
+{
+ "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up. A record, not an input — hand entries go in injury-returns.json.",
+ "generated": "2026-10-14T04:09:26.010Z",
+ "week": 6,
+ "entries": {
+  "2449": {
+   "n": "Stefon Diggs",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "4199": {
+   "n": "Aaron Jones",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "4866": {
+   "n": "Saquon Barkley",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "4881": {
+   "n": "Lamar Jackson",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "4983": {
+   "n": "DJ Moore",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "5844": {
+   "n": "T.J. Hockenson",
+   "s": "Out",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "5850": {
+   "n": "Josh Jacobs",
+   "s": "NA",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: NA = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "5859": {
+   "n": "A.J. Brown",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "5872": {
+   "n": "Deebo Samuel",
+   "s": "Out",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "5892": {
+   "n": "David Montgomery",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 2,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "week-to-week",
+   "retChecked": "2026-10-14"
+  },
+  "6786": {
+   "n": "CeeDee Lamb",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "7021": {
+   "n": "Rico Dowdle",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "7525": {
+   "n": "DeVonta Smith",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "7543": {
+   "n": "Travis Etienne",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "8142": {
+   "n": "Alec Pierce",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "8155": {
+   "n": "Breece Hall",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "8408": {
+   "n": "Jordan Mason",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "8800": {
+   "n": "Malik Davis",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "9226": {
+   "n": "De'Von Achane",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "9488": {
+   "n": "Jaxon Smith-Njigba",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "9502": {
+   "n": "Tank Dell",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "9753": {
+   "n": "Zach Charbonnet",
+   "s": "PUP",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "9756": {
+   "n": "Jordan Addison",
+   "s": "Out",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "10222": {
+   "n": "Jayden Reed",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "10229": {
+   "n": "Rashee Rice",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "11560": {
+   "n": "Caleb Williams",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "11625": {
+   "n": "Adonai Mitchell",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "11628": {
+   "n": "Marvin Harrison",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "11635": {
+   "n": "Ladd McConkey",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 2,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "week-to-week",
+   "retChecked": "2026-10-14"
+  },
+  "11646": {
+   "n": "Jalen Coker",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "12495": {
+   "n": "Ollie Gordon",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "12508": {
+   "n": "Jaxson Dart",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "12509": {
+   "n": "Tre' Harris",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 2,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "week-to-week",
+   "retChecked": "2026-10-14"
+  },
+  "12512": {
+   "n": "Quinshon Judkins",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "12529": {
+   "n": "TreVeyon Henderson",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "12534": {
+   "n": "Kyle Monangai",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "13276": {
+   "n": "Omar Cooper",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "13281": {
+   "n": "Jordyn Tyson",
+   "s": "IR",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "13286": {
+   "n": "Jadarian Price",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  },
+  "13296": {
+   "n": "Caleb Douglas",
+   "s": "Out",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-14"
+  },
+  "13298": {
+   "n": "KC Concepcion",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-14"
+  },
+  "13417": {
+   "n": "De'Zhaun Stribling",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 9,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR = rest of regular season",
+   "retChecked": "2026-10-14"
+  }
+ }
+}

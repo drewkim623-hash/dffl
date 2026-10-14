@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-curated return timetables, read by injury-returns.mjs. entries: { \"<sleeper player_id>\": { \"kind\": \"team\" | \"report\", \"ret\": \"YYYY-MM-DD\" (or \"weeks\": N | \"season\"), \"source\": \"url or publisher\", \"checked\": \"YYYY-MM-DD\", \"note\": \"what was said\" } }. kind \"team\" = the club's own timetable: it wins over everything and is not estimated. kind \"report\" (the default) = a media report: used only when ESPN has no return date and no timetable in its outlook; a dated report is not estimated, a weeks-only one is.",
+  "entries": {}
+}
