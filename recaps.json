@@ -29,6 +29,7 @@
    "dek": "one-sentence standfirst under the headline",
    "byline": "who wrote it",
    "standfirst": "optional short detail line next to the byline",
+   "teaser": "plain-text group-chat teaser, <=600 chars; shape and rules in weekly-job-prompt.md, checked by check-recaps.mjs",
    "blocks[]": {
     "p": "{type:'p', text, lead?}  - a paragraph; lead:true gets the drop cap. <b> is allowed, nothing else",
     "h": "{type:'h', eyebrow, text}  - a section heading",
@@ -458,6 +459,7 @@
    "dek": "Christian McCaffrey arrived by trade last week. Kaelon Black just arrived by the highest FAAB bid of the round — same 49ers backfield, same fantasy roster.",
    "byline": "DFFL desk",
    "standfirst": "$36 · the round's top bid",
+   "teaser": "🚨 DFFL | WEEK 1\n\nBRADYRIFE BOUGHT THE BACKUP TOO\n\n💰 bradyrife paid $36 for Kaelon Black, the top FAAB bid of the round\n📈 That is $15 more than the next one: wesley55's $21 for Romeo Doubs\n🏈 He already owns Christian McCaffrey, who scored 11.3 in his bradyrife debut\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=bradyrife-bought-the-backup-too",
    "blocks": [
     {
      "type": "p",
@@ -539,6 +541,7 @@
    "dek": "The two best rosters in the league landed in the same division. One of them is going to spend the autumn fighting for a wildcard — and that is only the second-most interesting thing about this draft.",
    "byline": "DFFL desk",
    "standfirst": "15 rounds, 180 picks",
+   "teaser": "🚨 DFFL | PRESEASON\n\nTHE CPES PROBLEM\n\n🏆 jadencha's title odds: 28%, well clear of the defending champion's 20\n💸 jskule23 got Puka Nacua 176 picks below his market price, the biggest keeper discount\n📉 Brock Purdy fell 71 picks, the biggest drop in the open draft\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-cpes-problem",
    "blocks": [
     {
      "type": "note",
@@ -910,6 +913,7 @@
    "dek": "I wrote yesterday that this league cannot punish its worst team. I had the bracket upside down. It punishes them better than almost any format I have seen.",
    "byline": "DFFL desk",
    "standfirst": "Opinion",
+   "teaser": "🚨 DFFL | PRESEASON\n\nI OWE THE TOILET BOWL AN APOLOGY\n\n🚽 28 of 28 consolation ties went to the team that scored fewer points\n🔻 chassinator went 3-11 in 2025, lost the final by three points and finished twelfth\n🏆 Same chassinator won the whole thing in 2022, and has finished last twice since\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=i-owe-the-toilet-bowl-an-apology",
    "blocks": [
     {
      "type": "note",
@@ -1129,6 +1133,7 @@
     "tone": "red",
     "caption": "What the schedule has taken, and given"
    },
+   "teaser": "🚨 DFFL | PRESEASON\n\nTHE NINE-GAME DIFFERENCE\n\n⚖️ Domo112 and saucebossandrew: 32.45 earned wins against 32.36, five seasons\n📊 Actual records: 37-19 for one, 28-28 for the other\n🎯 Domo112's opponents have put up 598 more points against him\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-nine-game-difference",
    "blocks": [
     {
      "type": "p",
@@ -1357,6 +1362,7 @@
     "tone": "blue",
     "caption": "Week 1, 2026"
    },
+   "teaser": "🚨 DFFL | WEEK 1\n\nWEEK 1, GAME BY GAME\n\n🌙 sizzlemc2 went into Monday night 28.56 behind and got 46.7 from two players\n😩 moseslin scored 161.86, more than three of the six winners, and is 0-1\n🏈 6 games, 120 starters, 1,637.28 points\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=week-1-game-by-game",
    "blocks": [
     {
      "type": "p",
@@ -1832,6 +1838,7 @@
     "tone": "red",
     "caption": "The board's biggest one-week mover"
    },
+   "teaser": "🚨 DFFL | WEEK 1\n\nTHE STEEPEST FALL ON THE BOARD\n\n📉 bertalicious's playoff odds: 73.3% before the season, 53.3% now\n🧮 A 20.0-point drop, the largest swing of any team in the league\n🤏 And the loss was by 14.46, the second-closest game of the week\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-steepest-fall-on-the-board",
    "blocks": [
     {
      "type": "p",
@@ -2020,6 +2027,7 @@
    "dek": "The league left 482.22 points in its bench slots. Exactly one of the six losses could have been reversed from there.",
    "byline": "DFFL desk",
    "standfirst": "6 games · 1401.7 points · every lineup checked",
+   "teaser": "🚨 DFFL | WEEK 2\n\nONE GAME WAS ON THE BENCH\n\n🪑 The league left 482.22 points on its benches in week 2\n😬 sizzlemc2 benched 69.98 and lost by 18.28\n🤷 Winners wasted 255.06 bench points, losers only 227.16\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=one-game-was-on-the-bench",
    "blocks": [
     {
      "type": "p",
@@ -2640,6 +2648,7 @@
    "dek": "jskule23 is 0-2 and has now spent $62 in FAAB this season, more than any other manager in the league. Fifty-one of it went on Patrick Mahomes in a single claim — by itself more than every other manager's full-season total.",
    "byline": "DFFL desk",
    "standfirst": "$51 · the round's only claim in that neighborhood",
+   "teaser": "🚨 DFFL | WEEK 2\n\nTHE FIFTY-ONE DOLLAR QUARTERBACK\n\n💰 jskule23 paid $51 for Patrick Mahomes, the biggest FAAB claim of the season\n🧾 He has spent $62 this season, more than any other manager\n📉 And he is 0-2\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-fifty-one-dollar-quarterback",
    "blocks": [
     {
      "type": "p",
@@ -2752,6 +2761,7 @@
    "dek": "jadencha, wesley55 and bradyrife are all 2-0. The board splits their playoff odds by 44.8 points. moseslin is 0-2 and still prices ahead of a team with a win.",
    "byline": "DFFL desk",
    "standfirst": "44.8 pts · the spread among the league's three unbeaten teams",
+   "teaser": "🚨 DFFL | WEEK 3\n\nSAME RECORD, DIFFERENT BOARD\n\n📊 Three teams are 2-0, and the board splits their playoff odds by 44.8 points\n🔝 jadencha sits at 97.9%, bradyrife at 53.2%\n🤔 Inside the 0-2 tier the spread is 26.5 points\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=same-record-different-board",
    "blocks": [
     {
      "type": "p",
@@ -2925,6 +2935,7 @@
    "dek": "bradyrife is 3-0 having faced 315.38 points, the fewest in the league. jadencha would be 30-3 against the whole league and is 2-1. Three weeks in, who you drew is doing a lot of the work. Every game in full, below.",
    "byline": "DFFL desk",
    "standfirst": "6 games · 1,546.7 points · every schedule checked",
+   "teaser": "🚨 DFFL | WEEK 3\n\nTHE SCHEDULE IS KEEPING SCORE\n\n🍀 bradyrife is 3-0 and has faced 315.38 points, the fewest in the league\n🥊 moseslin has had 459.34 put up against him, 143.96 more\n📊 jadencha would be 30-3 against the whole league, and is 2-1\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-schedule-is-keeping-score",
    "blocks": [
     {
      "type": "p",
@@ -3161,6 +3172,7 @@
    "dek": "The second-most points in the league, and the most left on the bench. Three weeks into the season, every one of Managerial Wizard's results has turned on a lineup call.",
    "byline": "DFFL desk",
    "standfirst": "2-1 · 422.24 points for · 155.12 on the bench",
+   "teaser": "🚨 DFFL | WEEK 3\n\nSIZZLEMC2 HAS TOO MANY GOOD PLAYERS\n\n🪑 sizzlemc2 has left 155.12 points on the bench, the most in the league\n💥 422.24 points scored, second only to jadencha\n📊 Worth a 23-10 record against everybody. The real one: 2-1\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=sizzlemc2-has-too-many-good-players",
    "blocks": [
     {
      "type": "p",
@@ -3348,6 +3360,7 @@
    "dek": "One pick'em, one near coin flip, and a 20-point favourite. All six matchups broken down, with the line on each and what a win or a loss does to both teams' playoff chances.",
    "byline": "DFFL desk",
    "standfirst": "6 games · lines from the Odds tab · stakes from the Playoff Picture",
+   "teaser": "🚨 DFFL | WEEK 4\n\nTHE LINES, AND WHAT EVERY GAME IS WORTH\n\n🎲 sizzlemc2's game carries 21.4 points of playoff chance, the most this week\n✅ A win over drewkim: 62.1%. A loss: 40.7%\n📏 Lines run from a pick'em to a 20-point favourite\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=week-4-the-lines-and-what-every-game-is-worth",
    "blocks": [
     {
      "type": "p",
@@ -3657,6 +3670,7 @@
    "dek": "No manager has put more into the waiver wire this season than victorthompson's $100, and no manager's playoff odds have fallen further since the draft. The two numbers are supposed to point the other way.",
    "byline": "DFFL desk",
    "standfirst": "1-2 · $100 in FAAB, the most in the league · -19.5 points of playoff odds, the steepest fall of any manager",
+   "teaser": "🚨 DFFL | WEEK 3\n\nTHE HUNDRED-DOLLAR FALL\n\n💸 victorthompson has spent $100 in FAAB, the most in the league\n📉 The steepest playoff-odds fall of any manager: -19.5 points\n🥶 333.9 points scored, the fewest, fewer than 0-3 jskule23's 351.24\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-hundred-dollar-fall",
    "blocks": [
     {
      "type": "p",
@@ -3854,6 +3868,7 @@
    "dek": "Week 4 priced five games with a real favorite and left one as a true pick'em. The pick'em resolved as advertised. Three of the five favorites did not.",
    "byline": "DFFL desk",
    "standfirst": "5 favorites · 3 lost outright · the 20-point favorite won by 12.32",
+   "teaser": "🚨 DFFL | WEEK 4\n\nTHE FAVORITES HAD A BAD SUNDAY\n\n🐶 Underdogs won 3 of 5 games with a clear favorite\n😰 The 20-point favorite needed 153.38 points to win by 12.32\n🤝 The pick'em went to wesley55, ending bradyrife's 3-0 start\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-favorites-had-a-bad-sunday",
    "blocks": [
     {
      "type": "p",
@@ -4012,6 +4027,7 @@
    "dek": "Four teams are 3-1. Four are 2-2. Four are 1-3. Nobody sits outside those bands — and the points column inside each one tells a different story than the record does.",
    "byline": "DFFL desk",
    "standfirst": "4 weeks · 3 bands of 4",
+   "teaser": "🚨 DFFL | WEEK 5\n\nTHE LEAGUE SPLIT INTO THREE EVEN THIRDS\n\n🧩 Four teams at 3-1, four at 2-2, four at 1-3\n📊 Inside the 3-1 band: 118.40 points between jadencha and bradyrife\n🧮 4 weeks, 3 bands of 4, nobody outside them\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-league-in-thirds",
    "blocks": [
     {
      "type": "p",
@@ -4133,6 +4149,7 @@
    "dek": "The site's playoff model has moved for every team in the league since the draft. It moved up for all four 3-1 teams, every one of them, and down for all eight others, every one of them.",
    "byline": "DFFL desk",
    "standfirst": "4-for-4 up at 3-1 · 8-for-8 down everywhere else",
+   "teaser": "🚨 DFFL | WEEK 5\n\nEVERY 3-1 TEAM GOT MORE LIKELY. NOBODY ELSE DID.\n\n📈 All 4 of the 3-1 teams have better playoff odds than at the draft\n📉 All 8 of the others have worse ones\n🔥 jadencha, sizzlemc2, wesley55 and bradyrife: a combined 12-4\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=every-3-1-team-got-more-likely",
    "blocks": [
     {
      "type": "p",
@@ -4258,6 +4275,7 @@
    "dek": "Week 5's tightest finish was decided by 17.28 points — wider than the closest game in any of the first four weeks of the season. jadencha's 124.74-point win is the widest anyone has posted this year. Every game in full, below.",
    "byline": "DFFL desk",
    "standfirst": "6 games · 1,604.24 points · no finish within 17",
+   "teaser": "🚨 DFFL | WEEK 5\n\nTHE WEEK WITHOUT A CLOSE GAME\n\n📏 The closest game of week 5 was decided by 17.28 points\n💥 jadencha beat sizzlemc2 by 124.74, the widest margin of the year\n🧹 Three of the six games were decided by at least 56\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-week-without-a-close-game",
    "blocks": [
     {
      "type": "p",
@@ -4462,6 +4480,7 @@
    "cover": {
     "type": "trade"
    },
+   "teaser": "🚨 DFFL | WEEK 5\n\nJOSH ALLEN GOES TO THE LEAGUE'S TOP SCORER\n\n🔁 The season's first three-team trade: 3 teams, 3 players, 2 picks\n💪 Josh Allen scored 146.96 for jskule23, 29.39 a game\n🏆 He joins jadencha, first in points with 820.1 and 4-1\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=josh-allen-goes-to-the-leagues-top-scorer",
    "blocks": [
     {
      "type": "p",

@@ -1472,6 +1472,102 @@ check("the two figures it rests on are both in it", nine.quotes0009 && nine.quot
 check("both managers are named", nine.namesBoth);
 check("no NaN anywhere in it", nine.nan === false);
 
+/* The teaser: ten plain-text lines for the group chat at the foot of every
+ * article, with a Copy button. The shape rules live in check-recaps.mjs, the
+ * same file the weekly job runs before it pushes. */
+group("Article teasers");
+{
+  const { recapsProblems, teaserLink, SITE } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const rj = JSON.parse(await readFile(join(ROOT, "recaps.json"), "utf8"));
+  const arts = rj.articles || [];
+  const probs = recapsProblems(rj);
+  check("every article has a teaser in the ten-line shape, <=600 chars, no HTML, every stat number in its article",
+    arts.length > 0 && probs.length === 0, probs.slice(0, 3).join(" | ") || `${arts.length} articles`);
+  const { spawnSync } = await import("node:child_process");
+  const cr = spawnSync(process.execPath, ["check-recaps.mjs"], { cwd: ROOT, encoding: "utf8", timeout: 60000 });
+  check("check-recaps.mjs exits 0 on the committed recaps.json", cr.status === 0, String(cr.stdout || cr.stderr).slice(-200));
+  // The check has to bite: a number the article never prints, and a link to another piece, both fail.
+  const a0 = arts[0], L0 = a0.teaser.split("\n");
+  const { teaserProblems } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const slugs = new Set(arts.map(a => a.slug));
+  const badNum = teaserProblems({ ...a0, teaser: [...L0.slice(0, 4), "📈 98765.4 of nothing", ...L0.slice(5)].join("\n") }, slugs);
+  const badLink = teaserProblems({ ...a0, teaser: [...L0.slice(0, 9), teaserLink(arts[1].slug)].join("\n") }, slugs);
+  check("an invented stat number or another piece's link fails the teaser check",
+    badNum.some(p => /98765\.4/.test(p)) && badLink.some(p => /last line/.test(p)), `${badNum.length}/${badLink.length}`);
+  // Every teaser link names the piece it came with: the ?a=<slug> it carries resolves to that article.
+  const resolved = await page.evaluate(async list => {
+    const out = [];
+    for (const { slug, link, site } of list) {
+      const u = new URL(link);
+      const a = u.href.startsWith(site) && u.pathname === new URL(site).pathname
+        ? await window.__DFFL.articleBySlug(u.searchParams.get("a")) : null;
+      if (!a || a.slug !== slug) out.push(slug);
+    }
+    return out;
+  }, arts.map(a => ({ slug: a.slug, link: a.teaser.split("\n").pop(), site: SITE })));
+  check("every teaser's link opens its own article", resolved.length === 0, resolved.join(", "));
+
+  // The newest piece, loaded straight from its teaser link at 390, the way a tap from the chat lands.
+  const newest = arts.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0];
+  const tctx = await browser.newContext({ viewport: { width: 390, height: 844 }, permissions: ["clipboard-read", "clipboard-write"] });
+  const tp = await tctx.newPage();
+  const terrs = [];
+  tp.on("pageerror", e => terrs.push(String(e)));
+  await tp.goto(newest.teaser.split("\n").pop().replace(SITE, `${BASE}/`), { waitUntil: "domcontentloaded" });
+  await tp.waitForFunction(() => document.querySelector('[data-panel="article"]:not([hidden]) .artl .ateaser'), null, { timeout: 90000 });
+  const td = await tp.evaluate(() => {
+    const art = document.querySelector('[data-panel="article"] .artl');
+    const box = art.querySelector(".ateaser"), btn = box.querySelector(".copytxt"), say = box.querySelector(".say");
+    const r = box.getBoundingClientRect(), b = btn.getBoundingClientRect();
+    return {
+      headline: art.querySelector("h2").textContent,
+      last: art.lastElementChild === box,
+      afterBlocks: !!(box.previousElementSibling && box.previousElementSibling.classList.contains("abd")),
+      text: box.querySelector("pre").textContent,
+      live: say.getAttribute("role") === "status" && say.getAttribute("aria-live") === "polite",
+      named: /Copy the teaser for/.test(btn.getAttribute("aria-label") || ""),
+      inside: r.left >= 0 && r.right <= innerWidth + 0.5,
+      overflow: document.documentElement.scrollWidth > innerWidth,
+      tap: b.height >= 44,
+      taHidden: box.querySelector("textarea").hidden,
+    };
+  });
+  check("a direct load of the teaser link at 390 opens that article", td.headline === newest.headline, td.headline);
+  check("the teaser box is the article's last child, right after the last block", td.last && td.afterBlocks);
+  check("the box shows the teaser exactly as committed", td.text === newest.teaser);
+  check("the box fits 390 with no sideways scroll, a 44px Copy button and a named, live status",
+    td.inside && !td.overflow && td.tap && td.live && td.named && td.taHidden, JSON.stringify(td).slice(0, 200));
+  await tp.click(".ateaser .copytxt");
+  await tp.waitForFunction(() => document.querySelector(".ateaser .say").textContent.length > 0, null, { timeout: 5000 });
+  const copied = await tp.evaluate(async () => ({
+    clip: await navigator.clipboard.readText(),
+    say: document.querySelector(".ateaser .say").textContent,
+    taHidden: document.querySelector(".ateaser textarea").hidden,
+  }));
+  check("Copy puts the teaser on the clipboard and says so", copied.clip === newest.teaser && /^Copied/.test(copied.say) && copied.taHidden,
+    copied.say);
+  // No clipboard (an old WebView, an insecure origin): the text appears selected in a readonly box.
+  await tp.evaluate(() => Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true }));
+  await tp.click(".ateaser .copytxt");
+  const fb = await tp.evaluate(() => {
+    const ta = document.querySelector(".ateaser textarea");
+    return { shown: !ta.hidden, ro: ta.readOnly, value: ta.value, focused: document.activeElement === ta,
+      sel: ta.value.slice(ta.selectionStart, ta.selectionEnd), say: document.querySelector(".ateaser .say").textContent,
+      inside: ta.getBoundingClientRect().right <= innerWidth + 0.5 };
+  });
+  check("without a clipboard the teaser shows readonly, focused and fully selected, and says so",
+    fb.shown && fb.ro && fb.focused && fb.value === newest.teaser && fb.sel === newest.teaser && /Couldn't copy/.test(fb.say) && fb.inside,
+    JSON.stringify({ ...fb, value: fb.value.length, sel: fb.sel.length }));
+  const bare = await page.evaluate(() => {
+    const n = window.__DFFL.articleCard({ headline: "x", blocks: [{ type: "p", text: "y" }] }, true);
+    const idx = window.__DFFL.articleCard({ headline: "x", teaser: "t", blocks: [] }, false);
+    return n.querySelectorAll(".ateaser").length + idx.querySelectorAll(".ateaser").length;
+  });
+  check("no teaser box without a teaser, and none outside the full article", bare === 0, `${bare}`);
+  check("no page errors on the teaser page", terrs.length === 0, terrs.slice(0, 2).join(" | "));
+  await tctx.close();
+}
+
 await page.evaluate(() => { const a = document.querySelector('[data-panel="article"]'); if (a) a.remove(); });
 const artSafe = await page.evaluate(() => {
   const D = window.__DFFL;
