@@ -809,6 +809,24 @@
   .aby{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:11px;letter-spacing:.13em;
     text-transform:uppercase;color:var(--muted);font-weight:600}
   .aby b{color:var(--ink-2);font-weight:700}
+  /* The teaser: the few lines somebody pastes into the group chat, with the link. */
+  .ateaser{margin:18px 0 0;background:var(--raised);border:1px solid var(--ring);border-left:3px solid var(--blue);
+    border-radius:var(--rs);padding:13px 15px;max-width:66ch;min-width:0}
+  .artl > .ateaser{margin-top:26px}
+  .ateaser .tk{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:0 0 7px}
+  .ateaser pre{margin:0 0 12px;font:inherit;font-size:14.5px;line-height:1.55;color:var(--ink-2);
+    white-space:pre-wrap;overflow-wrap:anywhere}
+  .ateaser .tact{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .copytxt{background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 17px;min-height:44px;
+    font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .copytxt:hover{filter:brightness(1.08)}
+  .copytxt:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  .ateaser .say{font-size:13.5px;color:var(--ink-2);font-weight:600}
+  .ateaser textarea{display:block;width:100%;box-sizing:border-box;margin-top:10px;font:inherit;font-size:14px;
+    line-height:1.5;padding:10px;border:1px solid var(--ring);border-radius:var(--rs);background:var(--surface);
+    color:var(--ink);resize:vertical}
+  .ateaser textarea[hidden]{display:none}
   .abd > .apara,.abd > .ahead,.abd > .astat,.abd > .anote{max-width:66ch}
   .apara{font-size:16.5px;line-height:1.7;color:var(--ink-2);margin:0 0 17px;text-wrap:pretty}
   .apara b{color:var(--ink);font-weight:750}
@@ -3278,6 +3296,48 @@ async function articleBySlug(slug) {
   } catch (e) { return null; }
 }
 
+/**
+ * The teaser: a headline, three stat lines and the piece's own link, written
+ * to be pasted into the group chat as it stands. Plain text in, plain text out.
+ */
+function teaserBox(a) {
+  const box = el("div", "ateaser");
+  box.innerHTML = `<p class="tk">Teaser · for the group chat</p>
+    <pre></pre>
+    <div class="tact">
+      <button type="button" class="copytxt" aria-label="Copy the teaser for ${esc(a.headline || "this article")}">Copy teaser</button>
+      <span class="say" role="status" aria-live="polite"></span>
+    </div>
+    <textarea readonly hidden rows="6" aria-label="Teaser, selected for copying"></textarea>`;
+  box.querySelector("pre").textContent = a.teaser;
+  box.querySelector(".copytxt").onclick = () => copyTeaser(box, a.teaser);
+  return box;
+}
+
+/**
+ * Clipboard first. If the browser refuses (no permission, an insecure origin,
+ * an old WebView), show the text in a readonly textarea already selected, so
+ * one more copy gesture does it.
+ */
+async function copyTeaser(box, text) {
+  const say = box.querySelector(".say"), ta = box.querySelector("textarea");
+  say.textContent = "";
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("no clipboard");
+    await navigator.clipboard.writeText(text);
+    ta.hidden = true;
+    say.textContent = "Copied. Paste it into the group chat.";
+  } catch (e) {
+    ta.value = text;
+    ta.rows = Math.min(12, text.split("\n").length + 1);
+    ta.hidden = false;
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    say.textContent = "Couldn't copy automatically. The text below is selected: copy it now.";
+  }
+}
+
 function articleCard(a, full) {
   const box = el("article", `artl${a.kind === "opinion" ? " op" : ""}`);
   const when = a.date ? new Date(a.date + "T12:00:00Z").toLocaleDateString(undefined,
@@ -3293,6 +3353,8 @@ function articleCard(a, full) {
         ${a.standfirst ? `<span>${esc(a.standfirst)}</span>` : ""}</div>
     </header>
     <div class="abd">${(a.blocks || []).map(articleBlock).join("")}</div>`;
+  // The teaser sits under the last block: read the piece, then share it.
+  if (full && a.teaser) box.appendChild(teaserBox(a));
   const hero = box.querySelector(".cover.big");
   if (hero) hero._art = a;   // for the redraw when the window crosses COVER_WIDE_MQ
   return box;
@@ -9684,7 +9746,7 @@ async function boot() {
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
       weekMovers, panelRecaps, allPowerRankings, keepersOf, keepersFor, loadStatedKeepers,
       preDraftOwners, playerModal, openPlayer, posClass,
-      articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
+      articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, teaserBox, copyTeaser, coverHTML, bracketHTML,
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,

@@ -65,7 +65,7 @@ Three things, all committed straight to `main`:
 1. **`recaps.json` → `weeks[]`** — the week's write-up.
 2. **`rankings.json` → `weeks[]`** — one sentence of colour per manager.
 3. **`recaps.json` → `articles[]`** — one new article, `"source": "tuesday"`: the recap and the
-   column together. See **The Tuesday article** below.
+   column together, with a `teaser`. See **The Tuesday article** and **The teaser** below.
 
 Then it sends that article. See **Sending the blast** below.
 
@@ -98,11 +98,43 @@ One article, appended to `articles[]`, that is both the column and the recap —
   then every game in order of how close it finished: an `h` per game and one or two paragraphs,
   opening with the score in `<b>`.
 - Fields: unique `slug`, today's `date`, `kind: "opinion"` if it argues, `kicker`
-  `"<season> · week <n>"`, `headline`, `dek`, `byline: "DFFL desk"`, `standfirst`, and
-  `"source": "tuesday"`.
+  `"<season> · week <n>"`, `headline`, `dek`, `byline: "DFFL desk"`, `standfirst`, `teaser`
+  and `"source": "tuesday"`.
 
 **Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append to it, and leave
 every existing article exactly as found. Dropping the key deletes writing nothing else regenerates.
+
+### The teaser
+
+Every new article, from any routine, carries a `teaser`: the text somebody copies from the bottom
+of the article page (there is a **Copy teaser** button) and pastes into the league group chat.
+Plain text, **600 characters at most**, no HTML or markdown, and exactly these ten lines,
+separated by `\n`:
+
+```
+🚨 DFFL | WEEK n
+(blank line)
+HEADLINE IN CAPS
+(blank line)
+<emoji> stat line 1
+<emoji> stat line 2
+<emoji> stat line 3
+(blank line)
+Full story 👇
+https://drewkim623-hash.github.io/dffl/?a=<slug>
+```
+
+- Line 1: `🚨 DFFL | WEEK n` with the week the piece is about, as its kicker names it
+  (`🚨 DFFL | PRESEASON` for a piece filed before week 1).
+- Line 3: the article's `headline`, exactly, in capitals.
+- Lines 5-7: each opens with one emoji and a space, and each carries at least one number. **Every
+  number on these lines must be printed in the article itself**, the same figure, written as
+  digits the way the article writes it.
+- Line 9: exactly `Full story 👇`.
+- Line 10: exactly `https://drewkim623-hash.github.io/dffl/?a=<slug>` with the article's own slug.
+
+Run `node check-recaps.mjs` before pushing: it fails a missing teaser, one out of this shape, over
+600 characters, or with a number the article does not print.
 
 ## Polls: the league votes by replying
 
