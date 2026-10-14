@@ -5217,11 +5217,14 @@ const PL_NAMES = ["points lost: the starter/bench odds-impact % split is gone fr
   "points lost: teams sorted by this-week total, all-no-estimate teams last",
   "points lost: no-estimate rows show no rest-of-season number and stay out of the total",
   "points lost: bench players lose 0.0 this week", "points lost: a Questionable starter carries his full loss and a status tag",
-  "points lost: each bench player stands in for one injury at most",
+  "points lost: this week's stand-ins are healthy players entering the best lineup",
   "points lost: a made-up report proves the replacement, weeks-out and IR rules",
   "points lost: without data/projections.json the tab says so",
   "points lost: rest of season is each out player's share of the best-lineup drop, starters included",
   "points lost: the stand-in is who enters the rebuilt lineup, never an injured player; else lineup shuffle",
+  "points lost: this week is the same best-lineup drop as rest of season, so both figures on a row mean the same thing",
+  "points lost: splitLineupDrop shares the drop by (with - with minus just him), scaled to the drop; all 0 -> even",
+  "points lost: IR with no date reads season (IR), not no estimate",
   "points lost: rows under PTS_LOST.displayFloor show a dash; team totals stay exact",
   "points lost: retWeeks without a date reads ~N wk (est.) with its source, never no estimate",
   "points lost: injury odds math is byte-for-byte origin/main's"];
@@ -5273,7 +5276,11 @@ const injData = await injPage.evaluate(async () => {
     const ret = row.querySelector(".ret").textContent.trim();
     const rw = !/^\d{4}-\d{2}-\d{2}/.test(String(w.rec.ret || "")) && Number(w.rec.retWeeks) > 0 ? Math.round(Number(w.rec.retWeeks)) : 0;
     if (rw) { if (ret !== `~${rw} wk (est.)`) out.noRetBad.push(`${w.rec.n}: ${ret}`); }
-    else if (!w.rec.ret) { out.noRet++; if (ret !== "no estimate") out.noRetBad.push(`${w.rec.n}: ${ret}`); }
+    else if (!w.rec.ret) {
+      out.noRet++;
+      // IR with no date runs to season's end; anything else with no date has no estimate.
+      if (ret !== (w.rec.s === "IR" ? "season (IR)" : "no estimate")) out.noRetBad.push(`${w.rec.n}: ${ret}`);
+    }
     else if (ret !== D.returnLabel(w.rec.ret)) out.retBad.push(`${w.rec.n}: ${ret}`);
   }
   for (const pid of shown.keys()) if (!want.has(pid)) out.extra.push(pid);
@@ -5341,8 +5348,11 @@ const injData = await injPage.evaluate(async () => {
 
   // Slots, worked by hand: R1 (RB slot, 15), W1 (WR slot, 14) and F1 (WR in
   // the FLEX, 13) are out with no date. Bench RB3 10, RB2 4, TE1 9, WZ (WR, 0).
-  // RB slot -> RB3 (15-10=5); WR slot -> nobody: WZ projects 0 and an RB/TE may
-  // not fill a WR slot (14); FLEX -> TE1, the best RB/WR/TE left (13-9=4). 23.
+  // Best lineup without them: RB RB3 10, WR nobody (WZ projects 0 and an RB/TE
+  // may not fill a WR slot, though RB2 sits idle), FLEX TE1 9 (the best
+  // RB/WR/TE left) = 19, vs 42 with them: 23. Margins: without R1 RB3 enters
+  // at RB (37 -> 5); without W1 F1 slides to WR and RB3 enters the FLEX (38 ->
+  // 4); without F1 RB3 takes the FLEX (39 -> 3). Shares 23 x 5/12, 4/12, 3/12.
   const slP = { current_week: 6, playoff_week_start: 7, sundays: { 6: "2026-10-18" },
     weeks: { 6: { R1: 15, W1: 14, F1: 13, RB2: 4, RB3: 10, TE1: 9, WZ: 0 } } };
   const slPos = { R1: "RB", W1: "WR", F1: "WR", RB2: "RB", RB3: "RB", TE1: "TE", WZ: "WR" };
@@ -5422,14 +5432,14 @@ const injData = await injPage.evaluate(async () => {
   const rwOne = id => D.projectedPointsLost({ starters: [id], players: [id, "R"], reserve: [], taxi: [] },
     new Map([[id, rwRec[id]]]), rwP, { week: 6, player: pid => ({ n: pid, p: "WR" }), slots: ["WR", "BN"] }).rows[0];
   const [rx, ry, rz] = ["X", "Y", "Z"].map(rwOne);
-  pl.retFields = { x: [rx.ros, rx.weeksOut && rx.weeksOut.join(","), rx.retSource, rx.estimated, rx.retNote],
-    y: [ry.ros, ry.weeksOut && ry.weeksOut.join(","), ry.retSource, ry.estimated, ry.retNote],
-    z: [rz.ros, rz.weeksOut, rz.retSource, rz.estimated, rz.retNote] };
+  pl.retFields = { x: [rx.ros, rx.weeksOut && rx.weeksOut.join(","), rx.retSource, rx.retEstimated, rx.retNote],
+    y: [ry.ros, ry.weeksOut && ry.weeksOut.join(","), ry.retSource, ry.retEstimated, ry.retNote],
+    z: [rz.ros, rz.weeksOut, rz.retSource, rz.retEstimated, rz.retNote] };
   // And on the tab: a real injured rostered player given these fields.
   const tagPid = [...map.keys()].find(pid => rost.map[pid] && map.get(pid) && map.get(pid).s);
   if (tagPid) {
     const m2 = new Map(map);
-    m2.set(tagPid, { ...map.get(tagPid), retSource: "report", retEstimated: true, retNote: "synthetic" });
+    m2.set(tagPid, { ...map.get(tagPid), retWeeks: undefined, retSource: "report", retEstimated: true, retNote: "synthetic" });
     const hostT = document.createElement("div");
     D.renderInjuries(hostT, { at: Date.now(), source: "file", map: m2 }, proj);
     const rowT = hostT.querySelector(`.injp[data-pid="${tagPid}"]`);
@@ -5459,7 +5469,25 @@ const injData = await injPage.evaluate(async () => {
     b: [rowOf(ccB, "A").ros, rowOf(ccB, "B").ros, ccB.ros, rowOf(ccB, "A").perWeek[0].repl],
     c: [rowOf(ccC, "A").ros, rowOf(ccC, "B").ros],
     d: [rowOf(ccD, "A").ros, rowOf(ccD, "A").perWeek[0].repl, rowOf(ccD, "A").repl && rowOf(ccD, "A").repl.name],
+    // This week by the same rule: (a) 3 not the old slot rule's 12; (b) and (c)
+    // match their one-week rest of season exactly.
+    tw: [rowOf(ccA, "S1").thisWeek, rowOf(ccB, "A").thisWeek, rowOf(ccB, "B").thisWeek, rowOf(ccC, "A").thisWeek, rowOf(ccC, "B").thisWeek],
   };
+  // The shared split helper on its own: margins 5 and 1 of a 10 drop; all
+  // margins 0 -> even; a negative margin counts as 0; nobody -> [].
+  pl.split = { fn: typeof D.splitLineupDrop === "function",
+    a: D.splitLineupDrop(10, 16, [11, 15]), b: D.splitLineupDrop(10, 20, [20, 20]),
+    c: D.splitLineupDrop(5, 10, [12, 8]), d: D.splitLineupDrop(3, 7, []) };
+  // IR with no date runs to season's end: "season (IR)", not "no estimate".
+  if (tagPid) {
+    const m4 = new Map(map), base = { ...map.get(tagPid), s: "IR", sev: undefined, retWeeks: undefined };
+    delete base.ret;
+    m4.set(tagPid, base);
+    const h4 = document.createElement("div");
+    D.renderInjuries(h4, { at: Date.now(), source: "file", map: m4 }, proj);
+    const r4 = h4.querySelector(`.injp[data-pid="${tagPid}"]`);
+    pl.irLabel = r4 && r4.querySelector(".ret").textContent;
+  }
   // The display floor: with it raised past every value, rows read "—" and team totals keep their numbers.
   const flWas = D.PTS_LOST.displayFloor, flHost = document.createElement("div");
   D.PTS_LOST.displayFloor = 1e9;
@@ -5568,18 +5596,6 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       }
       return pick;
     };
-    // Hurt starters: each slot, tightest first, takes the top bench player it allows.
-    const starterLoss = (w, hurt, taken) => {
-      const res = {};
-      const order = hurt.map(p => [p, slotAt(rawSt.indexOf(p))])
-        .sort((a, b) => width(a[1]) - width(b[1]) || hurtOf(b[0], w) - hurtOf(a[0], w) || (a[0] < b[0] ? -1 : 1));
-      for (const [p, slot] of order) {
-        const pick = top(slot, benchOk, taken, b => projOf(b, w));
-        if (pick != null) taken.add(pick);
-        res[p] = Math.max(0, hurtOf(p, w) - (pick != null ? projOf(pick, w) : 0));
-      }
-      return res;
-    };
     const lineup = (pool, val) => {
       const taken = new Set(), at = {};
       let sum = 0;
@@ -5589,16 +5605,12 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       }
       return { sum, at };
     };
-    if (season.includes(wk)) {
-      const hs = hurtAll.filter(p => st.includes(p));
-      const tw = starterLoss(wk, hs, new Set(hs));
-      for (const p in tw) out[p].thisWeek = tw[p];
-    }
-    // Rest of season, everyone out that week (starters too): best lineup with
-    // vs without them; shares by (with total - with total minus just him).
-    for (const w of season) {
-      const gone = hurtAll.filter(p => isOut(p, w));
-      if (!gone.length) continue;
+    // One week: best lineup with vs without the out players; each one in the
+    // with-lineup gets drop * (with - with-minus-just-him) / sum of those, or
+    // an even split when every margin is 0. Returns pid -> share.
+    const weekLoss = (w, gone) => {
+      const res = {};
+      if (!gone.length) return res;
       const pool = everyone.filter(p => !park.includes(p) && !gone.includes(p)
         && (okNow(p) || (out[p] && out[p].weeks ? !isOut(p, w) : w > wk)));
       const val = p => (gone.includes(p) ? hurtOf(p, w) : projOf(p, w));
@@ -5609,7 +5621,17 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       const m = {};
       for (const p of inside) m[p] = Math.max(0, W.sum - lineup(all2.filter(q => q !== p), val).sum);
       const sm = inside.reduce((s, p) => s + m[p], 0);
-      for (const p of inside) out[p].ros += drop * (sm > 0 ? m[p] / sm : 1 / inside.length);
+      for (const p of inside) res[p] = drop * (sm > 0 ? m[p] / sm : 1 / inside.length);
+      return res;
+    };
+    // This week: every injured starter is out; rest of season: whoever's weeks out include w.
+    if (season.includes(wk)) {
+      const tw = weekLoss(wk, hurtAll.filter(p => st.includes(p)));
+      for (const p in tw) out[p].thisWeek = tw[p];
+    }
+    for (const w of season) {
+      const lw = weekLoss(w, hurtAll.filter(p => isOut(p, w)));
+      for (const p in lw) out[p].ros += lw[p];
     }
     let tW = 0, tR = 0;
     for (const p in out) { tW += out[p].thisWeek; tR += out[p].ros || 0; }
@@ -5658,15 +5680,12 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       const a = t.rows[i - 1], b = t.rows[i];
       if (a.thisWeek < b.thisWeek - 1e-9 || (close(a.thisWeek, b.thisWeek) && (a.ros ?? -1) < (b.ros ?? -1) - 1e-9)) sortBad.push(`${t.rid}: ${a.pid} before ${b.pid}`);
     }
-    // One stand-in per injury this week (the slot rule); a rest-of-season
-    // stand-in is whoever enters the best lineup — never an injured player.
-    const seen = new Map();
+    // A stand-in, this week or later, is whoever enters the best lineup —
+    // never an injured player, and never someone already in it.
     for (const x of f.rows) for (const [w, b] of x.repls) {
-      if (b && w !== "tw" && injFileNow.map[b] && injFileNow.map[b].s) standBad.push(`${x.pid} wk ${w}: ${b}`);
-      if (!b || w !== "tw") continue;
-      const k = `${w}:${b}`;
-      if (seen.has(k)) dupBad.push(`${t.rid} wk ${w}: ${b} covers ${seen.get(k)} and ${x.pid}`);
-      seen.set(k, x.pid);
+      if (!b) continue;
+      if (injFileNow.map[b] && injFileNow.map[b].s) (w === "tw" ? dupBad : standBad).push(`${x.pid} wk ${w}: ${b}`);
+      if (b === x.pid) dupBad.push(`${x.pid} stands in for himself`);
     }
   }
   // A no-estimate row's absence from the total: the total is the sum of the
@@ -5721,8 +5740,8 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       `${fbUsed} fallback weeks; ${fbBad.slice(0, 4).join(", ")}`);
     const S = PL.slotFake;
     check("points lost: a FLEX slot takes the best RB/WR/TE; a fixed RB/WR slot never takes another position",
-      close(S.tw, 23) && S.rows.R1[1] === "RB3" && close(S.rows.R1[0], 5) && S.rows.W1[1] === null && close(S.rows.W1[0], 14)
-        && S.rows.F1[1] === "TE1" && S.rows.F1[2] === "FLEX" && close(S.rows.F1[0], 4), JSON.stringify(S));
+      close(S.tw, 23) && S.rows.R1[1] === "RB3" && close(S.rows.R1[0], 23 * 5 / 12) && S.rows.W1[1] === "RB3" && close(S.rows.W1[0], 23 * 4 / 12)
+        && S.rows.W1[2] === "WR" && S.rows.F1[1] === "RB3" && S.rows.F1[2] === "FLEX" && close(S.rows.F1[0], 23 * 3 / 12), JSON.stringify(S));
     const B = PL.benchFake;
     check("points lost: a bench injury that wouldn't start costs 0; one that would start costs the lineup drop",
       close(B.tw, 0) && close(B.ros, 7) && close(B.rows.B1.ros, 7) && close(B.rows.B1.lost[0], 0) && close(B.rows.B1.lost[1], 7)
@@ -5753,7 +5772,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   check("points lost: bench players lose 0.0 this week", benchBad.length === 0 && PL.fake.rows.F.tw === 0, benchBad.slice(0, 4).join(" ; "));
   check("points lost: a Questionable starter carries his full loss and a status tag", qBad.length === 0 && PL.fake.rows.B.tw === 5,
     `${qSeen} live; ${qBad.join(", ")} fake B=${PL.fake.rows.B.tw}`);
-  check("points lost: each bench player stands in for one injury at most", dupBad.length === 0, dupBad.slice(0, 3).join(" ; "));
+  check("points lost: this week's stand-ins are healthy players entering the best lineup", dupBad.length === 0, dupBad.slice(0, 3).join(" ; "));
   // Worked by hand, lineup slots WR (A), RB (B), QB (C): A (WR, out, no date)
   // loses 20-8 to D this week; B (RB, questionable to Oct 30) 15-10 to the
   // questionable bench E in weeks 6 and 7. Bench and IR slot, rest of season by
@@ -5770,11 +5789,19 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   {
     const CC = PL.ccubed || {};
     check("points lost: rest of season is each out player's share of the best-lineup drop, starters included",
-      !!CC.a && close(CC.a[0], 12) && close(CC.a[1], 3) && close(CC.b[0], 10 * 5 / 6) && close(CC.b[1], 10 / 6) && close(CC.b[2], 10)
+      !!CC.a && close(CC.a[0], 3) && close(CC.a[1], 3) && close(CC.b[0], 10 * 5 / 6) && close(CC.b[1], 10 / 6) && close(CC.b[2], 10)
         && close(CC.c[0], 5) && close(CC.c[1], 5), JSON.stringify(CC));
     check("points lost: the stand-in is who enters the rebuilt lineup, never an injured player; else lineup shuffle",
       !!CC.a && CC.a[2] === "WR3" && CC.b[3] === "C" && close(CC.d[0], 2) && CC.d[1] === null && CC.d[2] === "lineup shuffle"
         && standBad.length === 0, `${JSON.stringify(CC)} ${standBad.slice(0, 3).join(", ")}`);
+    check("points lost: this week is the same best-lineup drop as rest of season, so both figures on a row mean the same thing",
+      Array.isArray(CC.tw) && close(CC.tw[0], 3) && close(CC.tw[1], CC.b[0]) && close(CC.tw[2], CC.b[1]) && close(CC.tw[3], 5) && close(CC.tw[4], 5),
+      JSON.stringify(CC.tw));
+    const SP = PL.split || {};
+    check("points lost: splitLineupDrop shares the drop by (with - with minus just him), scaled to the drop; all 0 -> even",
+      SP.fn && close(SP.a[0], 10 * 5 / 6) && close(SP.a[1], 10 / 6) && close(SP.b[0], 5) && close(SP.b[1], 5)
+        && close(SP.c[0], 0) && close(SP.c[1], 5) && SP.d.length === 0, JSON.stringify(SP));
+    check("points lost: IR with no date reads season (IR), not no estimate", PL.irLabel === "season (IR)", String(PL.irLabel));
     const FT = PL.floorTab || {};
     check("points lost: rows under PTS_LOST.displayFloor show a dash; team totals stay exact",
       PL.floor === 0.5 && floorBad.length === 0 && FT.rowNums === 0 && FT.teamNums === FT.teams && FT.teams > 0,
