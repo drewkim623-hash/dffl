@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "picture", "draft", "trades", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -4962,11 +4962,15 @@ const injPage = await injCtx.newPage();
 const injErrs = [];
 injPage.on("pageerror", e => injErrs.push(String(e)));
 const injRoute = async () => {
-  await injPage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
-  await injPage.waitForFunction(() => {
-    const p = document.querySelector('[data-panel="injuries"]');
-    return p && p.dataset.ready === "1";
-  }, null, { timeout: 60000 });
+  try {
+    await injPage.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+    await injPage.waitForFunction(() => {
+      const p = document.querySelector('[data-panel="injuries"]');
+      return p && p.dataset.ready === "1";
+    }, null, { timeout: 60000 });
+  } catch (e) {
+    return { timedOut: String(e).split("\n")[0] };
+  }
   return injPage.evaluate(() => {
     const p = document.querySelector('[data-panel="injuries"]');
     const b = document.querySelector('#tabs button[data-tab="injuries"]');
@@ -4983,23 +4987,48 @@ await injPage.reload({ waitUntil: "domcontentloaded" });
 const injReload = await injRoute();
 check("injuries: and again on reload", injReload.visible && injReload.selected === "true" && injReload.hash === "#injuries",
   JSON.stringify(injReload));
+// With the tab missing or never ready, name every check below as failed
+// rather than letting a timeout take the whole run down.
+const INJ_NAMES = ["injuries: the tab reads the published injuries.json and shows its timestamp",
+  "injuries: every injured rostered player in injuries.json appears", "injuries: each one is grouped under his own team",
+  "injuries: nobody is listed who isn't injured and rostered", "injuries: starters show the same cut the odds model charges",
+  "injuries: each team's total is the odds model's charged cut", "injuries: bench players show 0% and a bench label",
+  "injuries: a player with no return date says no estimate", "injuries: a return date reads as the site's return label",
+  "injuries: a past return date reads as was expected back",
+  "injuries: a made-up starter carries the model's cut and a bench man 0%", "injuries: an empty report says nobody is hurt",
+  "injuries: odds impact and the statuses explain themselves on tap", "injuries: rows render at 390px",
+  "injuries: no element in the tab overflows at 390px", "injuries: stacked rows, not a sideways table",
+  "injuries: no text in the tab under 11px at 390px", "injury report: every team lists every injured player on its roster",
+  "injury report: bench injured players are included, at 0%", "injury report: each starter carries the model's charged cut",
+  "injuries: no uncaught page errors"];
+if (injDirect.timedOut || injReload.timedOut) {
+  for (const n of INJ_NAMES) check(n, false, `skipped: ${injDirect.timedOut || injReload.timedOut}`);
+} else try {
 
 const injData = await injPage.evaluate(async () => {
   const D = window.__DFFL;
   const file = await fetch("injuries.json", { cache: "no-cache" }).then(r => r.json());
   const map = new Map(Object.entries(file.map || {}));
   const season = D.DB.seasons[0];
-  const avail = D.availability(season, { map });
+  const plan = D.injuryPlan(season, { map }, window.__ODDS);
   const panel = document.querySelector('[data-panel="injuries"]');
   const out = { at: Number(panel.querySelector(".srcnote").dataset.at), fileAt: file.at,
     expected: 0, missing: [], misplaced: [], extra: [], starterBad: [], benchBad: [], starters: 0, benches: 0,
-    noRet: 0, noRetBad: [], retBad: [] };
+    noRet: 0, noRetBad: [], retBad: [], teamBad: [] };
   const want = new Map();
   for (const r of season.rosters || []) {
     const ids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
       .filter(p => p && p !== "0").map(String));
-    const hurt = new Map(((avail.get(r.roster_id) || {}).hurt || []).map(x => [String(x.pid), x]));
+    const hurt = new Map(D.injuryCharged(plan, r.roster_id, plan.W0).map(x => [String(x.pid), x]));
     const st = new Set((r.starters || []).map(String));
+    const card = panel.querySelector(`.injteam[data-rid="${r.roster_id}"] .bhead .tc`);
+    if (card) {
+      const m = D.injuryMult(plan, r.roster_id, plan.W0);
+      const exp = m < 1 ? `−${((1 - m) * 100).toFixed(1)}%` : "0%";
+      const k = card.querySelector(".k").textContent;
+      const got = card.textContent.slice(0, -k.length).trim();
+      if (got !== exp) out.teamBad.push(`${r.roster_id}: ${got} vs ${exp}`);
+    }
     for (const pid of ids) {
       const rec = map.get(pid);
       if (!rec) continue;
@@ -5020,7 +5049,7 @@ const injData = await injPage.evaluate(async () => {
     const cut = imp.textContent.trim().slice(0, -k.length).trim();
     if (w.starter) {
       out.starters++;
-      const exp = w.x && w.x.loss > 0 ? `−${(w.x.loss * 100).toFixed(1)}%` : "0%";
+      const exp = w.x && w.x.loss * w.x.scale > 0 ? `−${(w.x.loss * w.x.scale * 100).toFixed(1)}%` : "0%";
       if (cut !== exp || k !== "starter" || row.dataset.starter !== "1") out.starterBad.push(`${w.rec.n}: ${cut} vs ${exp}`);
     } else {
       out.benches++;
@@ -5044,19 +5073,23 @@ const injData = await injPage.evaluate(async () => {
   ]) };
   const host = document.createElement("div");
   D.renderInjuries(host, fake);
-  const fx = D.availability(season, fake).get(r0.roster_id).hurt[0];
+  const fplan = D.injuryPlan(season, fake, window.__ODDS);
+  const fx = D.injuryCharged(fplan, r0.roster_id, fplan.W0)[0];
   const sp = String(fx.pid);
   const fs = host.querySelector(`.injp[data-pid="${sp}"]`), fb = host.querySelector(`.injp[data-pid="${bp}"]`);
   const cutOf = row => { const i = row.querySelector(".imp"); const k = i.querySelector(".k").textContent; return i.textContent.slice(0, -k.length).trim(); };
   out.fake = {
     starterRet: fs && fs.querySelector(".ret").textContent, starterCut: fs && cutOf(fs),
-    expCut: fx ? `−${(fx.loss * 100).toFixed(1)}%` : null,
+    expCut: fx ? `−${(fx.loss * fx.scale * 100).toFixed(1)}%` : null,
     benchCut: fb && cutOf(fb), benchK: fb && fb.querySelector(".imp .k").textContent,
     sameTeam: !!fs && !!fb && fs.closest(".injteam") === fb.closest(".injteam")
       && fs.closest(".injteam").dataset.rid === String(r0.roster_id),
   };
   const none = document.createElement("div");
   D.renderInjuries(none, { at: Date.now(), source: "file", map: new Map() });
+  const past = new Date(); past.setDate(past.getDate() - 12);
+  const iso = `${past.getFullYear()}-${String(past.getMonth() + 1).padStart(2, "0")}-${String(past.getDate()).padStart(2, "0")}`;
+  out.pastLabel = D.returnLabel(iso);
   out.emptyState = !!none.querySelector(".empty") && !none.querySelector(".injteam");
   out.explainers = ["injimpact", "injstatus"].every(k => panel.querySelector(`.jx[data-jx="${k}"]`) && D.JARGON[k]);
   return out;
@@ -5067,13 +5100,16 @@ check("injuries: every injured rostered player in injuries.json appears", injDat
   `${injData.missing.length}/${injData.expected} missing: ${injData.missing.slice(0, 4).join(", ")}`);
 check("injuries: each one is grouped under his own team", injData.misplaced.length === 0, injData.misplaced.slice(0, 4).join(", "));
 check("injuries: nobody is listed who isn't injured and rostered", injData.extra.length === 0, injData.extra.slice(0, 4).join(", "));
-check("injuries: starters show the same cut the odds model computes", injData.starterBad.length === 0,
+check("injuries: starters show the same cut the odds model charges", injData.starterBad.length === 0,
   `${injData.starters} starters; ${injData.starterBad.slice(0, 4).join(" ; ")}`);
+check("injuries: each team's total is the odds model's charged cut", injData.teamBad.length === 0,
+  injData.teamBad.slice(0, 4).join(" ; "));
 check("injuries: bench players show 0% and a bench label", injData.benchBad.length === 0,
   `${injData.benches} bench; ${injData.benchBad.slice(0, 4).join(" ; ")}`);
 check("injuries: a player with no return date says no estimate", injData.noRetBad.length === 0
   && injData.fake.starterRet === "no estimate", `${injData.noRet} without; ${injData.noRetBad.slice(0, 3).join(" ; ")} fake=${injData.fake.starterRet}`);
 check("injuries: a return date reads as the site's return label", injData.retBad.length === 0, injData.retBad.slice(0, 3).join(" ; "));
+check("injuries: a past return date reads as was expected back", /^was expected back /.test(injData.pastLabel), injData.pastLabel);
 check("injuries: a made-up starter carries the model's cut and a bench man 0%",
   injData.fake.starterCut === injData.fake.expCut && injData.fake.expCut !== "0%"
   && injData.fake.benchCut === "0%" && injData.fake.benchK === "bench" && injData.fake.sameTeam, JSON.stringify(injData.fake));
@@ -5105,6 +5141,7 @@ await injPage.waitForFunction(() => document.body.dataset.liveReady, null, { tim
 const injBoard = await injPage.evaluate(() => {
   const D = window.__DFFL, inj = window.__INJ, avail = window.__AVAIL;
   const season = D.DB.seasons[0];
+  const plan = inj ? D.injuryPlan(season, inj, window.__ODDS) : null;
   const out = { teams: 0, bench: 0, benchShown: 0, mismatch: [], cutBad: [] };
   if (!inj || !avail) return { ...out, skipped: true };
   for (const r of season.rosters || []) {
@@ -5118,13 +5155,13 @@ const injBoard = await injPage.evaluate(() => {
     const chips = row ? [...row.querySelectorAll(".ip[data-pid]")] : [];
     const got = new Set(chips.map(c => c.dataset.pid));
     if (want.length !== got.size || want.some(p => !got.has(p))) out.mismatch.push(`${r.roster_id}: ${got.size}/${want.length}`);
-    const hurt = new Map(((avail.get(r.roster_id) || {}).hurt || []).map(x => [String(x.pid), x]));
+    const hurt = new Map(D.injuryCharged(plan, r.roster_id, plan.W0).map(x => [String(x.pid), x]));
     for (const c of chips) {
       const pid = c.dataset.pid, cut = c.querySelector(".cut").textContent.trim();
       if (!st.has(pid)) { out.bench++; if (cut === "0% bench") out.benchShown++; else out.cutBad.push(`${pid}: ${cut}`); }
       else {
         const x = hurt.get(pid);
-        const exp = x && x.loss > 0 ? `−${(x.loss * 100).toFixed(1)}%` : "0%";
+        const exp = x && x.loss * x.scale > 0 ? `−${(x.loss * x.scale * 100).toFixed(1)}%` : "0%";
         if (cut !== exp) out.cutBad.push(`${pid}: ${cut} vs ${exp}`);
       }
     }
@@ -5135,8 +5172,11 @@ check("injury report: every team lists every injured player on its roster", !inj
   && injBoard.mismatch.length === 0, injBoard.skipped ? "no live board" : injBoard.mismatch.slice(0, 4).join(" ; "));
 check("injury report: bench injured players are included, at 0%", injBoard.bench > 0 && injBoard.benchShown === injBoard.bench,
   `${injBoard.benchShown}/${injBoard.bench}`);
-check("injury report: each starter carries the model's cut", injBoard.cutBad.length === 0, injBoard.cutBad.slice(0, 4).join(" ; "));
+check("injury report: each starter carries the model's charged cut", injBoard.cutBad.length === 0, injBoard.cutBad.slice(0, 4).join(" ; "));
 check("injuries: no uncaught page errors", injErrs.length === 0, injErrs.slice(0, 2).join(" | "));
+} catch (e) {
+  check("injuries: section ran to the end", false, String(e).split("\n")[0]);
+}
 await injCtx.close();
 
 group("Screenshots");

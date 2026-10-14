@@ -4282,13 +4282,15 @@ function availability(season, inj) {
 
 /**
  * Every injured player on a roster — bench, IR slot and taxi squad included —
- * with each starter joined to his availability() row so he carries the model's
- * own cut. Nobody off the starting lineup is in what the model prices, so the
- * rest carry a loss of zero. `a` is that roster's entry from availability().
+ * with each starter carrying exactly what the sim, the game lines and the
+ * futures charge him for the coming week: loss × scale from injuryCharged() at
+ * plan.W0. A starter who isn't charged that week (he already played, say) and
+ * everyone off the starting lineup carry a loss of zero. `plan` is injuryPlan().
  */
-function rosterInjuries(r, inj, a) {
+function rosterInjuries(r, inj, plan) {
   if (!r || !inj || !inj.map) return [];
-  const rows = new Map(((a && a.hurt) || []).map(x => [String(x.pid), x]));
+  const rows = new Map((plan ? injuryCharged(plan, r.roster_id, plan.W0) : [])
+    .map(h => [String(h.pid), { ...h, loss: h.loss * h.scale }]));
   const starters = new Set((r.starters || []).map(String));
   const pids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
     .filter(p => p && p !== "0").map(String));
@@ -5018,15 +5020,21 @@ function returnLabel(iso) {
   // The status badge beside this already says OUT or IR, so "out for the season"
   // would read as "OUT OUT FOR THE SEASON".
   if (days > 110) return "rest of season";
-  return `back ${when.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+  const md = when.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  // A date already gone by is ESPN's stale estimate, not a promise.
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  return when < today ? `was expected back ${md}` : `back ${md}`;
 }
 
 function injuryBoard(model, avail, inj) {
   const season = DB.seasons[0];
   const rosterOf = new Map(((season && season.rosters) || []).map(r => [r.roster_id, r]));
+  // The per-player cuts are what the sim charges next week. The team figure
+  // on the right is still main's availability() number, left as it was.
+  const plan = injuryPlan(season, inj, model);
   const rows = model.teams
     .map(t => ({ t, a: avail.get(t.rid) }))
-    .map(x => ({ ...x, all: rosterInjuries(rosterOf.get(x.t.rid), inj, x.a) }))
+    .map(x => ({ ...x, all: rosterInjuries(rosterOf.get(x.t.rid), inj, plan) }))
     .filter(x => x.a && x.all.length)
     .sort((a, b) => a.a.mult - b.a.mult);
   const b = el("div", "board");
@@ -5107,9 +5115,10 @@ function injuryNote(inj, avail) {
 /* ================================================ INJURIES ========== */
 
 /**
- * Every injured player in the league, team by team. The odds impact is the
- * Odds tab's own number — availability() over the same feed — so the two can
- * never disagree; this tab only adds the bench, which the model does not price.
+ * Every injured player in the league, team by team. The odds impact is what
+ * the sim, the game lines and the futures charge for the coming week —
+ * injuryCharged() per player and injuryMult() per team, from injuryPlan() over
+ * the same feed — so the tab can never disagree with them.
  */
 function panelInjuries() {
   const p = el("div", "panel"); p.dataset.panel = "injuries";
@@ -5135,12 +5144,12 @@ function ensureInjuries(full) {
 function renderInjuries(host, inj) {
   host.innerHTML = "";
   const season = DB.seasons[0];
-  const avail = availability(season, inj);
+  const plan = inj && inj.map ? injuryPlan(season, inj, window.__ODDS) : null;
   const teams = ((season && season.rosters) || []).map(r => {
-    const a = avail.get(r.roster_id);
-    return { r, a, uid: season.uidOf.get(r.roster_id), list: rosterInjuries(r, inj, a) };
+    const mult = plan ? injuryMult(plan, r.roster_id, plan.W0) : 1;
+    return { r, mult, uid: season.uidOf.get(r.roster_id), list: rosterInjuries(r, inj, plan) };
   }).filter(x => x.list.length)
-    .sort((x, y) => ((x.a ? x.a.mult : 1) - (y.a ? y.a.mult : 1))
+    .sort((x, y) => (x.mult - y.mult)
       || (y.list.length - x.list.length) || nameOf(x.uid).localeCompare(nameOf(y.uid)));
   const total = teams.reduce((s, x) => s + x.list.length, 0);
   const when = inj.at ? new Date(inj.at).toLocaleString(undefined,
@@ -5173,11 +5182,10 @@ function renderInjuries(host, inj) {
     return;
   }
   const dot = " · ";
-  for (const { r, a, uid, list } of teams) {
+  for (const { r, mult, uid, list } of teams) {
     const b = el("div", "board injteam");
     b.dataset.rid = r.roster_id;
     const lineup = list.filter(x => x.starter).length;
-    const mult = a ? a.mult : 1;
     b.innerHTML = `<div class="bhead">${avatarHTML(uid, "sm")}
       <span class="tw"><span class="bt">${esc(nameOf(uid))}</span>
         <span class="bs">${list.length} injured · ${lineup} in the starting lineup</span></span>
