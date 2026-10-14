@@ -369,6 +369,7 @@
     border:1px solid currentColor;border-radius:999px;padding:0 5px}
   .injp .meta .est.rep{color:#e07b24}
   .injp .meta.srcl{font-size:11px}
+  .injp .meta .bnote{display:block;font-size:11px}
   .injkey details{margin-top:4px}
   .injkey summary{cursor:pointer;color:var(--ink-2);font-weight:600}
   .injkey details p{margin:6px 0 0}
@@ -4808,7 +4809,8 @@ function teamInjuryImpact(team, injuries, P, opts = {}) {
       row.perWeek = pw;
       row.totalLost = Object.values(pw).reduce((a, x) => a + x, 0);
       row.lineupPerWeek = row.weeksOut ? row.totalLost / row.weeksOut : (m.get(L.week) || 0);
-      row.wouldStart = Object.values(pw).some(x => x > 0);
+      // Starts if some out week costs a visible 0.1 pt; float dust from the joint-drop split doesn't count.
+      row.wouldStart = Object.values(pw).some(x => x >= 0.05);
       row.pricing = "lineup-delta";
     } else row.pricing = "full-value";
     const lost = row.totalLost * row.weight;
@@ -6202,12 +6204,17 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED, opts = {
       const po = x.playoffDelta != null ? fmtInjuryDelta(x.playoffDelta, "%") : calc ? "calculating…" : "not measured";
       const poCls = x.playoffDelta != null ? (Math.abs(x.playoffDelta) < 0.5 ? "zero" : "") : calc ? "pending" : "none";
       const ti = x.titleDelta != null ? `<span class="ti">${esc(fmtInjuryDelta(x.titleDelta, "%"))} title</span>` : "";
+      // A bench player who still costs lineup points: he'd start only when the starters ahead of him are on bye.
+      const startWks = Object.values(x.perWeek || {}).filter(v => v >= 0.05);
+      const bnote = x.bench && x.weeksOut && x.wouldStart && startWks.length
+        ? `<span class="bnote">he'd start in weeks when the starters ahead of him are on bye (${startWks.length} of ${wks(x.weeksOut)},
+          ${f1(startWks.reduce((a, v) => a + v, 0) / startWks.length)} pts/wk in those)</span>` : "";
       row.innerHTML = `<span class="imp"><span class="po ${poCls}">${esc(po)}</span><span class="pol">playoff odds</span>${ti}</span>
         <span class="nm">${esc(x.name)}</span>
         <span class="meta">${esc([x.pos, x.club].filter(Boolean).join(dot))}${detail ? esc(dot + detail) : ""}</span>
         <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(retText)}</span>${x.retEstimated ? ` <span class="est">estimated</span>` : x.retSource === "report" ? ` <span class="est rep">reported</span>` : ""}${out ? `${esc(dot)}<span class="wo">${esc(out)}</span>` : ""}</span>
         ${x.retLabel ? `<span class="meta srcl"><span class="rsrc">${esc(x.retLabel)}</span></span>
-        ` : ""}<span class="meta pts">${x.bench ? `<span class="tag bench">bench</span> ` : ""}<span class="ptl">${esc(pts)}</span></span>`;
+        ` : ""}<span class="meta pts">${x.bench ? `<span class="tag bench">bench</span> ` : ""}<span class="ptl">${esc(pts)}</span>${bnote}</span>`;
       b.appendChild(row);
     }
     host.appendChild(b);
