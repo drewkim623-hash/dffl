@@ -5649,6 +5649,98 @@ check("injuries: no uncaught page errors", injErrs.length === 0, injErrs.slice(0
 }
 await injCtx.close();
 
+/* The tab row's scroll hint at phone width: fades, chevron, first-visit nudge. */
+group("Tab bar scroll hint");
+{
+  const op = (pg, sel, pseudo) => pg.evaluate(([s, p]) => {
+    const n = document.querySelector(s); return n ? Number(getComputedStyle(n, p).opacity) : -1;
+  }, [sel, pseudo || null]);
+  const settle = pg => pg.waitForFunction(() => document.querySelector("#tabs button"), null, { timeout: 60000 });
+  // A first visit at 390: the row overflows, the right fade and chevron show, the nudge runs once.
+  const tctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const tp = await tctx.newPage();
+  await tp.goto(BASE, { waitUntil: "domcontentloaded" });
+  await settle(tp);
+  await tp.waitForFunction(() => document.body.dataset.tabNudge, null, { timeout: 10000 }).catch(() => {});
+  await tp.waitForTimeout(1400);
+  const first = await tp.evaluate(() => {
+    const bar = document.querySelector("#tabs"), w = bar.parentElement, chev = w.querySelector(".tabchev");
+    return { over: bar.scrollWidth > bar.clientWidth, more: w.classList.contains("more"), nudge: document.body.dataset.tabNudge || "",
+      stored: localStorage.getItem("tabNudgeSeen"), left: bar.scrollLeft,
+      pe: [getComputedStyle(w, "::after").pointerEvents, getComputedStyle(w, "::before").pointerEvents, chev ? getComputedStyle(chev).pointerEvents : "missing"],
+      sticky: getComputedStyle(document.querySelector("nav.tabs")).position };
+  });
+  check("tab hint: at 390 the tab row overflows", first.over);
+  check("tab hint: the right fade shows when the row overflows", first.more && await op(tp, "nav.tabs .wrap", "::after") > 0.9);
+  check("tab hint: the chevron shows when the row overflows", await op(tp, ".tabchev") > 0.9);
+  check("tab hint: no left fade at the start", await op(tp, "nav.tabs .wrap", "::before") < 0.1);
+  check("tab hint: fades and chevron never take taps", first.pe.every(v => v === "none"), first.pe.join(","));
+  check("tab hint: the tab bar is still sticky", first.sticky === "sticky", first.sticky);
+  check("tab hint: the first visit nudges once and remembers it", first.nudge === "ran" && first.stored === "1" && first.left < 2,
+    `${first.nudge} ${first.stored} left=${first.left}`);
+  // A tab still takes a tap where the fade sits.
+  const lastVisible = await tp.evaluate(() => {
+    const bar = document.querySelector("#tabs"), r = bar.getBoundingClientRect();
+    const b = [...bar.children].find(x => { const q = x.getBoundingClientRect(); return q.left < r.right - 10 && q.right > r.right - 30; });
+    return b ? b.dataset.tab : null;
+  });
+  if (lastVisible) {
+    const r = await tp.evaluate(t => { const q = document.querySelector(`#tabs button[data-tab="${t}"]`).getBoundingClientRect(); return { x: q.left + 8, y: q.top + q.height / 2 }; }, lastVisible);
+    await tp.mouse.click(r.x, r.y);
+    await tp.waitForTimeout(150);
+  }
+  const tapped = lastVisible ? await tp.evaluate(t => document.querySelector(`#tabs button[data-tab="${t}"]`).getAttribute("aria-selected"), lastVisible) : null;
+  check("tab hint: a tab under the right fade still takes a tap", tapped === "true", `${lastVisible} ${tapped}`);
+  // Scrolled partway: the left fade shows. Scrolled to the end: right fade and chevron hide.
+  await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = 60; b.dispatchEvent(new Event("scroll")); });
+  await tp.waitForTimeout(300);
+  check("tab hint: scrolling past the start shows the left fade", await op(tp, "nav.tabs .wrap", "::before") > 0.9);
+  await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = b.scrollWidth; b.dispatchEvent(new Event("scroll")); });
+  await tp.waitForTimeout(300);
+  check("tab hint: at the end the right fade hides", await op(tp, "nav.tabs .wrap", "::after") < 0.1);
+  check("tab hint: at the end the chevron hides", await op(tp, ".tabchev") < 0.1);
+  // A second visit in the same browser: no nudge.
+  await tp.reload({ waitUntil: "domcontentloaded" });
+  await settle(tp);
+  await tp.waitForTimeout(1200);
+  const again = await tp.evaluate(() => document.body.dataset.tabNudge || "");
+  check("tab hint: the nudge does not run on a second visit", again === "seen", again);
+  await tctx.close();
+  // Reduced motion: no nudge, nothing stored.
+  const rctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
+  const rp = await rctx.newPage();
+  await rp.goto(BASE, { waitUntil: "domcontentloaded" });
+  await settle(rp);
+  await rp.waitForTimeout(1200);
+  const red = await rp.evaluate(() => ({ n: document.body.dataset.tabNudge || "", s: localStorage.getItem("tabNudgeSeen"), left: document.querySelector("#tabs").scrollLeft }));
+  check("tab hint: no nudge under prefers-reduced-motion", red.n === "reduced" && red.s === null && red.left === 0, JSON.stringify(red));
+  await rctx.close();
+  // Desktop, where the row fits: nothing at all.
+  const dctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const dp = await dctx.newPage();
+  await dp.goto(BASE, { waitUntil: "domcontentloaded" });
+  await settle(dp);
+  await dp.waitForTimeout(1200);
+  const desk = await dp.evaluate(() => {
+    const bar = document.querySelector("#tabs"), w = bar.parentElement;
+    return { over: bar.scrollWidth > bar.clientWidth + 2, cls: ["more", "less"].filter(c => w.classList.contains(c)).join(","), nudge: document.body.dataset.tabNudge || "" };
+  });
+  check("tab hint: at 1280 the hint matches the row (fade only if it really overflows)",
+    desk.over ? desk.cls.includes("more") : !desk.cls && !desk.nudge, JSON.stringify(desk));
+  // Where the row fits, nothing shows: trim it to three tabs and let the resize handler re-check.
+  const fit = await dp.evaluate(async () => {
+    const bar = document.querySelector("#tabs"), w = bar.parentElement;
+    [...bar.children].slice(3).forEach(b => { b.style.display = "none"; });
+    bar.scrollLeft = 0; window.dispatchEvent(new Event("resize"));
+    await new Promise(r => setTimeout(r, 300));
+    const op = (n, p) => Number(getComputedStyle(n, p).opacity);
+    return { over: bar.scrollWidth > bar.clientWidth + 2, cls: ["over", "more", "less"].filter(c => w.classList.contains(c)).join(","),
+      after: op(w, "::after"), before: op(w, "::before"), chev: op(w.querySelector(".tabchev")) };
+  });
+  check("tab hint: on desktop with a row that fits, no fade or chevron", !fit.over && !fit.cls && fit.after < 0.1 && fit.before < 0.1 && fit.chev < 0.1, JSON.stringify(fit));
+  await dctx.close();
+}
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);
