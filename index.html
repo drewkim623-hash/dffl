@@ -54,17 +54,22 @@
   .tabrow{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:8px 0}
   .tabrow::-webkit-scrollbar{display:none}
   nav.tabs .wrap{position:relative}
-  /* Scroll hint: fades on whichever edge has more tabs past it, plus a chevron on the right.
-     Purely decorative, so none of it takes taps. Nothing shows unless the row overflows. */
+  /* Scroll hint: fades on whichever edge has more tabs past it. Purely decorative,
+     so they never take taps. Nothing shows unless the row overflows. */
   nav.tabs .wrap::before,nav.tabs .wrap::after{content:"";position:absolute;top:0;bottom:0;width:48px;pointer-events:none;
     opacity:0;transition:opacity .18s;z-index:1}
   nav.tabs .wrap::before{left:var(--pad);background:linear-gradient(270deg,transparent,var(--plane) 80%)}
   nav.tabs .wrap::after{right:var(--pad);background:linear-gradient(90deg,transparent,var(--plane) 70%)}
   nav.tabs .wrap.more::after,nav.tabs .wrap.less::before{opacity:1}
-  .tabchev{position:absolute;top:50%;right:calc(var(--pad) + 2px);transform:translateY(-50%);z-index:2;pointer-events:none;
-    width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:17px;font-weight:700;line-height:1;
-    color:var(--ink-2);background:var(--raised);border:1px solid var(--grid);opacity:0;transition:opacity .18s}
-  nav.tabs .wrap.more .tabchev{opacity:1}
+  /* Arrow buttons: real controls that page the row, right while there is more, left once scrolled. */
+  .tabarr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:34px;height:34px;padding:0;
+    border-radius:999px;display:grid;place-items:center;font-family:inherit;font-weight:700;font-size:20px;line-height:1;color:var(--ink);cursor:pointer;
+    background:var(--raised);border:1px solid var(--ring);box-shadow:0 2px 10px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+  .tabarr:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+  @media (hover:hover){.tabarr:hover{background:var(--blue);border-color:var(--blue);color:#fff}}
+  .tabarr[hidden]{display:none}
+  .tabarr-r{right:calc(var(--pad) - 6px)}
+  .tabarr-l{left:calc(var(--pad) - 6px)}
   .tabrow button{
     background:transparent;border:1px solid transparent;border-radius:999px;color:var(--muted);
     font-weight:650;font-size:14.5px;padding:8px 15px;cursor:pointer;white-space:nowrap;transition:.14s}
@@ -810,6 +815,24 @@
   .aby{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:11px;letter-spacing:.13em;
     text-transform:uppercase;color:var(--muted);font-weight:600}
   .aby b{color:var(--ink-2);font-weight:700}
+  /* The teaser: the few lines somebody pastes into the group chat, with the link. */
+  .ateaser{margin:18px 0 0;background:var(--raised);border:1px solid var(--ring);border-left:3px solid var(--blue);
+    border-radius:var(--rs);padding:13px 15px;max-width:66ch;min-width:0}
+  .artl > .ateaser{margin-top:26px}
+  .ateaser .tk{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:0 0 7px}
+  .ateaser pre{margin:0 0 12px;font:inherit;font-size:14.5px;line-height:1.55;color:var(--ink-2);
+    white-space:pre-wrap;overflow-wrap:anywhere}
+  .ateaser .tact{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .copytxt{background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 17px;min-height:44px;
+    font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .copytxt:hover{filter:brightness(1.08)}
+  .copytxt:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  .ateaser .say{font-size:13.5px;color:var(--ink-2);font-weight:600}
+  .ateaser textarea{display:block;width:100%;box-sizing:border-box;margin-top:10px;font:inherit;font-size:14px;
+    line-height:1.5;padding:10px;border:1px solid var(--ring);border-radius:var(--rs);background:var(--surface);
+    color:var(--ink);resize:vertical}
+  .ateaser textarea[hidden]{display:none}
   .abd > .apara,.abd > .ahead,.abd > .astat,.abd > .anote{max-width:66ch}
   .apara{font-size:16.5px;line-height:1.7;color:var(--ink-2);margin:0 0 17px;text-wrap:pretty}
   .apara b{color:var(--ink);font-weight:750}
@@ -1155,7 +1178,7 @@
   </div>
 </header>
 
-<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><span class="tabchev" aria-hidden="true">›</span></div></nav>
+<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button></div></nav>
 
 <main class="wrap">
   <div id="loader">
@@ -1782,12 +1805,16 @@ function buildTabs() {
     bar.dataset.hint = "1";
     bar.addEventListener("scroll", tabHint, { passive: true });
     window.addEventListener("resize", tabHint, { passive: true });
+    // Each arrow pages the row by most of its width.
+    const page = dir => bar.scrollBy({ left: dir * Math.max(120, bar.clientWidth * 0.8), behavior: "smooth" });
+    $(".tabarr-r").onclick = () => page(1);
+    $(".tabarr-l").onclick = () => page(-1);
     setTimeout(tabNudge, 700);
   }
 }
 /**
- * Fades whichever edge of the tab row has tabs past it: the right (with a
- * chevron) until the row is scrolled to its end, the left once it's scrolled
+ * Fades whichever edge of the tab row has tabs past it, with an arrow button
+ * on that edge: the right until the row is scrolled to its end, the left once it's scrolled
  * past its start. A row that fits shows neither.
  */
 function tabHint() {
@@ -1796,6 +1823,22 @@ function tabHint() {
   w.classList.toggle("over", over);
   w.classList.toggle("more", over && bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
   w.classList.toggle("less", over && bar.scrollLeft > 2);
+  const r = w.querySelector(".tabarr-r"), l = w.querySelector(".tabarr-l");
+  if (!r || !l) return;
+  // Hiding a focused arrow would drop keyboard focus to the page, so hand it to the other one.
+  const had = document.activeElement;
+  r.hidden = !w.classList.contains("more");
+  l.hidden = !w.classList.contains("less");
+  if (had === r && r.hidden && !l.hidden) l.focus();
+  else if (had === l && l.hidden && !r.hidden) r.focus();
+}
+/** Scrolls the tab row (only the row, never the page) so the selected tab sits in the middle. */
+function revealTab(id, smooth) {
+  const bar = $("#tabs"), b = bar && bar.querySelector(`[data-tab="${id}"]`);
+  if (!b || bar.scrollWidth <= bar.clientWidth + 2) return;
+  const br = b.getBoundingClientRect(), rr = bar.getBoundingClientRect();
+  const left = bar.scrollLeft + (br.left - rr.left) - (rr.width - br.width) / 2;
+  bar.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
 }
 /**
  * The first time somebody sees a row that scrolls, slide it a little and back
@@ -1832,6 +1875,7 @@ function show(id) {
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
+  revealTab(id, document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
   scrollTo(0, 0);
@@ -3284,6 +3328,48 @@ async function articleBySlug(slug) {
   } catch (e) { return null; }
 }
 
+/**
+ * The teaser: a headline, three stat lines and the piece's own link, written
+ * to be pasted into the group chat as it stands. Plain text in, plain text out.
+ */
+function teaserBox(a) {
+  const box = el("div", "ateaser");
+  box.innerHTML = `<p class="tk">Teaser · for the group chat</p>
+    <pre></pre>
+    <div class="tact">
+      <button type="button" class="copytxt" aria-label="Copy the teaser for ${esc(a.headline || "this article")}">Copy teaser</button>
+      <span class="say" role="status" aria-live="polite"></span>
+    </div>
+    <textarea readonly hidden rows="6" aria-label="Teaser, selected for copying"></textarea>`;
+  box.querySelector("pre").textContent = a.teaser;
+  box.querySelector(".copytxt").onclick = () => copyTeaser(box, a.teaser);
+  return box;
+}
+
+/**
+ * Clipboard first. If the browser refuses (no permission, an insecure origin,
+ * an old WebView), show the text in a readonly textarea already selected, so
+ * one more copy gesture does it.
+ */
+async function copyTeaser(box, text) {
+  const say = box.querySelector(".say"), ta = box.querySelector("textarea");
+  say.textContent = "";
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("no clipboard");
+    await navigator.clipboard.writeText(text);
+    ta.hidden = true;
+    say.textContent = "Copied. Paste it into the group chat.";
+  } catch (e) {
+    ta.value = text;
+    ta.rows = Math.min(12, text.split("\n").length + 1);
+    ta.hidden = false;
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    say.textContent = "Couldn't copy automatically. The text below is selected: copy it now.";
+  }
+}
+
 function articleCard(a, full) {
   const box = el("article", `artl${a.kind === "opinion" ? " op" : ""}`);
   const when = a.date ? new Date(a.date + "T12:00:00Z").toLocaleDateString(undefined,
@@ -3299,6 +3385,8 @@ function articleCard(a, full) {
         ${a.standfirst ? `<span>${esc(a.standfirst)}</span>` : ""}</div>
     </header>
     <div class="abd">${(a.blocks || []).map(articleBlock).join("")}</div>`;
+  // The teaser sits under the last block: read the piece, then share it.
+  if (full && a.teaser) box.appendChild(teaserBox(a));
   const hero = box.querySelector(".cover.big");
   if (hero) hero._art = a;   // for the redraw when the window crosses COVER_WIDE_MQ
   return box;
@@ -10180,7 +10268,7 @@ async function boot() {
       powerRankings, weeklyScores, loadBlurbs, blurbFor, panelPower, moveHTML, rankSpark, projectedBoard,
       weekMovers, panelRecaps, allPowerRankings, keepersOf, keepersFor, loadStatedKeepers,
       preDraftOwners, playerModal, openPlayer, posClass,
-      articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, coverHTML, bracketHTML,
+      articleCard, articleBlock, articleTeaser, openArticle, articleBySlug, teaserBox, copyTeaser, coverHTML, bracketHTML,
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,

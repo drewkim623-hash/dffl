@@ -1472,6 +1472,102 @@ check("the two figures it rests on are both in it", nine.quotes0009 && nine.quot
 check("both managers are named", nine.namesBoth);
 check("no NaN anywhere in it", nine.nan === false);
 
+/* The teaser: ten plain-text lines for the group chat at the foot of every
+ * article, with a Copy button. The shape rules live in check-recaps.mjs, the
+ * same file the weekly job runs before it pushes. */
+group("Article teasers");
+{
+  const { recapsProblems, teaserLink, SITE } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const rj = JSON.parse(await readFile(join(ROOT, "recaps.json"), "utf8"));
+  const arts = rj.articles || [];
+  const probs = recapsProblems(rj);
+  check("every article has a teaser in the ten-line shape, <=600 chars, no HTML, every stat number in its article",
+    arts.length > 0 && probs.length === 0, probs.slice(0, 3).join(" | ") || `${arts.length} articles`);
+  const { spawnSync } = await import("node:child_process");
+  const cr = spawnSync(process.execPath, ["check-recaps.mjs"], { cwd: ROOT, encoding: "utf8", timeout: 60000 });
+  check("check-recaps.mjs exits 0 on the committed recaps.json", cr.status === 0, String(cr.stdout || cr.stderr).slice(-200));
+  // The check has to bite: a number the article never prints, and a link to another piece, both fail.
+  const a0 = arts[0], L0 = a0.teaser.split("\n");
+  const { teaserProblems } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const slugs = new Set(arts.map(a => a.slug));
+  const badNum = teaserProblems({ ...a0, teaser: [...L0.slice(0, 4), "📈 98765.4 of nothing", ...L0.slice(5)].join("\n") }, slugs);
+  const badLink = teaserProblems({ ...a0, teaser: [...L0.slice(0, 9), teaserLink(arts[1].slug)].join("\n") }, slugs);
+  check("an invented stat number or another piece's link fails the teaser check",
+    badNum.some(p => /98765\.4/.test(p)) && badLink.some(p => /last line/.test(p)), `${badNum.length}/${badLink.length}`);
+  // Every teaser link names the piece it came with: the ?a=<slug> it carries resolves to that article.
+  const resolved = await page.evaluate(async list => {
+    const out = [];
+    for (const { slug, link, site } of list) {
+      const u = new URL(link);
+      const a = u.href.startsWith(site) && u.pathname === new URL(site).pathname
+        ? await window.__DFFL.articleBySlug(u.searchParams.get("a")) : null;
+      if (!a || a.slug !== slug) out.push(slug);
+    }
+    return out;
+  }, arts.map(a => ({ slug: a.slug, link: a.teaser.split("\n").pop(), site: SITE })));
+  check("every teaser's link opens its own article", resolved.length === 0, resolved.join(", "));
+
+  // The newest piece, loaded straight from its teaser link at 390, the way a tap from the chat lands.
+  const newest = arts.slice().sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0];
+  const tctx = await browser.newContext({ viewport: { width: 390, height: 844 }, permissions: ["clipboard-read", "clipboard-write"] });
+  const tp = await tctx.newPage();
+  const terrs = [];
+  tp.on("pageerror", e => terrs.push(String(e)));
+  await tp.goto(newest.teaser.split("\n").pop().replace(SITE, `${BASE}/`), { waitUntil: "domcontentloaded" });
+  await tp.waitForFunction(() => document.querySelector('[data-panel="article"]:not([hidden]) .artl .ateaser'), null, { timeout: 90000 });
+  const td = await tp.evaluate(() => {
+    const art = document.querySelector('[data-panel="article"] .artl');
+    const box = art.querySelector(".ateaser"), btn = box.querySelector(".copytxt"), say = box.querySelector(".say");
+    const r = box.getBoundingClientRect(), b = btn.getBoundingClientRect();
+    return {
+      headline: art.querySelector("h2").textContent,
+      last: art.lastElementChild === box,
+      afterBlocks: !!(box.previousElementSibling && box.previousElementSibling.classList.contains("abd")),
+      text: box.querySelector("pre").textContent,
+      live: say.getAttribute("role") === "status" && say.getAttribute("aria-live") === "polite",
+      named: /Copy the teaser for/.test(btn.getAttribute("aria-label") || ""),
+      inside: r.left >= 0 && r.right <= innerWidth + 0.5,
+      overflow: document.documentElement.scrollWidth > innerWidth,
+      tap: b.height >= 44,
+      taHidden: box.querySelector("textarea").hidden,
+    };
+  });
+  check("a direct load of the teaser link at 390 opens that article", td.headline === newest.headline, td.headline);
+  check("the teaser box is the article's last child, right after the last block", td.last && td.afterBlocks);
+  check("the box shows the teaser exactly as committed", td.text === newest.teaser);
+  check("the box fits 390 with no sideways scroll, a 44px Copy button and a named, live status",
+    td.inside && !td.overflow && td.tap && td.live && td.named && td.taHidden, JSON.stringify(td).slice(0, 200));
+  await tp.click(".ateaser .copytxt");
+  await tp.waitForFunction(() => document.querySelector(".ateaser .say").textContent.length > 0, null, { timeout: 5000 });
+  const copied = await tp.evaluate(async () => ({
+    clip: await navigator.clipboard.readText(),
+    say: document.querySelector(".ateaser .say").textContent,
+    taHidden: document.querySelector(".ateaser textarea").hidden,
+  }));
+  check("Copy puts the teaser on the clipboard and says so", copied.clip === newest.teaser && /^Copied/.test(copied.say) && copied.taHidden,
+    copied.say);
+  // No clipboard (an old WebView, an insecure origin): the text appears selected in a readonly box.
+  await tp.evaluate(() => Object.defineProperty(navigator, "clipboard", { value: undefined, configurable: true }));
+  await tp.click(".ateaser .copytxt");
+  const fb = await tp.evaluate(() => {
+    const ta = document.querySelector(".ateaser textarea");
+    return { shown: !ta.hidden, ro: ta.readOnly, value: ta.value, focused: document.activeElement === ta,
+      sel: ta.value.slice(ta.selectionStart, ta.selectionEnd), say: document.querySelector(".ateaser .say").textContent,
+      inside: ta.getBoundingClientRect().right <= innerWidth + 0.5 };
+  });
+  check("without a clipboard the teaser shows readonly, focused and fully selected, and says so",
+    fb.shown && fb.ro && fb.focused && fb.value === newest.teaser && fb.sel === newest.teaser && /Couldn't copy/.test(fb.say) && fb.inside,
+    JSON.stringify({ ...fb, value: fb.value.length, sel: fb.sel.length }));
+  const bare = await page.evaluate(() => {
+    const n = window.__DFFL.articleCard({ headline: "x", blocks: [{ type: "p", text: "y" }] }, true);
+    const idx = window.__DFFL.articleCard({ headline: "x", teaser: "t", blocks: [] }, false);
+    return n.querySelectorAll(".ateaser").length + idx.querySelectorAll(".ateaser").length;
+  });
+  check("no teaser box without a teaser, and none outside the full article", bare === 0, `${bare}`);
+  check("no page errors on the teaser page", terrs.length === 0, terrs.slice(0, 2).join(" | "));
+  await tctx.close();
+}
+
 await page.evaluate(() => { const a = document.querySelector('[data-panel="article"]'); if (a) a.remove(); });
 const artSafe = await page.evaluate(() => {
   const D = window.__DFFL;
@@ -6084,17 +6180,20 @@ group("Tab bar scroll hint");
   await tp.waitForFunction(() => document.body.dataset.tabNudge, null, { timeout: 10000 }).catch(() => {});
   await tp.waitForTimeout(1400);
   const first = await tp.evaluate(() => {
-    const bar = document.querySelector("#tabs"), w = bar.parentElement, chev = w.querySelector(".tabchev");
+    const bar = document.querySelector("#tabs"), w = bar.parentElement, chev = w.querySelector(".tabarr-r");
     return { over: bar.scrollWidth > bar.clientWidth, more: w.classList.contains("more"), nudge: document.body.dataset.tabNudge || "",
       stored: localStorage.getItem("tabNudgeSeen"), left: bar.scrollLeft,
-      pe: [getComputedStyle(w, "::after").pointerEvents, getComputedStyle(w, "::before").pointerEvents, chev ? getComputedStyle(chev).pointerEvents : "missing"],
+      pe: [getComputedStyle(w, "::after").pointerEvents, getComputedStyle(w, "::before").pointerEvents],
+      arrow: chev ? { hidden: chev.hidden, label: chev.getAttribute("aria-label"), tag: chev.tagName, w: chev.getBoundingClientRect().width, h: chev.getBoundingClientRect().height } : null,
       sticky: getComputedStyle(document.querySelector("nav.tabs")).position };
   });
   check("tab hint: at 390 the tab row overflows", first.over);
   check("tab hint: the right fade shows when the row overflows", first.more && await op(tp, "nav.tabs .wrap", "::after") > 0.9);
-  check("tab hint: the chevron shows when the row overflows", await op(tp, ".tabchev") > 0.9);
+  check("tab hint: a right arrow button shows when the row overflows", first.arrow && !first.arrow.hidden && first.arrow.tag === "BUTTON" && first.arrow.label === "Scroll tabs right", JSON.stringify(first.arrow));
+  check("tab hint: the arrow is a 32px+ tap target", first.arrow && first.arrow.w >= 32 && first.arrow.h >= 32, JSON.stringify(first.arrow));
+  check("tab hint: no left arrow at the start", await tp.evaluate(() => document.querySelector(".tabarr-l").hidden));
   check("tab hint: no left fade at the start", await op(tp, "nav.tabs .wrap", "::before") < 0.1);
-  check("tab hint: fades and chevron never take taps", first.pe.every(v => v === "none"), first.pe.join(","));
+  check("tab hint: the fades never take taps", first.pe.every(v => v === "none"), first.pe.join(","));
   check("tab hint: the tab bar is still sticky", first.sticky === "sticky", first.sticky);
   check("tab hint: the first visit nudges once and remembers it", first.nudge === "ran" && first.stored === "1" && first.left < 2,
     `${first.nudge} ${first.stored} left=${first.left}`);
@@ -6111,6 +6210,17 @@ group("Tab bar scroll hint");
   }
   const tapped = lastVisible ? await tp.evaluate(t => document.querySelector(`#tabs button[data-tab="${t}"]`).getAttribute("aria-selected"), lastVisible) : null;
   check("tab hint: a tab under the right fade still takes a tap", tapped === "true", `${lastVisible} ${tapped}`);
+  const tapped0 = await tp.evaluate(() => document.querySelector('#tabs [aria-selected="true"]').dataset.tab);
+  // The right arrow pages the row; the left arrow pages it back.
+  await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = 0; b.dispatchEvent(new Event("scroll")); });
+  await tp.waitForTimeout(250);
+  await tp.click(".tabarr-r");
+  await tp.waitForTimeout(700);
+  const paged = await tp.evaluate(() => { const b = document.querySelector("#tabs"); return { left: b.scrollLeft, cw: b.clientWidth, sel: document.querySelector('#tabs [aria-selected="true"]').dataset.tab }; });
+  check("tab hint: tapping the right arrow pages the row and changes no tab", paged.left >= paged.cw * 0.5 && paged.sel === tapped0, JSON.stringify(paged));
+  await tp.click(".tabarr-l");
+  await tp.waitForTimeout(700);
+  check("tab hint: the left arrow pages it back", await tp.evaluate(l => document.querySelector("#tabs").scrollLeft < l, paged.left));
   // Scrolled partway: the left fade shows. Scrolled to the end: right fade and chevron hide.
   await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = 60; b.dispatchEvent(new Event("scroll")); });
   await tp.waitForTimeout(300);
@@ -6118,7 +6228,21 @@ group("Tab bar scroll hint");
   await tp.evaluate(() => { const b = document.querySelector("#tabs"); b.scrollLeft = b.scrollWidth; b.dispatchEvent(new Event("scroll")); });
   await tp.waitForTimeout(300);
   check("tab hint: at the end the right fade hides", await op(tp, "nav.tabs .wrap", "::after") < 0.1);
-  check("tab hint: at the end the chevron hides", await op(tp, ".tabchev") < 0.1);
+  check("tab hint: at the end the right arrow hides and the left one shows", await tp.evaluate(() => document.querySelector(".tabarr-r").hidden && !document.querySelector(".tabarr-l").hidden));
+  // A direct load of the last tab scrolls the row so that tab is in view.
+  const lastId = await tp.evaluate(() => [...document.querySelectorAll("#tabs button")].pop().dataset.tab);
+  const rp0 = await tctx.newPage();
+  await rp0.goto(BASE + "#" + lastId, { waitUntil: "domcontentloaded" });
+  await settle(rp0);
+  await rp0.waitForTimeout(1500);
+  const vis = await rp0.evaluate(id => { const bar = document.querySelector("#tabs"), b = bar.querySelector(`[data-tab="${id}"]`), r = b.getBoundingClientRect(), q = bar.getBoundingClientRect();
+    return { sel: b.getAttribute("aria-selected"), inView: r.left >= q.left - 1 && r.right <= q.right + 1, left: bar.scrollLeft }; }, lastId);
+  check("tab hint: on load the selected tab is scrolled into view", vis.sel === "true" && vis.inView && vis.left > 0, JSON.stringify(vis));
+  // Switching tabs keeps the new one in view.
+  await rp0.evaluate(() => document.querySelector('#tabs button[data-tab="home"]').click());
+  await rp0.waitForTimeout(700);
+  check("tab hint: changing tab scrolls the new one into view", await rp0.evaluate(() => { const b = document.querySelector('#tabs [aria-selected="true"]'), r = b.getBoundingClientRect(), q = document.querySelector("#tabs").getBoundingClientRect(); return b.dataset.tab === "home" && r.left >= q.left - 1 && r.right <= q.right + 1; }));
+  await rp0.close();
   // A second visit in the same browser: no nudge.
   await tp.reload({ waitUntil: "domcontentloaded" });
   await settle(tp);
@@ -6155,7 +6279,7 @@ group("Tab bar scroll hint");
     await new Promise(r => setTimeout(r, 300));
     const op = (n, p) => Number(getComputedStyle(n, p).opacity);
     return { over: bar.scrollWidth > bar.clientWidth + 2, cls: ["over", "more", "less"].filter(c => w.classList.contains(c)).join(","),
-      after: op(w, "::after"), before: op(w, "::before"), chev: op(w.querySelector(".tabchev")) };
+      after: op(w, "::after"), before: op(w, "::before"), chev: w.querySelector(".tabarr-r").hidden && w.querySelector(".tabarr-l").hidden ? 0 : 1 };
   });
   check("tab hint: on desktop with a row that fits, no fade or chevron", !fit.over && !fit.cls && fit.after < 0.1 && fit.before < 0.1 && fit.chev < 0.1, JSON.stringify(fit));
   await dctx.close();
@@ -6561,6 +6685,48 @@ await mobile.click('#tabs button[data-tab="home"]');
 await mobile.waitForTimeout(200);
 await mobile.screenshot({ path: "home-mobile.png", fullPage: true });
 check("screenshots written", true);
+
+/* ------------------------------------------ odds history: team rows */
+group("Odds history: per-team odds for each finalized week");
+{
+  const { teamRowsFromSnapshot, mergeTeamWeeks } = await import("./odds-history.mjs");
+  const hist = JSON.parse(await readFile(join(ROOT, "data/odds-history.json"), "utf8"));
+  const snap = JSON.parse(await readFile(join(ROOT, "data/odds-snapshot.json"), "utf8"));
+  const teams = hist.teams || {};
+  const keys = Object.keys(teams);
+  const p01 = x => typeof x === "number" && x >= 0 && x <= 1;
+  const badRow = keys.flatMap(k => teams[k].map(r => [k, r])).find(([k, r]) =>
+    !/^\d{4}-\d+$/.test(k) || typeof r.at !== "string" || Number.isNaN(Date.parse(r.at)) || !r.uid ||
+    !p01(r.playoff) || !p01(r.title) || JSON.stringify(Object.keys(r)) !== '["at","uid","manager","playoff","title"]');
+  check("team rows have shape { at, uid, manager, playoff, title } with chances in [0,1]", keys.length > 0 && !badRow, JSON.stringify(badRow));
+  check("one row per team per week, all from one reading", keys.every(k =>
+    new Set(teams[k].map(r => r.uid)).size === teams[k].length && new Set(teams[k].map(r => r.at)).size === 1));
+  check("matchup line rows untouched alongside", hist.weeks && Object.values(hist.weeks).every(rows =>
+    Array.isArray(rows) && rows.every(r => r.a && r.b && typeof r.pA === "number")));
+
+  // Synthetic: the same week written twice is replaced, never duplicated.
+  const S = (generated, week, pf, tt, over = {}) => ({ generated, season: "2026", week, liveWeek: null, settled: true,
+    teams: [{ uid: "u1", manager: "m1", playoffNow: pf, titleNow: tt }, { uid: "u2", manager: "m2", playoffNow: 1 - pf, titleNow: 1 - tt }], ...over });
+  const first = mergeTeamWeeks(undefined, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  const again = mergeTeamWeeks(first.teams, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  const second = mergeTeamWeeks(first.teams, [teamRowsFromSnapshot(S("2026-10-13T11:00:00.000Z", 6, 0.6, 0.2))]);
+  const stale = mergeTeamWeeks(second.teams, [teamRowsFromSnapshot(S("2026-10-13T05:00:00.000Z", 6, 0.4, 0.1))]);
+  check("a finalized week is keyed season-(week before the snapshot's)", JSON.stringify(Object.keys(first.teams)) === '["2026-5"]');
+  check("writing the same reading twice changes nothing", !again.changed && JSON.stringify(again.teams) === JSON.stringify(first.teams));
+  check("a newer reading of the same week replaces its rows, no duplicates", second.changed &&
+    second.teams["2026-5"].length === 2 && second.teams["2026-5"][0].playoff === 0.6 && second.teams["2026-5"][0].title === 0.2);
+  check("an older reading never overwrites a newer one", !stale.changed);
+  check("a snapshot with a week in flight records nothing",
+    teamRowsFromSnapshot(S("2026-10-12T11:00:00.000Z", 5, 0.5, 0.5, { liveWeek: 5, settled: false })) === null);
+
+  // The committed snapshot, when it was read between weeks, must be the latest week on file.
+  const want = teamRowsFromSnapshot(snap);
+  if (want) {
+    const have = teams[want.key];
+    check(`latest finalized week ${want.key} is recorded from the committed snapshot`,
+      keys.at(-1) === want.key && JSON.stringify(have) === JSON.stringify(want.rows), `latest on file ${keys.at(-1)}`);
+  } else check("committed snapshot is mid-week, so no latest-week row is expected from it", true);
+}
 
 /* -------------------------------------------------------------- done */
 await browser.close();

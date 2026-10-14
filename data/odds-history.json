@@ -1,6 +1,6 @@
 {
- "_comment": "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; pA is the chance manager a beats manager b as the site priced it at that moment.",
- "generated": "2026-10-12T11:06:14.969Z",
+ "_comment": "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; pA is the chance manager a beats manager b as the site priced it at that moment. teams holds each finalized week's playoff and title chances (0..1) per team, from the newest snapshot read after that week went final; a newer reading of the same week replaces that week's team rows.",
+ "generated": "2026-10-14T03:42:52.921Z",
  "weeks": {
   "2026-1": [
    {
@@ -1567,6 +1567,438 @@
     "aPts": 173.36,
     "bPts": 101.96,
     "settled": false
+   }
+  ]
+ },
+ "teams": {
+  "2026-1": [
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 0.94655,
+    "title": 0.3208
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.9071,
+    "title": 0.2343
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.4321,
+    "title": 0.0426
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.2011,
+    "title": 0.0121
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "845540882697547776",
+    "manager": "bertalicious",
+    "playoff": 0.5661,
+    "title": 0.0937
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.6017,
+    "title": 0.077
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.48585,
+    "title": 0.04865
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.244,
+    "title": 0.0206
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.58495,
+    "title": 0.06485
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.3295,
+    "title": 0.03025
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.20345,
+    "title": 0.0138
+   },
+   {
+    "at": "2026-09-17T11:04:44.141Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.4976,
+    "title": 0.04135
+   }
+  ],
+  "2026-2": [
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 0.97205,
+    "title": 0.36175
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.8123,
+    "title": 0.1716
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.2959,
+    "title": 0.0265
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.29575,
+    "title": 0.01885
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "845540882697547776",
+    "manager": "bertalicious",
+    "playoff": 0.6764,
+    "title": 0.1173
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.53705,
+    "title": 0.0673
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.6044,
+    "title": 0.0627
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.1707,
+    "title": 0.01215
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.7091,
+    "title": 0.086
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.232,
+    "title": 0.0207
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.31055,
+    "title": 0.0227
+   },
+   {
+    "at": "2026-09-24T11:04:26.879Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.3838,
+    "title": 0.03245
+   }
+  ],
+  "2026-3": [
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 0.95445,
+    "title": 0.3373
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.87705,
+    "title": 0.19805
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.36605,
+    "title": 0.03335
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.2127,
+    "title": 0.01335
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "845540882697547776",
+    "manager": "willie12w",
+    "playoff": 0.7276,
+    "title": 0.1228
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.40135,
+    "title": 0.0423
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.74565,
+    "title": 0.08505
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.1038,
+    "title": 0.00875
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.60825,
+    "title": 0.07205
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.2783,
+    "title": 0.0227
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.2004,
+    "title": 0.01485
+   },
+   {
+    "at": "2026-10-01T11:04:17.184Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.5244,
+    "title": 0.04945
+   }
+  ],
+  "2026-4": [
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 0.9737,
+    "title": 0.37215
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.79525,
+    "title": 0.1605
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.2347,
+    "title": 0.02095
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.1203,
+    "title": 0.006
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "845540882697547776",
+    "manager": "willie12w",
+    "playoff": 0.5884,
+    "title": 0.0937
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.5164,
+    "title": 0.05955
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.6538,
+    "title": 0.07235
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.20395,
+    "title": 0.0163
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.7152,
+    "title": 0.0871
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.23205,
+    "title": 0.0204
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.2981,
+    "title": 0.02235
+   },
+   {
+    "at": "2026-10-08T11:04:23.495Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.66815,
+    "title": 0.06865
+   }
+  ],
+  "2026-5": [
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 0.99035,
+    "title": 0.39705
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.888,
+    "title": 0.1792
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.3263,
+    "title": 0.0255
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.05445,
+    "title": 0.00235
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "845540882697547776",
+    "manager": "willie12w",
+    "playoff": 0.6676,
+    "title": 0.1017
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.33335,
+    "title": 0.028
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.78485,
+    "title": 0.0933
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.1665,
+    "title": 0.0133
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.59835,
+    "title": 0.0625
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.43565,
+    "title": 0.04065
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.23025,
+    "title": 0.0158
+   },
+   {
+    "at": "2026-10-13T11:05:17.493Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.52435,
+    "title": 0.04065
    }
   ]
  }
