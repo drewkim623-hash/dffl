@@ -3138,6 +3138,11 @@ if (ledgerFile.missing) {
   check("the data push rebases onto main first and never forces",
     /git pull --rebase/.test(wf) && /git rebase --abort/.test(wf) && !/--force|\s-f\b|push\s+\+/.test(pushLines.join("\n"))
       && wf.indexOf("git pull --rebase") < wf.lastIndexOf("git push"), pushLines.map(l => l.trim()).join(" | "));
+  const wfPush = (wf.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
+  check("weekly-data.yml push: on a rebase failure, reset to origin, rebuild, retry once, then error; no force push",
+    (wfPush.match(/git pull --rebase/g) || []).length === 2 && /git rebase --abort/.test(wfPush) && /git reset --hard "origin\/\$branch"/.test(wfPush)
+      && ["build-week.mjs", "build-injuries.mjs", "build-email.mjs", "build-odds-history.mjs"].every(f => wfPush.includes(`node ${f}`))
+      && /::error::/.test(wfPush) && /exit 1\s*$/.test(wfPush) && !/--force|push -f\b/.test(wf));
 
   const g = node(["recap-guard.mjs", "--json"]);
   let verdict = null;
