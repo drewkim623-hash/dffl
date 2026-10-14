@@ -54,8 +54,8 @@
   .tabrow{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:8px 0}
   .tabrow::-webkit-scrollbar{display:none}
   nav.tabs .wrap{position:relative}
-  /* Scroll hint: fades on whichever edge has more tabs past it, plus a chevron on the right.
-     Purely decorative, so none of it takes taps. Nothing shows unless the row overflows. */
+  /* Scroll hint: fades on whichever edge has more tabs past it. Purely decorative,
+     so they never take taps. Nothing shows unless the row overflows. */
   nav.tabs .wrap::before,nav.tabs .wrap::after{content:"";position:absolute;top:0;bottom:0;width:48px;pointer-events:none;
     opacity:0;transition:opacity .18s;z-index:1}
   nav.tabs .wrap::before{left:var(--pad);background:linear-gradient(270deg,transparent,var(--plane) 80%)}
@@ -63,9 +63,10 @@
   nav.tabs .wrap.more::after,nav.tabs .wrap.less::before{opacity:1}
   /* Arrow buttons: real controls that page the row, right while there is more, left once scrolled. */
   .tabarr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:34px;height:34px;padding:0;
-    border-radius:999px;display:grid;place-items:center;font:700 20px/1 inherit;color:var(--ink);cursor:pointer;
+    border-radius:999px;display:grid;place-items:center;font-family:inherit;font-weight:700;font-size:20px;line-height:1;color:var(--ink);cursor:pointer;
     background:var(--raised);border:1px solid var(--ring);box-shadow:0 2px 10px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
-  .tabarr:hover,.tabarr:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+  .tabarr:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+  @media (hover:hover){.tabarr:hover{background:var(--blue);border-color:var(--blue);color:#fff}}
   .tabarr[hidden]{display:none}
   .tabarr-r{right:calc(var(--pad) - 6px)}
   .tabarr-l{left:calc(var(--pad) - 6px)}
@@ -1786,8 +1787,8 @@ function buildTabs() {
   }
 }
 /**
- * Fades whichever edge of the tab row has tabs past it: the right (with a
- * chevron) until the row is scrolled to its end, the left once it's scrolled
+ * Fades whichever edge of the tab row has tabs past it, with an arrow button
+ * on that edge: the right until the row is scrolled to its end, the left once it's scrolled
  * past its start. A row that fits shows neither.
  */
 function tabHint() {
@@ -1797,8 +1798,13 @@ function tabHint() {
   w.classList.toggle("more", over && bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
   w.classList.toggle("less", over && bar.scrollLeft > 2);
   const r = w.querySelector(".tabarr-r"), l = w.querySelector(".tabarr-l");
-  if (r) r.hidden = !w.classList.contains("more");
-  if (l) l.hidden = !w.classList.contains("less");
+  if (!r || !l) return;
+  // Hiding a focused arrow would drop keyboard focus to the page, so hand it to the other one.
+  const had = document.activeElement;
+  r.hidden = !w.classList.contains("more");
+  l.hidden = !w.classList.contains("less");
+  if (had === r && r.hidden && !l.hidden) l.focus();
+  else if (had === l && l.hidden && !r.hidden) r.focus();
 }
 /** Scrolls the tab row (only the row, never the page) so the selected tab sits in the middle. */
 function revealTab(id, smooth) {
