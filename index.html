@@ -61,10 +61,14 @@
   nav.tabs .wrap::before{left:var(--pad);background:linear-gradient(270deg,transparent,var(--plane) 80%)}
   nav.tabs .wrap::after{right:var(--pad);background:linear-gradient(90deg,transparent,var(--plane) 70%)}
   nav.tabs .wrap.more::after,nav.tabs .wrap.less::before{opacity:1}
-  .tabchev{position:absolute;top:50%;right:calc(var(--pad) + 2px);transform:translateY(-50%);z-index:2;pointer-events:none;
-    width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:17px;font-weight:700;line-height:1;
-    color:var(--ink-2);background:var(--raised);border:1px solid var(--grid);opacity:0;transition:opacity .18s}
-  nav.tabs .wrap.more .tabchev{opacity:1}
+  /* Arrow buttons: real controls that page the row, right while there is more, left once scrolled. */
+  .tabarr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:34px;height:34px;padding:0;
+    border-radius:999px;display:grid;place-items:center;font:700 20px/1 inherit;color:var(--ink);cursor:pointer;
+    background:var(--raised);border:1px solid var(--ring);box-shadow:0 2px 10px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+  .tabarr:hover,.tabarr:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+  .tabarr[hidden]{display:none}
+  .tabarr-r{right:calc(var(--pad) - 6px)}
+  .tabarr-l{left:calc(var(--pad) - 6px)}
   .tabrow button{
     background:transparent;border:1px solid transparent;border-radius:999px;color:var(--muted);
     font-weight:650;font-size:14.5px;padding:8px 15px;cursor:pointer;white-space:nowrap;transition:.14s}
@@ -1147,7 +1151,7 @@
   </div>
 </header>
 
-<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><span class="tabchev" aria-hidden="true">›</span></div></nav>
+<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button></div></nav>
 
 <main class="wrap">
   <div id="loader">
@@ -1774,6 +1778,10 @@ function buildTabs() {
     bar.dataset.hint = "1";
     bar.addEventListener("scroll", tabHint, { passive: true });
     window.addEventListener("resize", tabHint, { passive: true });
+    // Each arrow pages the row by most of its width.
+    const page = dir => bar.scrollBy({ left: dir * Math.max(120, bar.clientWidth * 0.8), behavior: "smooth" });
+    $(".tabarr-r").onclick = () => page(1);
+    $(".tabarr-l").onclick = () => page(-1);
     setTimeout(tabNudge, 700);
   }
 }
@@ -1788,6 +1796,17 @@ function tabHint() {
   w.classList.toggle("over", over);
   w.classList.toggle("more", over && bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
   w.classList.toggle("less", over && bar.scrollLeft > 2);
+  const r = w.querySelector(".tabarr-r"), l = w.querySelector(".tabarr-l");
+  if (r) r.hidden = !w.classList.contains("more");
+  if (l) l.hidden = !w.classList.contains("less");
+}
+/** Scrolls the tab row (only the row, never the page) so the selected tab sits in the middle. */
+function revealTab(id, smooth) {
+  const bar = $("#tabs"), b = bar && bar.querySelector(`[data-tab="${id}"]`);
+  if (!b || bar.scrollWidth <= bar.clientWidth + 2) return;
+  const br = b.getBoundingClientRect(), rr = bar.getBoundingClientRect();
+  const left = bar.scrollLeft + (br.left - rr.left) - (rr.width - br.width) / 2;
+  bar.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
 }
 /**
  * The first time somebody sees a row that scrolls, slide it a little and back
@@ -1824,6 +1843,7 @@ function show(id) {
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
+  revealTab(id, document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
   scrollTo(0, 0);
