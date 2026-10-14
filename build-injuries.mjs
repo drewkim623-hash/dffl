@@ -20,6 +20,10 @@
  * ESPN will have a man Questionable whom Sleeper has Out. ESPN is used here for
  * description and nothing else, so nothing added below can move a price.
  *
+ * It also writes data/projections.json: Sleeper's weekly projections for every
+ * rostered player through the end of the regular season, scored with this
+ * league's scoring_settings, for the Injuries tab's projected points lost.
+ *
  *   node build-injuries.mjs
  *
  * Run it whenever you want the front page's injury strip refreshed — the weekly
@@ -28,6 +32,7 @@
  */
 import { writeFile, readFile } from "fs/promises";
 import { fetchJSON } from "./fetch-json.mjs";
+import { effectiveWeek } from "./effective-week.mjs";
 
 const SRC = "https://api.sleeper.app/v1/players/nfl";
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries";
@@ -220,3 +225,79 @@ const bytes = JSON.stringify(out).length;
 console.log(`injuries.json — ${out.count} players carrying a status, ${(bytes / 1024).toFixed(1)}KB`);
 console.log(`  outlook: ${seen.matched} matched on ESPN · ${seen.bp} body parts · ${seen.sev} severities`
   + ` · ${seen.ret} return dates · ${seen.note} notes (rostered only)`);
+
+/* ------------------------------------------------------------ projections */
+
+// The Injuries tab's "projected points lost" needs each rostered player's
+// weekly projection for the rest of the regular season. Sleeper's projection
+// files are ~10MB a week, so they are read here and boiled down to one number
+// per rostered player per week — scored with this league's scoring_settings —
+// in data/projections.json. Like the outlook, this is a bonus: a failure here
+// leaves injuries.json written and the tab shows its empty state.
+const API = "https://api.sleeper.app/v1";
+const LEAGUE = "1318040218183417856";
+try {
+  const [state, league] = await Promise.all([
+    fetchJSON(`${API}/state/nfl`, { label: "state/nfl" }),
+    fetchJSON(`${API}/league/${LEAGUE}`, { label: "league" }),
+  ]);
+  let latest = null;
+  try { latest = JSON.parse(await readFile("data/latest.json", "utf8")); } catch (e) { /* no bump */ }
+  const current = effectiveWeek(state, latest);
+  const season = String(state.season);
+  const pws = Number(league.settings && league.settings.playoff_week_start) || 15;
+  const scoring = league.scoring_settings || {};
+  // Sum of stat × the league's value for that stat; stats the league does not
+  // score are ignored.
+  const score = stats => Object.entries(stats || {})
+    .reduce((s, [k, v]) => s + (Object.hasOwn(scoring, k) ? Number(v) * Number(scoring[k]) || 0 : 0), 0);
+
+  // Each week's Sunday, from the season's first Sunday. The tab counts a week as
+  // missed when its Sunday is before ESPN's return date.
+  const start = new Date(`${state.season_start_date}T12:00:00Z`);
+  start.setUTCDate(start.getUTCDate() + ((7 - start.getUTCDay()) % 7));
+  const sundayOf = w => {
+    const d = new Date(start.getTime());
+    d.setUTCDate(d.getUTCDate() + 7 * (w - 1));
+    return d.toISOString().slice(0, 10);
+  };
+
+  const weeks = {}, sundays = {}, missing = {};
+  for (let w = current; w <= pws - 1; w++) {
+    sundays[w] = sundayOf(w);
+    const rows = await fetchJSON(`https://api.sleeper.app/projections/nfl/${season}/${w}?season_type=regular`,
+      { label: `projections/${w}` }).catch(e => { console.warn(e.message); return null; });
+    // An unpublished week is left out entirely; the tab falls back to each
+    // player's latest published week.
+    if (!Array.isArray(rows) || !rows.length) continue;
+    const wk = {};
+    for (const r of rows) {
+      const pid = String(r.player_id);
+      if (!rostered.has(pid)) continue;
+      wk[pid] = Math.round(score(r.stats) * 100) / 100;
+    }
+    missing[w] = [...rostered].filter(p => !(p in wk)).length;
+    weeks[w] = wk;
+  }
+
+  const proj = {
+    _comment:
+      "Written by build-injuries.mjs. Sleeper's weekly projections (api.sleeper.app/projections) "
+      + "for every DFFL-rostered player, from the effective current week through the last "
+      + "regular-season week (playoff_week_start - 1), each scored with this league's "
+      + "scoring_settings. weeks[w][pid] = projected points; sundays[w] = that week's Sunday. "
+      + "Read by the Injuries tab's projected points lost.",
+    generated: new Date().toISOString(),
+    season,
+    scoring: "league scoring_settings",
+    current_week: current,
+    playoff_week_start: pws,
+    sundays,
+    weeks,
+  };
+  await writeFile("data/projections.json", JSON.stringify(proj) + "\n");
+  console.log(`data/projections.json — weeks ${Object.keys(weeks).join(",") || "none"} · `
+    + `${(JSON.stringify(proj).length / 1024).toFixed(1)}KB · rostered players absent per week: ${JSON.stringify(missing)}`);
+} catch (e) {
+  console.warn(`projections unavailable (${e.message}) — data/projections.json not written.`);
+}
