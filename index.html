@@ -367,12 +367,19 @@
   .injp .meta .rsrc{color:var(--muted)}
   .injp .meta .est{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);
     border:1px solid currentColor;border-radius:999px;padding:0 5px}
-  .injp .imp{grid-column:2;grid-row:1 / span 4;text-align:right;font-size:15px;font-weight:800;
+  .injp .meta .est.rep{color:#e07b24}
+  .injp .meta.srcl{font-size:11px}
+  .injkey details{margin-top:4px}
+  .injkey summary{cursor:pointer;color:var(--ink-2);font-weight:600}
+  .injkey details p{margin:6px 0 0}
+  .injp .imp{grid-column:2;grid-row:1 / span 5;text-align:right;font-size:15px;font-weight:800;
     font-variant-numeric:tabular-nums;color:var(--red);line-height:1.15;max-width:9.5em}
-  .injp .imp .po,.injp .imp .ti{display:block}
-  .injp .imp .ti{margin-top:4px;font-size:12px;font-weight:700;color:var(--ink-2)}
+  .injp .imp .po,.injp .imp .pol,.injp .imp .ti{display:block;white-space:nowrap}
+  .injp .imp .po{font-size:26px;font-weight:800;line-height:1.05;letter-spacing:-.01em}
+  .injp .imp .pol{margin-top:2px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .injp .imp .ti{margin-top:5px;font-size:12px;font-weight:700;color:var(--ink-2)}
   .injp .imp .po.zero,.injp .imp .po.pending,.injp .imp .po.none{color:var(--muted)}
-  .injp .imp .po.pending,.injp .imp .po.none{font-size:12px;font-weight:700}
+  .injp .imp .po.pending,.injp .imp .po.none{font-size:13px;font-weight:700}
   .injp .meta .tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
     border:1px solid currentColor;border-radius:999px;padding:0 5px}
   .injteam .bhead .capnote{display:block;font-size:11px;color:var(--muted)}
@@ -6141,14 +6148,15 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED, opts = {
     src.appendChild(el("div")).appendChild(btn);
     return;
   }
-  host.appendChild(el("p", "injkey",
-    `Each row leads with the injury's <b>${jx("injodds", "playoff odds impact")}</b>: the Odds model's
+  host.appendChild(el("div", "injkey",
+    `<p>The big number is how much each injury moves his team's playoff odds.</p>
+     <details><summary>How this works</summary><p>Each row leads with the injury's <b>${jx("injodds", "playoff odds impact")}</b>: the Odds model's
      season re-run with just that injury taken out, title odds beside it. Under it, the
      <b>${jx("injlost", "points")}</b> his team's best starting lineup loses per week he's out (0 if he
      wouldn't start), times the weeks out. A team's weekly injury loss is capped at
      ${Math.round(INJ_ODDS.cap * 100)}% of its strength, so when the cap binds a team's rows add up to more
      than its injuries do together. Source: <b class="ptsrc">${esc(PTS_LOST.source)}</b>. The tags are
-     ${jx("injstatus", "Sleeper's statuses")}.`));
+     ${jx("injstatus", "Sleeper's statuses")}.</p></details>`));
   if (!proj) {
     host.appendChild(el("div", "empty projnone",
       "<b>No projections on file</b>data/projections.json hasn't been published, so injuries can't be priced yet. The injured players are listed below."));
@@ -6191,14 +6199,15 @@ function renderInjuries(host, inj, proj = PROJECTIONS, rost = ROSTERED, opts = {
         : x.wouldStart === false ? "wouldn't start · 0 pts"
         : `${f1(x.lineupPerWeek ?? x.ptsPerWeek)} pts/wk in lineup × ${wks(x.weeksOut)} = ${f1(x.totalLost)} pts`;
       const calc = pending && !x.unpriced;
-      const po = x.playoffDelta != null ? `${fmtInjuryDelta(x.playoffDelta, "%")} playoff odds` : calc ? "calculating…" : "not measured";
+      const po = x.playoffDelta != null ? fmtInjuryDelta(x.playoffDelta, "%") : calc ? "calculating…" : "not measured";
       const poCls = x.playoffDelta != null ? (Math.abs(x.playoffDelta) < 0.5 ? "zero" : "") : calc ? "pending" : "none";
       const ti = x.titleDelta != null ? `<span class="ti">${esc(fmtInjuryDelta(x.titleDelta, "%"))} title</span>` : "";
-      row.innerHTML = `<span class="imp"><span class="po ${poCls}">${esc(po)}</span>${ti}</span>
+      row.innerHTML = `<span class="imp"><span class="po ${poCls}">${esc(po)}</span><span class="pol">playoff odds</span>${ti}</span>
         <span class="nm">${esc(x.name)}</span>
         <span class="meta">${esc([x.pos, x.club].filter(Boolean).join(dot))}${detail ? esc(dot + detail) : ""}</span>
-        <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(retText)}</span>${x.retLabel ? `<span class="rsrc"> (${esc(x.retLabel)})</span>` : ""}${x.retEstimated ? ` <span class="est">estimated</span>` : x.retSource === "report" ? ` <span class="est rep">reported</span>` : ""}${out ? `${esc(dot)}<span class="wo">${esc(out)}</span>` : ""}</span>
-        <span class="meta pts">${x.bench ? `<span class="tag bench">bench</span> ` : ""}<span class="ptl">${esc(pts)}</span></span>`;
+        <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(retText)}</span>${x.retEstimated ? ` <span class="est">estimated</span>` : x.retSource === "report" ? ` <span class="est rep">reported</span>` : ""}${out ? `${esc(dot)}<span class="wo">${esc(out)}</span>` : ""}</span>
+        ${x.retLabel ? `<span class="meta srcl"><span class="rsrc">${esc(x.retLabel)}</span></span>
+        ` : ""}<span class="meta pts">${x.bench ? `<span class="tag bench">bench</span> ` : ""}<span class="ptl">${esc(pts)}</span></span>`;
       b.appendChild(row);
     }
     host.appendChild(b);

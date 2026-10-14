@@ -5323,7 +5323,7 @@ const PL_NAMES = [
   "points lost: the tab loads data/projections.json",
   "points lost: the source label reads Sleeper projections, ESPN return dates",
   "injuries tab: rows are injuryLossPlan's rows, the ones the odds worker measures",
-  "injuries tab: each row leads with its playoff odds impact as −X.X% playoff odds, ~0% under 0.5",
+  "injuries tab: each row leads with its playoff odds impact as a hero −X.X% labelled playoff odds, ~0% under 0.5",
   "injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk in lineup × wks = total pts",
   "injuries tab: bench players are tagged bench; players who wouldn't start cost 0 pts",
   "injuries tab: the return source and its checked date are shown beside the return",
@@ -5444,6 +5444,7 @@ const injData = await injPage.evaluate(async () => {
       pid: r.dataset.pid, starter: r.dataset.starter === "1", lost: r.dataset.lost === "" ? null : Number(r.dataset.lost),
       lead: r.firstElementChild && r.firstElementChild.classList.contains("imp") && r.firstElementChild.firstElementChild
         ? r.firstElementChild.firstElementChild.textContent : null,
+      label: (r.querySelector(".imp .pol") || {}).textContent || null,
       title: (r.querySelector(".imp .ti") || {}).textContent || null,
       pts: (r.querySelector(".meta.pts .ptl") || {}).textContent || "",
       benchTag: !!r.querySelector(".meta.pts .tag.bench"), benchCls: r.classList.contains("bench"),
@@ -5800,7 +5801,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
     const lossTeam = new Map(LT.map(t => [t.rid, t]));
     const f1 = v => (Math.round(v * 10) / 10).toFixed(1);
     const fmtD = (d, u) => (Math.abs(d) < 0.5 ? `~0${u}` : `${d > 0 ? "+" : "−"}${Math.abs(d).toFixed(1)}${u}`);
-    const LEAD = /^(calculating…|not measured|~0% playoff odds|[−+]\d+\.\d% playoff odds)$/;
+    const LEAD = /^(calculating…|not measured|~0%|[−+]\d+\.\d%)$/;
     // Rows: the plan's own, per team, nothing added or dropped.
     const rowBad = [];
     for (const t of PL.shown) {
@@ -5816,12 +5817,12 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
     const leadBad = [], secBad = [], ptsBad = [], benchBad = [], srcBad = [], sortBad = [], wordBad = [];
     let benchSeen = 0, zeroSeen = 0, srcSeen = 0;
     for (const t of [...PL.shown, ...ST]) for (const x of t.rows) {
-      if (!LEAD.test(x.lead || "")) leadBad.push(`${x.pid}: ${x.lead}`);
+      if (!LEAD.test(x.lead || "") || x.label !== "playoff odds") leadBad.push(`${x.pid}: ${x.lead}`);
       if (/for his|stand-in|replacement|stands in/i.test(x.text)) wordBad.push(x.pid);
     }
     for (const t of ST) for (const x of t.rows) {
       const d = SD[x.pid], L = lossOf.get(x.pid);
-      if (d && (x.lead !== `${fmtD(d[0], "%")} playoff odds` || x.title !== `${fmtD(d[1], "%")} title`)) secBad.push(`${x.pid}: ${x.lead} / ${x.title}`);
+      if (d && (x.lead !== fmtD(d[0], "%") || x.title !== `${fmtD(d[1], "%")} title`)) secBad.push(`${x.pid}: ${x.lead} / ${x.title}`);
       if (!d && (x.lead !== "not measured" || x.title)) secBad.push(`${x.pid} unmeasured: ${x.lead}`);
       if (!L) continue;
       const want = !L.weeksOut ? "0 pts" : L.wouldStart === false ? "wouldn't start · 0 pts"
@@ -5830,7 +5831,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if (x.benchTag !== L.bench || x.benchCls !== L.bench) benchBad.push(x.pid);
       if (L.bench) benchSeen++;
       if (L.wouldStart === false && L.weeksOut) zeroSeen++;
-      if (L.retLabel) { srcSeen++; if (x.src !== ` (${L.retLabel})`) srcBad.push(`${x.pid}: ${x.src}`); }
+      if (L.retLabel) { srcSeen++; if (x.src !== L.retLabel) srcBad.push(`${x.pid}: ${x.src}`); }
       else if (x.src) srcBad.push(`${x.pid}: unexpected ${x.src}`);
     }
     for (const t of ST) for (let i = 1; i < t.rows.length; i++) {
@@ -5838,9 +5839,9 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if ((!a && b) || (a && b && a[0] > b[0] + 1e-9)) sortBad.push(`${t.rid}: ${t.rows[i - 1].pid} before ${t.rows[i].pid}`);
     }
     const F = PL.stubFmt || [];
-    check("injuries tab: each row leads with its playoff odds impact as −X.X% playoff odds, ~0% under 0.5",
+    check("injuries tab: each row leads with its playoff odds impact as a hero −X.X% labelled playoff odds, ~0% under 0.5",
       ST.length > 0 && leadBad.length === 0 && secBad.length === 0 && F.join("|") === "−3.5%|~0%|−0.5%|"
-        && ST.some(t => t.rows.some(x => x.lead === "~0% playoff odds")) && ST.some(t => t.rows.some(x => x.lead === "not measured")),
+        && ST.some(t => t.rows.some(x => x.lead === "~0%")) && ST.some(t => t.rows.some(x => x.lead === "not measured")),
       `${F.join("|")} ${[...leadBad, ...secBad].slice(0, 4).join(" ; ")}`);
     check("injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk in lineup × wks = total pts",
       ptsBad.length === 0 && wordBad.length === 0 && ST.some(t => t.rows.some(x => /pts\/wk in lineup ×/.test(x.pts))),
