@@ -116,25 +116,46 @@ jobs:
         run: |
           git config user.name  "dffl-data[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data injuries.json injury-returns-cache.json rosters.json
-          if git diff --staged --quiet; then
+          branch="${GITHUB_REF_NAME:-main}"
+          commit() {
+            git add -A data injuries.json injury-returns-cache.json rosters.json
+            if git diff --staged --quiet; then return 1; fi
+            git commit -m "Data: $(node -e "
+              try {
+                const l = require('./data/latest.json');
+                process.stdout.write('week ' + l.week + ' of ' + l.season);
+              } catch (e) { process.stdout.write('injury refresh'); }
+            ")"
+          }
+          if ! commit; then
             echo "Nothing changed."
             exit 0
           fi
-          git commit -m "Data: $(node -e "
-            try {
-              const l = require('./data/latest.json');
-              process.stdout.write('week ' + l.week + ' of ' + l.season);
-            } catch (e) { process.stdout.write('injury refresh'); }
-          ")"
-          # The routine commits to main too (recaps, the send ledger), and the
-          # two Tuesday runs make a collision likelier. Replay this one commit
-          # on top of whatever landed since checkout, then push once. No loop,
-          # no force: if the rebase conflicts it is aborted and the step fails
-          # loudly, and the next scheduled run starts clean.
-          if ! git pull --rebase origin "${GITHUB_REF_NAME:-main}"; then
-            git rebase --abort || true
-            echo "::error::Could not rebase the data commit onto main; nothing pushed."
-            exit 1
+          # The routine commits to main too (recaps, the send ledger), and
+          # injury-refresh.yml can land first on a Sunday. No force push. On a
+          # rebase (or push) failure: abort, start again from origin, rerun the
+          # build steps above, recommit and try once more.
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::warning::Rebase or push failed; regenerating on top of origin/$branch and retrying once."
+          git fetch origin "$branch"
+          git reset --hard "origin/$branch"
+          if [ -n "${{ inputs.week }}" ]; then
+            node build-week.mjs --week "${{ inputs.week }}"
+          else
+            node build-week.mjs
           fi
-          git push origin "HEAD:${GITHUB_REF_NAME:-main}"
+          node build-rosters.mjs
+          node build-injuries.mjs
+          node injury-returns.mjs
+          node build-pulse.mjs
+          node build-email.mjs
+          node build-odds-history.mjs || echo "::warning::odds history not updated"
+          if ! commit; then
+            echo "Nothing changed on top of origin/$branch."
+            exit 0
+          fi
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::error::Could not rebase the data commit onto $branch after one retry; nothing pushed."
+          exit 1
