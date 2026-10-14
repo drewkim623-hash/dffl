@@ -329,6 +329,34 @@
   .irow .cost.bite{color:var(--red)}
   .irow .cost .k{font-size:9.5px;font-weight:600;text-transform:uppercase;
     letter-spacing:.06em;color:var(--muted)}
+  .irow .ip{flex-wrap:wrap;max-width:100%}
+  .irow .ip .cut{font-weight:800;font-size:11px;font-variant-numeric:tabular-nums;color:var(--red);
+    padding-left:6px;border-left:1px solid var(--grid)}
+  .irow .ip.bench{opacity:.8}
+  .irow .ip.bench .cut{color:var(--muted)}
+  /* ---- the Injuries tab: one card per team, one stacked row per player ---- */
+  .injkey{font-size:12.5px;color:var(--muted);line-height:1.55;margin:0 0 12px;max-width:80ch}
+  .injkey b{color:var(--ink-2)}
+  .injteam .bhead{justify-content:flex-start}
+  .injteam .bhead .av{font-size:11px}
+  .injteam .bhead .tw{min-width:0;flex:1}
+  .injteam .bhead .tc{text-align:right;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;
+    color:var(--ink-2);flex:none;line-height:1.15}
+  .injteam .bhead .tc.bite{color:var(--red)}
+  .injteam .bhead .tc .k,.injp .imp .k{display:block;font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--muted)}
+  .injp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:start;
+    padding:10px 15px;border-top:1px solid var(--grid)}
+  .bhead + .injp{border-top:0}
+  .injp .nm{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+  .injp .meta{grid-column:1;font-size:12px;color:var(--muted);line-height:1.45;overflow-wrap:anywhere}
+  .injp .meta .st{font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .injp .meta .ret{color:var(--ink-2)}
+  .injp .imp{grid-column:2;grid-row:1 / span 3;text-align:right;font-size:15px;font-weight:800;
+    font-variant-numeric:tabular-nums;color:var(--red);line-height:1.15}
+  .injp.bench .imp{color:var(--muted)}
+  .injload{margin-top:10px;background:var(--raised);color:var(--ink);border:1px solid var(--ring);
+    border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
   .notice.live p:first-of-type{margin-top:0}
   /* ---- the front page's week ---- */
   .wskel{padding:26px;text-align:center;color:var(--muted);font-size:13px;
@@ -1646,6 +1674,7 @@ const TABS = [
   { id: "matchups", label: "Matchups" },
   { id: "power", label: "Power" },
   { id: "odds", label: "Odds" },
+  { id: "injuries", label: "Injuries" },
   { id: "picture", label: "Playoff Picture" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
@@ -1688,6 +1717,7 @@ function show(id) {
   // runs tens of thousands of seasons, so it waits until somebody asks for it.
   if (id === "picture") ensurePicture();
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
+  if (id === "injuries") ensureInjuries();
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
@@ -4250,6 +4280,36 @@ function availability(season, inj) {
   return out;
 }
 
+/**
+ * Every injured player on a roster — bench, IR slot and taxi squad included —
+ * with each starter carrying exactly what the sim, the game lines and the
+ * futures charge him for the coming week: loss × scale from injuryCharged() at
+ * plan.W0. A starter who isn't charged that week (he already played, say) and
+ * everyone off the starting lineup carry a loss of zero. `plan` is injuryPlan().
+ */
+function rosterInjuries(r, inj, plan) {
+  if (!r || !inj || !inj.map) return [];
+  const rows = new Map((plan ? injuryCharged(plan, r.roster_id, plan.W0) : [])
+    .map(h => [String(h.pid), { ...h, loss: h.loss * h.scale }]));
+  const starters = new Set((r.starters || []).map(String));
+  const pids = new Set([...(r.starters || []), ...(r.players || []), ...(r.reserve || []), ...(r.taxi || [])]
+    .filter(p => p && p !== "0").map(String));
+  const out = [];
+  for (const pid of pids) {
+    const rec = inj.map.get(pid);
+    if (!rec || !rec.s) continue;
+    const x = rows.get(pid);
+    out.push({ pid, rec, status: rec.s, starter: starters.has(pid), loss: x ? x.loss : 0 });
+  }
+  return out.sort((p, q) => (q.starter - p.starter) || (q.loss - p.loss)
+    || String(p.rec.n).localeCompare(String(q.rec.n)));
+}
+
+/** A player's cut, printed as the injury report prints the team's: −4.1%, or 0% off the lineup. */
+function injCutText(x) {
+  return x && x.starter && x.loss > 0 ? `−${(x.loss * 100).toFixed(1)}%` : "0%";
+}
+
 /** An ESPN return date as a local midnight, built from parts like returnLabel. */
 function injRetDate(iso) {
   const [y, m, d] = String(iso || "").split("-").map(Number);
@@ -4960,26 +5020,37 @@ function returnLabel(iso) {
   // The status badge beside this already says OUT or IR, so "out for the season"
   // would read as "OUT OUT FOR THE SEASON".
   if (days > 110) return "rest of season";
-  return `back ${when.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+  const md = when.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  // A date already gone by is ESPN's stale estimate, not a promise.
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  return when < today ? `was expected back ${md}` : `back ${md}`;
 }
 
 function injuryBoard(model, avail, inj) {
+  const season = DB.seasons[0];
+  const rosterOf = new Map(((season && season.rosters) || []).map(r => [r.roster_id, r]));
+  // The per-player cuts and the team figure are both what the sim charges
+  // next week: injuryCharged() and injuryMult() at plan.W0.
+  const plan = injuryPlan(season, inj, model);
   const rows = model.teams
     .map(t => ({ t, a: avail.get(t.rid) }))
-    .filter(x => x.a && x.a.hurt.length)
-    .sort((a, b) => a.a.mult - b.a.mult);
+    .map(x => ({ ...x, all: rosterInjuries(rosterOf.get(x.t.rid), inj, plan) }))
+    .map(x => ({ ...x, mult: injuryMult(plan, x.t.rid, plan.W0) }))
+    .filter(x => x.a && x.all.length)
+    .sort((a, b) => a.mult - b.mult);
   const b = el("div", "board");
   b.innerHTML = `<div class="bhead"><span class="bt">The injury report
-    <span class="bs">what next week's lineups are missing</span></span></div>`;
+    <span class="bs">every injured player on each roster · only starters cost anything next week</span></span></div>`;
   if (!rows.length) {
     b.appendChild(el("div", "irow none",
-      `<span>Nobody in a starting lineup is carrying a status right now. Every team is
+      `<span>Nobody on a DFFL roster is carrying a status right now. Every team is
        priced at full strength.</span>`));
     return b;
   }
-  for (const { t, a } of rows) {
+  for (const { t, all, mult } of rows) {
     const r = el("div", "irow");
-    const list = a.hurt.map(h => {
+    r.dataset.rid = t.rid;
+    const list = all.map(h => {
       const p = h.rec || injPlayer(h.pid, inj);
       const nm = p ? p.n : h.pid;
       const dot = "\u2009\u00b7\u2009";
@@ -4990,14 +5061,14 @@ function injuryBoard(model, avail, inj) {
       // which is more than a chip can hold. It hangs off the title so the
       // report stays scannable and the detail is one hover away.
       const tip = p && p.note ? ` title="${esc(p.note)}"` : "";
-      return `<span class="ip"${tip}><b>${esc(nm)}</b>${sub ? `<i>${esc(sub)}</i>` : ""}
+      return `<span class="ip${h.starter ? "" : " bench"}" data-pid="${esc(h.pid)}"${tip}><b>${esc(nm)}</b>${sub ? `<i>${esc(sub)}</i>` : ""}
         <span class="st st-${esc(h.status.toLowerCase())}">${esc(h.status)}</span>${
-          back ? `<em>${esc(back)}</em>` : ""}</span>`;
+          back ? `<em>${esc(back)}</em>` : ""}<span class="cut">${esc(injCutText(h))}${h.starter ? "" : " bench"}</span></span>`;
     }).join("");
     r.innerHTML = `${avatarHTML(t.uid, "sm avcell")}
       <span class="who"><span class="n">${esc(nameOf(t.uid))}</span>
         <span class="plist">${list}</span></span>
-      <span class="cost ${a.mult < 0.97 ? "bite" : ""}">−${((1 - a.mult) * 100).toFixed(1)}%<span class="k">next week</span></span>`;
+      <span class="cost ${mult < 0.97 ? "bite" : ""}">${mult < 1 ? `−${((1 - mult) * 100).toFixed(1)}%` : "0%"}<span class="k">next week</span></span>`;
     b.appendChild(r);
   }
   return b;
@@ -5040,6 +5111,102 @@ function injuryNote(inj, avail) {
        status, from Sleeper's own injury feed${outlook ? ", with severity and expected return from ESPN's" : ""}${when ? ` · read ${esc(when)}` : ""}
        ${inj.source === "cache" ? " · from this browser's cache" : ""}.`;
   return d;
+}
+
+/* ================================================ INJURIES ========== */
+
+/**
+ * Every injured player in the league, team by team. The odds impact is what
+ * the sim, the game lines and the futures charge for the coming week —
+ * injuryCharged() per player and injuryMult() per team, from injuryPlan() over
+ * the same feed — so the tab can never disagree with them.
+ */
+function panelInjuries() {
+  const p = el("div", "panel"); p.dataset.panel = "injuries";
+  p.appendChild(sechead("Injuries",
+    "Every player on a DFFL roster carrying an injury status — bench, IR slot and taxi squad included — and what each one costs his team next week."));
+  const host = el("div"); host.id = "injHost";
+  host.appendChild(el("div", "wskel", "Reading the injury report…"));
+  p.appendChild(host);
+  return p;
+}
+
+/** Fills the Injuries tab once, from the cheap sources only, unless asked for the full feed. */
+let INJTAB_P = null;
+function ensureInjuries(full) {
+  if (INJTAB_P && !full) return INJTAB_P;
+  return (INJTAB_P = (async () => {
+    const inj = await loadInjuries(full ? { full: true } : undefined);
+    renderInjuries($("#injHost"), inj);
+    $('[data-panel="injuries"]').dataset.ready = "1";
+  })());
+}
+
+function renderInjuries(host, inj) {
+  host.innerHTML = "";
+  const season = DB.seasons[0];
+  const plan = inj && inj.map ? injuryPlan(season, inj, window.__ODDS) : null;
+  const teams = ((season && season.rosters) || []).map(r => {
+    const mult = plan ? injuryMult(plan, r.roster_id, plan.W0) : 1;
+    return { r, mult, uid: season.uidOf.get(r.roster_id), list: rosterInjuries(r, inj, plan) };
+  }).filter(x => x.list.length)
+    .sort((x, y) => (x.mult - y.mult)
+      || (y.list.length - x.list.length) || nameOf(x.uid).localeCompare(nameOf(y.uid)));
+  const total = teams.reduce((s, x) => s + x.list.length, 0);
+  const when = inj.at ? new Date(inj.at).toLocaleString(undefined,
+    { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : null;
+
+  const src = el("div", "srcnote");
+  src.dataset.at = inj.at || "";
+  src.innerHTML = inj.source === "unavailable"
+    ? `<b>No injury data.</b> Sleeper's player file didn't load. ${esc(inj.error || "")}`
+    : inj.source === "deferred"
+    ? `<b>No injury report on file yet.</b> The small published copy is missing or more than a week old.`
+    : `<b>${total}</b> rostered player${total === 1 ? "" : "s"} carr${total === 1 ? "ies" : "y"} a status, from
+       Sleeper's injury feed with ESPN's expected return${when ? ` · data as of ${esc(when)}` : ""}${
+       inj.source === "cache" ? " · from this browser's cache" : ""}.`;
+  host.appendChild(src);
+  if (inj.source === "deferred") {
+    const btn = el("button", "injload", "Load Sleeper's full injury feed (5MB)");
+    btn.type = "button";
+    btn.onclick = () => { btn.disabled = true; btn.textContent = "Loading…"; ensureInjuries(true); };
+    src.appendChild(el("div")).appendChild(btn);
+    return;
+  }
+  host.appendChild(el("p", "injkey",
+    `<b>${jx("injimpact", "Odds impact")}</b> is how much a starter's absence cuts his team's projected
+     strength next week, straight from the Odds model; bench players show 0%. The tags are
+     ${jx("injstatus", "Sleeper's statuses")}.`));
+  if (!teams.length) {
+    host.appendChild(el("div", "empty",
+      "<b>Nobody is hurt</b>No player on a DFFL roster carries an injury status right now."));
+    return;
+  }
+  const dot = " · ";
+  for (const { r, mult, uid, list } of teams) {
+    const b = el("div", "board injteam");
+    b.dataset.rid = r.roster_id;
+    const lineup = list.filter(x => x.starter).length;
+    b.innerHTML = `<div class="bhead">${avatarHTML(uid, "sm")}
+      <span class="tw"><span class="bt">${esc(nameOf(uid))}</span>
+        <span class="bs">${list.length} injured · ${lineup} in the starting lineup</span></span>
+      <span class="tc ${mult < 0.97 ? "bite" : ""}">${mult < 1 ? `−${((1 - mult) * 100).toFixed(1)}%` : "0%"}<span class="k">next week</span></span></div>`;
+    for (const x of list) {
+      const p = x.rec;
+      const back = returnLabel(p.ret);
+      const row = el("div", `injp${x.starter ? "" : " bench"}`);
+      row.dataset.pid = x.pid;
+      row.dataset.starter = x.starter ? "1" : "0";
+      if (p.note) row.title = p.note;
+      const detail = injuryDetail(p);
+      row.innerHTML = `<span class="nm">${esc(p.n || x.pid)}</span>
+        <span class="meta">${esc([p.p, p.t].filter(Boolean).join(dot))}${detail ? esc(dot + detail) : ""}</span>
+        <span class="meta"><span class="st st-${esc(String(x.status).toLowerCase())}">${esc(x.status)}</span>${esc(dot)}<span class="ret">${esc(back || "no estimate")}</span></span>
+        <span class="imp">${esc(injCutText(x))}<span class="k">${x.starter ? "starter" : "bench"}</span></span>`;
+      b.appendChild(row);
+    }
+    host.appendChild(b);
+  }
 }
 
 /**
@@ -6896,6 +7063,8 @@ const JARGON = {
   rating: `The number the board is sorted by: all-play ${pctW(POWER_W.allPlay)}, form ${pctW(POWER_W.form)}, points for ${pctW(POWER_W.points)} (league top scorer 1, bottom 0) and actual win rate ${pctW(POWER_W.record)}. 1.00 would be best at everything.`,
   po: "Playoff weeks: this score came after the regular season ended, in a playoff or consolation-bracket game.",
   otb: "Off the board: the game is so lopsided (favorite 99.5%+ after the house cut) that no sensible moneyline can be posted, so it's pulled. The spread and total still stand.",
+  injimpact: `How much a starter's absence cuts his team's projected strength next week, in the Odds model's own numbers: his share of the lineup's scoring, times the chance he sits, times the ${pctW(1 - REPLACEMENT)} a bench replacement doesn't make up. Starters only — bench, IR-slot and taxi players aren't in the lineup being priced, so they show 0%.`,
+  injstatus: `Sleeper's injury tags. Q is questionable (priced to play ${pctW(INJ_AVAIL.Questionable)} of the time), D is doubtful (${pctW(INJ_AVAIL.Doubtful)}), O is out. IR is injured reserve, PUP physically unable to perform, Sus suspended, NA not active, DNR did not report, COV the illness list — all priced as not playing.`,
   keeper: "Keeper: a player the manager already owned when the draft began and kept, spending this pick on him instead of a new player. Unless keepers.json lists them, the site infers each manager's keepers as their biggest discounts to the draft market.",
 };
 /** A label that explains itself on tap. Buttons can't nest, so inside one it is a span acting as one. */
@@ -9149,6 +9318,7 @@ async function boot() {
     await Promise.all([loadBlurbs(), loadRostered()]);
     app.appendChild(panelPower(ODDS, SIM));
     app.appendChild(panelOdds(ODDS, SIM));
+    app.appendChild(panelInjuries());
     app.appendChild(panelPicture());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
@@ -9205,7 +9375,7 @@ async function boot() {
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
-      injuryDetail, returnLabel,
+      injuryDetail, returnLabel, rosterInjuries, injCutText, ensureInjuries, renderInjuries,
       injuryPlan, injuryMult, injuryHurtMap, injuryLabel, injuryLabelText, injuryCharged, injuryFuturesNote,
       approxKickoff, lastNameOf, gameCardHTML,
       ensureLiveOdds, INJ_AVAIL, REPLACEMENT, INJ_FLOOR, INJ_KEY,
