@@ -1293,6 +1293,52 @@ check("every headline carries a cover", artl.covers === artl.teasers && artl.fac
 check("the newest piece leads", artl.newestFirst, `${artl.headlines[0]} — expected ${artl.expectedLead}`);
 check("a column is flagged as a column", artl.columnFlagged === 1, `${artl.columnFlagged}`);
 
+group("News: the Allen three-team trade");
+/* The piece is checked against the files it was written from: the trade as
+ * pulse.json logged it, and every score it quotes against the week files. */
+{
+  const rj = JSON.parse(await readFile(join(ROOT, "recaps.json"), "utf8"));
+  const pulse = JSON.parse(await readFile(join(ROOT, "data/pulse.json"), "utf8"));
+  const wk = await Promise.all([1, 2, 3, 4, 5].map(async w =>
+    JSON.parse(await readFile(join(ROOT, `data/week-2026-0${w}.json`), "utf8"))));
+  const art = (rj.articles || []).find(a => a.slug === "josh-allen-goes-to-the-league-leader");
+  check("the trade piece is published", !!art);
+  if (art) {
+    const text = JSON.stringify(art);
+    const tx = (pulse.trades || []).find(t => t.managers.length === 3 && t.adds.some(x => x.name === "Josh Allen"));
+    check("pulse.json logs the trade it reports", !!tx);
+    if (tx) {
+      const to = Object.fromEntries(tx.adds.map(x => [x.name, x.to]));
+      check("the piece sends each player where the log does",
+        to["Josh Allen"] === "jadencha" && to["Jordan Love"] === "saucebossandrew" && to["J.K. Dobbins"] === "jskule23",
+        JSON.stringify(to));
+      check("the piece names every manager and player in the trade",
+        [...tx.managers, ...tx.adds.map(x => x.name)].every(n => text.includes(n)));
+      check("both picks are the ones logged",
+        tx.picks.length === 2 && tx.picks.every(p => p.season === "2027" && p.to === "jskule23") &&
+        tx.picks.some(p => p.round === 5 && p.from === "jadencha") && tx.picks.some(p => p.round === 9 && p.from === "saucebossandrew"));
+    }
+    // Every score a side's starters or best bench player put up, by week, for one player on one roster.
+    const pts = (w, mgr, name) => {
+      const s = wk[w - 1].games.flatMap(g => g.sides).find(x => x.manager === mgr);
+      const p = s && [...s.starters, s.benchBest].find(x => x && x.name === name);
+      return p ? p.points : null;
+    };
+    const allen = [1, 2, 3, 4, 5].map(w => pts(w, "jskule23", "Josh Allen"));
+    const bars = art.blocks.find(b => b.type === "bars");
+    check("Allen's week-by-week bars match jskule23's lineups",
+      bars && bars.rows.every((r, i) => r.value === allen[i]), `${allen.join(", ")}`);
+    const total = allen.reduce((a, b) => a + b, 0);
+    check("the pull-out total is Allen's five weeks added up",
+      art.blocks.find(b => b.type === "stat").n === total.toFixed(2), total.toFixed(2));
+    check("Love's 25.28 and Dobbins's 14.4 are jadencha's week 5",
+      pts(5, "jadencha", "Jordan Love") === 25.28 && pts(5, "jadencha", "J.K. Dobbins") === 14.4 && text.includes("25.28") && text.includes("14.4"));
+    const st = Object.fromEntries(wk[4].standings.map(s => [s.manager, `${s.wins}-${s.losses} · ${s.points_for}`]));
+    check("the cards carry each side's record and points through week 5",
+      ["jadencha", "jskule23", "saucebossandrew"].every(m => text.includes(st[m])), JSON.stringify(st));
+  }
+}
+
 await page.click('#tabs button[data-tab="recaps"]');
 await page.waitForFunction(() => document.querySelectorAll('[data-panel="recaps"] .teaser').length > 0, null, { timeout: 20000 });
 // Open pieces by name. Selecting by position meant that publishing anything new
@@ -1513,7 +1559,7 @@ const COVER_KIND_TABLE = {
   "i-owe-the-toilet-bowl-an-apology": "column", "the-nine-game-difference": "analysis",
   "week-1-game-by-game": "recap", "the-steepest-fall-on-the-board": "odds",
   "one-game-was-on-the-bench": "column", "the-fifty-one-dollar-quarterback": "waivers",
-  "same-record-different-board": "odds",
+  "same-record-different-board": "odds", "josh-allen-goes-to-the-league-leader": "trade",
 };
 const coverPage = await ctx.newPage();
 coverPage.on("pageerror", e => errors.push(String(e)));

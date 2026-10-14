@@ -4447,6 +4447,126 @@
      "text": "sizzlemc2 managed a season-low 68.64, with Denzel Boston's 13.6 the top scorer and five starters finishing under three points. The 124.74-point margin is the widest anyone has posted this season — and the widest anyone has faced."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "josh-allen-goes-to-the-league-leader",
+   "date": "2026-10-13",
+   "kind": "trade",
+   "source": "watch",
+   "kicker": "2026 · week 5 · trade",
+   "headline": "Josh Allen Goes to the League Leader",
+   "dek": "jadencha, 4-1 and the league's top scorer, gets Josh Allen from jskule23 in the season's first three-team trade. Jordan Love goes to saucebossandrew; J.K. Dobbins and two 2027 picks go to jskule23.",
+   "byline": "DFFL desk",
+   "standfirst": "3 teams · 3 players · 2 picks",
+   "cover": {
+    "type": "trade"
+   },
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Josh Allen is going to the team at the top of the table. <b>jadencha</b>, 4-1 and the league's highest scorer with 820.1 points through five weeks, completed a three-team trade at 7:29 p.m. Eastern on Tuesday that brings Allen over from <b>jskule23</b>. To make it work, jadencha sends Jordan Love to <b>saucebossandrew</b>, and J.K. Dobbins plus a 2027 fifth-round pick to jskule23, who also collects saucebossandrew's 2027 ninth. It is the first trade this season with three teams in it; the ten before it were all between two managers."
+    },
+    {
+     "type": "stat",
+     "n": "146.96",
+     "text": "Josh Allen's points for jskule23 this season, in five starts out of five — 29.39 a game, and 22.2% of everything jskule23 has scored."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the deal",
+     "text": "Who Gets What"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "Josh Allen",
+       "sub": "4-1 · 820.1 points, the most in the league",
+       "lead": true,
+       "rows": [
+        { "label": "Gets", "value": "Josh Allen (QB, BUF)" },
+        { "label": "Sends", "value": "Jordan Love (QB, GB)" },
+        { "label": "Sends", "value": "J.K. Dobbins (RB, DEN)" },
+        { "label": "Sends", "value": "2027 5th-round pick" }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "J.K. Dobbins",
+       "sub": "1-4 · 662.36 points, fifth-most in the league",
+       "rows": [
+        { "label": "Gets", "value": "J.K. Dobbins (RB, DEN)" },
+        { "label": "Gets", "value": "jadencha's 2027 5th" },
+        { "label": "Gets", "value": "saucebossandrew's 2027 9th" },
+        { "label": "Sends", "value": "Josh Allen (QB, BUF)" }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "Jordan Love",
+       "sub": "2-3 · 589.26 points",
+       "rows": [
+        { "label": "Gets", "value": "Jordan Love (QB, GB)" },
+        { "label": "Sends", "value": "2027 9th-round pick" }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the quarterback",
+     "text": "Allen Started Every Week for jskule23"
+    },
+    {
+     "type": "p",
+     "text": "Allen was in jskule23's lineup all five weeks and scored 35.66, 40.82, 18.46, 19.52 and 32.5 — 146.96 in all. It did not turn into wins: jskule23 is 1-4, despite the fifth-most points in the league. His 32.5 in week 5 came in the 17.28-point loss to Domo112, the closest game of week 5. jskule23 gives him up for a running back and two picks in next year's draft."
+    },
+    {
+     "type": "bars",
+     "title": "Josh Allen, week by week",
+     "sub": "points as jskule23's starting quarterback",
+     "rows": [
+      { "label": "Week 1", "value": 35.66, "group": 1 },
+      { "label": "Week 2", "value": 40.82, "group": 1 },
+      { "label": "Week 3", "value": 18.46, "group": 1 },
+      { "label": "Week 4", "value": 19.52, "group": 1 },
+      { "label": "Week 5", "value": 32.5, "group": 1 }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the other quarterback",
+     "text": "Jordan Love's Fourth Roster of the Season"
+    },
+    {
+     "type": "p",
+     "text": "Jordan Love has moved more than anyone in this deal. chassinator picked him up in week 1 and let him go in week 2. Domo112 added him in week 4 and started him for 14.08, then dropped him in a waiver claim for Jacoby Brissett. jadencha took him as a free agent for week 5, in place of C.J. Stroud, and got 25.28 out of him in the 124.74-point win over sizzlemc2 — his only game on that roster, and 7.22 fewer than Allen scored for jskule23 the same week. saucebossandrew is the fourth manager to carry him this season."
+    },
+    {
+     "type": "p",
+     "text": "saucebossandrew started Bo Nix at quarterback in week 5. Nix scored 7.92 in a 33.8-point loss to moseslin, 17.36 fewer than Love scored that week on somebody else's team."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the running back",
+     "text": "Dobbins Leaves From the Bench"
+    },
+    {
+     "type": "p",
+     "text": "J.K. Dobbins has not been in a DFFL starting lineup this season. In week 5 he scored 14.4 on jadencha's bench, the most of anyone jadencha left out of the lineup that week. He goes to jskule23 with the two picks."
+    },
+    {
+     "type": "p",
+     "text": "There is no grade here. Every point above was scored before the trade went through: none of the three has played a down for his new team yet, and both picks belong to a draft that is a season away."
+    },
+    {
+     "type": "note",
+     "text": "Player scores are official Sleeper totals under this league's scoring, taken from the weekly data files for weeks 1-5; records and points-for are through week 5. The trade itself is from Sleeper's transaction log, completed on the evening of 13 October in the week 5 leg. Love's earlier moves and the count of earlier trades are from the same weekly files."
+    }
+   ]
   }
  ]
 }
