@@ -5204,6 +5204,9 @@ const PL_NAMES = ["points lost: the starter/bench odds-impact % split is gone fr
   "points lost: the tab loads data/projections.json", "points lost: the source label reads Sleeper projections, ESPN return dates",
   "points lost: every row and team total matches projectedPointsLost()",
   "points lost: an independent re-implementation agrees on every row and team",
+  "points lost: a hurt player projected at 0 uses his last projection above zero, else season PPG; a bye stays 0",
+  "points lost: hurt_fallback entries only fill weeks Sleeper projected at 0, with a named source",
+  "points lost: De'Von Achane (IR) no longer reads 0 for the rest of the season",
   "points lost: each team total is the sum of its rows", "points lost: rows sorted biggest this-week loss first within each team",
   "points lost: teams sorted by this-week total, all-no-estimate teams last",
   "points lost: no-estimate rows show no rest-of-season number and stay out of the total",
@@ -5329,6 +5332,25 @@ const injData = await injPage.evaluate(async () => {
   pl.fake = { thisWeek: L.thisWeek, ros: L.ros, order: L.rows.map(r => r.pid).join(""),
     rows: Object.fromEntries(L.rows.map(r => [r.pid, { tw: r.thisWeek, ros: r.ros, wo: r.weeksOut && r.weeksOut.join(","),
       repl: r.repl && r.repl.pid }])) };
+  // The hurt-player fallback, worked by hand: P (RB) and Q (WR) are IR starters
+  // Sleeper projects at 0. P has a "wk 3" fallback in week 6 only (week 7 is his
+  // bye: no entry, stays 0); Q falls back to season PPG 11 in both weeks.
+  // Bench R (RB) 4 and S (WR) 3. Expected: this week 14-4 + 11-3 = 18;
+  // rest of season P 10 + 0, Q 8 + 8 = 26. With the setting off: 0 and 0.
+  const fbProj = { current_week: 6, playoff_week_start: 8, sundays: { 6: "2026-10-18", 7: "2026-10-25" },
+    weeks: { 6: { P: 0, Q: 0, R: 4, S: 3 }, 7: { P: 0, Q: 0, R: 4, S: 3 } },
+    hurt_fallback: { P: { 6: [14, "wk 3"] }, Q: { 6: [11, "ppg"], 7: [11, "ppg"] } } };
+  const fbInj = new Map(Object.entries({ P: { s: "IR", n: "P", p: "RB" }, Q: { s: "IR", n: "Q", p: "WR" } }));
+  const fbPos = { R: "RB", S: "WR" };
+  const fbTeam = { starters: ["P", "Q"], players: ["P", "Q", "R", "S"], reserve: [], taxi: [] };
+  const fbOpt = { week: 6, player: pid => (fbPos[pid] ? { n: pid, p: fbPos[pid] } : null) };
+  const FB = D.projectedPointsLost(fbTeam, fbInj, fbProj, fbOpt);
+  const was = D.PTS_LOST.hurtFallback;
+  D.PTS_LOST.hurtFallback = false;
+  const FB0 = D.projectedPointsLost(fbTeam, fbInj, fbProj, fbOpt);
+  D.PTS_LOST.hurtFallback = was;
+  pl.fallback = { tw: FB.thisWeek, ros: FB.ros, off: [FB0.thisWeek, FB0.ros],
+    rows: Object.fromEntries(FB.rows.map(r => [r.pid, [r.thisWeek, r.ros]])) };
   const noProj = document.createElement("div");
   D.renderInjuries(noProj, { at: Date.now(), source: "file", map }, null);
   pl.noProj = { msg: !!noProj.querySelector(".projnone"),
@@ -5371,6 +5393,13 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if (best == null) for (const x of published) if (x > w && pid in P.weeks[x] && (best == null || x < best)) best = x;
       return best == null ? 0 : P.weeks[best][pid];
     };
+    // A hurt player at 0 takes the builder's hurt_fallback (last projection above zero, else PPG).
+    const hurtOf = (pid, w) => {
+      const v = projOf(pid, w);
+      if (v > 0) return v;
+      const f = P.hurt_fallback && P.hurt_fallback[pid] && P.hurt_fallback[pid][w];
+      return f ? f[0] : v;
+    };
     const ids = a => (a || []).filter(p => p && p !== "0").map(String);
     const st = ids(r.starters), park = [...ids(r.reserve), ...ids(r.taxi)];
     const everyone = [...new Set([...st, ...ids(r.players), ...park])];
@@ -5390,7 +5419,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
     }
     const runWeek = (w, hurt) => {
       const taken = new Set(hurt), res = {};
-      hurt.sort((a, b) => (st.includes(b) ? 1 : 0) - (st.includes(a) ? 1 : 0) || projOf(b, w) - projOf(a, w) || (a < b ? -1 : 1));
+      hurt.sort((a, b) => (st.includes(b) ? 1 : 0) - (st.includes(a) ? 1 : 0) || hurtOf(b, w) - hurtOf(a, w) || (a < b ? -1 : 1));
       for (const p of hurt) {
         let pick = null;
         for (const pass of [x => posOf(x) === posOf(p), x => FLEX.includes(posOf(p)) && FLEX.includes(posOf(x))]) {
@@ -5401,7 +5430,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
           if (pick != null) break;
         }
         if (pick != null) taken.add(pick);
-        res[p] = Math.max(0, projOf(p, w) - (pick != null ? projOf(pick, w) : 0));
+        res[p] = Math.max(0, hurtOf(p, w) - (pick != null ? projOf(pick, w) : 0));
       }
       return res;
     };
@@ -5477,6 +5506,24 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   }
   check("points lost: every row and team total matches projectedPointsLost()", PL.shown.length > 0 && fnBad.length === 0,
     fnBad.slice(0, 4).join(" ; "));
+  {
+    const F = PL.fallback || {};
+    check("points lost: a hurt player projected at 0 uses his last projection above zero, else season PPG; a bye stays 0",
+      close(F.tw, 18) && close(F.ros, 26) && F.rows && close(F.rows.P[1], 10) && close(F.rows.Q[1], 16)
+        && F.off && F.off[0] === 0 && F.off[1] === 0, JSON.stringify(F));
+    const fbBad = [];
+    for (const [pid, byW] of Object.entries((projFile && projFile.hurt_fallback) || {})) for (const [w, v] of Object.entries(byW)) {
+      const own = projFile.weeks[w] ? projFile.weeks[w][pid] : undefined;
+      if ((own || 0) > 0 || !(v[0] > 0) || !/^(wk \d+|ppg)$/.test(v[1]) || !(injFileNow.map[pid] && injFileNow.map[pid].s)
+        || (/^wk /.test(v[1]) && !(Number(v[1].slice(3)) < Number(w)))) fbBad.push(`${pid} wk ${w}`);
+    }
+    check("points lost: hurt_fallback entries only fill weeks Sleeper projected at 0, with a named source",
+      !!projFile && !!projFile.hurt_fallback && fbBad.length === 0, fbBad.slice(0, 4).join(", "));
+    const achane = Object.keys(injFileNow.map).find(pid => injFileNow.map[pid].n === "De'Von Achane");
+    const aRow = achane && PL.fn.flatMap(t => t.rows).find(x => x.pid === achane);
+    check("points lost: De'Von Achane (IR) no longer reads 0 for the rest of the season",
+      !!aRow && aRow.ros != null && aRow.ros > 0, aRow ? `ros ${aRow.ros}` : "Achane not on a roster with an injury status");
+  }
   check("points lost: an independent re-implementation agrees on every row and team", !!projFile && reBad.length === 0,
     reBad.slice(0, 4).join(" ; "));
   check("points lost: each team total is the sum of its rows", sumBad.length === 0, sumBad.slice(0, 4).join(" ; "));

@@ -33,6 +33,7 @@
 import { writeFile, readFile } from "fs/promises";
 import { fetchJSON } from "./fetch-json.mjs";
 import { effectiveWeek } from "./effective-week.mjs";
+import { hurtFallback } from "./hurt-fallback.mjs";
 
 const SRC = "https://api.sleeper.app/v1/players/nfl";
 const ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries";
@@ -280,6 +281,9 @@ try {
     weeks[w] = wk;
   }
 
+  // Hurt players Sleeper projects at 0: earlier projection above zero, else season PPG (byes stay 0).
+  const hurt_fallback = await hurtFallback({ season, cur: current, pws, scoring, fetchJSON })
+    .catch(e => { console.warn(`hurt fallback skipped (${e.message})`); return {}; });
   const proj = {
     _comment:
       "Written by build-injuries.mjs. Sleeper's weekly projections (api.sleeper.app/projections) "
@@ -294,6 +298,8 @@ try {
     playoff_week_start: pws,
     sundays,
     weeks,
+    // hurt_fallback[pid][w] = [points, "wk N" | "ppg"] for a hurt player projected at 0 in week w (not a bye).
+    hurt_fallback,
   };
   await writeFile("data/projections.json", JSON.stringify(proj) + "\n");
   console.log(`data/projections.json — weeks ${Object.keys(weeks).join(",") || "none"} · `

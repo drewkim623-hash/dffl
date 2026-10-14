@@ -5245,6 +5245,10 @@ const PTS_LOST = {
   // Rest of season also counts injured players off the starting lineup (IR
   // slot, bench, taxi) for the weeks they are out; this week never does.
   rosIncludesBench: true,
+  // A HURT player projected at 0 (or missing) in a non-bye week uses his most
+  // recent projection above zero, else his season points per game — both
+  // precomputed by build-injuries.mjs into projections.hurt_fallback.
+  hurtFallback: true,
 };
 
 /**
@@ -5299,6 +5303,13 @@ function projectedPointsLost(team, injuries, projections, opts = {}) {
     const x = back ?? fwd;
     return x == null ? 0 : Number(P.weeks[x][pid]) || 0;
   };
+  // The hurt player's own projection, with the hurt_fallback for a 0 week.
+  const hproj = (pid, w) => {
+    const v = proj(pid, w);
+    if (v > 0 || !C.hurtFallback || !P || !P.hurt_fallback) return v;
+    const f = P.hurt_fallback[pid] && P.hurt_fallback[pid][w];
+    return f ? Number(f[0]) || 0 : v;
+  };
   const clean = a => (a || []).filter(p => p && p !== "0").map(String);
   const starters = new Set(clean(team.starters));
   const parked = new Set([...clean(team.reserve), ...clean(team.taxi)]);
@@ -5322,14 +5333,14 @@ function projectedPointsLost(team, injuries, projections, opts = {}) {
   const assign = (w, hurt) => {
     const used = new Set(hurt), out = new Map();
     const order = [...hurt].sort((a, b) => (starters.has(b) - starters.has(a))
-      || (proj(b, w) - proj(a, w)) || a.localeCompare(b));
+      || (hproj(b, w) - hproj(a, w)) || a.localeCompare(b));
     for (const pid of order) {
       const pos = info(pid).p;
       const pick = ok => bench.filter(b => !used.has(b) && ok(info(b).p))
         .sort((a, b) => (proj(b, w) - proj(a, w)) || a.localeCompare(b))[0];
       const r = pick(p => p === pos) || (C.flex.includes(pos) ? pick(p => C.flex.includes(p)) : undefined);
       if (r) used.add(r);
-      const hp = proj(pid, w), rp = r ? proj(r, w) : 0;
+      const hp = hproj(pid, w), rp = r ? proj(r, w) : 0;
       out.set(pid, { week: w, hurt: hp, repl: r || null, replProj: rp, lost: Math.max(0, hp - rp) });
     }
     return out;
@@ -5357,7 +5368,7 @@ function projectedPointsLost(team, injuries, projections, opts = {}) {
       weeksOut: o ? o.weeks : null,
       thisWeek: tw ? tw.lost : 0,
       ros,
-      hurtProj: proj(pid, week),
+      hurtProj: hproj(pid, week),
       repl: shown && shown.repl ? { pid: shown.repl, name: info(shown.repl).n || shown.repl,
         proj: shown.replProj, week: shown.week } : null,
       perWeek: per,
