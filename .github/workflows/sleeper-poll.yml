@@ -1,0 +1,119 @@
+# Poll Sleeper every 20 minutes and rebuild only when something moved.
+#
+# The first step is the whole cost of a quiet run: sleeper-fingerprint.mjs
+# --check hashes this week's (and last week's) transactions and every roster,
+# and compares that with the committed data/sleeper-fingerprint.json. Only on a
+# change does the job go on to the roster/injury builds, the browser install
+# and the odds snapshot. Injury statuses are not polled: Sleeper asks that its
+# 5MB player file be pulled about once a day, so injury changes come from
+# injury-refresh.yml (daily) and the weekly build.
+#
+# Nothing here sends anything. build-email.mjs only drives the published site
+# in a headless browser and writes data/odds-snapshot.json; composing and
+# sending the email is the routine's job, and never runs from a workflow.
+
+name: Sleeper poll
+
+on:
+  schedule:
+    - cron: "7,27,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Shared with weekly-data.yml and injury-refresh.yml: all three write the same
+# files and push to main.
+concurrency:
+  group: sleeper-data
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      # Cheap check first. A fetch failure exits 0 with changed=false.
+      - name: Has anything changed on Sleeper?
+        id: fp
+        run: node sleeper-fingerprint.mjs --check
+
+      - name: Refresh the roster map
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-rosters.mjs
+
+      - name: Refresh the injury snapshot
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-injuries.mjs
+
+      # After the snapshot on purpose: build-injuries.mjs rewrites injuries.json
+      # without the return fields, so they are added back here.
+      - name: Estimate injury return dates
+        if: steps.fp.outputs.changed == 'true'
+        run: node injury-returns.mjs
+
+      - name: Take the league's pulse
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-pulse.mjs
+
+      - name: Install the browser for the odds snapshot
+        if: steps.fp.outputs.changed == 'true'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      # Writes data/odds-snapshot.json and nothing else; it never sends.
+      - name: Snapshot what the site is showing
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-email.mjs
+
+      - name: Add this run's odds reading to the line history
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-odds-history.mjs || echo "::warning::odds history not updated"
+
+      - name: Record the new fingerprint
+        if: steps.fp.outputs.changed == 'true'
+        run: node sleeper-fingerprint.mjs --write
+
+      - name: Commit anything that changed
+        if: steps.fp.outputs.changed == 'true'
+        run: |
+          git config user.name  "dffl-data[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="${GITHUB_REF_NAME:-main}"
+          commit() {
+            git add -A data injuries.json injury-returns.json injury-returns-cache.json rosters.json
+            if git diff --staged --quiet; then return 1; fi
+            git commit -m "Data: Sleeper change"
+          }
+          if ! commit; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          # No force push. On a rebase (or push) failure: abort, start again from
+          # origin, rerun the build steps above, recommit and try once more.
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::warning::Rebase or push failed; regenerating on top of origin/$branch and retrying once."
+          git fetch origin "$branch"
+          git reset --hard "origin/$branch"
+          node build-rosters.mjs
+          node build-injuries.mjs
+          node injury-returns.mjs
+          node build-pulse.mjs
+          node build-email.mjs
+          node build-odds-history.mjs || echo "::warning::odds history not updated"
+          node sleeper-fingerprint.mjs --write
+          if ! commit; then
+            echo "Nothing changed on top of origin/$branch."
+            exit 0
+          fi
+          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
+          git rebase --abort || true
+          echo "::error::Could not rebase the poll commit onto $branch after one retry; nothing pushed."
+          exit 1

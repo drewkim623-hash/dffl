@@ -46,8 +46,10 @@ on:
 permissions:
   contents: write
 
+# Shared with injury-refresh.yml and sleeper-poll.yml: all three write the
+# same files and push to main.
 concurrency:
-  group: weekly-data
+  group: sleeper-data
   cancel-in-progress: false
 
 jobs:
@@ -112,6 +114,10 @@ jobs:
       - name: Add this run's odds reading to the line history
         run: node build-odds-history.mjs || echo "::warning::odds history not updated"
 
+      # So the next sleeper-poll.yml run does not redo this one's work.
+      - name: Record the Sleeper fingerprint
+        run: node sleeper-fingerprint.mjs --write
+
       - name: Commit anything that changed
         run: |
           git config user.name  "dffl-data[bot]"
@@ -151,6 +157,7 @@ jobs:
           node build-pulse.mjs
           node build-email.mjs
           node build-odds-history.mjs || echo "::warning::odds history not updated"
+          node sleeper-fingerprint.mjs --write
           if ! commit; then
             echo "Nothing changed on top of origin/$branch."
             exit 0
