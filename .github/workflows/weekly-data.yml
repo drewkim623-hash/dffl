@@ -86,6 +86,21 @@ jobs:
       - name: Refresh the injury snapshot
         run: node build-injuries.mjs
 
+      # A copy of this week's projections, once: data/projections-history/
+      # <season>-wk<NN>.json, never overwritten. The git add of data stages it.
+      - name: Keep this week's projections
+        run: |
+          node -e "
+            const fs = require('fs');
+            if (!fs.existsSync('data/projections.json')) process.exit(0);
+            const p = JSON.parse(fs.readFileSync('data/projections.json', 'utf8'));
+            const f = 'data/projections-history/' + p.season + '-wk' + String(p.current_week).padStart(2, '0') + '.json';
+            if (fs.existsSync(f)) { console.log(f + ' already kept'); process.exit(0); }
+            fs.mkdirSync('data/projections-history', { recursive: true });
+            fs.copyFileSync('data/projections.json', f);
+            console.log('kept ' + f);
+          "
+
       # Right after the injury snapshot on purpose: build-injuries.mjs rewrites
       # injuries.json without the return fields, so they are added back here.
       - name: Estimate injury return dates
@@ -95,6 +110,10 @@ jobs:
       # progress, recent trades and claims, who is hurt. Small and factual.
       - name: Take the league's pulse
         run: node build-pulse.mjs
+
+      # After rosters and projections (build-injuries.mjs), before the odds are read.
+      - name: Price each roster against the ones it fielded
+        run: node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
 
       # The email's numbers must be the site's numbers, so they are read off the
       # published page rather than recomputed. That needs a browser, which is
@@ -114,6 +133,10 @@ jobs:
       # never stop the commit below, which the Tuesday recap depends on.
       - name: Add this run's odds reading to the line history
         run: node build-odds-history.mjs || echo "::warning::odds history not updated"
+
+      # Trade grades go stale as trades happen. Never --write-keepers here.
+      - name: Rebuild trade grades
+        run: node build-trade-grades.mjs || echo "::warning::trade grades not updated"
 
       # So the next sleeper-poll.yml run does not redo this one's work.
       - name: Record the Sleeper fingerprint
@@ -154,10 +177,21 @@ jobs:
           fi
           node build-rosters.mjs
           node build-injuries.mjs
+          node -e "
+            const fs = require('fs');
+            if (!fs.existsSync('data/projections.json')) process.exit(0);
+            const p = JSON.parse(fs.readFileSync('data/projections.json', 'utf8'));
+            const f = 'data/projections-history/' + p.season + '-wk' + String(p.current_week).padStart(2, '0') + '.json';
+            if (fs.existsSync(f)) process.exit(0);
+            fs.mkdirSync('data/projections-history', { recursive: true });
+            fs.copyFileSync('data/projections.json', f);
+          "
           node injury-returns.mjs
           node build-pulse.mjs
+          node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
           node build-email.mjs
           node build-odds-history.mjs || echo "::warning::odds history not updated"
+          node build-trade-grades.mjs || echo "::warning::trade grades not updated"
           node sleeper-fingerprint.mjs --write
           if ! commit; then
             echo "Nothing changed on top of origin/$branch."
