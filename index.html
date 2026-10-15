@@ -8673,7 +8673,7 @@ function panelPower(model, sim) {
 
   const TIERS = [["Contenders", 0, 4], ["The middle", 4, 8], ["Rebuilding", 8, Infinity]];
   function tiered(rows, make) {
-    const wrap = el("div", "tiers");
+    const wrap = el("div", "tiers rows");
     for (const [name, a, b] of TIERS) {
       const slice = rows.slice(a, b);
       if (!slice.length) continue;
