@@ -2075,6 +2075,11 @@ function weekHero(w) {
     if (!top || s.pts > top.s.pts) top = { s, o };
   const { s, o } = top;
   const margin = s.pts - o.pts;
+  let next = null;
+  for (const g of w.games) for (const x of [g.a, g.b])
+    if (x !== s && (next == null || x.pts > next)) next = x.pts;
+  const gap = next == null ? "" : s.pts === next ? " · tied for the week's best"
+    : ` · ${f1(s.pts - next)} clear of the field${w.live ? " so far" : ""}`;
   const verb = margin === 0 ? "tied" : w.live ? "leads" : "beat";
   const team = teamOf(s.uid);
   const hero = el("div", `whero${w.live ? " live" : ""}`);
@@ -2085,7 +2090,7 @@ function weekHero(w) {
         <div><div class="tn">${esc(team || nameOf(s.uid))}</div>
         ${team ? `<div class="hh">${esc(nameOf(s.uid))}</div>` : ""}</div></div>
     </div>
-    <div class="hline">${verb} ${esc(nameOf(o.uid))}${margin ? ` by ${f1(margin)}` : ""} · ${f1(s.pts)}-point week</div>`;
+    <div class="hline">${verb} ${esc(nameOf(o.uid))}${margin ? ` by ${f1(margin)}` : ""}${gap}</div>`;
   return hero;
 }
 
