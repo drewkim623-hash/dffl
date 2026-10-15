@@ -15,9 +15,9 @@
     --plane:#0b0710; --surface:#171020; --raised:#22182e; --hover:#2b1f3a;
     --ink:#ffffff; --ink-2:#d4cbe0; --muted:#968ba6;
     --grid:#30233f; --ring:rgba(255,255,255,.09);
-    --blue:#ffc23d; --red:#e66767; --aqua:#199e70; --gold:#c98500; --violet:#b98cff;
+    --blue:#ffc23d; --red:#e66767; --aqua:#199e70; --gold:#ffc23d; --violet:#b98cff;
     --good:#0ca30c; --crit:#d03b3b; --mid:#3a2d4a;
-    --plus:#3ad07f; --hold:#c98500;
+    --plus:#3ad07f; --hold:#ffc23d;
     --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
     --r:14px; --rs:10px;
     /* blend theme: gold on aubergine, violet counter-glow, Space Grotesk over Inter */
@@ -100,8 +100,8 @@
   /* ============ champ banner ============ */
   .champbar{
     display:flex;align-items:center;gap:15px;margin-top:18px;padding:16px 18px;
-    background:linear-gradient(100deg,rgba(201,133,0,.16),rgba(201,133,0,.03) 60%,transparent);
-    border:1px solid rgba(201,133,0,.35);border-radius:var(--r)}
+    background:linear-gradient(100deg,rgba(255,194,61,.16),rgba(255,194,61,.03) 60%,transparent);
+    border:1px solid rgba(255,194,61,.35);border-radius:var(--r)}
   .champbar .ring{width:54px;height:54px;border-radius:50%;flex:none;border:2px solid var(--gold);
     display:grid;place-items:center;overflow:hidden;background:var(--raised);font-weight:800;color:var(--gold)}
   .champbar .ring img{width:100%;height:100%;object-fit:cover}
@@ -132,7 +132,7 @@
 
   .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;
     padding:2px 8px;border-radius:999px;border:1px solid var(--ring);white-space:nowrap}
-  .badge.gold{color:var(--gold);border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.10)}
+  .badge.gold{color:var(--gold);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
   .badge.blue{color:var(--blue);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
   .badge.red{color:var(--red);border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.10)}
 
@@ -177,7 +177,7 @@
   /* ============ trophies ============ */
   .trophies{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
   .trophy{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
-  .trophy::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),rgba(201,133,0,.2))}
+  .trophy::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--gold),rgba(255,194,61,.2))}
   .trophy .yr{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .trophy .ch{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-top:9px}
   .trophy .win{display:flex;align-items:center;gap:11px;margin:11px 0 3px}
@@ -289,10 +289,10 @@
   .gfoot a{color:var(--blue);font-weight:700;text-decoration:none;white-space:nowrap}
   .gfoot a:hover{text-decoration:underline}
   /* A week still being played: ahead is not won, so it is never the win blue. */
-  .gside.lead{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent)}
-  .gside.lead:hover{background:linear-gradient(90deg,rgba(201,133,0,.20),var(--hover))}
+  .gside.lead{background:linear-gradient(90deg,rgba(255,194,61,.12),transparent)}
+  .gside.lead:hover{background:linear-gradient(90deg,rgba(255,194,61,.20),var(--hover))}
   .gside.lead .gp{color:var(--gold)}
-  .livenote{background:rgba(201,133,0,.09);border:1px solid rgba(201,133,0,.32);
+  .livenote{background:rgba(255,194,61,.09);border:1px solid rgba(255,194,61,.32);
     border-radius:var(--rs);padding:11px 13px;margin:0 0 12px;font-size:12.5px;
     color:var(--ink-2);line-height:1.55}
   .livenote b{color:var(--gold)}
@@ -403,7 +403,7 @@
   .ws{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;padding:8px 11px}
   .ws + .ws{border-top:1px solid var(--grid)}
   .ws.win{background:linear-gradient(90deg,rgba(255,194,61,.11),transparent)}
-  .ws.lead{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent)}
+  .ws.lead{background:linear-gradient(90deg,rgba(255,194,61,.12),transparent)}
   .ws .wn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ws .wp{font-weight:800;font-size:14.5px;font-variant-numeric:tabular-nums}
   .ws.win .wp{color:var(--blue)} .ws.lead .wp{color:var(--gold)}
@@ -452,8 +452,8 @@
   .ws{grid-template-columns:auto 1fr auto auto}
   /* A timestamp, not a hold — the two must not share a class, because "every
      board states its hold" is a real check and a clock is not an answer to it. */
-  .board.live .bhead .stamp{background:rgba(201,133,0,.14);color:var(--gold);
-    border:1px solid rgba(201,133,0,.3);border-radius:999px;padding:3px 9px;
+  .board.live .bhead .stamp{background:rgba(255,194,61,.14);color:var(--gold);
+    border:1px solid rgba(255,194,61,.3);border-radius:999px;padding:3px 9px;
     font-size:11px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
   .lrow{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--grid);
     border-top:1px solid var(--grid)}
@@ -495,7 +495,7 @@
   .aw .ic{font-size:17px;width:22px;text-align:center}
 
   /* ============ odds board ============ */
-  .notice{border:1px solid rgba(201,133,0,.42);background:rgba(201,133,0,.07);border-radius:var(--r);
+  .notice{border:1px solid rgba(255,194,61,.42);background:rgba(255,194,61,.07);border-radius:var(--r);
     padding:14px 16px;margin-bottom:20px}
   .notice .nt{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--hold);font-weight:700;margin-bottom:7px}
@@ -510,7 +510,7 @@
   .bhead .bt{font-size:14.5px;font-weight:800;letter-spacing:-.01em;min-width:0}
   .bhead .bs{font-size:11.5px;color:var(--muted);font-weight:600;display:block;margin-top:2px;line-height:1.4}
   .bhead .hold{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--hold);border:1px solid rgba(201,133,0,.4);background:rgba(201,133,0,.09);
+    color:var(--hold);border:1px solid rgba(255,194,61,.4);background:rgba(255,194,61,.09);
     border-radius:6px;padding:4px 7px;white-space:nowrap;font-weight:700;flex:none}
 
   .orow{display:grid;grid-template-columns:20px auto minmax(0,1fr) auto;align-items:center;gap:10px;
@@ -594,7 +594,7 @@
   .mode{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:0 0 16px}
   .mode .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
     font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none}
-  .mode .pill.pre{color:var(--hold);border:1px solid rgba(201,133,0,.45);background:rgba(201,133,0,.10)}
+  .mode .pill.pre{color:var(--hold);border:1px solid rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
   .mode .pill.post{color:var(--plus);border:1px solid rgba(58,208,127,.42);background:rgba(58,208,127,.10)}
   .mode .what{font-size:13.5px;color:var(--ink-2);line-height:1.55;min-width:0}
 
@@ -669,8 +669,8 @@
     background:var(--raised);color:var(--ink-2);border:1px solid var(--ring)}
   .pos-dot.qb{color:#d2b8ff;border-color:rgba(185,140,255,.45);background:rgba(185,140,255,.13)}
   .pos-dot.rb{color:#3fc79a;border-color:rgba(25,158,112,.45);background:rgba(25,158,112,.13)}
-  .pos-dot.wr{color:#ffd57a;border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.13)}
-  .pos-dot.te{color:#e0a63c;border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.13)}
+  .pos-dot.wr{color:#8cc8ff;border-color:rgba(108,184,255,.45);background:rgba(108,184,255,.13)}
+  .pos-dot.te{color:#ffd57a;border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.13)}
   .pos-dot.kk{color:var(--muted)}
   .pos-dot.def{color:#f09090;border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.13)}
 
@@ -697,7 +697,7 @@
   .viax{display:inline;border:1px solid rgba(185,140,255,.45);background:rgba(185,140,255,.10);
     border-radius:5px;padding:2px 7px;font-size:10.5px}
   .dboard .bc.qb{border-left-color:#9085e9} .dboard .bc.rb{border-left-color:#199e70}
-  .dboard .bc.wr{border-left-color:#ffc23d} .dboard .bc.te{border-left-color:#c98500}
+  .dboard .bc.wr{border-left-color:#6cb8ff} .dboard .bc.te{border-left-color:#ffc23d}
   .dboard .bc.def{border-left-color:#e66767} .dboard .bc.kk{border-left-color:var(--mid)}
 
   .mgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
@@ -804,15 +804,25 @@
     margin-bottom:2px}
   .brm{background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);overflow:hidden;
     position:relative}
-  .brm.placed{border-color:rgba(201,133,0,.42)}
+  .brm.placed{border-color:rgba(255,194,61,.42)}
   .bpl{position:absolute;top:0;right:0;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-    background:rgba(201,133,0,.16);color:var(--gold);font-weight:800;padding:2px 6px;border-radius:0 0 0 6px}
+    background:rgba(255,194,61,.16);color:var(--gold);font-weight:800;padding:2px 6px;border-radius:0 0 0 6px}
   .bside{padding:8px 10px;font-size:13px;color:var(--muted);border-top:1px solid var(--grid)}
   .brm .bside:first-of-type{border-top:0}
   .bside.won{color:var(--ink);font-weight:750;background:linear-gradient(90deg,rgba(255,194,61,.13),transparent)}
   .bside .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 
   /* ============ long-form articles ============ */
+  /* The article's own solid bar: pinned on top, the tab nav scrolls away under it. */
+  body.art-open nav.tabs{position:static;background:var(--plane);backdrop-filter:none}
+  .artbar{position:sticky;top:0;z-index:60;display:flex;align-items:baseline;gap:10px;
+    margin:0 calc(-1 * var(--pad)) 14px;padding:12px var(--pad);background:var(--plane);
+    border-bottom:1px solid var(--grid);box-shadow:0 10px 14px -8px rgba(0,0,0,.8)}
+  .artbar b{font:800 20px/1.2 var(--disp);text-transform:uppercase;letter-spacing:-.01em}
+  .artbar .back{margin-left:auto;background:none;border:0;border-radius:0;padding:0;
+    color:var(--a-lt);font-weight:700;font-size:14px}
+  .artbar .back:hover{background:none;color:var(--a)}
+  .artl *{scroll-margin-top:64px}
   .artl{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);
     padding:26px 26px 28px;margin-bottom:16px;overflow:hidden}
   .artl.op{border-left:3px solid var(--red)}
@@ -1026,7 +1036,7 @@
     border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:2px}
   .ppv .pp-sd{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
     font:700 12px var(--mono);color:var(--ink-2);background:rgba(255,255,255,.06)}
-  .ppv .pp-sd.bye{color:#1a1200;background:radial-gradient(circle at 35% 30%,#ffd27a,var(--gold));box-shadow:0 0 12px rgba(201,133,0,.55)}
+  .ppv .pp-sd.bye{color:#1a1200;background:radial-gradient(circle at 35% 30%,#ffd27a,var(--gold));box-shadow:0 0 12px rgba(255,194,61,.55)}
   .ppv .pp-sd.div{color:var(--on-a);background:radial-gradient(circle at 35% 30%,#ffd57a,var(--blue));box-shadow:0 0 10px rgba(255,194,61,.5)}
   .ppv .pp-sd.wc{color:#ffe3a3;background:rgba(255,194,61,.16);box-shadow:inset 0 0 0 1px rgba(255,194,61,.6)}
   .ppv .av.pp-xs{width:20px;height:20px;font-size:11px}
@@ -1048,9 +1058,9 @@
   .ppv .pp-pb.by .pp-bar i{background:linear-gradient(90deg,#a86f00,#f0b53a)}
   .ppv .pp-heros{display:grid;gap:12px;margin-top:18px}
   .ppv .pp-hero{display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;min-width:0;
-    background:linear-gradient(135deg,rgba(201,133,0,.22),rgba(201,133,0,.04) 55%,rgba(255,255,255,.02));
-    border:1px solid rgba(201,133,0,.35);box-shadow:0 12px 40px -16px rgba(201,133,0,.6)}
-  .ppv .pp-hero .av{width:52px;height:52px;font-size:17px;border:0;box-shadow:0 0 0 2px #e9a93a,0 0 18px rgba(201,133,0,.6)}
+    background:linear-gradient(135deg,rgba(255,194,61,.22),rgba(255,194,61,.04) 55%,rgba(255,255,255,.02));
+    border:1px solid rgba(255,194,61,.35);box-shadow:0 12px 40px -16px rgba(255,194,61,.6)}
+  .ppv .pp-hero .av{width:52px;height:52px;font-size:17px;border:0;box-shadow:0 0 0 2px #e9a93a,0 0 18px rgba(255,194,61,.6)}
   .ppv .pp-hero .pp-eye{color:#ffd27a}
   .ppv .pp-hero .pp-nm{font-size:19px}
   .ppv .pp-hero .pp-bars{margin-left:auto}
@@ -1066,8 +1076,8 @@
   .ppv .pp-lb{font:600 11px var(--mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase;
     white-space:nowrap;margin:0 0 5px 2px}
   .ppv .pp-mt{border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--ring)}
-  .ppv .pp-mt.byeg{border-color:rgba(201,133,0,.45);box-shadow:0 0 0 1px rgba(201,133,0,.15),0 8px 30px -10px rgba(201,133,0,.45);
-    background:linear-gradient(180deg,rgba(201,133,0,.10),rgba(255,255,255,.015))}
+  .ppv .pp-mt.byeg{border-color:rgba(255,194,61,.45);box-shadow:0 0 0 1px rgba(255,194,61,.15),0 8px 30px -10px rgba(255,194,61,.45);
+    background:linear-gradient(180deg,rgba(255,194,61,.10),rgba(255,255,255,.015))}
   .ppv .pp-mt.fin{border-color:rgba(185,140,255,.45);box-shadow:0 10px 40px -12px rgba(185,140,255,.5)}
   .ppv .pp-tm{display:flex;align-items:center;gap:6px;height:44px;padding:0 7px;min-width:0}
   .ppv .pp-tm+.pp-tm{border-top:1px solid rgba(255,255,255,.06)}
@@ -1090,13 +1100,13 @@
   .ppv .pp-lst{border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--ring);overflow:hidden}
   .ppv .pp-li{display:grid;grid-template-columns:22px 28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px}
   .ppv .pp-li+.pp-li{border-top:1px solid rgba(255,255,255,.05)}
-  .ppv .pp-li.byer{background:linear-gradient(90deg,rgba(201,133,0,.12),transparent 65%)}
+  .ppv .pp-li.byer{background:linear-gradient(90deg,rgba(255,194,61,.12),transparent 65%)}
   .ppv .pp-cut{position:relative;height:28px;display:flex;align-items:center;padding:0 14px}
   .ppv .pp-cut::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed}
   .ppv .pp-cut span{position:relative;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;
     padding:2px 8px;border-radius:999px;background:var(--surface)}
   .ppv .pp-cut.byl{color:var(--gold)}
-  .ppv .pp-cut.byl span{color:#ffd27a;border:1px solid rgba(201,133,0,.5)}
+  .ppv .pp-cut.byl span{color:#ffd27a;border:1px solid rgba(255,194,61,.5)}
   .ppv .pp-cut.pol{color:var(--blue)}
   .ppv .pp-cut.pol span{color:#ffe3a3;border:1px solid rgba(255,194,61,.6)}
   .ppv .pp-hh{padding:12px 14px 4px;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
@@ -1132,7 +1142,7 @@
     border-radius:999px;padding:4px 10px;white-space:nowrap;border:1px solid var(--ring);color:var(--ink-2)}
   .verd.even{color:var(--muted)}
   .verd.win{color:var(--blue);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
-  .verd.lop{color:var(--hold);border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.10)}
+  .verd.lop{color:var(--hold);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
   .verd.fleeced{color:var(--red);border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.10)}
   .verd.none{color:var(--muted);border-style:dashed}
 
@@ -1924,6 +1934,7 @@ function show(id) {
   if (prof) prof.remove();
   const art = $('[data-panel="article"]');
   if (art) art.remove();
+  document.body.classList.remove("art-open");
   id = TAB_ALIAS.get(id) || id;
   // The trade block reads five seasons of transactions and a 5MB name file.
   // Nobody pays for that until they ask to see it.
@@ -2812,7 +2823,7 @@ const artText = t => esc(String(t ?? ""))
 // Colours come off the page's own custom properties, so restyling :root restyles the
 // covers too; the literals are what those properties hold today, for when they can't be read.
 const COVER_VAR_DEFAULTS = { ink: "#ffffff", "ink-2": "#d4cbe0", plane: "#0b0710", blue: "#ffc23d",
-  violet: "#b98cff", aqua: "#199e70", gold: "#c98500", red: "#e66767" };
+  violet: "#b98cff", aqua: "#199e70", gold: "#ffc23d", red: "#e66767" };
 /** A CSS colour as lowercase #rrggbb, or the fallback when it isn't a plain opaque hex or rgb(). */
 function coverHex(v, fallback) {
   const s = String(v ?? "").trim().toLowerCase();
@@ -3372,9 +3383,13 @@ function openArticle(a, keepHash) {
   const old = $('[data-panel="article"]');
   if (old) old.remove();
   const p = el("div", "panel"); p.dataset.panel = "article";
-  const back = el("button", "back", "← All articles");
+  const bar = el("div", "artbar");
+  bar.appendChild(el("b")).textContent = $("#lgName").textContent;
+  const back = el("button", "back", "← News");
   back.onclick = () => show(LAST_TAB_ART);   // show() rewrites the hash to the tab
-  p.appendChild(back);
+  bar.appendChild(back);
+  p.appendChild(bar);
+  document.body.classList.add("art-open");
   p.appendChild(articleCard(a, true));
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
