@@ -870,9 +870,8 @@ const powerDom = await page.evaluate(() => {
     marks, arrows: marks.filter(m => /[▲▼]/.test(m)).length,
     // the colour is never the only carrier: an arrow and a number ride with it
     colourNotAlone: [...panel.querySelectorAll(".mv.up, .mv.down")].every(n => /[▲▼]\s*\d+/.test(n.textContent)),
-    // the methodology sits in a collapsed <details>, which innerText skips
-    weightsShown: /40%[\s\S]*25%[\s\S]*20%[\s\S]*15%/.test(panel.textContent),
-    namesWeights: /All-play win %[\s\S]*Form, last 3 weeks[\s\S]*Points for[\s\S]*Actual record/.test(panel.textContent),
+    weightsShown: /40%[\s\S]*25%[\s\S]*20%[\s\S]*15%/.test(panel.innerText),
+    namesWeights: /All-play win %[\s\S]*Form, last 3 weeks[\s\S]*Points for[\s\S]*Actual record/.test(panel.innerText),
     nan: /NaN|undefined|Infinity/.test(panel.innerText),
   };
 });
@@ -5033,9 +5032,6 @@ group("Jargon explainers");
     const real = [...sel.options].find(o => o.value !== "__proj");
     if (real) { sel.value = real.value; sel.dispatchEvent(new Event("change")); }
   });
-  await page.waitForTimeout(150);
-  // The chips live in each row's ⌄ fold-out; open the first row's so they're clickable.
-  await page.locator('[data-panel="power"] .pwrow .pwx').first().click();
   await page.waitForTimeout(150);
   for (const k of ["allplay", "form", "rating"]) {
     const L = await isLabel(page, `[data-panel="power"] .pwrow .cl button.jx[data-jx="${k}"]`);
