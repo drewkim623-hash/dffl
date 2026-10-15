@@ -1151,7 +1151,7 @@
   .tside + .tside{border-left:1px solid var(--grid)}
   @media(max-width:560px){.tside + .tside{border-left:0}}
   .tside.won{background:linear-gradient(180deg,rgba(255,194,61,.09),transparent 70%)}
-  .tside .who{display:flex;align-items:center;gap:9px;min-width:0}
+  .tside .who{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;min-width:0}
   .tside .who .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .tside .net{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;flex:none}
   .tlist{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:4px}
@@ -1163,6 +1163,9 @@
   .tline .sub{font-size:11px;color:var(--muted);font-style:normal;display:block;line-height:1.35}
   .tpicks{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
   .tnote{padding:11px 14px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);line-height:1.5}
+  .gchip{display:inline-block;flex:none;padding:1px 6px;border-radius:3px;font-weight:800;font-size:12px;white-space:nowrap}
+  .gchip small{font-weight:600;opacity:.85}.gh{display:inline-block;flex:none;font-size:11px;opacity:.8;white-space:nowrap}
+  .g-a{background:var(--good);color:var(--ink)}.g-b{background:var(--a);color:var(--on-a)}.g-c{background:var(--mid);color:var(--ink-2)}.g-d{background:var(--hold);color:var(--on-a)}.g-f{background:var(--crit);color:var(--ink)}.gh.pend{opacity:.6}.g-small{background:var(--raised);color:var(--muted)}.gh.g-small{background:none}
   .tfilter{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:430px;margin:0 0 14px}
   .back.more{display:block;width:100%;margin:4px 0 0;text-align:center}
 
@@ -1282,6 +1285,7 @@
     .fxm .fxm-mkt > .board > .orow:nth-of-type(2){border-top:0}
     .fxm .fxm-mkt > .board > .orow:nth-of-type(odd){border-right:1px solid var(--grid)}
   }
+  select{background:var(--raised);color:var(--ink);border:1px solid var(--edge);color-scheme:dark}
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
@@ -5265,30 +5269,124 @@ function livePosterior(model, season, throughWeek = null) {
   if (!model || !model.ok || !season) return null;
   const wk = model.weekSd, pri = model.seasonSd;
   if (!(wk > 0) || !(pri > 0)) return null;
-  const byRid = new Map();
+  const byRid = new Map(), wksOf = new Map();
+  let rewound = false;
   for (const g of (season.games || [])) {
     if (g.playoff) continue;
     // throughWeek rewinds the board: only what had been scored by the end of
     // that week counts toward a team's level, so the page can show what the
     // model believed then rather than what it believes now.
-    if (throughWeek != null && g.week > throughWeek) continue;
+    if (throughWeek != null && g.week > throughWeek) { rewound = true; continue; }
     for (const s of [g.a, g.b]) {
-      if (!byRid.has(s.rid)) byRid.set(s.rid, []);
+      if (!byRid.has(s.rid)) { byRid.set(s.rid, []); wksOf.set(s.rid, []); }
       byRid.get(s.rid).push(s.pts);
+      wksOf.get(s.rid).push(g.week);
     }
   }
+  // Trades: today's roster against the rosters that scored those points. Only
+  // for the current season's board as it stands now — a rewound board shows
+  // what the model believed then, before any later trade.
+  const roster = !rewound && rosterWeeksFor(season);
   const pp = 1 / (pri * pri);
   return model.teams.map(t => {
     const obs = byRid.get(t.rid) || [];
     const n = obs.length;
     const op = n / (wk * wk);
     const om = n ? obs.reduce((a, b) => a + b, 0) / n : 0;
-    const mean = n ? (pp * t.mean + op * om) / (pp + op) : t.mean;
+    const level = n ? (pp * t.mean + op * om) / (pp + op) : t.mean;
+    const delta = roster ? rosterDelta(roster, t.rid, wksOf.get(t.rid) || []) : 0;
+    const mean = level + delta + rosterBlend(roster, t.rid, level);
     return {
       ...t, n, priorMean: t.mean, obsMean: n ? om : null, mean,
       levelSd: Math.sqrt(1 / (pp + op)), moved: mean - t.mean,
     };
   });
+}
+
+/**
+ * Trade-aware levels ("Option C"). livePosterior() learns a team's level from
+ * points its past rosters scored; after a trade those rosters are not the one
+ * that will play the rest of the season. data/roster-weeks.json (written by
+ * build-roster-weeks.mjs) prices every roster the same way — best healthy
+ * lineup on data/projections.json, averaged over the rest of the regular season
+ * — so for each team
+ *
+ *   Δ = current.strength − mean over the weeks livePosterior counts of weeks[wk][rid].strength
+ *
+ * and the level becomes mean + Δ. Nothing else about the odds changes: the
+ * prior, the noise, the injury model, the seeds and the sims are all as they
+ * were. A team whose roster never changed gets Δ exactly 0. No file (or a
+ * different season's) means Δ = 0 for everybody and the board as it was.
+ *
+ * ROSTER_BLEND_W is the hook for Option A: pull the level a fraction of the way
+ * toward the current roster's projected strength itself. 0 = off; at 0 the term
+ * is exactly 0 and only Δ applies.
+ */
+const ROSTER_BLEND_W = 0;
+const ROSTER_FILE = "data/roster-weeks.json";
+let ROSTER_WEEKS = null;
+// rid -> Δ on the current board (every scored week counted). Filled in place by
+// loadRosterWeeks(), so a reference taken earlier stays current.
+const rosterDeltas = new Map();
+
+/** The roster file, if it belongs to this season's board; else null (Δ = 0). */
+function rosterWeeksFor(season) {
+  const RW = ROSTER_WEEKS;
+  if (!RW || !RW.current || !RW.weeks || !season) return null;
+  return RW.season && String(season.season) !== String(RW.season) ? null : RW;
+}
+
+/** Δ for one team over the weeks counted: today's strength minus the fielded rosters' mean. */
+function rosterDelta(RW, rid, weeks) {
+  const cur = RW.current[rid];
+  if (!cur || !Number.isFinite(cur.strength)) return 0;
+  const past = [...new Set(weeks)].map(w => RW.weeks[w] && RW.weeks[w][rid])
+    .filter(x => x && Number.isFinite(x.strength));
+  if (!past.length) return 0;
+  // Same players every week as today: no trade, Δ is 0 by definition.
+  const key = a => (a || []).map(String).sort().join(",");
+  if (cur.players && past.every(x => x.players && key(x.players) === key(cur.players))) return 0;
+  return cur.strength - past.reduce((s, x) => s + x.strength, 0) / past.length;
+}
+
+/** Option A's term: ROSTER_BLEND_W × (current strength − level). 0 while the weight is 0. */
+function rosterBlend(RW, rid, level) {
+  const cur = RW && RW.current[rid];
+  const gap = cur && Number.isFinite(cur.strength) ? cur.strength - level : 0;
+  return ROSTER_BLEND_W ? ROSTER_BLEND_W * gap : 0;
+}
+
+/**
+ * Read data/roster-weeks.json (fail-soft: missing => Δ = 0 for all) and fill
+ * rosterDeltas for the current season. `inject` replaces the file — an object
+ * to price, or null to switch the adjustment off — for verify.mjs.
+ */
+async function loadRosterWeeks(inject) {
+  if (inject !== undefined) ROSTER_WEEKS = inject;
+  else {
+    ROSTER_WEEKS = null;
+    if (!MOCK) {
+      try {
+        const j = await jget(ROSTER_FILE);
+        if (j && j.current && j.weeks) ROSTER_WEEKS = j;
+      } catch (e) { /* not published: no adjustment */ }
+    }
+  }
+  rosterDeltas.clear();
+  const season = DB.seasons[0];
+  const RW = rosterWeeksFor(season);
+  if (RW) {
+    const weeks = new Map();
+    for (const g of season.games || []) {
+      if (g.playoff) continue;
+      for (const s of [g.a, g.b]) {
+        if (!weeks.has(s.rid)) weeks.set(s.rid, []);
+        weeks.get(s.rid).push(g.week);
+      }
+    }
+    for (const r of season.rosters || []) rosterDeltas.set(r.roster_id, rosterDelta(RW, r.roster_id, weeks.get(r.roster_id) || []));
+  }
+  return rosterDeltas;
 }
 
 /**
@@ -10027,6 +10125,21 @@ const gotNames = sd => [...sd.got.map(x => x.name),
   ...sd.picksIn.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
 const sgnf = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
 
+let TRADE_GRADES = null;
+const gradeCls = l => l.startsWith("A") ? "g-a" : l === "B" ? "g-b" : l === "C" ? "g-c" : l === "D" ? "g-d" : "g-f";
+/** One chip per side: trade-day letter + point margin, then hindsight letter or Pending. */
+function gradeChipHTML(t, sd) {
+  const g = TRADE_GRADES && TRADE_GRADES.trades && TRADE_GRADES.trades[t.id];
+  const s = g && g.sides.find(x => x.rid === sd.rid);
+  if (!s) return "";
+  const pts = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
+  const lab = g => g.small ? "C · small trade" : g.letter, cls = g => g.small ? "g-small" : gradeCls(g.letter);
+  const h = typeof s.hindsight === "string" ? `<span class="gh pend">Hindsight: Pending</span>`
+    : `<span class="gh ${cls(s.hindsight)}">Hindsight ${esc(lab(s.hindsight))} ${esc(pts(s.hindsight.marginPts))}</span>`;
+  const tip = s.tradeDay.small ? "Under 25 points of value traded in total, so no letter beyond C" : `Trade-day grade: margin ${s.tradeDay.marginPct}% of this side plus the average other side`;
+  return `<span class="gchip ${cls(s.tradeDay)}" title="${esc(tip)}">${esc(lab(s.tradeDay))} <small>${esc(pts(s.tradeDay.marginPts))}</small></span>${h}`;
+}
+
 function tradeCard(t) {
   const v = verdictOf(t);
   const box = el("article", "trade");
@@ -10052,7 +10165,7 @@ function tradeCard(t) {
         r.pts, t.graded && r.priced, r.priced ? null : r.why))).join("");
     d.innerHTML = `<div class="who">${avatarHTML(sd.uid, "sm")}
         <span class="n">${esc(sd.uid ? nameOf(sd.uid) : "roster " + sd.rid)}</span>
-        ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}</div>
+        ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}${gradeChipHTML(t, sd)}</div>
       ${lines ? `<ul class="tlist">${lines}</ul>` : `<div class="tpicks">gave everything, got nothing back</div>`}`;
     sides.appendChild(d);
   }
@@ -10064,6 +10177,8 @@ function tradeCard(t) {
   if (t.graded && t.unpriced.length)
     notes.push(`Not priced: ${t.unpriced.map(u => `${u.label} (${u.why})`).join(", ")}.`);
   box.appendChild(el("div", "tnote", notes.map(esc).join(" ")));
+  if (TRADE_GRADES && TRADE_GRADES.trades && TRADE_GRADES.trades[t.id])
+    box.appendChild(el("div", "tnote", esc("Grade: value over replacement, rest of season + shrunk keeper value + pick chart. C = margin under 21.6% of value traded; under 25 points traded in total is \u201cC · small trade\u201d.")));
   return box;
 }
 
@@ -10324,6 +10439,7 @@ async function ensureTrades() {
     await loadPlayerNames(need);
     await loadDraftSlots();
     const L = tradeLedger(txs), W = waiverReport(txs);
+    TRADE_GRADES = await jget("data/trade-grades.json").catch(() => null);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
     renderTrades(host, L, W);
     document.body.dataset.tradesReady = "1";
@@ -10382,6 +10498,9 @@ async function boot() {
 
     const AT = allTime(), RB = recordBook(), H2H = h2hMap(), DIST = scoringDist();
     const ODDS = await oddsModel(), SIM = simulateSeason(ODDS);
+    // Before anything reads the live posterior: each team's roster change since
+    // the weeks it scored (Δ = 0 for all if the file isn't there).
+    await loadRosterWeeks();
     window.__AT = AT; window.__RB = RB; window.__H2H = H2H; window.__DIST = DIST;
     window.__ODDS = ODDS; window.__SIM = SIM;
 
@@ -10460,6 +10579,7 @@ async function boot() {
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
+      ROSTER_BLEND_W, rosterDeltas, loadRosterWeeks, rosterDelta, rosterWeeks: () => ROSTER_WEEKS,
       injuryDetail, returnLabel, rosterInjuries, injCutText, ensureInjuries, renderInjuries,
       PTS_LOST, projectedPointsLost, splitLineupDrop, pointsLostOpts, loadProjections, injuryTabTeams, injuryTabOrder, whenInjuryDeltas,
       injuryPlan, injuryLossPlan, injuryLossTeam, injuryLostPts, attachLossPlan, INJ_ODDS,

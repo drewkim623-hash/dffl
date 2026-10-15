@@ -63,6 +63,11 @@ jobs:
         if: steps.fp.outputs.changed == 'true'
         run: node build-pulse.mjs
 
+      # After rosters and projections (build-injuries.mjs), before the odds are read.
+      - name: Price each roster against the ones it fielded
+        if: steps.fp.outputs.changed == 'true'
+        run: node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
+
       - name: Install the browser for the odds snapshot
         if: steps.fp.outputs.changed == 'true'
         run: |
@@ -108,6 +113,7 @@ jobs:
           node build-injuries.mjs
           node injury-returns.mjs
           node build-pulse.mjs
+          node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
           node build-email.mjs
           node build-odds-history.mjs || echo "::warning::odds history not updated"
           node sleeper-fingerprint.mjs --write

@@ -8,6 +8,35 @@
           "..."
         ]
       }
+    },
+    "players": {
+      "<player_id>": {
+        "name": "",
+        "origin": {
+          "year": 0,
+          "round": 0
+        },
+        "yearsKept": 0,
+        "baseRound": 0,
+        "nextCostRound": 0,
+        "regressed": false,
+        "ruleSource": "",
+        "rights": [
+          {
+            "holder": "",
+            "originalOwner": "",
+            "revertsTo": "",
+            "revertsAfterSeason": 0,
+            "costRound": 0,
+            "raw": ""
+          }
+        ],
+        "exception": false
+      }
+    },
+    "config": {
+      "TRADE_RESETS_YEARS": "false until confirmed",
+      "REGRESSION_FROM": "first draft regression applies (2027)"
     }
   },
   "seasons": {
@@ -72,6 +101,488 @@
         "Chase Brown",
         "Trevor Lawrence"
       ]
+    }
+  },
+  "config": {
+    "TRADE_RESETS_YEARS": false,
+    "REGRESSION_FROM": 2027
+  },
+  "exceptions": [
+    {
+      "player_id": "11631",
+      "name": "Brian Thomas Jr.",
+      "note": "R7 (2025) -> R5 (2026) is unexplained by the rule; flagged, not modeled"
+    }
+  ],
+  "_comment_players": "players{} is computed by build-trade-grades.mjs (do not hand-edit except rights[]). rights[] is hand-entered: reverting keeper rights are not in any public Sleeper endpoint.",
+  "players": {
+    "4034": {
+      "name": "Christian McCaffrey",
+      "origin": {
+        "year": 2022,
+        "round": 1
+      },
+      "yearsKept": 4,
+      "baseRound": 1,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "4866": {
+      "name": "Saquon Barkley",
+      "origin": {
+        "year": 2022,
+        "round": 2
+      },
+      "yearsKept": 4,
+      "baseRound": 2,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "4984": {
+      "name": "Josh Allen",
+      "origin": {
+        "year": 2022,
+        "round": 3
+      },
+      "yearsKept": 4,
+      "baseRound": 3,
+      "nextCostRound": 2,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "5859": {
+      "name": "A.J. Brown",
+      "origin": {
+        "year": 2022,
+        "round": 3
+      },
+      "yearsKept": 4,
+      "baseRound": 3,
+      "nextCostRound": 2,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "6770": {
+      "name": "Joe Burrow",
+      "origin": {
+        "year": 2022,
+        "round": 6
+      },
+      "yearsKept": 4,
+      "baseRound": 8,
+      "nextCostRound": 6,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "6797": {
+      "name": "Justin Herbert",
+      "origin": {
+        "year": 2025,
+        "round": 10
+      },
+      "yearsKept": 1,
+      "baseRound": 10,
+      "nextCostRound": 10,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "6813": {
+      "name": "Jonathan Taylor",
+      "origin": {
+        "year": 2022,
+        "round": 1
+      },
+      "yearsKept": 4,
+      "baseRound": 1,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "7523": {
+      "name": "Trevor Lawrence",
+      "origin": {
+        "year": 2026,
+        "round": 15
+      },
+      "yearsKept": 0,
+      "baseRound": 15,
+      "nextCostRound": 15,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "7547": {
+      "name": "Amon-Ra St. Brown",
+      "origin": {
+        "year": 2022,
+        "round": 6
+      },
+      "yearsKept": 4,
+      "baseRound": 6,
+      "nextCostRound": 4,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "7564": {
+      "name": "Ja'Marr Chase",
+      "origin": {
+        "year": 2022,
+        "round": 1
+      },
+      "yearsKept": 4,
+      "baseRound": 1,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "7569": {
+      "name": "Nico Collins",
+      "origin": {
+        "year": 2022,
+        "round": 13
+      },
+      "yearsKept": 4,
+      "baseRound": 13,
+      "nextCostRound": 10,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "7588": {
+      "name": "Javonte Williams",
+      "origin": {
+        "year": 2022,
+        "round": 3
+      },
+      "yearsKept": 4,
+      "baseRound": 9,
+      "nextCostRound": 7,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8112": {
+      "name": "Drake London",
+      "origin": {
+        "year": 2022,
+        "round": 8
+      },
+      "yearsKept": 4,
+      "baseRound": 4,
+      "nextCostRound": 3,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8130": {
+      "name": "Trey McBride",
+      "origin": {
+        "year": 2024,
+        "round": 5
+      },
+      "yearsKept": 2,
+      "baseRound": 5,
+      "nextCostRound": 3,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8138": {
+      "name": "James Cook",
+      "origin": {
+        "year": 2022,
+        "round": 8
+      },
+      "yearsKept": 4,
+      "baseRound": 4,
+      "nextCostRound": 3,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8146": {
+      "name": "Garrett Wilson",
+      "origin": {
+        "year": 2022,
+        "round": 10
+      },
+      "yearsKept": 4,
+      "baseRound": 10,
+      "nextCostRound": 7,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8150": {
+      "name": "Kyren Williams",
+      "origin": {
+        "year": 2024,
+        "round": 15
+      },
+      "yearsKept": 2,
+      "baseRound": 14,
+      "nextCostRound": 11,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "8151": {
+      "name": "Kenneth Walker",
+      "origin": {
+        "year": 2022,
+        "round": 8
+      },
+      "yearsKept": 4,
+      "baseRound": 8,
+      "nextCostRound": 6,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9221": {
+      "name": "Jahmyr Gibbs",
+      "origin": {
+        "year": 2023,
+        "round": 2
+      },
+      "yearsKept": 3,
+      "baseRound": 2,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9224": {
+      "name": "Chase Brown",
+      "origin": {
+        "year": 2023,
+        "round": 14
+      },
+      "yearsKept": 3,
+      "baseRound": 9,
+      "nextCostRound": 7,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9226": {
+      "name": "De'Von Achane",
+      "origin": {
+        "year": 2023,
+        "round": 10
+      },
+      "yearsKept": 3,
+      "baseRound": 9,
+      "nextCostRound": 7,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9488": {
+      "name": "Jaxon Smith-Njigba",
+      "origin": {
+        "year": 2023,
+        "round": 6
+      },
+      "yearsKept": 3,
+      "baseRound": 8,
+      "nextCostRound": 6,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9493": {
+      "name": "Puka Nacua",
+      "origin": {
+        "year": 2024,
+        "round": 15
+      },
+      "yearsKept": 2,
+      "baseRound": 15,
+      "nextCostRound": 12,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "9509": {
+      "name": "Bijan Robinson",
+      "origin": {
+        "year": 2023,
+        "round": 1
+      },
+      "yearsKept": 3,
+      "baseRound": 1,
+      "nextCostRound": 1,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "10229": {
+      "name": "Rashee Rice",
+      "origin": {
+        "year": 2023,
+        "round": 14
+      },
+      "yearsKept": 3,
+      "baseRound": 3,
+      "nextCostRound": 2,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "10232": {
+      "name": "Michael Wilson",
+      "origin": {
+        "year": 2026,
+        "round": 15
+      },
+      "yearsKept": 0,
+      "baseRound": 15,
+      "nextCostRound": 15,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "11564": {
+      "name": "Drake Maye",
+      "origin": {
+        "year": 2025,
+        "round": 10
+      },
+      "yearsKept": 1,
+      "baseRound": 10,
+      "nextCostRound": 10,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "11566": {
+      "name": "Jayden Daniels",
+      "origin": {
+        "year": 2024,
+        "round": 7
+      },
+      "yearsKept": 2,
+      "baseRound": 7,
+      "nextCostRound": 5,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "11584": {
+      "name": "Bucky Irving",
+      "origin": {
+        "year": 2025,
+        "round": 15
+      },
+      "yearsKept": 1,
+      "baseRound": 15,
+      "nextCostRound": 15,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "11604": {
+      "name": "Brock Bowers",
+      "origin": {
+        "year": 2024,
+        "round": 6
+      },
+      "yearsKept": 2,
+      "baseRound": 6,
+      "nextCostRound": 4,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "11635": {
+      "name": "Ladd McConkey",
+      "origin": {
+        "year": 2024,
+        "round": 4
+      },
+      "yearsKept": 2,
+      "baseRound": 5,
+      "nextCostRound": 3,
+      "regressed": true,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "12481": {
+      "name": "Cam Skattebo",
+      "origin": {
+        "year": 2025,
+        "round": 8
+      },
+      "yearsKept": 1,
+      "baseRound": 7,
+      "nextCostRound": 7,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "12512": {
+      "name": "Quinshon Judkins",
+      "origin": {
+        "year": 2025,
+        "round": 5
+      },
+      "yearsKept": 1,
+      "baseRound": 5,
+      "nextCostRound": 5,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "12514": {
+      "name": "Emeka Egbuka",
+      "origin": {
+        "year": 2025,
+        "round": 5
+      },
+      "yearsKept": 1,
+      "baseRound": 5,
+      "nextCostRound": 5,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "12517": {
+      "name": "Colston Loveland",
+      "origin": {
+        "year": 2025,
+        "round": 9
+      },
+      "yearsKept": 1,
+      "baseRound": 9,
+      "nextCostRound": 9,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
+    },
+    "12519": {
+      "name": "Luther Burden",
+      "origin": {
+        "year": 2025,
+        "round": 9
+      },
+      "yearsKept": 1,
+      "baseRound": 9,
+      "nextCostRound": 9,
+      "regressed": false,
+      "ruleSource": "Commissioner, league chat: kept 2+ years -> R10-15 up 3, R5-9 up 2, R1-4 up 1; from the 2027 draft",
+      "rights": []
     }
   }
 }
