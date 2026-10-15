@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-15T13:33:38.574Z",
+ "generated": "2026-10-15T17:19:35.753Z",
  "week": 6,
  "entries": {
   "2449": {
@@ -264,17 +264,6 @@
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-10-15"
-  },
-  "9502": {
-   "n": "Tank Dell",
-   "s": "IR",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.rotowire.com/football/player/tank-dell-16935 — Knee (rehab of Dec 2024 ACL/MCL/LCL tear; IR-designated to return Oct 7). 21-day window opened Oct 7; RotoWire est. return Oct 18 (Week 6), SI suggests possibly Week 9 after HOU bye. Sleeper body part is the old injury. Counted Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14",
-   "irSince": 6
   },
   "9753": {
    "n": "Zach Charbonnet",
