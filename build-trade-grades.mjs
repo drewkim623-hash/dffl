@@ -10,7 +10,8 @@
  *            the current season uses actual points so far + Sleeper projections for the rest.
  *   keeper   shrunk surplus: 0.8 x max(0, SHRINK x last full season VOR - value of next keeper cost round)
  *   picks    e^(3.83 - 0.0135*pick) - 1 at the round's mid-slot (trade-day; slot unknown).
- * margin = (side - average of the other sides) / total (two teams: side - other). Letters on |margin| (v2 percentile cutoffs, fixed so
+ * margin = side - average of the other sides; % = that / (side + average other side) (two teams: (side-other)/total).
+ * Under 25 VOR traded in total, both sides grade "C · small trade" (point margin kept). Letters on |margin| (v2 percentile cutoffs, fixed so
  * grades don't drift as trades are added): C < 21.6% <= B/D < 55.3% <= A/F < 86.9% <= A+/F-.
  * Hindsight: once every traded pick has become a player with a completed season, the pick is valued
  * at his actual season VOR + actual keeper surplus; otherwise "Pending".
@@ -23,6 +24,7 @@ const LEAGUE = "1318040218183417856";
 const LAST_WEEK = 17;
 const STARTERS = { QB: 12, RB: 30, WR: 30, TE: 14 };
 export const CUTOFFS = { c: 0.216, bd: 0.553, af: 0.869 };
+export const SMALL_TRADE = 25;                               // total VOR traded below this grades C · small trade
 export const SHRINK = 0.58, KEEPER_DISCOUNT = 0.8;           // fitted 2022->25 year-to-year VOR slope; one-year-out discount
 const K = JSON.parse(fs.readFileSync("keepers.json", "utf8"));
 const CFG = { TRADE_RESETS_YEARS: false, REGRESSION_FROM: 2027, ...(K.config || {}) };
@@ -43,6 +45,13 @@ export function nextCost(history, pid, draftYear, cfg = CFG) {
   const yearsKept = apps - 1, regressed = draftYear + 1 >= cfg.REGRESSION_FROM && yearsKept >= 2;
   return { baseRound: d.round, nextCostRound: regressed ? regress(d.round) : d.round, regressed, yearsKept, origin: { year: draftYear - yearsKept, round: history.get(draftYear - yearsKept).get(pid).round } };
 }
+/** Points margin: this side minus the average of the other sides (sums to zero for any n). */
+export const marginPts = (x, total, n) => x - (total - x) / (Math.max(2, n) - 1);
+/** Margin share: divided by this side + the average other side, so it is total for two teams and within ±100% for any n. */
+export const marginPct = (x, total, n) => { const o = (total - x) / (Math.max(2, n) - 1); return x + o > 0 ? (x - o) / (x + o) : 0; };
+/** One grade: letter, or C · small trade when too little value moved. */
+export const grade = (x, total, n) => { const p = marginPct(x, total, n), small = total < SMALL_TRADE;
+  return { letter: small ? "C" : letter(p), ...(small ? { small: true } : {}), marginPct: Math.round(p * 100), marginPts: Math.round(marginPts(x, total, n) * 10) / 10 }; };
 export const keeperValue = (lastVor, costRound) => KEEPER_DISCOUNT * Math.max(0, SHRINK * lastVor - curve(midPick(costRound)));
 
 const r1 = x => Math.round(x * 10) / 10;
@@ -79,7 +88,7 @@ async function main() {
     for (let w = Math.max(1, w0); w <= lastActual; w++) { const e = (await W(y, w)).find(x => x.player_id === pid); v += Math.max(0, (e ? score(S, e.stats || {}, p) : 0) - rw); }
     if (y >= curSeason) for (let w = Math.max(curWeek, w0); w <= LAST_WEEK; w++) { const e = (await P(w, p)).find(x => x.player_id === pid); v += Math.max(0, (e ? score(S, e.stats || {}, p) : 0) - rw); }
     return { v, basis: y >= curSeason ? `actual to wk ${curWeek - 1} + Sleeper projection` : "actual remaining points (hindsight; no stored projections)" }; }
-  async function keeperFor(y, pid) { if (EXC.has(pid)) { /* modeled normally; exception is only a flag */ }
+  async function keeperFor(y, pid) {
     const c = nextCost(history, pid, y); if (!c) return null; const lastY = Math.min(y, curSeason - 1), vor = await seasonVor(lastY, pid);
     return { ...c, value: keeperValue(vor, c.nextCostRound), lastVor: vor }; }
   const out = { generated: new Date().toISOString(), scale: "v2", cutoffs: CUTOFFS, shrink: SHRINK, keeperDiscount: KEEPER_DISCOUNT, config: CFG, trades: {} };
@@ -94,18 +103,18 @@ async function main() {
         const dy = Number(d.season), ds = seasons.get(dy), done = dy < curSeason && ds && ds.drafts[0];
         let dp = null; if (done) { const uid = s.uid(d.roster_id), rid = ds.rosters.find(r => r.owner_id === uid)?.roster_id ?? d.roster_id;
           const slot = Number(Object.entries(ds.drafts[0].slot_to_roster_id || {}).find(([, v]) => v === rid)?.[0]); const teams = Object.keys(ds.drafts[0].slot_to_roster_id || {}).length || 12;
-          const no = slot ? (d.round - 1) * teams + (d.round % 2 ? slot : teams + 1 - slot) : null; const e = ds.picks.find(p => p.pick_no === no); if (e && e.player_id && !e.is_keeper) dp = [String(e.player_id)]; }
-        let h = null; if (dp && dy < curSeason) { const [pid] = dp; const kv = history.has(dy + 1) && history.get(dy + 1).has(pid) ? Math.max(0, (await seasonVor(dy + 1, pid)) - curve(midPick(history.get(dy + 1).get(pid).round))) : 0; h = (await seasonVor(dy, pid)) + kv; hind += h; } else { pend = true; }
-        assets.push({ asset: `${d.season} R${d.round}`, value: r1(v), basis: "mid-slot curve", ...(h != null ? { hindsight: r1(h), became: nm(dp[0]) } : { hindsight: "Pending" }) }); }
+          const no = slot ? (d.round - 1) * teams + (d.round % 2 ? slot : teams + 1 - slot) : null; const e = ds.picks.find(p => p.pick_no === no); if (e && e.player_id) dp = [String(e.player_id), !!e.is_keeper, e.pick_no]; }
+        let h = null;
+        // A slot spent on a keeper bought nothing new: value it like any unused pick at that slot (curve at its pick number).
+        if (dp && dp[1]) { h = curve(dp[2]); hind += h; } else
+        if (dp && dy < curSeason) { const [pid] = dp; const kv = history.has(dy + 1) && history.get(dy + 1).has(pid) ? Math.max(0, (await seasonVor(dy + 1, pid)) - curve(midPick(history.get(dy + 1).get(pid).round))) : 0; h = (await seasonVor(dy, pid)) + kv; hind += h; } else { pend = true; }
+        assets.push({ asset: `${d.season} R${d.round}`, value: r1(v), basis: "mid-slot curve", ...(h != null ? { hindsight: r1(h), ...(dp[1] ? { kept: true, became: `Kept: ${nm(dp[0])}`, hindsightBasis: `kept slot: curve value at pick ${dp[2]}, same as an unused pick there` } : { became: nm(dp[0]) }) } : { hindsight: "Pending" }) }); }
       pendingAny ||= pend || y >= curSeason;
       sides.push({ rid, uid: s.uid(rid), manager: s.mgr(rid), assets, day, hind }); }
     const tot = sides.reduce((a, x) => a + x.day, 0), htot = sides.reduce((a, x) => a + x.hind, 0);
-    // margin = side minus the average of the other sides, over everything traded; sums to zero for any number of teams
-    const n = Math.max(2, sides.length), mp = (x, all) => x - (all - x) / (n - 1);
-    out.trades[t.transaction_id] = { season: y, week: t._week, sides: sides.map(x => { const m = tot ? mp(x.day, tot) / tot : 0, hm = htot ? mp(x.hind, htot) / htot : 0;
-      return { rid: x.rid, uid: x.uid, manager: x.manager, assets: x.assets, total: r1(x.day),
-        tradeDay: { letter: letter(m), marginPct: Math.round(m * 100), marginPts: r1(mp(x.day, tot)) },
-        hindsight: pendingAny ? "Pending" : { letter: letter(hm), marginPct: Math.round(hm * 100), marginPts: r1(mp(x.hind, htot)) } }; }) };
+    const n = sides.length;
+    out.trades[t.transaction_id] = { season: y, week: t._week, sides: sides.map(x => ({ rid: x.rid, uid: x.uid, manager: x.manager, assets: x.assets, total: r1(x.day),
+      tradeDay: grade(x.day, tot, n), hindsight: pendingAny ? "Pending" : grade(x.hind, htot, n) })) };
   }
   // keepers.json computed block (current rosters' players drafted this season)
   // Only players on the stated keeper list: appearing in back-to-back drafts can also mean he was simply drafted again.

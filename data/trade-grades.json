@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15T05:58:35.169Z",
+ "generated": "2026-10-15T06:12:10.052Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -540,6 +540,7 @@
      "total": 10.5,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": -14,
       "marginPts": -3.5
      },
@@ -566,6 +567,7 @@
      "total": 14,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": 14,
       "marginPts": 3.5
      },
@@ -596,8 +598,8 @@
      ],
      "total": 153.1,
      "tradeDay": {
-      "letter": "B",
-      "marginPct": 46,
+      "letter": "A",
+      "marginPct": 56,
       "marginPts": 109.9
      },
      "hindsight": "Pending"
@@ -629,7 +631,7 @@
      "total": 37.4,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -27,
+      "marginPct": -46,
       "marginPts": -63.7
      },
      "hindsight": "Pending"
@@ -648,8 +650,8 @@
      ],
      "total": 49.2,
      "tradeDay": {
-      "letter": "C",
-      "marginPct": -19,
+      "letter": "D",
+      "marginPct": -32,
       "marginPts": -46.1
      },
      "hindsight": "Pending"
@@ -680,7 +682,8 @@
      ],
      "total": 0.1,
      "tradeDay": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -99,
       "marginPts": -10.5
      },
@@ -700,7 +703,8 @@
      ],
      "total": 10.5,
      "tradeDay": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 99,
       "marginPts": 10.5
      },
@@ -1015,13 +1019,13 @@
      ],
      "total": 38.8,
      "tradeDay": {
-      "letter": "D",
-      "marginPct": -34,
+      "letter": "F",
+      "marginPct": -61,
       "marginPts": -124.1
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": -1,
+      "marginPct": -2,
       "marginPts": -6.6
      }
     },
@@ -1058,13 +1062,13 @@
      ],
      "total": 232,
      "tradeDay": {
-      "letter": "B",
-      "marginPct": 45,
+      "letter": "A",
+      "marginPct": 56,
       "marginPts": 165.7
      },
      "hindsight": {
       "letter": "B",
-      "marginPct": 40,
+      "marginPct": 50,
       "marginPts": 222.8
      }
     },
@@ -1098,12 +1102,12 @@
      "total": 93.8,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -11,
+      "marginPct": -18,
       "marginPts": -41.6
      },
      "hindsight": {
-      "letter": "D",
-      "marginPct": -39,
+      "letter": "F",
+      "marginPct": -72,
       "marginPts": -216.2
      }
     }
@@ -1223,13 +1227,13 @@
      ],
      "total": 32.3,
      "tradeDay": {
-      "letter": "D",
-      "marginPct": -25,
+      "letter": "F",
+      "marginPct": -65,
       "marginPts": -122.4
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": -6,
+      "marginPct": -12,
       "marginPts": -30.4
      }
     },
@@ -1273,13 +1277,13 @@
      ],
      "total": 280.3,
      "tradeDay": {
-      "letter": "B",
-      "marginPct": 42,
+      "letter": "A",
+      "marginPct": 59,
       "marginPts": 208.3
      },
      "hindsight": {
       "letter": "B",
-      "marginPct": 27,
+      "marginPct": 43,
       "marginPts": 146.4
      }
     },
@@ -1311,13 +1315,13 @@
      ],
      "total": 81.7,
      "tradeDay": {
-      "letter": "C",
-      "marginPct": -11,
+      "letter": "D",
+      "marginPct": -26,
       "marginPts": -56.6
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": 9,
+      "marginPct": 16,
       "marginPts": 47.7
      }
     },
@@ -1358,12 +1362,12 @@
      "total": 102.2,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -6,
+      "marginPct": -13,
       "marginPts": -29.3
      },
      "hindsight": {
-      "letter": "D",
-      "marginPct": -30,
+      "letter": "F-",
+      "marginPct": -87,
       "marginPts": -163.7
      }
     }
@@ -1995,13 +1999,13 @@
      ],
      "total": 13.1,
      "tradeDay": {
-      "letter": "D",
-      "marginPct": -45,
+      "letter": "F-",
+      "marginPct": -88,
       "marginPts": -190.5
      },
      "hindsight": {
-      "letter": "D",
-      "marginPct": -45,
+      "letter": "F-",
+      "marginPct": -88,
       "marginPts": -190.5
      }
     },
@@ -2025,12 +2029,12 @@
      "total": 301.6,
      "tradeDay": {
       "letter": "A",
-      "marginPct": 58,
+      "marginPct": 67,
       "marginPts": 242.3
      },
      "hindsight": {
       "letter": "A",
-      "marginPct": 58,
+      "marginPct": 67,
       "marginPts": 242.3
      }
     },
@@ -2061,12 +2065,12 @@
      "total": 105.5,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -12,
+      "marginPct": -20,
       "marginPts": -51.8
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": -12,
+      "marginPct": -20,
       "marginPts": -51.8
      }
     }
@@ -2767,7 +2771,8 @@
      ],
      "total": 0,
      "tradeDay": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -7.3
      },
@@ -2787,7 +2792,8 @@
      ],
      "total": 7.3,
      "tradeDay": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 7.3
      },
@@ -2989,7 +2995,8 @@
      ],
      "total": 0,
      "tradeDay": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -6.1
      },
@@ -3009,7 +3016,8 @@
      ],
      "total": 6.1,
      "tradeDay": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 6.1
      },
@@ -3476,7 +3484,8 @@
       "marginPts": 4.4
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -13.4
      }
@@ -3500,7 +3509,8 @@
       "marginPts": -4.4
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 13.4
      }
@@ -3594,7 +3604,8 @@
       "marginPts": -10.6
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 2.3
      }
@@ -3626,7 +3637,8 @@
       "marginPts": 10.6
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -2.3
      }
@@ -4632,7 +4644,8 @@
       "marginPts": 2.1
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 23.1
      }
@@ -4657,7 +4670,8 @@
       "marginPts": -2.1
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -23.1
      }
@@ -4895,7 +4909,8 @@
       "marginPts": -13.8
      },
      "hindsight": {
-      "letter": "D",
+      "letter": "C",
+      "small": true,
       "marginPct": -25,
       "marginPts": -3.3
      }
@@ -4926,7 +4941,8 @@
       "marginPts": 13.8
      },
      "hindsight": {
-      "letter": "B",
+      "letter": "C",
+      "small": true,
       "marginPct": 25,
       "marginPts": 3.3
      }
@@ -4959,7 +4975,8 @@
      ],
      "total": 9.2,
      "tradeDay": {
-      "letter": "B",
+      "letter": "C",
+      "small": true,
       "marginPct": 45,
       "marginPts": 5.7
      },
@@ -4983,7 +5000,8 @@
      ],
      "total": 3.5,
      "tradeDay": {
-      "letter": "D",
+      "letter": "C",
+      "small": true,
       "marginPct": -45,
       "marginPts": -5.7
      },
@@ -5018,7 +5036,8 @@
       "marginPts": 5.2
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 23
      }
@@ -5049,7 +5068,8 @@
       "marginPts": -5.2
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -23
      }
@@ -5158,6 +5178,7 @@
      },
      "hindsight": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      }
@@ -5190,6 +5211,7 @@
      },
      "hindsight": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      }
@@ -5445,13 +5467,13 @@
      ],
      "total": 9.7,
      "tradeDay": {
-      "letter": "D",
-      "marginPct": -29,
+      "letter": "F",
+      "marginPct": -84,
       "marginPts": -98.1
      },
      "hindsight": {
-      "letter": "D",
-      "marginPct": -25,
+      "letter": "F",
+      "marginPct": -66,
       "marginPts": -91.7
      }
     },
@@ -5482,12 +5504,12 @@
      "total": 144.2,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 24,
+      "marginPct": 39,
       "marginPts": 81.3
      },
      "hindsight": {
-      "letter": "C",
-      "marginPct": 13,
+      "letter": "B",
+      "marginPct": 23,
       "marginPts": 47.8
      }
     },
@@ -5539,13 +5561,13 @@
      ],
      "total": 120.1,
      "tradeDay": {
-      "letter": "C",
-      "marginPct": 15,
+      "letter": "B",
+      "marginPct": 26,
       "marginPts": 49.1
      },
      "hindsight": {
-      "letter": "B",
-      "marginPct": 39,
+      "letter": "A",
+      "marginPct": 56,
       "marginPts": 144
      }
     },
@@ -5572,12 +5594,12 @@
      "total": 59,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -10,
+      "marginPct": -21,
       "marginPts": -32.3
      },
      "hindsight": {
-      "letter": "D",
-      "marginPct": -27,
+      "letter": "F",
+      "marginPct": -74,
       "marginPts": -100.1
      }
     }
@@ -5610,11 +5632,13 @@
      "total": 11.1,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": -4,
       "marginPts": -1
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -22.8
      }
@@ -5642,11 +5666,13 @@
      "total": 12.2,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": 4,
       "marginPts": 1
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 22.8
      }
@@ -6365,12 +6391,12 @@
      "total": 97.1,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -23,
+      "marginPct": -40,
       "marginPts": -128.8
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": 0,
+      "marginPct": -1,
       "marginPts": -3.9
      }
     },
@@ -6401,12 +6427,12 @@
      "total": 158,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -7,
+      "marginPct": -11,
       "marginPts": -37.6
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": -12,
+      "marginPct": -19,
       "marginPts": -98
      }
     },
@@ -6450,12 +6476,12 @@
      "total": 294,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 30,
+      "marginPct": 39,
       "marginPts": 166.5
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": 13,
+      "marginPct": 18,
       "marginPts": 101.9
      }
     }
@@ -6568,10 +6594,14 @@
      "total": 91.1,
      "tradeDay": {
       "letter": "C",
-      "marginPct": 5,
+      "marginPct": 7,
       "marginPts": 11.8
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "marginPct": -5,
+      "marginPts": -18.3
+     }
     },
     {
      "rid": 3,
@@ -6589,7 +6619,10 @@
        "asset": "2023 R5",
        "value": 21.1,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 19.5,
+       "kept": true,
+       "became": "Kept: Jalen Hurts",
+       "hindsightBasis": "kept slot: curve value at pick 60, same as an unused pick there"
       },
       {
        "asset": "2023 R2",
@@ -6601,11 +6634,15 @@
      ],
      "total": 59.3,
      "tradeDay": {
-      "letter": "C",
-      "marginPct": -14,
+      "letter": "D",
+      "marginPct": -23,
       "marginPts": -35.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "F",
+      "marginPct": -84,
+      "marginPts": -228.4
+     }
     },
     {
      "rid": 7,
@@ -6637,10 +6674,14 @@
      "total": 99.3,
      "tradeDay": {
       "letter": "C",
-      "marginPct": 10,
+      "marginPct": 14,
       "marginPts": 24.1
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "A",
+      "marginPct": 57,
+      "marginPts": 246.7
+     }
     }
    ]
   },
@@ -7346,7 +7387,8 @@
      ],
      "total": 1.6,
      "tradeDay": {
-      "letter": "F",
+      "letter": "C",
+      "small": true,
       "marginPct": -86,
       "marginPts": -19.5
      },
@@ -7371,7 +7413,8 @@
      ],
      "total": 21.1,
      "tradeDay": {
-      "letter": "A",
+      "letter": "C",
+      "small": true,
       "marginPct": 86,
       "marginPts": 19.5
      },
@@ -7467,12 +7510,14 @@
      ],
      "total": 12.9,
      "tradeDay": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 94,
       "marginPts": 12.6
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 94,
       "marginPts": 12.6
      }
@@ -7491,12 +7536,14 @@
      ],
      "total": 0.4,
      "tradeDay": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -94,
       "marginPts": -12.6
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -94,
       "marginPts": -12.6
      }
@@ -7522,11 +7569,13 @@
      "total": 0,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      },
      "hindsight": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      }
@@ -7546,11 +7595,13 @@
      "total": 0,
      "tradeDay": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      },
      "hindsight": {
       "letter": "C",
+      "small": true,
       "marginPct": 0,
       "marginPts": 0
      }
@@ -7710,7 +7761,10 @@
        "asset": "2024 R14",
        "value": 4.1,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 4.5,
+       "kept": true,
+       "became": "Kept: Brock Purdy",
+       "hindsightBasis": "kept slot: curve value at pick 157, same as an unused pick there"
       }
      ],
      "total": 56.3,
@@ -7719,7 +7773,11 @@
       "marginPct": 59,
       "marginPts": 41.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "A",
+      "marginPct": 72,
+      "marginPts": 47.3
+     }
     },
     {
      "rid": 8,
@@ -7746,7 +7804,11 @@
       "marginPct": -59,
       "marginPts": -41.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "F",
+      "marginPct": -72,
+      "marginPts": -47.3
+     }
     }
    ]
   },
@@ -7878,7 +7940,11 @@
       "marginPct": -59,
       "marginPts": -41.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "F",
+      "marginPct": -72,
+      "marginPts": -47.3
+     }
     },
     {
      "rid": 8,
@@ -7895,7 +7961,10 @@
        "asset": "2024 R14",
        "value": 4.1,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 4.5,
+       "kept": true,
+       "became": "Kept: Brock Purdy",
+       "hindsightBasis": "kept slot: curve value at pick 157, same as an unused pick there"
       }
      ],
      "total": 56.3,
@@ -7904,7 +7973,11 @@
       "marginPct": 59,
       "marginPts": 41.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "A",
+      "marginPct": 72,
+      "marginPts": 47.3
+     }
     }
    ]
   },
@@ -8157,16 +8230,25 @@
        "asset": "2024 R15",
        "value": 3.4,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 3.1,
+       "kept": true,
+       "became": "Kept: Evan Engram",
+       "hindsightBasis": "kept slot: curve value at pick 180, same as an unused pick there"
       }
      ],
      "total": 3.4,
      "tradeDay": {
-      "letter": "F",
+      "letter": "C",
+      "small": true,
       "marginPct": -57,
       "marginPts": -8.8
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": -60,
+      "marginPts": -9.1
+     }
     },
     {
      "rid": 7,
@@ -8182,11 +8264,17 @@
      ],
      "total": 12.2,
      "tradeDay": {
-      "letter": "A",
+      "letter": "C",
+      "small": true,
       "marginPct": 57,
       "marginPts": 8.8
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": 60,
+      "marginPts": 9.1
+     }
     }
    ]
   },
@@ -8208,11 +8296,17 @@
      ],
      "total": 12.2,
      "tradeDay": {
-      "letter": "A",
+      "letter": "C",
+      "small": true,
       "marginPct": 57,
       "marginPts": 8.8
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": 60,
+      "marginPts": 9.1
+     }
     },
     {
      "rid": 7,
@@ -8223,16 +8317,25 @@
        "asset": "2024 R15",
        "value": 3.4,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 3.1,
+       "kept": true,
+       "became": "Kept: Evan Engram",
+       "hindsightBasis": "kept slot: curve value at pick 180, same as an unused pick there"
       }
      ],
      "total": 3.4,
      "tradeDay": {
-      "letter": "F",
+      "letter": "C",
+      "small": true,
       "marginPct": -57,
       "marginPts": -8.8
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": -60,
+      "marginPts": -9.1
+     }
     }
    ]
   },
@@ -9572,7 +9675,8 @@
       "marginPts": 0
      },
      "hindsight": {
-      "letter": "A+",
+      "letter": "C",
+      "small": true,
       "marginPct": 100,
       "marginPts": 22
      }
@@ -9603,7 +9707,8 @@
       "marginPts": 0
      },
      "hindsight": {
-      "letter": "F-",
+      "letter": "C",
+      "small": true,
       "marginPct": -100,
       "marginPts": -22
      }
@@ -9872,12 +9977,12 @@
      "total": 30.5,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -31,
+      "marginPct": -55,
       "marginPts": -75.2
      },
      "hindsight": {
       "letter": "D",
-      "marginPct": -31,
+      "marginPct": -55,
       "marginPts": -75.2
      }
     },
@@ -9902,12 +10007,12 @@
      "total": 59.5,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -13,
+      "marginPct": -21,
       "marginPts": -31.8
      },
      "hindsight": {
       "letter": "C",
-      "marginPct": -13,
+      "marginPct": -21,
       "marginPts": -31.8
      }
     },
@@ -9949,12 +10054,12 @@
      "total": 152,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 44,
+      "marginPct": 54,
       "marginPts": 106.9
      },
      "hindsight": {
       "letter": "B",
-      "marginPct": 44,
+      "marginPct": 54,
       "marginPts": 106.9
      }
     }
@@ -10734,7 +10839,10 @@
        "asset": "2023 R5",
        "value": 21.1,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 19.5,
+       "kept": true,
+       "became": "Kept: Jalen Hurts",
+       "hindsightBasis": "kept slot: curve value at pick 60, same as an unused pick there"
       }
      ],
      "total": 83.6,
@@ -10743,7 +10851,11 @@
       "marginPct": 15,
       "marginPts": 21.7
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "B",
+      "marginPct": 27,
+      "marginPts": 35.1
+     }
     },
     {
      "rid": 3,
@@ -10786,7 +10898,11 @@
       "marginPct": -15,
       "marginPts": -21.7
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "D",
+      "marginPct": -27,
+      "marginPts": -35.1
+     }
     }
    ]
   },
@@ -10815,11 +10931,17 @@
      ],
      "total": 10.9,
      "tradeDay": {
-      "letter": "B",
+      "letter": "C",
+      "small": true,
       "marginPct": 37,
       "marginPts": 5.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": 19,
+      "marginPts": 2.2
+     }
     },
     {
      "rid": 10,
@@ -10836,16 +10958,25 @@
        "asset": "2025 R13",
        "value": 5,
        "basis": "mid-slot curve",
-       "hindsight": "Pending"
+       "hindsight": 4.6,
+       "kept": true,
+       "became": "Kept: Nico Collins",
+       "hindsightBasis": "kept slot: curve value at pick 156, same as an unused pick there"
       }
      ],
      "total": 5,
      "tradeDay": {
-      "letter": "D",
+      "letter": "C",
+      "small": true,
       "marginPct": -37,
       "marginPts": -5.9
      },
-     "hindsight": "Pending"
+     "hindsight": {
+      "letter": "C",
+      "small": true,
+      "marginPct": -19,
+      "marginPts": -2.2
+     }
     }
    ]
   },

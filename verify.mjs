@@ -2894,6 +2894,34 @@ group("Trades: v2 grade chips");
   check("trade cards show grade chips", chips > 50, `${chips}`);
   const overflow = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].some(e => e.scrollWidth > e.clientWidth + 1));
   check("chips don't overflow a trade side", !overflow);
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(300);
+  const overflow390 = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].filter(e => e.scrollWidth > e.clientWidth + 1).length);
+  check("chips don't overflow a trade side at 390px", overflow390 === 0, `${overflow390}`);
+  if (vp) await page.setViewportSize(vp);
+  const small = Object.values(G.trades).filter(t => t.sides.reduce((a, s) => a + s.total, 0) < 25);
+  check("trades under 25 VOR total grade C · small trade, both sides, point margin kept",
+    small.length > 0 && small.every(t => t.sides.every(s => s.tradeDay.letter === "C" && s.tradeDay.small && typeof s.tradeDay.marginPts === "number")), `${small.length} trades`);
+  check("every grade stays within ±100%", sides.every(s => Math.abs(s.tradeDay.marginPct) <= 100 && (typeof s.hindsight === "string" || Math.abs(s.hindsight.marginPct) <= 100)));
+  const keptPicks = Object.values(G.trades).flatMap(t => t.sides.flatMap(s => s.assets)).filter(a => a.kept);
+  const M0 = await import("./build-trade-grades.mjs");
+  check("a pick spent on a keeper is valued at its slot's curve value and labelled Kept: <player>",
+    keptPicks.length > 0 && keptPicks.every(a => /^Kept: \S/.test(a.became) && Math.abs(a.hindsight - Math.round(M0.curve(Number(a.hindsightBasis.match(/pick (\d+)/)[1])) * 10) / 10) < 0.05), `${keptPicks.length} kept picks`);
+  // unit checks on the exported math
+  const M = await import("./build-trade-grades.mjs");
+  const near = (a, b) => Math.abs(a - b) < 1e-9;
+  check("cutoffs: 21.5% C, 21.6% B, -55.3% F, 86.9% A+, -86.8% F", M.letter(0.215) === "C" && M.letter(0.216) === "B" && M.letter(-0.553) === "F" && M.letter(0.869) === "A+" && M.letter(-0.868) === "F");
+  check("margin: two teams is side minus other over the total", near(M.marginPts(30, 40, 2), 20) && near(M.marginPct(30, 40, 2), 0.5));
+  check("margin: three teams uses the average other side and is bounded", near(M.marginPts(0, 90, 3), -45) && near(M.marginPct(0, 90, 3), -1) && near(M.marginPct(90, 90, 3), 1)
+    && near([60, 20, 10].reduce((a, x) => a + M.marginPts(x, 90, 3), 0), 0));
+  check("grade: under 25 VOR total is C · small trade with the margin kept", (g => g.letter === "C" && g.small && g.marginPts === 10)(M.grade(10, 10, 2)) && !M.grade(30, 30, 2).small);
+  check("regress: R15→12, R10→7, R9→7, R5→3, R4→3, R1→1", [15, 10, 9, 5, 4, 1].map(M.regress).join() === "12,7,7,3,3,1");
+  const H = new Map([[2024, new Map([["p", { round: 15, by: "u" }]])], [2025, new Map([["p", { round: 15, by: "u" }]])], [2026, new Map([["p", { round: 15, by: "v" }]])]]);
+  check("nextCost: kept 2 years regresses from 2027; not before; trade resets only when switched on",
+    M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2027, TRADE_RESETS_YEARS: false }).nextCostRound === 12
+    && M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2028, TRADE_RESETS_YEARS: false }).nextCostRound === 15
+    && M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2027, TRADE_RESETS_YEARS: true }).yearsKept === 0);
+  check("keeperValue: 0.8 x (0.58 x VOR - cost value), floored at 0", near(M.keeperValue(100, 15), 0.8 * (58 - M.curve(M.midPick(15)))) && M.keeperValue(0, 1) === 0);
 }
 
 group("Trades: a synthetic trade grades to a known answer");
