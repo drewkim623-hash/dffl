@@ -1231,6 +1231,47 @@
     .wstrip:has(> .wgame:nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
   }
   select{background:var(--raised);color:var(--ink);border:1px solid var(--edge);color-scheme:dark}
+  /* Records: hero for the all-time high, then ranked list rows in a two-up grid. */
+  .rhero{position:relative;overflow:hidden;margin:18px 0 6px;padding:22px 22px 20px;border-radius:var(--r);
+    border:1px solid rgba(var(--a-rgb),.30);box-shadow:0 18px 40px -22px rgba(var(--a-rgb),.35);background:
+    radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.22),transparent 70%),
+    radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.18),transparent 70%),
+    linear-gradient(160deg,var(--deep),var(--surface) 65%)}
+  .rhero::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .rhero .l{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .rhero .big{font:700 clamp(56px,17vw,88px)/1 var(--disp);letter-spacing:-.05em;color:var(--gold);margin:8px 0 12px;
+    font-variant-numeric:tabular-nums;text-shadow:0 0 24px rgba(var(--a-rgb),.45),0 2px 0 #000}
+  .rhero .who{display:flex;align-items:center;gap:10px;min-width:0}
+  .rhero .nm{font:700 26px/1.1 var(--disp);letter-spacing:-.02em;overflow-wrap:anywhere}
+  .rhero .c{color:var(--ink-2,var(--muted));font-size:14px;margin-top:8px}
+  .rgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:0 18px}
+  .rblock{min-width:0}
+  @media (min-width:1000px){.rgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .trophies.lst,.recs.lst{display:block;gap:0}
+  .lst{display:block;background:var(--surface);border:1px solid var(--edge);border-radius:var(--r);overflow:hidden;
+    box-shadow:0 10px 30px -18px #000}
+  .lst>.it{position:relative;border:0;border-radius:0;background:none;padding:12px 14px}
+  .lst>.it+.it{border-top:1px solid var(--edge)}
+  .lst>.it:first-child::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;background:linear-gradient(var(--gold),transparent)}
+  .trophy.it::before{height:auto;inset:12px auto 12px 0}
+  .trophy.it:not(:first-child)::before{content:none}
+  .trophy.it{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;align-items:center}
+  .trophy.it .yr{grid-row:span 2;font:700 20px/1 var(--disp);letter-spacing:-.02em;color:var(--gold);text-transform:none}
+  .trophy.it .win{margin:0;gap:9px;flex-wrap:wrap;min-width:0}
+  .trophy.it .win .nm{font-size:17px;overflow-wrap:anywhere}
+  .trophy.it .ch{margin:0;padding:3px 8px;border-radius:999px;background:var(--gold);color:#1a1020;font-size:10px;letter-spacing:.1em;font-weight:800}
+  .trophy.it dl{margin:0;display:flex;flex-wrap:wrap;gap:2px 6px;font-size:12.5px}
+  .trophy.it dt{color:var(--muted)} .trophy.it dd{text-align:left;font-weight:600;margin-right:6px}
+  .rec.it{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:12px;align-items:center}
+  .rec.it .v{margin:0;width:94px;padding:8px 8px;border-radius:10px;text-align:center;font-size:19px;color:var(--gold);
+    background:rgba(var(--a-rgb),.12);border:1px solid rgba(var(--a-rgb),.35)}
+  .rec.it.down .v{color:var(--red);background:rgba(230,103,103,.10);border-color:rgba(230,103,103,.32)}
+  .rec.it .avs{display:flex}
+  .rec.it .avs .av+.av{margin-left:-8px}
+  .rec.it .l{font-size:10.5px}
+  .rec.it .w{font-size:14px;overflow-wrap:anywhere}
+  .rec.it .c{margin-top:1px}
+  @media (max-width:420px){.rec.it{gap:10px}.rec.it .v{width:76px;font-size:16px;padding:7px 6px}}
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
@@ -2457,49 +2498,79 @@ function panelManagers(AT) {
 function panelRecords(RB) {
   const p = el("div", "panel"); p.dataset.panel = "records";
 
-  p.appendChild(sechead("Trophy case",
-    "Final placements come from Sleeper's playoff and consolation brackets — so last place is whoever actually lost the toilet bowl, not just whoever had the worst record."));
-  const grid = el("div", "trophies");
+  const when = s => `${s.season} · week ${s.week}${s.playoff ? " (playoffs)" : ""}`;
+  const gwhen = x => `${x.g.season} · week ${x.g.week}${x.g.playoff ? " (playoffs)" : ""}`;
+  const vs = x => `${nameOf(x.g.a.uid)} ${f2(x.g.a.pts)} — ${f2(x.g.b.pts)} ${nameOf(x.g.b.uid)}`;
+  const both = x => [x.g.a.uid, x.g.b.uid];
+
+  // The headline all-time record leads the tab as the hero card.
+  if (RB.high) {
+    const hero = el("div", "rhero");
+    hero.innerHTML = `<div class="l">Highest score ever</div>
+      <div class="big">${esc(f2(RB.high.pts))}</div>
+      <div class="who">${avatarHTML(RB.high.uid)}<span class="nm">${esc(nameOf(RB.high.uid))}</span></div>
+      <div class="c">${esc(`${when(RB.high)} · beat ${nameOf(RB.high.opp.uid)}`)}</div>`;
+    p.appendChild(hero);
+  }
+
+  const rgrid = el("div", "rgrid");
+  const block = (title, sub) => {
+    const b = el("section", "rblock");
+    b.appendChild(sechead(title, sub));
+    rgrid.appendChild(b);
+    return b;
+  };
+
+  const tb = block("Trophy case",
+    "Final placements come from Sleeper's playoff and consolation brackets — so last place is whoever actually lost the toilet bowl, not just whoever had the worst record.");
+  const grid = el("div", "trophies lst");
   const done = DB.seasons.filter(s => s.complete && Object.keys(s.places).length);
   if (!done.length) grid.appendChild(el("div", "empty", "<b>No completed seasons yet</b>Trophies appear the moment a championship game finalizes."));
   for (const s of done) {
     const u = pl => s.uidOf.get(s.places[pl]);
     const last = Math.max(...Object.keys(s.places).map(Number));
     const cu = u(1);
-    const card = el("div", "trophy");
+    const card = el("div", "trophy it");
     card.innerHTML = `<div class="yr">${esc(s.season)}</div>
-      <div class="ch">Champion</div>
-      <div class="win">${avatarHTML(cu)}<span class="nm">${esc(nameOf(cu))}</span></div>
+      <div class="win">${avatarHTML(cu)}<span class="nm">${esc(nameOf(cu))}</span><span class="ch">Champion</span></div>
       <dl><dt>Runner-up</dt><dd>${esc(nameOf(u(2)))}</dd>
       <dt>Third</dt><dd>${esc(nameOf(u(3)))}</dd>
       <dt>Last place</dt><dd class="last">${esc(nameOf(u(last)))}</dd></dl>`;
     grid.appendChild(card);
   }
-  p.appendChild(grid);
+  tb.appendChild(grid);
 
-  p.appendChild(sechead("The record book", "Every game ever played, regular season and playoffs."));
-  const when = s => `${s.season} · week ${s.week}${s.playoff ? " (playoffs)" : ""}`;
-  const gwhen = x => `${x.g.season} · week ${x.g.week}${x.g.playoff ? " (playoffs)" : ""}`;
-  const vs = x => `${nameOf(x.g.a.uid)} ${f2(x.g.a.pts)} — ${f2(x.g.b.pts)} ${nameOf(x.g.b.uid)}`;
-  const cards = [
-    RB.high && { c: "up", l: "Highest score ever", v: f2(RB.high.pts), w: nameOf(RB.high.uid), x: `${when(RB.high)} · beat ${nameOf(RB.high.opp.uid)}` },
-    RB.low && { c: "down", l: "Lowest score ever", v: f2(RB.low.pts), w: nameOf(RB.low.uid), x: `${when(RB.low)} · vs ${nameOf(RB.low.opp.uid)}` },
-    RB.blowout && { c: "up", l: "Biggest blowout", v: "+" + f2(RB.blowout.margin), w: vs(RB.blowout), x: gwhen(RB.blowout) },
-    RB.nailbiter && { c: "down", l: "Closest finish", v: f2(RB.nailbiter.margin), w: vs(RB.nailbiter), x: gwhen(RB.nailbiter) },
-    RB.unlucky && { c: "down", l: "Best score that still lost", v: f2(RB.unlucky.pts), w: nameOf(RB.unlucky.uid), x: `${when(RB.unlucky)} · lost to ${nameOf(RB.unlucky.opp.uid)} (${f2(RB.unlucky.opp.pts)})` },
-    RB.lucky && { c: "up", l: "Worst score that still won", v: f2(RB.lucky.pts), w: nameOf(RB.lucky.uid), x: `${when(RB.lucky)} · beat ${nameOf(RB.lucky.opp.uid)} (${f2(RB.lucky.opp.pts)})` },
-    RB.shootout && { c: "up", l: "Highest-scoring game", v: f2(RB.shootout.total), w: vs(RB.shootout), x: gwhen(RB.shootout) },
-    RB.snoozer && { c: "down", l: "Lowest-scoring game", v: f2(RB.snoozer.total), w: vs(RB.snoozer), x: gwhen(RB.snoozer) },
-    RB.streakW && RB.streakW.uid && { c: "up", l: "Longest win streak", v: RB.streakW.n + "W", w: nameOf(RB.streakW.uid), x: `ended ${RB.streakW.end.season} week ${RB.streakW.end.week}` },
-    RB.streakL && RB.streakL.uid && { c: "down", l: "Longest losing streak", v: RB.streakL.n + "L", w: nameOf(RB.streakL.uid), x: `ended ${RB.streakL.end.season} week ${RB.streakL.end.week}` },
-    RB.seasonHi && { c: "up", l: "Best season of scoring", v: f2(RB.seasonHi.pf), w: nameOf(RB.seasonHi.uid), x: `${RB.seasonHi.season} regular season` },
-    RB.seasonLo && { c: "down", l: "Worst season of scoring", v: f2(RB.seasonLo.pf), w: nameOf(RB.seasonLo.uid), x: `${RB.seasonLo.season} regular season` },
-  ].filter(Boolean);
-  const rg = el("div", "recs");
-  rg.innerHTML = cards.map(c =>
-    `<div class="rec ${c.c}"><div class="l">${esc(c.l)}</div><div class="v">${esc(c.v)}</div>
-     <div class="w">${esc(c.w)}</div><div class="c">${esc(c.x)}</div></div>`).join("");
-  p.appendChild(rg);
+  // The record book, grouped: single weeks, whole games, then streaks and seasons.
+  const groups = [
+    ["The record book", "Every game ever played, regular season and playoffs. Single weeks first.", [
+      RB.low && { c: "down", l: "Lowest score ever", v: f2(RB.low.pts), u: [RB.low.uid], w: nameOf(RB.low.uid), x: `${when(RB.low)} · vs ${nameOf(RB.low.opp.uid)}` },
+      RB.unlucky && { c: "down", l: "Best score that still lost", v: f2(RB.unlucky.pts), u: [RB.unlucky.uid], w: nameOf(RB.unlucky.uid), x: `${when(RB.unlucky)} · lost to ${nameOf(RB.unlucky.opp.uid)} (${f2(RB.unlucky.opp.pts)})` },
+      RB.lucky && { c: "up", l: "Worst score that still won", v: f2(RB.lucky.pts), u: [RB.lucky.uid], w: nameOf(RB.lucky.uid), x: `${when(RB.lucky)} · beat ${nameOf(RB.lucky.opp.uid)} (${f2(RB.lucky.opp.pts)})` },
+    ]],
+    ["Games", "Both sides of the scoreboard.", [
+      RB.blowout && { c: "up", l: "Biggest blowout", v: "+" + f2(RB.blowout.margin), u: both(RB.blowout), w: vs(RB.blowout), x: gwhen(RB.blowout) },
+      RB.nailbiter && { c: "down", l: "Closest finish", v: f2(RB.nailbiter.margin), u: both(RB.nailbiter), w: vs(RB.nailbiter), x: gwhen(RB.nailbiter) },
+      RB.shootout && { c: "up", l: "Highest-scoring game", v: f2(RB.shootout.total), u: both(RB.shootout), w: vs(RB.shootout), x: gwhen(RB.shootout) },
+      RB.snoozer && { c: "down", l: "Lowest-scoring game", v: f2(RB.snoozer.total), u: both(RB.snoozer), w: vs(RB.snoozer), x: gwhen(RB.snoozer) },
+    ]],
+    ["Streaks & seasons", "", [
+      RB.streakW && RB.streakW.uid && { c: "up", l: "Longest win streak", v: RB.streakW.n + "W", u: [RB.streakW.uid], w: nameOf(RB.streakW.uid), x: `ended ${RB.streakW.end.season} week ${RB.streakW.end.week}` },
+      RB.streakL && RB.streakL.uid && { c: "down", l: "Longest losing streak", v: RB.streakL.n + "L", u: [RB.streakL.uid], w: nameOf(RB.streakL.uid), x: `ended ${RB.streakL.end.season} week ${RB.streakL.end.week}` },
+      RB.seasonHi && { c: "up", l: "Best season of scoring", v: f2(RB.seasonHi.pf), u: [RB.seasonHi.uid], w: nameOf(RB.seasonHi.uid), x: `${RB.seasonHi.season} regular season` },
+      RB.seasonLo && { c: "down", l: "Worst season of scoring", v: f2(RB.seasonLo.pf), u: [RB.seasonLo.uid], w: nameOf(RB.seasonLo.uid), x: `${RB.seasonLo.season} regular season` },
+    ]],
+  ];
+  for (const [title, sub, items] of groups) {
+    const cards = items.filter(Boolean);
+    if (!cards.length) continue;
+    const rg = el("div", "recs lst");
+    rg.innerHTML = cards.map(c =>
+      `<div class="rec it ${c.c}"><div class="v">${esc(c.v)}</div>
+       <div class="avs">${c.u.map(x => avatarHTML(x, "sm")).join("")}</div>
+       <div class="bd"><div class="l">${esc(c.l)}</div><div class="w">${esc(c.w)}</div><div class="c">${esc(c.x)}</div></div></div>`).join("");
+    block(title, sub || undefined).appendChild(rg);
+  }
+  p.appendChild(rgrid);
 
   const row = s => `<tr>
     <td><span class="nmcell">${avatarHTML(s.uid, "sm")}${esc(nameOf(s.uid))}</span></td>
