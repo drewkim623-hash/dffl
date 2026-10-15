@@ -6630,7 +6630,7 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
         && /::error::/.test(script) && /exit 1\s*$/.test(script) && !/--force|push -f\b/.test(y));
   }
   {
-    // sleeper-poll.yml and the shared sleeper-data group. Static: files only.
+    // sleeper-poll.yml and the concurrency groups. Static: files only.
     const fs = await import("node:fs");
     const wfPath = f => join(ROOT, ".github", "workflows", f);
     const names = ["weekly-data.yml", "injury-refresh.yml", "sleeper-poll.yml"];
@@ -6638,9 +6638,19 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     const poll = wfs["sleeper-poll.yml"];
     check("sleeper-poll.yml exists with the 7,27,47 cron and workflow_dispatch",
       /cron:\s*"7,27,47 \* \* \* \*"/.test(poll) && /workflow_dispatch/.test(poll));
-    check("weekly-data, injury-refresh and sleeper-poll share concurrency group sleeper-data, no cancel-in-progress",
-      names.every(f => /concurrency:\s*\n\s+group: sleeper-data\s*\n\s+cancel-in-progress: false/.test(wfs[f])),
-      names.filter(f => !/group: sleeper-data/.test(wfs[f])).join(","));
+    // GitHub keeps one pending run per group, so weekly-data stays out of the
+    // poll's group: a queued poll must never cancel a pending weekly run.
+    const group = (f, g) => new RegExp(`concurrency:\\s*\\n\\s+group: ${g}\\s*\\n\\s+cancel-in-progress: false`).test(wfs[f]);
+    check("sleeper-poll and injury-refresh share concurrency group sleeper-data, no cancel-in-progress",
+      group("sleeper-poll.yml", "sleeper-data") && group("injury-refresh.yml", "sleeper-data"));
+    check("weekly-data.yml keeps its own concurrency group weekly-data, no cancel-in-progress",
+      group("weekly-data.yml", "weekly-data") && !/group: sleeper-data/.test(wfs["weekly-data.yml"]));
+    const retry = w => { const s = (w.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
+      return (s.match(/git pull --rebase origin "\$branch" && git push origin "HEAD:\$branch"/g) || []).length === 2
+        && /git rebase --abort/.test(s) && /git reset --hard "origin\/\$branch"/.test(s)
+        && /::error::/.test(s) && /exit 1\s*$/.test(s) && !/--force|push -f\b|push\s+\+/.test(w); };
+    check("all three workflows: pull --rebase + push; on failure abort, reset to origin, regenerate, retry once; no force",
+      names.every(f => retry(wfs[f])), names.filter(f => !retry(wfs[f])).join(","));
     // build-email.mjs only writes data/odds-snapshot.json; every other mail-ish script is the routine's.
     const mailish = s => s !== "build-email.mjs" && /compose-email|send|sent-emails|mail|blast|poll-tally/.test(s);
     const bad = names.filter(f => [...wfs[f].matchAll(/node\s+([\w.-]+\.mjs)/g)].some(m => mailish(m[1]))

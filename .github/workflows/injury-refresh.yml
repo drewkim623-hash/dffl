@@ -36,9 +36,10 @@ permissions:
   contents: write
   actions: read
 
-# Shared with weekly-data.yml and sleeper-poll.yml: all three write the same
-# files and push to main. The Sunday gate above still skips while weekly-data
-# is queued or running.
+# Shared with sleeper-poll.yml: both write the same files and push to main.
+# weekly-data.yml keeps its own group so a queued poll can never cancel a
+# pending weekly-data run (GitHub keeps one pending run per group); the Sunday
+# gate above skips while weekly-data is queued or running.
 concurrency:
   group: sleeper-data
   cancel-in-progress: false

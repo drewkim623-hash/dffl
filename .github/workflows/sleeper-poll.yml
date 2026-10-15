@@ -22,8 +22,10 @@ on:
 permissions:
   contents: write
 
-# Shared with weekly-data.yml and injury-refresh.yml: all three write the same
-# files and push to main.
+# Shared with injury-refresh.yml: both write the same files and push to main.
+# weekly-data.yml keeps its own group so a queued poll can never cancel a
+# pending weekly-data run (GitHub keeps one pending run per group); a collision
+# with it is left to the commit step's rebase-and-retry below.
 concurrency:
   group: sleeper-data
   cancel-in-progress: false

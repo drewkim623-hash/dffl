@@ -46,10 +46,11 @@ on:
 permissions:
   contents: write
 
-# Shared with injury-refresh.yml and sleeper-poll.yml: all three write the
-# same files and push to main.
+# Its own group on purpose, not sleeper-data: GitHub keeps one pending run per
+# group and a newer pending run replaces it, so sharing with the 20-minute
+# sleeper-poll.yml would let a queued poll cancel a pending weekly-data run.
 concurrency:
-  group: sleeper-data
+  group: weekly-data
   cancel-in-progress: false
 
 jobs:
