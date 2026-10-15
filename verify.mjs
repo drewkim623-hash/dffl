@@ -864,8 +864,9 @@ const powerDom = await page.evaluate(() => {
     marks, arrows: marks.filter(m => /[▲▼]/.test(m)).length,
     // the colour is never the only carrier: an arrow and a number ride with it
     colourNotAlone: [...panel.querySelectorAll(".mv.up, .mv.down")].every(n => /[▲▼]\s*\d+/.test(n.textContent)),
-    weightsShown: /40%[\s\S]*25%[\s\S]*20%[\s\S]*15%/.test(panel.innerText),
-    namesWeights: /All-play win %[\s\S]*Form, last 3 weeks[\s\S]*Points for[\s\S]*Actual record/.test(panel.innerText),
+    // the methodology sits in a collapsed <details>, which innerText skips
+    weightsShown: /40%[\s\S]*25%[\s\S]*20%[\s\S]*15%/.test(panel.textContent),
+    namesWeights: /All-play win %[\s\S]*Form, last 3 weeks[\s\S]*Points for[\s\S]*Actual record/.test(panel.textContent),
     nan: /NaN|undefined|Infinity/.test(panel.innerText),
   };
 });
