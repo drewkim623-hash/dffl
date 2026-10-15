@@ -490,7 +490,7 @@ const gl = await page.evaluate(() => {
   };
 });
 check("odds tab contains the game-lines board", gl.inOdds);
-check("game lines sit above the futures with a two-pill sub-nav", gl.first && gl.nav.join("/") === "Game lines/Futures", gl.nav.join("/"));
+check("game lines sit above the futures with an underline tab nav", gl.first && gl.nav.join("/") === "Game lines/Playoffs/Division/Title", gl.nav.join("/"));
 check("one card per matchup this week", gl.cards.length === gl.expected && gl.expected > 0, `${gl.cards.length} cards vs ${gl.expected} matchups`);
 check("every card carries both managers' rids", gl.cards.every(c => c.rids));
 check("every card shows a moneyline (or result) for both teams", gl.cards.every(c => c.mlBoth && (c.priced || c.resultOnly)),
