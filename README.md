@@ -108,6 +108,12 @@ one card per game. Shape:
 }
 ```
 
+`articles[]` entries carry `blocks[]`: `p`, `h`, `stat`, `note`, `bars`, `cards`, `picks`,
+`bracket`, and `tiers`. **`tiers` (tier cards) is the default odds graphic** for any piece that
+charts playoff or title odds; its fields and rules are in
+[docs/graphics-standard.md](docs/graphics-standard.md), and `node check-recaps.mjs` validates it.
+Open `?tierdemo` on the site for a sample.
+
 To publish a week, replace `recaps.json` in the repo with the updated version. On GitHub you can
 do it in the browser: open the file, click the pencil icon, paste, commit.
 

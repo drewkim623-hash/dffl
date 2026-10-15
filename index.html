@@ -856,6 +856,48 @@
   .anote{font-size:13px;line-height:1.6;color:var(--muted);border-top:1px solid var(--grid);
     padding-top:14px;margin:24px 0 0}
 
+  /* ============ tier cards: the default odds graphic (docs/graphics-standard.md) ============ */
+  .tiers{--tstub:4px;margin:26px 0;max-width:none;background:linear-gradient(180deg,#121218,#0d0d12);
+    border:1px solid var(--ring);border-top:3px solid var(--red);border-radius:var(--r);padding:16px 14px 14px}
+  .tiers .tt{font-size:22px;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;font-stretch:condensed;line-height:1.1}
+  .tiers .ti{font-size:13px;color:var(--ink-2);margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tgrp{margin-top:16px}
+  .tgrp .tn{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--red);margin-bottom:8px}
+  .tgrp .tn::after{content:"";flex:1;height:1px;background:var(--grid)}
+  .tgrp .tn span{order:2;font-weight:600;letter-spacing:.08em;color:var(--muted)}
+  .tiers .tk{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+  .tgrp.t2 .tn{color:var(--ink-2)} .tgrp.t3 .tn{color:var(--muted)}
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+  .tcard{min-width:0;background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:10px 11px 11px}
+  .tcard.out{opacity:.6}
+  .tcard.cut{box-shadow:0 2px 0 0 var(--red)}
+  .tcard .thero{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px}
+  .tcard .thero b{font-size:32px;font-weight:900;line-height:1;letter-spacing:-.03em;font-stretch:condensed;
+    font-variant-numeric:tabular-nums}
+  .tcard .thero small{font-size:.5em;font-weight:800;margin-left:1px;color:var(--ink-2)}
+  .tmv{font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .tmv.up{color:var(--plus)} .tmv.down{color:var(--red)}
+  .tst{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    padding:2px 6px;border-radius:999px;border:1px solid var(--ring);color:var(--ink-2)}
+  .tst.in{color:var(--plus);border-color:rgba(58,208,127,.4)} .tst.out{color:var(--muted)}
+  .tcard .tteam{margin-top:7px;font-size:14px;font-weight:800;line-height:1.25;overflow-wrap:anywhere}
+  .tcard .tsd{display:inline-block;min-width:16px;margin-right:5px;font-size:10.5px;font-weight:800;color:var(--muted);
+    font-variant-numeric:tabular-nums}
+  .tcard .tmg{font-size:12px;line-height:1.3;color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
+  .tcard .tbar{height:5px;border-radius:3px;background:var(--raised);margin-top:9px;overflow:hidden}
+  .tcard .tbar span{display:block;height:100%;border-radius:3px;background:var(--red)}
+  .tgrp.t2 .tbar span{background:#c95656} .tgrp.t3 .tbar span{background:#8f4444}
+  .tcard .tbye{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);margin-top:6px}
+  .tiers .tfoot{font-size:11.5px;line-height:1.45;color:var(--muted);margin:14px 0 0}
+  .tiers .tlink{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:var(--red);text-decoration:none}
+  @media (max-width:430px){
+    .tiers{padding:14px 11px 12px}
+    .tcards{grid-template-columns:1fr 1fr}
+    .tcard .tmg{font-size:13px;color:var(--ink-2)}
+    .tcard .tbye{font-size:11.5px;color:var(--ink-2)}
+  }
+
   .abars{margin:24px 0;max-width:none}
   .abars .at{font-size:15px;font-weight:800;letter-spacing:-.01em}
   .abars .as{font-size:12.5px;color:var(--muted);margin:3px 0 14px;line-height:1.45}
@@ -3236,8 +3278,91 @@ function bracketHTML(b) {
     <div class="scroll"><div class="brcols">${cols}</div></div></div>`;
 }
 
+/**
+ * Percentages for a set of values: whole numbers, except where two different
+ * values would print the same whole number (or a live chance would print 0 or
+ * a not-certain one 100). Those get one decimal, so close teams stay apart.
+ */
+function tierPcts(vals) {
+  const need = v => vals.some(w => w !== v && Math.round(w) === Math.round(v))
+    || (Math.round(v) === 0 && v > 0) || (Math.round(v) === 100 && v < 100);
+  return vals.map(v => v == null || !isFinite(v) ? "" : need(v) && !Number.isInteger(v) ? v.toFixed(1) : String(Math.round(v)));
+}
+
+/**
+ * The default odds graphic: tier cards. Hero number first, team and managers
+ * under it, a bar that never vanishes, a bye chance when there is one. The
+ * change arrow appears only when the row carries last week's number.
+ */
+function tiersHTML(b) {
+  // Field names follow the reference port too: sub = intro, note = foot, link = the link's words.
+  const intro = b.intro || b.sub, foot = b.foot || b.note;
+  // A row names its team by a manager's display_name; show the team name above it when we know one.
+  const who = h => {
+    const m = typeof DB !== "undefined" && DB.mgr && [...DB.mgr.values()].find(x => String(x.name).toLowerCase() === String(h || "").toLowerCase());
+    return m && m.team && m.team !== m.name ? m.team : "";
+  };
+  const tiers = (b.tiers || []).filter(t => t && (t.rows || []).length);
+  const rows = tiers.flatMap(t => t.rows);
+  const pct = tierPcts(rows.map(r => Number(r.pct)));
+  const bye = tierPcts(rows.map(r => r.bye == null ? null : Number(r.bye)));
+  let i = 0;
+  const body = tiers.map((t, ti) => `<section class="tgrp t${Math.min(ti + 1, 3)}">
+      <div class="tn">${esc(t.name || "")}${t.range ? `<span>${esc(t.range)}</span>` : ""}</div>
+      <div class="tcards">${t.rows.map(r => {
+        const k = i++, v = Number(r.pct) || 0;
+        const last = r.last == null || r.last === "" ? null : Number(r.last);
+        const d = last == null || !isFinite(last) ? 0 : v - last;
+        const mv = Math.abs(d) >= 0.05
+          ? `<span class="tmv ${d > 0 ? "up" : "down"}" aria-label="${d > 0 ? "up" : "down"} ${Math.abs(d).toFixed(1)} points from last week">${d > 0 ? "▲" : "▼"}${Math.abs(d) >= 10 ? Math.round(Math.abs(d)) : Math.abs(d).toFixed(1)}</span>` : "";
+        const tag = r.status === "in" ? `<span class="tst in">In</span>` : r.status === "bye" ? `<span class="tst by">Bye</span>`
+          : r.status === "out" ? `<span class="tst out">Out</span>` : "";
+        const name = who(r.team), mg = [r.managers || (name ? r.team : ""), r.rec].filter(Boolean).join(" · ");
+        const cut = b.cutAfter && String(r.team).toLowerCase() === String(b.cutAfter).toLowerCase();
+        return `<div class="tcard${r.status === "out" ? " out" : ""}${cut ? " cut" : ""}" data-team="${esc(r.team || "")}">
+          <div class="thero"><b>${pct[k]}<small>%</small></b>${mv}${tag}</div>
+          <div class="tteam">${r.seed ? `<span class="tsd">${Number(r.seed)}</span>` : ""}${esc(name || r.team || "")}</div>
+          ${mg ? `<div class="tmg">${esc(mg)}</div>` : ""}
+          <div class="tbar"><span style="width:max(var(--tstub),${Math.max(0, Math.min(100, v)).toFixed(1)}%)"></span></div>
+          ${r.bye != null ? `<div class="tbye">BYE ${bye[k]}%</div>` : ""}
+        </div>`;
+      }).join("")}</div></section>`).join("");
+  return `<div class="tiers">${b.kicker ? `<div class="tk">${esc(b.kicker)}</div>` : ""}<div class="tt">${esc(b.title || "")}</div>
+    ${intro ? `<div class="ti">${esc(intro)}</div>` : ""}
+    ${body}
+    ${foot ? `<p class="tfoot">${artText(foot)}</p>` : ""}
+    ${b.href && /^(https:\/\/|#)/.test(b.href) ? `<a class="tlink" href="${esc(b.href)}">${esc(b.link || "Full odds")} →</a>` : ""}</div>`;
+}
+
+/* A sample tiers block, for ?tierdemo and verify.mjs. Not a published piece. */
+const TIER_DEMO = {
+  slug: "tier-demo", kicker: "Sample · tier cards", headline: "Tier cards: the default odds graphic",
+  dek: "A fixture, not real odds. Open ?tierdemo to see it.", byline: "DFFL desk",
+  blocks: [
+    { type: "p", text: "The block every article uses when it charts playoff or title odds." },
+    { type: "tiers", title: "Who gets in", intro: "Playoff odds after week 6.",
+      foot: "Sample numbers. 10,000 simulated seasons; six teams make it and the top two get a bye. Arrows show the move from last week, where last week's number is on file.",
+      cutAfter: "SixthSeedSam",
+      tiers: [
+        { name: "Locked in", rows: [
+          { team: "TopDog", managers: "The Kennel", pct: 98.6, last: 94.1, bye: 71.2, seed: 1, status: "in" },
+          { team: "SecondSlot", managers: "Run It Back", pct: 98.7, last: 99.0, bye: 52.0, seed: 2 } ] },
+        { name: "On the bubble", rows: [
+          { team: "Bubbleboy", managers: "Pop Culture", pct: 61.3, last: 48.0, bye: 9.4, seed: 3 },
+          { team: "Coinflip", managers: "Heads Up", pct: 60.8, bye: 9.1, seed: 4 },
+          { team: "Maximiliano_Fitzgerald_Throckmorton", managers: "A Very Long Team Name That Has To Wrap On Phones", pct: 44.0, last: 51.5, bye: 2.0, seed: 5 },
+          { team: "SixthSeedSam", managers: "Last One In", pct: 37.2, seed: 6 } ] },
+        { name: "Long shots", rows: [
+          { team: "Hopeful", managers: "Next Year", pct: 3.4, last: 8.0, bye: 0 },
+          { team: "Basement", managers: "Tank Commander", pct: 0.3, last: 0.9, status: "out" } ] },
+      ] },
+  ],
+};
+
 function articleBlock(b) {
   switch (b && b.type) {
+    case "tiers":
+      return tiersHTML(b);
     case "p":
       return `<p class="${b.lead ? "apara lead" : "apara"}">${artText(b.text)}</p>`;
     case "h":
@@ -10252,7 +10377,11 @@ async function boot() {
     const params = new URLSearchParams(location.search);
     const q = params.get("a"), tab = params.get("t");
     const want = q ? "article/" + q : (tab || location.hash.replace("#", ""));
-    if (want.startsWith("article/")) {
+    if (params.has("tierdemo") || want === "tierdemo") {
+      // The tier-card sample (TIER_DEMO): a fixture, opened like an article.
+      show("recaps");
+      openArticle(TIER_DEMO, true);
+    } else if (want.startsWith("article/")) {
       // A link out of the email names a piece. Show the index first so there is
       // something behind the back button, then open the piece over it.
       show("recaps");
@@ -10274,7 +10403,7 @@ async function boot() {
     });
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
     window.__DFFL = {
-      DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
+      DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist, TIER_DEMO, tiersHTML, tierPcts,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,
       fmtOdds, futuresMarkets, liveNow: () => LIVE_NOW,
