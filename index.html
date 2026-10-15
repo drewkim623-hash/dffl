@@ -1041,6 +1041,8 @@
   .atl p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
 
   /* ============ power rankings ============ */
+  .tiers{display:grid;gap:14px;align-items:start}
+  @media(min-width:1000px){.tiers{grid-template-columns:1fr 1fr}}
   .pwrow{
     display:grid;grid-template-columns:30px 52px auto minmax(0,1fr) auto auto;align-items:center;gap:11px;
     background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:11px 13px}
