@@ -948,8 +948,8 @@
   .pwhero .k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .pwhero .big{font:700 84px/1 var(--disp);letter-spacing:-.05em;color:#fff;margin:6px 0 10px;
     text-shadow:0 0 24px rgba(var(--a-rgb),.45);font-variant-numeric:tabular-nums}
-  .pwhero .tn{display:flex;align-items:center;gap:9px;font:700 26px/1.15 var(--disp);letter-spacing:-.02em;min-width:0}
-  .pwhero .tn span:last-child{min-width:0;overflow-wrap:anywhere}
+  .pwhero .tn{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font:700 22px/1.2 var(--disp);letter-spacing:-.02em;min-width:0}
+  .pwhero .tn span:last-child{display:block;min-width:0;overflow-wrap:normal;white-space:normal}
   .pwhero .hd{color:var(--muted);font-size:13.5px;margin-top:3px}
   .pwhero .ln{color:var(--ink-2);font-size:14.5px;margin-top:9px;font-variant-numeric:tabular-nums}
   .pwseg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:14px;
@@ -975,7 +975,7 @@
   .pwrow .pr{font:700 19px/1 var(--disp);color:var(--gold);font-variant-numeric:tabular-nums;text-align:center;
     letter-spacing:-.02em}
   .pwrow .id .h,.lkrow .id .h{font-size:12.5px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .lkrow .id{min-width:0} .lkrow .id .n{font-weight:750;font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lkrow .id{min-width:0} .lkrow .id .n{font-weight:750;font-size:15px;display:block;overflow-wrap:normal;white-space:normal}
   .pwrow .id .mv{text-align:left;margin-top:2px}
   .pwrow .val,.lkrow .val{display:flex;flex-direction:column;align-items:center;gap:4px}
   .val .tv{min-width:64px;text-align:center;padding:6px 8px;border-radius:10px;font:700 17px/1.1 var(--disp);
@@ -1001,14 +1001,14 @@
   .mv.up{color:var(--good)} .mv.down{color:var(--crit)}
   .mv.flat,.mv.none{color:var(--muted)}
   .pwrow .id{min-width:0}
-  .pwrow .id .n{font-weight:750;font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pwrow .id .n{font-weight:750;font-size:15px;display:block;overflow-wrap:normal;white-space:normal}
   .pwrow .id .s{font-size:12.5px;color:var(--muted);line-height:1.45}
   .pwrow .sp{display:flex;align-items:center;flex:none}
   .pwrow .sp:empty{display:none}
   .spark{display:block;max-width:100%}
   .pwrow .stats{display:flex;gap:7px;flex-wrap:wrap}
   .pwrow .stats .chip{flex:1;min-width:0}
-  @media(max-width:420px){.pwhero .big{font-size:68px}.pwhero .tn{font-size:22px}}
+  @media(max-width:420px){.pwhero .big{font-size:68px}.pwhero .tn{font-size:20px}}
 
   /* ============ position rooms ============ */
   .rooms{display:grid;gap:7px}
@@ -1829,9 +1829,11 @@ const teamOf = uid => (DB.mgr.get(uid) || {}).team || "";
 const initials = n => String(n || "?").replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase();
 function avatarHTML(uid, cls = "") {
   const m = DB.mgr.get(uid);
+  const ini = esc(initials(m && m.name));
+  // A dead or blocked image falls back to the initials rather than a blank disc.
   const inner = m && m.avatar
-    ? `<img src="https://sleepercdn.com/avatars/thumbs/${esc(m.avatar)}" alt="" loading="lazy">`
-    : esc(initials(m && m.name));
+    ? `<img src="https://sleepercdn.com/avatars/thumbs/${esc(m.avatar)}" alt="" loading="eager" onerror="this.parentNode.textContent='${ini}'">`
+    : ini;
   return `<span class="av ${cls}">${inner}</span>`;
 }
 const tipEl = $("#tip");
@@ -8594,14 +8596,16 @@ function projectedBoard(model, sim) {
 
 function panelPower(model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "power";
-  p.appendChild(sechead("Power rankings",
-    "Not the standings. Every week each team is measured against the whole league rather than the one opponent it drew, and the board is rebuilt from scratch — so the arrows are real movement, not a hot take."));
+  // The #1 hero opens the tab; the heading and its intro sit below the board.
+  const head = sechead("Power rankings",
+    "Not the standings. Every week each team is measured against the whole league rather than the one opponent it drew, and the board is rebuilt from scratch — so the arrows are real movement, not a hot take.");
 
   const proj = projectedBoard(model, sim);
   const all = allPowerRankings();
   if (!all.size && !proj) {
     p.appendChild(el("div", "empty",
       "<b>No weeks to rank yet</b>The board is built out of results, and there aren't any. It starts the week the season does."));
+    p.insertBefore(head, p.firstChild);
     p.appendChild(roomsSection());
     return p;
   }
@@ -8633,6 +8637,7 @@ function panelPower(model, sim) {
   boardView.appendChild(picks);
   const host = el("div"); boardView.appendChild(host);
   luckView.appendChild(luckBoard());
+  p.appendChild(head);
   // Always the season being played, whichever board is picked above.
   p.appendChild(roomsSection());
 
