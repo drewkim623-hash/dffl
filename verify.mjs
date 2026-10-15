@@ -2697,6 +2697,42 @@ await page.waitForFunction(() => document.body.dataset.tradesReady, null, { time
 const tradesState = await page.evaluate(() => document.body.dataset.tradesReady);
 check("the trades tab loads its own data on first open", tradesState === "1", tradesState);
 
+group("Trades: waiver report card");
+const wrcRead = () => page.evaluate(() => {
+  const c = document.querySelector("#waiverCard");
+  if (!c) return null;
+  const over = [];
+  for (const n of c.querySelectorAll("*")) {
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return {
+    teams: c.querySelectorAll(".wrc-team").length,
+    heroes: c.querySelectorAll(".wrc-hero .n").length,
+    grades: [...c.querySelectorAll("[data-grade]")].map(g => [g.dataset.grade, g.textContent.trim()]),
+    cols: getComputedStyle(c).gridTemplateColumns.split(" ").length,
+    note: (c.nextElementSibling && c.nextElementSibling.textContent) || "",
+    over: over.slice(0, 6), docScroll: document.documentElement.scrollWidth, inner: innerWidth,
+    imgs: c.querySelectorAll("img").length,
+  };
+});
+const vp0 = page.viewportSize();
+const wrcWide = await wrcRead();
+check("the waiver report card renders with a card per team", !!wrcWide && wrcWide.teams > 0 && wrcWide.heroes === wrcWide.teams, JSON.stringify(wrcWide && wrcWide.teams));
+const WRC_OK = new Set(["A+", "A", "B", "C", "D", "F", "F-"]);
+check("every waiver grade comes from A+ A B C D F F-", !!wrcWide && wrcWide.grades.length > 0 && wrcWide.grades.every(([d, t]) => WRC_OK.has(d) && d === t),
+  wrcWide && wrcWide.grades.filter(([d, t]) => !WRC_OK.has(d) || d !== t).slice(0, 4).join(" "));
+check("the card says its bands are borrowed from the trade-grade v2 scale", !!wrcWide && /borrowed from the trade-grade v2 scale/.test(wrcWide.note), wrcWide && wrcWide.note.slice(0, 80));
+check("the waiver card carries no player headshots", !!wrcWide && wrcWide.imgs === 0, String(wrcWide && wrcWide.imgs));
+if (vp0 && vp0.width >= 720) check("the waiver card is a grid at desktop width", !!wrcWide && wrcWide.cols > 1, String(wrcWide && wrcWide.cols));
+await page.setViewportSize({ width: 390, height: 844 });
+await page.waitForTimeout(150);
+const wrc390 = await wrcRead();
+check("the waiver card is one column at 390px", !!wrc390 && wrc390.cols === 1, String(wrc390 && wrc390.cols));
+check("the waiver card has no horizontal overflow at 390px", !!wrc390 && wrc390.over.length === 0 && wrc390.docScroll <= wrc390.inner,
+  wrc390 && `${wrc390.over.join(" | ")} doc ${wrc390.docScroll}/${wrc390.inner}`);
+if (vp0) await page.setViewportSize(vp0);
+
 const T = await page.evaluate(() => {
   const L = window.__TRADES, W = window.__WAIVERS, D = window.__DFFL;
   const nums = [];

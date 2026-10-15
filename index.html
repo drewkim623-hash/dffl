@@ -189,6 +189,28 @@
   .rec .c{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
   .rec.up .v{color:var(--blue)} .rec.down .v{color:var(--red)}
 
+  /* ============ waiver report card ============ */
+  .wrc{display:grid;grid-template-columns:1fr;gap:11px}
+  @media (min-width:720px){.wrc{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
+  .wrc-team{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:14px 15px;min-width:0}
+  .wrc-hero{display:flex;align-items:baseline;gap:12px;min-width:0}
+  .wrc-hero .g{font-size:44px;font-weight:900;letter-spacing:-.04em;line-height:1}
+  .wrc-hero .meta{min-width:0}
+  .wrc-hero .n{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wrc-hero .s{font-size:12px;color:var(--muted)}
+  .wrc-list{list-style:none;margin:10px 0 0;padding:0;border-top:1px solid var(--grid)}
+  .wrc-list li{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto auto;gap:8px;align-items:baseline;
+    padding:7px 0;border-bottom:1px solid var(--grid);font-size:13.5px}
+  .wrc-list li:last-child{border-bottom:0}
+  .wrc-list .gr{font-weight:800}
+  .wrc-list .pl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wrc-list .fb{color:var(--muted);font-family:var(--mono);font-size:12px}
+  .wrc-list .pt{font-variant-numeric:tabular-nums;font-weight:650;text-align:right;min-width:3.6em}
+  .wrc-list .early{color:var(--muted);font-weight:500;font-size:12px}
+  .wrc .gA{color:var(--plus)} .wrc .gB{color:var(--blue)} .wrc .gC{color:var(--ink-2)}
+  .wrc .gD{color:var(--gold)} .wrc .gF{color:var(--red)}
+  .wrc-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
+
   /* ============ tables ============ */
   .card{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden}
   .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -9853,8 +9875,128 @@ function waiverReport(txs) {
   };
 }
 
+/* ------------------------------------------------- waiver report card */
+/*
+ * This season's pickups, graded. Unlike the tables below, a pickup here is
+ * credited only with what he did for the roster that claimed him: points he
+ * scored in that roster's starting lineup, in finished regular-season weeks
+ * after the claim week. Bench points never helped anybody.
+ *
+ * Grade bands are BORROWED from the trade-grade scale v2 — percentiles of
+ * |points added| across every graded pickup this season, sign picking the side:
+ *   below the 21.6th pct  → C
+ *   up to the 55.3rd pct  → B if positive, D if negative or zero
+ *   up to the 86.9th pct  → A / F
+ *   above                 → A+ / F-
+ */
+const WRC_BANDS = [0.216, 0.553, 0.869];
+const WRC_GPA = { "A+": 4.3, A: 4, B: 3, C: 2, D: 1, F: 0, "F-": -0.3 };
+const WRC_GRADES = Object.keys(WRC_GPA);
+const wrcCls = g => "g" + g[0];
+
+/** Linear-interpolated quantile of an ascending array. */
+function quantile(sorted, p) {
+  if (!sorted.length) return 0;
+  const i = (sorted.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (i - lo);
+}
+function wrcGrade(x, cuts) {
+  const a = Math.abs(x);
+  if (a < cuts[0]) return "C";
+  const up = x > 0;
+  if (a <= cuts[1]) return up ? "B" : "D";
+  if (a <= cuts[2]) return up ? "A" : "F";
+  return up ? "A+" : "F-";
+}
+/** A team's GPA mapped back onto the same letters, by nearest step. */
+function wrcLetter(gpa) {
+  let best = "C", d = Infinity;
+  for (const g of WRC_GRADES) { const e = Math.abs(WRC_GPA[g] - gpa); if (e < d) { d = e; best = g; } }
+  return best;
+}
+
+function waiverReportCard(txs) {
+  const season = DB.seasons.slice().sort((a, b) => Number(b.season) - Number(a.season))[0];
+  if (!season) return null;
+  const lastReg = (season.pws || 15) - 1;
+  const done = [...(season.regEntries || new Map()).keys()].filter(w => w <= lastReg);
+  const addedFor = (rid, pid, wk) => {
+    let tot = 0, n = 0;
+    for (const w of done) {
+      if (w <= wk) continue;
+      n++;
+      const e = season.regEntries.get(w).find(x => Number(x.roster_id) === rid);
+      if (!e) continue;
+      const pp = e.players_points || {};
+      // Started points when Sleeper gives us a lineup; scored-on-roster otherwise.
+      const counts = e.starters ? e.starters.includes(pid) : (e.players || []).includes(pid);
+      if (counts) tot += Number(pp[pid]) || 0;
+    }
+    return { pts: tot, weeks: n };
+  };
+
+  const rows = [];
+  for (const t of txs) {
+    if (t.season !== season.season || (t.type !== "waiver" && t.type !== "free_agent")) continue;
+    const wk = Number(t.leg) || 1;
+    const bid = Number(t.settings && t.settings.waiver_bid) || 0;
+    Object.entries(t.adds || {}).forEach(([pid, rid], i) => {
+      rid = Number(rid);
+      const a = addedFor(rid, pid, wk);
+      // One bid buys the whole claim, so it is shown once, on the first player.
+      rows.push({ rid, pid, wk, bid: i === 0 ? bid : null, type: t.type, ts: t.status_updated || t.created || 0,
+        name: pname(pid).name, pos: pname(pid).pos, pts: a.pts, early: a.weeks === 0 });
+    });
+  }
+  const graded = rows.filter(r => !r.early);
+  const abs = graded.map(r => Math.abs(r.pts)).sort((a, b) => a - b);
+  const cuts = WRC_BANDS.map(p => quantile(abs, p));
+  for (const r of graded) r.grade = wrcGrade(r.pts, cuts);
+
+  const teams = season.rosters.map(r => {
+    const u = season.userById.get(r.owner_id) || {};
+    const name = (u.metadata && u.metadata.team_name) || u.display_name || `Roster ${r.roster_id}`;
+    const mine = rows.filter(x => x.rid === Number(r.roster_id))
+      .sort((a, b) => (b.wk - a.wk) || (b.ts - a.ts));
+    const g = mine.filter(x => x.grade);
+    const gpa = g.length ? g.reduce((s, x) => s + WRC_GPA[x.grade], 0) / g.length : null;
+    return { rid: r.roster_id, name, handle: u.display_name || "", rows: mine, n: g.length,
+      gpa, grade: gpa == null ? null : wrcLetter(gpa), net: g.reduce((s, x) => s + x.pts, 0) };
+  }).filter(t => t.rows.length)
+    .sort((a, b) => ((b.gpa ?? -9) - (a.gpa ?? -9)) || (b.net - a.net));
+  return { season: season.season, teams, graded: graded.length, total: rows.length };
+}
+
+function renderWaiverCard(host, R) {
+  host.appendChild(sechead(`${R.season} waiver report card`,
+    "Every pickup this season, graded on the points he put in the claiming team's starting lineup in finished weeks after the claim."));
+  if (!R.teams.length) {
+    host.appendChild(el("div", "empty", "<b>No pickups yet this season</b>"));
+    return;
+  }
+  const wrap = el("div", "wrc");
+  wrap.id = "waiverCard";
+  for (const t of R.teams) {
+    const card = el("article", "wrc-team");
+    const items = t.rows.map(r => `<li>
+        <span class="gr ${r.grade ? wrcCls(r.grade) : ""}"${r.grade ? ` data-grade="${r.grade}"` : ""}>${r.grade || "–"}</span>
+        <span class="pl">${plabel(r)}</span>
+        <span class="fb">${r.bid == null ? "" : r.type === "free_agent" ? "FA" : "$" + r.bid}</span>
+        <span class="pt">${r.early ? `<span class="early">Too early</span>` : esc(sgnf(r.pts))}</span></li>`).join("");
+    card.innerHTML = `<div class="wrc-hero">
+        <span class="g ${t.grade ? wrcCls(t.grade) : ""}"${t.grade ? ` data-grade="${t.grade}"` : ""}>${t.grade || "–"}</span>
+        <div class="meta"><div class="n">${esc(t.name)}</div>
+          <div class="s">${t.n ? `GPA ${f2(t.gpa)} · ${esc(sgnf(t.net))} pts · ${t.n} graded` : "Too early to grade"}</div></div>
+      </div><ul class="wrc-list">${items}</ul>`;
+    wrap.appendChild(card);
+  }
+  host.appendChild(wrap);
+  host.appendChild(el("div", "wrc-note",
+    `Grades are percentile bands of |points added| across all ${R.graded} graded pickups this season, borrowed from the trade-grade v2 scale: under the 21.6th percentile is a C; to the 55.3rd a B (or D if he added nothing or less); to the 86.9th an A (or F); above that A+ (or F-). The team grade is the GPA of its pickups, rounded to the nearest letter. A pickup with no finished week since the claim is “Too early”.`));
+}
+
 /* -------------------------------------------------------------- panel */
-const plabel = x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
+const plabel =x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
 /** Everything a side received, players and picks, in plain words. */
 const gotNames = sd => [...sd.got.map(x => x.name),
   ...sd.picksIn.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
@@ -9979,6 +10121,8 @@ function renderTrades(host, L, W) {
   /* ---- waivers ---- */
   host.appendChild(sechead("Waivers and FAAB",
     "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him."));
+
+  if (W.card) renderWaiverCard(host, W.card);
 
   if (!W.claims.length) {
     host.appendChild(el("div", "empty", "<b>No waiver activity on record</b>"));
@@ -10157,6 +10301,7 @@ async function ensureTrades() {
     await loadPlayerNames(need);
     await loadDraftSlots();
     const L = tradeLedger(txs), W = waiverReport(txs);
+    W.card = waiverReportCard(txs);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
     renderTrades(host, L, W);
     document.body.dataset.tradesReady = "1";
