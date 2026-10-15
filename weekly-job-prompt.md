@@ -92,7 +92,8 @@ One article, appended to `articles[]`, that is both the column and the recap —
 *One Game Was on the Bench* (week 2) and *The Schedule Is Keeping Score* (week 3):
 
 - **The column first.** An argument the finished week supports and the standings alone do not
-  show: a lead paragraph, a `stat` block, two or three `h` sections, a `bars` or `cards` block. The
+  show: a lead paragraph, a `stat` block, two or three `h` sections, a `bars` or `cards` block (or
+  a `tiers` block when the chart is playoff or title odds; see **Graphics** below). The
   email pulls the first `stat` and the first paragraph, so both must carry weight. Read every
   headline and dek already in `articles[]` and do not repeat an angle — in particular, not the
   previous Saturday's.
@@ -102,6 +103,30 @@ One article, appended to `articles[]`, that is both the column and the recap —
 - Fields: unique `slug`, today's `date`, `kind: "opinion"` if it argues, `kicker`
   `"<season> · week <n>"`, `headline`, `dek`, `byline: "DFFL desk"`, `standfirst`, `teaser`
   and `"source": "tuesday"`.
+
+### Graphics
+
+Every article from every routine (the Tuesday article, the story watch's column, the Saturday
+column) follows **[docs/graphics-standard.md](docs/graphics-standard.md)**: the broadcast look,
+tiers rather than raw lists, phone first, the hero number first, and the 390px check before
+pushing.
+
+**The default odds graphic is a `tiers` block (tier cards).** Any time a piece charts playoff or
+title odds, use `tiers`, not `bars`, `cards` or a hand-built list:
+
+```json
+{"type":"tiers","title":"…","intro":"one short line","foot":"method and caveats",
+ "tiers":[{"name":"Locked in","rows":[{"team":"<display_name>","managers":"…","pct":97.4,"last":91.0,"bye":62}]}]}
+```
+
+- `intro` is one short line (80 characters at most); everything else goes in `foot`.
+- Write `pct`, `last` and `bye` as the real values; the site picks whole numbers or one decimal.
+- Give `last` (last week's playoff chance) only when you have it from the data: it draws the
+  change arrow. Without it the row shows no arrow, which is correct.
+- Group into tiers the numbers support, not a list of twelve.
+
+A graphic type the site has never printed needs two or three options first; if Drew does not
+answer, pick the best fit and file. `node check-recaps.mjs` validates every `tiers` block.
 
 **Never drop `articles[]` when rewriting `recaps.json`.** Read the file, append to it, and leave
 every existing article exactly as found. Dropping the key deletes writing nothing else regenerates.

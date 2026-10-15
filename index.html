@@ -196,6 +196,33 @@
   .rec .c{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
   .rec.up .v{color:var(--blue)} .rec.down .v{color:var(--red)}
 
+  /* ============ waiver report card ============ */
+  .wrc{display:grid;grid-template-columns:1fr;gap:11px}
+  @media (min-width:720px){.wrc{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
+  .wrc-team{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:14px 15px;min-width:0}
+  .wrc-hero{display:flex;align-items:baseline;gap:12px;min-width:0}
+  .wrc-hero .g{font-size:44px;font-weight:900;letter-spacing:-.04em;line-height:1}
+  .wrc-hero .meta{min-width:0}
+  .wrc-hero .n{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wrc-hero .s{font-size:12px;color:var(--muted)}
+  @media (max-width:719px){
+    .wrc-hero{flex-direction:column;align-items:flex-start;gap:6px}
+    .wrc-hero .g{font-size:64px}
+    .wrc-hero .meta{width:100%}
+  }
+  .wrc-list{list-style:none;margin:10px 0 0;padding:0;border-top:1px solid var(--grid)}
+  .wrc-list li{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto auto;gap:8px;align-items:baseline;
+    padding:7px 0;border-bottom:1px solid var(--grid);font-size:13.5px}
+  .wrc-list li:last-child{border-bottom:0}
+  .wrc-list .gr{font-weight:800}
+  .wrc-list .pl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wrc-list .fb{color:var(--muted);font-family:var(--mono);font-size:12px}
+  .wrc-list .pt{font-variant-numeric:tabular-nums;font-weight:650;text-align:right;min-width:3.6em}
+  .wrc-list .early{color:var(--muted);font-weight:500;font-size:12px}
+  .wrc .gA{color:var(--plus)} .wrc .gB{color:var(--blue)} .wrc .gC{color:var(--ink-2)}
+  .wrc .gD{color:var(--gold)} .wrc .gF{color:var(--red)}
+  .wrc-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
+
   /* ============ tables ============ */
   .card{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden}
   .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -872,6 +899,53 @@
   .astat .t{font-size:14.5px;line-height:1.5;color:var(--ink-2)}
   .anote{font-size:13px;line-height:1.6;color:var(--muted);border-top:1px solid var(--grid);
     padding-top:14px;margin:24px 0 0}
+
+  /* ============ tier cards: the default odds graphic (docs/graphics-standard.md) ============ */
+  .tiers{--tstub:4px;margin:26px 0;max-width:none;background:var(--surface);
+    border:1px solid var(--ring);border-top:3px solid var(--a,#ffc23d);border-radius:var(--r);padding:16px 14px 14px}
+  .tiers .tt{font-family:var(--disp,"Space Grotesk",system-ui,sans-serif);font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+  .tiers .ti{font-size:13px;color:var(--ink-2);margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tgrp{margin-top:16px}
+  .tgrp .tn{display:flex;align-items:center;gap:8px;font-family:var(--disp,"Space Grotesk",system-ui,sans-serif);
+    font-size:13px;font-weight:700;letter-spacing:0;color:var(--a,#ffc23d);margin-bottom:8px}
+  .tgrp .tn::after{content:"";flex:1;height:1px;background:var(--grid)}
+  .tgrp .tn span{order:2;font-weight:600;color:var(--muted)}
+  .tiers .tk{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--a,#ffc23d);margin-bottom:4px}
+  .tgrp.t2 .tn{color:var(--ink-2)} .tgrp.t3 .tn{color:var(--muted)}
+  .tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+  .tcard{min-width:0;background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:10px 11px 11px}
+  .tcard.out{opacity:.6}
+  .tcard.cut{box-shadow:0 2px 0 0 var(--a,#ffc23d)}
+  .tcard .thero{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px}
+  .tcard .thero b{font-family:var(--disp,"Space Grotesk",system-ui,sans-serif);font-size:32px;font-weight:700;line-height:1;letter-spacing:-.03em;
+    font-variant-numeric:tabular-nums}
+  .tcard .thero small{font-size:.5em;font-weight:800;margin-left:1px;color:var(--ink-2)}
+  .tmv{font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .tmv.up{color:var(--plus)} .tmv.down{color:var(--muted)}
+  .tst{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    padding:2px 6px;border-radius:999px;border:1px solid var(--ring);color:var(--ink-2)}
+  .tst.in{color:var(--plus);border-color:rgba(58,208,127,.4)} .tst.out{color:var(--muted)}
+  .tcard .tteam{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:14px;font-weight:800;line-height:1.25}
+  .tcard .tav{position:relative;flex:none;width:22px;height:22px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+    background:var(--raised);border:1px solid var(--ring);font-size:8.5px;font-weight:800;color:var(--ink-2)}
+  .tcard .tav img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  /* Wrap only at spaces; a single long handle ends in an ellipsis (full name in title). */
+  .tcard .tnm{min-width:0;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal}
+  .tcard .tsd{display:inline-block;min-width:16px;margin-right:5px;font-size:10.5px;font-weight:800;color:var(--muted);
+    font-variant-numeric:tabular-nums}
+  .tcard .tmg{font-size:12px;line-height:1.3;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal}
+  .tcard .tbar{height:5px;border-radius:3px;background:var(--raised);margin-top:9px;overflow:hidden}
+  .tcard .tbar span{display:block;height:100%;border-radius:3px;background:var(--a,#ffc23d)}
+  .tgrp.t2 .tbar span{opacity:.7} .tgrp.t3 .tbar span{opacity:.45}
+  .tcard .tbye{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);margin-top:6px}
+  .tiers .tfoot{font-size:11.5px;line-height:1.45;color:var(--muted);margin:14px 0 0}
+  .tiers .tlink{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:var(--a,#ffc23d);text-decoration:none}
+  @media (max-width:430px){
+    .tiers{padding:14px 11px 12px}
+    .tcards{grid-template-columns:1fr 1fr}
+    .tcard .tmg{font-size:13px;color:var(--ink-2)}
+    .tcard .tbye{font-size:11.5px;color:var(--ink-2)}
+  }
 
   .abars{margin:24px 0;max-width:none}
   .abars .at{font-size:15px;font-weight:800;letter-spacing:-.01em}
@@ -3325,8 +3399,92 @@ function bracketHTML(b) {
     <div class="scroll"><div class="brcols">${cols}</div></div></div>`;
 }
 
+/**
+ * Percentages for a set of values: whole numbers, except where two different
+ * values would print the same whole number (or a live chance would print 0 or
+ * a not-certain one 100). Those get one decimal, so close teams stay apart.
+ */
+function tierPcts(vals) {
+  const need = v => vals.some(w => w !== v && Math.round(w) === Math.round(v))
+    || (Math.round(v) === 0 && v > 0) || (Math.round(v) === 100 && v < 100);
+  return vals.map(v => v == null || !isFinite(v) ? "" : need(v) && !Number.isInteger(v) ? v.toFixed(1) : String(Math.round(v)));
+}
+
+/**
+ * The default odds graphic: tier cards. Hero number first, team and managers
+ * under it, a bar that never vanishes, a bye chance when there is one. The
+ * change arrow appears only when the row carries last week's number.
+ */
+function tiersHTML(b) {
+  // Field names follow the reference port too: sub = intro, note = foot, link = the link's words.
+  const intro = b.intro || b.sub, foot = b.foot || b.note;
+  // A row names its team by a manager's display_name; show the team name above it when we know one.
+  const mgrOf = h => typeof DB !== "undefined" && DB.mgr && [...DB.mgr.values()].find(x => String(x.name).toLowerCase() === String(h || "").toLowerCase()) || null;
+  const who = h => { const m = mgrOf(h); return m && m.team && m.team !== m.name ? m.team : ""; };
+  // Avatar with initials underneath; a failed image removes itself and the initials show.
+  const tav = (m, label) => `<span class="tav">${esc(initials(label))}${m && m.avatar
+    ? `<img src="https://sleepercdn.com/avatars/thumbs/${esc(m.avatar)}" alt="" loading="eager" onerror="this.remove()">` : ""}</span>`;
+  const tiers = (b.tiers || []).filter(t => t && (t.rows || []).length);
+  const rows = tiers.flatMap(t => t.rows);
+  const pct = tierPcts(rows.map(r => Number(r.pct)));
+  const bye = tierPcts(rows.map(r => r.bye == null ? null : Number(r.bye)));
+  let i = 0;
+  const body = tiers.map((t, ti) => `<section class="tgrp t${Math.min(ti + 1, 3)}">
+      <div class="tn">${esc(t.name || "")}${t.range ? `<span>${esc(t.range)}</span>` : ""}</div>
+      <div class="tcards">${t.rows.map(r => {
+        const k = i++, v = Number(r.pct) || 0;
+        const last = r.last == null || r.last === "" ? null : Number(r.last);
+        const d = last == null || !isFinite(last) ? 0 : v - last;
+        const mv = Math.abs(d) >= 0.05
+          ? `<span class="tmv ${d > 0 ? "up" : "down"}" aria-label="${d > 0 ? "up" : "down"} ${Math.abs(d).toFixed(1)} points from last week">${d > 0 ? "▲" : "▼"}${Math.abs(d) >= 10 ? Math.round(Math.abs(d)) : Math.abs(d).toFixed(1)}</span>` : "";
+        const tag = r.status === "in" ? `<span class="tst in">In</span>` : r.status === "bye" ? `<span class="tst by">Bye</span>`
+          : r.status === "out" ? `<span class="tst out">Out</span>` : "";
+        const name = who(r.team), mg = [r.managers || (name ? r.team : ""), r.rec].filter(Boolean).join(" · ");
+        const cut = b.cutAfter && String(r.team).toLowerCase() === String(b.cutAfter).toLowerCase();
+        return `<div class="tcard${r.status === "out" ? " out" : ""}${cut ? " cut" : ""}" data-team="${esc(r.team || "")}">
+          <div class="thero"><b>${pct[k]}<small>%</small></b>${mv}${tag}</div>
+          <div class="tteam">${r.seed ? `<span class="tsd">${Number(r.seed)}</span>` : ""}${tav(mgrOf(r.team), name || r.team)}<span class="tnm" title="${esc(name || r.team || "")}">${esc(name || r.team || "")}</span></div>
+          ${mg ? `<div class="tmg">${esc(mg)}</div>` : ""}
+          <div class="tbar"><span style="width:max(var(--tstub),${Math.max(0, Math.min(100, v)).toFixed(1)}%)"></span></div>
+          ${r.bye != null ? `<div class="tbye">BYE ${bye[k]}%</div>` : ""}
+        </div>`;
+      }).join("")}</div></section>`).join("");
+  return `<div class="tiers">${b.kicker ? `<div class="tk">${esc(b.kicker)}</div>` : ""}<div class="tt">${esc(b.title || "")}</div>
+    ${intro ? `<div class="ti">${esc(intro)}</div>` : ""}
+    ${body}
+    ${foot ? `<p class="tfoot">${artText(foot)}</p>` : ""}
+    ${b.href && /^(https:\/\/|#)/.test(b.href) ? `<a class="tlink" href="${esc(b.href)}">${esc(b.link || "Full odds")} →</a>` : ""}</div>`;
+}
+
+/* A sample tiers block, for ?tierdemo and verify.mjs. Not a published piece. */
+const TIER_DEMO = {
+  slug: "tier-demo", kicker: "Sample · tier cards", headline: "Tier cards: the default odds graphic",
+  dek: "A fixture, not real odds. Open ?tierdemo to see it.", byline: "DFFL desk",
+  blocks: [
+    { type: "p", text: "The block every article uses when it charts playoff or title odds." },
+    { type: "tiers", title: "Who gets in", intro: "Playoff odds after week 6.",
+      foot: "Sample numbers. 10,000 simulated seasons; six teams make it and the top two get a bye. Arrows show the move from last week, where last week's number is on file.",
+      cutAfter: "SixthSeedSam",
+      tiers: [
+        { name: "Locked in", rows: [
+          { team: "TopDog", managers: "The Kennel", pct: 98.6, last: 94.1, bye: 71.2, seed: 1, status: "in" },
+          { team: "SecondSlot", managers: "Run It Back", pct: 98.7, last: 99.0, bye: 52.0, seed: 2 } ] },
+        { name: "On the bubble", rows: [
+          { team: "Bubbleboy", managers: "Pop Culture", pct: 61.3, last: 48.0, bye: 9.4, seed: 3 },
+          { team: "Coinflip", managers: "Heads Up", pct: 60.8, bye: 9.1, seed: 4 },
+          { team: "Maximiliano_Fitzgerald_Throckmorton", managers: "A Very Long Team Name That Has To Wrap On Phones", pct: 44.0, last: 51.5, bye: 2.0, seed: 5 },
+          { team: "SixthSeedSam", managers: "Last One In", pct: 37.2, seed: 6 } ] },
+        { name: "Long shots", rows: [
+          { team: "Hopeful", managers: "Next Year", pct: 3.4, last: 8.0, bye: 0 },
+          { team: "Basement", managers: "Tank Commander", pct: 0.3, last: 0.9, status: "out" } ] },
+      ] },
+  ],
+};
+
 function articleBlock(b) {
   switch (b && b.type) {
+    case "tiers":
+      return tiersHTML(b);
     case "p":
       return `<p class="${b.lead ? "apara lead" : "apara"}">${artText(b.text)}</p>`;
     case "h":
@@ -10040,6 +10198,146 @@ function waiverReport(txs) {
   };
 }
 
+/* ------------------------------------------------- waiver report card */
+/*
+ * This season's pickups, graded. Unlike the tables below, a pickup here is
+ * credited only with what he did for the roster that claimed him: points he
+ * scored in that roster's starting lineup, in finished regular-season weeks
+ * from the claim week on, until that roster drops or trades him away.
+ * Bench points never helped anybody. FAAB cost plays no part in the grade.
+ *
+ * Grade bands are BORROWED from the trade-grade scale v2 — percentiles of
+ * |points added| across every graded pickup this season, sign picking the side:
+ *   below the 21.6th pct  → C
+ *   up to the 55.3rd pct  → B if positive, D if negative or zero
+ *   up to the 86.9th pct  → A / F
+ *   above                 → A+ / F-
+ */
+const WRC_BANDS = [0.216, 0.553, 0.869];
+const WRC_GPA = { "A+": 4.3, A: 4, B: 3, C: 2, D: 1, F: 0, "F-": -0.3 };
+const WRC_GRADES = Object.keys(WRC_GPA);
+const wrcCls = g => "g" + g[0];
+
+/** Linear-interpolated quantile of an ascending array. */
+function quantile(sorted, p) {
+  if (!sorted.length) return 0;
+  const i = (sorted.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (i - lo);
+}
+function wrcGrade(x, cuts) {
+  const a = Math.abs(x);
+  if (a < cuts[0]) return "C";
+  const up = x > 0;
+  if (a <= cuts[1]) return up ? "B" : "D";
+  if (a <= cuts[2]) return up ? "A" : "F";
+  return up ? "A+" : "F-";
+}
+/** A team's GPA mapped back onto the same letters, by nearest step. */
+function wrcLetter(gpa) {
+  let best = "C", d = Infinity;
+  for (const g of WRC_GRADES) { const e = Math.abs(WRC_GPA[g] - gpa); if (e < d) { d = e; best = g; } }
+  return best;
+}
+
+/**
+ * `season` defaults to the latest one; verify.mjs passes a synthetic season
+ * ({ season, pws, regEntries, rosters, userById }) to check the math.
+ */
+function waiverReportCard(txs, season) {
+  season = season || DB.seasons.slice().sort((a, b) => Number(b.season) - Number(a.season))[0];
+  if (!season) return null;
+  const lastReg = (season.pws || 15) - 1;
+  const done = [...(season.regEntries || new Map()).keys()].filter(w => w <= lastReg).sort((a, b) => a - b);
+  const isClaim = t => t.type === "waiver" || t.type === "free_agent";
+  const tx = txs.filter(t => t.season === season.season)
+    .map((t, i) => ({ t, i, wk: Number(t.leg) || 1, ts: t.status_updated || t.created || 0 }))
+    .sort((a, b) => (a.wk - b.wk) || (a.ts - b.ts) || (a.i - b.i));
+  // Each claim owns the finished weeks from the claim week on, up to and including the
+  // week that roster next drops or trades him away (he may have started before the
+  // drop), or up to (not including) its next claim of him. Only points in that roster's
+  // starting lineup count; a week with no lineup on record counts 0.
+  const credited = new Set();     // "rid|pid|week" already credited to an earlier claim
+  const addedFor = (rid, pid, k) => {
+    const wk = tx[k].wk;
+    let end = Infinity;
+    for (let j = k + 1; j < tx.length; j++) {
+      const t = tx[j].t;
+      if (Number((t.drops || {})[pid]) === rid) { end = tx[j].wk; break; }
+      if (isClaim(t) && Number((t.adds || {})[pid]) === rid) { end = tx[j].wk - 1; break; }
+    }
+    let tot = 0, n = 0;
+    for (const w of done) {
+      if (w < wk || w > end) continue;
+      const key = `${rid}|${pid}|${w}`;
+      if (credited.has(key)) continue;
+      credited.add(key);
+      n++;
+      const e = season.regEntries.get(w).find(x => Number(x.roster_id) === rid);
+      if (e && (e.starters || []).includes(pid)) tot += Number((e.players_points || {})[pid]) || 0;
+    }
+    return { pts: tot, weeks: n };
+  };
+
+  const rows = [];
+  tx.forEach(({ t, wk, ts }, k) => {
+    if (!isClaim(t)) return;
+    const bid = Number(t.settings && t.settings.waiver_bid) || 0;
+    Object.entries(t.adds || {}).forEach(([pid, rid], i) => {
+      rid = Number(rid);
+      const a = addedFor(rid, pid, k);
+      const p = pname(pid);
+      // One bid buys the whole claim, so it is shown once, on the first player.
+      rows.push({ rid, pid, wk, bid: i === 0 ? bid : null, type: t.type, ts,
+        name: p.name, pos: p.pos, pts: a.pts, early: a.weeks === 0 });
+    });
+  });
+  const graded = rows.filter(r => !r.early);
+  const abs = graded.map(r => Math.abs(r.pts)).sort((a, b) => a - b);
+  const cuts = WRC_BANDS.map(p => quantile(abs, p));
+  for (const r of graded) r.grade = wrcGrade(r.pts, cuts);
+
+  const teams = season.rosters.map(r => {
+    const u = season.userById.get(r.owner_id) || {};
+    const name = (u.metadata && u.metadata.team_name) || u.display_name || `Roster ${r.roster_id}`;
+    const mine = rows.filter(x => x.rid === Number(r.roster_id))
+      .sort((a, b) => (b.wk - a.wk) || (b.ts - a.ts));
+    const g = mine.filter(x => x.grade);
+    const gpa = g.length ? g.reduce((s, x) => s + WRC_GPA[x.grade], 0) / g.length : null;
+    return { rid: r.roster_id, name, handle: u.display_name || "", rows: mine, n: g.length,
+      gpa, grade: gpa == null ? null : wrcLetter(gpa), net: g.reduce((s, x) => s + x.pts, 0) };
+  }).filter(t => t.rows.length)
+    .sort((a, b) => ((b.gpa ?? -9) - (a.gpa ?? -9)) || (b.net - a.net));
+  return { season: season.season, teams, rows, cuts, graded: graded.length, total: rows.length };
+}
+
+function renderWaiverCard(host, R) {
+  host.appendChild(sechead(`${R.season} waiver report card`,
+    "Every pickup this season, graded on the points he put in the claiming team's starting lineup in finished weeks from the claim week on, until that team drops or trades him. Unlike the claims table below, bench points don't count."));
+  if (!R.teams.length) {
+    host.appendChild(el("div", "empty", "<b>No pickups yet this season</b>"));
+    return;
+  }
+  const wrap = el("div", "wrc");
+  wrap.id = "waiverCard";
+  for (const t of R.teams) {
+    const card = el("article", "wrc-team");
+    const items = t.rows.map(r => `<li>
+        <span class="gr ${r.grade ? wrcCls(r.grade) : ""}"${r.grade ? ` data-grade="${r.grade}"` : ""}>${r.grade || "–"}</span>
+        <span class="pl">${plabel(r)}</span>
+        <span class="fb">${r.bid == null ? "" : r.type === "free_agent" ? "FA" : "$" + r.bid}</span>
+        <span class="pt">${r.early ? `<span class="early">Too early</span>` : esc(sgnf(r.pts))}</span></li>`).join("");
+    card.innerHTML = `<div class="wrc-hero">
+        <span class="g ${t.grade ? wrcCls(t.grade) : ""}"${t.grade ? ` data-grade="${t.grade}"` : ""}>${t.grade || "–"}</span>
+        <div class="meta"><div class="n">${esc(t.name)}</div>
+          <div class="s">${t.n ? `GPA ${f2(t.gpa)} · ${esc(sgnf(t.net))} pts · ${t.n} graded` : "Too early to grade"}</div></div>
+      </div><ul class="wrc-list">${items}</ul>`;
+    wrap.appendChild(card);
+  }
+  host.appendChild(wrap);
+  host.appendChild(el("div", "wrc-note",
+    `Grades are percentile bands of |points added| across all ${R.graded} graded pickups this season, borrowed from the trade-grade v2 scale: under the 21.6th percentile is a C; to the 55.3rd a B (or D if he added nothing or less); to the 86.9th an A (or F); above that A+ (or F-). The team grade is the GPA of its pickups, rounded to the nearest letter. Points count from the claim week on, only while he was in the claiming team's starting lineup. A pickup with no finished week since the claim is “Too early”. Grades ignore FAAB cost: a $50 claim and a free add that score the same get the same letter. When many pickups score exactly 0, the bottom cut is 0 and every scoreless pickup is a D, so the C band can be empty.`));
+}
+
 /* -------------------------------------------------------------- panel */
 const plabel = x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
 /** Everything a side received, players and picks, in plain words. */
@@ -10185,7 +10483,9 @@ function renderTrades(host, L, W) {
 
   /* ---- waivers ---- */
   host.appendChild(sechead("Waivers and FAAB",
-    "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him."));
+    "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him. (The report card counts only started points — see its note.)"));
+
+  if (W.card) renderWaiverCard(host, W.card);
 
   if (!W.claims.length) {
     host.appendChild(el("div", "empty", "<b>No waiver activity on record</b>"));
@@ -10374,6 +10674,7 @@ async function ensureTrades() {
     await loadDraftSlots();
     const L = tradeLedger(txs), W = waiverReport(txs);
     TRADE_GRADES = await jget("data/trade-grades.json").catch(() => null);
+    W.card = waiverReportCard(txs);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
     renderTrades(host, L, W);
     document.body.dataset.tradesReady = "1";
@@ -10472,7 +10773,11 @@ async function boot() {
     const params = new URLSearchParams(location.search);
     const q = params.get("a"), tab = params.get("t");
     const want = q ? "article/" + q : (tab || location.hash.replace("#", ""));
-    if (want.startsWith("article/")) {
+    if (params.has("tierdemo") || want === "tierdemo") {
+      // The tier-card sample (TIER_DEMO): a fixture, opened like an article.
+      show("recaps");
+      openArticle(TIER_DEMO, true);
+    } else if (want.startsWith("article/")) {
       // A link out of the email names a piece. Show the index first so there is
       // something behind the back button, then open the piece over it.
       show("recaps");
@@ -10494,7 +10799,7 @@ async function boot() {
     });
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
     window.__DFFL = {
-      DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist,
+      DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist, TIER_DEMO, tiersHTML, tierPcts,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,
       fmtOdds, futuresMarkets, liveNow: () => LIVE_NOW,
