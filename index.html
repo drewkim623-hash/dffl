@@ -1041,75 +1041,32 @@
   .atl p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
 
   /* ============ power rankings ============ */
-  .pwhero{position:relative;overflow:hidden;border:1px solid var(--edge);border-radius:var(--r);padding:20px 22px 22px;
-    margin-bottom:14px;background:radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.22),transparent 70%),
-    radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.18),transparent 70%),linear-gradient(160deg,var(--deep),var(--surface) 65%)}
-  .pwhero:empty{display:none}
-  .pwhero::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-  .pwhero .k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .pwhero .big{font:700 84px/1 var(--disp);letter-spacing:-.05em;color:#fff;margin:6px 0 10px;
-    text-shadow:0 0 24px rgba(var(--a-rgb),.45);font-variant-numeric:tabular-nums}
-  .pwhero .tn{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font:700 22px/1.2 var(--disp);letter-spacing:-.02em;min-width:0}
-  .pwhero .tn span:last-child{display:block;min-width:0;overflow-wrap:normal;white-space:normal}
-  .pwhero .hd{color:var(--muted);font-size:13.5px;margin-top:3px}
-  .pwhero .ln{color:var(--ink-2);font-size:14.5px;margin-top:9px;font-variant-numeric:tabular-nums}
-  .pwseg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:14px;
-    background:var(--surface);border:1px solid var(--ring);border-radius:var(--r)}
-  .pwseg button{appearance:none;border:0;background:none;color:var(--ink-2);font:700 14px var(--body);padding:10px;
-    border-radius:var(--rs);cursor:pointer}
-  .pwseg button.on{background:var(--raised);color:var(--ink);box-shadow:inset 0 -3px 0 var(--gold)}
-  .pwseg button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-  .pwlede{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.55}
   .tiers{display:grid;gap:14px;align-items:start}
   @media(min-width:1000px){.tiers{grid-template-columns:1fr 1fr}}
-  .lst{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden;
-    box-shadow:0 10px 30px -18px #000}
-  .lst .lh{margin:0;padding:12px 15px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-    font-weight:800;border-bottom:1px solid var(--grid)}
-  .pwrow,.lkrow{
-    position:relative;display:grid;grid-template-columns:24px 28px minmax(0,1fr) auto 26px;align-items:center;gap:10px;
-    padding:11px 12px 11px 13px;border-top:1px solid var(--grid)}
-  .lkrow{grid-template-columns:28px minmax(0,1fr) auto}
-  .lst .lh+.pwrow,.lst .lkrow:first-child{border-top:0}
-  .lst .lh+.pwrow::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;
-    background:linear-gradient(var(--gold),transparent)}
-  .pwrow .pr{font:700 19px/1 var(--disp);color:var(--gold);font-variant-numeric:tabular-nums;text-align:center;
+  .pwrow{
+    display:grid;grid-template-columns:30px 52px auto minmax(0,1fr) auto auto;align-items:center;gap:11px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:var(--rs);padding:11px 13px}
+  .pwrow .pr{font-size:17px;font-weight:850;color:var(--ink);font-variant-numeric:tabular-nums;text-align:center;
     letter-spacing:-.02em}
-  .pwrow .id .h,.lkrow .id .h{font-size:12.5px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .lkrow .id{min-width:0} .lkrow .id .n{font-weight:750;font-size:15px;display:block;overflow-wrap:normal;white-space:normal}
-  .pwrow .id .mv{text-align:left;margin-top:2px}
-  .pwrow .val,.lkrow .val{display:flex;flex-direction:column;align-items:center;gap:4px}
-  .val .tv{min-width:64px;text-align:center;padding:6px 8px;border-radius:10px;font:700 17px/1.1 var(--disp);
-    font-variant-numeric:tabular-nums;background:linear-gradient(var(--raised),var(--surface));border:1px solid var(--grid);
-    box-shadow:inset 0 1px 0 #ffffff12}
-  .val .ts{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .pwx{appearance:none;border:0;background:none;color:var(--muted);font-size:16px;cursor:pointer;width:26px;height:32px;
-    border-radius:8px;transition:transform .2s}
-  .pwx:focus-visible{outline:2px solid var(--gold)}
-  .pwrow.open .pwx{transform:rotate(180deg);color:var(--gold)}
-  @media(prefers-reduced-motion:reduce){.pwx{transition:none}}
-  .pwrow .more{display:none;grid-column:1/-1;gap:10px;flex-direction:column}
-  .pwrow.open .more{display:flex}
-  .pwrow .id .s{display:none}
-  .pwrow.open .id .s{display:block;white-space:normal;margin-top:4px}
-  details.method summary{cursor:pointer;font-weight:800;font-size:15px;list-style:none}
-  details.method summary::-webkit-details-marker{display:none}
-  details.method summary::before{content:"▶ ";color:var(--gold);font-size:12px}
-  details.method[open] summary{margin-bottom:10px}
-  details.method[open] summary::before{content:"▼ "}
   .mv{font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:center;
     display:inline-block}
   .mv.up{color:var(--good)} .mv.down{color:var(--crit)}
   .mv.flat,.mv.none{color:var(--muted)}
   .pwrow .id{min-width:0}
-  .pwrow .id .n{font-weight:750;font-size:15px;display:block;overflow-wrap:normal;white-space:normal}
-  .pwrow .id .s{font-size:12.5px;color:var(--muted);line-height:1.45}
+  .pwrow .id .n{font-weight:750;font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pwrow .id .s{font-size:12.5px;color:var(--muted);display:block;line-height:1.45}
   .pwrow .sp{display:flex;align-items:center;flex:none}
-  .pwrow .sp:empty{display:none}
-  .spark{display:block;max-width:100%}
-  .pwrow .stats{display:flex;gap:7px;flex-wrap:wrap}
-  .pwrow .stats .chip{flex:1;min-width:0}
-  @media(max-width:420px){.pwhero .big{font-size:68px}.pwhero .tn{font-size:20px}}
+  .spark{display:block}
+  .pwrow .stats{display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}
+  @media(max-width:820px){
+    .pwrow{grid-template-columns:30px 52px auto minmax(0,1fr);
+      grid-template-areas:"pr mv av id" "sp sp sp sp" "st st st st";gap:8px 10px}
+    .pwrow .pr{grid-area:pr} .pwrow .mv{grid-area:mv} .pwrow .av{grid-area:av} .pwrow .id{grid-area:id}
+    .pwrow .sp{grid-area:sp;justify-content:flex-start}
+    .pwrow .stats{grid-area:st;justify-content:flex-start}
+    .pwrow .stats .chip{flex:1;min-width:0}
+  }
+  @media(max-width:420px){.pwrow .sp{display:none}}
 
   /* ============ position rooms ============ */
   .rooms{display:grid;gap:7px}
@@ -9220,124 +9177,30 @@ function projectedBoard(model, sim) {
 
 function panelPower(model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "power";
-  // The #1 hero opens the tab; the heading and its intro sit below the board.
-  const head = sechead("Power rankings",
-    "Not the standings. Every week each team is measured against the whole league rather than the one opponent it drew, and the board is rebuilt from scratch — so the arrows are real movement, not a hot take.");
+  p.appendChild(sechead("Power rankings",
+    "Not the standings. Every week each team is measured against the whole league rather than the one opponent it drew, and the board is rebuilt from scratch — so the arrows are real movement, not a hot take."));
 
   const proj = projectedBoard(model, sim);
   const all = allPowerRankings();
   if (!all.size && !proj) {
     p.appendChild(el("div", "empty",
       "<b>No weeks to rank yet</b>The board is built out of results, and there aren't any. It starts the week the season does."));
-    p.insertBefore(head, p.firstChild);
     p.appendChild(roomsSection());
     return p;
   }
   window.__POWER = all; window.__PROJ = proj;
 
   const PROJKEY = "__proj";
-  // Hero up top, Board / Luck as a segmented toggle, then whichever view is on.
-  const hero = el("div", "pwhero"); p.appendChild(hero);
-  const segs = el("div", "pwseg"); segs.setAttribute("role", "tablist"); p.appendChild(segs);
-  const boardView = el("div"), luckView = el("div"); luckView.hidden = true;
-  p.appendChild(boardView); p.appendChild(luckView);
-  [["Board", boardView], ["Luck", luckView]].forEach(([label, view], i) => {
-    const b = el("button", i ? null : "on", label);
-    b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(!i));
-    b.onclick = () => {
-      for (const x of segs.children) { x.classList.toggle("on", x === b); x.setAttribute("aria-selected", String(x === b)); }
-      boardView.hidden = view !== boardView; luckView.hidden = view !== luckView;
-      hero.hidden = view !== boardView;
-    };
-    segs.appendChild(b);
-  });
-
   const picks = el("div", "pickrow");
   const seasonSel = el("select"), weekSel = el("select");
   seasonSel.setAttribute("aria-label", "Season"); weekSel.setAttribute("aria-label", "Week");
   if (proj) { const o = el("option", null, `${proj.season} preseason`); o.value = PROJKEY; seasonSel.appendChild(o); }
   for (const yr of [...all.keys()]) { const o = el("option", null, `${yr} season`); o.value = yr; seasonSel.appendChild(o); }
   picks.appendChild(seasonSel); picks.appendChild(weekSel);
-  boardView.appendChild(picks);
-  const host = el("div"); boardView.appendChild(host);
-  luckView.appendChild(luckBoard());
-  p.appendChild(head);
+  p.appendChild(picks);
+  const host = el("div"); p.appendChild(host);
   // Always the season being played, whichever board is picked above.
   p.appendChild(roomsSection());
-
-  function drawHero(kicker, big, uid, line) {
-    const team = teamOf(uid);
-    hero.innerHTML = `<div class="k">${esc(kicker)}</div>
-      <div class="big">${esc(big)}</div>
-      <div class="tn">${avatarHTML(uid, "sm")}<span>${esc(team || nameOf(uid))}</span></div>
-      ${team ? `<div class="hd">${esc(nameOf(uid))}</div>` : ""}
-      <div class="ln">${line}</div>`;
-  }
-
-  // One ranked row: gold rank, avatar, team + handle + arrow, rating tile with
-  // the record under it. The rank line, chips and write-up fold out.
-  function rankRow(r, { mv, line, tile, tileSub, spark, chips, tip }) {
-    const team = teamOf(r.uid), who = team || nameOf(r.uid);
-    const row = el("div", "pwrow");
-    row.innerHTML = `
-      <span class="pr">${r.rank}</span>
-      ${avatarHTML(r.uid, "sm")}
-      <span class="id">
-        <span class="n">${esc(who)}</span>
-        ${team ? `<span class="h">${esc(nameOf(r.uid))}</span>` : ""}
-        ${mv}
-        <span class="s">${line}</span>
-      </span>
-      <span class="val"><span class="tv">${tile}</span><span class="ts">${tileSub}</span></span>
-      <button type="button" class="pwx" aria-expanded="false" aria-label="More on ${esc(who)}"><span aria-hidden="true">⌄</span></button>
-      <span class="more"><span class="sp">${spark}</span><span class="stats">${chips}</span></span>`;
-    const x = row.querySelector(".pwx");
-    x.onclick = e => {
-      e.stopPropagation();
-      x.setAttribute("aria-expanded", String(row.classList.toggle("open")));
-    };
-    bindTip(row, tip);
-    return row;
-  }
-
-  const TIERS = [["Contenders", 0, 4], ["The middle", 4, 8], ["Rebuilding", 8, Infinity]];
-  function tiered(rows, make) {
-    const wrap = el("div", "tiers rows");
-    for (const [name, a, b] of TIERS) {
-      const slice = rows.slice(a, b);
-      if (!slice.length) continue;
-      const lst = el("div", "lst");
-      lst.appendChild(el("h3", "lh", esc(name)));
-      for (const r of slice) lst.appendChild(make(r));
-      wrap.appendChild(lst);
-    }
-    return wrap;
-  }
-
-  // The all-time luck table the Managers tab already computes, as a list.
-  function luckBoard() {
-    const wrap = el("div");
-    const AT = window.__AT || [];
-    if (!AT.length) { wrap.appendChild(el("div", "empty", "<b>No games yet</b>")); return wrap; }
-    wrap.appendChild(el("p", "pwlede",
-      "All-time wins above or below what each manager's scoring earned. Positive means the schedule has been kind."));
-    const lst = el("div", "lst");
-    for (const r of AT.slice().sort((a, b) => b.luck - a.luck)) {
-      const team = teamOf(r.uid);
-      const row = el("div", "lkrow");
-      row.innerHTML = `
-        ${avatarHTML(r.uid, "sm")}
-        <span class="id">
-          <span class="n">${esc(team || nameOf(r.uid))}</span>
-          ${team ? `<span class="h">${esc(nameOf(r.uid))}</span>` : ""}
-        </span>
-        <span class="val ${r.luck >= 0 ? "pos-t" : "neg-t"}"><span class="tv">${r.luck >= 0 ? "+" : ""}${f1(r.luck)}</span><span class="ts">${r.w}–${r.l}</span></span>`;
-      bindTip(row, `<b>${esc(nameOf(r.uid))}</b><br>Actual ${r.w}-${r.l}<br>Earned about ${f1(r.expW)} wins<br>${r.luck >= 0 ? "Up" : "Down"} ${f1(Math.abs(r.luck))} on luck`);
-      lst.appendChild(row);
-    }
-    wrap.appendChild(lst);
-    return wrap;
-  }
 
   function fillWeeks() {
     if (seasonSel.value === PROJKEY) {
@@ -9363,24 +9226,33 @@ function panelPower(model, sim) {
         run through the same model the Odds tab prices from. It is a starting position, not a result.</span>`;
     host.appendChild(mode);
 
-    const top = proj.rows[0];
-    drawHero(`Projected #1 · ${proj.season} preseason`, f1(top.mean), top.uid,
-      `${f1(top.wins)} wins · ${pct(top.playoff)} playoffs`);
-    host.appendChild(tiered(proj.rows, r => rankRow(r, {
-      mv: `<span class="mv none"></span>`,
-      line: `projects to ${f1(r.mean)} points a week · ${f1(r.wins)} wins`,
-      tile: f1(r.mean), tileSub: `${f1(r.wins)} wins`, spark: "",
-      chips: `<span class="chip"><span class="cv">${f1(r.rosterValue)}</span><span class="cl">Roster</span></span>
+    const rows = el("div", "rows");
+    for (const r of proj.rows) {
+      const row = el("div", "pwrow");
+      row.innerHTML = `
+        <span class="pr">${r.rank}</span>
+        <span class="mv none"></span>
+        ${avatarHTML(r.uid, "sm")}
+        <span class="id">
+          <span class="n">${esc(nameOf(r.uid))}</span>
+          <span class="s">projects to ${f1(r.mean)} points a week · ${f1(r.wins)} wins</span>
+        </span>
+        <span class="sp"></span>
+        <span class="stats">
+          <span class="chip"><span class="cv">${f1(r.rosterValue)}</span><span class="cl">Roster</span></span>
           <span class="chip"><span class="cv">${r.fromDraft >= 0 ? "+" : ""}${f1(r.fromDraft)}</span><span class="cl">From draft</span></span>
           <span class="chip"><span class="cv">${r.fromRecord >= 0 ? "+" : ""}${f1(r.fromRecord)}</span><span class="cl">From record</span></span>
-          <span class="chip"><span class="cv">${pct(r.playoff)}</span><span class="cl">Playoffs</span></span>`,
-      tip: `<b>${esc(nameOf(r.uid))}</b><br>
+          <span class="chip"><span class="cv">${pct(r.playoff)}</span><span class="cl">Playoffs</span></span>
+        </span>`;
+      bindTip(row, `<b>${esc(nameOf(r.uid))}</b><br>
         projects ${f1(r.mean)} pts a week · ${f1(r.wins)} wins<br>
-        makes the playoffs ${pct(r.playoff)} · wins it ${pct(r.title)}`,
-    })));
+        makes the playoffs ${pct(r.playoff)} · wins it ${pct(r.title)}`);
+      rows.appendChild(row);
+    }
+    host.appendChild(rows);
 
-    const m = el("details", "method");
-    m.innerHTML = `<summary>Why this board is different</summary>
+    const m = el("div", "method");
+    m.innerHTML = `<h3>Why this board is different</h3>
       <p>The weekly boards rank on what teams have done. This one has nothing to go on, so it ranks on
          what they drafted: each roster's best ${model.rosterCap || 15} picks priced against the
          pre-draft market, weighted ${W_ROSTER}, plus the manager's own scoring record, weighted
@@ -9399,36 +9271,40 @@ function panelPower(model, sim) {
     const idx = R.weeks.indexOf(wk);
     const board = R.boards[idx];
     host.innerHTML = "";
-    if (!board) { hero.innerHTML = ""; host.appendChild(el("div", "empty", "<b>No board for that week</b>")); return; }
+    if (!board) { host.appendChild(el("div", "empty", "<b>No board for that week</b>")); return; }
 
-    const rec = r => `${r.w}–${r.l}${r.t ? `–${r.t}` : ""}`;
-    const top = board.rows[0];
-    drawHero(`Power #1 · ${R.season === (DB.seasons[0] && DB.seasons[0].season) ? "" : `${R.season} `}Week ${wk}`,
-      f2(top.score), top.uid, `${rec(top)} · ${pct(top.apPct)} all-play`);
-
+    const rows = el("div", "rows");
     let blurbed = 0;
-    host.appendChild(tiered(board.rows, r => {
+    for (const r of board.rows) {
       const blurb = blurbFor(R.season, wk, r.uid);
       if (blurb) blurbed++;
-      return rankRow(r, {
-        mv: moveHTML(r.move),
-        line: blurb ? esc(blurb) : `${rec(r)} · ${f1(r.pf)} points for`,
-        tile: f2(r.score), tileSub: rec(r),
-        spark: rankSpark(R.history.get(r.uid), idx + 1, R.n),
-        chips: `<span class="chip"><span class="cv">${rec(r)}</span><span class="cl">Record</span></span>
+      const row = el("div", "pwrow");
+      row.innerHTML = `
+        <span class="pr">${r.rank}</span>
+        ${moveHTML(r.move)}
+        ${avatarHTML(r.uid, "sm")}
+        <span class="id">
+          <span class="n">${esc(nameOf(r.uid))}</span>
+          <span class="s">${blurb ? esc(blurb) : `${r.w}–${r.l}${r.t ? `–${r.t}` : ""} · ${f1(r.pf)} points for`}</span>
+        </span>
+        <span class="sp">${rankSpark(R.history.get(r.uid), idx + 1, R.n)}</span>
+        <span class="stats">
+          <span class="chip"><span class="cv">${r.w}–${r.l}${r.t ? `–${r.t}` : ""}</span><span class="cl">Record</span></span>
           <span class="chip"><span class="cv">${pct(r.apPct)}</span><span class="cl">${jx("allplay", "All-play")}</span></span>
           <span class="chip"><span class="cv">${pct(r.formPct)}</span><span class="cl">${jx("form", "Form")}</span></span>
-          <span class="chip"><span class="cv">${f2(r.score)}</span><span class="cl">${jx("rating", "Rating")}</span></span>`,
-        tip: `<b>${esc(nameOf(r.uid))}</b><br>
+          <span class="chip"><span class="cv">${f2(r.score)}</span><span class="cl">${jx("rating", "Rating")}</span></span>
+        </span>`;
+      bindTip(row, `<b>${esc(nameOf(r.uid))}</b><br>
         all-play ${pct(r.apPct)} · form ${pct(r.formPct)}<br>
         ${f1(r.pf)} points for · ${pct(r.pfNorm)} of the league's range<br>
-        rating ${f2(r.score)}${r.move != null ? `<br>${r.move === 0 ? "held" : r.move > 0 ? `up ${r.move}` : `down ${-r.move}`} on week ${wk - 1}` : ""}`,
-      });
-    }));
+        rating ${f2(r.score)}${r.move != null ? `<br>${r.move === 0 ? "held" : r.move > 0 ? `up ${r.move}` : `down ${-r.move}`} on week ${wk - 1}` : ""}`);
+      rows.appendChild(row);
+    }
+    host.appendChild(rows);
 
     const w = POWER_W;
-    const m = el("details", "method");
-    m.innerHTML = `<summary>What the rating is made of</summary>
+    const m = el("div", "method");
+    m.innerHTML = `<h3>What the rating is made of</h3>
       <dl>
         <dt>All-play win %</dt><dd>${(w.allPlay * 100).toFixed(0)}%</dd>
         <dt>Form, last ${FORM_WEEKS} weeks</dt><dd>${(w.form * 100).toFixed(0)}%</dd>
