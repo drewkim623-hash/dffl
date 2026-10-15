@@ -2703,6 +2703,92 @@ await page.waitForFunction(() => document.body.dataset.tradesReady, null, { time
 const tradesState = await page.evaluate(() => document.body.dataset.tradesReady);
 check("the trades tab loads its own data on first open", tradesState === "1", tradesState);
 
+group("Trades: waiver report card");
+const wrcRead = () => page.evaluate(() => {
+  const c = document.querySelector("#waiverCard");
+  if (!c) return null;
+  const over = [];
+  for (const n of c.querySelectorAll("*")) {
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return {
+    teams: c.querySelectorAll(".wrc-team").length,
+    heroes: c.querySelectorAll(".wrc-hero .n").length,
+    grades: [...c.querySelectorAll("[data-grade]")].map(g => [g.dataset.grade, g.textContent.trim()]),
+    cols: getComputedStyle(c).gridTemplateColumns.split(" ").length,
+    note: (c.nextElementSibling && c.nextElementSibling.textContent) || "",
+    over: over.slice(0, 6), docScroll: document.documentElement.scrollWidth, inner: innerWidth,
+    imgs: c.querySelectorAll("img").length,
+    graded: window.__WAIVERS && window.__WAIVERS.card ? window.__WAIVERS.card.graded : 0,
+    heroStack: (() => {
+      const h = c.querySelector(".wrc-hero"); if (!h) return null;
+      const g = h.querySelector(".g").getBoundingClientRect(), n = h.querySelector(".n").getBoundingClientRect();
+      return g.bottom <= n.top + 1;
+    })(),
+  };
+});
+// The points-added math, on a synthetic season (roster 1 and 2, weeks 1–5 final).
+const wrcFx = await page.evaluate(() => {
+  const E = (rid, starters, pts) => ({ roster_id: rid, ...(starters ? { starters } : {}), players: Object.keys(pts), players_points: pts });
+  const season = {
+    season: "2099", pws: 15, userById: new Map(),
+    rosters: [{ roster_id: 1, owner_id: "u1" }, { roster_id: 2, owner_id: "u2" }],
+    regEntries: new Map([
+      [1, [E(1, [], {}), E(2, ["b"], { b: 4 })]],
+      [2, [E(1, ["a"], { a: 10 }), E(2, [], { b: 9 })]],
+      [3, [E(1, null, { a: 50 }), E(2, ["b"], { b: 6 })]],
+      [4, [E(1, [], { a: 8 }), E(2, ["a", "b"], { a: 30, b: 7 })]],
+      [5, [E(1, ["a"], { a: 100 }), E(2, [], {})]],
+    ]),
+  };
+  const T = (type, leg, ts, adds, drops, bid) => ({ season: "2099", type, leg, status_updated: ts, adds, drops,
+    settings: bid == null ? {} : { waiver_bid: bid } });
+  const txs = [
+    T("free_agent", 1, 100, { b: 2 }, null),          // b: roster 2 adds…
+    T("waiver", 2, 200, { a: 1 }, null, 10),          // a: roster 1 claims in week 2
+    T("free_agent", 2, 300, null, { b: 2 }),          // b: …drops…
+    T("free_agent", 3, 400, { b: 2 }, null),          // b: …and re-adds
+    T("trade", 4, 500, { a: 2 }, { a: 1 }),           // a: traded away in week 4…
+    T("trade", 5, 600, { a: 1 }, { a: 2 }),           // a: …and back in week 5 (starts, 100 pts)
+    T("waiver", 6, 700, { c: 1 }, null, 3),           // c: no finished week yet
+  ];
+  const R = waiverReportCard(txs, season);
+  const rows = R.rows.map(r => ({ pid: r.pid, wk: r.wk, pts: r.pts, early: r.early, grade: r.grade || null, bid: r.bid }));
+  const g = (x, cuts) => wrcGrade(x, cuts);
+  const bands = [g(0.5, [1, 2, 3]), g(1, [1, 2, 3]), g(2, [1, 2, 3]), g(2.01, [1, 2, 3]), g(3, [1, 2, 3]), g(3.01, [1, 2, 3]),
+    g(-1, [1, 2, 3]), g(-2.5, [1, 2, 3]), g(-3.5, [1, 2, 3]), g(0, [0, 2, 3])];
+  return { rows, bands };
+});
+const wrcRow = (pid, wk) => wrcFx.rows.find(r => r.pid === pid && r.wk === wk);
+check("waiver card: claim-week points count when started, bench / no-lineup weeks don't, and none after a trade away",
+  wrcRow("a", 2) && wrcRow("a", 2).pts === 10, JSON.stringify(wrcRow("a", 2)));
+check("waiver card: a drop + re-add by the same roster isn't double counted",
+  wrcRow("b", 1) && wrcRow("b", 1).pts === 4 && wrcRow("b", 3) && wrcRow("b", 3).pts === 13,
+  JSON.stringify([wrcRow("b", 1), wrcRow("b", 3)]));
+check("waiver card: a pickup with 0 finished weeks is Too early and ungraded",
+  wrcRow("c", 6) && wrcRow("c", 6).early && !wrcRow("c", 6).grade, JSON.stringify(wrcRow("c", 6)));
+check("waiver card: band boundaries (C <21.6th, B/D ≤55.3rd, A/F ≤86.9th, A+/F- above; 0 is a D when the C cut is 0)",
+  wrcFx.bands.join(" ") === "C B B A A A+ D F F- D", wrcFx.bands.join(" "));
+const vp0 = page.viewportSize();
+const wrcWide = await wrcRead();
+check("the waiver report card renders with a card per team", !!wrcWide && wrcWide.teams > 0 && wrcWide.heroes === wrcWide.teams, JSON.stringify(wrcWide && wrcWide.teams));
+const WRC_OK = new Set(["A+", "A", "B", "C", "D", "F", "F-"]);
+check("every waiver grade comes from A+ A B C D F F-", !!wrcWide && (wrcWide.grades.length > 0 || wrcWide.graded === 0) && wrcWide.grades.every(([d, t]) => WRC_OK.has(d) && d === t),
+  wrcWide && wrcWide.grades.filter(([d, t]) => !WRC_OK.has(d) || d !== t).slice(0, 4).join(" "));
+check("the card says its bands are borrowed from the trade-grade v2 scale", !!wrcWide && /borrowed from the trade-grade v2 scale/.test(wrcWide.note), wrcWide && wrcWide.note.slice(0, 80));
+check("the waiver card carries no player headshots", !!wrcWide && wrcWide.imgs === 0, String(wrcWide && wrcWide.imgs));
+if (vp0 && vp0.width >= 720) check("the waiver card is a grid at desktop width", !!wrcWide && wrcWide.cols > 1, String(wrcWide && wrcWide.cols));
+await page.setViewportSize({ width: 390, height: 844 });
+await page.waitForTimeout(150);
+const wrc390 = await wrcRead();
+check("the waiver card is one column at 390px", !!wrc390 && wrc390.cols === 1, String(wrc390 && wrc390.cols));
+check("the waiver card stacks the hero grade above the team name at 390px", !!wrc390 && wrc390.heroStack === true, String(wrc390 && wrc390.heroStack));
+if (vp0 && vp0.width >= 720) check("the waiver card keeps the grade beside the team name at desktop width", !!wrcWide && wrcWide.heroStack === false, String(wrcWide && wrcWide.heroStack));
+check("the waiver card has no horizontal overflow at 390px", !!wrc390 && wrc390.over.length === 0 && wrc390.docScroll <= wrc390.inner,
+  wrc390 && `${wrc390.over.join(" | ")} doc ${wrc390.docScroll}/${wrc390.inner}`);
+if (vp0) await page.setViewportSize(vp0);
+
 const T = await page.evaluate(() => {
   const L = window.__TRADES, W = window.__WAIVERS, D = window.__DFFL;
   const nums = [];
@@ -6860,6 +6946,72 @@ group("Odds history: per-team odds for each finalized week");
     check(`latest finalized week ${want.key} is recorded from the committed snapshot`,
       keys.at(-1) === want.key && JSON.stringify(have) === JSON.stringify(want.rows), `latest on file ${keys.at(-1)}`);
   } else check("committed snapshot is mid-week, so no latest-week row is expected from it", true);
+}
+
+/* tiers is the default odds graphic for new articles. These checks render the
+ * TIER_DEMO fixture (opened at ?tierdemo), not anything in recaps.json. */
+group("Tier cards");
+{
+  const { tiersProblems, TIERS_INTRO_MAX } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const tp = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const tpage = await tp.newPage();
+  await tpage.goto(`${BASE}/?tierdemo`, { waitUntil: "domcontentloaded" });
+  await tpage.waitForFunction(() => document.body.dataset.ready && document.querySelector(".tiers .tcard"), null, { timeout: 90000 });
+  const t = await tpage.evaluate(() => {
+    const D = window.__DFFL, cards = [...document.querySelectorAll(".tiers .tcard")];
+    const byTeam = Object.fromEntries(cards.map(c => [c.dataset.team, c]));
+    const hero = n => byTeam[n].querySelector(".thero b").textContent;
+    const ti = document.querySelector(".tiers .ti"), lh = parseFloat(getComputedStyle(ti).lineHeight) || 20;
+    const clipped = cards.flatMap(c => [...c.querySelectorAll(".tteam,.tmg")]).filter(e => {
+      const r = e.getBoundingClientRect(), cr = e.closest(".tcard").getBoundingClientRect();
+      return e.scrollWidth > e.clientWidth + 1 || r.right > cr.right + 1 || r.right > innerWidth;
+    }).map(e => e.textContent);
+    const long = byTeam["Maximiliano_Fitzgerald_Throckmorton"].querySelector(".tnm");
+    const stub = byTeam["Basement"].querySelector(".tbar span").getBoundingClientRect().width;
+    const fs = s => parseFloat(getComputedStyle(document.querySelector(s)).fontSize);
+    return {
+      fixture: D.TIER_DEMO.blocks.find(b => b.type === "tiers"),
+      fmt: D.tierPcts([98.6, 98.7, 61.3, 60.8, 44, 3.4, 0.3, 100, 99.7, 72.6, 71.4]),
+      top: hero("TopDog"), second: hero("SecondSlot"), bubble: hero("Bubbleboy"), coin: hero("Coinflip"), mid: hero("Maximiliano_Fitzgerald_Throckmorton"),
+      arrowsWithLast: ["TopDog", "SecondSlot", "Bubbleboy", "Basement"].every(n => byTeam[n].querySelector(".tmv")),
+      noLast: ["Coinflip", "SixthSeedSam"].map(n => ({ n, mv: !!byTeam[n].querySelector(".tmv"), text: byTeam[n].querySelector(".thero").textContent.replace(/\s+/g, "") })),
+      stub, clipped, longLines: Math.round(long.getBoundingClientRect().height / parseFloat(getComputedStyle(long).lineHeight)),
+      longEllipsis: getComputedStyle(long).textOverflow === "ellipsis" && long.title === long.textContent,
+      avatars: cards.every(c => c.querySelector(".tteam .tav")),
+      introOneLine: ti.getBoundingClientRect().height <= lh * 1.4 && ti.scrollWidth <= ti.clientWidth + 1,
+      overflowX: document.documentElement.scrollWidth > innerWidth,
+      mgFont: fs(".tcard .tmg"), byeFont: fs(".tcard .tbye"), heroFont: fs(".tcard .thero b"),
+      byeColor: getComputedStyle(document.querySelector(".tcard .tbye")).color,
+    };
+  });
+  check("the ?tierdemo fixture passes check-recaps' tiers rules", tiersProblems(t.fixture).length === 0, tiersProblems(t.fixture).join("; "));
+  check("check-recaps refuses an intro longer than one short line",
+    tiersProblems({ ...t.fixture, intro: "x".repeat(TIERS_INTRO_MAX + 1) }).some(p => /intro/.test(p)));
+  check("decimals: close values get one decimal, the rest whole numbers",
+    JSON.stringify(t.fmt) === '["98.6","98.7","61.3","60.8","44","3","0.3","100","99.7","73","71"]', JSON.stringify(t.fmt));
+  check("decimals: close teams never print the same number on the cards",
+    t.top === "98.6%" && t.second === "98.7%" && t.bubble === "61.3%" && t.coin === "60.8%" && t.mid === "44%",
+    [t.top, t.second, t.bubble, t.coin, t.mid].join(" "));
+  check("an arrow shows on every row that carries last week's number", t.arrowsWithLast);
+  check("no arrow and no placeholder on a row without last week's number",
+    t.noLast.every(r => !r.mv && /^\d+(\.\d)?%(In|Bye|Out)?$/.test(r.text)), JSON.stringify(t.noLast));
+  check("a 0.3% long shot still draws a bar stub of at least 3px", t.stub >= 3, `${t.stub.toFixed(1)}px`);
+  check("names wrap at spaces, never mid-word; a single long handle is one ellipsized line at 390",
+    t.clipped.length === 0 && t.longLines === 1 && t.longEllipsis && !t.overflowX,
+    `clipped: ${t.clipped.join(" | ")}; long name lines ${t.longLines}; ellipsis ${t.longEllipsis}`);
+  check("every tier card carries a team avatar (initials fallback)", t.avatars);
+  check("the intro under the headline is one line", t.introOneLine);
+  check("at 390 the hero number leads and the manager line and BYE label are a step up",
+    t.heroFont >= 28 && t.mgFont >= 13 && t.byeFont >= 11.5 && t.byeColor !== "rgb(139, 138, 149)",
+    `hero ${t.heroFont} mg ${t.mgFont} bye ${t.byeFont} ${t.byeColor}`);
+  await tp.close();
+
+  const doc = async f => readFile(join(ROOT, f), "utf8").catch(() => "");
+  const [std, job, readme] = await Promise.all(["docs/graphics-standard.md", "weekly-job-prompt.md", "README.md"].map(doc));
+  check("tiers is documented as the default odds graphic (standard, job prompt, README)",
+    /default odds graphic/i.test(std) && /default odds graphic is a `tiers` block/i.test(job) && /default odds graphic/i.test(readme));
+  check("every article contract points at docs/graphics-standard.md",
+    job.includes("docs/graphics-standard.md") && /390px/.test(std) && /2.3 options|two or three options/i.test(std));
 }
 
 group("Trade-aware odds (data/roster-weeks.json)");
