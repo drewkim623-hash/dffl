@@ -6812,7 +6812,7 @@ group("Tier cards");
       const r = e.getBoundingClientRect(), cr = e.closest(".tcard").getBoundingClientRect();
       return e.scrollWidth > e.clientWidth + 1 || r.right > cr.right + 1 || r.right > innerWidth;
     }).map(e => e.textContent);
-    const long = byTeam["Maximiliano_Fitzgerald_Throckmorton"].querySelector(".tteam");
+    const long = byTeam["Maximiliano_Fitzgerald_Throckmorton"].querySelector(".tnm");
     const stub = byTeam["Basement"].querySelector(".tbar span").getBoundingClientRect().width;
     const fs = s => parseFloat(getComputedStyle(document.querySelector(s)).fontSize);
     return {
@@ -6822,6 +6822,8 @@ group("Tier cards");
       arrowsWithLast: ["TopDog", "SecondSlot", "Bubbleboy", "Basement"].every(n => byTeam[n].querySelector(".tmv")),
       noLast: ["Coinflip", "SixthSeedSam"].map(n => ({ n, mv: !!byTeam[n].querySelector(".tmv"), text: byTeam[n].querySelector(".thero").textContent.replace(/\s+/g, "") })),
       stub, clipped, longLines: Math.round(long.getBoundingClientRect().height / parseFloat(getComputedStyle(long).lineHeight)),
+      longEllipsis: getComputedStyle(long).textOverflow === "ellipsis" && long.title === long.textContent,
+      avatars: cards.every(c => c.querySelector(".tteam .tav")),
       introOneLine: ti.getBoundingClientRect().height <= lh * 1.4 && ti.scrollWidth <= ti.clientWidth + 1,
       overflowX: document.documentElement.scrollWidth > innerWidth,
       mgFont: fs(".tcard .tmg"), byeFont: fs(".tcard .tbye"), heroFont: fs(".tcard .thero b"),
@@ -6840,8 +6842,10 @@ group("Tier cards");
   check("no arrow and no placeholder on a row without last week's number",
     t.noLast.every(r => !r.mv && /^\d+(\.\d)?%(In|Bye|Out)?$/.test(r.text)), JSON.stringify(t.noLast));
   check("a 0.3% long shot still draws a bar stub of at least 3px", t.stub >= 3, `${t.stub.toFixed(1)}px`);
-  check("names wrap and are never clipped at 390", t.clipped.length === 0 && t.longLines >= 2 && !t.overflowX,
-    `clipped: ${t.clipped.join(" | ")}; long name lines ${t.longLines}`);
+  check("names wrap at spaces, never mid-word; a single long handle is one ellipsized line at 390",
+    t.clipped.length === 0 && t.longLines === 1 && t.longEllipsis && !t.overflowX,
+    `clipped: ${t.clipped.join(" | ")}; long name lines ${t.longLines}; ellipsis ${t.longEllipsis}`);
+  check("every tier card carries a team avatar (initials fallback)", t.avatars);
   check("the intro under the headline is one line", t.introOneLine);
   check("at 390 the hero number leads and the manager line and BYE label are a step up",
     t.heroFont >= 28 && t.mgFont >= 13 && t.byeFont >= 11.5 && t.byeColor !== "rgb(139, 138, 149)",
