@@ -4890,6 +4890,9 @@ group("Jargon explainers");
     if (real) { sel.value = real.value; sel.dispatchEvent(new Event("change")); }
   });
   await page.waitForTimeout(150);
+  // The chips live in each row's ⌄ fold-out; open the first row's so they're clickable.
+  await page.locator('[data-panel="power"] .pwrow .pwx').first().click();
+  await page.waitForTimeout(150);
   for (const k of ["allplay", "form", "rating"]) {
     const L = await isLabel(page, `[data-panel="power"] .pwrow .cl button.jx[data-jx="${k}"]`);
     check(`Power: every ${k} chip label is a <button> with aria-expanded`, L.ok && L.n >= 12, `${L.n} labels`);
