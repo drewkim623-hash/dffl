@@ -1127,15 +1127,27 @@
 
   /* ============ trades ============ */
   .fleece{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin-top:18px;
-    background:linear-gradient(100deg,rgba(230,103,103,.17),rgba(230,103,103,.03) 58%,transparent);
-    border:1px solid rgba(230,103,103,.38)}
-  .fleece .k{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--red);font-weight:700}
-  .fleece .v{font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin:6px 0 2px;
-    font-variant-numeric:tabular-nums}
+    background:radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.22),transparent 70%),
+      radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.18),transparent 70%),linear-gradient(160deg,var(--raised),var(--surface));
+    border:1px solid rgba(var(--a-rgb),.38);box-shadow:0 18px 40px -22px rgba(var(--a-rgb),.35)}
+  .fleece::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
+  .fleece .k{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .fleece .fteams{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:12px}
+  .fleece .ft{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%}
+  .fleece .ft .n{font-weight:700;font-size:15px;overflow-wrap:break-word;min-width:0}
+  .fleece .vs{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .fleece .fgrade{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin:8px 0 2px}
+  .fleece .v{font-size:clamp(44px,14vw,72px);font-weight:900;letter-spacing:-.035em;line-height:1.05;
+    font-variant-numeric:tabular-nums;color:var(--a);text-shadow:0 0 24px rgba(var(--a-rgb),.45)}
   .fleece .w{font-size:16px;font-weight:750;letter-spacing:-.01em}
   .fleece .c{font-size:13px;color:var(--ink-2);margin-top:5px;line-height:1.5;max-width:64ch}
 
-  .trade{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+  .trade{position:relative;background:var(--surface);border:1px solid var(--edge,var(--ring));border-radius:var(--r);overflow:hidden;margin-bottom:11px}
+  .trade::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;background:linear-gradient(var(--a),transparent);opacity:.8}
+  .tradelist{display:grid;grid-template-columns:minmax(0,1fr);gap:0 14px;align-items:start}
+  .tradelist > .empty,.tradelist > .back.more{grid-column:1/-1}
+  @media(min-width:1000px){.tradelist{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tradelist .tsides{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}}
   .thead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
     padding:10px 14px;background:var(--raised);border-bottom:1px solid var(--grid)}
   .thead .twhen{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -1153,7 +1165,7 @@
   @media(max-width:560px){.tside + .tside{border-left:0}}
   .tside.won{background:linear-gradient(180deg,rgba(255,194,61,.09),transparent 70%)}
   .tside .who{display:flex;align-items:center;gap:9px;min-width:0}
-  .tside .who .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .tside .who .n{font-weight:750;font-size:14.5px;overflow-wrap:break-word;min-width:0;line-height:1.25}
   .tside .net{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;flex:none}
   .tlist{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:4px}
   .tline{display:flex;align-items:baseline;gap:8px;font-size:13.5px;min-width:0}
@@ -1164,7 +1176,13 @@
   .tline .sub{font-size:11px;color:var(--muted);font-style:normal;display:block;line-height:1.35}
   .tpicks{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
   .tnote{padding:11px 14px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);line-height:1.5}
-  .tfilter{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:430px;margin:0 0 14px}
+  .tfilter{display:flex;flex-wrap:wrap;gap:4px;padding:4px;margin:0 0 14px;max-width:100%;
+    background:var(--surface);border:1px solid var(--edge,var(--ring));border-radius:12px}
+  .tfilter button{flex:1 1 auto;font:inherit;font-size:13px;font-weight:600;color:var(--ink-2);background:none;border:0;
+    border-radius:9px;padding:8px 12px;cursor:pointer;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .tfilter button[aria-pressed="true"]{background:var(--raised);color:var(--ink);font-weight:700;box-shadow:inset 0 -2px 0 var(--a)}
+  .tfilter button:focus-visible{outline:2px solid var(--a);outline-offset:1px}
+  @media(prefers-reduced-motion:no-preference){.tfilter button{transition:background .15s,color .15s}}
   .back.more{display:block;width:100%;margin:4px 0 0;text-align:center}
 
   /* ============ misc ============ */
@@ -9988,9 +10006,12 @@ function renderTrades(host, L, W) {
     const got = gotNames(w);
     const gave = [...w.sent.map(x => x.name),
       ...w.picksOut.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
+    const fv = verdictOf(t);
+    const team = uid => `<span class="ft">${avatarHTML(uid)}<span class="n">${esc(uid ? nameOf(uid) : "the other side")}</span></span>`;
     const f = el("div", "fleece");
     f.innerHTML = `<div class="k">Biggest fleecing in league history</div>
-      <div class="v">${esc(sgnf(t.margin))}</div>
+      <div class="fteams">${team(w.uid)}<span class="vs">over</span>${team(loser.uid)}</div>
+      <div class="fgrade"><span class="v">${esc(sgnf(t.margin))}</span><span class="verd ${fv.cls}">${esc(fv.label)}</span></div>
       <div class="w">${esc(nameOf(w.uid))} took ${esc(loser.uid ? nameOf(loser.uid) : "the other side")} — ${esc(t.season)}, ${t.week === 1 ? "preseason" : "week " + t.week}</div>
       <div class="c">Got ${esc(got)} (${f1(w.gain)} pts from there on) for ${esc(gave)} (${f1(w.loss)}).</div>`;
     host.appendChild(f);
@@ -10144,24 +10165,34 @@ function renderTrades(host, L, W) {
   const PAGE = 20;
   host.appendChild(sechead("Every trade in league history",
     "Newest first. Each player is followed by what he scored from that week to the end of that regular season, and each pick by the player it became — the only points either side can claim."));
+  // The season filter, as a segmented toggle: one button per season.
   const filt = el("div", "tfilter");
-  const sel = el("select");
-  sel.setAttribute("aria-label", "Filter trades by season");
-  const opt = (v, t) => { const o = el("option", null, t); o.value = v; sel.appendChild(o); };
+  filt.setAttribute("role", "group");
+  filt.setAttribute("aria-label", "Filter trades by season");
+  let season = "all";
+  const opt = (v, t) => {
+    const b = el("button", null, t); b.type = "button"; b.dataset.season = v;
+    b.setAttribute("aria-pressed", String(v === season));
+    b.onclick = () => {
+      season = v;
+      for (const x of filt.children) x.setAttribute("aria-pressed", String(x.dataset.season === season));
+      shown = PAGE; drawList();
+    };
+    filt.appendChild(b);
+  };
   opt("all", `All seasons (${L.trades.length})`);
   for (const yr of L.seasons) opt(yr, `${yr} (${L.trades.filter(t => t.season === yr).length})`);
-  filt.appendChild(sel);
   host.appendChild(filt);
-  const list = el("div");
+  const list = el("div", "tradelist");
   host.appendChild(list);
 
   let shown = PAGE;
   function drawList() {
     list.innerHTML = "";
-    const all = sel.value === "all" ? L.trades : L.trades.filter(t => t.season === sel.value);
+    const all = season === "all" ? L.trades : L.trades.filter(t => t.season === season);
     if (!all.length) {
       list.appendChild(el("div", "empty",
-        `<b>No trades in ${esc(sel.value)}</b>Nobody made a deal that season. It happens.`));
+        `<b>No trades in ${esc(season)}</b>Nobody made a deal that season. It happens.`));
       return;
     }
     for (const t of all.slice(0, shown)) list.appendChild(tradeCard(t));
@@ -10171,7 +10202,6 @@ function renderTrades(host, L, W) {
       list.appendChild(more);
     }
   }
-  sel.onchange = () => { shown = PAGE; drawList(); };
   drawList();
 
   host.appendChild(glossary([
