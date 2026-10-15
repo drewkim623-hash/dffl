@@ -1230,6 +1230,47 @@
     /* A full week is six games: three across fills the row instead of four-then-two. */
     .wstrip:has(> .wgame:nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
   }
+  /* ---- Home: the week's hero, list-style game rows, the feature card ---- */
+  .whero{position:relative;overflow:hidden;margin:4px 0 14px;padding:18px 18px 16px;border-radius:var(--r);
+    background:radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.22),transparent 70%),
+      radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.18),transparent 70%),
+      linear-gradient(160deg,var(--deep),var(--surface) 65%);
+    border:1px solid var(--edge);box-shadow:0 0 0 1px rgba(var(--a-rgb),.08),0 18px 40px -20px rgba(var(--a-rgb),.33)}
+  .whero::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+    background:linear-gradient(90deg,transparent,var(--a),transparent)}
+  .whero .hk{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--a-lt)}
+  .whero.live .hk{color:var(--a2)}
+  .whero .hk .livedot{margin-right:6px;vertical-align:1px}
+  .whero .hrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 18px;margin:4px 0 6px;min-width:0}
+  .whero .big{font:700 84px/1 var(--disp);letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:#fff;
+    text-shadow:0 0 24px rgba(var(--a-rgb),.45)}
+  .whero .hwho{display:flex;align-items:center;gap:9px;min-width:0;padding-bottom:8px}
+  .whero .tn{font:700 20px/1.1 var(--disp);letter-spacing:-.01em;overflow-wrap:anywhere}
+  .whero .hh{font-size:12.5px;color:var(--ink-2)}
+  .whero .hline{font-size:13.5px;color:var(--ink-2)}
+  @media (max-width:420px){.whero .big{font-size:clamp(60px,21vw,84px)}}
+  .wstrip{gap:8px}
+  .wgame{box-shadow:0 10px 30px -18px #000}
+  .ws{padding:7px 12px;gap:9px}
+  .ws .wn{font-size:13.5px}
+  .ws .wp{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:-.02em;text-align:right;min-width:4.2em}
+  .ws.win .wn{color:var(--a-lt)}
+  .ws.win{box-shadow:inset 3px 0 0 var(--a)}
+  .ws.lead{box-shadow:inset 3px 0 0 var(--a2)}
+  .wf{padding:4px 12px}
+  .teaser.feat{position:relative;background:linear-gradient(120deg,rgba(var(--a-rgb),.16),var(--surface) 70%);border-color:var(--edge)}
+  .teaser.feat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--a);z-index:1;pointer-events:none}
+  .teaser .fk{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--a-lt)}
+  @media (min-width:1000px){
+    .whero{padding:22px 28px 20px}
+    .whero .hrow{gap:6px 28px}
+    .whero .big{font-size:104px}
+    .whero .tn{font-size:26px}
+    .whero .hline{font-size:15px}
+  }
+  @media (min-width:700px) and (max-width:999px){
+    .wstrip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
@@ -2026,6 +2067,28 @@ function weekStrip(w) {
   return g;
 }
 
+/** The week's top score, huge, at the head of the front page. */
+function weekHero(w) {
+  if (!w.games.length) return null;
+  let top = null;
+  for (const g of w.games) for (const [s, o] of [[g.a, g.b], [g.b, g.a]])
+    if (!top || s.pts > top.s.pts) top = { s, o };
+  const { s, o } = top;
+  const margin = s.pts - o.pts;
+  const verb = margin === 0 ? "tied" : w.live ? "leads" : "beat";
+  const team = teamOf(s.uid);
+  const hero = el("div", `whero${w.live ? " live" : ""}`);
+  hero.innerHTML = `<div class="hk">${w.live ? `<span class="livedot"></span>Week ${w.week} · Live` : `Week ${w.week} · Final`}</div>
+    <div class="hrow">
+      <div class="big">${f2(s.pts)}</div>
+      <div class="hwho">${avatarHTML(s.uid, "sm")}
+        <div><div class="tn">${esc(team || nameOf(s.uid))}</div>
+        ${team ? `<div class="hh">${esc(nameOf(s.uid))}</div>` : ""}</div></div>
+    </div>
+    <div class="hline">${verb} ${esc(nameOf(o.uid))}${margin ? ` by ${f1(margin)}` : ""} · ${f1(s.pts)}-point week</div>`;
+  return hero;
+}
+
 /** Climbing and falling on the power board, this week against last. */
 function moversRow(season) {
   const PR = allPowerRankings().get(season.season);
@@ -2122,7 +2185,9 @@ async function ensureHomeWeek() {
     if (w && w.live) { try { await liveOnce(); } catch (e) { /* draw it plain */ } }
 
     if (w && String(w.season) === String(season.season)) {
-      host.appendChild(sechead(`Week ${w.week}${w.live ? "" : " · final"}`,
+      const hero = weekHero(w);
+      if (hero) host.appendChild(hero);
+      host.appendChild(sechead(hero ? "The games" : `Week ${w.week}${w.live ? "" : " · final"}`,
         w.live
           ? "Being played right now. Scores are live; nothing counts as a win until every starter has played."
           : "The last week in the book. Tap any game for the full scoreboard."));
@@ -2169,7 +2234,15 @@ async function ensureHomeWeek() {
       host.appendChild(sechead("From the desk",
         "The latest long reads. Tap to read in full."));
       const list = el("div", "tlist home");
-      for (const a of arts) list.appendChild(articleTeaser(a));
+      arts.forEach((a, i) => {
+        const t = articleTeaser(a);
+        // The newest piece is the feature: gold rail and a "Feature" kicker.
+        if (i === 0) {
+          t.classList.add("feat");
+          t.querySelector(".tbody").insertAdjacentHTML("afterbegin", `<div class="fk">Feature</div>`);
+        }
+        list.appendChild(t);
+      });
       host.appendChild(list);
     }
     startLivePolling();
