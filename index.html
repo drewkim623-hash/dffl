@@ -198,6 +198,11 @@
   .wrc-hero .meta{min-width:0}
   .wrc-hero .n{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .wrc-hero .s{font-size:12px;color:var(--muted)}
+  @media (max-width:719px){
+    .wrc-hero{flex-direction:column;align-items:flex-start;gap:6px}
+    .wrc-hero .g{font-size:64px}
+    .wrc-hero .meta{width:100%}
+  }
   .wrc-list{list-style:none;margin:10px 0 0;padding:0;border-top:1px solid var(--grid)}
   .wrc-list li{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto auto;gap:8px;align-items:baseline;
     padding:7px 0;border-bottom:1px solid var(--grid);font-size:13.5px}
@@ -9880,7 +9885,8 @@ function waiverReport(txs) {
  * This season's pickups, graded. Unlike the tables below, a pickup here is
  * credited only with what he did for the roster that claimed him: points he
  * scored in that roster's starting lineup, in finished regular-season weeks
- * after the claim week. Bench points never helped anybody.
+ * from the claim week on, until that roster drops or trades him away.
+ * Bench points never helped anybody. FAAB cost plays no part in the grade.
  *
  * Grade bands are BORROWED from the trade-grade scale v2 — percentiles of
  * |points added| across every graded pickup this season, sign picking the side:
@@ -9915,39 +9921,58 @@ function wrcLetter(gpa) {
   return best;
 }
 
-function waiverReportCard(txs) {
-  const season = DB.seasons.slice().sort((a, b) => Number(b.season) - Number(a.season))[0];
+/**
+ * `season` defaults to the latest one; verify.mjs passes a synthetic season
+ * ({ season, pws, regEntries, rosters, userById }) to check the math.
+ */
+function waiverReportCard(txs, season) {
+  season = season || DB.seasons.slice().sort((a, b) => Number(b.season) - Number(a.season))[0];
   if (!season) return null;
   const lastReg = (season.pws || 15) - 1;
-  const done = [...(season.regEntries || new Map()).keys()].filter(w => w <= lastReg);
-  const addedFor = (rid, pid, wk) => {
+  const done = [...(season.regEntries || new Map()).keys()].filter(w => w <= lastReg).sort((a, b) => a - b);
+  const isClaim = t => t.type === "waiver" || t.type === "free_agent";
+  const tx = txs.filter(t => t.season === season.season)
+    .map((t, i) => ({ t, i, wk: Number(t.leg) || 1, ts: t.status_updated || t.created || 0 }))
+    .sort((a, b) => (a.wk - b.wk) || (a.ts - b.ts) || (a.i - b.i));
+  // Each claim owns the finished weeks from the claim week on, up to and including the
+  // week that roster next drops or trades him away (he may have started before the
+  // drop), or up to (not including) its next claim of him. Only points in that roster's
+  // starting lineup count; a week with no lineup on record counts 0.
+  const credited = new Set();     // "rid|pid|week" already credited to an earlier claim
+  const addedFor = (rid, pid, k) => {
+    const wk = tx[k].wk;
+    let end = Infinity;
+    for (let j = k + 1; j < tx.length; j++) {
+      const t = tx[j].t;
+      if (Number((t.drops || {})[pid]) === rid) { end = tx[j].wk; break; }
+      if (isClaim(t) && Number((t.adds || {})[pid]) === rid) { end = tx[j].wk - 1; break; }
+    }
     let tot = 0, n = 0;
     for (const w of done) {
-      if (w <= wk) continue;
+      if (w < wk || w > end) continue;
+      const key = `${rid}|${pid}|${w}`;
+      if (credited.has(key)) continue;
+      credited.add(key);
       n++;
       const e = season.regEntries.get(w).find(x => Number(x.roster_id) === rid);
-      if (!e) continue;
-      const pp = e.players_points || {};
-      // Started points when Sleeper gives us a lineup; scored-on-roster otherwise.
-      const counts = e.starters ? e.starters.includes(pid) : (e.players || []).includes(pid);
-      if (counts) tot += Number(pp[pid]) || 0;
+      if (e && (e.starters || []).includes(pid)) tot += Number((e.players_points || {})[pid]) || 0;
     }
     return { pts: tot, weeks: n };
   };
 
   const rows = [];
-  for (const t of txs) {
-    if (t.season !== season.season || (t.type !== "waiver" && t.type !== "free_agent")) continue;
-    const wk = Number(t.leg) || 1;
+  tx.forEach(({ t, wk, ts }, k) => {
+    if (!isClaim(t)) return;
     const bid = Number(t.settings && t.settings.waiver_bid) || 0;
     Object.entries(t.adds || {}).forEach(([pid, rid], i) => {
       rid = Number(rid);
-      const a = addedFor(rid, pid, wk);
+      const a = addedFor(rid, pid, k);
+      const p = pname(pid);
       // One bid buys the whole claim, so it is shown once, on the first player.
-      rows.push({ rid, pid, wk, bid: i === 0 ? bid : null, type: t.type, ts: t.status_updated || t.created || 0,
-        name: pname(pid).name, pos: pname(pid).pos, pts: a.pts, early: a.weeks === 0 });
+      rows.push({ rid, pid, wk, bid: i === 0 ? bid : null, type: t.type, ts,
+        name: p.name, pos: p.pos, pts: a.pts, early: a.weeks === 0 });
     });
-  }
+  });
   const graded = rows.filter(r => !r.early);
   const abs = graded.map(r => Math.abs(r.pts)).sort((a, b) => a - b);
   const cuts = WRC_BANDS.map(p => quantile(abs, p));
@@ -9964,12 +9989,12 @@ function waiverReportCard(txs) {
       gpa, grade: gpa == null ? null : wrcLetter(gpa), net: g.reduce((s, x) => s + x.pts, 0) };
   }).filter(t => t.rows.length)
     .sort((a, b) => ((b.gpa ?? -9) - (a.gpa ?? -9)) || (b.net - a.net));
-  return { season: season.season, teams, graded: graded.length, total: rows.length };
+  return { season: season.season, teams, rows, cuts, graded: graded.length, total: rows.length };
 }
 
 function renderWaiverCard(host, R) {
   host.appendChild(sechead(`${R.season} waiver report card`,
-    "Every pickup this season, graded on the points he put in the claiming team's starting lineup in finished weeks after the claim."));
+    "Every pickup this season, graded on the points he put in the claiming team's starting lineup in finished weeks from the claim week on, until that team drops or trades him. Unlike the claims table below, bench points don't count."));
   if (!R.teams.length) {
     host.appendChild(el("div", "empty", "<b>No pickups yet this season</b>"));
     return;
@@ -9992,11 +10017,11 @@ function renderWaiverCard(host, R) {
   }
   host.appendChild(wrap);
   host.appendChild(el("div", "wrc-note",
-    `Grades are percentile bands of |points added| across all ${R.graded} graded pickups this season, borrowed from the trade-grade v2 scale: under the 21.6th percentile is a C; to the 55.3rd a B (or D if he added nothing or less); to the 86.9th an A (or F); above that A+ (or F-). The team grade is the GPA of its pickups, rounded to the nearest letter. A pickup with no finished week since the claim is “Too early”.`));
+    `Grades are percentile bands of |points added| across all ${R.graded} graded pickups this season, borrowed from the trade-grade v2 scale: under the 21.6th percentile is a C; to the 55.3rd a B (or D if he added nothing or less); to the 86.9th an A (or F); above that A+ (or F-). The team grade is the GPA of its pickups, rounded to the nearest letter. Points count from the claim week on, only while he was in the claiming team's starting lineup. A pickup with no finished week since the claim is “Too early”. Grades ignore FAAB cost: a $50 claim and a free add that score the same get the same letter. When many pickups score exactly 0, the bottom cut is 0 and every scoreless pickup is a D, so the C band can be empty.`));
 }
 
 /* -------------------------------------------------------------- panel */
-const plabel =x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
+const plabel = x => `${esc(x.name)}${x.pos ? ` <span class="pos">${esc(x.pos)}</span>` : ""}`;
 /** Everything a side received, players and picks, in plain words. */
 const gotNames = sd => [...sd.got.map(x => x.name),
   ...sd.picksIn.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
@@ -10120,7 +10145,7 @@ function renderTrades(host, L, W) {
 
   /* ---- waivers ---- */
   host.appendChild(sechead("Waivers and FAAB",
-    "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him."));
+    "Every claim is credited with what the player scored from the week he was claimed onward. Same rule as the trades, and just as blind to whether anyone actually started him. (The report card counts only started points — see its note.)"));
 
   if (W.card) renderWaiverCard(host, W.card);
 
