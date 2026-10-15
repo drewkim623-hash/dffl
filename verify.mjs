@@ -477,8 +477,9 @@ const gl = await page.evaluate(() => {
   const done = gameLine({ expected: 101, sd: 0 }, { expected: 99, sd: 0 });
   const even = D.roundOdds(D.americanOdds(D.addVig([0.5, 0.5], ODDS_HOLD)[0]));
   return {
-    // sub-nav first, then the game lines, then the futures board's own heading
-    inOdds: !!sec, first: !!sec && p.firstElementChild.classList.contains("glnav") &&
+    // sub-nav first (after the title-favourite hero), then the game lines, then the futures board's own heading
+    inOdds: !!sec, first: !!sec && (p.firstElementChild.classList.contains("ohero")
+      ? p.firstElementChild.nextElementSibling : p.firstElementChild).classList.contains("glnav") &&
       !!(sec.compareDocumentPosition(p.querySelector(".sechead")) & Node.DOCUMENT_POSITION_FOLLOWING),
     nav: [...p.querySelectorAll(".glnav button")].map(b => b.textContent.trim()),
     expected, cards, status: L && L.status,
@@ -494,7 +495,7 @@ const gl = await page.evaluate(() => {
   };
 });
 check("odds tab contains the game-lines board", gl.inOdds);
-check("game lines sit above the futures with a two-pill sub-nav", gl.first && gl.nav.join("/") === "Game lines/Futures", gl.nav.join("/"));
+check("game lines sit above the futures with an underline tab nav", gl.first && gl.nav.join("/") === "Game lines/Playoffs/Division/Title", gl.nav.join("/"));
 check("one card per matchup this week", gl.cards.length === gl.expected && gl.expected > 0, `${gl.cards.length} cards vs ${gl.expected} matchups`);
 check("every card carries both managers' rids", gl.cards.every(c => c.rids));
 check("every card shows a moneyline (or result) for both teams", gl.cards.every(c => c.mlBoth && (c.priced || c.resultOnly)),
