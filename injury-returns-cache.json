@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-15T17:19:35.753Z",
+ "generated": "2026-10-15T18:26:11.633Z",
  "week": 6,
  "entries": {
   "2449": {
@@ -123,6 +123,16 @@
    "retEstimated": false,
    "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
+  },
+  "6904": {
+   "n": "Jalen Hurts",
+   "s": "Out",
+   "ret": "2026-10-26",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-15"
   },
   "7021": {
    "n": "Rico Dowdle",
