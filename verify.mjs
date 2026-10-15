@@ -1312,7 +1312,7 @@ const artl = await page.evaluate(async () => {
 check("every published piece is on the index",
   artl.teasers === artl.published && artl.teasers >= 3 && artl.noBodyOnIndex,
   `${artl.teasers} teasers for ${artl.published} articles`);
-check("every headline carries a cover", artl.covers === artl.teasers && artl.faces >= 5, `${artl.covers} covers, ${artl.faces} faces`);
+check("every headline carries a cover, with no headshots on the index", artl.covers === artl.teasers && artl.faces === 0, `${artl.covers} covers, ${artl.faces} faces`);
 check("the newest piece leads", artl.newestFirst, `${artl.headlines[0]} — expected ${artl.expectedLead}`);
 check("a column is flagged as a column", artl.columnFlagged === 1, `${artl.columnFlagged}`);
 
@@ -1636,7 +1636,7 @@ const covers = await page.evaluate(async () => {
     .reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
   const ratio = (x, y) => { const [hi, lo] = [lum(x), lum(y)].sort((p, q) => q - p); return (hi + .05) / (lo + .05); };
   out.worst = Math.min(...Object.values(D.COVER_PALETTE).flatMap(p => [p.from, p.to])
-    .flatMap(s => [ratio("#ffffff", s), ratio("#c6c5cf", s)]));
+    .flatMap(s => [ratio("#ffffff", s), ratio("#d4cbe0", s)]));
   const trade = { slug: "verify-trade", season: "2026", date: "2026-10-01", headline: "A Trade", blocks: [],
     cover: { trade: { a: "drewkim", b: "moseslin", aGets: ["Bijan Robinson"], bGets: ["Ja'Marr Chase", "a 2027 1st"] } } };
   const tsvg = D.coverSVG(trade, false);
@@ -1662,7 +1662,7 @@ const covers = await page.evaluate(async () => {
 check("every teaser draws one cover with words on it, and no fallback plates",
   covers.drawn === covers.teasers && covers.teasers > 0 && covers.fallbacks === 0,
   `${covers.drawn} of ${covers.teasers} drawn, ${covers.fallbacks} fallbacks`);
-check("cover text is only white or --ink-2", covers.fills.every(f => f === "#ffffff" || f === "#c6c5cf"), covers.fills.join(" "));
+check("cover text is only white or --ink-2", covers.fills.every(f => f === "#ffffff" || f === "#d4cbe0"), covers.fills.join(" "));
 check("covers are deterministic and no two alike", covers.deterministic && covers.distinct && (covers.kinds >= 4 || covers.pairs >= 4),
   `${covers.kinds} kinds, ${covers.pairs} gradients`);
 check("every cover gradient stop reads at 4.5:1 for both text colours", covers.worst >= 4.5, covers.worst.toFixed(2));
@@ -1865,7 +1865,7 @@ check("no cover text runs past the art's edge at 390px", cov390.overflow.length 
 check("every cover carries its label, cut only after a whole word", both.every(c => c.labels.length === 0),
   both.flatMap(c => c.labels).slice(0, 6).join(" ; "));
 check("The Steepest Fall lights bertalicious and mutes drewkim",
-  cov1280.steep.every(r => r.bertalicious === "#ffffff" && r.drewkim === "#c6c5cf"), JSON.stringify(cov1280.steep));
+  cov1280.steep.every(r => r.bertalicious === "#ffffff" && r.drewkim === "#d4cbe0"), JSON.stringify(cov1280.steep));
 check("a scoreboard naming both managers lights the winner: Week 1 → Domo112, Nine-Game → saucebossandrew (37-19)",
   both.every(c => ["card", "hero"].every(w => c.lit[`${w}:week-1-game-by-game`] === "Domo112" &&
     c.lit[`${w}:the-nine-game-difference`] === "saucebossandrew")), JSON.stringify(cov1280.lit));
