@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-15T07:04:01.957Z",
- "at": 1792047841957,
+ "generated": "2026-10-15T11:04:19.358Z",
+ "at": 1792062259358,
  "season": "2026",
  "week": 6,
  "liveWeek": null,
@@ -81,7 +81,7 @@
    "titleNow": 0.0137,
    "playoffWas": 0.50195,
    "playoffNow": 0.21015,
-   "wins": 5.9481,
+   "wins": 5.94815,
    "titleOdds": 6790,
    "titleOddsOpen": 1390,
    "playoffOdds": 350
@@ -119,7 +119,7 @@
    "titleWas": 0.0653,
    "titleNow": 0.0623,
    "playoffWas": 0.5436,
-   "playoffNow": 0.60985,
+   "playoffNow": 0.6099,
    "wins": 7.46575,
    "titleOdds": 1410,
    "titleOddsOpen": 1340,
@@ -158,8 +158,8 @@
    "titleWas": 0.0256,
    "titleNow": 0.04,
    "playoffWas": 0.3376,
-   "playoffNow": 0.51975,
-   "wins": 7.13705,
+   "playoffNow": 0.5197,
+   "wins": 7.137,
    "titleOdds": 2260,
    "titleOddsOpen": 3590,
    "playoffOdds": -125
