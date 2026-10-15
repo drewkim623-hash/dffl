@@ -408,7 +408,12 @@ group("Odds tab renders");
 await page.click('#tabs button[data-tab="odds"]');
 const dom = await page.evaluate(() => {
   const p = document.querySelector('[data-panel="odds"]');
-  const prices = [...p.querySelectorAll(".price .o")].map(e => e.textContent.trim());
+  // fmtOdds prints "—" for an outcome no simulated season produced (0.0%, or
+  // 100.0%); that is a well-formed price too.
+  const prices = [...p.querySelectorAll(".price .o")].map(e => {
+    const t = e.textContent.trim(), tp = e.closest(".price").querySelector(".tp");
+    return t === "—" && tp && /^(0\.0|100\.0)%$/.test(tp.textContent.trim()) ? "+0" : t;
+  });
   const truths = [...p.querySelectorAll(".price .tp")].map(e => e.textContent.trim());
   const holds = [...p.querySelectorAll(".hold")].map(e => e.textContent.trim());
   const text = p.textContent;
@@ -2872,6 +2877,58 @@ check("a full-season count matches the sum of its weeks", near(after.fromWeek1, 
 check("counting from week 8 drops weeks 1-7 exactly", near(after.fromWeek8, after.tail, 1e-9), `${after.fromWeek8} vs ${after.tail}`);
 check("a mid-season count is strictly less than the whole season", near(after.fromWeek1 - after.fromWeek8, after.head, 1e-9) && after.head > 0, `${after.fromWeek1} − ${after.fromWeek8} should be ${after.head}`);
 check("playoff weeks are scored by Sleeper but never counted here", after.playoffs > 0 && after.fromWeek15 === 0, `playoff pts ${after.playoffs}, counted ${after.fromWeek15}`);
+
+group("Trades: v2 grade chips");
+{
+  const fs = await import("node:fs");
+  const G = JSON.parse(fs.readFileSync("data/trade-grades.json", "utf8"));
+  const K = JSON.parse(fs.readFileSync("keepers.json", "utf8"));
+  const sides = Object.values(G.trades).flatMap(t => t.sides);
+  const share = l => sides.filter(s => s.tradeDay.letter === l).length / sides.length;
+  check("every trade side has a trade-day letter", sides.every(s => /^(A\+|A|B|C|D|F|F-)$/.test(s.tradeDay.letter)));
+  check("C is the biggest band (about the middle 40%)", share("C") > 0.3 && share("C") < 0.55, share("C").toFixed(2));
+  check("A+ and F- are rare (under 6% each)", share("A+") < 0.06 && share("F-") < 0.06, `${share("A+").toFixed(3)} / ${share("F-").toFixed(3)}`);
+  check("margins cancel within each trade", Object.values(G.trades).every(t => Math.abs(t.sides.reduce((a, s) => a + s.tradeDay.marginPts, 0)) < 0.5));
+  check("an unresolved pick leaves hindsight Pending", Object.values(G.trades).some(t => t.sides.some(s => s.hindsight === "Pending")));
+  const pierce = G.trades["1014788370771537920"];
+  check("2023 Pierce-for-R5 resolves the pick to Jordan Addison in hindsight", pierce && pierce.sides.some(s => s.assets.some(a => a.became === "Jordan Addison")));
+  check("regression starts in 2027 and trades don't reset years", K.config.REGRESSION_FROM === 2027 && K.config.TRADE_RESETS_YEARS === false);
+  check("Puka's next keeper cost regresses R15 -> R12", K.players["9493"] && K.players["9493"].nextCostRound === 12 && K.players["9493"].regressed);
+  check("BTJ is flagged as an exception", (K.exceptions || []).some(e => e.player_id === "11631"));
+  check("keepers.json still carries the stated seasons lists", !!(K.seasons && K.seasons["2026"]));
+  const chips = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .gchip')].length);
+  check("trade cards show grade chips", chips > 50, `${chips}`);
+  const overflow = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].some(e => e.scrollWidth > e.clientWidth + 1));
+  check("chips don't overflow a trade side", !overflow);
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(300);
+  const overflow390 = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].filter(e => e.scrollWidth > e.clientWidth + 1).length);
+  check("chips don't overflow a trade side at 390px", overflow390 === 0, `${overflow390}`);
+  if (vp) await page.setViewportSize(vp);
+  const small = Object.values(G.trades).filter(t => t.sides.reduce((a, s) => a + s.total, 0) < 25);
+  check("trades under 25 VOR total grade C · small trade, both sides, point margin kept",
+    small.length > 0 && small.every(t => t.sides.every(s => s.tradeDay.letter === "C" && s.tradeDay.small && typeof s.tradeDay.marginPts === "number")), `${small.length} trades`);
+  check("every grade stays within ±100%", sides.every(s => Math.abs(s.tradeDay.marginPct) <= 100 && (typeof s.hindsight === "string" || Math.abs(s.hindsight.marginPct) <= 100)));
+  const keptPicks = Object.values(G.trades).flatMap(t => t.sides.flatMap(s => s.assets)).filter(a => a.kept);
+  const M0 = await import("./build-trade-grades.mjs");
+  check("a pick spent on a keeper is valued at its slot's curve value and labelled Kept: <player>",
+    keptPicks.length > 0 && keptPicks.every(a => /^Kept: \S/.test(a.became) && Math.abs(a.hindsight - Math.round(M0.curve(Number(a.hindsightBasis.match(/pick (\d+)/)[1])) * 10) / 10) < 0.05), `${keptPicks.length} kept picks`);
+  // unit checks on the exported math
+  const M = await import("./build-trade-grades.mjs");
+  const near = (a, b) => Math.abs(a - b) < 1e-9;
+  check("cutoffs: 21.5% C, 21.6% B, -55.3% F, 86.9% A+, -86.8% F", M.letter(0.215) === "C" && M.letter(0.216) === "B" && M.letter(-0.553) === "F" && M.letter(0.869) === "A+" && M.letter(-0.868) === "F");
+  check("margin: two teams is side minus other over the total", near(M.marginPts(30, 40, 2), 20) && near(M.marginPct(30, 40, 2), 0.5));
+  check("margin: three teams uses the average other side and is bounded", near(M.marginPts(0, 90, 3), -45) && near(M.marginPct(0, 90, 3), -1) && near(M.marginPct(90, 90, 3), 1)
+    && near([60, 20, 10].reduce((a, x) => a + M.marginPts(x, 90, 3), 0), 0));
+  check("grade: under 25 VOR total is C · small trade with the margin kept", (g => g.letter === "C" && g.small && g.marginPts === 10)(M.grade(10, 10, 2)) && !M.grade(30, 30, 2).small);
+  check("regress: R15→12, R10→7, R9→7, R5→3, R4→3, R1→1", [15, 10, 9, 5, 4, 1].map(M.regress).join() === "12,7,7,3,3,1");
+  const H = new Map([[2024, new Map([["p", { round: 15, by: "u" }]])], [2025, new Map([["p", { round: 15, by: "u" }]])], [2026, new Map([["p", { round: 15, by: "v" }]])]]);
+  check("nextCost: kept 2 years regresses from 2027; not before; trade resets only when switched on",
+    M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2027, TRADE_RESETS_YEARS: false }).nextCostRound === 12
+    && M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2028, TRADE_RESETS_YEARS: false }).nextCostRound === 15
+    && M.nextCost(H, "p", 2026, { REGRESSION_FROM: 2027, TRADE_RESETS_YEARS: true }).yearsKept === 0);
+  check("keeperValue: 0.8 x (0.58 x VOR - cost value), floored at 0", near(M.keeperValue(100, 15), 0.8 * (58 - M.curve(M.midPick(15)))) && M.keeperValue(0, 1) === 0);
+}
 
 group("Trades: a synthetic trade grades to a known answer");
 const synth = await page.evaluate(() => {
@@ -6044,12 +6101,14 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   // (injuryPlan/injuryCharged/injuryMult/injuryHurtMap, gameLinesData,
   // simulateSeason) give byte-identical output to origin/main's own source on
   // the same inputs, with no loss plan attached.
-  const SAME_FNS = ["INJ_AVAIL", "availability", "approxKickoff", "injRetDate", "livePosterior", "injuryLabel",
+  // livePosterior grew the trade adjustment (data/roster-weeks.json); with it
+  // switched off its output must be origin/main's, checked below.
+  const SAME_FNS = ["INJ_AVAIL", "availability", "approxKickoff", "injRetDate", "injuryLabel",
     "injuryLabelText", "injuryFuturesNote", "loadInjuries"];
   const moved = SAME_FNS.filter(n => { const a = grab(mainSrc, n); return !a || a !== grab(hereSrc, n); });
   const constLine = n => (src => (src.match(new RegExp(`\\nconst ${n} = [^\\n]*`)) || [""])[0]);
   const consts = ["REPLACEMENT", "INJ_FLOOR"].filter(n => !constLine(n)(mainSrc) || constLine(n)(mainSrc) !== constLine(n)(hereSrc));
-  const GREW = ["injuryPlan", "injuryCharged", "injuryMult", "injuryHurtMap", "gameLinesData", "simulateSeason"];
+  const GREW = ["injuryPlan", "injuryCharged", "injuryMult", "injuryHurtMap", "gameLinesData", "simulateSeason", "livePosterior"];
   // The body starts at ") {", past default parameters like `opts = {}`.
   const grabFn = (src, name) => {
     const m = src.match(new RegExp(`\\n(?:async )?function ${name}\\(`));
@@ -6078,8 +6137,16 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if (strip(D.injuryCharged(pB, r.roster_id, w)) !== strip(M.injuryCharged(pM, r.roster_id, w))) bad.push(`injuryCharged ${r.roster_id}/${w}`);
       if (strip(D.injuryHurtMap(pB, r.roster_id, w)) !== strip(M.injuryHurtMap(pM, r.roster_id, w))) bad.push(`injuryHurtMap ${r.roster_id}/${w}`);
     }
+    // The trade adjustment (data/roster-weeks.json) off: game lines and
+    // livePosterior, now and rewound, are origin/main's.
+    const rwKeep = D.rosterWeeks();
+    await D.loadRosterWeeks(null);
     const glB = D.gameLinesData(R, null, pB), glM = M.gameLinesData(R, null, pM);
     if (strip(glB.games.map(g => [g.open, g.a.inj, g.b.inj])) !== strip(glM.games.map(g => [g.open, g.a.inj, g.b.inj]))) bad.push("gameLinesData");
+    for (const tw of [null, 3]) {
+      if (strip(D.livePosterior(model, season, tw)) !== strip(M.livePosterior(model, season, tw))) bad.push(`livePosterior ${tw}`);
+    }
+    await D.loadRosterWeeks(rwKeep);
     let sims = 0;
     if (model && model.ok && window.__SIM) {
       const avail = D.availability(season, inj);
@@ -6796,6 +6863,104 @@ group("Odds history: per-team odds for each finalized week");
     check(`latest finalized week ${want.key} is recorded from the committed snapshot`,
       keys.at(-1) === want.key && JSON.stringify(have) === JSON.stringify(want.rows), `latest on file ${keys.at(-1)}`);
   } else check("committed snapshot is mid-week, so no latest-week row is expected from it", true);
+}
+
+group("Trade-aware odds (data/roster-weeks.json)");
+{
+  const fs = await import("node:fs");
+  const { lineupStrength } = await import(new URL("./build-roster-weeks.mjs", import.meta.url));
+  let RW = null;
+  try { RW = JSON.parse(await readFile(join(ROOT, "data/roster-weeks.json"), "utf8")); } catch {}
+  const ids = a => Array.isArray(a) && a.every(p => typeof p === "string");
+  const wkBad = RW && RW.weeks ? Object.entries(RW.weeks).flatMap(([wk, rs]) => Object.entries(rs)
+    .filter(([, r]) => !ids(r.fielded) || !r.fielded.length || !ids(r.players) || !ids(r.optimal) || !Number.isFinite(r.strength))
+    .map(([rid]) => `${wk}/${rid}`)) : ["missing"];
+  const cur = (RW && RW.current) || {};
+  const curBad = Object.entries(cur).filter(([, r]) => !ids(r.optimal) || !r.optimal.length || !Number.isFinite(r.strength)).map(([rid]) => rid);
+  check("roster-weeks.json: updated, weeks with fielded arrays and numeric strength, current optimal+strength for all 12 rosters",
+    !!RW && !Number.isNaN(Date.parse(RW.updated)) && Object.keys(RW.weeks || {}).length > 0
+      && Object.values(RW.weeks).every(rs => Object.keys(rs).length === 12) && wkBad.length === 0
+      && Object.keys(cur).length === 12 && curBad.length === 0,
+    `weeks ${Object.keys((RW && RW.weeks) || {}).join(",")} · bad ${[...wkBad, ...curBad].slice(0, 5).join(" ")}`);
+
+  // Strength is the build script's own function on today's projections; the
+  // file's current strengths are reproducible from it.
+  const P = JSON.parse(await readFile(join(ROOT, "data/projections.json"), "utf8"));
+  const rost = JSON.parse(await readFile(join(ROOT, "rosters.json"), "utf8"));
+  const posOf = p => (rost.map[p] || {}).p || "";
+  const strengthOf = players => lineupStrength(players, P, posOf, rost.slots).strength;
+  const redo = RW ? Object.entries(cur).filter(([, r]) => strengthOf(r.players) !== r.strength).map(([rid]) => rid) : ["no file"];
+  check("roster-weeks.json: current strengths reproduce from lineupStrength() on data/projections.json", redo.length === 0, redo.join(","));
+
+  // Fixtures below: a roster whose players never changed (every week = today),
+  // a league where nobody's did, and today's trade undone. The fixture weeks'
+  // strengths are off by a float's worth on purpose: the same players must
+  // still give exactly 0.
+  const nameRid = n => Object.entries(rost.map).find(([, v]) => v.n === n)?.[0];
+  const puka = nameRid("Puka Nacua"), mhj = nameRid("Marvin Harrison"), evans = nameRid("Mike Evans");
+  const res = !RW ? null : await page.evaluate(async ({ RW, puka, mhj, evans, undoStr }) => {
+    const D = window.__DFFL, model = window.__ODDS, season = D.DB.seasons[0];
+    const { R } = await D.liveOnce();
+    const ridOf = name => { const u = season.users.find(x => x.display_name === name); return u ? season.rosters.find(r => r.owner_id === u.user_id).roster_id : null; };
+    const strip = x => JSON.stringify(x);
+    const run = async rw => {
+      await D.loadRosterWeeks(rw);
+      const live = D.liveState(model, season, R, window.__AVAIL, window.__BOARD, null, window.__PLAN);
+      const s = live && D.simulateSeason(model, D.ODDS_SIMS, live);
+      return { deltas: [...D.rosterDeltas], post: live && live.teams.map(t => t.mean),
+        playoff: s && Object.fromEntries(live.teams.map((t, i) => [t.rid, s.playoff[i]])),
+        counts: s && strip(["title", "playoff", "seed", "wins"].map(k => s[k])) };
+    };
+    const off = await run(null);
+    const real = await run(RW);
+    // (b) one roster that never changed: rid 10, everybody else as filed.
+    const one = JSON.parse(JSON.stringify(RW));
+    for (const wk in one.weeks) one.weeks[wk][10] && Object.assign(one.weeks[wk][10], { players: [...one.current[10].players], strength: one.current[10].strength + 1e-9 * Number(wk) });
+    const oneRun = await run(one);
+    // (c) nobody's roster changed: every Δ 0, so the board is the deltas-off board exactly.
+    const none = JSON.parse(JSON.stringify(RW));
+    for (const rid in none.current) for (const wk in none.weeks) none.weeks[wk][rid] && Object.assign(none.weeks[wk][rid], { players: [...none.current[rid].players], strength: none.current[rid].strength + 1e-9 * Number(wk) });
+    const noneRun = await run(none);
+    // (d) today's trade undone: Puka back to jskule23, Harrison and Evans back to Domo112.
+    const domo = ridOf("Domo112"), jsk = ridOf("jskule23");
+    const undo = JSON.parse(JSON.stringify(RW));
+    undo.current[domo].strength = undoStr[0]; undo.current[jsk].strength = undoStr[1];
+    const undoRun = await run(undo);
+    await D.loadRosterWeeks();
+    return { off, real, oneRun, noneRun, undoRun, domo, jsk,
+      pukaOn: !!(RW.current[domo] && RW.current[domo].players.includes(puka)),
+      restored: strip([...D.rosterDeltas]) === strip(real.deltas) };
+  }, (() => {
+    // Undo strengths, computed here with the build script's own function.
+    if (!RW || !puka || !mhj || !evans) return { RW, puka, mhj, evans, undoStr: [NaN, NaN] };
+    const holder = p => Object.keys(cur).find(rid => cur[rid].players.includes(p));
+    const domo = holder(puka), jsk = holder(evans);
+    const swap = (list, out, inn) => [...list.filter(p => !out.includes(p)), ...inn];
+    return { RW, puka, mhj, evans, undoStr: [
+      strengthOf(swap(cur[domo].players, [puka], [mhj, evans])),
+      strengthOf(swap(cur[jsk].players, [mhj, evans], [puka])),
+    ] };
+  })());
+  const dOf = (r, rid) => new Map(r.deltas).get(rid);
+  check("roster Δ is exactly 0 for a roster whose players never changed (fixture: roster 10 same players every week)",
+    !!res && dOf(res.oneRun, 10) === 0 && dOf(res.real, 10) !== undefined, res && JSON.stringify(res.oneRun.deltas));
+  check("with every Δ 0 the live board equals the deltas-off board exactly (levels and sim counts, same seed)",
+    !!res && res.noneRun.deltas.every(([, d]) => d === 0) && JSON.stringify(res.noneRun.post) === JSON.stringify(res.off.post)
+      && res.noneRun.counts === res.off.counts && !!res.off.counts);
+  check("no file: every Δ is 0 and the board is today's", !!res && res.off.deltas.length === 0);
+  check("Puka Nacua is on Domo112's roster in roster-weeks.json", !!res && res.pukaOn && !!puka && !!mhj && !!evans,
+    `puka ${puka} mhj ${mhj} evans ${evans}`);
+  check("trade: Domo112's playoff odds go up and jskule23's go down vs deltas off",
+    !!res && res.real.playoff[res.domo] > res.off.playoff[res.domo] && res.real.playoff[res.jsk] < res.off.playoff[res.jsk],
+    res && `Domo112 ${res.off.playoff[res.domo]}→${res.real.playoff[res.domo]}, jskule23 ${res.off.playoff[res.jsk]}→${res.real.playoff[res.jsk]}`);
+  check("trade: undoing it (Puka back for Harrison + Evans) lowers Domo112 and raises jskule23 vs the real file",
+    !!res && res.undoRun.playoff[res.domo] < res.real.playoff[res.domo] && res.undoRun.playoff[res.jsk] > res.real.playoff[res.jsk],
+    res && `Domo112 ${res.undoRun.playoff[res.domo]} vs ${res.real.playoff[res.domo]}, jskule23 ${res.undoRun.playoff[res.jsk]} vs ${res.real.playoff[res.jsk]}`);
+  check("loadRosterWeeks() restores the file's deltas after the fixtures", !!res && res.restored);
+
+  const hist = join(ROOT, "data", "projections-history");
+  const badHist = fs.existsSync(hist) ? fs.readdirSync(hist).filter(f => !/^\d{4}-wk\d{2}\.json$/.test(f)) : [];
+  check("data/projections-history/: every file is <season>-wk<NN>.json", badHist.length === 0, badHist.join(","));
 }
 
 /* -------------------------------------------------------------- done */
