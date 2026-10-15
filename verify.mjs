@@ -472,8 +472,9 @@ const gl = await page.evaluate(() => {
   const done = gameLine({ expected: 101, sd: 0 }, { expected: 99, sd: 0 });
   const even = D.roundOdds(D.americanOdds(D.addVig([0.5, 0.5], ODDS_HOLD)[0]));
   return {
-    // sub-nav first, then the game lines, then the futures board's own heading
-    inOdds: !!sec, first: !!sec && p.firstElementChild.classList.contains("glnav") &&
+    // sub-nav first (after the title-favourite hero), then the game lines, then the futures board's own heading
+    inOdds: !!sec, first: !!sec && (p.firstElementChild.classList.contains("ohero")
+      ? p.firstElementChild.nextElementSibling : p.firstElementChild).classList.contains("glnav") &&
       !!(sec.compareDocumentPosition(p.querySelector(".sechead")) & Node.DOCUMENT_POSITION_FOLLOWING),
     nav: [...p.querySelectorAll(".glnav button")].map(b => b.textContent.trim()),
     expected, cards, status: L && L.status,

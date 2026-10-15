@@ -1230,6 +1230,54 @@
     /* A full week is six games: three across fills the row instead of four-then-two. */
     .wstrip:has(> .wgame:nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
   }
+  /* Odds: the title favourite posted large, markets as an underline tab row,
+     futures as a ranked list, the method folded away at the bottom. */
+  .ohero{position:relative;overflow:hidden;margin:6px 0 16px;padding:18px 20px 20px;border-radius:18px;
+    border:1px solid rgba(var(--a-rgb),.32);
+    background:radial-gradient(120% 140% at 0% 0%,rgba(185,140,255,.22),transparent 60%),linear-gradient(160deg,var(--deep),var(--surface));
+    box-shadow:0 18px 40px -24px rgba(var(--a-rgb),.45)}
+  .ohero::before{content:"";position:absolute;left:10%;right:10%;top:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--a),transparent)}
+  .ohero-k{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .ohero-b{display:flex;flex-direction:column;min-width:0}
+  .ohero-o{font-family:var(--disp);font-weight:700;font-size:clamp(60px,21.5vw,96px);line-height:1;letter-spacing:-.04em;
+    color:var(--a);text-shadow:0 0 28px rgba(var(--a-rgb),.35);font-variant-numeric:tabular-nums;margin:8px 0 10px}
+  .ohero-t{display:block;min-width:0}
+  .ohero-n{display:block;font-family:var(--disp);font-weight:700;font-size:27px;letter-spacing:-.02em;line-height:1.15;overflow-wrap:anywhere}
+  .ohero-h{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+  .ohero-l{display:block;color:var(--ink-2);font-size:15px;line-height:1.5;margin-top:8px}
+  .fxm .fxm-chips{gap:0;padding:0;margin:0 0 14px;border-bottom:1px solid var(--grid)}
+  .fxm .fxm-chip{background:transparent;border:0;border-radius:0;padding:12px 14px;color:var(--muted);
+    box-shadow:inset 0 -3px 0 transparent;transition:color .13s,box-shadow .13s}
+  .fxm .fxm-chip:hover{background:transparent;color:var(--ink)}
+  .fxm .fxm-chip[aria-selected="true"]{background:transparent;color:var(--ink);box-shadow:inset 0 -3px 0 var(--a)}
+  .fxm .fxm-row{grid-template-columns:24px auto minmax(0,1fr) auto;gap:12px;padding:12px 14px}
+  .fxm .fxm-row .rk{font-family:var(--disp);font-size:19px;font-weight:700;color:var(--a);text-align:center}
+  .fxm .fxm-row .av{width:40px;height:40px}
+  .fxm .fxm-row .who .n{font-family:var(--disp);font-size:16px}
+  .fxm .fxm-row .who .h{display:block;font-size:12.5px;color:var(--muted)}
+  .fxm .fxm-row .who .s{white-space:normal;line-height:1.4;margin-top:2px}
+  .fxm .fxm-row .price{min-width:78px}
+  .fxm .fxm-row .price .o{font-size:17px}
+  details.gloss.ohow summary::before{content:"▶ ";color:var(--a);font-size:.8em}
+  details.gloss.ohow[open] summary::before{content:"▼ "}
+  details.gloss.ohow .method{margin:0;border:0;border-radius:0 0 var(--r) var(--r)}
+  @media(max-width:560px){
+    .fxm .orow.fxm-row.two{grid-template-columns:24px auto minmax(0,1fr)}
+  }
+  @media(prefers-reduced-motion:reduce){.fxm .fxm-chip{transition:none}}
+  /* Laptop widths: the hero reads across, and a single-winner list breaks into
+     two ranked columns rather than stretching every row across 1100px. */
+  @media(min-width:900px){
+    .ohero{padding:22px 28px 24px}
+    .ohero-b{flex-direction:row;align-items:center;gap:32px}
+    .ohero-o{margin:6px 0 0}
+    .ohero-n{font-size:30px}
+    .fxm .fxm-mkt > .board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .fxm .fxm-mkt > .board > .bhead{grid-column:1/-1}
+    .fxm .fxm-mkt > .board > .orow:nth-of-type(2){border-top:0}
+    .fxm .fxm-mkt > .board > .orow:nth-of-type(odd){border-right:1px solid var(--grid)}
+  }
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
@@ -7188,7 +7236,7 @@ function fxmLive(status) {
   }
 }
 
-function futuresMarkets(model, sim) {
+function futuresMarkets(model, sim, hero) {
   const T = model.teams;
   const all = T.map((t, i) => i);
   const divs = [...model.divNames.keys()].sort((a, b) => a - b);
@@ -7321,8 +7369,9 @@ function futuresMarkets(model, sim) {
           const uid = T[r.i].uid, row = el("button", `orow fxm-row${m.two ? " two" : ""}`);
           row.type = "button";
           Object.assign(row.dataset, { uid, div: T[r.i].div, key: r.key, name: nameOf(uid), price: r.prices[0].price });
+          const team = teamOf(uid);
           row.innerHTML = `<span class="rk"></span>${avatarHTML(uid, "sm avcell")}
-            <span class="who"><span class="n">${esc(nameOf(uid))}</span><span class="s">${esc(r.note)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
+            <span class="who"><span class="n">${esc(team || nameOf(uid))}</span>${team ? `<span class="h">${esc(nameOf(uid))}</span>` : ""}<span class="s">${esc(r.note)}</span>${r.inj ? `<span class="fxm-inj">${esc(r.inj.replace(/^ · /, ""))}</span>` : ""}</span>
             ${m.two ? `<span class="prices">${tiles(r)}</span>` : tiles(r)}`;
           row.title = `All of ${nameOf(uid)}'s prices`;
           row.onclick = () => { st.team = uid; apply(); };
@@ -7362,8 +7411,25 @@ function futuresMarkets(model, sim) {
   root.addEventListener("click", e => {
     const b = e.target.closest("button[data-jump]");
     const t = b && document.getElementById(b.dataset.jump);
-    if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (t && t.tagName === "DETAILS") t.open = true;
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   });
+
+  // The hero is the title board's own top row on whichever line is showing —
+  // the same price, probability and note, just posted large.
+  const paintHero = () => {
+    const L = lines[st.line];
+    if (!hero || !L) return;
+    const top = L.secs.title.boards[0].rows.reduce((a, r) => (r.key > a.key ? r : a));
+    const uid = T[top.i].uid, team = teamOf(uid), x = top.prices[0];
+    const wk = st.line === "live" && liveInfo ? (liveInfo.liveWeek ?? liveInfo.adjWeek) : null;
+    hero.dataset.uid = uid;
+    hero.innerHTML = `<div class="ohero-k">Title favorite · ${wk != null ? `Week ${wk}` : "Opening line"}</div>
+      <div class="ohero-b"><span class="ohero-o">${esc(fmtOdds(x.price))}</span>
+        <span class="ohero-t"><span class="ohero-n">${esc(team || nameOf(uid))}</span>
+          ${team ? `<span class="ohero-h">${esc(nameOf(uid))}</span>` : ""}
+          <span class="ohero-l">${(x.p * 100).toFixed(1)}% to win it all · ${esc(top.note)}</span></span></div>`;
+  };
 
   const paintTeam = uid => {
     const i = T.findIndex(t => t.uid === uid), L = lines[st.line];
@@ -7441,6 +7507,7 @@ function futuresMarkets(model, sim) {
     teamSel.value = st.team;
     teamHost.hidden = !st.team;
     if (st.team) paintTeam(st.team);
+    paintHero();
     const m = CHIPS.find(x => x.id === st.market);
     blurb.textContent = st.team
       ? `Every market, one manager. Pick a market above or "All teams" to go back to the full lists.`
@@ -7580,7 +7647,10 @@ function panelOdds(model, sim) {
 
   // A sportsbook's futures page first: every season market as chips and lists.
   // The live board and the house notice follow it, moved below rather than removed.
-  p.appendChild(futuresMarkets(model, sim));
+  // The title favourite, posted large above everything else on the tab.
+  const hero = el("div", "ohero");
+  p.insertBefore(hero, nav);
+  p.appendChild(futuresMarkets(model, sim, hero));
   p.appendChild(liveHost);
   p.appendChild(notice);
 
@@ -7625,7 +7695,8 @@ function panelOdds(model, sim) {
   }
 
   /* ---- methodology ---- */
-  const how = sechead("How the board is priced"); how.id = "fxmHow";
+  const how = el("details", "gloss ohow"); how.id = "fxmHow";
+  how.innerHTML = `<summary>How the board is priced</summary>`;
   p.appendChild(how);
   const m = el("div", "method");
   const yrs = `${model.seasons[0]}–${model.seasons[model.seasons.length - 1]}`;
@@ -7706,7 +7777,7 @@ function panelOdds(model, sim) {
        <code>p ≥ .5 → -100p/(1-p)</code>, <code>p &lt; .5 → 100(1-p)/p</code>, rounded to
        the nearest 5 below 200 and the nearest 10 above. The de-vigged probability is
        printed under every price.</p>`;
-  p.appendChild(m);
+  how.appendChild(m);
 
   p.appendChild(glossary([
     { t: "American odds", d: "What you'd win on a 100 stake. +300 pays 300 on a 100 bet; -150 means you'd stake 150 to win 100. Negative is the favourite." },
