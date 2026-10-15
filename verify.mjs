@@ -6619,8 +6619,8 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     const fs = await import("node:fs");
     const y = fs.readFileSync(join(ROOT, ".github", "workflows", "injury-refresh.yml"), "utf8");
     const script = (y.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
-    check("injury-refresh.yml: gate within 30 min, own concurrency group, actions: read + GH_TOKEN",
-      /\[ \$d -lt 30 \]/.test(y) && !/-le 7/.test(y) && /group: injury-refresh/.test(y) && !/group: weekly-data/.test(y)
+    check("injury-refresh.yml: gate within 30 min, shared sleeper-data concurrency group, actions: read + GH_TOKEN",
+      /\[ \$d -lt 30 \]/.test(y) && !/-le 7/.test(y) && /group: sleeper-data/.test(y) && !/group: (weekly-data|injury-refresh)\b/.test(y)
         && /^\s+actions: read$/m.test(y) && /GH_TOKEN: \$\{\{ github\.token \}\}/.test(y));
     check("injury-refresh.yml: Sundays skip while a weekly-data.yml run is in progress or queued",
       /"\$dow" = 7/.test(y) && /gh run list[^\n]*--workflow weekly-data\.yml[^\n]*--status "\$st"/.test(y) && /for st in in_progress queued/.test(y) && /go=false/.test(y));
@@ -6628,6 +6628,66 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       (script.match(/git pull --rebase/g) || []).length === 2 && /git rebase --abort/.test(script) && /git reset --hard "origin\/\$branch"/.test(script)
         && ["consensus.mjs", "build-injuries.mjs", "injury-returns.mjs"].every(f => script.includes(`node ${f}`))
         && /::error::/.test(script) && /exit 1\s*$/.test(script) && !/--force|push -f\b/.test(y));
+  }
+  {
+    // sleeper-poll.yml and the concurrency groups. Static: files only.
+    const fs = await import("node:fs");
+    const wfPath = f => join(ROOT, ".github", "workflows", f);
+    const names = ["weekly-data.yml", "injury-refresh.yml", "sleeper-poll.yml"];
+    const wfs = Object.fromEntries(names.map(f => [f, fs.existsSync(wfPath(f)) ? fs.readFileSync(wfPath(f), "utf8") : ""]));
+    const poll = wfs["sleeper-poll.yml"];
+    check("sleeper-poll.yml exists with the 7,27,47 cron and workflow_dispatch",
+      /cron:\s*"7,27,47 \* \* \* \*"/.test(poll) && /workflow_dispatch/.test(poll));
+    // GitHub keeps one pending run per group, so weekly-data stays out of the
+    // poll's group: a queued poll must never cancel a pending weekly run.
+    const group = (f, g) => new RegExp(`concurrency:\\s*\\n\\s+group: ${g}\\s*\\n\\s+cancel-in-progress: false`).test(wfs[f]);
+    check("sleeper-poll and injury-refresh share concurrency group sleeper-data, no cancel-in-progress",
+      group("sleeper-poll.yml", "sleeper-data") && group("injury-refresh.yml", "sleeper-data"));
+    check("weekly-data.yml keeps its own concurrency group weekly-data, no cancel-in-progress",
+      group("weekly-data.yml", "weekly-data") && !/group: sleeper-data/.test(wfs["weekly-data.yml"]));
+    const retry = w => { const s = (w.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
+      return (s.match(/git pull --rebase origin "\$branch" && git push origin "HEAD:\$branch"/g) || []).length === 2
+        && /git rebase --abort/.test(s) && /git reset --hard "origin\/\$branch"/.test(s)
+        && /::error::/.test(s) && /exit 1\s*$/.test(s) && !/--force|push -f\b|push\s+\+/.test(w); };
+    check("all three workflows: pull --rebase + push; on failure abort, reset to origin, regenerate, retry once; no force",
+      names.every(f => retry(wfs[f])), names.filter(f => !retry(wfs[f])).join(","));
+    // build-email.mjs only writes data/odds-snapshot.json; every other mail-ish script is the routine's.
+    const mailish = s => s !== "build-email.mjs" && /compose-email|send|sent-emails|mail|blast|poll-tally/.test(s);
+    const bad = names.filter(f => [...wfs[f].matchAll(/node\s+([\w.-]+\.mjs)/g)].some(m => mailish(m[1]))
+      || /compose-email|sent-emails/.test(wfs[f])
+      || [...wfs[f].matchAll(/secrets\.(\w+)/g)].some(m => m[1] !== "GITHUB_TOKEN"));
+    check("none of the three workflows compose/send/record email or use secrets beyond GITHUB_TOKEN/github.token",
+      bad.length === 0, bad.join(","));
+    check("sleeper-poll.yml: permissions are contents: write only",
+      /permissions:\s*\n\s+contents: write\s*\n\s*\n/.test(poll) && !/actions: |pull-requests: |id-token: /.test(poll));
+    let fp = null;
+    try { fp = JSON.parse(fs.readFileSync(join(ROOT, "data", "sleeper-fingerprint.json"), "utf8")); } catch {}
+    check("data/sleeper-fingerprint.json present and parses (season, week, transactions, rosters; no injuries)",
+      !!fp && !!fp.season && Number.isFinite(fp.week) && Array.isArray(fp.transactions)
+        && Object.keys(fp.rosters || {}).length >= 12 && !("injuries" in fp));
+    // Sleeper asks that the 5MB player file be pulled about once a day; the poll runs 72 times.
+    const fpSrc = fs.existsSync(join(ROOT, "sleeper-fingerprint.mjs")) ? fs.readFileSync(join(ROOT, "sleeper-fingerprint.mjs"), "utf8") : "";
+    check("sleeper-fingerprint.mjs never fetches players/nfl (state, transactions and rosters only)",
+      !!fpSrc && !/players\/nfl/.test(fpSrc) && /state\/nfl/.test(fpSrc) && /\/transactions\//.test(fpSrc) && /\/rosters/.test(fpSrc));
+    const ir = wfs["injury-refresh.yml"];
+    check("injury-refresh.yml runs build-email.mjs and build-odds-history.mjs (|| warning) and stages the odds files",
+      /run: node build-email\.mjs/.test(ir) && /node build-odds-history\.mjs \|\| echo "::warning::/.test(ir)
+        && /data\/odds-snapshot\.json/.test(ir) && /data\/odds-history\.json/.test(ir) && /dry_run/.test(ir));
+    const checkAt = poll.indexOf("sleeper-fingerprint.mjs --check");
+    const npmAt = Math.min(...["npm ci", "playwright"].map(s => poll.indexOf(s)).filter(i => i >= 0));
+    check("sleeper-poll.yml: the fingerprint check comes before any npm/playwright step",
+      checkAt > 0 && Number.isFinite(npmAt) && checkAt < npmAt);
+    const steps = poll.split(/\n      - /).slice(1);
+    const afterCheck = steps.slice(steps.findIndex(s => s.includes("--check")) + 1);
+    check("sleeper-poll.yml: every step after the check is gated on changed == 'true'",
+      afterCheck.length >= 9 && afterCheck.every(s => /if: steps\.fp\.outputs\.changed == 'true'/.test(s)));
+    check("all three workflows write the fingerprint before committing; the poll rebases, retries once, never forces",
+      names.every(f => { const w = wfs[f]; const at = w.indexOf("sleeper-fingerprint.mjs --write");
+        return at > 0 && at < w.indexOf("name: Commit anything that changed"); })
+        && (poll.match(/git pull --rebase/g) || []).length === 2 && /git reset --hard "origin\/\$branch"/.test(poll)
+        && !/--force|push -f\b/.test(poll));
+    check("no Claude/AI steps in the three workflows",
+      names.every(f => !/anthropic|claude-code|claude_code|ANTHROPIC/i.test(wfs[f])));
   }
   check("odds sim: points come off the mean (hurt team loses wins, nobody else does)",
     io.sim && io.sim.team0[1] < io.sim.team0[0] && io.sim.others === io.sim.n - 1, JSON.stringify(io.sim));
