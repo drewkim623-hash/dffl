@@ -5133,30 +5133,124 @@ function livePosterior(model, season, throughWeek = null) {
   if (!model || !model.ok || !season) return null;
   const wk = model.weekSd, pri = model.seasonSd;
   if (!(wk > 0) || !(pri > 0)) return null;
-  const byRid = new Map();
+  const byRid = new Map(), wksOf = new Map();
+  let rewound = false;
   for (const g of (season.games || [])) {
     if (g.playoff) continue;
     // throughWeek rewinds the board: only what had been scored by the end of
     // that week counts toward a team's level, so the page can show what the
     // model believed then rather than what it believes now.
-    if (throughWeek != null && g.week > throughWeek) continue;
+    if (throughWeek != null && g.week > throughWeek) { rewound = true; continue; }
     for (const s of [g.a, g.b]) {
-      if (!byRid.has(s.rid)) byRid.set(s.rid, []);
+      if (!byRid.has(s.rid)) { byRid.set(s.rid, []); wksOf.set(s.rid, []); }
       byRid.get(s.rid).push(s.pts);
+      wksOf.get(s.rid).push(g.week);
     }
   }
+  // Trades: today's roster against the rosters that scored those points. Only
+  // for the current season's board as it stands now — a rewound board shows
+  // what the model believed then, before any later trade.
+  const roster = !rewound && rosterWeeksFor(season);
   const pp = 1 / (pri * pri);
   return model.teams.map(t => {
     const obs = byRid.get(t.rid) || [];
     const n = obs.length;
     const op = n / (wk * wk);
     const om = n ? obs.reduce((a, b) => a + b, 0) / n : 0;
-    const mean = n ? (pp * t.mean + op * om) / (pp + op) : t.mean;
+    const level = n ? (pp * t.mean + op * om) / (pp + op) : t.mean;
+    const delta = roster ? rosterDelta(roster, t.rid, wksOf.get(t.rid) || []) : 0;
+    const mean = level + delta + rosterBlend(roster, t.rid, level);
     return {
       ...t, n, priorMean: t.mean, obsMean: n ? om : null, mean,
       levelSd: Math.sqrt(1 / (pp + op)), moved: mean - t.mean,
     };
   });
+}
+
+/**
+ * Trade-aware levels ("Option C"). livePosterior() learns a team's level from
+ * points its past rosters scored; after a trade those rosters are not the one
+ * that will play the rest of the season. data/roster-weeks.json (written by
+ * build-roster-weeks.mjs) prices every roster the same way — best healthy
+ * lineup on data/projections.json, averaged over the rest of the regular season
+ * — so for each team
+ *
+ *   Δ = current.strength − mean over the weeks livePosterior counts of weeks[wk][rid].strength
+ *
+ * and the level becomes mean + Δ. Nothing else about the odds changes: the
+ * prior, the noise, the injury model, the seeds and the sims are all as they
+ * were. A team whose roster never changed gets Δ exactly 0. No file (or a
+ * different season's) means Δ = 0 for everybody and the board as it was.
+ *
+ * ROSTER_BLEND_W is the hook for Option A: pull the level a fraction of the way
+ * toward the current roster's projected strength itself. 0 = off; at 0 the term
+ * is exactly 0 and only Δ applies.
+ */
+const ROSTER_BLEND_W = 0;
+const ROSTER_FILE = "data/roster-weeks.json";
+let ROSTER_WEEKS = null;
+// rid -> Δ on the current board (every scored week counted). Filled in place by
+// loadRosterWeeks(), so a reference taken earlier stays current.
+const rosterDeltas = new Map();
+
+/** The roster file, if it belongs to this season's board; else null (Δ = 0). */
+function rosterWeeksFor(season) {
+  const RW = ROSTER_WEEKS;
+  if (!RW || !RW.current || !RW.weeks || !season) return null;
+  return RW.season && String(season.season) !== String(RW.season) ? null : RW;
+}
+
+/** Δ for one team over the weeks counted: today's strength minus the fielded rosters' mean. */
+function rosterDelta(RW, rid, weeks) {
+  const cur = RW.current[rid];
+  if (!cur || !Number.isFinite(cur.strength)) return 0;
+  const past = [...new Set(weeks)].map(w => RW.weeks[w] && RW.weeks[w][rid])
+    .filter(x => x && Number.isFinite(x.strength));
+  if (!past.length) return 0;
+  // Same players every week as today: no trade, Δ is 0 by definition.
+  const key = a => (a || []).map(String).sort().join(",");
+  if (cur.players && past.every(x => x.players && key(x.players) === key(cur.players))) return 0;
+  return cur.strength - past.reduce((s, x) => s + x.strength, 0) / past.length;
+}
+
+/** Option A's term: ROSTER_BLEND_W × (current strength − level). 0 while the weight is 0. */
+function rosterBlend(RW, rid, level) {
+  const cur = RW && RW.current[rid];
+  const gap = cur && Number.isFinite(cur.strength) ? cur.strength - level : 0;
+  return ROSTER_BLEND_W ? ROSTER_BLEND_W * gap : 0;
+}
+
+/**
+ * Read data/roster-weeks.json (fail-soft: missing => Δ = 0 for all) and fill
+ * rosterDeltas for the current season. `inject` replaces the file — an object
+ * to price, or null to switch the adjustment off — for verify.mjs.
+ */
+async function loadRosterWeeks(inject) {
+  if (inject !== undefined) ROSTER_WEEKS = inject;
+  else {
+    ROSTER_WEEKS = null;
+    if (!MOCK) {
+      try {
+        const j = await jget(ROSTER_FILE);
+        if (j && j.current && j.weeks) ROSTER_WEEKS = j;
+      } catch (e) { /* not published: no adjustment */ }
+    }
+  }
+  rosterDeltas.clear();
+  const season = DB.seasons[0];
+  const RW = rosterWeeksFor(season);
+  if (RW) {
+    const weeks = new Map();
+    for (const g of season.games || []) {
+      if (g.playoff) continue;
+      for (const s of [g.a, g.b]) {
+        if (!weeks.has(s.rid)) weeks.set(s.rid, []);
+        weeks.get(s.rid).push(g.week);
+      }
+    }
+    for (const r of season.rosters || []) rosterDeltas.set(r.roster_id, rosterDelta(RW, r.roster_id, weeks.get(r.roster_id) || []));
+  }
+  return rosterDeltas;
 }
 
 /**
@@ -10215,6 +10309,9 @@ async function boot() {
 
     const AT = allTime(), RB = recordBook(), H2H = h2hMap(), DIST = scoringDist();
     const ODDS = await oddsModel(), SIM = simulateSeason(ODDS);
+    // Before anything reads the live posterior: each team's roster change since
+    // the weeks it scored (Δ = 0 for all if the file isn't there).
+    await loadRosterWeeks();
     window.__AT = AT; window.__RB = RB; window.__H2H = H2H; window.__DIST = DIST;
     window.__ODDS = ODDS; window.__SIM = SIM;
 
@@ -10293,6 +10390,7 @@ async function boot() {
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
       loadInjuries, injPlayer, availability, livePosterior, weeksOf, liveState,
+      ROSTER_BLEND_W, rosterDeltas, loadRosterWeeks, rosterDelta, rosterWeeks: () => ROSTER_WEEKS,
       injuryDetail, returnLabel, rosterInjuries, injCutText, ensureInjuries, renderInjuries,
       PTS_LOST, projectedPointsLost, splitLineupDrop, pointsLostOpts, loadProjections, injuryTabTeams, injuryTabOrder, whenInjuryDeltas,
       injuryPlan, injuryLossPlan, injuryLossTeam, injuryLostPts, attachLossPlan, INJ_ODDS,
