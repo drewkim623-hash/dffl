@@ -708,15 +708,43 @@
   .dh .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .dh .tot{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;flex:none}
   .dpicks{display:grid}
-  .dp{display:grid;grid-template-columns:20px 34px minmax(0,1fr) auto;align-items:center;gap:8px;
-    padding:7px 12px;background:transparent;border:0;border-top:1px solid var(--grid);text-align:left;
+  .dp{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:10px;
+    padding:10px 13px;background:transparent;border:0;border-top:1px solid var(--grid);text-align:left;
     font:inherit;color:inherit;cursor:pointer;transition:background .12s}
   .dpicks .dp:first-child{border-top:0}
+  .dpicks .dp:first-child::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;
+    background:linear-gradient(var(--gold),transparent)}
   .dp:hover{background:var(--hover)}
-  .dp .rd{font-size:10.5px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
-  .dp .nm{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dp .no{font-family:var(--disp);font-weight:700;font-size:17px;color:var(--gold);font-variant-numeric:tabular-nums;text-align:center}
+  .dp .who{display:grid;gap:3px;min-width:0}
+  .dp .nm{font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .dp .nm .k{color:var(--gold);font-size:10.5px;font-weight:900}
-  .dp .pts{font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .dp .sub{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+  .dp .pv{display:grid;justify-items:end;gap:2px;font-variant-numeric:tabular-nums}
+  .dp .pts{font-size:13.5px;font-weight:750;color:var(--ink);padding:3px 9px;border-radius:8px;
+    background:var(--raised);border:1px solid var(--ring)}
+  .dp .rd{font-size:10.5px;color:var(--muted);font-weight:700}
+  /* the steal of the draft, as the tab's hero card */
+  .dhero{position:relative;overflow:hidden;border:1px solid var(--ring);border-radius:var(--r);padding:20px 20px 18px;margin-bottom:11px;
+    background:radial-gradient(460px 240px at 100% 0,rgba(255,194,61,.20),transparent 70%),
+      radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.16),transparent 70%),linear-gradient(160deg,var(--plane),var(--surface) 65%)}
+  .dhero::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .dhero .l{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .dhero .big{font-family:var(--disp);font-weight:700;font-size:clamp(56px,16vw,84px);line-height:1;letter-spacing:-.05em;
+    color:var(--gold);margin:8px 0 6px;font-variant-numeric:tabular-nums;text-shadow:0 0 24px rgba(255,194,61,.35)}
+  .dhero.down .big{color:var(--red);text-shadow:none}
+  .dhero .w{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.02em}
+  .dhero .c{font-size:13.5px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+  .dhero + .recs .rec .v{font-size:28px}
+  /* the view picker, as a segmented control; the select stays for the year and the checks */
+  .dseg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;margin:0 0 14px;max-width:520px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:12px}
+  .dseg button{border:0;background:transparent;padding:9px 8px;border-radius:9px;font-weight:700;font-size:13.5px;
+    color:var(--muted);cursor:pointer;transition:background .12s,color .12s}
+  .dseg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:inset 0 -3px 0 var(--gold)}
+  .dseg button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+  .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:reduce){.dp,.dseg button{transition:none}}
 
   /* ============ player card ============ */
   .modal{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.66);backdrop-filter:blur(3px);
@@ -7918,6 +7946,18 @@ function panelDraft() {
   });
   picks.appendChild(sel); picks.appendChild(viewSel);
   p.appendChild(picks);
+  // The view select is driven by these buttons; it stays in the DOM (hidden) as the source of truth.
+  viewSel.classList.add("vh"); viewSel.tabIndex = -1; viewSel.setAttribute("aria-hidden", "true");
+  picks.style.gridTemplateColumns = "1fr";
+  const seg = el("div", "dseg"); seg.setAttribute("role", "group"); seg.setAttribute("aria-label", "Draft view");
+  [...viewSel.options].forEach(o => {
+    const b = el("button", null, esc(o.textContent)); b.type = "button"; b.dataset.v = o.value;
+    b.onclick = () => { if (viewSel.value !== o.value) { viewSel.value = o.value; viewSel.dispatchEvent(new Event("change")); } };
+    seg.appendChild(b);
+  });
+  const syncSeg = () => seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === viewSel.value)));
+  syncSeg();
+  p.appendChild(seg);
   const highlights = el("div"); p.appendChild(highlights);
   const host = el("div"); p.appendChild(host);
 
@@ -7927,9 +7967,15 @@ function panelDraft() {
     highlights.innerHTML = "";
     if (!A) return;
     const steal = A.steals[0], bust = A.busts[0];
+    if (steal) {
+      const h = el("div", "dhero");
+      h.innerHTML = `<div class="l">Steal of the draft</div><div class="big">+${esc(String(steal.value))}</div>
+        <div class="w">${esc(steal.name)}</div>
+        <div class="c">${esc(`${nameOf(steal.uid)} took him at ${steal.pick} — finished ${ord(steal.prodRank)} in scoring`)}</div>`;
+      highlights.appendChild(h);
+    }
     const t = el("div", "recs");
     t.innerHTML = [
-      steal && { c: "up", l: "Steal of the draft", v: `+${steal.value}`, w: steal.name, x: `${nameOf(steal.uid)} took him at ${steal.pick} — finished ${ord(steal.prodRank)} in scoring` },
       bust && { c: "down", l: "Bust of the draft", v: `${bust.value}`, w: bust.name, x: `${nameOf(bust.uid)} took him at ${bust.pick} — finished ${ord(bust.prodRank)}` },
       A.byMgr[0] && { c: "up", l: "Best draft haul", v: f1(A.byMgr[0].pts), w: nameOf(A.byMgr[0].uid), x: `most total points from his ${A.byMgr[0].n} picks` },
       A.byMgr[A.byMgr.length - 1] && { c: "down", l: "Worst draft haul", v: f1(A.byMgr[A.byMgr.length - 1].pts), w: nameOf(A.byMgr[A.byMgr.length - 1].uid), x: "fewest total points drafted" },
@@ -8033,10 +8079,10 @@ function panelDraft() {
         const pk = s.picks.find(x => x.pick_no === r.pick);
         const kept = keep.has(String(r.pid));
         const b = el("button", "dp");
-        b.innerHTML = `<span class="rd">${r.round}</span>
-          <span class="pos-dot ${posClass(r.pos)}">${esc(r.pos || "?")}</span>
-          <span class="nm">${esc(r.name)}${kept ? ` <b class="k">${jx("keeper", "K", 1)}</b>` : ""}</span>
-          ${scored ? `<span class="pts">${f1(r.pts)}</span>` : ""}`;
+        b.innerHTML = `<span class="no">${r.pick}</span>
+          <span class="who"><span class="nm">${esc(r.name)}${kept ? ` <b class="k">${jx("keeper", "K", 1)}</b>` : ""}</span>
+            <span class="sub"><span class="pos-dot ${posClass(r.pos)}">${esc(r.pos || "?")}</span></span></span>
+          <span class="pv">${scored ? `<span class="pts">${f1(r.pts)}</span>` : ""}<span class="rd">Rd ${r.round}</span></span>`;
         if (pk) b.onclick = () => openPlayer(s, pk, A);
         ul.appendChild(b);
       }
@@ -8095,6 +8141,7 @@ function panelDraft() {
     // If Sleeper didn't return per-player scoring, every value would be
     // meaningless. Show the board without value rather than fake numbers.
     const scored = !!A && A.rows.filter(r => r.pts > 0).length >= A.rows.length * 0.25;
+    syncSeg();
     drawHighlights(s, scored ? A : null);
     if (!scored && viewSel.value === "list") {
       host.innerHTML = "";
