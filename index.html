@@ -1135,7 +1135,7 @@
   .tside + .tside{border-left:1px solid var(--grid)}
   @media(max-width:560px){.tside + .tside{border-left:0}}
   .tside.won{background:linear-gradient(180deg,rgba(57,135,229,.09),transparent 70%)}
-  .tside .who{display:flex;align-items:center;gap:9px;min-width:0}
+  .tside .who{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;min-width:0}
   .tside .who .n{font-weight:750;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .tside .net{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:15px;flex:none}
   .tlist{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:4px}
@@ -1147,6 +1147,9 @@
   .tline .sub{font-size:11px;color:var(--muted);font-style:normal;display:block;line-height:1.35}
   .tpicks{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
   .tnote{padding:11px 14px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);line-height:1.5}
+  .gchip{display:inline-block;flex:none;padding:1px 6px;border-radius:3px;font-weight:800;font-size:12px;white-space:nowrap}
+  .gchip small{font-weight:600;opacity:.85}.gh{display:inline-block;flex:none;font-size:11px;opacity:.8;white-space:nowrap}
+  .g-a{background:#1f7a3a;color:#fff}.g-b{background:#3a6f9a;color:#fff}.g-c{background:#555;color:#fff}.g-d{background:#9a6a1f;color:#fff}.g-f{background:#b3261e;color:#fff}.gh.pend{opacity:.6}
   .tfilter{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:430px;margin:0 0 14px}
   .back.more{display:block;width:100%;margin:4px 0 0;text-align:center}
 
@@ -9860,6 +9863,19 @@ const gotNames = sd => [...sd.got.map(x => x.name),
   ...sd.picksIn.map(r => r.name ? `${r.label} → ${r.name}` : r.label)].join(", ") || "nothing";
 const sgnf = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
 
+let TRADE_GRADES = null;
+const gradeCls = l => l.startsWith("A") ? "g-a" : l === "B" ? "g-b" : l === "C" ? "g-c" : l === "D" ? "g-d" : "g-f";
+/** One chip per side: trade-day letter + point margin, then hindsight letter or Pending. */
+function gradeChipHTML(t, sd) {
+  const g = TRADE_GRADES && TRADE_GRADES.trades && TRADE_GRADES.trades[t.id];
+  const s = g && g.sides.find(x => x.rid === sd.rid);
+  if (!s) return "";
+  const pts = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
+  const h = typeof s.hindsight === "string" ? `<span class="gh pend">Hindsight: Pending</span>`
+    : `<span class="gh ${gradeCls(s.hindsight.letter)}">Hindsight ${esc(s.hindsight.letter)} ${esc(pts(s.hindsight.marginPts))}</span>`;
+  return `<span class="gchip ${gradeCls(s.tradeDay.letter)}" title="Trade-day grade: VOR margin ${s.tradeDay.marginPct}% of value traded">${esc(s.tradeDay.letter)} <small>${esc(pts(s.tradeDay.marginPts))}</small></span>${h}`;
+}
+
 function tradeCard(t) {
   const v = verdictOf(t);
   const box = el("article", "trade");
@@ -9885,7 +9901,7 @@ function tradeCard(t) {
         r.pts, t.graded && r.priced, r.priced ? null : r.why))).join("");
     d.innerHTML = `<div class="who">${avatarHTML(sd.uid, "sm")}
         <span class="n">${esc(sd.uid ? nameOf(sd.uid) : "roster " + sd.rid)}</span>
-        ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}</div>
+        ${t.graded ? `<b class="net ${sd.net >= 0 ? "pos-t" : "neg-t"}">${esc(sgnf(sd.net))}</b>` : ""}${gradeChipHTML(t, sd)}</div>
       ${lines ? `<ul class="tlist">${lines}</ul>` : `<div class="tpicks">gave everything, got nothing back</div>`}`;
     sides.appendChild(d);
   }
@@ -9897,6 +9913,8 @@ function tradeCard(t) {
   if (t.graded && t.unpriced.length)
     notes.push(`Not priced: ${t.unpriced.map(u => `${u.label} (${u.why})`).join(", ")}.`);
   box.appendChild(el("div", "tnote", notes.map(esc).join(" ")));
+  if (TRADE_GRADES && TRADE_GRADES.trades && TRADE_GRADES.trades[t.id])
+    box.appendChild(el("div", "tnote", esc("Grade: value over replacement, rest of season + shrunk keeper value + pick chart; C is the middle 40% of all league trades.")));
   return box;
 }
 
@@ -10157,6 +10175,7 @@ async function ensureTrades() {
     await loadPlayerNames(need);
     await loadDraftSlots();
     const L = tradeLedger(txs), W = waiverReport(txs);
+    TRADE_GRADES = await jget("data/trade-grades.json").catch(() => null);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
     renderTrades(host, L, W);
     document.body.dataset.tradesReady = "1";

@@ -115,6 +115,10 @@ jobs:
       - name: Add this run's odds reading to the line history
         run: node build-odds-history.mjs || echo "::warning::odds history not updated"
 
+      # Trade grades go stale as trades happen. Never --write-keepers here.
+      - name: Rebuild trade grades
+        run: node build-trade-grades.mjs || echo "::warning::trade grades not updated"
+
       # So the next sleeper-poll.yml run does not redo this one's work.
       - name: Record the Sleeper fingerprint
         run: node sleeper-fingerprint.mjs --write
@@ -158,6 +162,7 @@ jobs:
           node build-pulse.mjs
           node build-email.mjs
           node build-odds-history.mjs || echo "::warning::odds history not updated"
+          node build-trade-grades.mjs || echo "::warning::trade grades not updated"
           node sleeper-fingerprint.mjs --write
           if ! commit; then
             echo "Nothing changed on top of origin/$branch."

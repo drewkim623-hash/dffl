@@ -2872,6 +2872,30 @@ check("counting from week 8 drops weeks 1-7 exactly", near(after.fromWeek8, afte
 check("a mid-season count is strictly less than the whole season", near(after.fromWeek1 - after.fromWeek8, after.head, 1e-9) && after.head > 0, `${after.fromWeek1} − ${after.fromWeek8} should be ${after.head}`);
 check("playoff weeks are scored by Sleeper but never counted here", after.playoffs > 0 && after.fromWeek15 === 0, `playoff pts ${after.playoffs}, counted ${after.fromWeek15}`);
 
+group("Trades: v2 grade chips");
+{
+  const fs = await import("node:fs");
+  const G = JSON.parse(fs.readFileSync("data/trade-grades.json", "utf8"));
+  const K = JSON.parse(fs.readFileSync("keepers.json", "utf8"));
+  const sides = Object.values(G.trades).flatMap(t => t.sides);
+  const share = l => sides.filter(s => s.tradeDay.letter === l).length / sides.length;
+  check("every trade side has a trade-day letter", sides.every(s => /^(A\+|A|B|C|D|F|F-)$/.test(s.tradeDay.letter)));
+  check("C is the biggest band (about the middle 40%)", share("C") > 0.3 && share("C") < 0.55, share("C").toFixed(2));
+  check("A+ and F- are rare (under 6% each)", share("A+") < 0.06 && share("F-") < 0.06, `${share("A+").toFixed(3)} / ${share("F-").toFixed(3)}`);
+  check("margins cancel within each trade", Object.values(G.trades).every(t => Math.abs(t.sides.reduce((a, s) => a + s.tradeDay.marginPts, 0)) < 0.5));
+  check("an unresolved pick leaves hindsight Pending", Object.values(G.trades).some(t => t.sides.some(s => s.hindsight === "Pending")));
+  const pierce = G.trades["1014788370771537920"];
+  check("2023 Pierce-for-R5 resolves the pick to Jordan Addison in hindsight", pierce && pierce.sides.some(s => s.assets.some(a => a.became === "Jordan Addison")));
+  check("regression starts in 2027 and trades don't reset years", K.config.REGRESSION_FROM === 2027 && K.config.TRADE_RESETS_YEARS === false);
+  check("Puka's next keeper cost regresses R15 -> R12", K.players["9493"] && K.players["9493"].nextCostRound === 12 && K.players["9493"].regressed);
+  check("BTJ is flagged as an exception", (K.exceptions || []).some(e => e.player_id === "11631"));
+  check("keepers.json still carries the stated seasons lists", !!(K.seasons && K.seasons["2026"]));
+  const chips = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .gchip')].length);
+  check("trade cards show grade chips", chips > 50, `${chips}`);
+  const overflow = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].some(e => e.scrollWidth > e.clientWidth + 1));
+  check("chips don't overflow a trade side", !overflow);
+}
+
 group("Trades: a synthetic trade grades to a known answer");
 const synth = await page.evaluate(() => {
   const D = window.__DFFL, DB = D.DB;
