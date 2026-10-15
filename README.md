@@ -126,6 +126,13 @@ do it in the browser: open the file, click the pencil icon, paste, commit.
   screen.
 - **Pre-draft seasons.** 2026 is `pre_draft`, so it contributes no games yet. The moment week 1
   finalizes it starts appearing everywhere automatically.
+- **Waiver report card (Trades tab).** Grades this season's waiver and free-agent pickups on the
+  points each player scored in the claiming team's starting lineup in finished weeks from the
+  claim week on, until that team drops or trades him away (a re-add starts a new window, so no
+  week is counted twice). Bench points never count, and neither does FAAB cost. The letter bands are borrowed from the trade-grade v2 scale: percentiles of |points added|
+  across all graded pickups (below 21.6th = C; to 55.3rd = B/D; to 86.9th = A/F; above = A+/F-),
+  with the sign choosing the good or bad letter. Pickups with no finished week yet show "Too early".
+  If more than ~21.6% of pickups score exactly 0, the bottom cut is 0 and the C band empties.
 - **Nothing is cached.** Deliberate — stale fantasy stats are worse than a 4-second load.
 
 ## Local development

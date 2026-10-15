@@ -2702,6 +2702,92 @@ await page.waitForFunction(() => document.body.dataset.tradesReady, null, { time
 const tradesState = await page.evaluate(() => document.body.dataset.tradesReady);
 check("the trades tab loads its own data on first open", tradesState === "1", tradesState);
 
+group("Trades: waiver report card");
+const wrcRead = () => page.evaluate(() => {
+  const c = document.querySelector("#waiverCard");
+  if (!c) return null;
+  const over = [];
+  for (const n of c.querySelectorAll("*")) {
+    const r = n.getBoundingClientRect();
+    if (r.width && r.right > window.innerWidth + 1) over.push((n.className || n.tagName) + " → " + Math.round(r.right));
+  }
+  return {
+    teams: c.querySelectorAll(".wrc-team").length,
+    heroes: c.querySelectorAll(".wrc-hero .n").length,
+    grades: [...c.querySelectorAll("[data-grade]")].map(g => [g.dataset.grade, g.textContent.trim()]),
+    cols: getComputedStyle(c).gridTemplateColumns.split(" ").length,
+    note: (c.nextElementSibling && c.nextElementSibling.textContent) || "",
+    over: over.slice(0, 6), docScroll: document.documentElement.scrollWidth, inner: innerWidth,
+    imgs: c.querySelectorAll("img").length,
+    graded: window.__WAIVERS && window.__WAIVERS.card ? window.__WAIVERS.card.graded : 0,
+    heroStack: (() => {
+      const h = c.querySelector(".wrc-hero"); if (!h) return null;
+      const g = h.querySelector(".g").getBoundingClientRect(), n = h.querySelector(".n").getBoundingClientRect();
+      return g.bottom <= n.top + 1;
+    })(),
+  };
+});
+// The points-added math, on a synthetic season (roster 1 and 2, weeks 1–5 final).
+const wrcFx = await page.evaluate(() => {
+  const E = (rid, starters, pts) => ({ roster_id: rid, ...(starters ? { starters } : {}), players: Object.keys(pts), players_points: pts });
+  const season = {
+    season: "2099", pws: 15, userById: new Map(),
+    rosters: [{ roster_id: 1, owner_id: "u1" }, { roster_id: 2, owner_id: "u2" }],
+    regEntries: new Map([
+      [1, [E(1, [], {}), E(2, ["b"], { b: 4 })]],
+      [2, [E(1, ["a"], { a: 10 }), E(2, [], { b: 9 })]],
+      [3, [E(1, null, { a: 50 }), E(2, ["b"], { b: 6 })]],
+      [4, [E(1, [], { a: 8 }), E(2, ["a", "b"], { a: 30, b: 7 })]],
+      [5, [E(1, ["a"], { a: 100 }), E(2, [], {})]],
+    ]),
+  };
+  const T = (type, leg, ts, adds, drops, bid) => ({ season: "2099", type, leg, status_updated: ts, adds, drops,
+    settings: bid == null ? {} : { waiver_bid: bid } });
+  const txs = [
+    T("free_agent", 1, 100, { b: 2 }, null),          // b: roster 2 adds…
+    T("waiver", 2, 200, { a: 1 }, null, 10),          // a: roster 1 claims in week 2
+    T("free_agent", 2, 300, null, { b: 2 }),          // b: …drops…
+    T("free_agent", 3, 400, { b: 2 }, null),          // b: …and re-adds
+    T("trade", 4, 500, { a: 2 }, { a: 1 }),           // a: traded away in week 4…
+    T("trade", 5, 600, { a: 1 }, { a: 2 }),           // a: …and back in week 5 (starts, 100 pts)
+    T("waiver", 6, 700, { c: 1 }, null, 3),           // c: no finished week yet
+  ];
+  const R = waiverReportCard(txs, season);
+  const rows = R.rows.map(r => ({ pid: r.pid, wk: r.wk, pts: r.pts, early: r.early, grade: r.grade || null, bid: r.bid }));
+  const g = (x, cuts) => wrcGrade(x, cuts);
+  const bands = [g(0.5, [1, 2, 3]), g(1, [1, 2, 3]), g(2, [1, 2, 3]), g(2.01, [1, 2, 3]), g(3, [1, 2, 3]), g(3.01, [1, 2, 3]),
+    g(-1, [1, 2, 3]), g(-2.5, [1, 2, 3]), g(-3.5, [1, 2, 3]), g(0, [0, 2, 3])];
+  return { rows, bands };
+});
+const wrcRow = (pid, wk) => wrcFx.rows.find(r => r.pid === pid && r.wk === wk);
+check("waiver card: claim-week points count when started, bench / no-lineup weeks don't, and none after a trade away",
+  wrcRow("a", 2) && wrcRow("a", 2).pts === 10, JSON.stringify(wrcRow("a", 2)));
+check("waiver card: a drop + re-add by the same roster isn't double counted",
+  wrcRow("b", 1) && wrcRow("b", 1).pts === 4 && wrcRow("b", 3) && wrcRow("b", 3).pts === 13,
+  JSON.stringify([wrcRow("b", 1), wrcRow("b", 3)]));
+check("waiver card: a pickup with 0 finished weeks is Too early and ungraded",
+  wrcRow("c", 6) && wrcRow("c", 6).early && !wrcRow("c", 6).grade, JSON.stringify(wrcRow("c", 6)));
+check("waiver card: band boundaries (C <21.6th, B/D ≤55.3rd, A/F ≤86.9th, A+/F- above; 0 is a D when the C cut is 0)",
+  wrcFx.bands.join(" ") === "C B B A A A+ D F F- D", wrcFx.bands.join(" "));
+const vp0 = page.viewportSize();
+const wrcWide = await wrcRead();
+check("the waiver report card renders with a card per team", !!wrcWide && wrcWide.teams > 0 && wrcWide.heroes === wrcWide.teams, JSON.stringify(wrcWide && wrcWide.teams));
+const WRC_OK = new Set(["A+", "A", "B", "C", "D", "F", "F-"]);
+check("every waiver grade comes from A+ A B C D F F-", !!wrcWide && (wrcWide.grades.length > 0 || wrcWide.graded === 0) && wrcWide.grades.every(([d, t]) => WRC_OK.has(d) && d === t),
+  wrcWide && wrcWide.grades.filter(([d, t]) => !WRC_OK.has(d) || d !== t).slice(0, 4).join(" "));
+check("the card says its bands are borrowed from the trade-grade v2 scale", !!wrcWide && /borrowed from the trade-grade v2 scale/.test(wrcWide.note), wrcWide && wrcWide.note.slice(0, 80));
+check("the waiver card carries no player headshots", !!wrcWide && wrcWide.imgs === 0, String(wrcWide && wrcWide.imgs));
+if (vp0 && vp0.width >= 720) check("the waiver card is a grid at desktop width", !!wrcWide && wrcWide.cols > 1, String(wrcWide && wrcWide.cols));
+await page.setViewportSize({ width: 390, height: 844 });
+await page.waitForTimeout(150);
+const wrc390 = await wrcRead();
+check("the waiver card is one column at 390px", !!wrc390 && wrc390.cols === 1, String(wrc390 && wrc390.cols));
+check("the waiver card stacks the hero grade above the team name at 390px", !!wrc390 && wrc390.heroStack === true, String(wrc390 && wrc390.heroStack));
+if (vp0 && vp0.width >= 720) check("the waiver card keeps the grade beside the team name at desktop width", !!wrcWide && wrcWide.heroStack === false, String(wrcWide && wrcWide.heroStack));
+check("the waiver card has no horizontal overflow at 390px", !!wrc390 && wrc390.over.length === 0 && wrc390.docScroll <= wrc390.inner,
+  wrc390 && `${wrc390.over.join(" | ")} doc ${wrc390.docScroll}/${wrc390.inner}`);
+if (vp0) await page.setViewportSize(vp0);
+
 const T = await page.evaluate(() => {
   const L = window.__TRADES, W = window.__WAIVERS, D = window.__DFFL;
   const nums = [];
