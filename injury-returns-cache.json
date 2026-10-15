@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-15T11:03:49.307Z",
+ "generated": "2026-10-15T13:33:38.574Z",
  "week": 6,
  "entries": {
   "2449": {
@@ -60,7 +60,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-14"
   },
   "4983": {
@@ -100,7 +100,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -127,12 +127,12 @@
   "7021": {
    "n": "Rico Dowdle",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-10-18",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Dislocated toe. Missed 3 straight; ESPN Q Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Dislocated toe. Missed 3 straight; ESPN Q Week 6. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-15"
   },
   "7525": {
    "n": "DeVonta Smith",
@@ -158,12 +158,12 @@
   "8142": {
    "n": "Alec Pierce",
    "s": "IR",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14",
+   "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-15",
    "irSince": 6
   },
   "8144": {
@@ -179,12 +179,12 @@
   "8155": {
    "n": "Breece Hall",
    "s": "Doubtful",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: changed from audit [6]; consensus.",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-15"
   },
   "8408": {
    "n": "Jordan Mason",
@@ -354,22 +354,22 @@
   "11625": {
    "n": "Adonai Mitchell",
    "s": "Doubtful",
-   "ret": "2026-10-18",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit [6]; consensus.",
-   "retChecked": "2026-10-14"
-  },
-  "11635": {
-   "n": "Ladd McConkey",
-   "s": "Questionable",
    "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-15"
+  },
+  "11635": {
+   "n": "Ladd McConkey",
+   "s": "Questionable",
+   "ret": "2026-10-18",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-15"
   },
   "12495": {
    "n": "Ollie Gordon",
@@ -419,7 +419,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-14"
   },
   "12529": {
@@ -445,12 +445,12 @@
   "13276": {
    "n": "Omar Cooper",
    "s": "IR",
-   "ret": "2026-10-25",
+   "ret": "2026-10-18",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-15",
    "irSince": 6
   },
   "13281": {
@@ -492,7 +492,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-14"
   },
   "13345": {
