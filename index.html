@@ -1230,6 +1230,60 @@
     /* A full week is six games: three across fills the row instead of four-then-two. */
     .wstrip:has(> .wgame:nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
   }
+  /* News: the newest piece as the hero, the rest as list rows. A card cover is drawn at
+     320 wide with 14px type, so it never goes narrower than 256px (11px rendered). */
+  .teaser.lead{position:relative;grid-template-columns:minmax(0,300px) minmax(0,1fr);margin-bottom:16px;
+    border-color:rgba(var(--a-rgb),.30);
+    background:radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.18),transparent 70%),
+      radial-gradient(400px 260px at 0 100%,rgba(185,140,255,.16),transparent 70%),
+      linear-gradient(160deg,var(--deep,var(--plane)),var(--surface) 65%);
+    box-shadow:0 18px 40px -24px rgba(var(--a-rgb),.35)}
+  .teaser.lead::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;
+    background:linear-gradient(90deg,transparent,var(--a),transparent)}
+  .teaser.lead .tbody{padding:20px 22px;justify-content:center}
+  .teaser.lead .ak{color:var(--muted)}
+  .teaser.lead h3{font-size:clamp(26px,3.6vw,40px);line-height:1.04}
+  .teaser.lead .tdek{font-size:15px}
+  .teaser.lead .more{color:var(--a)}
+  .nlst{gap:0;background:var(--surface);border:1px solid var(--edge);border-radius:var(--r);overflow:hidden;
+    box-shadow:0 10px 30px -18px #000}
+  .nlh{grid-column:1/-1;padding:12px 16px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:700;color:var(--muted);border-bottom:1px solid var(--edge)}
+  .teaser.row{position:relative;grid-template-columns:268px minmax(0,1fr);align-items:center;border:0;
+    border-bottom:1px solid var(--edge);border-radius:0;background:transparent}
+  .teaser.row::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;z-index:1;
+    background:linear-gradient(var(--a),transparent);opacity:0;transition:opacity .14s}
+  .nlh + .teaser.row::before,.teaser.row:hover::before,.teaser.row:focus-visible::before{opacity:.9}
+  .teaser.row:hover{transform:none;background:var(--raised)}
+  .teaser.row > .cover{align-self:center;border-radius:var(--rs);margin:10px 0 10px 12px;width:auto}
+  .teaser.row .tbody{padding:12px 16px;gap:3px}
+  .teaser.row .ak{color:var(--a)}
+  .teaser.row h3{font-size:19px;line-height:1.15}
+  .teaser.row .tdek{display:none}
+  .teaser.row .aby{padding-top:6px;margin-top:4px}
+  .teaser.row .more{color:var(--a)}
+  .teaser.row .oflag{margin-bottom:4px}
+  @media(max-width:620px){
+    .teaser.lead{grid-template-columns:1fr}
+    .teaser.lead .tbody{padding:16px 16px 18px}
+    .teaser.lead h3{font-size:28px}
+    .teaser.row{grid-template-columns:1fr}
+    .teaser.row > .cover{margin:12px 12px 0}
+    .teaser.row .tbody{padding:10px 14px 14px}
+  }
+  @media (min-width:1000px){
+    .teaser.lead{grid-template-columns:minmax(0,420px) minmax(0,1fr)}
+    .teaser.lead .tbody{padding:26px 30px}
+    /* Two columns of rows, so the list fills the width; an odd last row takes the full line. */
+    .nlst{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .nlst > .teaser.row:nth-child(even){border-right:1px solid var(--edge)}
+    .nlst > .teaser.row:last-child:nth-child(even){grid-column:1/-1;border-right:0;
+      grid-template-columns:268px minmax(0,1fr)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .teaser,.teaser.row::before{transition:none}
+    .teaser:hover{transform:none}
+  }
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
@@ -3352,9 +3406,10 @@ function articleBlock(b) {
   }
 }
 
-/** The index entry: cover, headline, standfirst. The whole thing is the link. */
-function articleTeaser(a) {
-  const card = el("button", `teaser${a.kind === "opinion" ? " op" : ""}`);
+/** The index entry: cover, headline, standfirst. The whole thing is the link.
+ *  mode "lead" is the News hero, "row" a line in the list below it. */
+function articleTeaser(a, mode) {
+  const card = el("button", `teaser${a.kind === "opinion" ? " op" : ""}${mode ? " " + mode : ""}`);
   const when = a.date ? new Date(a.date + "T12:00:00Z").toLocaleDateString(undefined,
     { day: "numeric", month: "long", year: "numeric" }) : "";
   card.innerHTML = `${coverHTML(a, false)}
@@ -3481,9 +3536,14 @@ async function panelRecaps() {
   const articles = ((data && data.articles) || []).slice()
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
   if (articles.length) {
-    const list = el("div", "tlist");
-    for (const a of articles) list.appendChild(articleTeaser(a));
-    p.appendChild(list);
+    // The newest piece leads as the hero; the rest run as a list below it.
+    p.appendChild(articleTeaser(articles[0], "lead"));
+    if (articles.length > 1) {
+      const list = el("div", "tlist nlst");
+      list.appendChild(el("div", "nlh", "More stories"));
+      for (const a of articles.slice(1)) list.appendChild(articleTeaser(a, "row"));
+      p.appendChild(list);
+    }
   }
 
   const weeks = ((data && data.weeks) || []).slice()
