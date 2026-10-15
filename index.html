@@ -1230,6 +1230,7 @@
     /* A full week is six games: three across fills the row instead of four-then-two. */
     .wstrip:has(> .wgame:nth-child(6):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
   }
+  select{background:var(--raised);color:var(--ink);border:1px solid var(--edge);color-scheme:dark}
   @keyframes blendrise{from{opacity:0;transform:translateY(10px)}}
   @media (prefers-reduced-motion:no-preference){
     .panel:not([hidden]){animation:blendrise .4s cubic-bezier(.2,.9,.2,1)}
