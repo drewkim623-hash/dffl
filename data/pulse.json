@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-14T11:03:51.540Z",
- "at": 1791975831540,
+ "generated": "2026-10-15T03:12:04.440Z",
+ "at": 1792033924440,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 820.1,
    "points_against": 547.16,
    "faab_spent": 8,
-   "starters_hurt": [
-    "Jaxon Smith-Njigba (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bradyrife",
@@ -35,8 +33,7 @@
    "points_against": 682.8,
    "faab_spent": 62,
    "starters_hurt": [
-    "Caleb Williams (Questionable)",
-    "Jalen Coker (Questionable)"
+    "Caleb Williams (Questionable)"
    ]
   },
   {
@@ -47,7 +44,7 @@
    "points_against": 699.56,
    "faab_spent": 11,
    "starters_hurt": [
-    "CeeDee Lamb (Questionable)"
+    "Josh Downs (Questionable)"
    ]
   },
   {
@@ -79,7 +76,9 @@
    "points_for": 697.5,
    "points_against": 670.72,
    "faab_spent": 51,
-   "starters_hurt": []
+   "starters_hurt": [
+    "DJ Moore (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -88,7 +87,10 @@
    "points_for": 611.08,
    "points_against": 712.36,
    "faab_spent": 5,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Lamar Jackson (Questionable)",
+    "Saquon Barkley (Questionable)"
+   ]
   },
   {
    "manager": "victorthompson",
@@ -98,6 +100,7 @@
    "points_against": 609.4,
    "faab_spent": 100,
    "starters_hurt": [
+    "Jeremiyah Love (Questionable)",
     "Ladd McConkey (Questionable)"
    ]
   },
@@ -109,7 +112,7 @@
    "points_against": 643,
    "faab_spent": 59,
    "starters_hurt": [
-    "Breece Hall (Questionable)",
+    "Chris Olave (Questionable)",
     "Rashee Rice (Questionable)"
    ]
   },
@@ -120,7 +123,9 @@
    "points_for": 662.36,
    "points_against": 684.1,
    "faab_spent": 74,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Darren Waller (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -131,6 +136,7 @@
    "faab_spent": 58,
    "starters_hurt": [
     "DeVonta Smith (Questionable)",
+    "Brock Bowers (Questionable)",
     "KC Concepcion (Questionable)"
    ]
   }
@@ -140,12 +146,12 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "willie12w",
     "points": 0,
-    "startersLeftToPlay": 7
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -164,12 +170,12 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "jskule23",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -181,7 +187,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -200,7 +206,7 @@
    "a": {
     "manager": "saucebossandrew",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
@@ -210,6 +216,118 @@
   }
  ],
  "trades": [
+  {
+   "week": 6,
+   "type": "trade",
+   "managers": [
+    "willie12w",
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Khalil Shakir",
+     "pos": "WR",
+     "team": "BUF",
+     "status": null,
+     "to": "willie12w"
+    },
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "status": null,
+     "to": "willie12w"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Khalil Shakir",
+     "pos": "WR",
+     "team": "BUF",
+     "status": null,
+     "from": "jskule23"
+    },
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "status": null,
+     "from": "jskule23"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 9,
+     "from": "drewkim",
+     "to": "jskule23"
+    }
+   ]
+  },
+  {
+   "week": 6,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Mike Evans",
+     "pos": "WR",
+     "team": "SF",
+     "status": null,
+     "to": "jskule23"
+    },
+    {
+     "name": "Puka Nacua",
+     "pos": "WR",
+     "team": "LAR",
+     "status": null,
+     "to": "Domo112"
+    },
+    {
+     "name": "Marvin Harrison",
+     "pos": "WR",
+     "team": "HOU",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Mike Evans",
+     "pos": "WR",
+     "team": "SF",
+     "status": null,
+     "from": "Domo112"
+    },
+    {
+     "name": "Puka Nacua",
+     "pos": "WR",
+     "team": "LAR",
+     "status": null,
+     "from": "jskule23"
+    },
+    {
+     "name": "Marvin Harrison",
+     "pos": "WR",
+     "team": "HOU",
+     "status": null,
+     "from": "Domo112"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 2,
+     "from": "Domo112",
+     "to": "jskule23"
+    }
+   ]
+  },
   {
    "week": 5,
    "type": "trade",
@@ -375,7 +493,7 @@
      "name": "Rashod Bateman",
      "pos": "WR",
      "team": "BAL",
-     "status": null,
+     "status": "Questionable",
      "from": "bradyrife"
     }
    ],
@@ -529,5 +647,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 32
+ "free_agent_moves": 40
 }
