@@ -6947,6 +6947,72 @@ group("Odds history: per-team odds for each finalized week");
   } else check("committed snapshot is mid-week, so no latest-week row is expected from it", true);
 }
 
+/* tiers is the default odds graphic for new articles. These checks render the
+ * TIER_DEMO fixture (opened at ?tierdemo), not anything in recaps.json. */
+group("Tier cards");
+{
+  const { tiersProblems, TIERS_INTRO_MAX } = await import(new URL("./check-recaps.mjs", import.meta.url));
+  const tp = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const tpage = await tp.newPage();
+  await tpage.goto(`${BASE}/?tierdemo`, { waitUntil: "domcontentloaded" });
+  await tpage.waitForFunction(() => document.body.dataset.ready && document.querySelector(".tiers .tcard"), null, { timeout: 90000 });
+  const t = await tpage.evaluate(() => {
+    const D = window.__DFFL, cards = [...document.querySelectorAll(".tiers .tcard")];
+    const byTeam = Object.fromEntries(cards.map(c => [c.dataset.team, c]));
+    const hero = n => byTeam[n].querySelector(".thero b").textContent;
+    const ti = document.querySelector(".tiers .ti"), lh = parseFloat(getComputedStyle(ti).lineHeight) || 20;
+    const clipped = cards.flatMap(c => [...c.querySelectorAll(".tteam,.tmg")]).filter(e => {
+      const r = e.getBoundingClientRect(), cr = e.closest(".tcard").getBoundingClientRect();
+      return e.scrollWidth > e.clientWidth + 1 || r.right > cr.right + 1 || r.right > innerWidth;
+    }).map(e => e.textContent);
+    const long = byTeam["Maximiliano_Fitzgerald_Throckmorton"].querySelector(".tnm");
+    const stub = byTeam["Basement"].querySelector(".tbar span").getBoundingClientRect().width;
+    const fs = s => parseFloat(getComputedStyle(document.querySelector(s)).fontSize);
+    return {
+      fixture: D.TIER_DEMO.blocks.find(b => b.type === "tiers"),
+      fmt: D.tierPcts([98.6, 98.7, 61.3, 60.8, 44, 3.4, 0.3, 100, 99.7, 72.6, 71.4]),
+      top: hero("TopDog"), second: hero("SecondSlot"), bubble: hero("Bubbleboy"), coin: hero("Coinflip"), mid: hero("Maximiliano_Fitzgerald_Throckmorton"),
+      arrowsWithLast: ["TopDog", "SecondSlot", "Bubbleboy", "Basement"].every(n => byTeam[n].querySelector(".tmv")),
+      noLast: ["Coinflip", "SixthSeedSam"].map(n => ({ n, mv: !!byTeam[n].querySelector(".tmv"), text: byTeam[n].querySelector(".thero").textContent.replace(/\s+/g, "") })),
+      stub, clipped, longLines: Math.round(long.getBoundingClientRect().height / parseFloat(getComputedStyle(long).lineHeight)),
+      longEllipsis: getComputedStyle(long).textOverflow === "ellipsis" && long.title === long.textContent,
+      avatars: cards.every(c => c.querySelector(".tteam .tav")),
+      introOneLine: ti.getBoundingClientRect().height <= lh * 1.4 && ti.scrollWidth <= ti.clientWidth + 1,
+      overflowX: document.documentElement.scrollWidth > innerWidth,
+      mgFont: fs(".tcard .tmg"), byeFont: fs(".tcard .tbye"), heroFont: fs(".tcard .thero b"),
+      byeColor: getComputedStyle(document.querySelector(".tcard .tbye")).color,
+    };
+  });
+  check("the ?tierdemo fixture passes check-recaps' tiers rules", tiersProblems(t.fixture).length === 0, tiersProblems(t.fixture).join("; "));
+  check("check-recaps refuses an intro longer than one short line",
+    tiersProblems({ ...t.fixture, intro: "x".repeat(TIERS_INTRO_MAX + 1) }).some(p => /intro/.test(p)));
+  check("decimals: close values get one decimal, the rest whole numbers",
+    JSON.stringify(t.fmt) === '["98.6","98.7","61.3","60.8","44","3","0.3","100","99.7","73","71"]', JSON.stringify(t.fmt));
+  check("decimals: close teams never print the same number on the cards",
+    t.top === "98.6%" && t.second === "98.7%" && t.bubble === "61.3%" && t.coin === "60.8%" && t.mid === "44%",
+    [t.top, t.second, t.bubble, t.coin, t.mid].join(" "));
+  check("an arrow shows on every row that carries last week's number", t.arrowsWithLast);
+  check("no arrow and no placeholder on a row without last week's number",
+    t.noLast.every(r => !r.mv && /^\d+(\.\d)?%(In|Bye|Out)?$/.test(r.text)), JSON.stringify(t.noLast));
+  check("a 0.3% long shot still draws a bar stub of at least 3px", t.stub >= 3, `${t.stub.toFixed(1)}px`);
+  check("names wrap at spaces, never mid-word; a single long handle is one ellipsized line at 390",
+    t.clipped.length === 0 && t.longLines === 1 && t.longEllipsis && !t.overflowX,
+    `clipped: ${t.clipped.join(" | ")}; long name lines ${t.longLines}; ellipsis ${t.longEllipsis}`);
+  check("every tier card carries a team avatar (initials fallback)", t.avatars);
+  check("the intro under the headline is one line", t.introOneLine);
+  check("at 390 the hero number leads and the manager line and BYE label are a step up",
+    t.heroFont >= 28 && t.mgFont >= 13 && t.byeFont >= 11.5 && t.byeColor !== "rgb(139, 138, 149)",
+    `hero ${t.heroFont} mg ${t.mgFont} bye ${t.byeFont} ${t.byeColor}`);
+  await tp.close();
+
+  const doc = async f => readFile(join(ROOT, f), "utf8").catch(() => "");
+  const [std, job, readme] = await Promise.all(["docs/graphics-standard.md", "weekly-job-prompt.md", "README.md"].map(doc));
+  check("tiers is documented as the default odds graphic (standard, job prompt, README)",
+    /default odds graphic/i.test(std) && /default odds graphic is a `tiers` block/i.test(job) && /default odds graphic/i.test(readme));
+  check("every article contract points at docs/graphics-standard.md",
+    job.includes("docs/graphics-standard.md") && /390px/.test(std) && /2.3 options|two or three options/i.test(std));
+}
+
 group("Trade-aware odds (data/roster-weeks.json)");
 {
   const fs = await import("node:fs");
