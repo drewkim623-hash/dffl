@@ -113,6 +113,17 @@
       "note": "Quad bruise. 'Not considered serious'; Q for Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
+    "6904": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        6
+      ],
+      "weeks": 1,
+      "checked": "2026-10-15",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
+    },
     "7021": {
       "kind": "report",
       "weeks": 0,
@@ -130,8 +141,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-14",
-      "note": "Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
-      "flag": "uncertain"
+      "note": "Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "7543": {
       "kind": "report",
@@ -154,7 +165,7 @@
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
       "checked": "2026-10-15",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [6]; consensus.",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "8155": {
@@ -165,7 +176,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-15",
-      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "8408": {
@@ -308,7 +319,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-15",
-      "note": "Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "11628": {
@@ -325,7 +336,7 @@
       "weeks_list": [],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-15",
-      "note": "Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: changed from audit [6]; consensus.",
+      "note": "Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "11646": {
@@ -395,8 +406,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
       "checked": "2026-10-14",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+      "flag": "uncertain"
     },
     "12534": {
       "kind": "report",
@@ -415,7 +426,7 @@
       "weeks_list": [],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-15",
-      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: changed from audit [6]; consensus.",
+      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13281": {

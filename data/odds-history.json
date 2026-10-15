@@ -1,6 +1,6 @@
 {
  "_comment": "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; pA is the chance manager a beats manager b as the site priced it at that moment. teams holds each finalized week's playoff and title chances (0..1) per team, from the newest snapshot read after that week went final; a newer reading of the same week replaces that week's team rows.",
- "generated": "2026-10-15T19:52:20.390Z",
+ "generated": "2026-10-15T22:29:20.071Z",
  "weeks": {
   "2026-1": [
    {
@@ -1917,88 +1917,88 @@
   ],
   "2026-5": [
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "850931930408001536",
     "manager": "jadencha",
-    "playoff": 0.9958,
-    "title": 0.44985
+    "playoff": 0.99585,
+    "title": 0.44935
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "844705266430742528",
     "manager": "Domo112",
-    "playoff": 0.90515,
-    "title": 0.18375
+    "playoff": 0.9047,
+    "title": 0.1832
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "851564369144852480",
     "manager": "moseslin",
-    "playoff": 0.2492,
-    "title": 0.01605
+    "playoff": 0.2502,
+    "title": 0.0161
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "646481339029475328",
     "manager": "drewkim",
-    "playoff": 0.03355,
-    "title": 0.0014
+    "playoff": 0.0315,
+    "title": 0.00135
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "845540882697547776",
     "manager": "willie12w",
-    "playoff": 0.757,
-    "title": 0.10095
+    "playoff": 0.75925,
+    "title": 0.1025
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "850946675743793152",
     "manager": "saucebossandrew",
-    "playoff": 0.16175,
-    "title": 0.00745
+    "playoff": 0.16075,
+    "title": 0.0074
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "851478209852706816",
     "manager": "bradyrife",
-    "playoff": 0.78235,
-    "title": 0.0639
+    "playoff": 0.78065,
+    "title": 0.0636
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "845119622473699328",
     "manager": "jskule23",
     "playoff": 0.0313,
-    "title": 0.00065
+    "title": 0.0006
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "980916620434440192",
     "manager": "wesley55",
-    "playoff": 0.6518,
-    "title": 0.06405
+    "playoff": 0.65195,
+    "title": 0.0641
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "850932093394472960",
     "manager": "chassinator",
-    "playoff": 0.5228,
-    "title": 0.0487
+    "playoff": 0.52175,
+    "title": 0.04875
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "851571292711804928",
     "manager": "victorthompson",
-    "playoff": 0.3867,
-    "title": 0.0307
+    "playoff": 0.3896,
+    "title": 0.03055
    },
    {
-    "at": "2026-10-15T19:52:20.331Z",
+    "at": "2026-10-15T22:29:19.994Z",
     "uid": "851570417528332288",
     "manager": "sizzlemc2",
-    "playoff": 0.5226,
-    "title": 0.03255
+    "playoff": 0.5225,
+    "title": 0.0325
    }
   ]
  }
