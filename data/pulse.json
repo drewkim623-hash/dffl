@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-15T19:51:51.302Z",
- "at": 1792093911302,
+ "generated": "2026-10-15T23:50:48.306Z",
+ "at": 1792108248306,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -32,7 +32,10 @@
    "points_for": 681.7,
    "points_against": 682.8,
    "faab_spent": 62,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Caleb Williams (Questionable)",
+    "Jacory Croskey-Merritt (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -41,9 +44,7 @@
    "points_for": 651.22,
    "points_against": 699.56,
    "faab_spent": 11,
-   "starters_hurt": [
-    "Josh Downs (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -75,6 +76,7 @@
    "points_against": 670.72,
    "faab_spent": 51,
    "starters_hurt": [
+    "Zay Flowers (Questionable)",
     "DJ Moore (Questionable)"
    ]
   },
@@ -122,6 +124,7 @@
    "points_against": 684.1,
    "faab_spent": 74,
    "starters_hurt": [
+    "Mike Evans (Questionable)",
     "Darren Waller (Questionable)"
    ]
   },
@@ -148,7 +151,7 @@
    "b": {
     "manager": "willie12w",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -274,7 +277,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": null,
+     "status": "Questionable",
      "to": "jskule23"
     },
     {
@@ -297,7 +300,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": null,
+     "status": "Questionable",
      "from": "Domo112"
     },
     {
@@ -644,5 +647,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 46
+ "free_agent_moves": 47
 }
