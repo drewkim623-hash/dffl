@@ -17,7 +17,7 @@
     --grid:#30233f; --ring:rgba(255,255,255,.09);
     --blue:#ffc23d; --red:#e66767; --aqua:#199e70; --gold:#ffc23d; --violet:#b98cff;
     --good:#0ca30c; --crit:#d03b3b; --mid:#3a2d4a;
-    --plus:#3ad07f; --hold:#ffc23d;
+    --plus:#3ad07f; --hold:var(--a2);
     --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
     --r:14px; --rs:10px;
     /* blend theme: gold on aubergine, violet counter-glow, Space Grotesk over Inter */
@@ -133,6 +133,7 @@
   .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;
     padding:2px 8px;border-radius:999px;border:1px solid var(--ring);white-space:nowrap}
   .badge.gold{color:var(--gold);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
+  .badge.champ{color:var(--on-a);border-color:var(--a);background:var(--a)}
   .badge.blue{color:var(--blue);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
   .badge.red{color:var(--red);border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.10)}
 
@@ -289,8 +290,8 @@
   .gfoot a{color:var(--blue);font-weight:700;text-decoration:none;white-space:nowrap}
   .gfoot a:hover{text-decoration:underline}
   /* A week still being played: ahead is not won, so it is never the win blue. */
-  .gside.lead{background:linear-gradient(90deg,rgba(255,194,61,.12),transparent)}
-  .gside.lead:hover{background:linear-gradient(90deg,rgba(255,194,61,.20),var(--hover))}
+  .gside.lead{background:linear-gradient(90deg,rgba(185,140,255,.12),transparent)}
+  .gside.lead:hover{background:linear-gradient(90deg,rgba(185,140,255,.20),var(--hover))}
   .gside.lead .gp{color:var(--gold)}
   .livenote{background:rgba(255,194,61,.09);border:1px solid rgba(255,194,61,.32);
     border-radius:var(--rs);padding:11px 13px;margin:0 0 12px;font-size:12.5px;
@@ -403,7 +404,7 @@
   .ws{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;padding:8px 11px}
   .ws + .ws{border-top:1px solid var(--grid)}
   .ws.win{background:linear-gradient(90deg,rgba(255,194,61,.11),transparent)}
-  .ws.lead{background:linear-gradient(90deg,rgba(255,194,61,.12),transparent)}
+  .ws.lead{background:linear-gradient(90deg,rgba(185,140,255,.12),transparent)}
   .ws .wn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ws .wp{font-weight:800;font-size:14.5px;font-variant-numeric:tabular-nums}
   .ws.win .wp{color:var(--blue)} .ws.lead .wp{color:var(--gold)}
@@ -495,7 +496,7 @@
   .aw .ic{font-size:17px;width:22px;text-align:center}
 
   /* ============ odds board ============ */
-  .notice{border:1px solid rgba(255,194,61,.42);background:rgba(255,194,61,.07);border-radius:var(--r);
+  .notice{border:1px solid rgba(185,140,255,.42);background:rgba(185,140,255,.07);border-radius:var(--r);
     padding:14px 16px;margin-bottom:20px}
   .notice .nt{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--hold);font-weight:700;margin-bottom:7px}
@@ -510,7 +511,7 @@
   .bhead .bt{font-size:14.5px;font-weight:800;letter-spacing:-.01em;min-width:0}
   .bhead .bs{font-size:11.5px;color:var(--muted);font-weight:600;display:block;margin-top:2px;line-height:1.4}
   .bhead .hold{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--hold);border:1px solid rgba(255,194,61,.4);background:rgba(255,194,61,.09);
+    color:var(--hold);border:1px solid rgba(185,140,255,.4);background:rgba(185,140,255,.09);
     border-radius:6px;padding:4px 7px;white-space:nowrap;font-weight:700;flex:none}
 
   .orow{display:grid;grid-template-columns:20px auto minmax(0,1fr) auto;align-items:center;gap:10px;
@@ -594,7 +595,7 @@
   .mode{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin:0 0 16px}
   .mode .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
     font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none}
-  .mode .pill.pre{color:var(--hold);border:1px solid rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
+  .mode .pill.pre{color:var(--hold);border:1px solid rgba(185,140,255,.45);background:rgba(185,140,255,.10)}
   .mode .pill.post{color:var(--plus);border:1px solid rgba(58,208,127,.42);background:rgba(58,208,127,.10)}
   .mode .what{font-size:13.5px;color:var(--ink-2);line-height:1.55;min-width:0}
 
@@ -1036,7 +1037,7 @@
     border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:2px}
   .ppv .pp-sd{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
     font:700 12px var(--mono);color:var(--ink-2);background:rgba(255,255,255,.06)}
-  .ppv .pp-sd.bye{color:#1a1200;background:radial-gradient(circle at 35% 30%,#ffd27a,var(--gold));box-shadow:0 0 12px rgba(255,194,61,.55)}
+  .ppv .pp-sd.bye{color:var(--on-a);background:var(--a);box-shadow:0 0 12px rgba(255,194,61,.55)}
   .ppv .pp-sd.div{color:var(--on-a);background:radial-gradient(circle at 35% 30%,#ffd57a,var(--blue));box-shadow:0 0 10px rgba(255,194,61,.5)}
   .ppv .pp-sd.wc{color:#ffe3a3;background:rgba(255,194,61,.16);box-shadow:inset 0 0 0 1px rgba(255,194,61,.6)}
   .ppv .av.pp-xs{width:20px;height:20px;font-size:11px}
@@ -1060,7 +1061,7 @@
   .ppv .pp-hero{display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;min-width:0;
     background:linear-gradient(135deg,rgba(255,194,61,.22),rgba(255,194,61,.04) 55%,rgba(255,255,255,.02));
     border:1px solid rgba(255,194,61,.35);box-shadow:0 12px 40px -16px rgba(255,194,61,.6)}
-  .ppv .pp-hero .av{width:52px;height:52px;font-size:17px;border:0;box-shadow:0 0 0 2px #e9a93a,0 0 18px rgba(255,194,61,.6)}
+  .ppv .pp-hero .av{width:52px;height:52px;font-size:17px;border:0;box-shadow:0 0 0 2px var(--a),0 0 18px rgba(255,194,61,.6)}
   .ppv .pp-hero .pp-eye{color:#ffd27a}
   .ppv .pp-hero .pp-nm{font-size:19px}
   .ppv .pp-hero .pp-bars{margin-left:auto}
@@ -1142,7 +1143,7 @@
     border-radius:999px;padding:4px 10px;white-space:nowrap;border:1px solid var(--ring);color:var(--ink-2)}
   .verd.even{color:var(--muted)}
   .verd.win{color:var(--blue);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
-  .verd.lop{color:var(--hold);border-color:rgba(255,194,61,.45);background:rgba(255,194,61,.10)}
+  .verd.lop{color:var(--hold);border-color:rgba(185,140,255,.45);background:rgba(185,140,255,.10)}
   .verd.fleeced{color:var(--red);border-color:rgba(230,103,103,.45);background:rgba(230,103,103,.10)}
   .verd.none{color:var(--muted);border-style:dashed}
 
@@ -2284,7 +2285,7 @@ function managerGrid(AT) {
         <span style="min-width:0"><span class="nm">${esc(nameOf(r.uid))}</span>
         ${teamOf(r.uid) ? `<span class="tm">${esc(teamOf(r.uid))}</span>` : ""}</span></span>
       <span class="row"><span class="rec">${r.w}-${r.l}</span><span class="pc">${pct(r.winPct)}</span>
-        ${r.titles ? `<span class="badge gold">${r.titles}× champ</span>` : ""}</span>
+        ${r.titles ? `<span class="badge champ">${r.titles}× champ</span>` : ""}</span>
       <span class="go">View career →</span>`;
     b.onclick = () => openProfile(r.uid);
     g.appendChild(b);
@@ -2321,7 +2322,7 @@ function buildProfile(uid) {
   p.appendChild(head);
 
   const bits = [];
-  if (r.titles) bits.push(`<span class="badge gold">${r.titles}× champion</span>`);
+  if (r.titles) bits.push(`<span class="badge champ">${r.titles}× champion</span>`);
   if (r.podium) bits.push(`<span class="badge blue">${r.podium}× top 3</span>`);
   if (r.playoffs) bits.push(`<span class="badge blue">${r.playoffs}× playoffs</span>`);
   if (r.lasts) bits.push(`<span class="badge red">${r.lasts}× last place</span>`);
@@ -2368,7 +2369,7 @@ function buildProfile(uid) {
     let place = null;
     for (const [pl, rid] of Object.entries(s.places)) if (s.uidOf.get(Number(rid)) === uid) place = Number(pl);
     rows.push(`<tr>
-      <td>${esc(s.season)}${place === 1 ? ' <span class="badge gold">CHAMP</span>' : ""}</td>
+      <td>${esc(s.season)}${place === 1 ? ' <span class="badge champ">CHAMP</span>' : ""}</td>
       <td class="num">${place ? ord(place) : "—"}</td>
       <td class="num">${w}-${l}${tt ? "-" + tt : ""}</td>
       <td class="num">${f2(pf)}</td><td class="num">${f2(pa)}</td>
@@ -2428,7 +2429,7 @@ function panelManagers(AT) {
       b.innerHTML = `<span class="pos">${i + 1}</span>
         <span class="nmcell">${avatarHTML(r.uid)}</span>
         <span class="id"><span class="n">${esc(nameOf(r.uid))}
-          ${r.titles ? `<span class="badge gold">${r.titles}×</span>` : ""}</span>
+          ${r.titles ? `<span class="badge champ">${r.titles}×</span>` : ""}</span>
           <span class="s">${esc(teamOf(r.uid) || `${r.nSeasons} season${r.nSeasons === 1 ? "" : "s"}`)}</span></span>
         <span class="stats">
           <span class="chip"><span class="cv">${r.w}-${r.l}</span><span class="cl">Record</span></span>
@@ -2755,7 +2756,7 @@ function panelMatchups(AT) {
         const b = el("button", "rowc");
         b.innerHTML = `<span class="pos">${pl || "—"}</span>
           <span class="nmcell">${avatarHTML(uid)}</span>
-          <span class="id"><span class="n">${esc(nameOf(uid))}${pl === 1 ? ' <span class="badge gold">CHAMP</span>' : ""}</span>
+          <span class="id"><span class="n">${esc(nameOf(uid))}${pl === 1 ? ' <span class="badge champ">CHAMP</span>' : ""}</span>
             <span class="s">${esc(teamOf(uid) || "")}</span></span>
           <span class="stats">
             <span class="chip"><span class="cv">${r.w}-${r.l}</span><span class="cl">Record</span></span>
@@ -9206,8 +9207,8 @@ const ppBadge = (cls, full, short) =>
   `<span class="badge ${cls}" role="img" title="${full}" aria-label="${full}" data-short="${short}">${full}</span>`;
 function clinchBadge(c) {
   if (!c) return "";
-  if (c.clinchedTop) return ppBadge("gold", "Clinched top seed", "Top seed");
-  if (c.clinchedBye) return ppBadge("gold", "Clinched bye", "Bye");
+  if (c.clinchedTop) return ppBadge("champ", "Clinched top seed", "Top seed");
+  if (c.clinchedBye) return ppBadge("champ", "Clinched bye", "Bye");
   if (c.clinchedPlayoff) return ppBadge("blue", "Clinched playoffs", "In");
   if (c.eliminated) return ppBadge("red", "Eliminated", "Out");
   return "";
