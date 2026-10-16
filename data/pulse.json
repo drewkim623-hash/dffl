@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-15T23:50:48.306Z",
- "at": 1792108248306,
+ "generated": "2026-10-16T03:42:35.244Z",
+ "at": 1792122155245,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -54,6 +54,7 @@
    "points_against": 615.14,
    "faab_spent": 26,
    "starters_hurt": [
+    "Jaylen Waddle (Questionable)",
     "Quinshon Judkins (Questionable)"
    ]
   },
@@ -136,7 +137,6 @@
    "points_against": 761.36,
    "faab_spent": 58,
    "starters_hurt": [
-    "Brock Bowers (Questionable)",
     "KC Concepcion (Questionable)"
    ]
   }
@@ -157,12 +157,12 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
+    "points": 25.4,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "wesley55",
-    "points": 0,
+    "points": 6.4,
     "startersLeftToPlay": 10
    }
   },
@@ -174,7 +174,7 @@
    },
    "b": {
     "manager": "jskule23",
-    "points": 0,
+    "points": 19.1,
     "startersLeftToPlay": 10
    }
   },
@@ -186,7 +186,7 @@
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
+    "points": 5.2,
     "startersLeftToPlay": 10
    }
   },
@@ -205,13 +205,13 @@
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 0,
+    "points": 3,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -647,5 +647,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 47
+ "free_agent_moves": 48
 }

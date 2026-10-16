@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-15T23:50:47.584Z",
+ "generated": "2026-10-16T03:42:34.599Z",
  "week": 6,
  "entries": {
   "2216": {
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "2449": {
    "n": "Stefon Diggs",
@@ -31,7 +31,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "4035": {
    "n": "Alvin Kamara",
@@ -41,7 +41,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "4199": {
    "n": "Aaron Jones",
@@ -61,7 +61,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "4866": {
    "n": "Saquon Barkley",
@@ -152,7 +152,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -173,6 +173,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
+  },
+  "7526": {
+   "n": "Jaylen Waddle",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-16"
   },
   "7543": {
    "n": "Travis Etienne",
@@ -204,7 +214,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "8155": {
    "n": "Breece Hall",
@@ -283,7 +293,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "9753": {
    "n": "Zach Charbonnet",
@@ -314,7 +324,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -359,16 +369,6 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
-  },
-  "11604": {
-   "n": "Brock Bowers",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
   },
   "11625": {
    "n": "Adonai Mitchell",
@@ -459,7 +459,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "12534": {
    "n": "Kyle Monangai",
@@ -512,7 +512,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "13298": {
    "n": "KC Concepcion",
@@ -532,7 +532,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 6 (4 left)",
-   "retChecked": "2026-10-15",
+   "retChecked": "2026-10-16",
    "irSince": 6
   },
   "13346": {
@@ -543,7 +543,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-16"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
