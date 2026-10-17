@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-17T11:03:56.338Z",
+ "generated": "2026-10-17T22:03:41.584Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -141,15 +141,15 @@
       {
        "asset": "Luther Burden",
        "pid": "12519",
-       "value": 38.3,
+       "value": 38.2,
        "basis": "actual to wk 5 + Sleeper projection"
       }
      ],
-     "total": 38.3,
+     "total": 38.2,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 51,
-      "marginPts": 25.7
+      "marginPct": 50,
+      "marginPts": 25.6
      },
      "hindsight": "Pending"
     },
@@ -168,8 +168,8 @@
      "total": 12.6,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -51,
-      "marginPts": -25.7
+      "marginPct": -50,
+      "marginPts": -25.6
      },
      "hindsight": "Pending"
     }
@@ -449,7 +449,7 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 259.1,
+     "total": 259,
      "tradeDay": {
       "letter": "C",
       "marginPct": -12,
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 70.4,
+       "value": 71.9,
        "basis": "actual to wk 5 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 87,
+     "total": 88.4,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -20,
-      "marginPts": -43.6
+      "marginPct": -19,
+      "marginPts": -42
      },
      "hindsight": "Pending"
     },
@@ -502,7 +502,7 @@
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 73.2,
+       "value": 73.1,
        "basis": "actual to wk 5 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 130.5,
+     "total": 130.4,
      "tradeDay": {
       "letter": "C",
-      "marginPct": 20,
-      "marginPts": 43.6
+      "marginPct": 19,
+      "marginPts": 42
      },
      "hindsight": "Pending"
     }
@@ -600,7 +600,7 @@
      "tradeDay": {
       "letter": "A",
       "marginPct": 58,
-      "marginPts": 112.1
+      "marginPts": 112
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 44,
+       "value": 44.1,
        "basis": "actual to wk 5 + Sleeper projection"
       }
      ],
-     "total": 44,
+     "total": 44.1,
      "tradeDay": {
       "letter": "D",
       "marginPct": -37,
-      "marginPts": -51.7
+      "marginPts": -51.6
      },
      "hindsight": "Pending"
     }
