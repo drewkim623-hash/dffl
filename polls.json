@@ -96,10 +96,18 @@
    "opened": "2026-10-13",
    "closes": "2026-10-17",
    "subject": "DFFL Week 6: The Week Without A Close Game",
-   "status": "open",
-   "results": null,
+   "status": "closed",
+   "results": {
+    "BLOWOUT": 0,
+    "UNLUCKY": 0,
+    "NEITHER": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
    "announced": false,
-   "thread_id": "1a135338f4030316"
+   "thread_id": "1a135338f4030316",
+   "closed_at": "2026-10-17T23:18:23.309Z"
   }
  ]
 }
