@@ -105,7 +105,7 @@
     "invalid": 0,
     "outside": 0
    },
-   "announced": false,
+   "announced": true,
    "thread_id": "1a135338f4030316",
    "closed_at": "2026-10-17T23:18:23.309Z"
   }
