@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-16T17:51:03.398Z",
- "at": 1792173063399,
+ "generated": "2026-10-17T11:03:07.344Z",
+ "at": 1792234987344,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -55,6 +55,7 @@
    "faab_spent": 26,
    "starters_hurt": [
     "Jaylen Waddle (Questionable)",
+    "DK Metcalf (Questionable)",
     "Quinshon Judkins (Questionable)"
    ]
   },
@@ -77,7 +78,7 @@
    "points_against": 670.72,
    "faab_spent": 51,
    "starters_hurt": [
-    "Zay Flowers (Questionable)",
+    "Tyler Warren (Questionable)",
     "DJ Moore (Questionable)"
    ]
   },
@@ -89,8 +90,7 @@
    "points_against": 712.36,
    "faab_spent": 5,
    "starters_hurt": [
-    "Lamar Jackson (Questionable)",
-    "Saquon Barkley (Questionable)"
+    "Saquon Barkley (Out)"
    ]
   },
   {
@@ -101,8 +101,7 @@
    "points_against": 609.4,
    "faab_spent": 100,
    "starters_hurt": [
-    "Jeremiyah Love (Questionable)",
-    "Ladd McConkey (Questionable)"
+    "Jeremiyah Love (Out)"
    ]
   },
   {
@@ -114,7 +113,7 @@
    "faab_spent": 59,
    "starters_hurt": [
     "Chris Olave (Questionable)",
-    "Rashee Rice (Questionable)"
+    "Rashee Rice (Out)"
    ]
   },
   {
@@ -135,9 +134,7 @@
    "points_for": 568,
    "points_against": 761.36,
    "faab_spent": 58,
-   "starters_hurt": [
-    "KC Concepcion (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -492,7 +489,7 @@
      "name": "Rashod Bateman",
      "pos": "WR",
      "team": "BAL",
-     "status": "Questionable",
+     "status": null,
      "from": "bradyrife"
     }
    ],
