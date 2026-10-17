@@ -195,6 +195,20 @@
    "sha256": "1da9abca3d78cbb3f21897e447e527a54f7fb6cce3f0de7de2c1f2741f11c105",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-17T23:21:35.549Z",
+   "subject": "DFFL Week 6: The League's Last Three Trades All Run Through jskule23",
+   "lead": "the-leagues-last-three-trades-run-through-jskule23",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 5
+   },
+   "to": 12,
+   "sha256": "a623f2fa30f87d832e6252f890f1a4a60322ed338bbc455dd0d95c1003d8bc0c",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
