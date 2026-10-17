@@ -4506,10 +4506,22 @@
        "sub": "4-1 · 820.1 points, the most in the league",
        "lead": true,
        "rows": [
-        { "label": "Gets", "value": "Josh Allen (QB, BUF)" },
-        { "label": "Sends", "value": "Jordan Love (QB, GB)" },
-        { "label": "Sends", "value": "J.K. Dobbins (RB, DEN)" },
-        { "label": "Sends", "value": "2027 5th-round pick" }
+        {
+         "label": "Gets",
+         "value": "Josh Allen (QB, BUF)"
+        },
+        {
+         "label": "Sends",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "J.K. Dobbins (RB, DEN)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 5th-round pick"
+        }
        ]
       },
       {
@@ -4517,10 +4529,22 @@
        "big": "J.K. Dobbins",
        "sub": "1-4 · 662.36 points, fifth-most in the league",
        "rows": [
-        { "label": "Gets", "value": "J.K. Dobbins (RB, DEN)" },
-        { "label": "Gets", "value": "jadencha's 2027 5th" },
-        { "label": "Gets", "value": "saucebossandrew's 2027 9th" },
-        { "label": "Sends", "value": "Josh Allen (QB, BUF)" }
+        {
+         "label": "Gets",
+         "value": "J.K. Dobbins (RB, DEN)"
+        },
+        {
+         "label": "Gets",
+         "value": "jadencha's 2027 5th"
+        },
+        {
+         "label": "Gets",
+         "value": "saucebossandrew's 2027 9th"
+        },
+        {
+         "label": "Sends",
+         "value": "Josh Allen (QB, BUF)"
+        }
        ]
       },
       {
@@ -4528,8 +4552,14 @@
        "big": "Jordan Love",
        "sub": "2-3 · 589.26 points",
        "rows": [
-        { "label": "Gets", "value": "Jordan Love (QB, GB)" },
-        { "label": "Sends", "value": "2027 9th-round pick" }
+        {
+         "label": "Gets",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 9th-round pick"
+        }
        ]
       }
      ]
@@ -4548,11 +4578,31 @@
      "title": "Josh Allen, week by week",
      "sub": "points as jskule23's starting quarterback",
      "rows": [
-      { "label": "Week 1", "value": 35.66, "group": 1 },
-      { "label": "Week 2", "value": 40.82, "group": 1 },
-      { "label": "Week 3", "value": 18.46, "group": 1 },
-      { "label": "Week 4", "value": 19.52, "group": 1 },
-      { "label": "Week 5", "value": 32.5, "group": 1 }
+      {
+       "label": "Week 1",
+       "value": 35.66,
+       "group": 1
+      },
+      {
+       "label": "Week 2",
+       "value": 40.82,
+       "group": 1
+      },
+      {
+       "label": "Week 3",
+       "value": 18.46,
+       "group": 1
+      },
+      {
+       "label": "Week 4",
+       "value": 19.52,
+       "group": 1
+      },
+      {
+       "label": "Week 5",
+       "value": 32.5,
+       "group": 1
+      }
      ]
     },
     {
@@ -4584,6 +4634,104 @@
     {
      "type": "note",
      "text": "Player scores are official Sleeper totals under this league's scoring, taken from the weekly data files for weeks 1-5; records and points-for are through week 5. The trade itself is from Sleeper's transaction log, completed on the evening of 13 October in the week 5 leg. Love's earlier moves and the count of earlier trades are from the same weekly files."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-leagues-last-three-trades-run-through-jskule23",
+   "date": "2026-10-17",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "2026 · week 6 · trades",
+   "headline": "The League's Last Three Trades All Run Through jskule23",
+   "dek": "jskule23 has made the last three trades logged in this league — every one of them a sale. Four 2027 picks collected, Josh Allen and Puka Nacua sent out, and a playoff number that has fallen from 31.5% at the draft to 4.84% now.",
+   "byline": "DFFL desk",
+   "standfirst": "3 trades, 4 picks, one direction",
+   "teaser": "🚨 DFFL | WEEK 6\n\nTHE LEAGUE'S LAST THREE TRADES ALL RUN THROUGH JSKULE23\n\n🔄 jskule23's last 3 trades are the league's last 3 trades\n📦 4 future picks collected, all for 2027\n📉 Playoff odds: 31.5% at the draft, 4.84% now\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-leagues-last-three-trades-run-through-jskule23",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "The league has logged three trades since Tuesday's recap, and jskule23 is on every one of them. First, the three-team deal that sent Josh Allen out to jadencha. Then two more this week: <b>Khalil Shakir</b> and <b>Kendre Miller</b> out to willie12w, and <b>Puka Nacua</b> out to Domo112. jskule23 is 1-4, tied with drewkim for the league's worst record, and for three trades running has been selling, not buying."
+    },
+    {
+     "type": "stat",
+     "n": "3 for 3",
+     "text": "jskule23's three most recent trades are the league's three most recent trades. No other team has made a deal since week 4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the moves",
+     "text": "Three Trades, Same Direction"
+    },
+    {
+     "type": "p",
+     "text": "In the week 5 three-team trade, jskule23 sent out Josh Allen and got back J.K. Dobbins, a 2027 fifth-round pick from jadencha and a 2027 ninth-round pick from saucebossandrew. This week, jskule23 moved Khalil Shakir and Kendre Miller to willie12w in a deal that also sent a 2027 ninth-round pick over from drewkim. The third trade sent Puka Nacua to Domo112 for Mike Evans, Marvin Harrison and a 2027 second-round pick."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Players out",
+       "big": "4",
+       "sub": "Allen, Shakir, Miller, Nacua",
+       "rows": [
+        {
+         "label": "Josh Allen",
+         "value": "→ jadencha"
+        },
+        {
+         "label": "Khalil Shakir",
+         "value": "→ willie12w"
+        },
+        {
+         "label": "Kendre Miller",
+         "value": "→ willie12w"
+        },
+        {
+         "label": "Puka Nacua",
+         "value": "→ Domo112"
+        }
+       ]
+      },
+      {
+       "title": "Picks in",
+       "big": "4",
+       "sub": "all 2027",
+       "rows": [
+        {
+         "label": "2nd round",
+         "value": "from Domo112"
+        },
+        {
+         "label": "5th round",
+         "value": "from jadencha"
+        },
+        {
+         "label": "9th round",
+         "value": "from saucebossandrew"
+        },
+        {
+         "label": "9th round",
+         "value": "from drewkim"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "why now",
+     "text": "The Numbers Back the Sale"
+    },
+    {
+     "type": "p",
+     "text": "jskule23 is not short on points. The team's 662.36 scored this season rank fifth in the twelve-team league, ahead of sizzlemc2, wesley55, willie12w, moseslin, victorthompson, saucebossandrew and drewkim. But the record is 1-4, and the site's model has priced that in: jskule23 opened the season at a 31.5% chance to make the playoffs and a 2.965% chance at the title. Both numbers have collapsed to 4.84% and 0.165% without a change in record to match. A team scoring like a playoff contender and losing like a last-place one has a real decision in front of it, and jskule23 has made the same one three times in a row."
+    },
+    {
+     "type": "p",
+     "text": "None of it is a verdict on the players changing hands — Dobbins, Evans and Harrison can all still start down the stretch, and four 2027 picks are a real asset in this league. It is just that the alarm the standings are sounding and the alarm the model is sounding are, for once, about the same team, and jskule23 is the only manager who has answered both of them this week."
     }
    ]
   }
