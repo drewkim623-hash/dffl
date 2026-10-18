@@ -1,23 +1,23 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-18T16:34:02.091Z",
- "at": 1792341242091,
+ "generated": "2026-10-18T19:55:16.513Z",
+ "at": 1792353316513,
  "season": "2026",
  "week": 6,
  "liveWeek": 6,
  "decided": 30,
- "remaining": 53,
+ "remaining": 54,
  "teams": [
   {
    "uid": "850931930408001536",
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.28585,
-   "titleNow": 0.4717,
+   "titleNow": 0.4511,
    "playoffWas": 0.89525,
-   "playoffNow": 0.99815,
-   "wins": 10.92535,
-   "titleOdds": -100,
+   "playoffNow": 0.99825,
+   "wins": 10.8112,
+   "titleOdds": 110,
    "titleOddsOpen": 230,
    "playoffOdds": -19900
   },
@@ -26,210 +26,223 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.2025,
-   "titleNow": 0.1535,
+   "titleNow": 0.1905,
    "playoffWas": 0.82595,
-   "playoffNow": 0.80445,
-   "wins": 8.0891,
-   "titleOdds": 510,
+   "playoffNow": 0.94145,
+   "wins": 8.97985,
+   "titleOdds": 400,
    "titleOddsOpen": 370,
-   "playoffOdds": -580
+   "playoffOdds": -19900
   },
   {
    "uid": "851564369144852480",
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.04655,
-   "titleNow": 0.01745,
+   "titleNow": 0.01155,
    "playoffWas": 0.4348,
-   "playoffNow": 0.26165,
-   "wins": 5.7935,
-   "titleOdds": 5310,
+   "playoffNow": 0.2058,
+   "wins": 5.75015,
+   "titleOdds": 8070,
    "titleOddsOpen": 1930,
-   "playoffOdds": 260
+   "playoffOdds": 360
   },
   {
    "uid": "646481339029475328",
    "rid": 7,
    "manager": "drewkim",
    "titleWas": 0.018,
-   "titleNow": 0.0025,
+   "titleNow": 0.00175,
    "playoffWas": 0.25445,
-   "playoffNow": 0.05785,
-   "wins": 4.58395,
-   "titleOdds": 37640,
+   "playoffNow": 0.0505,
+   "wins": 4.59955,
+   "titleOdds": 53810,
    "titleOddsOpen": 5140,
-   "playoffOdds": 1530
+   "playoffOdds": 1770
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1487,
-   "titleNow": 0.06965,
+   "titleNow": 0.0827,
    "playoffWas": 0.73145,
-   "playoffNow": 0.5985,
-   "wins": 7.54465,
-   "titleOdds": 1250,
+   "playoffNow": 0.68825,
+   "wins": 7.6429,
+   "titleOdds": 1040,
    "titleOddsOpen": 530,
-   "playoffOdds": -175
+   "playoffOdds": -270
   },
   {
    "uid": "850946675743793152",
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.0634,
-   "titleNow": 0.01015,
+   "titleNow": 0.0073,
    "playoffWas": 0.50195,
-   "playoffNow": 0.21415,
-   "wins": 5.8215,
-   "titleOdds": 9190,
+   "playoffNow": 0.1714,
+   "wins": 5.748,
+   "titleOdds": 12820,
    "titleOddsOpen": 1390,
-   "playoffOdds": 340
+   "playoffOdds": 450
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.0472,
-   "titleNow": 0.073,
+   "titleNow": 0.0699,
    "playoffWas": 0.4206,
-   "playoffNow": 0.8582,
-   "wins": 8.44305,
-   "titleOdds": 1190,
+   "playoffNow": 0.8233,
+   "wins": 8.45735,
+   "titleOdds": 1250,
    "titleOddsOpen": 1900,
-   "playoffOdds": -1010
+   "playoffOdds": -690
   },
   {
    "uid": "845119622473699328",
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.02965,
-   "titleNow": 0.00045,
+   "titleNow": 0.00105,
    "playoffWas": 0.315,
-   "playoffNow": 0.0318,
-   "wins": 3.89825,
-   "titleOdds": 209540,
+   "playoffNow": 0.03225,
+   "wins": 3.9659,
+   "titleOdds": 89750,
    "titleOddsOpen": 3080,
-   "playoffOdds": 2870
+   "playoffOdds": 2830
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0653,
-   "titleNow": 0.0707,
+   "titleNow": 0.06735,
    "playoffWas": 0.5436,
-   "playoffNow": 0.654,
-   "wins": 7.46895,
-   "titleOdds": 1230,
+   "playoffNow": 0.65185,
+   "wins": 7.5439,
+   "titleOdds": 1300,
    "titleOddsOpen": 1340,
-   "playoffOdds": -230
+   "playoffOdds": -220
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.03735,
-   "titleNow": 0.0545,
+   "titleNow": 0.0485,
    "playoffWas": 0.39345,
-   "playoffNow": 0.5601,
-   "wins": 6.7986,
-   "titleOdds": 1630,
+   "playoffNow": 0.53045,
+   "wins": 6.76805,
+   "titleOdds": 1850,
    "titleOddsOpen": 2430,
-   "playoffOdds": -145
+   "playoffOdds": -130
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.0299,
-   "titleNow": 0.0373,
+   "titleNow": 0.03295,
    "playoffWas": 0.3459,
-   "playoffNow": 0.40315,
-   "wins": 6.4783,
-   "titleOdds": 2430,
+   "playoffNow": 0.36245,
+   "wins": 6.4829,
+   "titleOdds": 2760,
    "titleOddsOpen": 3060,
-   "playoffOdds": 135
+   "playoffOdds": 160
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0256,
-   "titleNow": 0.0391,
+   "titleNow": 0.03535,
    "playoffWas": 0.3376,
-   "playoffNow": 0.558,
-   "wins": 7.1548,
-   "titleOdds": 2310,
+   "playoffNow": 0.54405,
+   "wins": 7.25025,
+   "titleOdds": 2570,
    "titleOddsOpen": 3590,
-   "playoffOdds": -145
+   "playoffOdds": -135
   }
  ],
  "games": [
   {
    "a": "drewkim",
    "b": "victorthompson",
-   "aPts": 5.2,
-   "bPts": 5.2,
-   "pA": 0.490280684477537,
-   "pB": 0.5097193155224631,
+   "aPts": 56.2,
+   "bPts": 58.3,
+   "pA": 0.4763455311545141,
+   "pB": 0.5236544688454858,
    "settled": false,
-   "aLeft": 10,
+   "aLeft": 9,
    "bLeft": 9,
-   "aFrac": 0.9462815883415905,
-   "bFrac": 0.8925631766831812
+   "aFrac": 0.6544492866791584,
+   "bFrac": 0.6094600133004646
   },
   {
    "a": "saucebossandrew",
    "b": "sizzlemc2",
-   "aPts": 3,
-   "bPts": 0,
-   "pA": 0.4555180308365954,
-   "pB": 0.5444819691634046,
+   "aPts": 40.9,
+   "bPts": 39.26,
+   "pA": 0.35089360163588085,
+   "pB": 0.6491063983641192,
    "settled": false,
    "aLeft": 9,
    "bLeft": 10,
-   "aFrac": 0.9286500783694945,
-   "bFrac": 0.9999999999999998
+   "aFrac": 0.6809770826150249,
+   "bFrac": 0.7982412034465367
   },
   {
    "a": "bradyrife",
    "b": "moseslin",
-   "aPts": 41.4,
-   "bPts": 15.9,
-   "pA": 0.7442036490343554,
-   "pB": 0.25579635096564457,
+   "aPts": 61.44,
+   "bPts": 49.94,
+   "pA": 0.7743554753083255,
+   "pB": 0.2256445246916745,
    "settled": false,
-   "aLeft": 10,
-   "bLeft": 10,
-   "aFrac": 0.8827113264013386,
-   "bFrac": 0.9155298770451981
+   "aLeft": 8,
+   "bLeft": 8,
+   "aFrac": 0.6519844616658905,
+   "bFrac": 0.5827467075683589
   },
   {
    "a": "chassinator",
    "b": "jskule23",
-   "aPts": 10.4,
-   "bPts": 21.1,
-   "pA": 0.8228941927953124,
-   "pB": 0.1771058072046876,
+   "aPts": 80.2,
+   "bPts": 90.9,
+   "pA": 0.7798195537299206,
+   "pB": 0.22018044627007938,
    "settled": false,
-   "aLeft": 10,
-   "bLeft": 8,
-   "aFrac": 0.9402802205216223,
-   "bFrac": 0.7914456480430078
+   "aLeft": 9,
+   "bLeft": 7,
+   "aFrac": 0.6159654473314813,
+   "bFrac": 0.51153801681214
   },
   {
    "a": "jadencha",
    "b": "wesley55",
-   "aPts": 55.1,
-   "bPts": 14.2,
-   "pA": 0.9523700958416804,
-   "pB": 0.04762990415831958,
+   "aPts": 96.3,
+   "bPts": 85.6,
+   "pA": 0.8647735688641145,
+   "pB": 0.1352264311358855,
    "settled": false,
-   "aLeft": 9,
-   "bLeft": 9,
-   "aFrac": 0.8044833772520079,
-   "bFrac": 0.8389294405935304
+   "aLeft": 7,
+   "bLeft": 8,
+   "aFrac": 0.5792782619662735,
+   "bFrac": 0.532464634047301
+  },
+  {
+   "a": "Domo112",
+   "b": "willie12w",
+   "aPts": 91.64,
+   "bPts": 31.8,
+   "pA": 0.9087291958434734,
+   "pB": 0.09127080415652655,
+   "settled": false,
+   "aLeft": 10,
+   "bLeft": 10,
+   "aFrac": 0.6013329424476841,
+   "bFrac": 0.7971082086615865
   }
  ],
  "hurt": [
@@ -262,24 +275,14 @@
      "status": "Questionable"
     }
    ]
-  },
-  {
-   "manager": "chassinator",
-   "cost": 0.006961723647644247,
-   "players": [
-    {
-     "name": "DJ Moore",
-     "status": "Questionable"
-    }
-   ]
   }
  ],
  "settled": false,
  "nfl": {
-  "pre": 12,
-  "live": 1,
-  "post": 1,
-  "at": 1792341240214
+  "pre": 5,
+  "live": 7,
+  "post": 2,
+  "at": 1792353314367
  },
  "articles": [
   {

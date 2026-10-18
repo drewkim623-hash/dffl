@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-18T16:33:31.868Z",
+ "generated": "2026-10-18T19:54:43.312Z",
  "week": 6,
  "entries": {
   "2216": {
@@ -22,6 +22,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
+  },
+  "4035": {
+   "n": "Alvin Kamara",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-18"
   },
   "4199": {
    "n": "Aaron Jones",
@@ -66,13 +76,13 @@
   },
   "4983": {
    "n": "DJ Moore",
-   "s": "Questionable",
-   "ret": "2026-10-18",
+   "s": "Out",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-18"
   },
   "5844": {
    "n": "T.J. Hockenson",
@@ -121,7 +131,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-18",
    "irSince": 6
   },
@@ -146,6 +156,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "8121": {
+   "n": "Romeo Doubs",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-18"
+  },
   "8142": {
    "n": "Alec Pierce",
    "s": "IR",
@@ -164,7 +184,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-15"
   },
   "8408": {
@@ -288,7 +308,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-15"
   },
   "12495": {
@@ -339,7 +359,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-18"
   },
   "12518": {
@@ -349,7 +369,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-18"
   },
   "12533": {
