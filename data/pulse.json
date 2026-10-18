@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-18T15:36:46.494Z",
- "at": 1792337806494,
+ "generated": "2026-10-18T16:21:07.928Z",
+ "at": 1792340467928,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -32,9 +32,7 @@
    "points_for": 681.7,
    "points_against": 682.8,
    "faab_spent": 62,
-   "starters_hurt": [
-    "Caleb Williams (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -53,8 +51,7 @@
    "points_against": 615.14,
    "faab_spent": 26,
    "starters_hurt": [
-    "Jaylen Waddle (Questionable)",
-    "Quinshon Judkins (Questionable)"
+    "Jaylen Waddle (Questionable)"
    ]
   },
   {
@@ -106,9 +103,7 @@
    "points_for": 589.26,
    "points_against": 643,
    "faab_spent": 59,
-   "starters_hurt": [
-    "Chris Olave (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "jskule23",
@@ -147,31 +142,31 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 49.4,
+    "points": 53.8,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "wesley55",
     "points": 12.3,
-    "startersLeftToPlay": 8
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 8.4,
+    "points": 10.4,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "jskule23",
-    "points": 23.1,
+    "points": 21.1,
     "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 2.6,
+    "points": 3.2,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -183,12 +178,12 @@
   {
    "a": {
     "manager": "bradyrife",
-    "points": 18.14,
+    "points": 37.62,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 8.2,
+    "points": 10.2,
     "startersLeftToPlay": 10
    }
   },
@@ -637,5 +632,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 55
+ "free_agent_moves": 57
 }

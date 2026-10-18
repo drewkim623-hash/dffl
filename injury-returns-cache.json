@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-18T15:54:39.265Z",
+ "generated": "2026-10-18T16:21:07.271Z",
  "week": 6,
  "entries": {
   "2216": {
@@ -279,16 +279,6 @@
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
-  },
-  "11560": {
-   "n": "Caleb Williams",
-   "s": "Questionable",
-   "ret": "2026-10-18",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "11625": {
