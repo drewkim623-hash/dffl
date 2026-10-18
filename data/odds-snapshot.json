@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-17T22:03:29.316Z",
- "at": 1792274609316,
+ "generated": "2026-10-18T05:20:09.121Z",
+ "at": 1792300809122,
  "season": "2026",
  "week": 6,
  "liveWeek": 6,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.28585,
-   "titleNow": 0.46835,
+   "titleNow": 0.4704,
    "playoffWas": 0.89525,
-   "playoffNow": 0.99865,
-   "wins": 10.882,
+   "playoffNow": 0.9986,
+   "wins": 10.87205,
    "titleOdds": 100,
    "titleOddsOpen": 230,
    "playoffOdds": -19900
@@ -28,8 +28,8 @@
    "titleWas": 0.2025,
    "titleNow": 0.1495,
    "playoffWas": 0.82595,
-   "playoffNow": 0.8256,
-   "wins": 8.04335,
+   "playoffNow": 0.82555,
+   "wins": 8.0447,
    "titleOdds": 530,
    "titleOddsOpen": 370,
    "playoffOdds": -700
@@ -39,11 +39,11 @@
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.04655,
-   "titleNow": 0.0091,
+   "titleNow": 0.0092,
    "playoffWas": 0.4348,
-   "playoffNow": 0.1444,
-   "wins": 5.46975,
-   "titleOdds": 10270,
+   "playoffNow": 0.1458,
+   "wins": 5.47925,
+   "titleOdds": 10150,
    "titleOddsOpen": 1930,
    "playoffOdds": 550
   },
@@ -52,23 +52,23 @@
    "rid": 7,
    "manager": "drewkim",
    "titleWas": 0.018,
-   "titleNow": 0.00315,
+   "titleNow": 0.0033,
    "playoffWas": 0.25445,
-   "playoffNow": 0.08,
-   "wins": 4.6664,
-   "titleOdds": 29850,
+   "playoffNow": 0.07955,
+   "wins": 4.6604,
+   "titleOdds": 28490,
    "titleOddsOpen": 5140,
-   "playoffOdds": 1080
+   "playoffOdds": 1090
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1487,
-   "titleNow": 0.08605,
+   "titleNow": 0.0859,
    "playoffWas": 0.73145,
-   "playoffNow": 0.66905,
-   "wins": 7.59035,
+   "playoffNow": 0.66455,
+   "wins": 7.5826,
    "titleOdds": 1000,
    "titleOddsOpen": 530,
    "playoffOdds": -240
@@ -78,24 +78,24 @@
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.0634,
-   "titleNow": 0.0086,
+   "titleNow": 0.0092,
    "playoffWas": 0.50195,
-   "playoffNow": 0.2001,
-   "wins": 5.54405,
-   "titleOdds": 10870,
+   "playoffNow": 0.21175,
+   "wins": 5.6013,
+   "titleOdds": 10150,
    "titleOddsOpen": 1390,
-   "playoffOdds": 370
+   "playoffOdds": 350
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.0472,
-   "titleNow": 0.05085,
+   "titleNow": 0.0509,
    "playoffWas": 0.4206,
-   "playoffNow": 0.66805,
-   "wins": 7.69715,
-   "titleOdds": 1760,
+   "playoffNow": 0.66775,
+   "wins": 7.69955,
+   "titleOdds": 1750,
    "titleOddsOpen": 1900,
    "playoffOdds": -240
   },
@@ -106,48 +106,48 @@
    "titleWas": 0.02965,
    "titleNow": 0.00165,
    "playoffWas": 0.315,
-   "playoffNow": 0.0484,
-   "wins": 3.987,
+   "playoffNow": 0.04925,
+   "wins": 3.9897,
    "titleOdds": 57080,
    "titleOddsOpen": 3080,
-   "playoffOdds": 1850
+   "playoffOdds": 1820
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0653,
-   "titleNow": 0.08705,
+   "titleNow": 0.0866,
    "playoffWas": 0.5436,
-   "playoffNow": 0.72245,
-   "wins": 7.607,
-   "titleOdds": 980,
+   "playoffNow": 0.72785,
+   "wins": 7.62585,
+   "titleOdds": 990,
    "titleOddsOpen": 1340,
-   "playoffOdds": -330
+   "playoffOdds": -340
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.03735,
-   "titleNow": 0.0519,
+   "titleNow": 0.0511,
    "playoffWas": 0.39345,
-   "playoffNow": 0.57225,
-   "wins": 6.73885,
-   "titleOdds": 1720,
+   "playoffNow": 0.56895,
+   "wins": 6.72065,
+   "titleOdds": 1750,
    "titleOddsOpen": 2430,
-   "playoffOdds": -155
+   "playoffOdds": -150
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.0299,
-   "titleNow": 0.04185,
+   "titleNow": 0.0416,
    "playoffWas": 0.3459,
-   "playoffNow": 0.4392,
-   "wins": 6.47405,
-   "titleOdds": 2150,
+   "playoffNow": 0.43865,
+   "wins": 6.47705,
+   "titleOdds": 2170,
    "titleOddsOpen": 3060,
    "playoffOdds": 115
   },
@@ -156,13 +156,13 @@
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0256,
-   "titleNow": 0.04195,
+   "titleNow": 0.04065,
    "playoffWas": 0.3376,
-   "playoffNow": 0.63185,
-   "wins": 7.30005,
-   "titleOdds": 2150,
+   "playoffNow": 0.62175,
+   "wins": 7.2469,
+   "titleOdds": 2220,
    "titleOddsOpen": 3590,
-   "playoffOdds": -200
+   "playoffOdds": -195
   }
  ],
  "games": [
@@ -171,8 +171,8 @@
    "b": "victorthompson",
    "aPts": 0,
    "bPts": 5.2,
-   "pA": 0.5190132476439816,
-   "pB": 0.4809867523560184,
+   "pA": 0.5110885741554805,
+   "pB": 0.4889114258445195,
    "settled": false,
    "aLeft": 10,
    "bLeft": 9,
@@ -184,8 +184,8 @@
    "b": "sizzlemc2",
    "aPts": 3,
    "bPts": 0,
-   "pA": 0.2874915924315364,
-   "pB": 0.7125084075684636,
+   "pA": 0.3437251106357695,
+   "pB": 0.6562748893642305,
    "settled": false,
    "aLeft": 9,
    "bLeft": 10,
@@ -197,8 +197,8 @@
    "b": "jskule23",
    "aPts": 0,
    "bPts": 19.1,
-   "pA": 0.7518258285703868,
-   "pB": 0.24817417142961318,
+   "pA": 0.7501543254613943,
+   "pB": 0.24984567453860573,
    "settled": false,
    "aLeft": 10,
    "bLeft": 8,
@@ -210,8 +210,8 @@
    "b": "wesley55",
    "aPts": 25.4,
    "bPts": 6.4,
-   "pA": 0.9364696475526333,
-   "pB": 0.06353035244736671,
+   "pA": 0.9203704714619431,
+   "pB": 0.07962952853805694,
    "settled": false,
    "aLeft": 9,
    "bLeft": 8,
@@ -220,20 +220,6 @@
   }
  ],
  "hurt": [
-  {
-   "manager": "saucebossandrew",
-   "cost": 0.06288835272342674,
-   "players": [
-    {
-     "name": "Rashee Rice",
-     "status": "Out"
-    },
-    {
-     "name": "Chris Olave",
-     "status": "Questionable"
-    }
-   ]
-  },
   {
    "manager": "victorthompson",
    "cost": 0.0353524912135621,
@@ -245,15 +231,21 @@
    ]
   },
   {
+   "manager": "saucebossandrew",
+   "cost": 0.025772063792404376,
+   "players": [
+    {
+     "name": "Chris Olave",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "wesley55",
-   "cost": 0.031541653916768664,
+   "cost": 0.020869989290085655,
    "players": [
     {
      "name": "Jaylen Waddle",
-     "status": "Questionable"
-    },
-    {
-     "name": "DK Metcalf",
      "status": "Questionable"
     },
     {
@@ -313,10 +305,6 @@
     {
      "name": "Caleb Williams",
      "status": "Questionable"
-    },
-    {
-     "name": "Austin Ekeler",
-     "status": "Questionable"
     }
    ]
   }
@@ -326,9 +314,17 @@
   "pre": 13,
   "live": 0,
   "post": 1,
-  "at": 1792274607620
+  "at": 1792300807329
  },
  "articles": [
+  {
+   "slug": "the-leagues-last-three-trades-run-through-jskule23",
+   "kicker": "2026 · week 6 · trades",
+   "headline": "The League's Last Three Trades All Run Through jskule23",
+   "dek": "jskule23 has made the last three trades logged in this league — every one of them a sale. Four 2027 picks collected, Josh Allen and Puka Nacua sent out, and a playoff number that has fallen from 31.5% at the draft to 4.84% now.",
+   "byline": "DFFL desk",
+   "date": "2026-10-17"
+  },
   {
    "slug": "the-week-without-a-close-game",
    "kicker": "2026 · week 5",
@@ -344,14 +340,6 @@
    "dek": "jadencha, the league's top scorer and tied with bradyrife at 4-1, gets Josh Allen from jskule23 in the season's first three-team trade. Jordan Love goes to saucebossandrew; J.K. Dobbins and two 2027 picks go to jskule23.",
    "byline": "DFFL desk",
    "date": "2026-10-13"
-  },
-  {
-   "slug": "every-3-1-team-got-more-likely",
-   "kicker": "2026 · week 5 · odds",
-   "headline": "Every 3-1 Team Got More Likely. Nobody Else Did.",
-   "dek": "The site's playoff model has moved for every team in the league since the draft. It moved up for all four 3-1 teams, every one of them, and down for all eight others, every one of them.",
-   "byline": "DFFL desk",
-   "date": "2026-10-10"
   }
  ]
 }

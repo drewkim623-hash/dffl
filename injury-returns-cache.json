@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-17T22:02:56.903Z",
+ "generated": "2026-10-18T05:19:35.356Z",
  "week": 6,
  "entries": {
   "2216": {
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "2449": {
    "n": "Stefon Diggs",
@@ -31,7 +31,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "4199": {
    "n": "Aaron Jones",
@@ -71,7 +71,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 6 (4 left)",
-   "retChecked": "2026-10-17",
+   "retChecked": "2026-10-18",
    "irSince": 6
   },
   "4983": {
@@ -163,7 +163,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "7543": {
    "n": "Travis Etienne",
@@ -195,7 +195,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "8155": {
    "n": "Breece Hall",
@@ -400,7 +400,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -420,7 +420,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-17"
+   "retChecked": "2026-10-18"
   },
   "12534": {
    "n": "Kyle Monangai",
@@ -492,7 +492,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 6 (4 left)",
-   "retChecked": "2026-10-17",
+   "retChecked": "2026-10-18",
    "irSince": 6
   },
   "13417": {

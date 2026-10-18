@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-17T22:02:57.462Z",
- "at": 1792274577462,
+ "generated": "2026-10-18T05:19:36.215Z",
+ "at": 1792300776215,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -110,8 +110,7 @@
    "points_against": 643,
    "faab_spent": 59,
    "starters_hurt": [
-    "Chris Olave (Questionable)",
-    "Rashee Rice (Out)"
+    "Chris Olave (Questionable)"
    ]
   },
   {
