@@ -99,8 +99,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
       "checked": "2026-10-14",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+      "flag": "uncertain"
     },
     "6786": {
       "kind": "report",
@@ -123,7 +123,7 @@
       "weeks": 4,
       "checked": "2026-10-18",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [6]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "7021": {
       "kind": "report",
@@ -389,12 +389,25 @@
     },
     "12512": {
       "kind": "report",
-      "weeks": 0,
-      "weeks_list": [],
+      "weeks": 1,
+      "weeks_list": [
+        6
+      ],
       "source": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins",
-      "checked": "2026-10-17",
-      "note": "Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
+      "checked": "2026-10-18",
+      "note": "Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
+    },
+    "12518": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        6
+      ],
+      "weeks": 1,
+      "checked": "2026-10-18",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "12529": {
       "kind": "report",
@@ -416,7 +429,7 @@
       "weeks": 1,
       "checked": "2026-10-18",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "12534": {
       "kind": "report",
