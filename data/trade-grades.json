@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-17T22:03:41.584Z",
+ "generated": "2026-10-18T11:03:57.423Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -554,7 +554,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 6.4,
+       "value": 6.3,
        "basis": "actual to wk 5 + Sleeper projection"
       },
       {
@@ -564,7 +564,7 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 13.8,
+     "total": 13.7,
      "tradeDay": {
       "letter": "C",
       "small": true,
@@ -676,16 +676,16 @@
       {
        "asset": "Kendre Miller",
        "pid": "9757",
-       "value": 0.2,
+       "value": 0.1,
        "basis": "actual to wk 5 + Sleeper projection"
       }
      ],
-     "total": 0.2,
+     "total": 0.1,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -96,
-      "marginPts": -10.3
+      "marginPct": -99,
+      "marginPts": -10.5
      },
      "hindsight": "Pending"
     },
@@ -705,8 +705,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 96,
-      "marginPts": 10.3
+      "marginPct": 99,
+      "marginPts": 10.5
      },
      "hindsight": "Pending"
     }
