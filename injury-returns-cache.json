@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-18T13:18:16.492Z",
+ "generated": "2026-10-18T13:28:04.809Z",
  "week": 6,
  "entries": {
   "2216": {
@@ -107,12 +107,12 @@
   "5859": {
    "n": "A.J. Brown",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-10-18",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-18"
   },
   "5872": {
    "n": "Deebo Samuel",
@@ -137,12 +137,12 @@
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
-   "ret": "2026-10-25",
+   "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-15",
+   "retNote": "consensus.mjs — Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-18",
    "irSince": 6
   },
   "7021": {
@@ -389,7 +389,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: changed from audit [6]; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-17"
   },
   "12518": {
@@ -405,21 +405,24 @@
   "12529": {
    "n": "TreVeyon Henderson",
    "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
+   "ret": null,
+   "retWeeks": 1,
+   "retWeeksList": [
+    7
+   ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson — High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; uncertain (audit tiebreak wk 6).",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson — High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit [6,7]; consensus.",
+   "retChecked": "2026-10-18"
   },
   "12533": {
    "n": "Jacory Croskey-Merritt",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-10-25",
    "retWeeks": null,
-   "retSource": "espn-return-date",
+   "retSource": "report",
    "retEstimated": false,
-   "retNote": "ESPN return date",
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-10-18"
   },
   "12534": {
@@ -471,7 +474,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-17"
   },
   "13345": {
