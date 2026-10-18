@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-18T16:21:07.928Z",
- "at": 1792340467928,
+ "generated": "2026-10-18T16:33:32.427Z",
+ "at": 1792341212427,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -92,9 +92,7 @@
    "points_for": 600.74,
    "points_against": 609.4,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Jeremiyah Love (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -142,7 +140,7 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 53.8,
+    "points": 55.1,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -166,7 +164,7 @@
   {
    "a": {
     "manager": "drewkim",
-    "points": 3.2,
+    "points": 5.2,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -178,12 +176,12 @@
   {
    "a": {
     "manager": "bradyrife",
-    "points": 37.62,
+    "points": 41.04,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 10.2,
+    "points": 15.9,
     "startersLeftToPlay": 10
    }
   },
@@ -632,5 +630,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 57
+ "free_agent_moves": 58
 }
