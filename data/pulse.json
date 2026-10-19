@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-19T11:03:58.680Z",
- "at": 1792407838681,
+ "generated": "2026-10-19T23:20:11.392Z",
+ "at": 1792452011392,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -23,7 +23,9 @@
    "points_for": 664.36,
    "points_against": 574.64,
    "faab_spent": 78,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Davante Adams (Out)"
+   ]
   },
   {
    "manager": "Domo112",
@@ -52,7 +54,7 @@
    "faab_spent": 26,
    "starters_hurt": [
     "Jaylen Waddle (Questionable)",
-    "Romeo Doubs (Out)"
+    "Romeo Doubs (IR)"
    ]
   },
   {
@@ -62,9 +64,7 @@
    "points_for": 621.1,
    "points_against": 589.32,
    "faab_spent": 57,
-   "starters_hurt": [
-    "Stefon Diggs (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -112,9 +112,7 @@
    "points_for": 662.36,
    "points_against": 684.1,
    "faab_spent": 74,
-   "starters_hurt": [
-    "Mike Evans (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -262,7 +260,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": "Questionable",
+     "status": null,
      "to": "jskule23"
     },
     {
@@ -285,7 +283,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": "Questionable",
+     "status": null,
      "from": "Domo112"
     },
     {
