@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-18T16:33:32.427Z",
- "at": 1792341212427,
+ "generated": "2026-10-19T11:03:58.680Z",
+ "at": 1792407838681,
  "season": "2026",
  "nfl_week": 6,
  "season_type": "regular",
@@ -51,7 +51,8 @@
    "points_against": 615.14,
    "faab_spent": 26,
    "starters_hurt": [
-    "Jaylen Waddle (Questionable)"
+    "Jaylen Waddle (Questionable)",
+    "Romeo Doubs (Out)"
    ]
   },
   {
@@ -72,9 +73,7 @@
    "points_for": 697.5,
    "points_against": 670.72,
    "faab_spent": 51,
-   "starters_hurt": [
-    "DJ Moore (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -92,7 +91,10 @@
    "points_for": 600.74,
    "points_against": 609.4,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Dalton Kincaid (Questionable)",
+    "Ladd McConkey (Out)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -128,73 +130,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 122.7,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "willie12w",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 82.02,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 55.1,
-    "startersLeftToPlay": 9
+    "points": 170.4,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "wesley55",
-    "points": 12.3,
-    "startersLeftToPlay": 9
+    "points": 133.28,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 10.4,
-    "startersLeftToPlay": 10
+    "points": 104,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "jskule23",
-    "points": 21.1,
-    "startersLeftToPlay": 8
+    "points": 114.38,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 5.2,
-    "startersLeftToPlay": 10
+    "points": 77.2,
+    "startersLeftToPlay": 2
    },
    "b": {
     "manager": "victorthompson",
-    "points": 5.2,
-    "startersLeftToPlay": 9
+    "points": 91.72,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 41.04,
-    "startersLeftToPlay": 10
+    "points": 93.64,
+    "startersLeftToPlay": 3
    },
    "b": {
     "manager": "moseslin",
-    "points": 15.9,
-    "startersLeftToPlay": 10
+    "points": 91.12,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 3,
-    "startersLeftToPlay": 9
+    "points": 85.04,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 131.06,
+    "startersLeftToPlay": 0
    }
   }
  ],
@@ -476,7 +478,7 @@
      "name": "Rashod Bateman",
      "pos": "WR",
      "team": "BAL",
-     "status": null,
+     "status": "Out",
      "from": "bradyrife"
     }
    ],
