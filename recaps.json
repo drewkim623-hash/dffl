@@ -44,6 +44,84 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 6,
+   "note": "",
+   "lede": "Six games produced 1,417.92 points, down from 1,604.24 the week before. The closest finish — drewkim's 6.84-point win over victorthompson — was the tightest “closest game of the week” margin of the season outside of week 3's 1.72-point game, and bradyrife's 53.62-point win over moseslin was the widest this week. jadencha's 170.4 was the week's high score and moseslin's 91.12 the low. Half the league, six teams, now shares an identical 2-4 record, and two of this week's six games were decided between members of that group. jadencha and bradyrife remain alone atop the league at 5-1 apiece.",
+   "games": [
+    {
+     "headline": "jadencha's balanced attack holds off wesley55, 170.4-133.28",
+     "winner": "jadencha",
+     "winner_points": 170.4,
+     "loser": "wesley55",
+     "loser_points": 133.28,
+     "body": "Jaxon Smith-Njigba's 25.4 and Isaiah Likely's 23.9 led four jadencha starters within three points of each other at the top of the lineup, with Bhayshul Tuten adding 22.7 and Matthew Golden 22.4. wesley55 got 22.8 from James Cook and 20.3 from DK Metcalf, but Kyle Pitts's 23 never left the bench — more than any starter wesley55 put on the field, Cook included. The two sides combined for 303.68, the most points in any game this week."
+    },
+    {
+     "headline": "bradyrife's 53.62-point win over moseslin is the week's widest",
+     "winner": "bradyrife",
+     "winner_points": 144.74,
+     "loser": "moseslin",
+     "loser_points": 91.12,
+     "body": "Trevor Lawrence threw for 28.34 and Christian McCaffrey ran for 26.2, with George Kittle adding 17.9 and both George Pickens and Jakobi Meyers chipping in 13.3. Aaron Rodgers led moseslin with 17.02 and Keenan Allen added 16.2, but Cam Skattebo was held scoreless at running back and the New York Giants defense managed only 2. moseslin's 91.12 was the week's lowest score, and the 53.62-point margin was its widest."
+    },
+    {
+     "headline": "jskule23 tops chassinator 127.78-107.7; both fall to 2-4",
+     "winner": "jskule23",
+     "winner_points": 127.78,
+     "loser": "chassinator",
+     "loser_points": 107.7,
+     "body": "Germie Bernard scored 25.7, the best number in the game, and Chuba Hubbard added 19.6 and Carnell Tate 19 for jskule23. Drake Maye led chassinator with 23.8 and D'Andre Swift added 21, but Tre Tucker's 28.7 — the best score by any player on either roster — sat unused on the bench. The margin finished at 20.08, and both teams are now 2-4."
+    },
+    {
+     "headline": "sizzlemc2's Walker-Shough combo beats saucebossandrew",
+     "winner": "sizzlemc2",
+     "winner_points": 131.06,
+     "loser": "saucebossandrew",
+     "loser_points": 98.74,
+     "body": "Kenneth Walker scored 27.9 and Tyler Shough added 26.96 at quarterback, with the Kansas City defense good for 18. Jordan Love led saucebossandrew with 21.24 and Chris Olave and Xavier Worthy each added 14.3, but Mark Andrews, added off waivers this week, closed at 1.4 in his first start on the roster. The gap held at 32.32."
+    },
+    {
+     "headline": "Malik Nabers's 29.5 leads Domo112 past willie12w",
+     "winner": "Domo112",
+     "winner_points": 124.4,
+     "loser": "willie12w",
+     "loser_points": 98.42,
+     "body": "Malik Nabers scored 29.5, the best individual score anywhere in the league this week, and Colston Loveland added 18.5 and Caleb Williams 16.5 at quarterback — Domo112's first game with Puka Nacua, who started and scored 15 after arriving in a trade with jskule23. Kirk Cousins led willie12w with 19.52 and Stefon Diggs added 16.4, with the New Orleans defense good for 14, but nothing else in the lineup cleared 13.4. willie12w slips to 3-3."
+    },
+    {
+     "headline": "drewkim edges victorthompson by 6.84, the week's closest",
+     "winner": "drewkim",
+     "winner_points": 98.56,
+     "loser": "victorthompson",
+     "loser_points": 91.72,
+     "body": "DeVonta Smith led drewkim with 20.5, and Emeka Egbuka added 17.8 and Brock Purdy 17.36 at quarterback — Jayden Daniels's 21 sat on the bench and was never needed. Tetairoa McMillan topped victorthompson at 14.6, with Dak Prescott adding 13.02 and Drake London 12.2, but nothing in the lineup reached 15. The margin held at 6.84, and both teams are 2-4."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "Domo112 sends two starters and a 2027 second to get Puka Nacua back",
+     "body": "Domo112 traded Mike Evans and Marvin Harrison, plus a 2027 second-round pick, to jskule23 for Puka Nacua, who started and scored 15 in Domo112's win over willie12w. Evans went straight into jskule23's lineup for 13.4; Harrison, now jskule23's backup receiver, scored 6.4 off the bench."
+    },
+    {
+     "kind": "trade",
+     "headline": "A second jskule23 trade sends Khalil Shakir and Kendre Miller to willie12w",
+     "body": "jskule23 also flipped Khalil Shakir and Kendre Miller to willie12w, taking back a 2027 ninth-round pick that originally belonged to drewkim. Both players started for willie12w this week — Shakir for 13.4, Miller for 8 — in a loss to Domo112."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Every waiver claim settled at zero dollars",
+     "body": "saucebossandrew (Mark Andrews), jadencha (Caleb Douglas) and wesley55 (the Jacksonville defense) all won waiver claims this week, and none of them cost a dollar in FAAB. wesley55 and drewkim each churned their defense twice over the week without spending anything either."
+    },
+    {
+     "kind": "race",
+     "headline": "jadencha and bradyrife share the league lead, 181.4 points apart",
+     "body": "jadencha and bradyrife are the league's only two teams with one loss, both 5-1, but jadencha's 990.5 points for are 181.4 more than bradyrife's 809.1 this season — the record ties them together and the scoring doesn't."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 5,
    "note": "",
    "lede": "Six games produced 1,604.24 points, up slightly from 1,599.62 the week before, but nothing about how it was divided was close. jadencha's 193.38 was the week's high, beating sizzlemc2's 68.64 by 124.74 — the widest margin of the season — and chassinator's 88-point win over drewkim was nearly as lopsided. The nearest finish was Domo112's 17.28-point escape over jskule23, who put up 147 and still fell to 1-4. jadencha and bradyrife share the league lead at 4-1.",
@@ -4732,6 +4810,187 @@
     {
      "type": "p",
      "text": "None of it is a verdict on the players changing hands — Dobbins, Evans and Harrison can all still start down the stretch, and four 2027 picks are a real asset in this league. It is just that the alarm the standings are sounding and the alarm the model is sounding are, for once, about the same team, and jskule23 is the only manager who has answered both of them this week."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "half-the-league-shares-a-record",
+   "date": "2026-10-20",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 6",
+   "headline": "Half the League Shares a Record, and Not Much Else",
+   "dek": "chassinator has scored 805.2 points this season, the fourth-most in the league. drewkim has scored 666.56, the fewest. Both are 2-4. Every game in full, below.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · 1,417.92 points · six teams tied at 2-4",
+   "teaser": "🚨 DFFL | WEEK 6\n\nHALF THE LEAGUE SHARES A RECORD, AND NOT MUCH ELSE\n\n📊 Six teams are 2-4, from chassinator's 805.2 points down to drewkim's 666.56\n👀 chassinator and jskule23 are 4th and 5th in points for, but both are 2-4\n📏 drewkim's 6.84-point win over victorthompson was the week's closest game\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=half-the-league-shares-a-record",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Six of the twelve teams in this league are 2-4 after week 6, and the record is doing less work than usual to describe them. chassinator has scored 805.2 points this season, the fourth-most in the league — more than sizzlemc2, who is 4-2 — and lost to jskule23 this week anyway, 127.78-107.7. jskule23 is also 2-4, fifth in scoring at 790.14. drewkim is 2-4 too, with 666.56 points, the fewest of any team in the league. One record. A 138.64-point gap between the best and worst of the six teams wearing it."
+    },
+    {
+     "type": "stat",
+     "n": "138.64",
+     "text": "The gap in points scored this season between chassinator (805.2, fourth-most in the league) and drewkim (666.56, the fewest) — two teams sharing the same 2-4 record."
+    },
+    {
+     "type": "h",
+     "eyebrow": "this week's head-to-heads",
+     "text": "Two of the Six Games Were Decided Inside the Band"
+    },
+    {
+     "type": "p",
+     "text": "Two of week 6's six games were 2-4 teams playing each other. jskule23 beat chassinator 127.78-107.7, and drewkim beat victorthompson 98.56-91.72 in the tightest finish of the week. Both results left one winner and one loser inside the same six-team group, which is the only way a band this size can both gain and lose a member in the same week and still number six."
+    },
+    {
+     "type": "p",
+     "text": "The other two members of the band got there the ordinary way: moseslin lost to bradyrife by 53.62, and saucebossandrew lost to sizzlemc2 by 32.32, both to teams with a better record going in. Four different paths. One shared line in the standings."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the scoring underneath",
+     "text": "Two of the Six Are Top-Five Scorers. Four Are the League's Worst."
+    },
+    {
+     "type": "p",
+     "text": "chassinator (805.2) and jskule23 (790.14) are fourth and fifth in points for in the entire twelve-team league — ahead of sizzlemc2 and wesley55, both of whom have better records. moseslin (702.2), victorthompson (692.46), saucebossandrew (688) and drewkim (666.56) are the four lowest-scoring teams in the league, positions nine through twelve on points for, all four of them 2-4."
+    },
+    {
+     "type": "bars",
+     "title": "Six teams, one record",
+     "sub": "Points for this season — all six teams are 2-4",
+     "rows": [
+      {
+       "label": "chassinator",
+       "sub": "805.2 points for",
+       "value": 805.2,
+       "group": 1
+      },
+      {
+       "label": "jskule23",
+       "sub": "790.14 points for",
+       "value": 790.14,
+       "group": 1
+      },
+      {
+       "label": "moseslin",
+       "sub": "702.2 points for",
+       "value": 702.2,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "sub": "692.46 points for",
+       "value": 692.46,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "688 points for",
+       "value": 688,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "666.56 points for",
+       "value": 666.56,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of this means the record is wrong — 2-4 is 2-4, and all six of these teams need the same thing from here, which is wins. But as a description of what has actually happened through six weeks, a six-way tie is hiding two teams that have outscored half the league and four that are scoring like the league's bottom tier. The standings call that one story. It is at least two."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games combined for 1,417.92 points, down from 1,604.24 the week before. The closest finish was 6.84 points, the widest 53.62, and three of the six featured a team that is now 2-4. In order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "DeVonta Smith's 20.5 Was Enough, Barely"
+    },
+    {
+     "type": "p",
+     "text": "<b>drewkim 98.56, victorthompson 91.72.</b> DeVonta Smith led drewkim with 20.5, and Emeka Egbuka added 17.8 and Brock Purdy 17.36 at quarterback. Jayden Daniels scored 21 on the bench and never got the call."
+    },
+    {
+     "type": "p",
+     "text": "Tetairoa McMillan topped victorthompson at 14.6, with Dak Prescott adding 13.02 and Drake London 12.2, but nothing in the lineup broke 15 and the margin held at 6.84, the tightest finish of the week. Both teams are 2-4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-closest",
+     "text": "Germie Bernard's 25.7 Led Everyone on the Field"
+    },
+    {
+     "type": "p",
+     "text": "<b>jskule23 127.78, chassinator 107.7.</b> Germie Bernard scored 25.7, the best number in the game, and Chuba Hubbard added 19.6 and Carnell Tate 19 behind him. Luther Burden chipped in 17.5, giving jskule23 four starters past 17."
+    },
+    {
+     "type": "p",
+     "text": "Drake Maye led chassinator with 23.8 and D'Andre Swift added 21, but the Panthers defense's 9 points and Jake Ferguson's 3.3 at tight end left too little behind them. Tre Tucker's 28.7 — the best score by any player on either roster — sat unused on the bench. The margin finished at 20.08, and both teams fall to 2-4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the third-closest",
+     "text": "Malik Nabers's 29.5 Was the Week's Best Individual Score"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 124.4, willie12w 98.42.</b> Malik Nabers scored 29.5, the best individual score anywhere in the league this week, and Colston Loveland added 18.5 and Caleb Williams 16.5 at quarterback. Jalen Coker chipped in 15.7 and Puka Nacua 15 in his first week on the roster — five players in double figures before the kicker."
+    },
+    {
+     "type": "p",
+     "text": "Kirk Cousins led willie12w with 19.52 and Stefon Diggs added 16.4, with the New Orleans defense good for 14, but nothing else in the lineup cleared 13.4. The margin finished at 25.98, and willie12w slips to 3-3."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fourth-closest",
+     "text": "Kenneth Walker and Tyler Shough Carried sizzlemc2"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 131.06, saucebossandrew 98.74.</b> Kenneth Walker scored 27.9 and Tyler Shough added 26.96 at quarterback, with the Kansas City defense good for 18."
+    },
+    {
+     "type": "p",
+     "text": "Jordan Love led saucebossandrew with 21.24, and Chris Olave and Xavier Worthy each added 14.3, but Rachaad White's 13.7 and Dameon Pierce's 13 were the next-best the lineup had, and Mark Andrews, added off waivers this week, closed at 1.4 in his first start. The gap held at 32.32."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the shootout",
+     "text": "303.68 Combined, the Week's Highest-Scoring Game"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 170.4, wesley55 133.28.</b> Jaxon Smith-Njigba led the way with 25.4 and Isaiah Likely added 23.9, with Bhayshul Tuten's 22.7 and Matthew Golden's 22.4 right behind — four starters within three points of each other at the top of the lineup. Josh Allen added 18.3 at quarterback."
+    },
+    {
+     "type": "p",
+     "text": "wesley55 answered with James Cook's 22.8 and DK Metcalf's 20.3, and Chase McLaughlin kicked for 17, but Kyle Pitts's 23 sat on the bench the entire game — more than any starter wesley55 put on the field, Cook included. The two sides combined for 303.68, the most points in any game this week, and jadencha moved to 5-1."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "Trevor Lawrence and Christian McCaffrey Built a 53.62-Point Win"
+    },
+    {
+     "type": "p",
+     "text": "<b>bradyrife 144.74, moseslin 91.12.</b> Trevor Lawrence threw for 28.34 and Christian McCaffrey ran for 26.2, with George Kittle adding 17.9. Four bradyrife starters cleared 13, including both wide receivers at 13.3 apiece, George Pickens and Jakobi Meyers."
+    },
+    {
+     "type": "p",
+     "text": "Aaron Rodgers led moseslin with 17.02 and Keenan Allen added 16.2, but Cam Skattebo was held scoreless at running back and the New York Giants defense managed only 2. moseslin's 91.12 was the lowest score of the week, and the 53.62-point margin was the widest. moseslin falls to 2-4."
     }
    ]
   }

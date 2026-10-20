@@ -108,6 +108,30 @@
    "announced": true,
    "thread_id": "1a135338f4030316",
    "closed_at": "2026-10-17T23:18:23.309Z"
+  },
+  {
+   "id": "2026-w7-nacua-trade",
+   "question": "Domo112 gave up Mike Evans, Marvin Harrison and a 2027 second-round pick to get Puka Nacua back from jskule23. Who won that trade?",
+   "options": [
+    {
+     "key": "DOMO",
+     "label": "Domo112 — Nacua alone was worth it"
+    },
+    {
+     "key": "JSKULE",
+     "label": "jskule23 — too much for one receiver"
+    },
+    {
+     "key": "EVEN",
+     "label": "call it even"
+    }
+   ],
+   "opened": "2026-10-20",
+   "closes": "2026-10-24",
+   "subject": "DFFL Week 7: Half the League Shares a Record, and Not Much Else",
+   "status": "open",
+   "results": null,
+   "announced": false
   }
  ]
 }

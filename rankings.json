@@ -13,6 +13,60 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 6,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Posted the week's high score at 170.4, led by Jaxon Smith-Njigba's 25.4 and Isaiah Likely's 23.9, and is 5-1 with 990.5 points for — 181.4 more than anyone else in the league."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "Trevor Lawrence's 28.34 and Christian McCaffrey's 26.2 powered a 53.62-point win over moseslin, the week's widest margin, and bradyrife is 5-1 alongside jadencha."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Malik Nabers's 29.5 was the best individual score anywhere in the league this week, helping beat willie12w by 25.98 in Domo112's first game since trading for Puka Nacua, who started and scored 15."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "Kenneth Walker's 27.9 and Tyler Shough's 26.96 carried a 131.06 output past saucebossandrew, sizzlemc2's fourth win of the season."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "Scored 133.28, the third-most in the league this week, and lost anyway to jadencha by 37.12 — Kyle Pitts's 23 never left the bench, more than any starter wesley55 played."
+    },
+    {
+     "manager": "willie12w",
+     "blurb": "Started both Khalil Shakir (13.4) and Kendre Miller (8) for the first time after acquiring them from jskule23, but a 25.98-point loss to Domo112 leaves willie12w 3-3."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "Drake Maye's 23.8 and D'Andre Swift's 21 weren't enough in a 20.08-point loss to jskule23, and Tre Tucker's 28.7 — the best score by any player in the game — never left the bench."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Germie Bernard's 25.7 led a 127.78 output that beat chassinator by 20.08, in a week jskule23 also traded Puka Nacua to Domo112 for Mike Evans, Marvin Harrison and a 2027 second-round pick."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Fell to bradyrife by 53.62, the week's widest margin, with Cam Skattebo held scoreless and the lineup's 91.12 the lowest score in the league this week."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "Tetairoa McMillan's 14.6 led a 91.72 output in a 6.84-point loss to drewkim, the closest game of the week."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "Jordan Love's 21.24 led a 98.74 output in a 32.32-point loss to sizzlemc2, with Mark Andrews, picked up off waivers this week, closing at 1.4 in his first start."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "DeVonta Smith's 20.5 led a 98.56 output that beat victorthompson by 6.84, the closest game of the week, with Jayden Daniels's 21 sitting unused on the bench."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 5,
    "teams": [
     {
