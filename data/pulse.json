@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-20T04:25:00.072Z",
- "at": 1792470300072,
+ "generated": "2026-10-20T04:42:56.036Z",
+ "at": 1792471376036,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -9,46 +9,46 @@
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 4,
+   "wins": 5,
    "losses": 1,
-   "points_for": 820.1,
-   "points_against": 547.16,
+   "points_for": 990.5,
+   "points_against": 680.44,
    "faab_spent": 8,
    "starters_hurt": []
   },
   {
    "manager": "bradyrife",
-   "wins": 4,
+   "wins": 5,
    "losses": 1,
-   "points_for": 664.36,
-   "points_against": 574.64,
+   "points_for": 809.1,
+   "points_against": 665.76,
    "faab_spent": 78,
    "starters_hurt": []
   },
   {
    "manager": "Domo112",
-   "wins": 3,
+   "wins": 4,
    "losses": 2,
-   "points_for": 681.7,
-   "points_against": 682.8,
+   "points_for": 806.1,
+   "points_against": 781.22,
    "faab_spent": 62,
    "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
-   "wins": 3,
+   "wins": 4,
    "losses": 2,
-   "points_for": 651.22,
-   "points_against": 699.56,
+   "points_for": 782.28,
+   "points_against": 798.3,
    "faab_spent": 11,
    "starters_hurt": []
   },
   {
    "manager": "wesley55",
    "wins": 3,
-   "losses": 2,
-   "points_for": 622.14,
-   "points_against": 615.14,
+   "losses": 3,
+   "points_for": 755.42,
+   "points_against": 785.54,
    "faab_spent": 26,
    "starters_hurt": [
     "Jaylen Waddle (Questionable)",
@@ -58,38 +58,49 @@
   {
    "manager": "willie12w",
    "wins": 3,
-   "losses": 2,
-   "points_for": 621.1,
-   "points_against": 589.32,
+   "losses": 3,
+   "points_for": 719.52,
+   "points_against": 713.72,
    "faab_spent": 57,
    "starters_hurt": []
   },
   {
    "manager": "chassinator",
    "wins": 2,
-   "losses": 3,
-   "points_for": 697.5,
-   "points_against": 670.72,
+   "losses": 4,
+   "points_for": 805.2,
+   "points_against": 798.5,
    "faab_spent": 51,
    "starters_hurt": [
     "Terry McLaurin (Out)"
    ]
   },
   {
+   "manager": "jskule23",
+   "wins": 2,
+   "losses": 4,
+   "points_for": 790.14,
+   "points_against": 791.8,
+   "faab_spent": 74,
+   "starters_hurt": [
+    "Mike Evans (Out)"
+   ]
+  },
+  {
    "manager": "moseslin",
    "wins": 2,
-   "losses": 3,
-   "points_for": 611.08,
-   "points_against": 712.36,
+   "losses": 4,
+   "points_for": 702.2,
+   "points_against": 857.1,
    "faab_spent": 5,
    "starters_hurt": []
   },
   {
    "manager": "victorthompson",
    "wins": 2,
-   "losses": 3,
-   "points_for": 600.74,
-   "points_against": 609.4,
+   "losses": 4,
+   "points_for": 692.46,
+   "points_against": 707.96,
    "faab_spent": 100,
    "starters_hurt": [
     "Dalton Kincaid (Questionable)",
@@ -100,29 +111,18 @@
   {
    "manager": "saucebossandrew",
    "wins": 2,
-   "losses": 3,
-   "points_for": 589.26,
-   "points_against": 643,
+   "losses": 4,
+   "points_for": 688,
+   "points_against": 774.06,
    "faab_spent": 59,
    "starters_hurt": []
   },
   {
-   "manager": "jskule23",
-   "wins": 1,
-   "losses": 4,
-   "points_for": 662.36,
-   "points_against": 684.1,
-   "faab_spent": 74,
-   "starters_hurt": [
-    "Mike Evans (Out)"
-   ]
-  },
-  {
    "manager": "drewkim",
-   "wins": 1,
+   "wins": 2,
    "losses": 4,
-   "points_for": 568,
-   "points_against": 761.36,
+   "points_for": 666.56,
+   "points_against": 853.08,
    "faab_spent": 58,
    "starters_hurt": []
   }
