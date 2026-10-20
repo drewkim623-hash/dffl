@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-20T05:39:06.334Z",
- "at": 1792474746334,
+ "generated": "2026-10-20T11:04:46.121Z",
+ "at": 1792494286121,
  "season": "2026",
  "week": 7,
  "liveWeek": null,
@@ -168,16 +168,6 @@
  "games": [],
  "hurt": [
   {
-   "manager": "jskule23",
-   "cost": 0.07238864660041466,
-   "players": [
-    {
-     "name": "Mike Evans",
-     "status": "Out"
-    }
-   ]
-  },
-  {
    "manager": "wesley55",
    "cost": 0.052991174995297485,
    "players": [
@@ -216,6 +206,16 @@
     {
      "name": "Terry McLaurin",
      "status": "Out"
+    }
+   ]
+  },
+  {
+   "manager": "jskule23",
+   "cost": 0,
+   "players": [
+    {
+     "name": "Josh Jacobs",
+     "status": "NA"
     }
    ]
   }

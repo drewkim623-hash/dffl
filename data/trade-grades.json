@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-20T05:39:19.911Z",
+ "generated": "2026-10-20T11:04:53.424Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -270,7 +270,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -9,
-      "marginPts": -46.3
+      "marginPts": -46.4
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 167.7,
+       "value": 167.8,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -297,11 +297,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 291.5,
+     "total": 291.6,
      "tradeDay": {
       "letter": "C",
       "marginPct": 9,
-      "marginPts": 46.3
+      "marginPts": 46.4
      },
      "hindsight": "Pending"
     }
@@ -428,7 +428,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 78
+      "marginPts": 77.9
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 167.7,
+       "value": 167.8,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -449,11 +449,11 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 262,
+     "total": 262.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -78
+      "marginPts": -77.9
      },
      "hindsight": "Pending"
     }
@@ -632,7 +632,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -41,
-      "marginPts": -57.5
+      "marginPts": -57.6
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 47.5,
+       "value": 47.6,
        "basis": "actual to wk 6 + Sleeper projection"
       }
      ],
-     "total": 47.5,
+     "total": 47.6,
      "tradeDay": {
       "letter": "D",
       "marginPct": -34,
-      "marginPts": -49.3
+      "marginPts": -49.2
      },
      "hindsight": "Pending"
     }
@@ -737,7 +737,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 29,
-      "marginPts": 95.2
+      "marginPts": 95
      },
      "hindsight": "Pending"
     },
@@ -749,7 +749,7 @@
       {
        "asset": "Mike Evans",
        "pid": "2216",
-       "value": 83.8,
+       "value": 84,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -765,11 +765,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 118.7,
+     "total": 118.9,
      "tradeDay": {
       "letter": "D",
       "marginPct": -29,
-      "marginPts": -95.2
+      "marginPts": -95
      },
      "hindsight": "Pending"
     }

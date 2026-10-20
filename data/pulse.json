@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-20T05:38:33.534Z",
- "at": 1792474713534,
+ "generated": "2026-10-20T11:04:14.895Z",
+ "at": 1792494254895,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -83,7 +83,7 @@
    "points_against": 791.8,
    "faab_spent": 74,
    "starters_hurt": [
-    "Mike Evans (Out)"
+    "Josh Jacobs (NA)"
    ]
   },
   {
