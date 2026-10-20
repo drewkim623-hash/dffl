@@ -209,6 +209,20 @@
    "sha256": "a623f2fa30f87d832e6252f890f1a4a60322ed338bbc455dd0d95c1003d8bc0c",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-20T12:16:31.339Z",
+   "subject": "DFFL Week 7: Half the League Shares a Record, and Not Much Else",
+   "lead": "half-the-league-shares-a-record",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 6
+   },
+   "to": 12,
+   "sha256": "83e1ee4d8c69dcfd9cbf2c67b794417a839597d919d4a48febf7a675f222fc75",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
