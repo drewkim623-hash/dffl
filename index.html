@@ -83,7 +83,8 @@
   .tabrow button:hover{color:var(--ink-2);background:var(--raised)}
   .tabrow button[aria-selected="true"]{color:var(--on-a);background:var(--blue);border-color:var(--blue)}
   /* Desktop: all twelve tabs fit the row without scrolling. Phones keep the scrolling row. */
-  @media (min-width:1024px){.tabrow button{padding:8px 10px}}
+  @media (min-width:1024px){.tabrow button{padding:8px 7px}}
+  @media (min-width:1180px){.tabrow button{padding:8px 10px}}
 
   main{padding:22px 0 90px;min-height:60vh}
   .panel[hidden]{display:none}
@@ -1324,6 +1325,13 @@
   .jx,.sleeper-link,.pl-dec summary,.injkey summary{position:relative}
   .jx::after,.sleeper-link::after,.pl-dec summary::after,.injkey summary::after{content:"";position:absolute;
       right:0;top:50%;transform:translateY(-50%);width:max(100%,44px);height:max(100%,44px);background:transparent}
+  /* Where a hit area would spill onto a neighbouring control, the neighbour wins. */
+  .dboard .bc .jx::after{content:none}
+  .gside{position:relative;z-index:1}
+  /* Injuries key: explainers in running prose stay one line tall so they don't cover the
+     next line; the summary grows upward only, into plain text, never into the open details. */
+  .injkey p .jx::after,.injkey details > *:not(summary) .jx::after{height:100%}
+  .injkey summary::after{top:auto;bottom:0;transform:none;height:max(100%,44px)}
 
   /* ============ blend theme ============
      Gold on aubergine with a violet counter-glow; Space Grotesk for headlines and
