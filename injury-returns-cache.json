@@ -1,7 +1,7 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-19T23:20:10.741Z",
- "week": 6,
+ "generated": "2026-10-20T04:24:59.443Z",
+ "week": 7,
  "entries": {
   "2133": {
    "n": "Davante Adams",
@@ -11,7 +11,17 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-19"
+   "retChecked": "2026-10-20"
+  },
+  "2216": {
+   "n": "Mike Evans",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-20"
   },
   "4035": {
    "n": "Alvin Kamara",
@@ -21,12 +31,12 @@
    "retSource": "espn-outlook",
    "retEstimated": true,
    "retNote": "eligible to come off IR after a Week 8",
-   "retChecked": "2026-10-19"
+   "retChecked": "2026-10-20"
   },
   "4199": {
    "n": "Aaron Jones",
    "s": "Questionable",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -61,7 +71,7 @@
    "retSource": "espn-outlook",
    "retEstimated": true,
    "retNote": "practice window opened",
-   "retChecked": "2026-10-19",
+   "retChecked": "2026-10-20",
    "irSince": 6
   },
   "4983": {
@@ -77,7 +87,7 @@
   "5844": {
    "n": "T.J. Hockenson",
    "s": "Out",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -93,6 +103,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
+  },
+  "5859": {
+   "n": "A.J. Brown",
+   "s": "Questionable",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit [6]; consensus.",
+   "retChecked": "2026-10-18"
   },
   "5872": {
    "n": "Deebo Samuel",
@@ -114,6 +134,16 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
    "retChecked": "2026-10-14"
   },
+  "5927": {
+   "n": "Terry McLaurin",
+   "s": "Out",
+   "ret": "2026-11-01",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-20"
+  },
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
@@ -133,7 +163,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-19"
+   "retChecked": "2026-10-20"
   },
   "7543": {
    "n": "Travis Etienne",
@@ -154,7 +184,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-19",
+   "retChecked": "2026-10-20",
    "irSince": 6
   },
   "8142": {
@@ -181,7 +211,7 @@
   "8408": {
    "n": "Jordan Mason",
    "s": "IR",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -193,9 +223,8 @@
    "n": "Malik Davis",
    "s": "IR",
    "ret": null,
-   "retWeeks": 11,
+   "retWeeks": 10,
    "retWeeksList": [
-    6,
     7,
     8,
     9,
@@ -218,19 +247,6 @@
    "s": "IR",
    "ret": null,
    "retWeeks": 11,
-   "retWeeksList": [
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17
-   ],
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear — Torn ACL. Out for 2026 season (Rapoport/Schefter; Hafley). Consensus: matches audit; consensus.",
@@ -241,11 +257,11 @@
    "n": "Dontayvion Wicks",
    "s": "Questionable",
    "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
+   "retWeeks": 99,
+   "retSource": "espn-outlook",
    "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-19"
+   "retNote": "out for the rest of the season",
+   "retChecked": "2026-10-20"
   },
   "9753": {
    "n": "Zach Charbonnet",
@@ -261,7 +277,7 @@
   "9756": {
    "n": "Jordan Addison",
    "s": "Out",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -272,9 +288,8 @@
    "n": "Jayden Reed",
    "s": "IR",
    "ret": null,
-   "retWeeks": 11,
+   "retWeeks": 10,
    "retWeeksList": [
-    6,
     7,
     8,
     9,
@@ -310,7 +325,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-19"
+   "retChecked": "2026-10-20"
   },
   "11625": {
    "n": "Adonai Mitchell",
@@ -325,7 +340,7 @@
   "11635": {
    "n": "Ladd McConkey",
    "s": "Out",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -335,7 +350,7 @@
   "12495": {
    "n": "Ollie Gordon",
    "s": "Questionable",
-   "ret": "2026-10-18",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -346,9 +361,8 @@
    "n": "Jaxson Dart",
    "s": "IR",
    "ret": null,
-   "retWeeks": 8,
+   "retWeeks": 7,
    "retWeeksList": [
-    6,
     7,
     9,
     10,
@@ -450,20 +464,19 @@
    "n": "Jonah Coleman",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: IR minimum 4 weeks from wk 6 (4 left)",
-   "retChecked": "2026-10-19",
+   "retNote": "default: IR minimum 4 weeks from wk 6 (3 left)",
+   "retChecked": "2026-10-20",
    "irSince": 6
   },
   "13417": {
    "n": "De'Zhaun Stribling",
    "s": "IR",
    "ret": null,
-   "retWeeks": 5,
+   "retWeeks": 4,
    "retWeeksList": [
-    6,
     7,
     9,
     10,
