@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-21T07:30:30.717Z",
- "at": 1792567830718,
+ "generated": "2026-10-21T09:54:11.849Z",
+ "at": 1792576451849,
  "season": "2026",
  "week": 7,
  "liveWeek": null,
@@ -13,11 +13,11 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.2861,
-   "titleNow": 0.46825,
+   "titleNow": 0.4624,
    "playoffWas": 0.89605,
-   "playoffNow": 0.9994,
-   "wins": 11.05365,
-   "titleOdds": 100,
+   "playoffNow": 0.9993,
+   "wins": 11.0381,
+   "titleOdds": 105,
    "titleOddsOpen": 230,
    "playoffOdds": -19900
   },
@@ -26,11 +26,11 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.203,
-   "titleNow": 0.18825,
+   "titleNow": 0.19995,
    "playoffWas": 0.82675,
-   "playoffNow": 0.96025,
-   "wins": 9.09565,
-   "titleOdds": 400,
+   "playoffNow": 0.9651,
+   "wins": 9.17505,
+   "titleOdds": 370,
    "titleOddsOpen": 360,
    "playoffOdds": -19900
   },
@@ -39,37 +39,37 @@
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.0468,
-   "titleNow": 0.00775,
+   "titleNow": 0.0085,
    "playoffWas": 0.43425,
-   "playoffNow": 0.15695,
-   "wins": 5.4087,
-   "titleOdds": 12070,
+   "playoffNow": 0.15995,
+   "wins": 5.4176,
+   "titleOdds": 11000,
    "titleOddsOpen": 1920,
-   "playoffOdds": 500
+   "playoffOdds": 490
   },
   {
    "uid": "646481339029475328",
    "rid": 7,
    "manager": "drewkim",
    "titleWas": 0.01775,
-   "titleNow": 0.00275,
+   "titleNow": 0.0025,
    "playoffWas": 0.254,
-   "playoffNow": 0.08645,
-   "wins": 5.10935,
-   "titleOdds": 34210,
+   "playoffNow": 0.08255,
+   "wins": 5.06955,
+   "titleOdds": 37640,
    "titleOddsOpen": 5210,
-   "playoffOdds": 990
+   "playoffOdds": 1040
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1487,
-   "titleNow": 0.08075,
+   "titleNow": 0.07825,
    "playoffWas": 0.73195,
-   "playoffNow": 0.68145,
-   "wins": 7.4957,
-   "titleOdds": 1070,
+   "playoffNow": 0.68225,
+   "wins": 7.49855,
+   "titleOdds": 1110,
    "titleOddsOpen": 530,
    "playoffOdds": -260
   },
@@ -78,76 +78,76 @@
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.0633,
-   "titleNow": 0.0079,
+   "titleNow": 0.0081,
    "playoffWas": 0.5022,
-   "playoffNow": 0.14735,
-   "wins": 5.4633,
-   "titleOdds": 11840,
+   "playoffNow": 0.1498,
+   "wins": 5.47465,
+   "titleOdds": 11550,
    "titleOddsOpen": 1390,
-   "playoffOdds": 540
+   "playoffOdds": 530
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.0468,
-   "titleNow": 0.0755,
+   "titleNow": 0.07535,
    "playoffWas": 0.4206,
-   "playoffNow": 0.87545,
-   "wins": 8.54825,
+   "playoffNow": 0.87775,
+   "wins": 8.55845,
    "titleOdds": 1150,
    "titleOddsOpen": 1920,
-   "playoffOdds": -1290
+   "playoffOdds": -1340
   },
   {
    "uid": "845119622473699328",
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.02955,
-   "titleNow": 0.00315,
+   "titleNow": 0.00275,
    "playoffWas": 0.31445,
-   "playoffNow": 0.1034,
-   "wins": 4.87425,
-   "titleOdds": 29850,
+   "playoffNow": 0.102,
+   "wins": 4.86685,
+   "titleOdds": 34210,
    "titleOddsOpen": 3090,
-   "playoffOdds": 810
+   "playoffOdds": 820
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0651,
-   "titleNow": 0.06685,
+   "titleNow": 0.06875,
    "playoffWas": 0.5438,
-   "playoffNow": 0.6686,
-   "wins": 7.39405,
-   "titleOdds": 1310,
+   "playoffNow": 0.6835,
+   "wins": 7.4371,
+   "titleOdds": 1270,
    "titleOddsOpen": 1350,
-   "playoffOdds": -240
+   "playoffOdds": -260
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.0374,
-   "titleNow": 0.0258,
+   "titleNow": 0.02455,
    "playoffWas": 0.3935,
-   "playoffNow": 0.34355,
-   "wins": 5.9008,
-   "titleOdds": 3560,
+   "playoffNow": 0.3324,
+   "wins": 5.8554,
+   "titleOdds": 3740,
    "titleOddsOpen": 2420,
-   "playoffOdds": 175
+   "playoffOdds": 185
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02965,
-   "titleNow": 0.0183,
+   "titleNow": 0.0185,
    "playoffWas": 0.3457,
-   "playoffNow": 0.2336,
-   "wins": 5.8107,
-   "titleOdds": 5060,
+   "playoffNow": 0.2371,
+   "wins": 5.8186,
+   "titleOdds": 5000,
    "titleOddsOpen": 3080,
    "playoffOdds": 300
   },
@@ -156,45 +156,17 @@
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.02585,
-   "titleNow": 0.05475,
+   "titleNow": 0.0504,
    "playoffWas": 0.33675,
-   "playoffNow": 0.74355,
-   "wins": 7.8456,
-   "titleOdds": 1620,
+   "playoffNow": 0.7283,
+   "wins": 7.7901,
+   "titleOdds": 1770,
    "titleOddsOpen": 3550,
-   "playoffOdds": -370
+   "playoffOdds": -340
   }
  ],
  "games": [],
  "hurt": [
-  {
-   "manager": "chassinator",
-   "cost": 0.0803022855738511,
-   "players": [
-    {
-     "name": "Tyler Warren",
-     "status": "Out"
-    },
-    {
-     "name": "Kyle Monangai",
-     "status": "Out"
-    }
-   ]
-  },
-  {
-   "manager": "wesley55",
-   "cost": 0.052991174995297485,
-   "players": [
-    {
-     "name": "Romeo Doubs",
-     "status": "IR"
-    },
-    {
-     "name": "Jaylen Waddle",
-     "status": "Questionable"
-    }
-   ]
-  },
   {
    "manager": "victorthompson",
    "cost": 0.045161063934311185,
@@ -214,22 +186,26 @@
    ]
   },
   {
-   "manager": "willie12w",
-   "cost": 0.012407950418179992,
+   "manager": "wesley55",
+   "cost": 0.04309831337387926,
    "players": [
     {
-     "name": "Aaron Jones",
-     "status": "Questionable"
+     "name": "Romeo Doubs",
+     "status": "IR"
     }
    ]
   },
   {
-   "manager": "jskule23",
-   "cost": 0,
+   "manager": "chassinator",
+   "cost": 0.02007557139346272,
    "players": [
     {
-     "name": "Josh Jacobs",
-     "status": "NA"
+     "name": "Tyler Warren",
+     "status": "Questionable"
+    },
+    {
+     "name": "Kyle Monangai",
+     "status": "Questionable"
     }
    ]
   }
