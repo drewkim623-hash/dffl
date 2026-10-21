@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 6,
- "generated": "2026-10-20T11:04:11.083Z",
- "generated_at": "2026-10-20T11:04:11.083Z",
+ "generated": "2026-10-21T11:03:55.878Z",
+ "generated_at": "2026-10-21T11:03:55.878Z",
  "final": true,
  "standings_through_week": 6,
  "standings_folded": false,
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 990.5,
    "points_against": 680.44,
-   "waiver_budget_used": 8
+   "waiver_budget_used": 14
   },
   {
    "manager": "bradyrife",
@@ -1140,7 +1140,7 @@
    "ties": 0,
    "points_for": 809.1,
    "points_against": 665.76,
-   "waiver_budget_used": 78
+   "waiver_budget_used": 79
   },
   {
    "manager": "Domo112",
@@ -1151,7 +1151,7 @@
    "ties": 0,
    "points_for": 806.1,
    "points_against": 781.22,
-   "waiver_budget_used": 62
+   "waiver_budget_used": 74
   },
   {
    "manager": "sizzlemc2",
@@ -1162,7 +1162,7 @@
    "ties": 0,
    "points_for": 782.28,
    "points_against": 798.3,
-   "waiver_budget_used": 11
+   "waiver_budget_used": 49
   },
   {
    "manager": "wesley55",
@@ -1184,7 +1184,7 @@
    "ties": 0,
    "points_for": 719.52,
    "points_against": 713.72,
-   "waiver_budget_used": 57
+   "waiver_budget_used": 65
   },
   {
    "manager": "chassinator",
@@ -1195,7 +1195,7 @@
    "ties": 0,
    "points_for": 805.2,
    "points_against": 798.5,
-   "waiver_budget_used": 51
+   "waiver_budget_used": 69
   },
   {
    "manager": "jskule23",
@@ -1206,7 +1206,7 @@
    "ties": 0,
    "points_for": 790.14,
    "points_against": 791.8,
-   "waiver_budget_used": 74
+   "waiver_budget_used": 80
   },
   {
    "manager": "moseslin",
@@ -1250,10 +1250,315 @@
    "ties": 0,
    "points_for": 666.56,
    "points_against": 853.08,
-   "waiver_budget_used": 58
+   "waiver_budget_used": 100
   }
  ],
  "transactions": [
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Adonai Mitchell",
+     "pos": "WR",
+     "team": "NYJ",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 42,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "willie12w"
+   ],
+   "adds": [
+    {
+     "name": "DeMario Douglas",
+     "pos": "WR",
+     "team": "NE",
+     "to": "willie12w"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kirk Cousins",
+     "pos": "QB",
+     "team": "LV",
+     "from": "willie12w"
+    }
+   ],
+   "faab": 8,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Tank Dell",
+     "pos": "WR",
+     "team": "HOU",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kansas City Chiefs",
+     "pos": "DEF",
+     "team": "KC",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Tyrone Tracy",
+     "pos": "RB",
+     "team": "NYG",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Najee Harris",
+     "pos": "RB",
+     "team": "FA",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Bo Nix",
+     "pos": "QB",
+     "team": "DEN",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Darius Cooper",
+     "pos": "WR",
+     "team": "PHI",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 1,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Evan McPherson",
+     "pos": "K",
+     "team": "CIN",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Ka'imi Fairbairn",
+     "pos": "K",
+     "team": "HOU",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Konata Mumpfield",
+     "pos": "WR",
+     "team": "LAR",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [],
+   "faab": 15,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "New England Patriots",
+     "pos": "DEF",
+     "team": "NE",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Chris Boswell",
+     "pos": "K",
+     "team": "PIT",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Nick Folk",
+     "pos": "K",
+     "team": "ATL",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 1,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Omar Cooper",
+     "pos": "WR",
+     "team": "NYJ",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Tyreek Hill",
+     "pos": "WR",
+     "team": "FA",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 32,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Cleveland Browns",
+     "pos": "DEF",
+     "team": "CLE",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Baltimore Ravens",
+     "pos": "DEF",
+     "team": "BAL",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 3,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Kenyon Sadiq",
+     "pos": "TE",
+     "team": "NYJ",
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Darren Waller",
+     "pos": "TE",
+     "team": "CAR",
+     "from": "jskule23"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Ja'Kobi Lane",
+     "pos": "WR",
+     "team": "BAL",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Austin Ekeler",
+     "pos": "RB",
+     "team": "WAS",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 6,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
@@ -1352,7 +1657,7 @@
     {
      "name": "Najee Harris",
      "pos": "RB",
-     "team": "NYG",
+     "team": "FA",
      "to": "jadencha"
     }
    ],
