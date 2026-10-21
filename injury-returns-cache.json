@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-21T11:03:59.892Z",
+ "generated": "2026-10-21T12:32:17.261Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -411,6 +411,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-17"
+  },
+  "13296": {
+   "n": "Caleb Douglas",
+   "s": "Questionable",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "13345": {
    "n": "Jonah Coleman",

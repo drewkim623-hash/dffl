@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-21T11:04:00.408Z",
- "at": 1792580640408,
+ "generated": "2026-10-21T12:32:18.100Z",
+ "at": 1792585938100,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -51,7 +51,7 @@
    "points_against": 785.54,
    "faab_spent": 26,
    "starters_hurt": [
-    "Romeo Doubs (IR)"
+    "Quinshon Judkins (Questionable)"
    ]
   },
   {
@@ -130,7 +130,7 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "bradyrife",
@@ -178,7 +178,7 @@
    "a": {
     "manager": "jskule23",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
@@ -658,5 +658,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 28
+ "free_agent_moves": 30
 }

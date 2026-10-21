@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-21T11:04:28.871Z",
- "at": 1792580668871,
+ "generated": "2026-10-21T12:32:57.972Z",
+ "at": 1792585977973,
  "season": "2026",
  "week": 7,
  "liveWeek": null,
@@ -186,16 +186,6 @@
    ]
   },
   {
-   "manager": "wesley55",
-   "cost": 0.04309831337387926,
-   "players": [
-    {
-     "name": "Romeo Doubs",
-     "status": "IR"
-    }
-   ]
-  },
-  {
    "manager": "chassinator",
    "cost": 0.02007557139346272,
    "players": [
@@ -205,6 +195,16 @@
     },
     {
      "name": "Kyle Monangai",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
+   "manager": "wesley55",
+   "cost": 0.008658633819317862,
+   "players": [
+    {
+     "name": "Quinshon Judkins",
      "status": "Questionable"
     }
    ]
