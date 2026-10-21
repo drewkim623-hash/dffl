@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-21T15:22:32.250Z",
- "at": 1792596152250,
+ "generated": "2026-10-21T15:36:34.893Z",
+ "at": 1792596994894,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -71,8 +71,7 @@
    "points_against": 798.5,
    "faab_spent": 69,
    "starters_hurt": [
-    "Tyler Warren (Questionable)",
-    "Kyle Monangai (Questionable)"
+    "Tyler Warren (Questionable)"
    ]
   },
   {
@@ -658,5 +657,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 31
+ "free_agent_moves": 32
 }
