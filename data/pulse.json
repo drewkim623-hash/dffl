@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-21T03:45:18.817Z",
- "at": 1792554318818,
+ "generated": "2026-10-21T04:25:53.756Z",
+ "at": 1792556753756,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -62,7 +62,9 @@
    "points_for": 719.52,
    "points_against": 713.72,
    "faab_spent": 57,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Aaron Jones (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
