@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-21T15:36:34.893Z",
- "at": 1792596994894,
+ "generated": "2026-10-21T16:23:37.371Z",
+ "at": 1792599817371,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -100,8 +100,6 @@
    "points_against": 707.96,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Questionable)",
-    "Ladd McConkey (Out)",
     "A.J. Brown (Questionable)"
    ]
   },
@@ -141,7 +139,7 @@
    "a": {
     "manager": "jadencha",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
@@ -657,5 +655,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 32
+ "free_agent_moves": 35
 }

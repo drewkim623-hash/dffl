@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-21T15:36:34.162Z",
+ "generated": "2026-10-21T16:23:36.464Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -299,6 +299,17 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-15"
   },
+  "12469": {
+   "n": "Dylan Sampson",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "designated to return",
+   "retChecked": "2026-10-21",
+   "irSince": 7
+  },
   "12508": {
    "n": "Jaxson Dart",
    "s": "IR",
@@ -318,16 +329,6 @@
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
-  },
-  "12509": {
-   "n": "Tre' Harris",
-   "s": "Out",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4686612/tre-harris — Hamstring. Harbaugh: week-to-week; LAC bye Week 7, eye on Week 8. Sleeper says Q, ESPN Doubtful. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
   },
   "12512": {
    "n": "Quinshon Judkins",
