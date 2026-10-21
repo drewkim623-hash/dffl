@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-21T12:32:57.972Z",
- "at": 1792585977973,
+ "generated": "2026-10-21T13:33:11.053Z",
+ "at": 1792589591053,
  "season": "2026",
  "week": 7,
  "liveWeek": null,
@@ -187,7 +187,7 @@
   },
   {
    "manager": "chassinator",
-   "cost": 0.02007557139346272,
+   "cost": 0.019725456789461027,
    "players": [
     {
      "name": "Tyler Warren",
