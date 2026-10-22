@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-22T18:25:59.347Z",
+ "generated": "2026-10-22T22:26:30.156Z",
  "week": 7,
  "entries": {
   "1466": {
@@ -51,7 +51,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
   "4881": {
@@ -68,10 +68,10 @@
    "n": "Christian Kirk",
    "s": "IR",
    "ret": null,
-   "retWeeks": 1,
-   "retSource": "espn-outlook",
+   "retWeeks": 3,
+   "retSource": "default",
    "retEstimated": true,
-   "retNote": "practice window opened",
+   "retNote": "default: IR minimum 4 weeks from wk 6 (3 left)",
    "retChecked": "2026-10-22",
    "irSince": 6
   },
@@ -107,12 +107,12 @@
   },
   "5892": {
    "n": "David Montgomery",
-   "s": "Questionable",
+   "s": "Doubtful",
    "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-22"
   },
   "5927": {
@@ -123,26 +123,6 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-22"
-  },
-  "6794": {
-   "n": "Justin Jefferson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-22"
-  },
-  "6804": {
-   "n": "Jordan Love",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-10-22"
   },
   "6904": {
@@ -198,6 +178,16 @@
    "retChecked": "2026-10-20",
    "irSince": 6
   },
+  "8137": {
+   "n": "George Pickens",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "8142": {
    "n": "Alec Pierce",
    "s": "IR",
@@ -246,7 +236,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://vikingswire.usatoday.com/story/sports/nfl/vikings/2026/10/12/vikings-expected-to-see-jordan-mason-come-off-ir-for-week-7/92226547007/ — Thumb fracture (surgery). Expected activated for Week 7; MIN bye Week 6 => 0 games missed. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
+   "retNote": "https://vikingswire.usatoday.com/story/sports/nfl/vikings/2026/10/12/vikings-expected-to-see-jordan-mason-come-off-ir-for-week-7/92226547007/ — Thumb fracture (surgery). Expected activated for Week 7; MIN bye Week 6 => 0 games missed. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
   },
@@ -283,6 +273,16 @@
    "retNote": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear — Torn ACL. Out for 2026 season (Rapoport/Schefter; Hafley). Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "9493": {
+   "n": "Puka Nacua",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "9502": {
    "n": "Tank Dell",
@@ -383,9 +383,9 @@
    "s": "IR",
    "ret": null,
    "retWeeks": 4,
-   "retSource": "espn-outlook",
+   "retSource": "default",
    "retEstimated": true,
-   "retNote": "landed on IR",
+   "retNote": "default: IR minimum 4 weeks from wk 7 (4 left)",
    "retChecked": "2026-10-22",
    "irSince": 7
   },
@@ -472,7 +472,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-22"
   },
   "13281": {
@@ -500,12 +500,12 @@
   "13287": {
    "n": "Jeremiyah Love",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-17"
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-22"
   },
   "13296": {
    "n": "Caleb Douglas",
@@ -540,11 +540,11 @@
   "13345": {
    "n": "Jonah Coleman",
    "s": "IR",
-   "ret": "2026-11-01",
+   "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retNote": "consensus.mjs — Consensus: changed from audit [7]; consensus.",
    "retChecked": "2026-10-22",
    "irSince": 6
   },

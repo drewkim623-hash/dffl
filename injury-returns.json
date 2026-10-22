@@ -52,8 +52,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-14",
-      "note": "Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "note": "Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "4881": {
       "kind": "report",
@@ -126,7 +126,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
       "checked": "2026-10-22",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "6786": {
@@ -227,8 +227,8 @@
       "weeks_list": [],
       "source": "https://vikingswire.usatoday.com/story/sports/nfl/vikings/2026/10/12/vikings-expected-to-see-jordan-mason-come-off-ir-for-week-7/92226547007/",
       "checked": "2026-10-14",
-      "note": "Thumb fracture (surgery). Expected activated for Week 7; MIN bye Week 6 => 0 games missed. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "note": "Thumb fracture (surgery). Expected activated for Week 7; MIN bye Week 6 => 0 games missed. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "8800": {
       "kind": "report",
@@ -482,7 +482,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-22",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13276": {
@@ -522,12 +522,12 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        6
+        7
       ],
       "weeks": 1,
-      "checked": "2026-10-17",
+      "checked": "2026-10-22",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit []; consensus."
     },
     "13296": {
       "kind": "report",
@@ -552,13 +552,11 @@
     "13345": {
       "kind": "report",
       "source": "consensus.mjs",
-      "weeks_list": [
-        7
-      ],
-      "weeks": 1,
+      "weeks_list": [],
+      "weeks": 0,
       "checked": "2026-10-22",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: changed from audit [7]; consensus."
     },
     "13417": {
       "kind": "report",
