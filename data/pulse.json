@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-22T11:03:48.797Z",
- "at": 1792667028797,
+ "generated": "2026-10-22T18:26:00.186Z",
+ "at": 1792693560186,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -130,7 +130,7 @@
    "points_against": 853.08,
    "faab_spent": 100,
    "starters_hurt": [
-    "Zach Charbonnet (PUP)",
+    "Zach Charbonnet (Questionable)",
     "Emeka Egbuka (Questionable)",
     "Brock Bowers (Questionable)",
     "KC Concepcion Jr. (Questionable)"
@@ -670,5 +670,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 36
+ "free_agent_moves": 37
 }
