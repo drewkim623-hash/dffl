@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 6,
- "generated": "2026-10-21T11:03:55.878Z",
- "generated_at": "2026-10-21T11:03:55.878Z",
+ "generated": "2026-10-22T11:03:45.729Z",
+ "generated_at": "2026-10-22T11:03:45.729Z",
  "final": true,
  "standings_through_week": 6,
  "standings_folded": false,
@@ -102,7 +102,7 @@
       "points": 8.8
      },
      "benchBest": {
-      "name": "Chris Godwin",
+      "name": "Chris Godwin Jr.",
       "pos": "WR",
       "team": "TB",
       "points": 7.7
@@ -116,7 +116,7 @@
      "points": 133.28,
      "starters": [
       {
-       "name": "James Cook",
+       "name": "James Cook III",
        "pos": "RB",
        "team": "BUF",
        "points": 22.8
@@ -177,7 +177,7 @@
       }
      ],
      "top": {
-      "name": "James Cook",
+      "name": "James Cook III",
       "pos": "RB",
       "team": "BUF",
       "points": 22.8
@@ -189,7 +189,7 @@
       "points": 4.5
      },
      "benchBest": {
-      "name": "Kyle Pitts",
+      "name": "Kyle Pitts Sr.",
       "pos": "TE",
       "team": "ATL",
       "points": 23
@@ -348,7 +348,7 @@
        "points": 2
       },
       {
-       "name": "Harold Fannin",
+       "name": "Harold Fannin Jr.",
        "pos": "TE",
        "team": "CLE",
        "points": 1.9
@@ -415,7 +415,7 @@
        "points": 19
       },
       {
-       "name": "Luther Burden",
+       "name": "Luther Burden III",
        "pos": "WR",
        "team": "CHI",
        "points": 17.5
@@ -470,7 +470,7 @@
       "points": 0
      },
      "benchBest": {
-      "name": "Marvin Harrison",
+      "name": "Marvin Harrison Jr.",
       "pos": "WR",
       "team": "HOU",
       "points": 6.4
@@ -581,7 +581,7 @@
      "points": 131.06,
      "starters": [
       {
-       "name": "Kenneth Walker",
+       "name": "Kenneth Walker III",
        "pos": "RB",
        "team": "KC",
        "points": 27.9
@@ -642,7 +642,7 @@
       }
      ],
      "top": {
-      "name": "Kenneth Walker",
+      "name": "Kenneth Walker III",
       "pos": "RB",
       "team": "KC",
       "points": 27.9
@@ -979,7 +979,7 @@
        "points": 9.1
       },
       {
-       "name": "KC Concepcion",
+       "name": "KC Concepcion Jr.",
        "pos": "WR",
        "team": "CLE",
        "points": 7.9
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 990.5,
    "points_against": 680.44,
-   "waiver_budget_used": 14
+   "waiver_budget_used": 4
   },
   {
    "manager": "bradyrife",
@@ -1333,7 +1333,7 @@
    ],
    "adds": [
     {
-     "name": "Tyrone Tracy",
+     "name": "Tyrone Tracy Jr.",
      "pos": "RB",
      "team": "NYG",
      "to": "jadencha"
@@ -1470,7 +1470,7 @@
    ],
    "adds": [
     {
-     "name": "Omar Cooper",
+     "name": "Omar Cooper Jr.",
      "pos": "WR",
      "team": "NYJ",
      "to": "sizzlemc2"
@@ -1639,7 +1639,7 @@
    ],
    "drops": [
     {
-     "name": "Omar Cooper",
+     "name": "Omar Cooper Jr.",
      "pos": "WR",
      "team": "NYJ",
      "from": "moseslin"
@@ -1745,7 +1745,7 @@
    "adds": [],
    "drops": [
     {
-     "name": "Efton Chism",
+     "name": "Efton Chism III",
      "pos": "WR",
      "team": "NE",
      "from": "willie12w"
@@ -2167,7 +2167,7 @@
      "to": "Domo112"
     },
     {
-     "name": "Marvin Harrison",
+     "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "team": "HOU",
      "to": "jskule23"
@@ -2187,7 +2187,7 @@
      "from": "jskule23"
     },
     {
-     "name": "Marvin Harrison",
+     "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "team": "HOU",
      "from": "Domo112"
@@ -2333,7 +2333,7 @@
     "points": 8.8
    },
    "benchBest": {
-    "name": "Chris Godwin",
+    "name": "Chris Godwin Jr.",
     "pos": "WR",
     "team": "TB",
     "points": 7.7
@@ -2395,7 +2395,7 @@
      "points": 2
     },
     {
-     "name": "Harold Fannin",
+     "name": "Harold Fannin Jr.",
      "pos": "TE",
      "team": "CLE",
      "points": 1.9
@@ -2472,7 +2472,7 @@
        "points": 9.1
       },
       {
-       "name": "KC Concepcion",
+       "name": "KC Concepcion Jr.",
        "pos": "WR",
        "team": "CLE",
        "points": 7.9
@@ -2761,7 +2761,7 @@
        "points": 2
       },
       {
-       "name": "Harold Fannin",
+       "name": "Harold Fannin Jr.",
        "pos": "TE",
        "team": "CLE",
        "points": 1.9
@@ -2883,7 +2883,7 @@
       "points": 8.8
      },
      "benchBest": {
-      "name": "Chris Godwin",
+      "name": "Chris Godwin Jr.",
       "pos": "WR",
       "team": "TB",
       "points": 7.7
@@ -2897,7 +2897,7 @@
      "points": 133.28,
      "starters": [
       {
-       "name": "James Cook",
+       "name": "James Cook III",
        "pos": "RB",
        "team": "BUF",
        "points": 22.8
@@ -2958,7 +2958,7 @@
       }
      ],
      "top": {
-      "name": "James Cook",
+      "name": "James Cook III",
       "pos": "RB",
       "team": "BUF",
       "points": 22.8
@@ -2970,7 +2970,7 @@
       "points": 4.5
      },
      "benchBest": {
-      "name": "Kyle Pitts",
+      "name": "Kyle Pitts Sr.",
       "pos": "TE",
       "team": "ATL",
       "points": 23
@@ -2986,7 +2986,7 @@
    "points": 133.28,
    "starters": [
     {
-     "name": "James Cook",
+     "name": "James Cook III",
      "pos": "RB",
      "team": "BUF",
      "points": 22.8
@@ -3047,7 +3047,7 @@
     }
    ],
    "top": {
-    "name": "James Cook",
+    "name": "James Cook III",
     "pos": "RB",
     "team": "BUF",
     "points": 22.8
@@ -3059,7 +3059,7 @@
     "points": 4.5
    },
    "benchBest": {
-    "name": "Kyle Pitts",
+    "name": "Kyle Pitts Sr.",
     "pos": "TE",
     "team": "ATL",
     "points": 23

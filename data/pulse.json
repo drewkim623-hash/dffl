@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-22T00:51:40.924Z",
- "at": 1792630300924,
+ "generated": "2026-10-22T11:03:48.797Z",
+ "at": 1792667028797,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -373,7 +373,7 @@
      "name": "Tyreek Hill",
      "pos": "WR",
      "team": "FA",
-     "status": "Questionable",
+     "status": null,
      "from": "sizzlemc2"
     }
    ],

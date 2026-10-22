@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-22T00:51:40.340Z",
+ "generated": "2026-10-22T11:03:48.420Z",
  "week": 7,
  "entries": {
   "1466": {
@@ -384,9 +384,9 @@
    "s": "IR",
    "ret": null,
    "retWeeks": 4,
-   "retSource": "default",
+   "retSource": "espn-outlook",
    "retEstimated": true,
-   "retNote": "default: IR minimum 4 weeks from wk 7 (4 left)",
+   "retNote": "landed on IR",
    "retChecked": "2026-10-22",
    "irSince": 7
   },

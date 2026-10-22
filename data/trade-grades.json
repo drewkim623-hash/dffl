@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21T11:04:32.707Z",
+ "generated": "2026-10-22T11:04:21.944Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -139,17 +139,17 @@
      "manager": "jskule23",
      "assets": [
       {
-       "asset": "Luther Burden",
+       "asset": "Luther Burden III",
        "pid": "12519",
-       "value": 45.1,
+       "value": 45,
        "basis": "actual to wk 6 + Sleeper projection"
       }
      ],
-     "total": 45.1,
+     "total": 45,
      "tradeDay": {
       "letter": "A",
       "marginPct": 56,
-      "marginPts": 32.5
+      "marginPts": 32.4
      },
      "hindsight": "Pending"
     },
@@ -169,7 +169,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -56,
-      "marginPts": -32.5
+      "marginPts": -32.4
      },
      "hindsight": "Pending"
     }
@@ -270,7 +270,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -9,
-      "marginPts": -47.2
+      "marginPts": -47.1
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 168.8,
+       "value": 168.7,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -297,11 +297,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 292.6,
+     "total": 292.5,
      "tradeDay": {
       "letter": "C",
       "marginPct": 9,
-      "marginPts": 47.2
+      "marginPts": 47.1
      },
      "hindsight": "Pending"
     }
@@ -415,7 +415,7 @@
       {
        "asset": "Jahmyr Gibbs",
        "pid": "9221",
-       "value": 265.4,
+       "value": 265.1,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -424,11 +424,11 @@
        "basis": "next cost R1 (regressed from R2), kept 3 yr, shrunk"
       }
      ],
-     "total": 340.3,
+     "total": 340,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 77.2
+      "marginPts": 77
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 168.8,
+       "value": 168.7,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -449,11 +449,11 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 263.1,
+     "total": 263,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -77.2
+      "marginPts": -77
      },
      "hindsight": "Pending"
     }
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 70.5,
+       "value": 71.3,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 87,
+     "total": 87.8,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -21,
-      "marginPts": -45.8
+      "marginPct": -20,
+      "marginPts": -44.7
      },
      "hindsight": "Pending"
     },
@@ -502,7 +502,7 @@
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 81.5,
+       "value": 81.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 132.8,
+     "total": 132.5,
      "tradeDay": {
       "letter": "C",
-      "marginPct": 21,
-      "marginPts": 45.8
+      "marginPct": 20,
+      "marginPts": 44.7
      },
      "hindsight": "Pending"
     }
@@ -540,9 +540,8 @@
      "total": 10.5,
      "tradeDay": {
       "letter": "C",
-      "small": true,
-      "marginPct": -6,
-      "marginPts": -1.4
+      "marginPct": -19,
+      "marginPts": -5
      },
      "hindsight": "Pending"
     },
@@ -554,7 +553,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 4.5,
+       "value": 8.1,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -564,12 +563,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 11.9,
+     "total": 15.5,
      "tradeDay": {
       "letter": "C",
-      "small": true,
-      "marginPct": 6,
-      "marginPts": 1.4
+      "marginPct": 19,
+      "marginPts": 5
      },
      "hindsight": "Pending"
     }
@@ -600,7 +598,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 54,
-      "marginPts": 106.4
+      "marginPts": 106.3
      },
      "hindsight": "Pending"
     },
@@ -631,8 +629,8 @@
      "total": 43.1,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -39,
-      "marginPts": -56.3
+      "marginPct": -40,
+      "marginPts": -56.4
      },
      "hindsight": "Pending"
     },
@@ -651,8 +649,8 @@
      "total": 47.4,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -35,
-      "marginPts": -50
+      "marginPct": -34,
+      "marginPts": -49.9
      },
      "hindsight": "Pending"
     }
@@ -753,7 +751,7 @@
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
-       "asset": "Marvin Harrison",
+       "asset": "Marvin Harrison Jr.",
        "pid": "11628",
        "value": 0,
        "basis": "actual to wk 6 + Sleeper projection"
@@ -1007,7 +1005,7 @@
        "value": 17.8,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Brian Robinson"
+       "became": "Brian Robinson Jr."
       },
       {
        "asset": "2025 R5",
@@ -1272,7 +1270,7 @@
        "value": 25,
        "basis": "mid-slot curve",
        "hindsight": 10.1,
-       "became": "Deebo Samuel"
+       "became": "Deebo Samuel Sr."
       }
      ],
      "total": 280.3,
@@ -1439,7 +1437,7 @@
        "value": 12.6,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Chris Godwin"
+       "became": "Chris Godwin Jr."
       },
       {
        "asset": "2025 R13",
@@ -1502,7 +1500,7 @@
        "value": 25,
        "basis": "mid-slot curve",
        "hindsight": 172.8,
-       "became": "James Cook"
+       "became": "James Cook III"
       },
       {
        "asset": "2025 R9",
@@ -1609,7 +1607,7 @@
        "value": 25,
        "basis": "mid-slot curve",
        "hindsight": 10.1,
-       "became": "Deebo Samuel"
+       "became": "Deebo Samuel Sr."
       },
       {
        "asset": "2025 R9",
@@ -1827,13 +1825,13 @@
      "manager": "sizzlemc2",
      "assets": [
       {
-       "asset": "Kenneth Walker",
+       "asset": "Kenneth Walker III",
        "pid": "8151",
        "value": 63.5,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Kenneth Walker keeper",
+       "asset": "Kenneth Walker III keeper",
        "value": 13.4,
        "basis": "next cost R8, kept 3 yr, shrunk"
       },
@@ -1842,7 +1840,7 @@
        "value": 12.6,
        "basis": "mid-slot curve",
        "hindsight": 50.5,
-       "became": "Kenneth Walker"
+       "became": "Kenneth Walker III"
       }
      ],
      "total": 89.5,
@@ -2050,7 +2048,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Tyrone Tracy",
+       "asset": "Tyrone Tracy Jr.",
        "pid": "11655",
        "value": 37.4,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -2245,13 +2243,13 @@
      "manager": "wesley55",
      "assets": [
       {
-       "asset": "James Cook",
+       "asset": "James Cook III",
        "pid": "8138",
        "value": 150.1,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "James Cook keeper",
+       "asset": "James Cook III keeper",
        "value": 60.2,
        "basis": "next cost R4, kept 3 yr, shrunk"
       }
@@ -2899,7 +2897,7 @@
      "manager": "saucebossandrew",
      "assets": [
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 20.1,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -2949,7 +2947,7 @@
      "manager": "bradyrife",
      "assets": [
       {
-       "asset": "Deebo Samuel",
+       "asset": "Deebo Samuel Sr.",
        "pid": "5872",
        "value": 14.9,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -2987,7 +2985,7 @@
      "manager": "Domo112",
      "assets": [
       {
-       "asset": "Brian Robinson",
+       "asset": "Brian Robinson Jr.",
        "pid": "8154",
        "value": 0,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -3087,7 +3085,7 @@
      "manager": "drewkim",
      "assets": [
       {
-       "asset": "Brian Thomas",
+       "asset": "Brian Thomas Jr.",
        "pid": "11631",
        "value": 7.7,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -3428,13 +3426,13 @@
      "manager": "drewkim",
      "assets": [
       {
-       "asset": "James Cook",
+       "asset": "James Cook III",
        "pid": "8138",
        "value": 135.9,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "James Cook keeper",
+       "asset": "James Cook III keeper",
        "value": 34.9,
        "basis": "next cost R4, kept 2 yr, shrunk"
       },
@@ -3443,7 +3441,7 @@
        "value": 25,
        "basis": "mid-slot curve",
        "hindsight": 266.1,
-       "became": "James Cook"
+       "became": "James Cook III"
       }
      ],
      "total": 195.8,
@@ -3556,7 +3554,7 @@
        "value": 12.6,
        "basis": "mid-slot curve",
        "hindsight": 62.7,
-       "became": "Kenneth Walker"
+       "became": "Kenneth Walker III"
       }
      ],
      "total": 12.6,
@@ -3594,7 +3592,7 @@
        "value": 41.2,
        "basis": "mid-slot curve",
        "hindsight": 2.3,
-       "became": "Marvin Harrison"
+       "became": "Marvin Harrison Jr."
       }
      ],
      "total": 45.3,
@@ -3710,7 +3708,7 @@
      "manager": "Domo112",
      "assets": [
       {
-       "asset": "Anthony Richardson",
+       "asset": "Anthony Richardson Sr.",
        "pid": "9229",
        "value": 33.4,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -3790,7 +3788,7 @@
        "value": 21.1,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Chris Godwin"
+       "became": "Chris Godwin Jr."
       }
      ],
      "total": 21.1,
@@ -3864,7 +3862,7 @@
        "value": 17.8,
        "basis": "mid-slot curve",
        "hindsight": 68.6,
-       "became": "Kyle Pitts"
+       "became": "Kyle Pitts Sr."
       },
       {
        "asset": "2024 R7",
@@ -4115,7 +4113,7 @@
        "value": 17.8,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Brian Robinson"
+       "became": "Brian Robinson Jr."
       }
      ],
      "total": 31,
@@ -4178,7 +4176,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Kyle Pitts",
+       "asset": "Kyle Pitts Sr.",
        "pid": "7553",
        "value": 43.6,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -4218,7 +4216,7 @@
        "value": 8.8,
        "basis": "mid-slot curve",
        "hindsight": 77.4,
-       "became": "Kyle Pitts"
+       "became": "Kyle Pitts Sr."
       }
      ],
      "total": 85,
@@ -4392,7 +4390,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Kyle Pitts",
+       "asset": "Kyle Pitts Sr.",
        "pid": "7553",
        "value": 43.6,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -4688,13 +4686,13 @@
      "manager": "chassinator",
      "assets": [
       {
-       "asset": "James Cook",
+       "asset": "James Cook III",
        "pid": "8138",
        "value": 73.5,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "James Cook keeper",
+       "asset": "James Cook III keeper",
        "value": 34.9,
        "basis": "next cost R4, kept 2 yr, shrunk"
       },
@@ -4724,7 +4722,7 @@
      "manager": "drewkim",
      "assets": [
       {
-       "asset": "Brian Robinson",
+       "asset": "Brian Robinson Jr.",
        "pid": "8154",
        "value": 18,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -4796,7 +4794,7 @@
        "value": 8.8,
        "basis": "mid-slot curve",
        "hindsight": 77.4,
-       "became": "Kyle Pitts"
+       "became": "Kyle Pitts Sr."
       }
      ],
      "total": 26.6,
@@ -5023,7 +5021,7 @@
      "manager": "jadencha",
      "assets": [
       {
-       "asset": "Tyrone Tracy",
+       "asset": "Tyrone Tracy Jr.",
        "pid": "11655",
        "value": 23,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -5129,7 +5127,7 @@
        "value": 10.5,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Odell Beckham"
+       "became": "Odell Beckham Jr."
       }
      ],
      "total": 15.6,
@@ -5232,7 +5230,7 @@
        "value": 10.5,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Odell Beckham"
+       "became": "Odell Beckham Jr."
       },
       {
        "asset": "2023 R4",
@@ -5341,14 +5339,14 @@
        "value": 29.5,
        "basis": "mid-slot curve",
        "hindsight": 56.7,
-       "became": "Aaron Jones"
+       "became": "Aaron Jones Sr."
       },
       {
        "asset": "2023 R9",
        "value": 10.5,
        "basis": "mid-slot curve",
        "hindsight": 0,
-       "became": "Odell Beckham"
+       "became": "Odell Beckham Jr."
       },
       {
        "asset": "2023 R12",
@@ -6187,7 +6185,7 @@
        "value": 21.1,
        "basis": "mid-slot curve",
        "hindsight": 43,
-       "became": "Michael Pittman"
+       "became": "Michael Pittman Jr."
       },
       {
        "asset": "2023 R7",
@@ -6378,7 +6376,7 @@
        "value": 21.1,
        "basis": "mid-slot curve",
        "hindsight": 43,
-       "became": "Michael Pittman"
+       "became": "Michael Pittman Jr."
       },
       {
        "asset": "2023 R1",
@@ -6718,7 +6716,7 @@
        "value": 29.5,
        "basis": "mid-slot curve",
        "hindsight": 56.7,
-       "became": "Aaron Jones"
+       "became": "Aaron Jones Sr."
       }
      ],
      "total": 85.8,
@@ -6906,13 +6904,13 @@
      "manager": "Domo112",
      "assets": [
       {
-       "asset": "Michael Pittman",
+       "asset": "Michael Pittman Jr.",
        "pid": "6819",
        "value": 62.1,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Michael Pittman keeper",
+       "asset": "Michael Pittman Jr. keeper",
        "value": 3.1,
        "basis": "next cost R5, kept 1 yr, shrunk"
       }
@@ -7126,7 +7124,7 @@
        "value": 25,
        "basis": "mid-slot curve",
        "hindsight": 266.1,
-       "became": "James Cook"
+       "became": "James Cook III"
       }
      ],
      "total": 86.6,
@@ -7214,13 +7212,13 @@
      "manager": "bradyrife",
      "assets": [
       {
-       "asset": "Michael Pittman",
+       "asset": "Michael Pittman Jr.",
        "pid": "6819",
        "value": 61,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Michael Pittman keeper",
+       "asset": "Michael Pittman Jr. keeper",
        "value": 3.1,
        "basis": "next cost R5, kept 1 yr, shrunk"
       },
@@ -7344,13 +7342,13 @@
      "manager": "victorthompson",
      "assets": [
       {
-       "asset": "Michael Pittman",
+       "asset": "Michael Pittman Jr.",
        "pid": "6819",
        "value": 56.7,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Michael Pittman keeper",
+       "asset": "Michael Pittman Jr. keeper",
        "value": 3.1,
        "basis": "next cost R5, kept 1 yr, shrunk"
       }
@@ -8032,7 +8030,7 @@
        "value": 15,
        "basis": "mid-slot curve",
        "hindsight": 96.8,
-       "became": "Brian Thomas"
+       "became": "Brian Thomas Jr."
       }
      ],
      "total": 15,
@@ -8059,7 +8057,7 @@
      "manager": "Domo112",
      "assets": [
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 10.8,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -8673,13 +8671,13 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 105.1,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones keeper",
+       "asset": "Aaron Jones Sr. keeper",
        "value": 15.7,
        "basis": "next cost R2, kept 0 yr, shrunk"
       },
@@ -8759,13 +8757,13 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 105.1,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones keeper",
+       "asset": "Aaron Jones Sr. keeper",
        "value": 15.7,
        "basis": "next cost R2, kept 0 yr, shrunk"
       },
@@ -9269,7 +9267,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Brian Robinson",
+       "asset": "Brian Robinson Jr.",
        "pid": "8154",
        "value": 27.9,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -9554,7 +9552,7 @@
      "manager": "sizzlemc2",
      "assets": [
       {
-       "asset": "Brian Robinson",
+       "asset": "Brian Robinson Jr.",
        "pid": "8154",
        "value": 27.9,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -9590,13 +9588,13 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 75.9,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones keeper",
+       "asset": "Aaron Jones Sr. keeper",
        "value": 15.7,
        "basis": "next cost R2, kept 0 yr, shrunk"
       }
@@ -9887,7 +9885,7 @@
      "manager": "jakevickers5",
      "assets": [
       {
-       "asset": "Deebo Samuel",
+       "asset": "Deebo Samuel Sr.",
        "pid": "5872",
        "value": 17.3,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -10181,7 +10179,7 @@
        "basis": "next cost R9, kept 0 yr, shrunk"
       },
       {
-       "asset": "Michael Pittman",
+       "asset": "Michael Pittman Jr.",
        "pid": "6819",
        "value": 28.8,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -10245,7 +10243,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Kyle Pitts",
+       "asset": "Kyle Pitts Sr.",
        "pid": "7553",
        "value": 11,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -10333,13 +10331,13 @@
      "manager": "jadencha",
      "assets": [
       {
-       "asset": "Chris Godwin",
+       "asset": "Chris Godwin Jr.",
        "pid": "4037",
        "value": 60.5,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Chris Godwin keeper",
+       "asset": "Chris Godwin Jr. keeper",
        "value": 8.4,
        "basis": "next cost R7, kept 0 yr, shrunk"
       }
@@ -10814,13 +10812,13 @@
      "manager": "Domo112",
      "assets": [
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 31.3,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones keeper",
+       "asset": "Aaron Jones Sr. keeper",
        "value": 15.7,
        "basis": "next cost R2, kept 0 yr, shrunk"
       },
@@ -10949,7 +10947,7 @@
      "manager": "moseslin",
      "assets": [
       {
-       "asset": "Kyle Pitts",
+       "asset": "Kyle Pitts Sr.",
        "pid": "7553",
        "value": 0,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11031,7 +11029,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Deebo Samuel",
+       "asset": "Deebo Samuel Sr.",
        "pid": "5872",
        "value": 17.3,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11201,7 +11199,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Mecole Hardman",
+       "asset": "Mecole Hardman Jr.",
        "pid": "5917",
        "value": 0,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11342,7 +11340,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Mecole Hardman",
+       "asset": "Mecole Hardman Jr.",
        "pid": "5917",
        "value": 0,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11443,7 +11441,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Deebo Samuel",
+       "asset": "Deebo Samuel Sr.",
        "pid": "5872",
        "value": 17.3,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11646,7 +11644,7 @@
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Brian Robinson",
+       "asset": "Brian Robinson Jr.",
        "pid": "8154",
        "value": 18,
        "basis": "actual remaining points (hindsight; no stored projections)"
@@ -11742,13 +11740,13 @@
        "basis": "next cost R1, kept 0 yr, shrunk"
       },
       {
-       "asset": "Aaron Jones",
+       "asset": "Aaron Jones Sr.",
        "pid": "4199",
        "value": 31.3,
        "basis": "actual remaining points (hindsight; no stored projections)"
       },
       {
-       "asset": "Aaron Jones keeper",
+       "asset": "Aaron Jones Sr. keeper",
        "value": 15.7,
        "basis": "next cost R2, kept 0 yr, shrunk"
       },
