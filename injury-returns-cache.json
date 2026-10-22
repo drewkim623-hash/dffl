@@ -1,8 +1,18 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-21T16:23:36.464Z",
+ "generated": "2026-10-22T00:51:40.340Z",
  "week": 7,
  "entries": {
+  "1466": {
+   "n": "Travis Kelce",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "2133": {
    "n": "Davante Adams",
    "s": "IR",
@@ -23,6 +33,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-10-21"
+  },
+  "4035": {
+   "n": "Alvin Kamara",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "4866": {
    "n": "Saquon Barkley",
@@ -52,7 +72,7 @@
    "retSource": "espn-outlook",
    "retEstimated": true,
    "retNote": "practice window opened",
-   "retChecked": "2026-10-21",
+   "retChecked": "2026-10-22",
    "irSince": 6
   },
   "4983": {
@@ -75,18 +95,8 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4036133/tj-hockenson — Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14"
   },
-  "5859": {
-   "n": "A.J. Brown",
-   "s": "Questionable",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-18"
-  },
   "5872": {
-   "n": "Deebo Samuel",
+   "n": "Deebo Samuel Sr.",
    "s": "Out",
    "ret": "2026-11-01",
    "retWeeks": null,
@@ -113,7 +123,27 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-21"
+   "retChecked": "2026-10-22"
+  },
+  "6794": {
+   "n": "Justin Jefferson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
+  "6804": {
+   "n": "Jordan Love",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -126,8 +156,28 @@
    "retChecked": "2026-10-18",
    "irSince": 6
   },
+  "7021": {
+   "n": "Rico Dowdle",
+   "s": "Questionable",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Dislocated toe. Missed 3 straight; ESPN Q Week 6. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-15"
+  },
+  "7526": {
+   "n": "Jaylen Waddle",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "7543": {
-   "n": "Travis Etienne",
+   "n": "Travis Etienne Jr.",
    "s": "IR",
    "ret": "2026-11-01",
    "retWeeks": null,
@@ -159,6 +209,16 @@
    "retChecked": "2026-10-15",
    "irSince": 6
   },
+  "8154": {
+   "n": "Brian Robinson Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "8155": {
    "n": "Breece Hall",
    "s": "Questionable",
@@ -168,6 +228,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
    "retChecked": "2026-10-15"
+  },
+  "8167": {
+   "n": "Christian Watson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "8408": {
    "n": "Jordan Mason",
@@ -236,16 +306,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "9756": {
-   "n": "Jordan Addison",
-   "s": "Questionable",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
-  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -287,7 +347,27 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-21"
+   "retChecked": "2026-10-22"
+  },
+  "11584": {
+   "n": "Bucky Irving",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
+  "11604": {
+   "n": "Brock Bowers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -303,12 +383,22 @@
    "n": "Dylan Sampson",
    "s": "IR",
    "ret": null,
-   "retWeeks": 1,
-   "retSource": "espn-outlook",
+   "retWeeks": 4,
+   "retSource": "default",
    "retEstimated": true,
-   "retNote": "designated to return",
-   "retChecked": "2026-10-21",
+   "retNote": "default: IR minimum 4 weeks from wk 7 (4 left)",
+   "retChecked": "2026-10-22",
    "irSince": 7
+  },
+  "12501": {
+   "n": "Matthew Golden",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -340,6 +430,16 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins — Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
    "retChecked": "2026-10-18"
   },
+  "12514": {
+   "n": "Emeka Egbuka",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "12518": {
    "n": "Tyler Warren",
    "s": "Questionable",
@@ -368,7 +468,7 @@
   },
   "12534": {
    "n": "Kyle Monangai",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-10-25",
    "retWeeks": null,
    "retSource": "report",
@@ -418,6 +518,26 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
    "retChecked": "2026-10-14"
   },
+  "13298": {
+   "n": "KC Concepcion Jr.",
+   "s": "Questionable",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retChecked": "2026-10-14"
+  },
+  "13305": {
+   "n": "Mike Washington Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
+  },
   "13345": {
    "n": "Jonah Coleman",
    "s": "IR",
@@ -426,8 +546,18 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 6 (3 left)",
-   "retChecked": "2026-10-21",
+   "retChecked": "2026-10-22",
    "irSince": 6
+  },
+  "13346": {
+   "n": "Denzel Boston",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-22"
   },
   "13417": {
    "n": "De'Zhaun Stribling",

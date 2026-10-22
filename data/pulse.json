@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-21T16:23:37.371Z",
- "at": 1792599817371,
+ "generated": "2026-10-22T00:51:40.924Z",
+ "at": 1792630300924,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -13,8 +13,10 @@
    "losses": 1,
    "points_for": 990.5,
    "points_against": 680.44,
-   "faab_spent": 14,
-   "starters_hurt": []
+   "faab_spent": 4,
+   "starters_hurt": [
+    "Matthew Golden (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -41,7 +43,10 @@
    "points_for": 782.28,
    "points_against": 798.3,
    "faab_spent": 49,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Denzel Boston (Questionable)",
+    "Travis Kelce (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -51,7 +56,8 @@
    "points_against": 785.54,
    "faab_spent": 26,
    "starters_hurt": [
-    "Quinshon Judkins (Questionable)"
+    "Quinshon Judkins (Questionable)",
+    "Jaylen Waddle (Questionable)"
    ]
   },
   {
@@ -61,7 +67,9 @@
    "points_for": 719.52,
    "points_against": 713.72,
    "faab_spent": 65,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Bucky Irving (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -90,7 +98,9 @@
    "points_for": 702.2,
    "points_against": 857.1,
    "faab_spent": 5,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Christian Watson (Questionable)"
+   ]
   },
   {
    "manager": "victorthompson",
@@ -99,9 +109,7 @@
    "points_for": 692.46,
    "points_against": 707.96,
    "faab_spent": 100,
-   "starters_hurt": [
-    "A.J. Brown (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -110,7 +118,9 @@
    "points_for": 688,
    "points_against": 774.06,
    "faab_spent": 59,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jordan Love (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -119,7 +129,12 @@
    "points_for": 666.56,
    "points_against": 853.08,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Zach Charbonnet (PUP)",
+    "Emeka Egbuka (Questionable)",
+    "Brock Bowers (Questionable)",
+    "KC Concepcion Jr. (Questionable)"
+   ]
   }
  ],
  "this_week": [
@@ -132,7 +147,7 @@
    "b": {
     "manager": "bradyrife",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -269,7 +284,7 @@
      "to": "Domo112"
     },
     {
-     "name": "Marvin Harrison",
+     "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "team": "HOU",
      "status": null,
@@ -292,7 +307,7 @@
      "from": "jskule23"
     },
     {
-     "name": "Marvin Harrison",
+     "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "team": "HOU",
      "status": null,
@@ -331,7 +346,7 @@
      "name": "Adonai Mitchell",
      "pos": "WR",
      "team": "NYJ",
-     "status": "Doubtful",
+     "status": "Questionable",
      "from": "drewkim"
     }
    ],
@@ -346,7 +361,7 @@
    ],
    "adds": [
     {
-     "name": "Omar Cooper",
+     "name": "Omar Cooper Jr.",
      "pos": "WR",
      "team": "NYJ",
      "status": null,
@@ -527,7 +542,7 @@
    ],
    "adds": [
     {
-     "name": "Tyrone Tracy",
+     "name": "Tyrone Tracy Jr.",
      "pos": "RB",
      "team": "NYG",
      "status": null,
@@ -655,5 +670,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 35
+ "free_agent_moves": 36
 }
