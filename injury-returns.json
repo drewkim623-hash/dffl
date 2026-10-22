@@ -13,7 +13,7 @@
       "weeks": 4,
       "checked": "2026-10-21",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [8,9,10]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "2216": {
       "kind": "report",
@@ -24,7 +24,7 @@
       "weeks": 1,
       "checked": "2026-10-21",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "2449": {
       "kind": "report",
@@ -122,12 +122,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        6
+        7
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
-      "checked": "2026-10-14",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "checked": "2026-10-22",
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "6786": {
       "kind": "report",
@@ -218,8 +218,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-15",
-      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "8408": {
       "kind": "report",
@@ -478,12 +478,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        6
+        7
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-10-14",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "checked": "2026-10-22",
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "13276": {
       "kind": "report",
@@ -535,8 +535,8 @@
       "weeks_list": [],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-14",
-      "note": "Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "note": "Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "13298": {
       "kind": "report",
@@ -546,8 +546,19 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion",
       "checked": "2026-10-14",
-      "note": "Concussion. In protocol; Week 6 status pending. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
-      "flag": "uncertain"
+      "note": "Concussion. In protocol; Week 6 status pending. Consensus: matches audit; consensus.",
+      "flag": "consensus"
+    },
+    "13345": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        7
+      ],
+      "weeks": 1,
+      "checked": "2026-10-22",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "13417": {
       "kind": "report",
