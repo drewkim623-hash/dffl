@@ -4993,6 +4993,88 @@
      "text": "Aaron Rodgers led moseslin with 17.02 and Keenan Allen added 16.2, but Cam Skattebo was held scoreless at running back and the New York Giants defense managed only 2. moseslin's 91.12 was the lowest score of the week, and the 53.62-point margin was the widest. moseslin falls to 2-4."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "same-record-181-points-apart",
+   "date": "2026-10-23",
+   "source": "watch",
+   "kind": "opinion",
+   "kicker": "2026 · week 7",
+   "headline": "Same Record, 181 Points Apart",
+   "dek": "jadencha and bradyrife are both 5-1. jadencha has outscored bradyrife by 181.4 points this season, and the title odds have pulled apart with it — 47.125% to 7.955%, up from 28.61% and 4.68% on draft day.",
+   "byline": "DFFL desk",
+   "standfirst": "The league's only two 5-1 teams",
+   "teaser": "🚨 DFFL | WEEK 7\n\nSAME RECORD, 181 POINTS APART\n\n📊 181.4 more points for jadencha (990.5) than bradyrife (809.1)\n🏆 Title odds: 47.125% for jadencha, up from 28.61% at the draft\n📉 bradyrife's title number: 7.955%, barely above 6.765%\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=same-record-181-points-apart",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Two teams are 5-1 through six weeks, and the board does not treat them the same. <b>jadencha</b> has scored 990.5 points this season, the most in the league, and the site's title odds have climbed from 28.61% on draft day to 47.125% now — more than double Domo112's 20.74%, the next-highest number anyone carries. <b>bradyrife</b> is also 5-1 and has scored 809.1, the second-most in the league, but the title number has barely moved: 4.68% at the draft, 7.955% now."
+    },
+    {
+     "type": "stat",
+     "n": "181.4",
+     "text": "points separate the league's only two 5-1 teams. jadencha's 990.5 is the most anyone has scored this season; bradyrife's 809.1 is the next-most."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the board",
+     "text": "One 5-1 Team Is Trusted. The Other Is Tolerated."
+    },
+    {
+     "type": "p",
+     "text": "Both records say the same thing. The model does not. jadencha's playoff number is up to 99.955% from 89.605% at the draft — as close to settled as the site prints. bradyrife's playoff number has also risen, from 42.06% to 89.175%, but the title race is a different conversation: 7.955% now is barely higher than willie12w's and wesley55's identical 6.765% each — two teams at 3-3, half of bradyrife's win total. jadencha's 47.125% stands alone."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "990.5",
+       "sub": "points for · 5-1",
+       "rows": [
+        {
+         "label": "Title odds",
+         "value": "47.125% (28.61% at the draft)"
+        },
+        {
+         "label": "Playoff odds",
+         "value": "99.955% (89.605% at the draft)"
+        }
+       ]
+      },
+      {
+       "title": "bradyrife",
+       "big": "809.1",
+       "sub": "points for · 5-1",
+       "rows": [
+        {
+         "label": "Title odds",
+         "value": "7.955% (4.68% at the draft)"
+        },
+        {
+         "label": "Playoff odds",
+         "value": "89.175% (42.06% at the draft)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the margins",
+     "text": "Both Carry One Question Mark Into Week 7"
+    },
+    {
+     "type": "p",
+     "text": "Neither team is resting easy this week. jadencha heads into week 7 with <b>Matthew Golden</b> listed questionable. bradyrife has <b>George Pickens</b> questionable. It is the same single flag on both rosters — about the only thing these two teams currently share."
+    },
+    {
+     "type": "p",
+     "text": "The record will keep saying 5-1 for both until one of them loses. The points, the title price and the gap to the rest of the league are already treating this as two different seasons."
+    }
+   ]
   }
  ]
 }
