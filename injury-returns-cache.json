@@ -1,18 +1,8 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-23T19:19:13.003Z",
+ "generated": "2026-10-23T20:22:16.808Z",
  "week": 7,
  "entries": {
-  "1466": {
-   "n": "Travis Kelce",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-23"
-  },
   "2133": {
    "n": "Davante Adams",
    "s": "IR",
@@ -84,16 +74,6 @@
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-10-23"
-  },
-  "5844": {
-   "n": "T.J. Hockenson",
-   "s": "Questionable",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4036133/tj-hockenson — Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
   },
   "5872": {
    "n": "Deebo Samuel Sr.",
@@ -208,16 +188,6 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-15"
-  },
-  "8167": {
-   "n": "Christian Watson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-23"
   },
   "8408": {
    "n": "Jordan Mason",
@@ -358,16 +328,6 @@
    "retNote": "default: IR minimum 4 weeks from wk 7 (4 left)",
    "retChecked": "2026-10-23",
    "irSince": 7
-  },
-  "12501": {
-   "n": "Matthew Golden",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-23"
   },
   "12508": {
    "n": "Jaxson Dart",

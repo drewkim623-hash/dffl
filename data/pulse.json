@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-23T19:19:13.703Z",
- "at": 1792783153703,
+ "generated": "2026-10-23T20:22:17.591Z",
+ "at": 1792786937591,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 990.5,
    "points_against": 680.44,
    "faab_spent": 4,
-   "starters_hurt": [
-    "Matthew Golden (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bradyrife",
@@ -48,7 +46,6 @@
    "points_against": 798.3,
    "faab_spent": 49,
    "starters_hurt": [
-    "Travis Kelce (Questionable)",
     "Dallas Goedert (Questionable)"
    ]
   },
@@ -101,8 +98,7 @@
    "faab_spent": 5,
    "starters_hurt": [
     "Lamar Jackson (Questionable)",
-    "Saquon Barkley (Questionable)",
-    "Christian Watson (Questionable)"
+    "Saquon Barkley (Questionable)"
    ]
   },
   {
@@ -348,7 +344,7 @@
      "name": "Adonai Mitchell",
      "pos": "WR",
      "team": "NYJ",
-     "status": "Questionable",
+     "status": null,
      "from": "drewkim"
     }
    ],
