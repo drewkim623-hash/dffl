@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-23T13:53:27.181Z",
- "at": 1792763607181,
+ "generated": "2026-10-23T19:19:13.703Z",
+ "at": 1792783153703,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -48,7 +48,6 @@
    "points_against": 798.3,
    "faab_spent": 49,
    "starters_hurt": [
-    "Denzel Boston (Questionable)",
     "Travis Kelce (Questionable)",
     "Dallas Goedert (Questionable)"
    ]
@@ -61,7 +60,6 @@
    "points_against": 785.54,
    "faab_spent": 26,
    "starters_hurt": [
-    "Quinshon Judkins (Questionable)",
     "Jaylen Waddle (Questionable)"
    ]
   },
@@ -72,9 +70,7 @@
    "points_for": 719.52,
    "points_against": 713.72,
    "faab_spent": 65,
-   "starters_hurt": [
-    "Bucky Irving (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -84,7 +80,7 @@
    "points_against": 798.5,
    "faab_spent": 69,
    "starters_hurt": [
-    "Tyler Warren (Questionable)"
+    "Tyler Warren (Out)"
    ]
   },
   {
@@ -104,6 +100,8 @@
    "points_against": 857.1,
    "faab_spent": 5,
    "starters_hurt": [
+    "Lamar Jackson (Questionable)",
+    "Saquon Barkley (Questionable)",
     "Christian Watson (Questionable)"
    ]
   },
@@ -123,7 +121,9 @@
    "points_for": 688,
    "points_against": 774.06,
    "faab_spent": 59,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Breece Hall (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -134,8 +134,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Zach Charbonnet (Questionable)",
-    "Emeka Egbuka (Questionable)",
-    "KC Concepcion Jr. (Questionable)",
+    "Emeka Egbuka (Out)",
     "DeVonta Smith (Questionable)"
    ]
   }
@@ -210,7 +209,7 @@
    "b": {
     "manager": "drewkim",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -673,5 +672,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 42
+ "free_agent_moves": 43
 }
