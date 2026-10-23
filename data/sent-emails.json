@@ -223,6 +223,20 @@
    "sha256": "83e1ee4d8c69dcfd9cbf2c67b794417a839597d919d4a48febf7a675f222fc75",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-23T16:19:44.630Z",
+   "subject": "DFFL Week 7: Same Record, 181 Points Apart",
+   "lead": "same-record-181-points-apart",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 6
+   },
+   "to": 12,
+   "sha256": "d7ecc4c0bd95dbbb7255c27831f486c2209c42f91310b0994480f29796ae9c6e",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
