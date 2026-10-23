@@ -195,19 +195,20 @@
       ],
       "weeks": 4,
       "checked": "2026-10-20",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 7)."
     },
     "8142": {
       "kind": "report",
-      "weeks": 2,
+      "weeks": 3,
       "weeks_list": [
-        6,
-        7
+        7,
+        8,
+        9
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
-      "checked": "2026-10-15",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
+      "checked": "2026-10-23",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [7]; consensus.",
       "flag": "consensus"
     },
     "8155": {
@@ -436,8 +437,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4685702/quinshon-judkins",
       "checked": "2026-10-18",
-      "note": "Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-      "flag": "uncertain"
+      "note": "Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "12518": {
       "kind": "report",
@@ -447,8 +448,8 @@
       ],
       "weeks": 1,
       "checked": "2026-10-18",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 7)."
     },
     "12529": {
       "kind": "report",
@@ -527,7 +528,7 @@
       "weeks": 1,
       "checked": "2026-10-22",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13296": {
       "kind": "report",
@@ -556,7 +557,7 @@
       "weeks": 0,
       "checked": "2026-10-22",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [7]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13417": {
       "kind": "report",
