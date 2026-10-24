@@ -5075,6 +5075,100 @@
      "text": "The record will keep saying 5-1 for both until one of them loses. The points, the title price and the gap to the rest of the league are already treating this as two different seasons."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-nacua-trade-has-a-box-score-now",
+   "date": "2026-10-24",
+   "source": "saturday",
+   "kicker": "2026 · week 6 · trades",
+   "headline": "The Nacua Trade Has a Box Score Now",
+   "dek": "Domo112 sent Mike Evans, Marvin Harrison Jr. and a 2027 second-round pick to jskule23 for Puka Nacua. One week later, Nacua scored 15 for Domo112, Evans scored 13.4 for jskule23, and Harrison sat on the bench with 6.4 unused. Both teams won anyway.",
+   "byline": "DFFL desk",
+   "standfirst": "1 trade, 1 week in, 28.4 combined points",
+   "teaser": "🚨 DFFL | WEEK 6\n\nTHE NACUA TRADE HAS A BOX SCORE NOW\n\n📊 28.4 combined points from Nacua and Evans in their first week in new lineups\n🪑 Marvin Harrison Jr. scored 6.4 on the bench and jskule23 didn't need it\n📈 Domo112 is 4-2 with a 96.6% shot at the playoffs; jskule23 is 2-4\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-nacua-trade-has-a-box-score-now",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "One week after Domo112 sent Mike Evans, Marvin Harrison Jr. and a 2027 second-round pick to jskule23 for Puka Nacua, both receivers who switched teams were in a starting lineup. Nacua scored 15 for Domo112, the fifth-best number in a ten-man lineup. Evans scored 13.4 for jskule23 — also fifth-best. Harrison, the third piece heading to jskule23, did not start. He sat with 6.4 points, the highest score jskule23 left on the bench anywhere in the lineup that week. Both teams that made the trade won their week 6 games."
+    },
+    {
+     "type": "stat",
+     "n": "28.4",
+     "text": "What Nacua (15, for Domo112) and Evans (13.4, for jskule23) combined to score in the first week since the trade that swapped them."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the trade",
+     "text": "Three Pieces Out, One Piece In"
+    },
+    {
+     "type": "p",
+     "text": "The full deal sent Evans, Harrison and a 2027 second-round pick from Domo112 to jskule23, and Nacua back the other way. jskule23 turned a starting receiver into three future-facing assets. Domo112 turned three assets into one receiver already in the lineup."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the bench",
+     "text": "The Third Piece Didn't Play"
+    },
+    {
+     "type": "p",
+     "text": "Harrison was the one piece of the return jskule23 didn't start in week 6. He scored 6.4 points on the bench — the most jskule23 left unused anywhere in the lineup that week — while Evans played instead and delivered 13.4 in a <b>127.78-107.7</b> win over chassinator. Across town, Nacua's 15 helped Domo112 to a <b>124.4-98.42</b> win over willie12w."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Domo112's week 6",
+       "big": "15",
+       "sub": "Puka Nacua, 5th in the lineup",
+       "rows": [
+        {
+         "label": "Result",
+         "value": "Won 124.4–98.42"
+        },
+        {
+         "label": "Record now",
+         "value": "4-2"
+        },
+        {
+         "label": "Playoff chance now",
+         "value": "96.6%"
+        }
+       ]
+      },
+      {
+       "title": "jskule23's week 6",
+       "big": "13.4",
+       "sub": "Mike Evans, 5th in the lineup",
+       "rows": [
+        {
+         "label": "Marvin Harrison Jr.",
+         "value": "6.4, benched"
+        },
+        {
+         "label": "Result",
+         "value": "Won 127.78–107.7"
+        },
+        {
+         "label": "Record now",
+         "value": "2-4"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "where it stands",
+     "text": "Both Sides Are Still Themselves"
+    },
+    {
+     "type": "p",
+     "text": "Domo112 is 4-2 and sits at a 96.6% chance to make the playoffs. jskule23 is 2-4, at 14.0%. Those numbers are the whole season's, not just one trade's, and one week of lineups is a small sample to grade a deal that also included a pick that will not resolve until 2027. The league is voting on who won it anyway — the poll closes tonight."
+    }
+   ]
   }
  ]
 }
