@@ -237,6 +237,20 @@
    "sha256": "d7ecc4c0bd95dbbb7255c27831f486c2209c42f91310b0994480f29796ae9c6e",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-24T23:23:46.347Z",
+   "subject": "DFFL Week 7: The Nacua Trade Has a Box Score Now",
+   "lead": "the-nacua-trade-has-a-box-score-now",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 6
+   },
+   "to": 12,
+   "sha256": "4a5f6f0b746dae67fe142d07ead5c18c57cef5edea05062a355406579b629625",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
