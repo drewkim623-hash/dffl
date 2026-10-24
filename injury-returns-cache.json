@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-24T13:28:45.276Z",
+ "generated": "2026-10-24T17:17:34.013Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -297,17 +297,6 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-15"
-  },
-  "12469": {
-   "n": "Dylan Sampson",
-   "s": "IR",
-   "ret": null,
-   "retWeeks": 4,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: IR minimum 4 weeks from wk 7 (4 left)",
-   "retChecked": "2026-10-24",
-   "irSince": 7
   },
   "12508": {
    "n": "Jaxson Dart",
