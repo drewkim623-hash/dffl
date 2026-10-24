@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-23T11:04:32.511Z",
+ "generated": "2026-10-24T11:03:44.164Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -245,7 +245,7 @@
       {
        "asset": "Kyren Williams",
        "pid": "8150",
-       "value": 142.8,
+       "value": 142.7,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -266,11 +266,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 246.1,
+     "total": 246,
      "tradeDay": {
       "letter": "C",
       "marginPct": -8,
-      "marginPts": -39.9
+      "marginPts": -40
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 162.3,
+       "value": 162.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -301,7 +301,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 8,
-      "marginPts": 39.9
+      "marginPts": 40
      },
      "hindsight": "Pending"
     }
@@ -428,7 +428,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 14,
-      "marginPts": 84.3
+      "marginPts": 84.4
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 162.3,
+       "value": 162.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -453,7 +453,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -14,
-      "marginPts": -84.3
+      "marginPts": -84.4
      },
      "hindsight": "Pending"
     }
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 80.6,
+       "value": 80.7,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 97.1,
+     "total": 97.3,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -29.5
+      "marginPts": -29.4
      },
      "hindsight": "Pending"
     },
@@ -515,7 +515,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 29.5
+      "marginPts": 29.4
      },
      "hindsight": "Pending"
     }
@@ -541,7 +541,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -19,
-      "marginPts": -4.8
+      "marginPts": -5
      },
      "hindsight": "Pending"
     },
@@ -553,7 +553,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 8,
+       "value": 8.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -563,11 +563,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 15.3,
+     "total": 15.6,
      "tradeDay": {
       "letter": "C",
       "marginPct": 19,
-      "marginPts": 4.8
+      "marginPts": 5
      },
      "hindsight": "Pending"
     }
@@ -598,7 +598,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 54,
-      "marginPts": 106.7
+      "marginPts": 107
      },
      "hindsight": "Pending"
     },
@@ -610,7 +610,7 @@
       {
        "asset": "J.K. Dobbins",
        "pid": "6806",
-       "value": 11.4,
+       "value": 10.9,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -626,11 +626,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 43.1,
+     "total": 42.5,
      "tradeDay": {
       "letter": "D",
       "marginPct": -40,
-      "marginPts": -56.4
+      "marginPts": -56.9
      },
      "hindsight": "Pending"
     },
@@ -650,7 +650,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -35,
-      "marginPts": -50.3
+      "marginPts": -50.1
      },
      "hindsight": "Pending"
     }
@@ -722,7 +722,7 @@
       {
        "asset": "Puka Nacua",
        "pid": "9493",
-       "value": 124,
+       "value": 123.9,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -731,7 +731,7 @@
        "basis": "next cost R12 (regressed from R15), kept 2 yr, shrunk"
       }
      ],
-     "total": 213.7,
+     "total": 213.6,
      "tradeDay": {
       "letter": "B",
       "marginPct": 32,

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-23T20:22:17.591Z",
- "at": 1792786937591,
+ "generated": "2026-10-24T11:02:55.496Z",
+ "at": 1792839775496,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -23,9 +23,7 @@
    "points_for": 809.1,
    "points_against": 665.76,
    "faab_spent": 79,
-   "starters_hurt": [
-    "George Pickens (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "Domo112",
@@ -56,9 +54,7 @@
    "points_for": 755.42,
    "points_against": 785.54,
    "faab_spent": 26,
-   "starters_hurt": [
-    "Jaylen Waddle (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -129,7 +125,7 @@
    "points_against": 853.08,
    "faab_spent": 100,
    "starters_hurt": [
-    "Zach Charbonnet (Questionable)",
+    "Zach Charbonnet (Out)",
     "Emeka Egbuka (Out)",
     "DeVonta Smith (Questionable)"
    ]
@@ -271,7 +267,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": "Questionable",
+     "status": "Out",
      "to": "jskule23"
     },
     {
@@ -294,7 +290,7 @@
      "name": "Mike Evans",
      "pos": "WR",
      "team": "SF",
-     "status": "Questionable",
+     "status": "Out",
      "from": "Domo112"
     },
     {
