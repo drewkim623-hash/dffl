@@ -208,7 +208,7 @@
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
       "checked": "2026-10-23",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [7]; consensus.",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "8155": {
@@ -297,11 +297,11 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        6
+        7
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4426385/zach-charbonnet",
-      "checked": "2026-10-14",
-      "note": "Knee - ACL (Jan 2026 tear) rehab, PUP. Practice window open, limited; long shot for Week 6 TNF, Week 7 Oct 25 more likely. Consensus: matches audit; consensus.",
+      "checked": "2026-10-24",
+      "note": "Knee - ACL (Jan 2026 tear) rehab, PUP. Practice window open, limited; long shot for Week 6 TNF, Week 7 Oct 25 more likely. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "9756": {
@@ -338,11 +338,11 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        6
+        7
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-10-14",
-      "note": "Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
+      "checked": "2026-10-24",
+      "note": "Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "11560": {
@@ -440,16 +440,27 @@
       "note": "Ankle/foot tweak (walking boot). Monken: day-to-day, not ruled out for Week 6. Q = coming week only. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
+    "12514": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        7
+      ],
+      "weeks": 1,
+      "checked": "2026-10-24",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
+    },
     "12518": {
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        6
+        7
       ],
       "weeks": 1,
-      "checked": "2026-10-18",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 7)."
+      "checked": "2026-10-24",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "12529": {
       "kind": "report",

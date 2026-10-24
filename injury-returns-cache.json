@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-24T11:02:54.953Z",
+ "generated": "2026-10-24T13:28:45.276Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -155,7 +155,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [7]; consensus.",
+   "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-23",
    "irSince": 6
   },
@@ -238,12 +238,12 @@
   "9753": {
    "n": "Zach Charbonnet",
    "s": "Out",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4426385/zach-charbonnet — Knee - ACL (Jan 2026 tear) rehab, PUP. Practice window open, limited; long shot for Week 6 TNF, Week 7 Oct 25 more likely. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.espn.com/nfl/player/_/id/4426385/zach-charbonnet — Knee - ACL (Jan 2026 tear) rehab, PUP. Practice window open, limited; long shot for Week 6 TNF, Week 7 Oct 25 more likely. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-24"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -271,12 +271,12 @@
   "10229": {
    "n": "Rashee Rice",
    "s": "Out",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-24"
   },
   "10236": {
    "n": "Dalton Kincaid",
@@ -332,22 +332,22 @@
   "12514": {
    "n": "Emeka Egbuka",
    "s": "Out",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Out = coming week only",
+   "ret": "2026-11-01",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-10-24"
   },
   "12518": {
    "n": "Tyler Warren",
    "s": "Out",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 7).",
-   "retChecked": "2026-10-18"
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-10-24"
   },
   "12533": {
    "n": "Jacory Croskey-Merritt",
