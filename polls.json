@@ -139,7 +139,7 @@
     "invalid": 0,
     "outside": 0
    },
-   "announced": false,
+   "announced": true,
    "closed_at": "2026-10-24T23:20:43.815Z"
   }
  ]
