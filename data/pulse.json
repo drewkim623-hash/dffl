@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-24T17:17:34.634Z",
- "at": 1792862254635,
+ "generated": "2026-10-24T20:50:15.800Z",
+ "at": 1792875015800,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -43,9 +43,7 @@
    "points_for": 782.28,
    "points_against": 798.3,
    "faab_spent": 49,
-   "starters_hurt": [
-    "Dallas Goedert (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -93,7 +91,7 @@
    "points_against": 857.1,
    "faab_spent": 5,
    "starters_hurt": [
-    "Lamar Jackson (Questionable)",
+    "Lamar Jackson (Out)",
     "Saquon Barkley (Questionable)"
    ]
   },
@@ -126,8 +124,8 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Zach Charbonnet (Out)",
-    "Emeka Egbuka (Out)",
-    "DeVonta Smith (Questionable)"
+    "Christian Kirk (IR)",
+    "DeVonta Smith (Out)"
    ]
   }
  ],
@@ -512,7 +510,7 @@
      "name": "Tank Dell",
      "pos": "WR",
      "team": "HOU",
-     "status": "IR",
+     "status": "Questionable",
      "to": "sizzlemc2"
     }
    ],
@@ -664,5 +662,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 44
+ "free_agent_moves": 45
 }
