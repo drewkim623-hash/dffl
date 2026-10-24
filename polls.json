@@ -130,9 +130,17 @@
    "opened": "2026-10-20",
    "closes": "2026-10-24",
    "subject": "DFFL Week 7: Half the League Shares a Record, and Not Much Else",
-   "status": "open",
-   "results": null,
-   "announced": false
+   "status": "closed",
+   "results": {
+    "DOMO": 0,
+    "JSKULE": 0,
+    "EVEN": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
+   "announced": false,
+   "closed_at": "2026-10-24T23:20:43.815Z"
   }
  ]
 }
