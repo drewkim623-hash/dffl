@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-24T20:50:15.800Z",
- "at": 1792875015800,
+ "generated": "2026-10-24T22:03:10.205Z",
+ "at": 1792879390205,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -124,7 +124,6 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Zach Charbonnet (Out)",
-    "Christian Kirk (IR)",
     "DeVonta Smith (Out)"
    ]
   }
@@ -510,7 +509,7 @@
      "name": "Tank Dell",
      "pos": "WR",
      "team": "HOU",
-     "status": "Questionable",
+     "status": null,
      "to": "sizzlemc2"
     }
    ],

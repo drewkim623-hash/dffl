@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-24T11:03:44.164Z",
+ "generated": "2026-10-24T22:04:13.265Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -650,7 +650,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -35,
-      "marginPts": -50.1
+      "marginPts": -50
      },
      "hindsight": "Pending"
     }
