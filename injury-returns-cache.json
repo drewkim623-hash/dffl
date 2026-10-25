@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-25T15:54:44.738Z",
+ "generated": "2026-10-25T19:54:09.086Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -23,6 +23,26 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-21"
+  },
+  "4034": {
+   "n": "Christian McCaffrey",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-25"
+  },
+  "4199": {
+   "n": "Aaron Jones Sr.",
+   "s": "Questionable",
+   "ret": "2026-10-25",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/3042519/aaron-jones-sr — Leg (brief exit). Finished game, ESPN Active; MIN bye Week 6. 0 games. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "4866": {
    "n": "Saquon Barkley",
@@ -116,6 +136,26 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "7567": {
+   "n": "Kenny Gainwell",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-25"
+  },
+  "8112": {
+   "n": "Drake London",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-25"
+  },
   "8121": {
    "n": "Romeo Doubs",
    "s": "IR",
@@ -182,16 +222,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "9493": {
-   "n": "Puka Nacua",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-25"
-  },
   "9753": {
    "n": "Zach Charbonnet",
    "s": "Out",
@@ -254,6 +284,26 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-15"
+  },
+  "11655": {
+   "n": "Tyrone Tracy Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-25"
+  },
+  "12474": {
+   "n": "Woody Marks",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-25"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -341,16 +391,6 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-22"
-  },
-  "13305": {
-   "n": "Mike Washington Jr.",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-25"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
