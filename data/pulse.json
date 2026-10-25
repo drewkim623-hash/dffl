@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-24T22:03:10.205Z",
- "at": 1792879390205,
+ "generated": "2026-10-25T02:31:08.902Z",
+ "at": 1792895468903,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -122,10 +122,7 @@
    "points_for": 666.56,
    "points_against": 853.08,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Zach Charbonnet (Out)",
-    "DeVonta Smith (Out)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -661,5 +658,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 45
+ "free_agent_moves": 49
 }

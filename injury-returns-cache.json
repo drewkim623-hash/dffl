@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-24T22:03:09.648Z",
+ "generated": "2026-10-25T02:31:08.282Z",
  "week": 7,
  "entries": {
   "2133": {
@@ -82,7 +82,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-24"
+   "retChecked": "2026-10-25"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -190,7 +190,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-24"
+   "retChecked": "2026-10-25"
   },
   "9753": {
    "n": "Zach Charbonnet",
@@ -243,7 +243,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-24"
+   "retChecked": "2026-10-25"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -332,17 +332,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "13286": {
-   "n": "Jadarian Price",
-   "s": "IR",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nfl.com/news/seahawks-placing-rb-jadarian-price-chest-on-injured-reserve — Chest. IR Week 4; earliest Week 8 Nov 2. Minimum only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14",
-   "irSince": 6
-  },
   "13287": {
    "n": "Jeremiyah Love",
    "s": "Out",
@@ -361,17 +350,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-24"
-  },
-  "13345": {
-   "n": "Jonah Coleman",
-   "s": "Questionable",
-   "ret": "2026-10-25",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-22"
+   "retChecked": "2026-10-25"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
