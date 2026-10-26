@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-25T15:38:03.991Z",
- "at": 1792942683991,
+ "generated": "2026-10-26T03:00:59.590Z",
+ "at": 1792983659590,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
@@ -23,7 +23,9 @@
    "points_for": 809.1,
    "points_against": 665.76,
    "faab_spent": 79,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Christian McCaffrey (Questionable)"
+   ]
   },
   {
    "manager": "Domo112",
@@ -32,9 +34,7 @@
    "points_for": 806.1,
    "points_against": 781.22,
    "faab_spent": 74,
-   "starters_hurt": [
-    "Puka Nacua (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -52,7 +52,9 @@
    "points_for": 755.42,
    "points_against": 785.54,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jaylen Waddle (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -61,7 +63,9 @@
    "points_for": 719.52,
    "points_against": 713.72,
    "faab_spent": 65,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Aaron Jones Sr. (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -92,7 +96,8 @@
    "faab_spent": 5,
    "starters_hurt": [
     "Lamar Jackson (Out)",
-    "Saquon Barkley (Questionable)"
+    "Saquon Barkley (Questionable)",
+    "Cam Skattebo (Questionable)"
    ]
   },
   {
@@ -102,7 +107,9 @@
    "points_for": 692.46,
    "points_against": 707.96,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Drake London (Questionable)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -120,80 +127,83 @@
    "points_for": 666.56,
    "points_against": 853.08,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Woody Marks (Questionable)",
+    "Kenny Gainwell (Questionable)"
+   ]
   }
  ],
  "this_week": [
   {
    "a": {
     "manager": "Domo112",
-    "points": 42.02,
-    "startersLeftToPlay": 8
+    "points": 127.02,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "bradyrife",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 98.28,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 12.9,
-    "startersLeftToPlay": 10
+    "points": 145.3,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "victorthompson",
-    "points": 34.1,
-    "startersLeftToPlay": 9
+    "points": 93.1,
+    "startersLeftToPlay": 2
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 67.44,
-    "startersLeftToPlay": 7
+    "points": 159.04,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 7.1,
-    "startersLeftToPlay": 10
+    "points": 114.16,
+    "startersLeftToPlay": 2
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 16.2,
-    "startersLeftToPlay": 8
+    "points": 133.22,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 75.5,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 29.3,
-    "startersLeftToPlay": 9
+    "points": 97.68,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 20.18,
-    "startersLeftToPlay": 10
+    "points": 71.12,
+    "startersLeftToPlay": 5
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 22.7,
-    "startersLeftToPlay": 9
+    "points": 142.68,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "drewkim",
-    "points": 1.7,
-    "startersLeftToPlay": 10
+    "points": 78.62,
+    "startersLeftToPlay": 1
    }
   }
  ],
@@ -266,7 +276,7 @@
      "name": "Puka Nacua",
      "pos": "WR",
      "team": "LAR",
-     "status": "Questionable",
+     "status": null,
      "to": "Domo112"
     },
     {
@@ -289,7 +299,7 @@
      "name": "Puka Nacua",
      "pos": "WR",
      "team": "LAR",
-     "status": "Questionable",
+     "status": null,
      "from": "jskule23"
     },
     {
@@ -531,7 +541,7 @@
      "name": "Tyrone Tracy Jr.",
      "pos": "RB",
      "team": "NYG",
-     "status": null,
+     "status": "Questionable",
      "to": "jadencha"
     }
    ],
@@ -656,5 +666,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 51
+ "free_agent_moves": 52
 }
