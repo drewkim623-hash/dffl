@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-25T15:39:00.225Z",
+ "generated": "2026-10-26T11:05:07.032Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -141,15 +141,15 @@
       {
        "asset": "Luther Burden III",
        "pid": "12519",
-       "value": 45.1,
+       "value": 44.9,
        "basis": "actual to wk 6 + Sleeper projection"
       }
      ],
-     "total": 45.1,
+     "total": 44.9,
      "tradeDay": {
       "letter": "A",
       "marginPct": 56,
-      "marginPts": 32.5
+      "marginPts": 32.3
      },
      "hindsight": "Pending"
     },
@@ -169,7 +169,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -56,
-      "marginPts": -32.5
+      "marginPts": -32.3
      },
      "hindsight": "Pending"
     }
@@ -270,7 +270,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -8,
-      "marginPts": -40.2
+      "marginPts": -40.1
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 162.3,
+       "value": 162.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -297,11 +297,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 286.1,
+     "total": 286,
      "tradeDay": {
       "letter": "C",
       "marginPct": 8,
-      "marginPts": 40.2
+      "marginPts": 40.1
      },
      "hindsight": "Pending"
     }
@@ -327,7 +327,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -76,
-      "marginPts": -129.9
+      "marginPts": -130
      },
      "hindsight": "Pending"
     },
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 106.7,
+       "value": 106.8,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -348,11 +348,11 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 151,
+     "total": 151.1,
      "tradeDay": {
       "letter": "A",
       "marginPct": 76,
-      "marginPts": 129.9
+      "marginPts": 130
      },
      "hindsight": "Pending"
     }
@@ -415,7 +415,7 @@
       {
        "asset": "Jahmyr Gibbs",
        "pid": "9221",
-       "value": 266.9,
+       "value": 267.1,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -424,11 +424,11 @@
        "basis": "next cost R1 (regressed from R2), kept 3 yr, shrunk"
       }
      ],
-     "total": 341.8,
+     "total": 342.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": 14,
-      "marginPts": 85.2
+      "marginPts": 85.6
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 162.3,
+       "value": 162.2,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -449,11 +449,11 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 256.6,
+     "total": 256.5,
      "tradeDay": {
       "letter": "C",
       "marginPct": -14,
-      "marginPts": -85.2
+      "marginPts": -85.6
      },
      "hindsight": "Pending"
     }
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 81.4,
+       "value": 81.5,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 98,
+     "total": 98.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -28.7
+      "marginPts": -28.6
      },
      "hindsight": "Pending"
     },
@@ -496,13 +496,13 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 43.5,
+       "value": 43.4,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 75.2,
+       "value": 75.3,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 126.6,
+     "total": 126.7,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 28.7
+      "marginPts": 28.6
      },
      "hindsight": "Pending"
     }
@@ -541,7 +541,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -19,
-      "marginPts": -5
+      "marginPts": -4.9
      },
      "hindsight": "Pending"
     },
@@ -553,7 +553,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 8.2,
+       "value": 8.1,
        "basis": "actual to wk 6 + Sleeper projection"
       },
       {
@@ -563,11 +563,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 15.6,
+     "total": 15.4,
      "tradeDay": {
       "letter": "C",
       "marginPct": 19,
-      "marginPts": 5
+      "marginPts": 4.9
      },
      "hindsight": "Pending"
     }
@@ -598,7 +598,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 53,
-      "marginPts": 105.4
+      "marginPts": 105.6
      },
      "hindsight": "Pending"
     },
@@ -630,7 +630,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -39,
-      "marginPts": -55.9
+      "marginPts": -55.8
      },
      "hindsight": "Pending"
     },
@@ -642,15 +642,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 48.4,
+       "value": 48.2,
        "basis": "actual to wk 6 + Sleeper projection"
       }
      ],
-     "total": 48.4,
+     "total": 48.2,
      "tradeDay": {
       "letter": "D",
       "marginPct": -34,
-      "marginPts": -49.5
+      "marginPts": -49.7
      },
      "hindsight": "Pending"
     }
@@ -735,7 +735,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 32,
-      "marginPts": 103.7
+      "marginPts": 103.8
      },
      "hindsight": "Pending"
     },
@@ -767,7 +767,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -32,
-      "marginPts": -103.7
+      "marginPts": -103.8
      },
      "hindsight": "Pending"
     }
