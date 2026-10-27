@@ -524,6 +524,79 @@
      "body": "Kyle Pitts for wesley55 and Colston Loveland for Domo112 both posted nothing. Neither cost their manager the week, which says more about the opposition than the tight ends."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 7,
+   "note": "",
+   "lede": "Six games produced 1,511.2 points, up from 1,417.92 the week before. Domo112's 13.04-point win over bradyrife was the tightest finish of the week, and wesley55's 49.36-point win over drewkim was the widest. chassinator's 159.04 was the week's high score and jskule23's 97.80 the low, and victorthompson's 127.88 — in a loss to jadencha — was the best score by anyone who lost. jadencha is 6-1 with 1,135.8 points for the season, the most in the league; victorthompson, jskule23, moseslin, saucebossandrew and drewkim are all 2-5.",
+   "games": [
+    {
+     "headline": "chassinator outlasts saucebossandrew, 159.04-115.16",
+     "winner": "chassinator",
+     "winner_points": 159.04,
+     "loser": "saucebossandrew",
+     "loser_points": 115.16,
+     "body": "Zay Flowers led chassinator with 29.7 and Drake Maye added 28.44, with Tre Tucker, Rhamondre Stevenson, Kyren Williams and D'Andre Swift all between 17 and 22.3 behind them — six starters in double figures. Tony Pollard ran for 36 for saucebossandrew, the best score by anyone in the league this week, but nothing else in the lineup beyond Jordan Love's 17.96 reached 18. The two sides combined for 274.2, the most points in any game this week, and the margin finished at 43.88."
+    },
+    {
+     "headline": "jadencha holds off victorthompson's 127.88, wins 145.3-127.88",
+     "winner": "jadencha",
+     "winner_points": 145.3,
+     "loser": "victorthompson",
+     "loser_points": 127.88,
+     "body": "Jaxon Smith-Njigba scored 31.3 and Amon-Ra St. Brown added 25.2, with Jonathan Taylor and Ashton Jeanty both past 17 behind them. victorthompson got 23.28 from Dak Prescott and 19.6 from Drake London and Emanuel Wilson, and his 127.88 was the best score by any loser in the league this week, but it left only 9.2 unused on his bench — the smallest bench total anywhere — and the margin held at 17.42."
+    },
+    {
+     "headline": "willie12w routs moseslin 147.22-102.68",
+     "winner": "willie12w",
+     "winner_points": 147.22,
+     "loser": "moseslin",
+     "loser_points": 102.68,
+     "body": "Trey McBride scored 27.1, Jameson Williams added 26.1 and Bucky Irving 24.5, all in the same lineup. moseslin got 19.6 from Cam Skattebo, 14.1 from Saquon Barkley and 13.1 from Harold Fannin Jr., with Blake Corum's 16.6 sitting unused on the bench. The margin finished at 44.54, moseslin's fifth loss in seven weeks."
+    },
+    {
+     "headline": "wesley55 blows out drewkim, 147.68-98.32",
+     "winner": "wesley55",
+     "winner_points": 147.68,
+     "loser": "drewkim",
+     "loser_points": 98.32,
+     "body": "Joe Burrow threw for 28.88 and Tee Higgins caught for 28.8, with Quinshon Judkins adding 22.9 — three starters at 22 or better. drewkim got 23.2 from KC Concepcion Jr. and 19.7 from Makai Lemon, but Christian Kirk was held scoreless and the Carolina defense finished at -2. The 49.36-point margin was the widest in the league this week."
+    },
+    {
+     "headline": "Domo112 edges bradyrife in the week's closest game, 127.02-113.98",
+     "winner": "Domo112",
+     "winner_points": 127.02,
+     "loser": "bradyrife",
+     "loser_points": 113.98,
+     "body": "Bo Nix threw for 28.28, the best number in the game, with Christian McCaffrey adding 19 and Braelon Allen 17.4 behind him. Puka Nacua, who arrived from jskule23 in last week's trade, started again for Domo112 and finished with 21.8, second on the roster behind Caleb Williams' 22.12. The margin held at 13.04, the closest game of the week."
+    },
+    {
+     "headline": "sizzlemc2 tops jskule23 129.12-97.80",
+     "winner": "sizzlemc2",
+     "winner_points": 129.12,
+     "loser": "jskule23",
+     "loser_points": 97.8,
+     "body": "CeeDee Lamb scored 24.4 and Javonte Williams added 22.5 for sizzlemc2, who didn't need Omar Cooper Jr.'s 24.5 sitting on the bench — part of a league-high 49.8 points left unused. jskule23 got 24.7 from Luther Burden III and 17.6 from Josh Jacobs, but nothing else in the lineup beyond Will Reichard's 12 reached double figures, and his 97.80 was the lowest score in the league this week."
+    }
+   ],
+   "around": [
+    {
+     "kind": "waivers",
+     "headline": "Eight Moves, Three Kickers, Zero Dollars",
+     "body": "drewkim made eight roster moves in week 7, more than anyone else in the league, cycling through three kickers — Eddy Pineiro to Ryan Fitzgerald to Ka'imi Fairbairn — and three running backs before Sunday. Both of the week's waiver claims, his only, settled at $0 in FAAB."
+    },
+    {
+     "kind": "note",
+     "headline": "Two Very Different Seasons on the Wire",
+     "body": "jadencha has spent $4 in FAAB all season, the least in the league, and is 6-1. moseslin is the only other team under $10, at $5, and is 2-5. victorthompson and drewkim have each spent the full $100, and both are 2-5 as well."
+    },
+    {
+     "kind": "note",
+     "headline": "The Two Quietest Rosters",
+     "body": "bradyrife and sizzlemc2 were the only two managers who made no roster moves at all in week 7, free agency or waivers. Everyone else turned over at least one spot."
+    }
+   ]
   }
  ],
  "articles": [
@@ -5167,6 +5240,224 @@
     {
      "type": "p",
      "text": "Domo112 is 4-2 and sits at a 96.6% chance to make the playoffs. jskule23 is 2-4, at 14.0%. Those numbers are the whole season's, not just one trade's, and one week of lineups is a small sample to grade a deal that also included a pick that will not resolve until 2027. The league is voting on who won it anyway — the poll closes tonight."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-playoff-race-just-split-into-three-groups",
+   "date": "2026-10-27",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 7",
+   "headline": "The Playoff Race Just Split Into Three Groups",
+   "dek": "Six teams are at 77.17% or better to make the playoffs. chassinator sits alone at 46.71%. The other five are all under 15%, and saucebossandrew has fallen 43.09 points since the draft. Every game in full, below.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · 1,511.2 points · the odds board in three tiers",
+   "teaser": "🚨 DFFL | WEEK 7\n\nTHE PLAYOFF RACE JUST SPLIT INTO THREE GROUPS\n\n📊 chassinator's playoff chance sits at 46.71%, alone between two groups of six\n📉 saucebossandrew fell 43.09 points since the draft, down to 7.14% now\n💪 Tony Pollard scored 36, the week's best — and still lost by 43.88\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-playoff-race-just-split-into-three-groups",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Seven weeks in, the league's playoff race has stopped looking like one line with small gaps and started looking like three separate groups. <b>jadencha, Domo112, bradyrife, sizzlemc2, wesley55</b> and <b>willie12w</b> are all at 77.17% or better to make the playoffs. <b>chassinator</b> sits by himself at 46.71%. <b>victorthompson, jskule23, saucebossandrew, moseslin</b> and <b>drewkim</b> are all under 15%. On draft day, the widest gap between any two teams in the league was 18.88 points. The board now has two gaps wider than 30."
+    },
+    {
+     "type": "stat",
+     "n": "31.96",
+     "text": "The gap between chassinator's 46.71% playoff chance and victorthompson's 14.75% — the wider of two gaps bigger than 30 points on the board. The one just above it, between willie12w and chassinator, is 30.46. On draft day the widest gap anywhere in the league was 18.88."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the middle five",
+     "text": "Five Teams Have Lost Most of What the Draft Gave Them"
+    },
+    {
+     "type": "p",
+     "text": "saucebossandrew has fallen the furthest of anyone losing ground, from 50.23% on draft day to 7.14% now — a drop of 43.09 points. moseslin is down 36.76 (43.36% to 6.60%), jskule23 down 24.17 (31.41% to 7.24%), drewkim down 22.73 (25.35% to 2.62%) and victorthompson down 19.78 (34.53% to 14.75%). All five are 2-5, and none is above 15% anymore."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the six up top",
+     "text": "sizzlemc2 and bradyrife Have Made the Biggest Climbs in the League"
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2's climb is the largest of anyone's in either direction, up 46.82 points from 33.62% at the draft to 80.44% now. bradyrife is up 40.43 (42.05% to 82.48%), and wesley55 up 25.00 (54.41% to 79.41%). jadencha (99.98%), Domo112 (95.45%) and willie12w (77.17%) were already trusted on draft day and have only tightened their grip since. All six are 4-3 or better."
+    },
+    {
+     "type": "h",
+     "eyebrow": "alone in the middle",
+     "text": "chassinator Is the Only Team Without Company"
+    },
+    {
+     "type": "p",
+     "text": "chassinator is 3-4 — worse than everyone in the top six, better than everyone in the bottom five — and the odds board puts him exactly where that sounds: 46.71%, almost equidistant between the two groups, 30.46 points below willie12w and 31.96 points above victorthompson. He is the only team in the league without company at his own number."
+    },
+    {
+     "type": "tiers",
+     "title": "Who Gets In",
+     "intro": "Playoff odds after week 7, the board split into three groups.",
+     "foot": "The site's own model, run after every week's results. Draft-day figures are the preseason baseline, not last week's number.",
+     "tiers": [
+      {
+       "name": "In control",
+       "rows": [
+        {
+         "team": "jadencha",
+         "managers": "Pandas slave trade",
+         "pct": 99.98,
+         "rec": "6-1"
+        },
+        {
+         "team": "Domo112",
+         "managers": "Pablo Escobars Cartel",
+         "pct": 95.45,
+         "rec": "5-2"
+        },
+        {
+         "team": "bradyrife",
+         "managers": "Brady Lawrence",
+         "pct": 82.48,
+         "rec": "5-2"
+        },
+        {
+         "team": "sizzlemc2",
+         "managers": "Managerial Wizard",
+         "pct": 80.44,
+         "rec": "5-2"
+        },
+        {
+         "team": "wesley55",
+         "managers": "James Cook's team",
+         "pct": 79.41,
+         "rec": "4-3"
+        },
+        {
+         "team": "willie12w",
+         "managers": "Squirt",
+         "pct": 77.17,
+         "rec": "4-3"
+        }
+       ]
+      },
+      {
+       "name": "Alone in the middle",
+       "rows": [
+        {
+         "team": "chassinator",
+         "managers": "Ann Michael Maye",
+         "pct": 46.71,
+         "rec": "3-4"
+        }
+       ]
+      },
+      {
+       "name": "Long shots",
+       "rows": [
+        {
+         "team": "victorthompson",
+         "managers": "marty fakenewsman",
+         "pct": 14.75,
+         "rec": "2-5"
+        },
+        {
+         "team": "jskule23",
+         "managers": "THE answer",
+         "pct": 7.24,
+         "rec": "2-5"
+        },
+        {
+         "team": "saucebossandrew",
+         "managers": "saucebossandrew",
+         "pct": 7.14,
+         "rec": "2-5"
+        },
+        {
+         "team": "moseslin",
+         "managers": "mosey",
+         "pct": 6.6,
+         "rec": "2-5"
+        },
+        {
+         "team": "drewkim",
+         "managers": "inova hospital",
+         "pct": 2.62,
+         "rec": "2-5"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of this is settled — seven weeks is half the season, and the model still gives six of twelve teams a real path. But the gaps are no longer small, and five teams now need more than a win to climb back into them."
+    },
+    {
+     "type": "note",
+     "text": "Playoff and title odds are the site's own model, recomputed from the current schedule and standings after every week. 'At the draft' is the preseason baseline the model started from; it is not last week's number, which is why a team can gain ground in the odds the same week it loses a game."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games and 1,511.2 points, up 93.28 from the week before. The closest finish was 13.04 points, the widest 49.36 — a 36.32-point spread between them. In order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Domo112 Wins It By 13.04"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 127.02, bradyrife 113.98.</b> Bo Nix threw for 28.28, the best number in the game, with Christian McCaffrey adding 19 and Braelon Allen 17.4. Puka Nacua, acquired from jskule23 in last week's trade, started again for Domo112 and finished with 21.8, second on the roster behind Caleb Williams' 22.12; Colston Loveland added 19.9 and Jahmyr Gibbs 15.8. The margin held at 13.04, the closest game of the week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the unlucky",
+     "text": "127.88 Was the Best Losing Score of the Week"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 145.30, victorthompson 127.88.</b> Jaxon Smith-Njigba led everyone with 31.3 and Amon-Ra St. Brown added 25.2, with Jonathan Taylor (18) and Ashton Jeanty (17.6) behind them — four players clearing 16. victorthompson answered with Dak Prescott's 23.28, Drake London's 19.6 and Emanuel Wilson's 19, but 127.88 was the highest score by any loser in week 7 and still fell 17.42 short. His bench had only 9.2 left unused — the smallest bench total anywhere in the league this week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the wire",
+     "text": "sizzlemc2 Wins With a League-High 49.8 on the Bench"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 129.12, jskule23 97.80.</b> CeeDee Lamb's 24.4 and Javonte Williams' 22.5 led the way, with Tyler Shough adding 14.82 at quarterback and Tucker Kraft 14.8 behind him. sizzlemc2 didn't need the rest: Omar Cooper Jr. scored 24.5 on his bench, better than every sizzlemc2 starter except Lamb and Williams, and his total of 49.8 unused points was the most left on any bench in the league this week. jskule23 got 24.7 from Luther Burden III and 17.6 from Josh Jacobs but nothing else in double figures beyond Will Reichard's 12 at kicker, and lost by 31.32 with Caleb Douglas' 23 sitting unused."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the shootout",
+     "text": "Tony Pollard's 36 Was the Best Score in the League"
+    },
+    {
+     "type": "p",
+     "text": "<b>chassinator 159.04, saucebossandrew 115.16.</b> Tony Pollard ran for 36, the best score by any player in the league this week and 31.26% of saucebossandrew's own total — the largest share any single starter provided anywhere in week 7. He alone outscored his own bottom five starters combined (27.0): Zonovan Knight 7.8, Tyler Loop 7, Mark Andrews 5.3, Xavier Worthy 4.1 and Sam LaPorta 2.8. chassinator spread it out instead — Zay Flowers 29.7, Drake Maye 28.44, Tre Tucker 22.3, Rhamondre Stevenson 22, Kyren Williams 17.1 and D'Andre Swift 17 were all in double figures, and Courtland Sutton, added as a free agent this week, chipped in 7.5. The two teams combined for 274.2, the highest total of any game in week 7, and the margin still ran to 43.88."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-widest",
+     "text": "willie12w Routs moseslin by 44.54"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 147.22, moseslin 102.68.</b> Trey McBride led with 27.1, Jameson Williams added 26.1 and Bucky Irving 24.5, with Jared Goff throwing for 18.02 behind them. moseslin got 19.6 from Cam Skattebo, 14.1 from Saquon Barkley and 13.1 from Harold Fannin Jr., with Blake Corum's 16.6 sitting unused on the bench. The margin finished at 44.54, moseslin's fifth loss in seven weeks."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "wesley55 Wins by 49.36, the Widest Margin of the Week"
+    },
+    {
+     "type": "p",
+     "text": "<b>wesley55 147.68, drewkim 98.32.</b> Joe Burrow threw for 28.88 and Tee Higgins caught for 28.8, with Quinshon Judkins adding 22.9 behind them — three starters at 22 or better. drewkim got 23.2 from KC Concepcion Jr. and 19.7 from Makai Lemon, but Christian Kirk was held scoreless and the Carolina defense finished at -2. The 49.36-point margin was the widest in the league this week."
     }
    ]
   }

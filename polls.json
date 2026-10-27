@@ -141,6 +141,30 @@
    },
    "announced": true,
    "closed_at": "2026-10-24T23:20:43.815Z"
+  },
+  {
+   "id": "2026-w8-stud-or-depth",
+   "question": "Tony Pollard's 36 was the week's best score, and saucebossandrew still lost by 43.88 to chassinator's six double-digit scorers. Which wins more over a season?",
+   "options": [
+    {
+     "key": "STUD",
+     "label": "Give me the monster game every time"
+    },
+    {
+     "key": "DEPTH",
+     "label": "A deep, balanced lineup wins out"
+    },
+    {
+     "key": "BOTH",
+     "label": "Need one stud and a floor under him"
+    }
+   ],
+   "opened": "2026-10-27",
+   "closes": "2026-10-31",
+   "subject": "DFFL Week 8: The Playoff Race Just Split Into Three Groups",
+   "status": "open",
+   "results": null,
+   "announced": false
   }
  ]
 }
