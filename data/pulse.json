@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-27T04:25:58.360Z",
- "at": 1793075158360,
+ "generated": "2026-10-27T04:45:01.849Z",
+ "at": 1793076301849,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -9,10 +9,10 @@
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 5,
+   "wins": 6,
    "losses": 1,
-   "points_for": 990.5,
-   "points_against": 680.44,
+   "points_for": 1135.8,
+   "points_against": 808.32,
    "faab_spent": 4,
    "starters_hurt": [
     "Amon-Ra St. Brown (Questionable)",
@@ -20,42 +20,42 @@
    ]
   },
   {
-   "manager": "bradyrife",
-   "wins": 5,
-   "losses": 1,
-   "points_for": 809.1,
-   "points_against": 665.76,
-   "faab_spent": 79,
-   "starters_hurt": [
-    "Christian McCaffrey (Questionable)"
-   ]
-  },
-  {
    "manager": "Domo112",
-   "wins": 4,
+   "wins": 5,
    "losses": 2,
-   "points_for": 806.1,
-   "points_against": 781.22,
+   "points_for": 933.12,
+   "points_against": 895.2,
    "faab_spent": 74,
    "starters_hurt": [
     "Jalen Coker (Questionable)"
    ]
   },
   {
-   "manager": "sizzlemc2",
-   "wins": 4,
+   "manager": "bradyrife",
+   "wins": 5,
    "losses": 2,
-   "points_for": 782.28,
-   "points_against": 798.3,
+   "points_for": 923.08,
+   "points_against": 792.78,
+   "faab_spent": 79,
+   "starters_hurt": [
+    "Christian McCaffrey (Questionable)"
+   ]
+  },
+  {
+   "manager": "sizzlemc2",
+   "wins": 5,
+   "losses": 2,
+   "points_for": 911.4,
+   "points_against": 896.1,
    "faab_spent": 49,
    "starters_hurt": []
   },
   {
    "manager": "wesley55",
-   "wins": 3,
+   "wins": 4,
    "losses": 3,
-   "points_for": 755.42,
-   "points_against": 785.54,
+   "points_for": 903.1,
+   "points_against": 883.86,
    "faab_spent": 26,
    "starters_hurt": [
     "Jaylen Waddle (Questionable)"
@@ -63,10 +63,10 @@
   },
   {
    "manager": "willie12w",
-   "wins": 3,
+   "wins": 4,
    "losses": 3,
-   "points_for": 719.52,
-   "points_against": 713.72,
+   "points_for": 866.74,
+   "points_against": 816.4,
    "faab_spent": 65,
    "starters_hurt": [
     "Aaron Jones Sr. (Questionable)"
@@ -74,10 +74,10 @@
   },
   {
    "manager": "chassinator",
-   "wins": 2,
+   "wins": 3,
    "losses": 4,
-   "points_for": 805.2,
-   "points_against": 798.5,
+   "points_for": 964.24,
+   "points_against": 913.66,
    "faab_spent": 69,
    "starters_hurt": [
     "Tyler Warren (Out)"
@@ -86,18 +86,29 @@
   {
    "manager": "jskule23",
    "wins": 2,
-   "losses": 4,
-   "points_for": 790.14,
-   "points_against": 791.8,
+   "losses": 5,
+   "points_for": 887.94,
+   "points_against": 920.92,
    "faab_spent": 80,
    "starters_hurt": []
   },
   {
+   "manager": "victorthompson",
+   "wins": 2,
+   "losses": 5,
+   "points_for": 820.34,
+   "points_against": 853.26,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "Drake London (Questionable)"
+   ]
+  },
+  {
    "manager": "moseslin",
    "wins": 2,
-   "losses": 4,
-   "points_for": 702.2,
-   "points_against": 857.1,
+   "losses": 5,
+   "points_for": 804.88,
+   "points_against": 1004.32,
    "faab_spent": 5,
    "starters_hurt": [
     "Lamar Jackson (Out)",
@@ -106,31 +117,20 @@
    ]
   },
   {
-   "manager": "victorthompson",
-   "wins": 2,
-   "losses": 4,
-   "points_for": 692.46,
-   "points_against": 707.96,
-   "faab_spent": 100,
-   "starters_hurt": [
-    "Drake London (Questionable)"
-   ]
-  },
-  {
    "manager": "saucebossandrew",
    "wins": 2,
-   "losses": 4,
-   "points_for": 688,
-   "points_against": 774.06,
+   "losses": 5,
+   "points_for": 803.16,
+   "points_against": 933.1,
    "faab_spent": 59,
    "starters_hurt": []
   },
   {
    "manager": "drewkim",
    "wins": 2,
-   "losses": 4,
-   "points_for": 666.56,
-   "points_against": 853.08,
+   "losses": 5,
+   "points_for": 764.88,
+   "points_against": 1000.76,
    "faab_spent": 100,
    "starters_hurt": [
     "Woody Marks (Questionable)",
