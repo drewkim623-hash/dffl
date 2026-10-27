@@ -1,7 +1,7 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-27T03:56:05.434Z",
- "week": 7,
+ "generated": "2026-10-27T04:25:57.670Z",
+ "week": 8,
  "entries": {
   "2133": {
    "n": "Davante Adams",
@@ -37,7 +37,7 @@
   "4199": {
    "n": "Aaron Jones Sr.",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -47,7 +47,7 @@
   "4866": {
    "n": "Saquon Barkley",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -67,7 +67,7 @@
   "4983": {
    "n": "DJ Moore",
    "s": "Out",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -212,9 +212,8 @@
    "n": "Malik Davis",
    "s": "IR",
    "ret": null,
-   "retWeeks": 10,
+   "retWeeks": 9,
    "retWeeksList": [
-    7,
     8,
     9,
     10,
@@ -235,7 +234,7 @@
    "n": "De'Von Achane",
    "s": "IR",
    "ret": null,
-   "retWeeks": 11,
+   "retWeeks": 10,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear — Torn ACL. Out for 2026 season (Rapoport/Schefter; Hafley). Consensus: matches audit; consensus.",
@@ -256,9 +255,8 @@
    "n": "Jayden Reed",
    "s": "IR",
    "ret": null,
-   "retWeeks": 10,
+   "retWeeks": 9,
    "retWeeksList": [
-    7,
     8,
     9,
     10,
@@ -298,7 +296,7 @@
   "11635": {
    "n": "Ladd McConkey",
    "s": "Out",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -308,7 +306,7 @@
   "11646": {
    "n": "Jalen Coker",
    "s": "Questionable",
-   "ret": "2026-10-25",
+   "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -349,9 +347,8 @@
    "n": "Jaxson Dart",
    "s": "IR",
    "ret": null,
-   "retWeeks": 7,
+   "retWeeks": 6,
    "retWeeksList": [
-    7,
     9,
     10,
     11,
@@ -388,13 +385,8 @@
   "12533": {
    "n": "Jacory Croskey-Merritt",
    "s": "IR",
-   "ret": null,
-   "retWeeks": 3,
-   "retWeeksList": [
-    8,
-    9,
-    10
-   ],
+   "ret": "2026-11-22",
+   "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
@@ -436,9 +428,8 @@
    "n": "De'Zhaun Stribling",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retWeeksList": [
-    7,
     9,
     10,
     11

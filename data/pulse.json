@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-27T03:56:06.144Z",
- "at": 1793073366144,
+ "generated": "2026-10-27T04:25:58.360Z",
+ "at": 1793075158360,
  "season": "2026",
- "nfl_week": 7,
+ "nfl_week": 8,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -142,534 +142,77 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 127.02,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "bradyrife",
-    "points": 113.98,
-    "startersLeftToPlay": 0
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 145.3,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "victorthompson",
-    "points": 127.88,
-    "startersLeftToPlay": 0
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 159.04,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
-    "points": 115.16,
-    "startersLeftToPlay": 0
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 147.22,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "moseslin",
-    "points": 89.6,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "jskule23",
-    "points": 97.8,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 129.12,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 147.68,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
     "manager": "drewkim",
-    "points": 98.32,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
- "trades": [
-  {
-   "week": 6,
-   "type": "trade",
-   "managers": [
-    "willie12w",
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Khalil Shakir",
-     "pos": "WR",
-     "team": "BUF",
-     "status": null,
-     "to": "willie12w"
-    },
-    {
-     "name": "Kendre Miller",
-     "pos": "RB",
-     "team": "NO",
-     "status": null,
-     "to": "willie12w"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Khalil Shakir",
-     "pos": "WR",
-     "team": "BUF",
-     "status": null,
-     "from": "jskule23"
-    },
-    {
-     "name": "Kendre Miller",
-     "pos": "RB",
-     "team": "NO",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 9,
-     "from": "drewkim",
-     "to": "jskule23"
-    }
-   ]
-  },
-  {
-   "week": 6,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Mike Evans",
-     "pos": "WR",
-     "team": "SF",
-     "status": "Out",
-     "to": "jskule23"
-    },
-    {
-     "name": "Puka Nacua",
-     "pos": "WR",
-     "team": "LAR",
-     "status": null,
-     "to": "Domo112"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Mike Evans",
-     "pos": "WR",
-     "team": "SF",
-     "status": "Out",
-     "from": "Domo112"
-    },
-    {
-     "name": "Puka Nacua",
-     "pos": "WR",
-     "team": "LAR",
-     "status": null,
-     "from": "jskule23"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 2,
-     "from": "Domo112",
-     "to": "jskule23"
-    }
-   ]
-  }
- ],
- "waivers": [
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "team": "WAS",
-     "status": null,
-     "to": "drewkim"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Adonai Mitchell",
-     "pos": "WR",
-     "team": "NYJ",
-     "status": null,
-     "from": "drewkim"
-    }
-   ],
-   "faab": 42,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "sizzlemc2"
-   ],
-   "adds": [
-    {
-     "name": "Omar Cooper Jr.",
-     "pos": "WR",
-     "team": "NYJ",
-     "status": null,
-     "to": "sizzlemc2"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Tyreek Hill",
-     "pos": "WR",
-     "team": "FA",
-     "status": null,
-     "from": "sizzlemc2"
-    }
-   ],
-   "faab": 32,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Konata Mumpfield",
-     "pos": "WR",
-     "team": "LAR",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [],
-   "faab": 15,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "willie12w"
-   ],
-   "adds": [
-    {
-     "name": "DeMario Douglas",
-     "pos": "WR",
-     "team": "NE",
-     "status": null,
-     "to": "willie12w"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kirk Cousins",
-     "pos": "QB",
-     "team": "LV",
-     "status": null,
-     "from": "willie12w"
-    }
-   ],
-   "faab": 8,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Denver Broncos",
-     "pos": "DEF",
-     "team": "DEN",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "New England Patriots",
-     "pos": "DEF",
-     "team": "NE",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Kenyon Sadiq",
-     "pos": "TE",
-     "team": "NYJ",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Darren Waller",
-     "pos": "TE",
-     "team": "CAR",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Ja'Kobi Lane",
-     "pos": "WR",
-     "team": "BAL",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Austin Ekeler",
-     "pos": "RB",
-     "team": "WAS",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 6,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "sizzlemc2"
-   ],
-   "adds": [
-    {
-     "name": "Tank Dell",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "to": "sizzlemc2"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kansas City Chiefs",
-     "pos": "DEF",
-     "team": "KC",
-     "status": null,
-     "from": "sizzlemc2"
-    }
-   ],
-   "faab": 5,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Tyrone Tracy Jr.",
-     "pos": "RB",
-     "team": "NYG",
-     "status": "Questionable",
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Najee Harris",
-     "pos": "RB",
-     "team": "FA",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 3,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Evan McPherson",
-     "pos": "K",
-     "team": "CIN",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Ka'imi Fairbairn",
-     "pos": "K",
-     "team": "HOU",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 3,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Cleveland Browns",
-     "pos": "DEF",
-     "team": "CLE",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Baltimore Ravens",
-     "pos": "DEF",
-     "team": "BAL",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 3,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Bo Nix",
-     "pos": "QB",
-     "team": "DEN",
-     "status": null,
-     "to": "bradyrife"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Darius Cooper",
-     "pos": "WR",
-     "team": "PHI",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": 1,
-   "picks": []
-  },
-  {
-   "week": 6,
-   "type": "waiver",
-   "managers": [
-    "sizzlemc2"
-   ],
-   "adds": [
-    {
-     "name": "Chris Boswell",
-     "pos": "K",
-     "team": "PIT",
-     "status": null,
-     "to": "sizzlemc2"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Nick Folk",
-     "pos": "K",
-     "team": "ATL",
-     "status": null,
-     "from": "sizzlemc2"
-    }
-   ],
-   "faab": 1,
-   "picks": []
-  }
- ],
- "free_agent_moves": 53
+ "trades": [],
+ "waivers": [],
+ "free_agent_moves": 26
 }
