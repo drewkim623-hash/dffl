@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-26T11:04:29.159Z",
- "at": 1793012669159,
+ "generated": "2026-10-27T03:56:06.144Z",
+ "at": 1793073366144,
  "season": "2026",
  "nfl_week": 7,
  "season_type": "regular",
- "week_in_progress": true,
+ "week_in_progress": false,
  "standings": [
   {
    "manager": "jadencha",
@@ -14,7 +14,10 @@
    "points_for": 990.5,
    "points_against": 680.44,
    "faab_spent": 4,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Amon-Ra St. Brown (Questionable)",
+    "Matthew Golden (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -34,7 +37,9 @@
    "points_for": 806.1,
    "points_against": 781.22,
    "faab_spent": 74,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jalen Coker (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -142,8 +147,8 @@
    },
    "b": {
     "manager": "bradyrife",
-    "points": 98.28,
-    "startersLeftToPlay": 1
+    "points": 113.98,
+    "startersLeftToPlay": 0
    }
   },
   {
@@ -154,8 +159,8 @@
    },
    "b": {
     "manager": "victorthompson",
-    "points": 104.6,
-    "startersLeftToPlay": 1
+    "points": 127.88,
+    "startersLeftToPlay": 0
    }
   },
   {
@@ -173,13 +178,13 @@
   {
    "a": {
     "manager": "willie12w",
-    "points": 133.22,
-    "startersLeftToPlay": 1
+    "points": 147.22,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "moseslin",
-    "points": 75.5,
-    "startersLeftToPlay": 1
+    "points": 89.6,
+    "startersLeftToPlay": 0
    }
   },
   {
@@ -190,20 +195,20 @@
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 72.42,
-    "startersLeftToPlay": 3
+    "points": 129.12,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 142.68,
-    "startersLeftToPlay": 1
+    "points": 147.68,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "drewkim",
-    "points": 78.62,
-    "startersLeftToPlay": 1
+    "points": 98.32,
+    "startersLeftToPlay": 0
    }
   }
  ],
@@ -666,5 +671,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 52
+ "free_agent_moves": 53
 }
