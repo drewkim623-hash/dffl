@@ -251,6 +251,20 @@
    "sha256": "4a5f6f0b746dae67fe142d07ead5c18c57cef5edea05062a355406579b629625",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-27T12:23:50.256Z",
+   "subject": "DFFL Week 8: The Playoff Race Just Split Into Three Groups",
+   "lead": "the-playoff-race-just-split-into-three-groups",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 7
+   },
+   "to": 12,
+   "sha256": "84cc61652e4fff16c0973d0454a96f26b91396ff907882154bf045370a5c9af8",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
