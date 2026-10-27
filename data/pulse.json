@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-27T11:04:20.533Z",
- "at": 1793099060533,
+ "generated": "2026-10-27T13:56:09.159Z",
+ "at": 1793109369160,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -80,7 +80,8 @@
    "points_against": 913.66,
    "faab_spent": 69,
    "starters_hurt": [
-    "Tyler Warren (Out)"
+    "Tyler Warren (Out)",
+    "DJ Moore (Out)"
    ]
   },
   {
@@ -214,5 +215,5 @@
  ],
  "trades": [],
  "waivers": [],
- "free_agent_moves": 27
+ "free_agent_moves": 28
 }
