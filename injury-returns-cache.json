@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-28T16:50:24.694Z",
+ "generated": "2026-10-28T18:50:24.174Z",
  "week": 8,
  "entries": {
   "2133": {
@@ -274,6 +274,16 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
    "retChecked": "2026-10-24"
   },
+  "11576": {
+   "n": "Braelon Allen",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-28"
+  },
   "11635": {
    "n": "Ladd McConkey",
    "s": "Questionable",
@@ -373,6 +383,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
    "retChecked": "2026-10-22"
+  },
+  "13279": {
+   "n": "Carnell Tate",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-28"
   },
   "13281": {
    "n": "Jordyn Tyson",
