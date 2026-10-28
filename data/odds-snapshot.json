@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-28T13:27:37.431Z",
- "at": 1793194057431,
+ "generated": "2026-10-28T13:51:13.085Z",
+ "at": 1793195473085,
  "season": "2026",
  "week": 8,
  "liveWeek": null,
@@ -206,6 +206,20 @@
    ]
   },
   {
+   "manager": "chassinator",
+   "cost": 0.014447042347132566,
+   "players": [
+    {
+     "name": "Tyler Warren",
+     "status": "Questionable"
+    },
+    {
+     "name": "DJ Moore",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "saucebossandrew",
    "cost": 0.014271041346122337,
    "players": [
@@ -215,20 +229,6 @@
     },
     {
      "name": "Rashee Rice",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "chassinator",
-   "cost": 0.014112061769615991,
-   "players": [
-    {
-     "name": "Tyler Warren",
-     "status": "Questionable"
-    },
-    {
-     "name": "DJ Moore",
      "status": "Questionable"
     }
    ]
