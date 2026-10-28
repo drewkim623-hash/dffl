@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-28T14:18:01.740Z",
+ "generated": "2026-10-28T16:50:24.694Z",
  "week": 8,
  "entries": {
   "2133": {
@@ -96,13 +96,14 @@
   },
   "5927": {
    "n": "Terry McLaurin",
-   "s": "Out",
+   "s": "IR",
    "ret": "2027-02-15",
    "retWeeks": null,
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-28",
+   "irSince": 8
   },
   "6904": {
    "n": "Jalen Hurts",

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-28T14:18:02.236Z",
- "at": 1793197082236,
+ "generated": "2026-10-28T16:50:25.313Z",
+ "at": 1793206225313,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -133,7 +133,9 @@
    "points_against": 1000.76,
    "faab_spent": 100,
    "starters_hurt": [
-    "Woody Marks (Questionable)"
+    "Zach Charbonnet (Questionable)",
+    "DeVonta Smith (Questionable)",
+    "Emeka Egbuka (Questionable)"
    ]
   }
  ],
@@ -195,7 +197,7 @@
    "b": {
     "manager": "moseslin",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -314,5 +316,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 34
+ "free_agent_moves": 35
 }

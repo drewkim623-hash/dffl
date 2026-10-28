@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-28T14:19:10.909Z",
- "at": 1793197150909,
+ "generated": "2026-10-28T16:50:53.647Z",
+ "at": 1793206253647,
  "season": "2026",
  "week": 8,
  "liveWeek": null,
@@ -168,6 +168,24 @@
  "games": [],
  "hurt": [
   {
+   "manager": "drewkim",
+   "cost": 0.027907872370564468,
+   "players": [
+    {
+     "name": "Emeka Egbuka",
+     "status": "Questionable"
+    },
+    {
+     "name": "DeVonta Smith",
+     "status": "Questionable"
+    },
+    {
+     "name": "Zach Charbonnet",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "jadencha",
    "cost": 0.025577272131883766,
    "players": [
@@ -183,7 +201,7 @@
   },
   {
    "manager": "moseslin",
-   "cost": 0.023343932406139634,
+   "cost": 0.0226107175263488,
    "players": [
     {
      "name": "Lamar Jackson",
@@ -243,16 +261,6 @@
     },
     {
      "name": "Ladd McConkey",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "drewkim",
-   "cost": 0.010282517044893136,
-   "players": [
-    {
-     "name": "Woody Marks",
      "status": "Questionable"
     }
    ]
