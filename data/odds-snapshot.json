@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-10-28T12:24:36.932Z",
- "at": 1793190276933,
+ "generated": "2026-10-28T12:37:59.750Z",
+ "at": 1793191079750,
  "season": "2026",
  "week": 8,
  "liveWeek": null,
@@ -253,16 +253,6 @@
    "players": [
     {
      "name": "Woody Marks",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "wesley55",
-   "cost": 0.009765990743960784,
-   "players": [
-    {
-     "name": "Jaylen Waddle",
      "status": "Questionable"
     }
    ]
