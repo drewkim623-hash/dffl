@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-28T19:29:44.253Z",
- "at": 1793215784253,
+ "generated": "2026-10-28T21:15:24.959Z",
+ "at": 1793222124959,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -26,7 +26,9 @@
    "points_for": 933.12,
    "points_against": 895.1,
    "faab_spent": 87,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jahmyr Gibbs (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -36,7 +38,8 @@
    "points_against": 792.78,
    "faab_spent": 100,
    "starters_hurt": [
-    "Braelon Allen (Questionable)"
+    "Braelon Allen (Questionable)",
+    "Jakobi Meyers (Questionable)"
    ]
   },
   {
@@ -65,7 +68,8 @@
    "points_against": 816.4,
    "faab_spent": 65,
    "starters_hurt": [
-    "Aaron Jones Sr. (Questionable)"
+    "Aaron Jones Sr. (Questionable)",
+    "Ja'Marr Chase (Questionable)"
    ]
   },
   {
@@ -100,7 +104,8 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Jeremiyah Love (Questionable)",
-    "Ladd McConkey (Questionable)"
+    "Ladd McConkey (Questionable)",
+    "A.J. Brown (Questionable)"
    ]
   },
   {
@@ -318,5 +323,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 39
+ "free_agent_moves": 41
 }
