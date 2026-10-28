@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-28T18:50:24.922Z",
- "at": 1793213424922,
+ "generated": "2026-10-28T19:29:44.253Z",
+ "at": 1793215784253,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -36,8 +36,7 @@
    "points_against": 792.78,
    "faab_spent": 100,
    "starters_hurt": [
-    "Braelon Allen (Questionable)",
-    "Christian McCaffrey (Questionable)"
+    "Braelon Allen (Questionable)"
    ]
   },
   {
@@ -319,5 +318,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 38
+ "free_agent_moves": 39
 }
