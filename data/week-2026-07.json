@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 7,
- "generated": "2026-10-28T11:03:11.437Z",
- "generated_at": "2026-10-28T11:03:11.437Z",
+ "generated": "2026-10-29T11:03:07.257Z",
+ "generated_at": "2026-10-29T11:03:07.257Z",
  "final": true,
  "standings_through_week": 7,
  "standings_folded": false,
@@ -754,9 +754,9 @@
    "winner": "Domo112",
    "winner_points": 127.02,
    "loser": "bradyrife",
-   "loser_points": 113.88,
-   "margin": 13.14,
-   "total": 240.9,
+   "loser_points": 114.88,
+   "margin": 12.14,
+   "total": 241.9,
    "sides": [
     {
      "manager": "Domo112",
@@ -849,7 +849,7 @@
      "manager": "bradyrife",
      "team": "Brady Lawrence🎯",
      "roster_id": 8,
-     "points": 113.88,
+     "points": 114.88,
      "starters": [
       {
        "name": "Bo Nix",
@@ -909,7 +909,7 @@
        "name": "San Francisco 49ers",
        "pos": "DEF",
        "team": "SF",
-       "points": -1
+       "points": 0
       }
      ],
      "top": {
@@ -1139,7 +1139,7 @@
    "losses": 2,
    "ties": 0,
    "points_for": 933.12,
-   "points_against": 895.1,
+   "points_against": 896.1,
    "waiver_budget_used": 87
   },
   {
@@ -1149,7 +1149,7 @@
    "wins": 5,
    "losses": 2,
    "ties": 0,
-   "points_for": 922.98,
+   "points_for": 923.98,
    "points_against": 792.78,
    "waiver_budget_used": 100
   },
@@ -2152,9 +2152,9 @@
    "winner": "Domo112",
    "winner_points": 127.02,
    "loser": "bradyrife",
-   "loser_points": 113.88,
-   "margin": 13.14,
-   "total": 240.9,
+   "loser_points": 114.88,
+   "margin": 12.14,
+   "total": 241.9,
    "sides": [
     {
      "manager": "Domo112",
@@ -2247,7 +2247,7 @@
      "manager": "bradyrife",
      "team": "Brady Lawrence🎯",
      "roster_id": 8,
-     "points": 113.88,
+     "points": 114.88,
      "starters": [
       {
        "name": "Bo Nix",
@@ -2307,7 +2307,7 @@
        "name": "San Francisco 49ers",
        "pos": "DEF",
        "team": "SF",
-       "points": -1
+       "points": 0
       }
      ],
      "top": {

@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-28T11:04:05.794Z",
+ "generated": "2026-10-29T11:04:01.375Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -245,7 +245,7 @@
       {
        "asset": "Kyren Williams",
        "pid": "8150",
-       "value": 140.9,
+       "value": 141,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -266,7 +266,7 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 244.2,
+     "total": 244.3,
      "tradeDay": {
       "letter": "C",
       "marginPct": -8,
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 113.2,
+       "value": 113.1,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 100.6,
+     "total": 100.5,
      "tradeDay": {
       "letter": "C",
       "marginPct": -12,
-      "marginPts": -28.6
+      "marginPts": -28.7
      },
      "hindsight": "Pending"
     },
@@ -515,7 +515,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 12,
-      "marginPts": 28.6
+      "marginPts": 28.7
      },
      "hindsight": "Pending"
     }
@@ -632,7 +632,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -39,
-      "marginPts": -56.1
+      "marginPts": -56
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 46.7,
+       "value": 46.6,
        "basis": "actual to wk 7 + Sleeper projection"
       }
      ],
-     "total": 46.7,
+     "total": 46.6,
      "tradeDay": {
       "letter": "D",
       "marginPct": -35,
-      "marginPts": -51.1
+      "marginPts": -51.2
      },
      "hindsight": "Pending"
     }
@@ -724,7 +724,7 @@
       {
        "asset": "Puka Nacua",
        "pid": "9493",
-       "value": 122.5,
+       "value": 122.6,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -733,11 +733,11 @@
        "basis": "next cost R12 (regressed from R15), kept 2 yr, shrunk"
       }
      ],
-     "total": 212.2,
+     "total": 212.3,
      "tradeDay": {
       "letter": "B",
       "marginPct": 32,
-      "marginPts": 102.4
+      "marginPts": 102.5
      },
      "hindsight": "Pending"
     },
@@ -769,7 +769,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -32,
-      "marginPts": -102.4
+      "marginPts": -102.5
      },
      "hindsight": "Pending"
     }

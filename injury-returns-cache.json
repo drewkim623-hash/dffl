@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-28T21:15:24.112Z",
+ "generated": "2026-10-29T11:03:11.074Z",
  "week": 8,
  "entries": {
   "2133": {
@@ -24,6 +24,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-21"
   },
+  "2449": {
+   "n": "Stefon Diggs",
+   "s": "Questionable",
+   "ret": "2026-11-01",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
+  },
   "4034": {
    "n": "Christian McCaffrey",
    "s": "Questionable",
@@ -32,7 +42,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "4199": {
    "n": "Aaron Jones Sr.",
@@ -112,7 +122,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-28",
+   "retChecked": "2026-10-29",
    "irSince": 8
   },
   "5947": {
@@ -123,7 +133,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -154,7 +164,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -175,7 +185,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "7564": {
    "n": "Ja'Marr Chase",
@@ -185,7 +195,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "8121": {
    "n": "Romeo Doubs",
@@ -197,6 +207,26 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-20",
    "irSince": 6
+  },
+  "8132": {
+   "n": "Tyler Allgeier",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
+  },
+  "8137": {
+   "n": "George Pickens",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -249,7 +279,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "9226": {
    "n": "De'Von Achane",
@@ -304,6 +334,26 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
    "retChecked": "2026-10-24"
   },
+  "10232": {
+   "n": "Michael Wilson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
+  },
+  "10236": {
+   "n": "Dalton Kincaid",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
+  },
   "11576": {
    "n": "Braelon Allen",
    "s": "Questionable",
@@ -312,7 +362,17 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
+  },
+  "11604": {
+   "n": "Brock Bowers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
   },
   "11610": {
    "n": "Malik Washington",
@@ -322,7 +382,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -334,6 +394,16 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-15"
   },
+  "12469": {
+   "n": "Dylan Sampson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-29"
+  },
   "12474": {
    "n": "Woody Marks",
    "s": "Questionable",
@@ -342,7 +412,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -352,7 +422,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "12501": {
    "n": "Matthew Golden",
@@ -362,7 +432,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -432,7 +502,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-28"
+   "retChecked": "2026-10-29"
   },
   "13281": {
    "n": "Jordyn Tyson",

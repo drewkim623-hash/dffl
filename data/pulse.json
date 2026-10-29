@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-28T21:15:24.959Z",
- "at": 1793222124959,
+ "generated": "2026-10-29T11:03:11.702Z",
+ "at": 1793271791702,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -24,7 +24,7 @@
    "wins": 5,
    "losses": 2,
    "points_for": 933.12,
-   "points_against": 895.1,
+   "points_against": 896.1,
    "faab_spent": 87,
    "starters_hurt": [
     "Jahmyr Gibbs (Questionable)"
@@ -34,11 +34,12 @@
    "manager": "bradyrife",
    "wins": 5,
    "losses": 2,
-   "points_for": 922.98,
+   "points_for": 923.98,
    "points_against": 792.78,
    "faab_spent": 100,
    "starters_hurt": [
     "Braelon Allen (Questionable)",
+    "George Pickens (Questionable)",
     "Jakobi Meyers (Questionable)"
    ]
   },
@@ -69,7 +70,8 @@
    "faab_spent": 65,
    "starters_hurt": [
     "Aaron Jones Sr. (Questionable)",
-    "Ja'Marr Chase (Questionable)"
+    "Ja'Marr Chase (Questionable)",
+    "Stefon Diggs (Questionable)"
    ]
   },
   {
@@ -104,6 +106,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Jeremiyah Love (Questionable)",
+    "Dalton Kincaid (Questionable)",
     "Ladd McConkey (Questionable)",
     "A.J. Brown (Questionable)"
    ]
@@ -129,6 +132,7 @@
    "faab_spent": 59,
    "starters_hurt": [
     "Breece Hall (Questionable)",
+    "Michael Wilson (Questionable)",
     "Rashee Rice (Questionable)"
    ]
   },
@@ -142,6 +146,7 @@
    "starters_hurt": [
     "Zach Charbonnet (Questionable)",
     "Emeka Egbuka (Questionable)",
+    "Brock Bowers (Questionable)",
     "DeVonta Smith (Questionable)"
    ]
   }
