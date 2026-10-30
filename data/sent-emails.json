@@ -265,6 +265,20 @@
    "sha256": "84cc61652e4fff16c0973d0454a96f26b91396ff907882154bf045370a5c9af8",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-30T16:46:04.916Z",
+   "subject": "DFFL Week 8: 964.24 Points, Still Below .500",
+   "lead": "the-points-dont-match-the-record",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 7
+   },
+   "to": 12,
+   "sha256": "059f5235b10e50bfdda16b255026e5aabdd4d64dab0f761132cd7b1ef10a75fd",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
