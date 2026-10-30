@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-30T17:13:19.231Z",
- "at": 1793380399232,
+ "generated": "2026-10-30T17:50:10.014Z",
+ "at": 1793382610014,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -112,7 +112,6 @@
    "points_against": 1004.32,
    "faab_spent": 12,
    "starters_hurt": [
-    "Lamar Jackson (Questionable)",
     "Saquon Barkley (Questionable)",
     "Christian Watson (Questionable)"
    ]
@@ -138,9 +137,7 @@
    "points_against": 1000.76,
    "faab_spent": 100,
    "starters_hurt": [
-    "Zach Charbonnet (Questionable)",
-    "Emeka Egbuka (Out)",
-    "DeVonta Smith (Questionable)"
+    "Zach Charbonnet (Questionable)"
    ]
   }
  ],
@@ -340,5 +337,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 44
+ "free_agent_moves": 45
 }
