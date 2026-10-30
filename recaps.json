@@ -5460,6 +5460,173 @@
      "text": "<b>wesley55 147.68, drewkim 98.32.</b> Joe Burrow threw for 28.88 and Tee Higgins caught for 28.8, with Quinshon Judkins adding 22.9 behind them — three starters at 22 or better. drewkim got 23.2 from KC Concepcion Jr. and 19.7 from Makai Lemon, but Christian Kirk was held scoreless and the Carolina defense finished at -2. The 49.36-point margin was the widest in the league this week."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-points-dont-match-the-record",
+   "date": "2026-10-30",
+   "source": "watch",
+   "kind": "opinion",
+   "kicker": "2026 · week 8",
+   "headline": "964.24 Points, Still Below .500",
+   "dek": "chassinator has the league's second-most points this season — more than Domo112, bradyrife, sizzlemc2, wesley55 or willie12w have scored — and a worse record than all five.",
+   "byline": "DFFL desk",
+   "standfirst": "3-4, outscoring five teams with better records",
+   "teaser": "🚨 DFFL | WEEK 8\n\n964.24 POINTS, STILL BELOW .500\n\n📊 chassinator has scored 964.24 points this season, the second-most in the league\n🏆 wesley55 sits at 81.25% to make the playoffs on 903.1 points; chassinator sits at 46.045% on 964.24\n📈 His own number is up from 39.295% at the draft to 46.045% now\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-points-dont-match-the-record",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Seven weeks are final, and chassinator's problem has never been scoring. He has put up 964.24 points this season, the second-most in the league behind only jadencha's 1135.8 — more than Domo112, bradyrife, sizzlemc2, wesley55 or willie12w have scored. All five of those teams sit at 4-3 or better. chassinator is 3-4."
+    },
+    {
+     "type": "stat",
+     "n": "964.24",
+     "text": "chassinator's points for this season, the second-most in the league. Only jadencha, at 1135.8, has scored more — and chassinator is still below .500."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the gap",
+     "text": "Five Teams Have Scored Less and Won More"
+    },
+    {
+     "type": "p",
+     "text": "Domo112 has scored 933.12, bradyrife 923.98, sizzlemc2 911.4 and wesley55 903.1 — all between 31 and 61 points behind chassinator — and all are 4-3 or 5-2. willie12w, at 866.74, is 4-3 as well, nearly a hundred points back of chassinator with an extra win anyway."
+    },
+    {
+     "type": "bars",
+     "title": "Points for through week 7",
+     "sub": "By manager, with record alongside each bar.",
+     "rows": [
+      {
+       "label": "jadencha",
+       "sub": "6-1",
+       "value": 1135.8,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "3-4",
+       "value": 964.24,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "5-2",
+       "value": 933.12,
+       "group": 2
+      },
+      {
+       "label": "bradyrife",
+       "sub": "5-2",
+       "value": 923.98,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "5-2",
+       "value": 911.4,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "sub": "4-3",
+       "value": 903.1,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "sub": "4-3",
+       "value": 866.74,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the board",
+     "text": "The Odds Model Still Prefers Every Team Above Him"
+    },
+    {
+     "type": "p",
+     "text": "chassinator's own playoff number has climbed since the draft — 39.295% then, 46.045% now — but it still trails every team he has outscored. wesley55, playing with 61.14 fewer points, sits at 81.25%. Domo112, the only team other than jadencha ahead of chassinator in scoring, sits at 97.65%."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "chassinator",
+       "big": "46.045%",
+       "sub": "964.24 points · 3-4",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "39.295%"
+        }
+       ]
+      },
+      {
+       "title": "Domo112",
+       "big": "97.65%",
+       "sub": "933.12 points · 5-2",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "82.775%"
+        }
+       ]
+      },
+      {
+       "title": "bradyrife",
+       "big": "80.045%",
+       "sub": "923.98 points · 5-2",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "42.055%"
+        }
+       ]
+      },
+      {
+       "title": "sizzlemc2",
+       "big": "80.22%",
+       "sub": "911.4 points · 5-2",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "33.625%"
+        }
+       ]
+      },
+      {
+       "title": "wesley55",
+       "big": "81.25%",
+       "sub": "903.1 points · 4-3",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "54.41%"
+        }
+       ]
+      },
+      {
+       "title": "willie12w",
+       "big": "79.275%",
+       "sub": "866.74 points · 4-3",
+       "rows": [
+        {
+         "label": "At the draft",
+         "value": "73.29%"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Through seven weeks, chassinator has outscored five teams with better records than his. The board still rates his chances behind every one of them."
+    }
+   ]
   }
  ]
 }
