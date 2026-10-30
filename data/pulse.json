@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-29T11:03:11.702Z",
- "at": 1793271791702,
+ "generated": "2026-10-30T06:26:44.868Z",
+ "at": 1793341604868,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -14,10 +14,7 @@
    "points_for": 1135.8,
    "points_against": 808.32,
    "faab_spent": 4,
-   "starters_hurt": [
-    "Amon-Ra St. Brown (Questionable)",
-    "Matthew Golden (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "Domo112",
@@ -26,9 +23,7 @@
    "points_for": 933.12,
    "points_against": 896.1,
    "faab_spent": 87,
-   "starters_hurt": [
-    "Jahmyr Gibbs (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bradyrife",
@@ -38,7 +33,6 @@
    "points_against": 792.78,
    "faab_spent": 100,
    "starters_hurt": [
-    "Braelon Allen (Questionable)",
     "George Pickens (Questionable)",
     "Jakobi Meyers (Questionable)"
    ]
@@ -50,7 +44,9 @@
    "points_for": 911.4,
    "points_against": 896.1,
    "faab_spent": 49,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Travis Kelce (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -69,9 +65,7 @@
    "points_against": 816.4,
    "faab_spent": 65,
    "starters_hurt": [
-    "Aaron Jones Sr. (Questionable)",
-    "Ja'Marr Chase (Questionable)",
-    "Stefon Diggs (Questionable)"
+    "Aaron Jones Sr. (Questionable)"
    ]
   },
   {
@@ -92,7 +86,7 @@
    "losses": 5,
    "points_for": 887.94,
    "points_against": 920.92,
-   "faab_spent": 80,
+   "faab_spent": 91,
    "starters_hurt": [
     "Carnell Tate (Questionable)"
    ]
@@ -120,7 +114,8 @@
    "faab_spent": 12,
    "starters_hurt": [
     "Lamar Jackson (Questionable)",
-    "Saquon Barkley (Questionable)"
+    "Saquon Barkley (Questionable)",
+    "Christian Watson (Questionable)"
    ]
   },
   {
@@ -146,7 +141,6 @@
    "starters_hurt": [
     "Zach Charbonnet (Questionable)",
     "Emeka Egbuka (Questionable)",
-    "Brock Bowers (Questionable)",
     "DeVonta Smith (Questionable)"
    ]
   }
@@ -155,25 +149,25 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 9.6,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 11.8,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 20.9,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "jskule23",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 41.6,
+    "startersLeftToPlay": 8
    }
   },
   {
@@ -184,8 +178,8 @@
    },
    "b": {
     "manager": "bradyrife",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 2,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -196,8 +190,8 @@
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 17.3,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -208,8 +202,8 @@
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 18.3,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -220,8 +214,8 @@
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 22.52,
+    "startersLeftToPlay": 9
    }
   }
  ],
@@ -252,6 +246,25 @@
     }
    ],
    "faab": 21,
+   "picks": []
+  },
+  {
+   "week": 8,
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Kaelon Black",
+     "pos": "RB",
+     "team": "SF",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [],
+   "faab": 11,
    "picks": []
   },
   {
@@ -328,5 +341,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 41
+ "free_agent_moves": 42
 }

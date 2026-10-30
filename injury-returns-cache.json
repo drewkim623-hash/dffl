@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-29T22:22:55.128Z",
+ "generated": "2026-10-30T06:26:44.389Z",
  "week": 8,
  "entries": {
   "1466": {
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "2133": {
    "n": "Davante Adams",
@@ -42,7 +42,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "4199": {
    "n": "Aaron Jones Sr.",
@@ -122,7 +122,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-29",
+   "retChecked": "2026-10-30",
    "irSince": 8
   },
   "5947": {
@@ -133,7 +133,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -164,7 +164,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -177,17 +177,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "8121": {
-   "n": "Romeo Doubs",
-   "s": "IR",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-20",
-   "irSince": 6
-  },
   "8132": {
    "n": "Tyler Allgeier",
    "s": "Questionable",
@@ -196,7 +185,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "8137": {
    "n": "George Pickens",
@@ -206,7 +195,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -228,6 +217,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
    "retChecked": "2026-10-25"
+  },
+  "8167": {
+   "n": "Christian Watson",
+   "s": "Questionable",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-30"
   },
   "8800": {
    "n": "Malik Davis",
@@ -312,7 +311,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "10236": {
    "n": "Dalton Kincaid",
@@ -322,7 +321,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "11610": {
    "n": "Malik Washington",
@@ -332,7 +331,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -352,7 +351,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -362,7 +361,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -372,17 +371,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
-  },
-  "12501": {
-   "n": "Matthew Golden",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -462,7 +451,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-29"
+   "retChecked": "2026-10-30"
   },
   "13281": {
    "n": "Jordyn Tyson",
