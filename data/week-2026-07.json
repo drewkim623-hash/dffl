@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 7,
- "generated": "2026-10-29T11:03:07.257Z",
- "generated_at": "2026-10-29T11:03:07.257Z",
+ "generated": "2026-10-30T11:02:33.953Z",
+ "generated_at": "2026-10-30T11:02:33.953Z",
  "final": true,
  "standings_through_week": 7,
  "standings_folded": false,
@@ -1206,7 +1206,7 @@
    "ties": 0,
    "points_for": 887.94,
    "points_against": 920.92,
-   "waiver_budget_used": 80
+   "waiver_budget_used": 91
   },
   {
    "manager": "victorthompson",
