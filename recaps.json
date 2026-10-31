@@ -5627,6 +5627,133 @@
      "text": "Through seven weeks, chassinator has outscored five teams with better records than his. The board still rates his chances behind every one of them."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "five-teams-are-2-5",
+   "date": "2026-10-31",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "2026 · week 8",
+   "headline": "Five Teams Are 2-5. One Has the League's Worst Playoff Odds.",
+   "dek": "jskule23, victorthompson, moseslin, saucebossandrew and drewkim are all 2-5 — the most common record in the league. Their points differ by 123.06, and their playoff odds run from victorthompson's 15.715% down to drewkim's 2.68%, the lowest number anyone in the league carries.",
+   "byline": "DFFL desk",
+   "standfirst": "The league's most common record, read five different ways",
+   "teaser": "🚨 DFFL | WEEK 8\n\nFIVE TEAMS ARE 2-5. ONE HAS THE LEAGUE'S WORST PLAYOFF ODDS.\n\n📊 123.06 points separate jskule23 (887.94) and drewkim (764.88), both 2-5\n🎯 15.715% to 2.68% — the playoff-odds range inside that one record\n💰 victorthompson and drewkim have already spent their full $100 in FAAB\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=five-teams-are-2-5",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Seven weeks are final, and the league's most common record belongs to five different teams. jskule23, victorthompson, moseslin, saucebossandrew and drewkim are all 2-5 — more teams than share any other record in the league. The tie ends there. Points for among the five range by 123.06, from drewkim's 764.88, the fewest scored by any team in the league, to jskule23's 887.94. Playoff odds range further still: drewkim sits at 2.68%, the single lowest number in the twelve-team field, while victorthompson carries 15.715% on the same five losses — nearly six times higher."
+    },
+    {
+     "type": "stat",
+     "n": "5",
+     "text": "teams are 2-5 through week 7 — jskule23, victorthompson, moseslin, saucebossandrew and drewkim — the most common record in the league, ahead of the three teams at 5-2. Their points for differ by 123.06 and their playoff odds differ by nearly six times."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the points",
+     "text": "123.06 Points Inside One Record"
+    },
+    {
+     "type": "p",
+     "text": "jskule23 has scored 887.94 points this season, the most of the five, and still owns the group's worst playoff number, 3.175%. victorthompson, at 820.34, sits 67.6 points back of jskule23 and carries the group's best playoff odds anyway: 15.715%. moseslin (804.88) and saucebossandrew (803.16) are almost identical in points and land within half a point of each other in playoff odds too, 7.66% and 7.31%. drewkim, at 764.88, has scored less than every other team in the league, winning or losing, and carries the league's lowest playoff number along with it, 2.68%. Two of the five — victorthompson and drewkim — have already spent their full $100 in FAAB this season, and they sit at opposite ends of the group's playoff-odds range."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the odds",
+     "text": "The Model Doesn't Score It the Way the Standings Do"
+    },
+    {
+     "type": "p",
+     "text": "jskule23's 887.94 points is more than the other four teams in this group have scored, yet the site's simulation gives it the fewest projected wins of the five, 4.30 by season's end. drewkim, with the fewest points in the league, projects to 4.68 wins — ahead of jskule23. victorthompson's 5.60 projected wins is the most of the five, and it comes with the group's best playoff number to match. Record and scoring both say these five teams are in the same spot. The schedule still to come, which neither number captures, does not agree."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "victorthompson",
+       "big": "15.715%",
+       "sub": "820.34 points · 2-5",
+       "rows": [
+        {
+         "label": "Projected wins",
+         "value": "5.60"
+        },
+        {
+         "label": "FAAB spent",
+         "value": "$100"
+        }
+       ]
+      },
+      {
+       "title": "moseslin",
+       "big": "7.66%",
+       "sub": "804.88 points · 2-5",
+       "rows": [
+        {
+         "label": "Projected wins",
+         "value": "5.07"
+        },
+        {
+         "label": "FAAB spent",
+         "value": "$12"
+        }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "7.31%",
+       "sub": "803.16 points · 2-5",
+       "rows": [
+        {
+         "label": "Projected wins",
+         "value": "5.10"
+        },
+        {
+         "label": "FAAB spent",
+         "value": "$59"
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "3.175%",
+       "sub": "887.94 points · 2-5",
+       "rows": [
+        {
+         "label": "Projected wins",
+         "value": "4.30"
+        },
+        {
+         "label": "FAAB spent",
+         "value": "$91"
+        }
+       ]
+      },
+      {
+       "title": "drewkim",
+       "big": "2.68%",
+       "sub": "764.88 points · 2-5",
+       "rows": [
+        {
+         "label": "Projected wins",
+         "value": "4.68"
+        },
+        {
+         "label": "FAAB spent",
+         "value": "$100"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Two of the five play each other this week. As this was written Saturday evening, saucebossandrew led drewkim 22.52-0 with the full Sunday slate still to come for both rosters, and the site's live model gave saucebossandrew a 61.54% chance to win. Whatever happens, the five-way tie at 2-5 won't survive the weekend. The board never treated these five teams as equals to begin with."
+    }
+   ]
   }
  ]
 }
