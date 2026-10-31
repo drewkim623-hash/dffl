@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-31T11:03:08.284Z",
+ "generated": "2026-10-31T22:03:03.577Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -149,7 +149,7 @@
      "tradeDay": {
       "letter": "A",
       "marginPct": 67,
-      "marginPts": 50.9
+      "marginPts": 51
      },
      "hindsight": "Pending"
     },
@@ -169,7 +169,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -67,
-      "marginPts": -50.9
+      "marginPts": -51
      },
      "hindsight": "Pending"
     }
@@ -327,7 +327,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -76,
-      "marginPts": -135.9
+      "marginPts": -135.7
      },
      "hindsight": "Pending"
     },
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 112.7,
+       "value": 112.6,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -348,11 +348,11 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 157,
+     "total": 156.8,
      "tradeDay": {
       "letter": "A",
       "marginPct": 76,
-      "marginPts": 135.9
+      "marginPts": 135.7
      },
      "hindsight": "Pending"
     }
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 82.4,
+       "value": 82.5,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -502,7 +502,7 @@
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 79.8,
+       "value": 79.9,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -511,7 +511,7 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 131,
+     "total": 131.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": 14,
@@ -632,7 +632,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -42,
-      "marginPts": -58.1
+      "marginPts": -58
      },
      "hindsight": "Pending"
     },

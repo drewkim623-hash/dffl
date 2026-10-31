@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-31T11:02:10.960Z",
- "at": 1793444530961,
+ "generated": "2026-10-31T22:02:23.175Z",
+ "at": 1793484143175,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -23,9 +23,7 @@
    "points_for": 933.12,
    "points_against": 896.1,
    "faab_spent": 87,
-   "starters_hurt": [
-    "Colston Loveland (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bradyrife",
@@ -84,9 +82,7 @@
    "points_for": 887.94,
    "points_against": 920.92,
    "faab_spent": 91,
-   "starters_hurt": [
-    "Carnell Tate (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "victorthompson",
@@ -97,7 +93,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Dalton Kincaid (Questionable)",
-    "A.J. Brown (Questionable)"
+    "A.J. Brown (Out)"
    ]
   },
   {
@@ -129,9 +125,7 @@
    "points_for": 764.88,
    "points_against": 1000.76,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Zach Charbonnet (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
