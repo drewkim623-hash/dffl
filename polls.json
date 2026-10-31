@@ -163,9 +163,17 @@
    "opened": "2026-10-27",
    "closes": "2026-10-31",
    "subject": "DFFL Week 8: The Playoff Race Just Split Into Three Groups",
-   "status": "open",
-   "results": null,
-   "announced": false
+   "status": "closed",
+   "results": {
+    "STUD": 0,
+    "DEPTH": 0,
+    "BOTH": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
+   "announced": false,
+   "closed_at": "2026-10-31T23:22:27.184Z"
   }
  ]
 }
