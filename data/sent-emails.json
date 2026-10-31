@@ -279,6 +279,20 @@
    "sha256": "059f5235b10e50bfdda16b255026e5aabdd4d64dab0f761132cd7b1ef10a75fd",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-10-31T23:27:35.236Z",
+   "subject": "DFFL Week 8: Five Teams Are 2-5. One Has the League's Worst Playoff Odds.",
+   "lead": "five-teams-are-2-5",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 7
+   },
+   "to": 12,
+   "sha256": "9bd6c9ef18f28a142a3fa9fb2f0e473113c51d5b8d2cbb2d8d6974b4b085ba8a",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
