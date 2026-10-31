@@ -1,18 +1,8 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-10-30T17:50:09.459Z",
+ "generated": "2026-10-31T11:02:10.373Z",
  "week": 8,
  "entries": {
-  "1466": {
-   "n": "Travis Kelce",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
-  },
   "2133": {
    "n": "Davante Adams",
    "s": "IR",
@@ -37,32 +27,12 @@
   "4034": {
    "n": "Christian McCaffrey",
    "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-10-30"
-  },
-  "4199": {
-   "n": "Aaron Jones Sr.",
-   "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/3042519/aaron-jones-sr — Leg (brief exit). Finished game, ESPN Active; MIN bye Week 6. 0 games. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
-  },
-  "4866": {
-   "n": "Saquon Barkley",
-   "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
-   "retChecked": "2026-10-14"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-31"
   },
   "4983": {
    "n": "DJ Moore",
@@ -112,7 +82,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-10-30",
+   "retChecked": "2026-10-31",
    "irSince": 8
   },
   "5947": {
@@ -123,7 +93,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "retChecked": "2026-10-31"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -138,7 +108,7 @@
   },
   "7525": {
    "n": "DeVonta Smith",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
@@ -154,7 +124,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "retChecked": "2026-10-31"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -175,7 +145,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "retChecked": "2026-10-31"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -201,12 +171,12 @@
   "8167": {
    "n": "Christian Watson",
    "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-10-30"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-31"
   },
   "8800": {
    "n": "Malik Davis",
@@ -273,26 +243,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "10229": {
-   "n": "Rashee Rice",
-   "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
-   "retChecked": "2026-10-24"
-  },
-  "10232": {
-   "n": "Michael Wilson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
-  },
   "10236": {
    "n": "Dalton Kincaid",
    "s": "Questionable",
@@ -301,27 +251,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
-  },
-  "11610": {
-   "n": "Malik Washington",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
-  },
-  "11635": {
-   "n": "Ladd McConkey",
-   "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-15"
+   "retChecked": "2026-10-31"
   },
   "12474": {
    "n": "Woody Marks",
@@ -331,27 +261,27 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "retChecked": "2026-10-31"
   },
   "12481": {
    "n": "Cam Skattebo",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-10-30"
-  },
-  "12489": {
-   "n": "RJ Harvey",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "retChecked": "2026-10-31"
+  },
+  "12489": {
+   "n": "RJ Harvey",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-10-31"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -381,6 +311,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-24"
+  },
+  "12517": {
+   "n": "Colston Loveland",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-10-31"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -415,13 +355,13 @@
   },
   "13279": {
    "n": "Carnell Tate",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-10-30"
+   "s": "Out",
+   "ret": "2026-11-15",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-10-31"
   },
   "13281": {
    "n": "Jordyn Tyson",
@@ -444,16 +384,6 @@
    "retNote": "https://www.nfl.com/news/seahawks-placing-rb-jadarian-price-chest-on-injured-reserve — Chest. IR Week 4; earliest Week 8 Nov 2. Minimum only. Consensus: changed from audit []; consensus.",
    "retChecked": "2026-10-28",
    "irSince": 8
-  },
-  "13287": {
-   "n": "Jeremiyah Love",
-   "s": "Questionable",
-   "ret": "2026-11-01",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 8).",
-   "retChecked": "2026-10-22"
   },
   "13417": {
    "n": "De'Zhaun Stribling",

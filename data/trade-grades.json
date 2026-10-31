@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-30T11:03:13.027Z",
+ "generated": "2026-10-31T11:03:08.284Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -141,11 +141,11 @@
       {
        "asset": "Luther Burden III",
        "pid": "12519",
-       "value": 63.4,
+       "value": 63.5,
        "basis": "actual to wk 7 + Sleeper projection"
       }
      ],
-     "total": 63.4,
+     "total": 63.5,
      "tradeDay": {
       "letter": "A",
       "marginPct": 67,
@@ -270,7 +270,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -8,
-      "marginPts": -40.2
+      "marginPts": -40.3
      },
      "hindsight": "Pending"
     },
@@ -301,7 +301,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 8,
-      "marginPts": 40.2
+      "marginPts": 40.3
      },
      "hindsight": "Pending"
     }
@@ -327,7 +327,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -76,
-      "marginPts": -136.2
+      "marginPts": -135.9
      },
      "hindsight": "Pending"
     },
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 113,
+       "value": 112.7,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -348,11 +348,11 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 157.3,
+     "total": 157,
      "tradeDay": {
       "letter": "A",
       "marginPct": 76,
-      "marginPts": 136.2
+      "marginPts": 135.9
      },
      "hindsight": "Pending"
     }
@@ -415,7 +415,7 @@
       {
        "asset": "Jahmyr Gibbs",
        "pid": "9221",
-       "value": 256.8,
+       "value": 256.9,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -424,11 +424,11 @@
        "basis": "next cost R1 (regressed from R2), kept 3 yr, shrunk"
       }
      ],
-     "total": 331.7,
+     "total": 331.8,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 76.7
+      "marginPts": 76.9
      },
      "hindsight": "Pending"
     },
@@ -453,7 +453,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -76.7
+      "marginPts": -76.9
      },
      "hindsight": "Pending"
     }
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 83,
+       "value": 82.4,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 99.6,
+     "total": 99,
      "tradeDay": {
       "letter": "C",
-      "marginPct": -13,
-      "marginPts": -30.8
+      "marginPct": -14,
+      "marginPts": -32.1
      },
      "hindsight": "Pending"
     },
@@ -496,13 +496,13 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 43.9,
+       "value": 43.3,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 78.4,
+       "value": 79.8,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 130.3,
+     "total": 131,
      "tradeDay": {
       "letter": "C",
-      "marginPct": 13,
-      "marginPts": 30.8
+      "marginPct": 14,
+      "marginPts": 32.1
      },
      "hindsight": "Pending"
     }

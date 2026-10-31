@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-10-30T17:50:10.014Z",
- "at": 1793382610014,
+ "generated": "2026-10-31T11:02:10.960Z",
+ "at": 1793444530961,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -23,7 +23,9 @@
    "points_for": 933.12,
    "points_against": 896.1,
    "faab_spent": 87,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Colston Loveland (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -44,9 +46,7 @@
    "points_for": 911.4,
    "points_against": 896.1,
    "faab_spent": 49,
-   "starters_hurt": [
-    "Travis Kelce (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -64,9 +64,7 @@
    "points_for": 866.74,
    "points_against": 816.4,
    "faab_spent": 65,
-   "starters_hurt": [
-    "Aaron Jones Sr. (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -87,7 +85,7 @@
    "points_against": 920.92,
    "faab_spent": 91,
    "starters_hurt": [
-    "Carnell Tate (Questionable)"
+    "Carnell Tate (Out)"
    ]
   },
   {
@@ -98,9 +96,7 @@
    "points_against": 853.26,
    "faab_spent": 100,
    "starters_hurt": [
-    "Jeremiyah Love (Questionable)",
     "Dalton Kincaid (Questionable)",
-    "Ladd McConkey (Questionable)",
     "A.J. Brown (Questionable)"
    ]
   },
@@ -112,7 +108,6 @@
    "points_against": 1004.32,
    "faab_spent": 12,
    "starters_hurt": [
-    "Saquon Barkley (Questionable)",
     "Christian Watson (Questionable)"
    ]
   },
@@ -124,9 +119,7 @@
    "points_against": 933.1,
    "faab_spent": 59,
    "starters_hurt": [
-    "Breece Hall (Questionable)",
-    "Michael Wilson (Questionable)",
-    "Rashee Rice (Questionable)"
+    "Breece Hall (Questionable)"
    ]
   },
   {
