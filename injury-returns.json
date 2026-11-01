@@ -105,7 +105,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
       "checked": "2026-11-01",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5872": {
@@ -221,7 +221,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-01",
-      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "8408": {
@@ -397,12 +397,15 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        8
+        8,
+        9,
+        11,
+        12
       ],
-      "weeks": 1,
-      "checked": "2026-10-31",
+      "weeks": 4,
+      "checked": "2026-11-01",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit [8]; consensus."
     },
     "12495": {
       "kind": "report",
@@ -483,7 +486,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
       "checked": "2026-11-01",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "12533": {
@@ -507,7 +510,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-01",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13276": {
@@ -548,7 +551,7 @@
       "weeks_list": [],
       "source": "https://www.nfl.com/news/seahawks-placing-rb-jadarian-price-chest-on-injured-reserve",
       "checked": "2026-11-01",
-      "note": "Chest. IR Week 4; earliest Week 8 Nov 2. Minimum only. Consensus: changed from audit [8]; consensus.",
+      "note": "Chest. IR Week 4; earliest Week 8 Nov 2. Minimum only. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13287": {
