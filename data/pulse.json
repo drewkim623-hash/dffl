@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-01T17:29:44.536Z",
- "at": 1793554184536,
+ "generated": "2026-11-01T18:50:25.422Z",
+ "at": 1793559025422,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -14,7 +14,10 @@
    "points_for": 1135.8,
    "points_against": 808.32,
    "faab_spent": 4,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Amon-Ra St. Brown (Questionable)",
+    "Jake Ferguson (Questionable)"
+   ]
   },
   {
    "manager": "Domo112",
@@ -87,7 +90,7 @@
    "points_against": 853.26,
    "faab_spent": 100,
    "starters_hurt": [
-    "A.J. Brown (Out)"
+    "Drake London (Questionable)"
    ]
   },
   {
@@ -98,6 +101,7 @@
    "points_against": 1004.32,
    "faab_spent": 12,
    "starters_hurt": [
+    "Lamar Jackson (Out)",
     "Christian Watson (Questionable)"
    ]
   },
@@ -124,72 +128,72 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 9.6,
+    "points": 22.7,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
-    "points": 11.8,
+    "points": 38.1,
     "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 20.9,
+    "points": 44.38,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "jskule23",
-    "points": 41.6,
+    "points": 44.2,
     "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 0,
+    "points": 3.8,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "bradyrife",
-    "points": 2,
+    "points": 31.94,
     "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 0,
+    "points": 51.72,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 17.3,
+    "points": 34.5,
     "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 0,
+    "points": 41.28,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 18.3,
+    "points": 35.2,
     "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 0,
+    "points": 17.3,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 22.52,
+    "points": 44.02,
     "startersLeftToPlay": 9
    }
   }
@@ -316,5 +320,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 47
+ "free_agent_moves": 48
 }
