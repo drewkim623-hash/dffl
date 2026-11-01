@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-01T11:03:14.213Z",
+ "generated": "2026-11-01T15:35:47.782Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -327,7 +327,7 @@
      "tradeDay": {
       "letter": "F",
       "marginPct": -76,
-      "marginPts": -135.7
+      "marginPts": -135.3
      },
      "hindsight": "Pending"
     },
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 112.6,
+       "value": 112.2,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -348,11 +348,11 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 156.8,
+     "total": 156.4,
      "tradeDay": {
       "letter": "A",
       "marginPct": 76,
-      "marginPts": 135.7
+      "marginPts": 135.3
      },
      "hindsight": "Pending"
     }
@@ -415,7 +415,7 @@
       {
        "asset": "Jahmyr Gibbs",
        "pid": "9221",
-       "value": 256.9,
+       "value": 257,
        "basis": "actual to wk 7 + Sleeper projection"
       },
       {
@@ -424,11 +424,11 @@
        "basis": "next cost R1 (regressed from R2), kept 3 yr, shrunk"
       }
      ],
-     "total": 331.8,
+     "total": 331.9,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 76.9
+      "marginPts": 77
      },
      "hindsight": "Pending"
     },
@@ -453,7 +453,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -76.9
+      "marginPts": -77
      },
      "hindsight": "Pending"
     }
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 99,
+     "total": 99.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": -14,
-      "marginPts": -32.1
+      "marginPts": -32
      },
      "hindsight": "Pending"
     },
@@ -515,7 +515,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 14,
-      "marginPts": 32.1
+      "marginPts": 32
      },
      "hindsight": "Pending"
     }
