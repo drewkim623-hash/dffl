@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-01T11:02:24.573Z",
- "at": 1793530944573,
+ "generated": "2026-11-01T14:50:27.367Z",
+ "at": 1793544627367,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -114,9 +114,7 @@
    "points_for": 803.16,
    "points_against": 933.1,
    "faab_spent": 59,
-   "starters_hurt": [
-    "Breece Hall (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -324,5 +322,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 45
+ "free_agent_moves": 46
 }
