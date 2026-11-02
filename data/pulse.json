@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-01T18:50:25.422Z",
- "at": 1793559025422,
+ "generated": "2026-11-02T11:02:31.097Z",
+ "at": 1793617351098,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
@@ -16,7 +16,7 @@
    "faab_spent": 4,
    "starters_hurt": [
     "Amon-Ra St. Brown (Questionable)",
-    "Jake Ferguson (Questionable)"
+    "Jake Ferguson (Out)"
    ]
   },
   {
@@ -53,7 +53,9 @@
    "points_for": 903.1,
    "points_against": 883.86,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "James Cook III (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -62,7 +64,9 @@
    "points_for": 866.74,
    "points_against": 816.4,
    "faab_spent": 65,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Kyler Murray (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -71,7 +75,9 @@
    "points_for": 964.24,
    "points_against": 913.66,
    "faab_spent": 64,
-   "starters_hurt": []
+   "starters_hurt": [
+    "DJ Moore (Questionable)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -90,6 +96,7 @@
    "points_against": 853.26,
    "faab_spent": 100,
    "starters_hurt": [
+    "Jeremiyah Love (Out)",
     "Drake London (Questionable)"
    ]
   },
@@ -102,7 +109,8 @@
    "faab_spent": 12,
    "starters_hurt": [
     "Lamar Jackson (Out)",
-    "Christian Watson (Questionable)"
+    "Christian Watson (Questionable)",
+    "Kendrick Bourne (Out)"
    ]
   },
   {
@@ -112,7 +120,9 @@
    "points_for": 803.16,
    "points_against": 933.1,
    "faab_spent": 59,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Michael Wilson (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -128,73 +138,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 22.7,
-    "startersLeftToPlay": 9
+    "points": 93.7,
+    "startersLeftToPlay": 2
    },
    "b": {
     "manager": "victorthompson",
-    "points": 38.1,
-    "startersLeftToPlay": 9
+    "points": 103.7,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 44.38,
-    "startersLeftToPlay": 9
+    "points": 139.56,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "jskule23",
-    "points": 44.2,
-    "startersLeftToPlay": 8
+    "points": 94.54,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 3.8,
-    "startersLeftToPlay": 10
+    "points": 97.36,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "bradyrife",
-    "points": 31.94,
-    "startersLeftToPlay": 9
+    "points": 113.1,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 51.72,
-    "startersLeftToPlay": 10
+    "points": 174.4,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 34.5,
-    "startersLeftToPlay": 9
+    "points": 85.06,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 41.28,
-    "startersLeftToPlay": 10
+    "points": 171.78,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "moseslin",
-    "points": 35.2,
-    "startersLeftToPlay": 9
+    "points": 112.8,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 17.3,
-    "startersLeftToPlay": 10
+    "points": 95.08,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 44.02,
-    "startersLeftToPlay": 9
+    "points": 142.22,
+    "startersLeftToPlay": 1
    }
   }
  ],

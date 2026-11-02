@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-01T20:54:12.680Z",
+ "generated": "2026-11-02T11:02:30.501Z",
  "week": 8,
  "entries": {
   "2133": {
@@ -24,6 +24,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-21"
   },
+  "3214": {
+   "n": "Hunter Henry",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-11-02"
+  },
   "4034": {
    "n": "Christian McCaffrey",
    "s": "Questionable",
@@ -32,7 +42,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -42,7 +52,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -53,6 +63,26 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-25"
+  },
+  "4983": {
+   "n": "DJ Moore",
+   "s": "Questionable",
+   "ret": "2026-11-01",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-18"
+  },
+  "5849": {
+   "n": "Kyler Murray",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-02"
   },
   "5859": {
    "n": "A.J. Brown",
@@ -92,7 +122,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-01",
+   "retChecked": "2026-11-02",
    "irSince": 8
   },
   "6904": {
@@ -135,7 +165,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "8110": {
    "n": "Jake Ferguson",
@@ -145,7 +175,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "8112": {
    "n": "Drake London",
@@ -155,7 +185,17 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
+  },
+  "8138": {
+   "n": "James Cook III",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-02"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -186,7 +226,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "8800": {
    "n": "Malik Davis",
@@ -243,6 +283,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "10232": {
+   "n": "Michael Wilson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-02"
+  },
   "12474": {
    "n": "Woody Marks",
    "s": "Questionable",
@@ -251,7 +301,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -261,7 +311,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-02"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -374,7 +424,7 @@
   },
   "13287": {
    "n": "Jeremiyah Love",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-01",
    "retWeeks": null,
    "retSource": "report",
