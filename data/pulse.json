@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-03T11:02:21.282Z",
- "at": 1793703741282,
+ "generated": "2026-11-03T14:15:29.697Z",
+ "at": 1793715329697,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -123,9 +123,8 @@
    "points_against": 1176.1,
    "faab_spent": 12,
    "starters_hurt": [
-    "Lamar Jackson (Out)",
-    "Christian Watson (Questionable)",
-    "Kendrick Bourne (Out)"
+    "Cam Skattebo (Questionable)",
+    "Christian Watson (Questionable)"
    ]
   },
   {
@@ -203,7 +202,7 @@
    "a": {
     "manager": "moseslin",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
