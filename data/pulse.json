@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-02T18:49:52.944Z",
- "at": 1793645392944,
+ "generated": "2026-11-03T04:35:55.265Z",
+ "at": 1793680555265,
  "season": "2026",
  "nfl_week": 8,
  "season_type": "regular",
- "week_in_progress": true,
+ "week_in_progress": false,
  "standings": [
   {
    "manager": "jadencha",
@@ -15,6 +15,7 @@
    "points_against": 808.32,
    "faab_spent": 4,
    "starters_hurt": [
+    "Bhayshul Tuten (Questionable)",
     "Amon-Ra St. Brown (Questionable)",
     "Jake Ferguson (Out)"
    ]
@@ -35,7 +36,9 @@
    "points_for": 923.98,
    "points_against": 792.78,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jakobi Meyers (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -121,7 +124,8 @@
    "points_against": 933.1,
    "faab_spent": 59,
    "starters_hurt": [
-    "Michael Wilson (Questionable)"
+    "Michael Wilson (Questionable)",
+    "Tyler Loop (Questionable)"
    ]
   },
   {
@@ -138,8 +142,8 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 93.7,
-    "startersLeftToPlay": 2
+    "points": 119.18,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "victorthompson",
@@ -150,20 +154,20 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 139.56,
-    "startersLeftToPlay": 1
+    "points": 165.36,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "jskule23",
-    "points": 94.54,
-    "startersLeftToPlay": 1
+    "points": 113.14,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 97.36,
-    "startersLeftToPlay": 1
+    "points": 124.26,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "bradyrife",
@@ -198,13 +202,13 @@
   {
    "a": {
     "manager": "drewkim",
-    "points": 95.08,
-    "startersLeftToPlay": 1
+    "points": 99.48,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 142.22,
-    "startersLeftToPlay": 1
+    "points": 145.22,
+    "startersLeftToPlay": 0
    }
   }
  ],
@@ -356,7 +360,7 @@
      "name": "Jadarian Price",
      "pos": "RB",
      "team": "SEA",
-     "status": "IR",
+     "status": null,
      "to": "Domo112"
     }
    ],

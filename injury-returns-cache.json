@@ -1,7 +1,7 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-02T23:21:42.568Z",
- "week": 8,
+ "generated": "2026-11-03T04:35:54.804Z",
+ "week": 9,
  "entries": {
   "421": {
    "n": "Matthew Stafford",
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "2133": {
    "n": "Davante Adams",
@@ -27,7 +27,7 @@
   "2216": {
    "n": "Mike Evans",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -42,7 +42,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "4034": {
    "n": "Christian McCaffrey",
@@ -52,7 +52,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -62,12 +62,12 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "4881": {
    "n": "Lamar Jackson",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -77,7 +77,7 @@
   "4983": {
    "n": "DJ Moore",
    "s": "Questionable",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -92,7 +92,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "5859": {
    "n": "A.J. Brown",
@@ -107,7 +107,7 @@
   "5872": {
    "n": "Deebo Samuel Sr.",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -117,7 +117,7 @@
   "5892": {
    "n": "David Montgomery",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -132,8 +132,18 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-02",
+   "retChecked": "2026-11-03",
    "irSince": 8
+  },
+  "5947": {
+   "n": "Jakobi Meyers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-03"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -159,7 +169,7 @@
   "7543": {
    "n": "Travis Etienne Jr.",
    "s": "IR",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -175,7 +185,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "8110": {
    "n": "Jake Ferguson",
@@ -185,7 +195,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "8112": {
    "n": "Drake London",
@@ -195,7 +205,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "8138": {
    "n": "James Cook III",
@@ -205,7 +215,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -236,15 +246,14 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "8800": {
    "n": "Malik Davis",
    "s": "IR",
    "ret": null,
-   "retWeeks": 9,
+   "retWeeks": 8,
    "retWeeksList": [
-    8,
     9,
     10,
     11,
@@ -264,7 +273,7 @@
    "n": "De'Von Achane",
    "s": "IR",
    "ret": null,
-   "retWeeks": 10,
+   "retWeeks": 9,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear — Torn ACL. Out for 2026 season (Rapoport/Schefter; Hafley). Consensus: matches audit; consensus.",
@@ -275,9 +284,8 @@
    "n": "Jayden Reed",
    "s": "IR",
    "ret": null,
-   "retWeeks": 9,
+   "retWeeks": 8,
    "retWeeksList": [
-    8,
     9,
     10,
     12,
@@ -301,7 +309,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "12474": {
    "n": "Woody Marks",
@@ -311,7 +319,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -321,15 +329,14 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-02"
+   "retChecked": "2026-11-03"
   },
   "12489": {
    "n": "RJ Harvey",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retWeeksList": [
-    8,
     9,
     11,
     12
@@ -340,19 +347,21 @@
    "retChecked": "2026-11-01",
    "irSince": 8
   },
+  "12490": {
+   "n": "Bhayshul Tuten",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-03"
+  },
   "12508": {
    "n": "Jaxson Dart",
    "s": "IR",
    "ret": null,
    "retWeeks": 6,
-   "retWeeksList": [
-    9,
-    10,
-    11,
-    12,
-    13,
-    14
-   ],
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
@@ -400,6 +409,16 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-01"
   },
+  "12711": {
+   "n": "Tyler Loop",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 4,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "lands on injured reserve",
+   "retChecked": "2026-11-03"
+  },
   "13279": {
    "n": "Carnell Tate",
    "s": "Out",
@@ -413,7 +432,7 @@
   "13281": {
    "n": "Jordyn Tyson",
    "s": "IR",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -424,7 +443,7 @@
   "13287": {
    "n": "Jeremiyah Love",
    "s": "Out",
-   "ret": "2026-11-01",
+   "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -434,13 +453,8 @@
   "13417": {
    "n": "De'Zhaun Stribling",
    "s": "IR",
-   "ret": null,
-   "retWeeks": 3,
-   "retWeeksList": [
-    9,
-    10,
-    11
-   ],
+   "ret": "2026-11-29",
+   "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks — Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
