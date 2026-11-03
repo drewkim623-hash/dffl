@@ -7112,6 +7112,213 @@ group("Trade-aware odds (data/roster-weeks.json)");
   check("data/projections-history/: every file is <season>-wk<NN>.json", badHist.length === 0, badHist.join(","));
 }
 
+/* ================================= next week's matchups preview === */
+group("Next week's matchups: tale of the tape");
+{
+  const mctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const mp = await mctx.newPage();
+  const mpErr = [];
+  mp.on("pageerror", e => mpErr.push(String(e)));
+  await mp.goto(`${BASE}/?t=matchups`, { waitUntil: "domcontentloaded" });
+  await mp.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 }).catch(() => {});
+  await mp.waitForFunction(() => { const h = document.getElementById("mpHost"); return h && h.dataset.mpReady; }, null, { timeout: 60000 }).catch(() => {});
+
+  // (1) The pure helper on a made-up league: two seasons, the same two managers
+  // on different roster ids, every kind of playoff-week game.
+  const fx = await mp.evaluate(() => {
+    const S = window.__mpSeries, T = window.__mpGameType;
+    if (!S || !T) return null;
+    const G = (week, ra, ua, pa, rb, ub, pb) => ({ week, playoff: week >= 15, a: { rid: ra, uid: ua, pts: pa }, b: { rid: rb, uid: ub, pts: pb } });
+    const s1 = { season: "2030", pws: 15,
+      wb: [{ r: 1, m: 1, t1: 1, t2: 2 }, { r: 3, m: 5, t1: 2, t2: 1, p: 1 }],
+      lb: [{ r: 1, m: 1, t1: 7, t2: 8 }],
+      games: [G(3, 1, "x", 100, 2, "y", 90), G(15, 1, "x", 110, 2, "y", 100), G(17, 2, "y", 120, 1, "x", 90)] };
+    const s2 = { season: "2031", pws: 15,
+      wb: [{ r: 3, m: 6, t1: 4, t2: 9, p: 3 }, { r: 3, m: 7, t1: 4, t2: 9, p: 5 }],
+      lb: [{ r: 2, m: 3, t1: 9, t2: 4 }],
+      games: [G(16, 4, "x", 200, 9, "y", 50),     // toilet bowl: out
+        G(17, 4, "x", 80, 9, "y", 70)] };       // matches p:3 first: counted
+    const s3 = { season: "2032", pws: 15, wb: [{ r: 3, m: 7, t1: 4, t2: 9, p: 5 }], lb: [],
+      games: [G(17, 4, "x", 150, 9, "y", 10),     // 5th place: out
+        G(16, 4, "x", 140, 9, "y", 20)] };      // playoff week, in no bracket: out
+    return { all: S("x", "y", [s1, s2, s3]), rev: S("y", "x", [s1, s2, s3]),
+      types: [T(s1, s1.games[2]), T(s2, s2.games[0]), T(s3, s3.games[0]), T(s3, s3.games[1]), T(s1, s1.games[0])] };
+  });
+  check("matchups fixture: series counts regular, playoff, 3rd place; drops toilet bowl, 5th place and unbracketed playoff weeks",
+    !!fx && fx.all.w === 3 && fx.all.l === 1 && fx.all.t === 0 && fx.all.ptsA === 380 && fx.all.ptsB === 380,
+    JSON.stringify(fx && fx.all));
+  check("matchups fixture: playoff record 2–1 (3rd place counts), last meeting is the 2031 wk17 3rd-place game",
+    !!fx && fx.all.pw === 2 && fx.all.pl === 1 && fx.all.last && fx.all.last.season === "2031" && fx.all.last.week === 17 && fx.all.last.type === "third",
+    JSON.stringify(fx && fx.all.last));
+  check("matchups fixture: game types champ / toilet bowl null / consolation null / unbracketed null / reg",
+    !!fx && JSON.stringify(fx.types) === JSON.stringify(["champ", null, null, null, "reg"]), JSON.stringify(fx && fx.types));
+  check("matchups fixture: the series reads the same from either side",
+    !!fx && fx.rev.w === 1 && fx.rev.l === 3 && fx.rev.pw === 1 && fx.rev.pl === 2 && fx.rev.ptsA === fx.all.ptsB);
+
+  // (2) The real history through 2025 (finished seasons, so these never move).
+  const hist = await mp.evaluate(() => {
+    const D = window.__DFFL, S = window.__mpSeries;
+    if (!D || !S) return null;
+    const uid = n => [...D.DB.mgr.values()].find(m => m.name === n)?.uid;
+    const done = D.DB.seasons.filter(s => Number(s.season) <= 2025);
+    const pairs = [["jadencha", "saucebossandrew"], ["jskule23", "drewkim"], ["moseslin", "victorthompson"],
+      ["Domo112", "wesley55"], ["chassinator", "willie12w"], ["bradyrife", "sizzlemc2"]];
+    return Object.fromEntries(pairs.map(([a, b]) => {
+      const s = uid(a) && uid(b) ? S(uid(a), uid(b), done) : null;
+      return [`${a}|${b}`, s && { s: `${s.w}-${s.l}-${s.t}`, pts: `${s.ptsA.toFixed(2)}-${s.ptsB.toFixed(2)}`, po: `${s.pw}-${s.pl}`,
+        last: s.last && `${s.last.season}|${s.last.week}|${s.last.type}|${s.last.a.toFixed(2)}-${s.last.b.toFixed(2)}` }];
+    }));
+  });
+  const want = {
+    "jadencha|saucebossandrew": ["4-3-0", "962.58-899.08", "1-1", "2025|17|third|121.98-114.10"],
+    "jskule23|drewkim": ["4-3-0", "967.40-780.06", "1-0", "2025|12|reg|145.22-88.22"],
+    "moseslin|victorthompson": ["5-3-0", "1055.88-918.10", "0-1", "2025|14|reg|136.18-122.00"],
+    "Domo112|wesley55": ["4-0-0", "672.74-522.36", "1-0", "2025|10|reg|153.90-121.30"],
+    "chassinator|willie12w": ["3-4-0", "920.28-1080.12", "1-1", "2025|7|reg|131.44-196.54"],
+    "bradyrife|sizzlemc2": ["2-3-0", "607.82-635.88", "0-0", "2025|14|reg|135.06-102.26"],
+  };
+  for (const [k, [s, pts, po, last]] of Object.entries(want)) {
+    const h = hist && hist[k];
+    check(`series through 2025, ${k.replace("|", " v ")}: ${s.slice(0, 3)}, pts ${pts}, playoffs ${po}, last ${last.split("|").slice(0, 3).join(" ")}`,
+      !!h && h.s === s && h.pts === pts && h.po === po && h.last === last, JSON.stringify(h));
+  }
+  check("jskule23 v drewkim: last meeting is 2025 wk12, not the 2025 wk17 toilet bowl",
+    !!hist && !!hist["jskule23|drewkim"] && /^2025\|12\|reg/.test(hist["jskule23|drewkim"].last || ""));
+  check("jadencha v saucebossandrew: 3rd-place game counts as a playoff game (1–1) and is tagged 3rd place",
+    !!hist && !!hist["jadencha|saucebossandrew"] && hist["jadencha|saucebossandrew"].po === "1-1" && /\|third\|/.test(hist["jadencha|saucebossandrew"].last || ""));
+
+  // (3) The section as rendered at 390px.
+  const r = await mp.evaluate(async () => {
+    const host = document.getElementById("mpHost"), D = window.__DFFL, M = window.__MP;
+    if (!host || !M || !D) return null;
+    const season = D.DB.seasons[0];
+    let pairs = 0;
+    if (M.week != null) {
+      const rows = await fetch(`https://api.sleeper.app/v1/league/${season.leagueId}/matchups/${M.week}`).then(x => x.json()).catch(() => []);
+      const by = new Map();
+      for (const e of rows || []) if (e.matchup_id != null) by.set(e.matchup_id, (by.get(e.matchup_id) || 0) + 1);
+      pairs = [...by.values()].filter(n => n === 2).length;
+    }
+    const cards = [...host.querySelectorAll('[data-card="mp"]')];
+    const btns = [...host.querySelectorAll(".mpbtn")];
+    const collapsed = btns.map(b => ({ exp: b.getAttribute("aria-expanded"), hidden: document.getElementById(b.getAttribute("aria-controls"))?.hidden,
+      h: b.getBoundingClientRect().height, w: b.getBoundingClientRect().width }));
+    const height = host.getBoundingClientRect().height;
+    const consistent = cards.every(c => {
+      const s = window.__mpSeries(c.dataset.a, c.dataset.b, D.DB.seasons);
+      return c.dataset.series === `${s.w}-${s.l}-${s.t}` && c.dataset.playoff === `${s.pw}-${s.pl}-${s.pt}`;
+    });
+    btns.forEach(b => b.click());
+    const opened = btns.every(b => b.getAttribute("aria-expanded") === "true" && !document.getElementById(b.getAttribute("aria-controls")).hidden);
+    const sides = [...host.querySelectorAll(".lus")];
+    const pts = [...host.querySelectorAll(".lur .pt")].map(n => n.textContent.trim());
+    const W = innerWidth, over = [], small = [];
+    for (const n of host.querySelectorAll("*")) {
+      const rc = n.getBoundingClientRect();
+      if (rc.width && (rc.right > W + 1 || rc.left < -1)) over.push(`${n.className || n.tagName} ${Math.round(rc.left)}..${Math.round(rc.right)}`);
+      const text = [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim());
+      const fs = parseFloat(getComputedStyle(n).fontSize);
+      if (text && rc.width && fs < 11) small.push(`${n.className || n.tagName} ${fs}px`);
+    }
+    const out = { ready: host.dataset.mpReady, week: M.week, pairs, n: cards.length, collapsed, height, consistent, opened,
+      slots: sides.map(s => s.querySelectorAll(".lur").length), zero: pts.filter(t => /^0\.0+$/.test(t)).length,
+      dash: pts.filter(t => t === "—").length, total: pts.length,
+      emptyDash: [...host.querySelectorAll(".lur.empty .pt")].every(n => n.textContent.trim() === "—"),
+      kicked: (M.games || []).some(g => [g.a, g.b].some(s => s.players.some(p => p.pts != null))),
+      over: over.slice(0, 6), small: small.slice(0, 6), doc: document.documentElement.scrollWidth, W,
+      proj: /project/i.test(host.textContent) };
+    btns.forEach(b => b.click());
+    out.reclosed = btns.every(b => b.getAttribute("aria-expanded") === "false");
+    return out;
+  });
+  console.log(`  ·    week ${r && r.week}: ${r && r.n} cards, section ${r && Math.round(r.height)}px tall collapsed at 390`);
+  check("matchups section rendered with no page errors", !!r && r.ready === "ok" && mpErr.length === 0, `${r && r.ready} ${mpErr.slice(0, 2).join(" | ")}`);
+  check("one card per next-week game (matches Sleeper's matchups/{week})", !!r && r.n > 0 && r.n === r.pairs, r && `${r.n} cards, ${r.pairs} games`);
+  check("every card's series matches the pure helper", !!r && r.consistent);
+  check("lineups collapsed by default behind an aria-expanded button ≥44px tall",
+    !!r && r.collapsed.length === r.n && r.collapsed.every(c => c.exp === "false" && c.hidden === true && c.h >= 44 && c.w >= 44), JSON.stringify(r && r.collapsed[0]));
+  check("disclosure opens and closes", !!r && r.opened && r.reclosed);
+  check("each lineup has the 10 starting slots", !!r && r.slots.length === 2 * r.n && r.slots.every(n => n === 10), r && r.slots.join(","));
+  check("unplayed lineup points show — and never 0.00", !!r && r.total > 0 && r.zero === 0 && r.emptyDash && (r.kicked || r.dash === r.total),
+    r && `${r.dash}/${r.total} dashes, ${r.zero} zeros`);
+  check("no horizontal overflow at 390 (collapsed and open)", !!r && r.over.length === 0 && r.doc <= r.W, r && `${r.over.join("; ")} doc ${r.doc}`);
+  check("no text under 11px in the section", !!r && r.small.length === 0, r && r.small.join("; "));
+  check("section is tight: ≤ 700px a game collapsed at 390", !!r && r.n > 0 && r.height <= 700 * r.n, r && `${Math.round(r.height)}px for ${r.n}`);
+  check("no projections in the section", !!r && !r.proj);
+
+  // (4) Text that must never be cut: the form averages, and team names, which
+  // break at spaces (a long single word is set smaller instead), at 390 and 1280.
+  for (const w of [390, 1280]) {
+    await mp.setViewportSize({ width: w, height: 900 }); await mp.waitForTimeout(300);
+    const t = await mp.evaluate(() => {
+      const host = document.getElementById("mpHost");
+      if (!host) return null;
+      const av = [...host.querySelectorAll(".fr .av")];
+      // A new line is a rect that starts below the bottom of the one before (an
+      // emoji's taller box on the same line overlaps it, so it doesn't count).
+      const lines = rects => [...rects].filter(q => q.width > 0)
+        .reduce((acc, q) => (acc.last && q.top < acc.last.bottom - 2 ? acc : { n: acc.n + 1, last: q }), { n: 0, last: null }).n;
+      const names = [...host.querySelectorAll(".tn")].map(n => {
+        const tx = n.firstChild, re = /\S+/g, bad = [];
+        let m;
+        while (tx && (m = re.exec(tx.textContent))) {
+          const rg = document.createRange(); rg.setStart(tx, m.index); rg.setEnd(tx, m.index + m[0].length);
+          if (lines(rg.getClientRects()) > 1) bad.push(m[0]);
+        }
+        return { name: n.textContent, fs: parseFloat(getComputedStyle(n).fontSize), bad, over: n.scrollWidth > n.clientWidth + 1 };
+      });
+      const hero = [...host.querySelectorAll(".mps")].map(n => parseFloat(getComputedStyle(n).fontSize));
+      return {
+        n: av.length, clipped: av.filter(a => a.scrollWidth > a.clientWidth).map(a => `${a.textContent} ${a.scrollWidth}>${a.clientWidth}`),
+        avText: av.every(a => /^(\d+\.\d|—)avg$/.test(a.textContent.trim())),
+        avSmall: av.filter(a => parseFloat(getComputedStyle(a).fontSize) < 11).length,
+        broken: names.filter(x => x.bad.length).map(x => `${x.name}: ${x.bad.join(",")}`),
+        nameOver: names.filter(x => x.over).map(x => x.name), nameSmall: names.filter(x => x.fs < 11).map(x => x.name),
+        hero: Math.min(...hero), doc: document.documentElement.scrollWidth, W: innerWidth,
+      };
+    });
+    check(`form averages: every value fully visible, one decimal, ≥11px (${w}px)`,
+      !!t && t.n > 0 && t.clipped.length === 0 && t.avText && t.avSmall === 0, t && `${t.clipped.slice(0, 3).join("; ")} n=${t.n}`);
+    check(`team names break only at spaces, never clipped, ≥11px (${w}px)`,
+      !!t && t.broken.length === 0 && t.nameOver.length === 0 && t.nameSmall.length === 0,
+      t && [...t.broken, ...t.nameOver, ...t.nameSmall].slice(0, 4).join(" | "));
+    check(`hero series number stays big (≥36px) and nothing overflows (${w}px)`, !!t && t.hero >= 36 && t.doc <= t.W, t && `${t.hero}px doc ${t.doc}/${t.W}`);
+  }
+  await mp.setViewportSize({ width: 390, height: 844 });
+
+  // (5) Byes and "can't score": every starter whose club has no NFL game that
+  // week wears a BYE chip, and each side's count is EMPTY + BYE + Out.
+  const bye = await mp.evaluate(() => {
+    const M = window.__MP, host = document.getElementById("mpHost");
+    if (!M || !host) return null;
+    const bad = [];
+    let byes = 0;
+    for (const g of M.games) for (const s of [g.a, g.b]) {
+      const box = host.querySelector(`.lus[data-side="${CSS.escape(s.uid)}"]`);
+      const rows = box ? [...box.querySelectorAll(".lur")] : [];
+      s.players.forEach((p, i) => {
+        const chip = !!(rows[i] && rows[i].querySelector(".chip.bye"));
+        if (p.bye) byes++;
+        if (chip !== !!p.bye) bad.push(`${p.name} bye ${p.bye} chip ${chip}`);
+      });
+      const want = s.players.filter(p => p.empty || p.bye || p.status === "O").length;
+      const shown = box && box.querySelector(".cant") ? Number(box.querySelector(".cant").dataset.cant) : 0;
+      if (want !== shown || (want > 0 && !/^\d+ starters? can't score$/.test(box.querySelector(".cant").textContent.trim()))) bad.push(`${s.uid} cant ${want} shown ${shown}`);
+    }
+    const pit = M.week === 9 && M.games.flatMap(g => [g.a, g.b]).find(s => s.players.some(p => p.pos === "DEF" && p.club === "PIT"));
+    const pitBox = pit && host.querySelector(`.lus[data-side="${CSS.escape(pit.uid)}"]`);
+    const pitRow = pitBox && [...pitBox.querySelectorAll(".lur")].find(r => /Pittsburgh|PIT/.test(r.textContent) && /DEF/.test(r.textContent));
+    return { bad, byes, week: M.week, pit: pit ? { chip: !!(pitRow && pitRow.querySelector(".chip.bye")), cant: pitBox.querySelector(".cant")?.textContent.trim() } : null };
+  });
+  check("every starter on a bye wears a grey BYE chip; each side's \"N starters can't score\" counts EMPTY + BYE + Out",
+    !!bye && bye.bad.length === 0, bye && bye.bad.slice(0, 3).join(" | "));
+  if (bye && bye.week === 9) {
+    check("week 9: marty fakenewsman's PIT DEF shows BYE and the side says it has starters who can't score",
+      !!bye.pit && bye.pit.chip && /^\d+ starters? can't score$/.test(bye.pit.cant || ""), JSON.stringify(bye.pit));
+  }
+  await mctx.close();
+}
+
 /* -------------------------------------------------------------- done */
 await browser.close();
 server.close();
