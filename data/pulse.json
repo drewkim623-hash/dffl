@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-03T05:33:12.419Z",
- "at": 1793683992419,
+ "generated": "2026-11-03T11:02:21.282Z",
+ "at": 1793703741282,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -9,10 +9,10 @@
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 6,
+   "wins": 7,
    "losses": 1,
-   "points_for": 1135.8,
-   "points_against": 808.32,
+   "points_for": 1301.16,
+   "points_against": 921.46,
    "faab_spent": 4,
    "starters_hurt": [
     "Bhayshul Tuten (Questionable)",
@@ -22,19 +22,41 @@
   },
   {
    "manager": "Domo112",
-   "wins": 5,
+   "wins": 6,
    "losses": 2,
-   "points_for": 933.12,
-   "points_against": 896.1,
+   "points_for": 1052.3,
+   "points_against": 999.8,
    "faab_spent": 83,
    "starters_hurt": []
   },
   {
+   "manager": "wesley55",
+   "wins": 5,
+   "losses": 3,
+   "points_for": 1074.88,
+   "points_against": 996.66,
+   "faab_spent": 26,
+   "starters_hurt": [
+    "James Cook III (Questionable)"
+   ]
+  },
+  {
+   "manager": "willie12w",
+   "wins": 5,
+   "losses": 3,
+   "points_for": 1041.14,
+   "points_against": 901.46,
+   "faab_spent": 65,
+   "starters_hurt": [
+    "Kyler Murray (Questionable)"
+   ]
+  },
+  {
    "manager": "bradyrife",
    "wins": 5,
-   "losses": 2,
-   "points_for": 923.98,
-   "points_against": 792.78,
+   "losses": 3,
+   "points_for": 1037.08,
+   "points_against": 917.04,
    "faab_spent": 100,
    "starters_hurt": [
     "Jakobi Meyers (Questionable)"
@@ -43,60 +65,50 @@
   {
    "manager": "sizzlemc2",
    "wins": 5,
-   "losses": 2,
-   "points_for": 911.4,
-   "points_against": 896.1,
+   "losses": 3,
+   "points_for": 996.46,
+   "points_against": 1070.5,
    "faab_spent": 49,
    "starters_hurt": []
   },
   {
-   "manager": "wesley55",
-   "wins": 4,
-   "losses": 3,
-   "points_for": 903.1,
-   "points_against": 883.86,
-   "faab_spent": 26,
-   "starters_hurt": [
-    "James Cook III (Questionable)"
-   ]
-  },
-  {
-   "manager": "willie12w",
-   "wins": 4,
-   "losses": 3,
-   "points_for": 866.74,
-   "points_against": 816.4,
-   "faab_spent": 65,
-   "starters_hurt": [
-    "Kyler Murray (Questionable)"
-   ]
-  },
-  {
    "manager": "chassinator",
-   "wins": 3,
+   "wins": 4,
    "losses": 4,
-   "points_for": 964.24,
-   "points_against": 913.66,
+   "points_for": 1088.5,
+   "points_against": 1026.76,
    "faab_spent": 64,
    "starters_hurt": [
     "DJ Moore (Questionable)"
    ]
   },
   {
+   "manager": "saucebossandrew",
+   "wins": 3,
+   "losses": 5,
+   "points_for": 948.38,
+   "points_against": 1032.58,
+   "faab_spent": 59,
+   "starters_hurt": [
+    "Michael Wilson (Questionable)",
+    "Tyler Loop (Questionable)"
+   ]
+  },
+  {
    "manager": "jskule23",
    "wins": 2,
-   "losses": 5,
-   "points_for": 887.94,
-   "points_against": 920.92,
+   "losses": 6,
+   "points_for": 1001.08,
+   "points_against": 1086.28,
    "faab_spent": 95,
    "starters_hurt": []
   },
   {
    "manager": "victorthompson",
    "wins": 2,
-   "losses": 5,
-   "points_for": 820.34,
-   "points_against": 853.26,
+   "losses": 6,
+   "points_for": 924.04,
+   "points_against": 972.44,
    "faab_spent": 100,
    "starters_hurt": [
     "Jeremiyah Love (Out)",
@@ -106,9 +118,9 @@
   {
    "manager": "moseslin",
    "wins": 2,
-   "losses": 5,
-   "points_for": 804.88,
-   "points_against": 1004.32,
+   "losses": 6,
+   "points_for": 917.68,
+   "points_against": 1176.1,
    "faab_spent": 12,
    "starters_hurt": [
     "Lamar Jackson (Out)",
@@ -117,23 +129,11 @@
    ]
   },
   {
-   "manager": "saucebossandrew",
-   "wins": 2,
-   "losses": 5,
-   "points_for": 803.16,
-   "points_against": 933.1,
-   "faab_spent": 59,
-   "starters_hurt": [
-    "Michael Wilson (Questionable)",
-    "Tyler Loop (Questionable)"
-   ]
-  },
-  {
    "manager": "drewkim",
    "wins": 2,
-   "losses": 5,
-   "points_for": 764.88,
-   "points_against": 1000.76,
+   "losses": 6,
+   "points_for": 864.36,
+   "points_against": 1145.98,
    "faab_spent": 100,
    "starters_hurt": []
   }
