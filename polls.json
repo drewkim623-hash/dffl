@@ -174,6 +174,34 @@
    },
    "announced": true,
    "closed_at": "2026-10-31T23:22:27.184Z"
+  },
+  {
+   "id": "2026-w9-cellar-four",
+   "question": "jskule23, victorthompson, moseslin and drewkim are all 2-6. Which one turns it around first?",
+   "options": [
+    {
+     "key": "JSKULE",
+     "label": "jskule23"
+    },
+    {
+     "key": "VIC",
+     "label": "victorthompson"
+    },
+    {
+     "key": "MOSE",
+     "label": "moseslin"
+    },
+    {
+     "key": "DREW",
+     "label": "drewkim"
+    }
+   ],
+   "opened": "2026-11-03",
+   "closes": "2026-11-07",
+   "subject": "DFFL Week 9: The Full Budget Doesn't Buy A Winning Record",
+   "status": "open",
+   "results": null,
+   "announced": false
   }
  ]
 }

@@ -13,6 +13,60 @@
  "weeks": [
   {
    "season": "2026",
+   "week": 8,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Bhayshul Tuten's 29.9 and Josh Allen's 27.56 led a 165.36 win over jskule23, and jadencha is 7-1 with 1,301.16 points for the season, the most in the league."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Traded Chig Okonkwo to jskule23 for Marvin Harrison Jr., then beat victorthompson 119.18-103.7 behind Puka Nacua's 25 and Jahmyr Gibbs's 24.8, and is 6-2."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "Joe Burrow's 44.48 and Tee Higgins's 37.5 were the two best individual scores anywhere in the league this week, and wesley55's 58.98-point win over moseslin leaves him 5-3."
+    },
+    {
+     "manager": "willie12w",
+     "blurb": "Ja'Marr Chase's 31.1 led a 174.4 output, the week's high score, in an 89.34-point win over sizzlemc2, the week's widest margin, and willie12w is 5-3 after claiming Kyler Murray off waivers for nothing."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "Braelon Allen's 23.3 and Trevor Lawrence's 19.4 led the way, but an 11.16-point loss to chassinator, the week's closest game, leaves bradyrife 5-3."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "Scored 85.06, the week's low, in an 89.34-point loss to willie12w, with Tucker Kraft's 17.3 the only starter past 13; sizzlemc2 is 5-3."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "D'Andre Swift's 26.9 led a 124.26 win over bradyrife by 11.16, the week's closest game, and chassinator is 4-4 despite Zay Flowers' scoreless week."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "Tony Pollard's 29.2 and Michael Wilson's 26.8 led a 145.22 win over drewkim, and saucebossandrew made six roster moves this week, more than anyone else, cutting and then re-adding Ryan Flournoy in the same week."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Patrick Mahomes's 25.44 led a 113.14 output that lost to jadencha anyway — the best score by anyone who lost in the league this week — in a week jskule23 also traded Marvin Harrison Jr. to Domo112 and paid $11 for Kaelon Black off waivers."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "The Pittsburgh Steelers' 23 led a 103.7 output in a 15.48-point loss to Domo112, and victorthompson is 2-6."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Harold Fannin Jr.'s 23.4 led the way, but Lamar Jackson was held scoreless at quarterback in a 58.98-point loss to wesley55, and moseslin was one of two teams that made no roster moves this week."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "Brock Bowers's 28.2 led a 99.48 output in a 45.74-point loss to saucebossandrew, with his bench scoring nothing at all — the only lineup in the league with zero points left unused."
+    }
+   ]
+  },
+  {
+   "season": "2026",
    "week": 6,
    "teams": [
     {

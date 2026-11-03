@@ -597,6 +597,89 @@
      "body": "bradyrife and sizzlemc2 were the only two managers who made no roster moves at all in week 7, free agency or waivers. Everyone else turned over at least one spot."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 8,
+   "note": "",
+   "lede": "Six games produced 1,527.48 points, up from 1,511.2 the week before. willie12w's 174.4 was the week's high, and sizzlemc2's 85.06 — in the same 89.34-point loss, the week's widest margin — was the low. chassinator's 11.16-point win over bradyrife was the tightest finish, and jskule23's 113.14, in a loss to jadencha, was the best score by anyone who lost. jadencha is 7-1, and four teams — jskule23, victorthompson, moseslin and drewkim — share the league's fewest wins, at two apiece.",
+   "games": [
+    {
+     "headline": "wesley55 blitzes moseslin, 171.78-112.8",
+     "winner": "wesley55",
+     "winner_points": 171.78,
+     "loser": "moseslin",
+     "loser_points": 112.8,
+     "body": "Joe Burrow threw for 44.48 and Tee Higgins caught for 37.5, the two best individual scores anywhere in the league this week, and the Jacksonville defense added 22. Harold Fannin Jr.'s 23.4 led moseslin, but Lamar Jackson was held scoreless at quarterback and the Cincinnati defense managed only 8. The two sides combined for 284.58, the most points in any game this week, and the margin finished at 58.98."
+    },
+    {
+     "headline": "jadencha tops jskule23, 165.36-113.14; jskule23 falls to 2-6",
+     "winner": "jadencha",
+     "winner_points": 165.36,
+     "loser": "jskule23",
+     "loser_points": 113.14,
+     "body": "Bhayshul Tuten's 29.9 and Josh Allen's 27.56 led jadencha, who improves to 7-1. Patrick Mahomes's 25.44 led jskule23, and his 113.14 was the best score by anyone who lost in the league this week, 6.04 short of the week's lowest winning score. jskule23 also traded Marvin Harrison Jr. to Domo112 for Chig Okonkwo this week and paid $11 for Kaelon Black on waivers, the only FAAB spent in the league."
+    },
+    {
+     "headline": "willie12w's 174.4 buries sizzlemc2's 85.06 by 89.34",
+     "winner": "willie12w",
+     "winner_points": 174.4,
+     "loser": "sizzlemc2",
+     "loser_points": 85.06,
+     "body": "Ja'Marr Chase's 31.1 led the week's high score, with Bucky Irving adding 22 and the Tampa Bay defense 21. Tucker Kraft's 17.3 was the only sizzlemc2 starter past 13, and his 85.06 was the week's low. The 89.34-point margin was the widest of the week."
+    },
+    {
+     "headline": "saucebossandrew routs drewkim, 145.22-99.48",
+     "winner": "saucebossandrew",
+     "winner_points": 145.22,
+     "loser": "drewkim",
+     "loser_points": 99.48,
+     "body": "Tony Pollard's 29.2 and Michael Wilson's 26.8 led saucebossandrew, who also made six roster moves this week, the most of any manager, including cutting and re-adding Ryan Flournoy. Brock Bowers's 28.2 was the best number drewkim had, but nothing else in the lineup reached 17, and his bench scored nothing at all — the only team in the league to leave zero points unused this week. The margin finished at 45.74."
+    },
+    {
+     "headline": "chassinator edges bradyrife by 11.16, the week's closest",
+     "winner": "chassinator",
+     "winner_points": 124.26,
+     "loser": "bradyrife",
+     "loser_points": 113.1,
+     "body": "D'Andre Swift's 26.9 and Drake Maye's 22.46 led chassinator to a 124.26 win despite Zay Flowers' scoreless week at receiver. Braelon Allen's 23.3 and Trevor Lawrence's 19.4 kept bradyrife within range, with Bo Nix's 19.28 sitting on the bench right behind Lawrence's own number. The margin held at 11.16, the closest game of the week, and chassinator improves to 4-4."
+    },
+    {
+     "headline": "Domo112 holds off victorthompson, 119.18-103.7",
+     "winner": "Domo112",
+     "winner_points": 119.18,
+     "loser": "victorthompson",
+     "loser_points": 103.7,
+     "body": "Puka Nacua's 25 and Jahmyr Gibbs's 24.8 led Domo112, in the same week Domo112 traded Chig Okonkwo to jskule23 for Marvin Harrison Jr., who did not start in his Domo112 debut. The Pittsburgh Steelers' 23 was the best number on the victorthompson side, with Dak Prescott adding 19.8 and Dalton Kincaid 19.6, but Drake London closed at 1.8 and the margin held at 15.48, leaving victorthompson 2-6."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "Domo112 trades Chig Okonkwo to jskule23 for Marvin Harrison Jr.",
+     "body": "Domo112 sent tight end Chig Okonkwo to jskule23 in exchange for wide receiver Marvin Harrison Jr., a straight one-for-one with no FAAB or picks attached. Neither player started for his new team this week."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Every dollar spent this week belonged to jskule23",
+     "body": "jskule23 paid $11 for Kaelon Black, San Francisco's backup running back — the only FAAB spent anywhere in the league this week. willie12w and wesley55 also won waiver claims, for Kyler Murray and Tank Dell, but both cleared for $0."
+    },
+    {
+     "kind": "note",
+     "headline": "saucebossandrew leads the league with six moves, one of them a round trip",
+     "body": "saucebossandrew made six roster moves this week, the most of any manager, and one of them undid itself — Ryan Flournoy was dropped and then added back within the same week. drewkim was next with five."
+    },
+    {
+     "kind": "note",
+     "headline": "Two Rosters Didn't Move At All",
+     "body": "moseslin and sizzlemc2 were the only two managers who made no roster moves this week, free agency or waivers. Every other team turned over at least one spot."
+    },
+    {
+     "kind": "race",
+     "headline": "The four teams tied at two wins don't share a point total",
+     "body": "jskule23, victorthompson, moseslin and drewkim are all 2-6, but jskule23's 1,001.08 points this season are the most of the group, 136.72 more than drewkim's 864.36."
+    }
+   ]
   }
  ],
  "articles": [
@@ -5752,6 +5835,204 @@
     {
      "type": "p",
      "text": "Two of the five play each other this week. As this was written Saturday evening, saucebossandrew led drewkim 22.52-0 with the full Sunday slate still to come for both rosters, and the site's live model gave saucebossandrew a 61.54% chance to win. Whatever happens, the five-way tie at 2-5 won't survive the weekend. The board never treated these five teams as equals to begin with."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-full-budget-doesnt-buy-a-winning-record",
+   "date": "2026-11-03",
+   "source": "tuesday",
+   "kind": "opinion",
+   "kicker": "2026 · week 8",
+   "headline": "The Full Budget Doesn't Buy A Winning Record",
+   "dek": "Three managers have already spent their entire $100 FAAB allowance this season. Two of them are tied for the league's fewest wins. The exception is 5-3.",
+   "byline": "DFFL desk",
+   "standfirst": "$4 to $100 · the full range of spending this season",
+   "teaser": "🚨 DFFL | WEEK 8\n\nTHE FULL BUDGET DOESN'T BUY A WINNING RECORD\n\n💰 jadencha has spent $4 in FAAB all season and is 7-1\n📉 bradyrife, victorthompson and drewkim have all spent the full $100 — combined, they're 9-15\n🏈 willie12w's 174.4 was the week's high; chassinator's 11.16-point escape over bradyrife was the closest\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-full-budget-doesnt-buy-a-winning-record",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "jadencha has spent $4 in FAAB all season — the least of any manager in the league — and is 7-1, the only one-loss team left. bradyrife, victorthompson and drewkim have each spent the full $100 the league allows, and between the three of them they are 9-15. Two of the three most expensive teams in the league are tied for the fewest wins anyone has; the cheapest team has the fewest losses anyone has."
+    },
+    {
+     "type": "stat",
+     "n": "$4",
+     "text": "What jadencha has spent in FAAB this season, the least of anyone in the league. bradyrife, victorthompson and drewkim have each spent $100, the full allowance — and only one of the three has a winning record."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the frugal end",
+     "text": "The Cheapest Two Teams Split The Difference"
+    },
+    {
+     "type": "p",
+     "text": "jadencha's $4 is the league low, and he has lost once all season. moseslin is the next-cheapest at $12, and moseslin is 2-6, tied for the fewest wins in the league. The two lowest spenders in the league sit at opposite ends of the standings from each other."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the full tank",
+     "text": "Spending It All Worked Once Out Of Three Times"
+    },
+    {
+     "type": "p",
+     "text": "bradyrife, victorthompson and drewkim have each spent their full $100 this season. victorthompson and drewkim are both 2-6, tied for the fewest wins in the league. bradyrife, who has spent the same amount, is 5-3 after an 11.16-point loss to chassinator this week, the closest game of the day. jskule23's $95 is five dollars short of the group, and he is 2-6 as well — his only consolation this week was a 113.14-point loss to jadencha, the best score by anyone who lost."
+    },
+    {
+     "type": "bars",
+     "title": "FAAB spent this season, and the record next to it",
+     "sub": "By manager, in dollars. Green is a winning record, gold is .500, red is a losing one.",
+     "rows": [
+      {
+       "label": "jadencha",
+       "sub": "7-1",
+       "value": 4,
+       "group": 1
+      },
+      {
+       "label": "moseslin",
+       "sub": "2-6",
+       "value": 12,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "sub": "5-3",
+       "value": 26,
+       "group": 1
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "5-3",
+       "value": 49,
+       "group": 1
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "3-5",
+       "value": 59,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "4-4",
+       "value": 64,
+       "group": 3
+      },
+      {
+       "label": "willie12w",
+       "sub": "5-3",
+       "value": 65,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "6-2",
+       "value": 83,
+       "group": 1
+      },
+      {
+       "label": "jskule23",
+       "sub": "2-6",
+       "value": 95,
+       "group": 2
+      },
+      {
+       "label": "bradyrife",
+       "sub": "5-3",
+       "value": 100,
+       "group": 1
+      },
+      {
+       "label": "victorthompson",
+       "sub": "2-6",
+       "value": 100,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "2-6",
+       "value": 100,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the middle",
+     "text": "Everyone Else Sits Close To .500"
+    },
+    {
+     "type": "p",
+     "text": "Between wesley55's $26 and Domo112's $83, six managers have spent a FAAB season that looks almost ordinary, and most of their records sit close to break-even. wesley55, sizzlemc2 and willie12w are all 5-3, and Domo112 is 6-2. chassinator, at $64, is the league's only team at exactly 4-4. saucebossandrew, at $59, is the one real outlier in the middle, at 3-5. The two patterns above both show up at the edges of the spending list; the middle of it doesn't show either one as cleanly."
+    },
+    {
+     "type": "note",
+     "text": "FAAB resets every offseason. Whatever this season's dollars have or haven't bought, nobody carries a balance into 2027."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "Six Games, Closest First"
+    },
+    {
+     "type": "p",
+     "text": "Six games went final this week for 1,527.48 combined points, up from 1,511.2 the week before. Two were decided by less than 16 points; the other four were decided by at least 45. Here is every one, closest first."
+    },
+    {
+     "type": "h",
+     "eyebrow": "closest game",
+     "text": "chassinator Outlasts bradyrife By 11.16"
+    },
+    {
+     "type": "p",
+     "text": "<b>chassinator 124.26, bradyrife 113.1.</b> D'Andre Swift's 26.9 and Drake Maye's 22.46 led chassinator, and the win came despite Zay Flowers' scoreless week at receiver. Braelon Allen's 23.3 and Trevor Lawrence's 19.4 kept bradyrife in range, with Bo Nix's 19.28 sitting on the bench right behind Lawrence's own number. The margin held at 11.16, the closest game of the week, and chassinator improves to 4-4."
+    },
+    {
+     "type": "h",
+     "eyebrow": "second-closest",
+     "text": "Domo112 Holds Off victorthompson, 119.18-103.7"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 119.18, victorthompson 103.7.</b> Puka Nacua's 25 and Jahmyr Gibbs's 24.8 led Domo112, in the same week Domo112 traded Chig Okonkwo to jskule23 for Marvin Harrison Jr. — Harrison did not start in his Domo112 debut. The Pittsburgh Steelers' 23 was the best number on the other side, with Dak Prescott adding 19.8 and Dalton Kincaid 19.6, but Drake London closed at 1.8 and the margin held at 15.48."
+    },
+    {
+     "type": "h",
+     "eyebrow": "",
+     "text": "saucebossandrew Routs drewkim, 145.22-99.48"
+    },
+    {
+     "type": "p",
+     "text": "<b>saucebossandrew 145.22, drewkim 99.48.</b> Tony Pollard's 29.2 and Michael Wilson's 26.8 led a saucebossandrew lineup that also got 22.52 from Jordan Love, in a week saucebossandrew made six roster moves, the most of any manager, including cutting and then re-adding Ryan Flournoy. Brock Bowers's 28.2 was the best number drewkim had, but nothing else in the lineup reached 17, and his bench scored nothing at all — the only team in the league to leave zero points unused this week. The margin finished at 45.74."
+    },
+    {
+     "type": "h",
+     "eyebrow": "",
+     "text": "jadencha Beats jskule23, 165.36-113.14"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 165.36, jskule23 113.14.</b> Bhayshul Tuten's 29.9 and Josh Allen's 27.56 led jadencha, now 7-1. Patrick Mahomes's 25.44 led jskule23, and his 113.14 was the best score by anyone who lost in the league this week — 6.04 short of Domo112's 119.18, the week's lowest winning score. jskule23 also traded Marvin Harrison Jr. to Domo112 for Chig Okonkwo this week, and paid $11 for Kaelon Black on waivers, the only FAAB spent in the league."
+    },
+    {
+     "type": "h",
+     "eyebrow": "",
+     "text": "wesley55 Outscores moseslin In The Week's Highest-Scoring Game"
+    },
+    {
+     "type": "p",
+     "text": "<b>wesley55 171.78, moseslin 112.8.</b> Joe Burrow's 44.48 and Tee Higgins's 37.5 were the two best individual scores anywhere in the league this week, and together they covered most of wesley55's total by themselves. The two sides combined for 284.58, the most points in any game this week. Harold Fannin Jr.'s 23.4 led moseslin, but Lamar Jackson was held scoreless at quarterback, and wesley55 still left 38.68 unused on the bench — the most of any team in the league this week, even in the win."
+    },
+    {
+     "type": "h",
+     "eyebrow": "widest margin",
+     "text": "willie12w Blows Out sizzlemc2, 174.4-85.06"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 174.4, sizzlemc2 85.06.</b> Ja'Marr Chase's 31.1 led willie12w to the week's high score, and Bucky Irving's 22 and the Tampa Bay defense's 21 backed him up, in a week willie12w also claimed Kyler Murray off waivers for nothing. sizzlemc2's 85.06 was the week's low, with Tucker Kraft's 17.3 the only starter past 13. The 89.34-point margin was the widest of the week."
     }
    ]
   }
