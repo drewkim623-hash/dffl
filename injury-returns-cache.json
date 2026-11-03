@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-03T04:35:54.804Z",
+ "generated": "2026-11-03T05:14:50.260Z",
  "week": 9,
  "entries": {
   "421": {
@@ -413,10 +413,10 @@
    "n": "Tyler Loop",
    "s": "Questionable",
    "ret": null,
-   "retWeeks": 4,
-   "retSource": "espn-outlook",
+   "retWeeks": 1,
+   "retSource": "default",
    "retEstimated": true,
-   "retNote": "lands on injured reserve",
+   "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-03"
   },
   "13279": {

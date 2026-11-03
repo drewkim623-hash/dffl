@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-03T04:35:55.265Z",
- "at": 1793680555265,
+ "generated": "2026-11-03T05:14:50.773Z",
+ "at": 1793682890773,
  "season": "2026",
- "nfl_week": 8,
+ "nfl_week": 9,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -142,73 +142,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 119.18,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "victorthompson",
-    "points": 103.7,
-    "startersLeftToPlay": 0
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 165.36,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "jskule23",
-    "points": 113.14,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 124.26,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "bradyrife",
-    "points": 113.1,
-    "startersLeftToPlay": 0
+    "manager": "willie12w",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "willie12w",
-    "points": 174.4,
-    "startersLeftToPlay": 0
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 85.06,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "wesley55",
-    "points": 171.78,
-    "startersLeftToPlay": 0
-   },
-   "b": {
     "manager": "moseslin",
-    "points": 112.8,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "drewkim",
-    "points": 99.48,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
-    "points": 145.22,
-    "startersLeftToPlay": 0
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -258,33 +258,6 @@
  ],
  "waivers": [
   {
-   "week": 7,
-   "type": "waiver",
-   "managers": [
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Jonah Coleman",
-     "pos": "RB",
-     "team": "DEN",
-     "status": null,
-     "to": "bradyrife"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kaelon Black",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": 21,
-   "picks": []
-  },
-  {
    "week": 8,
    "type": "waiver",
    "managers": [
@@ -302,80 +275,7 @@
    "drops": [],
    "faab": 11,
    "picks": []
-  },
-  {
-   "week": 7,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Cam Little",
-     "pos": "K",
-     "team": "JAX",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [],
-   "faab": 11,
-   "picks": []
-  },
-  {
-   "week": 7,
-   "type": "waiver",
-   "managers": [
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "Cincinnati Bengals",
-     "pos": "DEF",
-     "team": "CIN",
-     "status": null,
-     "to": "moseslin"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Tennessee Titans",
-     "pos": "DEF",
-     "team": "TEN",
-     "status": null,
-     "from": "moseslin"
-    }
-   ],
-   "faab": 7,
-   "picks": []
-  },
-  {
-   "week": 7,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Jadarian Price",
-     "pos": "RB",
-     "team": "SEA",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "C.J. Stroud",
-     "pos": "QB",
-     "team": "HOU",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 2,
-   "picks": []
   }
  ],
- "free_agent_moves": 52
+ "free_agent_moves": 22
 }
