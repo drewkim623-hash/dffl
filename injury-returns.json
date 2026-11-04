@@ -23,8 +23,8 @@
       ],
       "weeks": 1,
       "checked": "2026-10-21",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 9)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "2449": {
       "kind": "report",
@@ -48,15 +48,16 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
+        9,
         10,
         11,
         12,
         13
       ],
-      "weeks": 4,
-      "checked": "2026-11-03",
+      "weeks": 5,
+      "checked": "2026-11-04",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: changed from audit [10,11,12,13]; consensus."
     },
     "4866": {
       "kind": "report",
@@ -80,7 +81,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-03",
-      "note": "Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: changed from audit []; consensus.",
+      "note": "Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "4983": {
@@ -134,8 +135,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/3126486/deebo-samuel-sr",
       "checked": "2026-10-14",
-      "note": "Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "note": "Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "5892": {
       "kind": "report",
@@ -193,15 +194,14 @@
     },
     "7543": {
       "kind": "report",
-      "weeks": 2,
+      "weeks": 1,
       "weeks_list": [
-        6,
-        7
+        9
       ],
       "source": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir",
-      "checked": "2026-10-14",
-      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "checked": "2026-11-04",
+      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "8121": {
       "kind": "report",
@@ -527,8 +527,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-01",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
+      "flag": "uncertain"
     },
     "13276": {
       "kind": "report",
@@ -558,7 +558,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson",
       "checked": "2026-11-03",
-      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: changed from audit []; consensus.",
+      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13286": {
@@ -574,12 +574,12 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        7
+        9
       ],
       "weeks": 1,
-      "checked": "2026-10-22",
+      "checked": "2026-11-04",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit []; consensus."
     },
     "13296": {
       "kind": "report",
