@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-03T17:30:05.133Z",
+ "generated": "2026-11-04T08:18:57.468Z",
  "week": 9,
  "entries": {
   "421": {
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "2133": {
    "n": "Davante Adams",
@@ -26,7 +26,7 @@
   },
   "2216": {
    "n": "Mike Evans",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -36,13 +36,13 @@
   },
   "3214": {
    "n": "Hunter Henry",
-   "s": "Out",
+   "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-03"
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-04"
   },
   "4034": {
    "n": "Christian McCaffrey",
@@ -52,11 +52,11 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "4454": {
    "n": "Kendrick Bourne",
-   "s": "Out",
+   "s": "IR",
    "ret": null,
    "retWeeks": 4,
    "retWeeksList": [
@@ -68,7 +68,8 @@
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-03",
+   "irSince": 9
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -98,11 +99,11 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "5859": {
    "n": "A.J. Brown",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -112,7 +113,7 @@
   },
   "5872": {
    "n": "Deebo Samuel Sr.",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -122,7 +123,7 @@
   },
   "5892": {
    "n": "David Montgomery",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -138,7 +139,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-03",
+   "retChecked": "2026-11-04",
    "irSince": 8
   },
   "5947": {
@@ -149,7 +150,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -164,7 +165,7 @@
   },
   "7525": {
    "n": "DeVonta Smith",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -183,45 +184,15 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "7547": {
-   "n": "Amon-Ra St. Brown",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
-  },
   "8110": {
    "n": "Jake Ferguson",
-   "s": "Out",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-03"
-  },
-  "8112": {
-   "n": "Drake London",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
-  },
-  "8138": {
-   "n": "James Cook III",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -236,7 +207,7 @@
   },
   "8155": {
    "n": "Breece Hall",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -252,7 +223,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "8800": {
    "n": "Malik Davis",
@@ -286,6 +257,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "10219": {
+   "n": "Chris Rodriguez Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-04"
+  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -315,17 +296,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
-  },
-  "12474": {
-   "n": "Woody Marks",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -335,7 +306,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -361,7 +332,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-03"
+   "retChecked": "2026-11-04"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -376,7 +347,7 @@
   },
   "12514": {
    "n": "Emeka Egbuka",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -386,7 +357,7 @@
   },
   "12529": {
    "n": "TreVeyon Henderson",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -407,7 +378,7 @@
   },
   "12534": {
    "n": "Kyle Monangai",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -438,13 +409,14 @@
   },
   "13287": {
    "n": "Jeremiyah Love",
-   "s": "Out",
+   "s": "IR",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-22"
+   "retChecked": "2026-10-22",
+   "irSince": 9
   },
   "13417": {
    "n": "De'Zhaun Stribling",

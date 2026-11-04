@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-03T17:30:05.567Z",
- "at": 1793727005568,
+ "generated": "2026-11-04T08:18:57.901Z",
+ "at": 1793780337901,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -13,11 +13,10 @@
    "losses": 1,
    "points_for": 1301.16,
    "points_against": 921.46,
-   "faab_spent": 4,
+   "faab_spent": 22,
    "starters_hurt": [
     "Bhayshul Tuten (Questionable)",
-    "Amon-Ra St. Brown (Questionable)",
-    "Jake Ferguson (Out)"
+    "Jake Ferguson (Questionable)"
    ]
   },
   {
@@ -36,9 +35,7 @@
    "points_for": 1074.88,
    "points_against": 996.66,
    "faab_spent": 26,
-   "starters_hurt": [
-    "James Cook III (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -47,9 +44,7 @@
    "points_for": 1041.14,
    "points_against": 901.46,
    "faab_spent": 65,
-   "starters_hurt": [
-    "Kyler Murray (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "bradyrife",
@@ -88,9 +83,9 @@
    "losses": 5,
    "points_for": 948.38,
    "points_against": 1032.58,
-   "faab_spent": 59,
+   "faab_spent": 100,
    "starters_hurt": [
-    "Breece Hall (Out)",
+    "Breece Hall (Questionable)",
     "Michael Wilson (Questionable)"
    ]
   },
@@ -111,8 +106,7 @@
    "points_against": 972.44,
    "faab_spent": 100,
    "starters_hurt": [
-    "Jeremiyah Love (Out)",
-    "Drake London (Questionable)"
+    "Jeremiyah Love (IR)"
    ]
   },
   {
@@ -121,7 +115,7 @@
    "losses": 6,
    "points_for": 917.68,
    "points_against": 1176.1,
-   "faab_spent": 12,
+   "faab_spent": 16,
    "starters_hurt": [
     "Cam Skattebo (Questionable)",
     "Christian Watson (Questionable)"
@@ -134,7 +128,9 @@
    "points_for": 864.36,
    "points_against": 1145.98,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "DeVonta Smith (Questionable)"
+   ]
   }
  ],
  "this_week": [
@@ -154,12 +150,12 @@
    "a": {
     "manager": "jadencha",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "saucebossandrew",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -195,7 +191,7 @@
    "b": {
     "manager": "sizzlemc2",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -260,6 +256,25 @@
    "week": 8,
    "type": "waiver",
    "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Allgeier",
+     "pos": "RB",
+     "team": "ARI",
+     "status": null,
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 41,
+   "picks": []
+  },
+  {
+   "week": 8,
+   "type": "waiver",
+   "managers": [
     "jskule23"
    ],
    "adds": [
@@ -274,7 +289,88 @@
    "drops": [],
    "faab": 11,
    "picks": []
+  },
+  {
+   "week": 8,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Houston Texans",
+     "pos": "DEF",
+     "team": "HOU",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Malachi Fields",
+     "pos": "WR",
+     "team": "NYG",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": 10,
+   "picks": []
+  },
+  {
+   "week": 8,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Chris Rodriguez Jr.",
+     "pos": "RB",
+     "team": "JAX",
+     "status": "Questionable",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Los Angeles Rams",
+     "pos": "DEF",
+     "team": "LAR",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": 8,
+   "picks": []
+  },
+  {
+   "week": 8,
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "J.J. McCarthy",
+     "pos": "QB",
+     "team": "NYG",
+     "status": null,
+     "to": "moseslin"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Aaron Rodgers",
+     "pos": "QB",
+     "team": "PIT",
+     "status": null,
+     "from": "moseslin"
+    }
+   ],
+   "faab": 4,
+   "picks": []
   }
  ],
- "free_agent_moves": 24
+ "free_agent_moves": 28
 }
