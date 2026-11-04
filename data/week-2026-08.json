@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 8,
- "generated": "2026-11-03T11:02:18.286Z",
- "generated_at": "2026-11-03T11:02:18.286Z",
+ "generated": "2026-11-04T11:03:41.925Z",
+ "generated_at": "2026-11-04T11:03:41.925Z",
  "final": true,
  "standings_through_week": 8,
  "standings_folded": false,
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 1301.16,
    "points_against": 921.46,
-   "waiver_budget_used": 4
+   "waiver_budget_used": 22
   },
   {
    "manager": "Domo112",
@@ -1206,7 +1206,7 @@
    "ties": 0,
    "points_for": 948.38,
    "points_against": 1032.58,
-   "waiver_budget_used": 59
+   "waiver_budget_used": 100
   },
   {
    "manager": "jskule23",
@@ -1239,7 +1239,7 @@
    "ties": 0,
    "points_for": 917.68,
    "points_against": 1176.1,
-   "waiver_budget_used": 12
+   "waiver_budget_used": 16
   },
   {
    "manager": "drewkim",
@@ -1255,6 +1255,177 @@
  ],
  "transactions": [
   {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Chris Rodriguez Jr.",
+     "pos": "RB",
+     "team": "JAX",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Los Angeles Rams",
+     "pos": "DEF",
+     "team": "LAR",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 8,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Houston Texans",
+     "pos": "DEF",
+     "team": "HOU",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Malachi Fields",
+     "pos": "WR",
+     "team": "NYG",
+     "from": "jadencha"
+    }
+   ],
+   "faab": 10,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Adonai Mitchell",
+     "pos": "WR",
+     "team": "NYJ",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Tyler Bass",
+     "pos": "K",
+     "team": "BUF",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Cairo Santos",
+     "pos": "K",
+     "team": "CHI",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chris Boswell",
+     "pos": "K",
+     "team": "PIT",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Jacoby Brissett",
+     "pos": "QB",
+     "team": "ARI",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Drew Stevens",
+     "pos": "K",
+     "team": "WAS",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Tyler Loop",
+     "pos": "K",
+     "team": "BAL",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "J.J. McCarthy",
+     "pos": "QB",
+     "team": "NYG",
+     "to": "moseslin"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Aaron Rodgers",
+     "pos": "QB",
+     "team": "PIT",
+     "from": "moseslin"
+    }
+   ],
+   "faab": 4,
+   "picks": []
+  },
+  {
    "type": "free_agent",
    "managers": [
     "saucebossandrew"
@@ -1269,6 +1440,40 @@
     }
    ],
    "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Gardner Minshew II",
+     "pos": "QB",
+     "team": "ARI",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Allgeier",
+     "pos": "RB",
+     "team": "ARI",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 41,
    "picks": []
   },
   {

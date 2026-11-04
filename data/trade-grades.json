@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-03T11:02:53.141Z",
+ "generated": "2026-11-04T11:03:51.102Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -141,15 +141,15 @@
       {
        "asset": "Luther Burden III",
        "pid": "12519",
-       "value": 75.5,
+       "value": 70,
        "basis": "actual to wk 8 + Sleeper projection"
       }
      ],
-     "total": 75.5,
+     "total": 70,
      "tradeDay": {
       "letter": "A",
-      "marginPct": 71,
-      "marginPts": 62.9
+      "marginPct": 70,
+      "marginPts": 57.4
      },
      "hindsight": "Pending"
     },
@@ -168,8 +168,8 @@
      "total": 12.6,
      "tradeDay": {
       "letter": "F",
-      "marginPct": -71,
-      "marginPts": -62.9
+      "marginPct": -70,
+      "marginPts": -57.4
      },
      "hindsight": "Pending"
     }
@@ -245,7 +245,7 @@
       {
        "asset": "Kyren Williams",
        "pid": "8150",
-       "value": 134.8,
+       "value": 134.4,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -266,11 +266,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 238.1,
+     "total": 237.7,
      "tradeDay": {
       "letter": "C",
       "marginPct": -9,
-      "marginPts": -47.4
+      "marginPts": -48.4
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 161.7,
+       "value": 162.3,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -297,11 +297,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 285.5,
+     "total": 286.1,
      "tradeDay": {
       "letter": "C",
       "marginPct": 9,
-      "marginPts": 47.4
+      "marginPts": 48.4
      },
      "hindsight": "Pending"
     }
@@ -326,8 +326,8 @@
      "total": 21.1,
      "tradeDay": {
       "letter": "F",
-      "marginPct": -76,
-      "marginPts": -136.7
+      "marginPct": -77,
+      "marginPts": -137.3
      },
      "hindsight": "Pending"
     },
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 113.6,
+       "value": 114.1,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -348,11 +348,11 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 157.8,
+     "total": 158.3,
      "tradeDay": {
       "letter": "A",
-      "marginPct": 76,
-      "marginPts": 136.7
+      "marginPct": 77,
+      "marginPts": 137.3
      },
      "hindsight": "Pending"
     }
@@ -415,7 +415,7 @@
       {
        "asset": "Jahmyr Gibbs",
        "pid": "9221",
-       "value": 260.6,
+       "value": 259.6,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -424,11 +424,11 @@
        "basis": "next cost R1 (regressed from R2), kept 3 yr, shrunk"
       }
      ],
-     "total": 335.6,
+     "total": 334.5,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 79.6
+      "marginPts": 78
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 161.7,
+       "value": 162.3,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -449,11 +449,11 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 255.9,
+     "total": 256.6,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -79.6
+      "marginPts": -78
      },
      "hindsight": "Pending"
     }
@@ -480,11 +480,11 @@
        "basis": "next cost R1, kept 1 yr, shrunk"
       }
      ],
-     "total": 91.6,
+     "total": 91.5,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -23,
-      "marginPts": -54.8
+      "marginPct": -24,
+      "marginPts": -57.7
      },
      "hindsight": "Pending"
     },
@@ -496,13 +496,13 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 46.1,
+       "value": 46.5,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
        "asset": "D'Andre Swift",
        "pid": "6790",
-       "value": 92.3,
+       "value": 94.8,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 146.4,
+     "total": 149.2,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 23,
-      "marginPts": 54.8
+      "marginPct": 24,
+      "marginPts": 57.7
      },
      "hindsight": "Pending"
     }
@@ -541,8 +541,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 1,
-      "marginPts": 0.2
+      "marginPct": 3,
+      "marginPts": 0.5
      },
      "hindsight": "Pending"
     },
@@ -554,7 +554,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 3,
+       "value": 2.7,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -564,12 +564,12 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 10.3,
+     "total": 10,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -1,
-      "marginPts": -0.2
+      "marginPct": -3,
+      "marginPts": -0.5
      },
      "hindsight": "Pending"
     }
@@ -587,7 +587,7 @@
       {
        "asset": "Josh Allen",
        "pid": "4984",
-       "value": 124.3,
+       "value": 125.2,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -596,7 +596,7 @@
        "basis": "next cost R2 (regressed from R3), kept 4 yr, shrunk"
       }
      ],
-     "total": 155,
+     "total": 155.8,
      "tradeDay": {
       "letter": "B",
       "marginPct": 54,
@@ -632,7 +632,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -43,
-      "marginPts": -61.6
+      "marginPts": -62.9
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 51.1,
+       "value": 52.9,
        "basis": "actual to wk 8 + Sleeper projection"
       }
      ],
-     "total": 51.1,
+     "total": 52.9,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -32,
-      "marginPts": -47.1
+      "marginPct": -30,
+      "marginPts": -45.8
      },
      "hindsight": "Pending"
     }
@@ -676,16 +676,16 @@
       {
        "asset": "Kendre Miller",
        "pid": "9757",
-       "value": 0,
+       "value": 1.2,
        "basis": "actual to wk 8 + Sleeper projection"
       }
      ],
-     "total": 3.7,
+     "total": 4.9,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -48,
-      "marginPts": -6.8
+      "marginPct": -37,
+      "marginPts": -5.7
      },
      "hindsight": "Pending"
     },
@@ -705,8 +705,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 48,
-      "marginPts": 6.8
+      "marginPct": 37,
+      "marginPts": 5.7
      },
      "hindsight": "Pending"
     }
@@ -724,7 +724,7 @@
       {
        "asset": "Puka Nacua",
        "pid": "9493",
-       "value": 124.4,
+       "value": 124.3,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -733,11 +733,11 @@
        "basis": "next cost R12 (regressed from R15), kept 2 yr, shrunk"
       }
      ],
-     "total": 214.2,
+     "total": 214.1,
      "tradeDay": {
       "letter": "B",
       "marginPct": 33,
-      "marginPts": 105.2
+      "marginPts": 105.3
      },
      "hindsight": "Pending"
     },
@@ -749,7 +749,7 @@
       {
        "asset": "Mike Evans",
        "pid": "2216",
-       "value": 74,
+       "value": 73.9,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -765,11 +765,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 108.9,
+     "total": 108.8,
      "tradeDay": {
       "letter": "D",
       "marginPct": -33,
-      "marginPts": -105.2
+      "marginPts": -105.3
      },
      "hindsight": "Pending"
     }
@@ -796,7 +796,7 @@
       "letter": "C",
       "small": true,
       "marginPct": -100,
-      "marginPts": -2.4
+      "marginPts": -3.1
      },
      "hindsight": "Pending"
     },
@@ -808,16 +808,16 @@
       {
        "asset": "Chig Okonkwo",
        "pid": "8210",
-       "value": 2.4,
+       "value": 3.1,
        "basis": "actual to wk 8 + Sleeper projection"
       }
      ],
-     "total": 2.4,
+     "total": 3.1,
      "tradeDay": {
       "letter": "C",
       "small": true,
       "marginPct": 100,
-      "marginPts": 2.4
+      "marginPts": 3.1
      },
      "hindsight": "Pending"
     }
