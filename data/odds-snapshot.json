@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-04T19:12:50.290Z",
- "at": 1793819570290,
+ "generated": "2026-11-04T19:33:00.750Z",
+ "at": 1793820780750,
  "season": "2026",
  "week": 9,
  "liveWeek": null,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.3205,
-   "titleNow": 0.47925,
+   "titleNow": 0.47965,
    "playoffWas": 0.919,
    "playoffNow": 0.99995,
-   "wins": 11.5551,
+   "wins": 11.5556,
    "titleOdds": -105,
    "titleOddsOpen": 195,
    "playoffOdds": -19900
@@ -26,10 +26,10 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.18815,
-   "titleNow": 0.16255,
+   "titleNow": 0.16265,
    "playoffWas": 0.82245,
-   "playoffNow": 0.9864,
-   "wins": 9.7142,
+   "playoffNow": 0.9865,
+   "wins": 9.71505,
    "titleOdds": 480,
    "titleOddsOpen": 400,
    "playoffOdds": -19900
@@ -41,11 +41,11 @@
    "titleWas": 0.04315,
    "titleNow": 0.00105,
    "playoffWas": 0.4141,
-   "playoffNow": 0.015,
-   "wins": 4.3055,
+   "playoffNow": 0.01495,
+   "wins": 4.2956,
    "titleOdds": 89750,
    "titleOddsOpen": 2090,
-   "playoffOdds": 6190
+   "playoffOdds": 6210
   },
   {
    "uid": "646481339029475328",
@@ -54,21 +54,21 @@
    "titleWas": 0.01435,
    "titleNow": 0.00025,
    "playoffWas": 0.235,
-   "playoffNow": 0.00615,
-   "wins": 4.11835,
+   "playoffNow": 0.0061,
+   "wins": 4.1185,
    "titleOdds": 377260,
    "titleOddsOpen": 6470,
-   "playoffOdds": 15240
+   "playoffOdds": 15370
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1368,
-   "titleNow": 0.11145,
+   "titleNow": 0.11135,
    "playoffWas": 0.72305,
-   "playoffNow": 0.8891,
-   "wins": 8.37795,
+   "playoffNow": 0.8892,
+   "wins": 8.37785,
    "titleOdds": 750,
    "titleOddsOpen": 590,
    "playoffOdds": -1640
@@ -78,11 +78,11 @@
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.05365,
-   "titleNow": 0.00255,
+   "titleNow": 0.0026,
    "playoffWas": 0.4699,
-   "playoffNow": 0.075,
-   "wins": 5.3004,
-   "titleOdds": 36900,
+   "playoffNow": 0.0751,
+   "wins": 5.2968,
+   "titleOdds": 36180,
    "titleOddsOpen": 1660,
    "playoffOdds": 1160
   },
@@ -91,49 +91,49 @@
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.05095,
-   "titleNow": 0.03985,
+   "titleNow": 0.0403,
    "playoffWas": 0.4532,
-   "playoffNow": 0.6832,
-   "wins": 7.5963,
-   "titleOdds": 2270,
+   "playoffNow": 0.685,
+   "wins": 7.6021,
+   "titleOdds": 2240,
    "titleOddsOpen": 1750,
-   "playoffOdds": -260
+   "playoffOdds": -270
   },
   {
    "uid": "845119622473699328",
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.0276,
-   "titleNow": 0.0012,
+   "titleNow": 0.00115,
    "playoffWas": 0.3112,
-   "playoffNow": 0.03545,
-   "wins": 4.49995,
-   "titleOdds": 78520,
+   "playoffNow": 0.0353,
+   "wins": 4.49585,
+   "titleOdds": 81930,
    "titleOddsOpen": 3320,
-   "playoffOdds": 2560
+   "playoffOdds": 2570
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0753,
-   "titleNow": 0.11955,
+   "titleNow": 0.1198,
    "playoffWas": 0.5877,
-   "playoffNow": 0.91255,
-   "wins": 8.48635,
+   "playoffNow": 0.9129,
+   "wins": 8.48355,
    "titleOdds": 690,
    "titleOddsOpen": 1150,
-   "playoffOdds": -2960
+   "playoffOdds": -2990
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.0391,
-   "titleNow": 0.0416,
+   "titleNow": 0.0415,
    "playoffWas": 0.41455,
-   "playoffNow": 0.5982,
-   "wins": 6.93545,
+   "playoffNow": 0.59795,
+   "wins": 6.93405,
    "titleOdds": 2170,
    "titleOddsOpen": 2310,
    "playoffOdds": -175
@@ -143,26 +143,26 @@
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02605,
-   "titleNow": 0.0032,
+   "titleNow": 0.0033,
    "playoffWas": 0.32165,
-   "playoffNow": 0.06395,
-   "wins": 5.12505,
-   "titleOdds": 29380,
+   "playoffNow": 0.06765,
+   "wins": 5.1593,
+   "titleOdds": 28490,
    "titleOddsOpen": 3520,
-   "playoffOdds": 1380
+   "playoffOdds": 1290
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0244,
-   "titleNow": 0.0375,
+   "titleNow": 0.0364,
    "playoffWas": 0.3282,
-   "playoffNow": 0.73505,
-   "wins": 7.9854,
-   "titleOdds": 2420,
+   "playoffNow": 0.7294,
+   "wins": 7.96575,
+   "titleOdds": 2490,
    "titleOddsOpen": 3770,
-   "playoffOdds": -350
+   "playoffOdds": -340
   }
  ],
  "games": [],
@@ -216,6 +216,16 @@
    ]
   },
   {
+   "manager": "sizzlemc2",
+   "cost": 0.01504124594302203,
+   "players": [
+    {
+     "name": "Sam Darnold",
+     "status": "Out"
+    }
+   ]
+  },
+  {
    "manager": "drewkim",
    "cost": 0.011436969589816104,
    "players": [
@@ -247,7 +257,7 @@
   },
   {
    "manager": "victorthompson",
-   "cost": 0.0030650890106127537,
+   "cost": 0.0029165648668458832,
    "players": [
     {
      "name": "A.J. Brown",

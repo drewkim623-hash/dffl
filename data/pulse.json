@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-04T19:12:03.178Z",
- "at": 1793819523178,
+ "generated": "2026-11-04T19:30:13.597Z",
+ "at": 1793820613597,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -375,5 +375,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 40
+ "free_agent_moves": 42
 }
