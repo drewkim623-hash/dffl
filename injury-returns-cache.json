@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-04T17:50:16.367Z",
+ "generated": "2026-11-04T19:12:02.726Z",
  "week": 9,
  "entries": {
   "421": {
@@ -74,6 +74,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-03"
+  },
+  "4943": {
+   "n": "Sam Darnold",
+   "s": "Out",
+   "ret": "2026-11-15",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-04"
   },
   "4983": {
    "n": "DJ Moore",
@@ -149,7 +159,7 @@
   "6803": {
    "n": "Brandon Aiyuk",
    "s": "DNR",
-   "ret": "2027-02-15",
+   "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "espn-return-date",
    "retEstimated": false,

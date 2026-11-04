@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-04T17:50:16.989Z",
- "at": 1793814616990,
+ "generated": "2026-11-04T19:12:03.178Z",
+ "at": 1793819523178,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -64,7 +64,9 @@
    "points_for": 996.46,
    "points_against": 1070.5,
    "faab_spent": 49,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Sam Darnold (Out)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -107,7 +109,7 @@
    "points_against": 972.44,
    "faab_spent": 100,
    "starters_hurt": [
-    "Jeremiyah Love (IR)"
+    "A.J. Brown (Questionable)"
    ]
   },
   {
@@ -373,5 +375,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 38
+ "free_agent_moves": 40
 }
