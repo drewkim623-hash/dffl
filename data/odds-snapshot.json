@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-04T16:51:28.060Z",
- "at": 1793811088060,
+ "generated": "2026-11-04T17:50:37.747Z",
+ "at": 1793814637747,
  "season": "2026",
  "week": 9,
  "liveWeek": null,
@@ -29,7 +29,7 @@
    "titleNow": 0.163,
    "playoffWas": 0.82245,
    "playoffNow": 0.98675,
-   "wins": 9.71285,
+   "wins": 9.7128,
    "titleOdds": 480,
    "titleOddsOpen": 400,
    "playoffOdds": -19900
@@ -67,11 +67,11 @@
    "titleWas": 0.1368,
    "titleNow": 0.1116,
    "playoffWas": 0.72305,
-   "playoffNow": 0.8925,
-   "wins": 8.39005,
+   "playoffNow": 0.89255,
+   "wins": 8.3902,
    "titleOdds": 750,
    "titleOddsOpen": 590,
-   "playoffOdds": -1750
+   "playoffOdds": -1760
   },
   {
    "uid": "850946675743793152",
@@ -81,7 +81,7 @@
    "titleNow": 0.00265,
    "playoffWas": 0.4699,
    "playoffNow": 0.07685,
-   "wins": 5.31275,
+   "wins": 5.3127,
    "titleOdds": 35500,
    "titleOddsOpen": 1660,
    "playoffOdds": 1130
@@ -93,7 +93,7 @@
    "titleWas": 0.05095,
    "titleNow": 0.0381,
    "playoffWas": 0.4532,
-   "playoffNow": 0.69375,
+   "playoffNow": 0.6938,
    "wins": 7.6283,
    "titleOdds": 2380,
    "titleOddsOpen": 1750,
@@ -106,8 +106,8 @@
    "titleWas": 0.0276,
    "titleNow": 0.0011,
    "playoffWas": 0.3112,
-   "playoffNow": 0.0363,
-   "wins": 4.5093,
+   "playoffNow": 0.03625,
+   "wins": 4.5091,
    "titleOdds": 85660,
    "titleOddsOpen": 3320,
    "playoffOdds": 2500
@@ -145,8 +145,8 @@
    "titleWas": 0.02605,
    "titleNow": 0.00325,
    "playoffWas": 0.32165,
-   "playoffNow": 0.06465,
-   "wins": 5.1235,
+   "playoffNow": 0.0646,
+   "wins": 5.12355,
    "titleOdds": 28930,
    "titleOddsOpen": 3520,
    "playoffOdds": 1360
@@ -159,7 +159,7 @@
    "titleNow": 0.0356,
    "playoffWas": 0.3282,
    "playoffNow": 0.7135,
-   "wins": 7.8965,
+   "wins": 7.8966,
    "titleOdds": 2550,
    "titleOddsOpen": 3770,
    "playoffOdds": -310
@@ -202,6 +202,16 @@
    ]
   },
   {
+   "manager": "bradyrife",
+   "cost": 0.017098492101483953,
+   "players": [
+    {
+     "name": "Christian McCaffrey",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "jskule23",
    "cost": 0.015726445279736545,
    "players": [
@@ -217,16 +227,6 @@
    "players": [
     {
      "name": "DeVonta Smith",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "bradyrife",
-   "cost": 0.010621827411167462,
-   "players": [
-    {
-     "name": "Jakobi Meyers",
      "status": "Questionable"
     }
    ]

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-04T16:50:48.664Z",
+ "generated": "2026-11-04T17:50:16.367Z",
  "week": 9,
  "entries": {
   "421": {
@@ -198,6 +198,16 @@
    "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-23",
    "irSince": 6
+  },
+  "8146": {
+   "n": "Garrett Wilson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-04"
   },
   "8155": {
    "n": "Breece Hall",
