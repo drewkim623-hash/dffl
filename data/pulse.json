@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-05T16:29:40.596Z",
- "at": 1793896180596,
+ "generated": "2026-11-05T20:50:27.790Z",
+ "at": 1793911827790,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -140,7 +140,8 @@
    "points_against": 1145.98,
    "faab_spent": 100,
    "starters_hurt": [
-    "DeVonta Smith (Questionable)"
+    "DeVonta Smith (Questionable)",
+    "Emeka Egbuka (Questionable)"
    ]
   }
  ],
@@ -219,6 +220,48 @@
   }
  ],
  "trades": [
+  {
+   "week": 8,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Chris Godwin Jr.",
+     "pos": "WR",
+     "team": "TB",
+     "status": null,
+     "to": "bradyrife"
+    },
+    {
+     "name": "Brian Thomas Jr.",
+     "pos": "WR",
+     "team": "JAX",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chris Godwin Jr.",
+     "pos": "WR",
+     "team": "TB",
+     "status": null,
+     "from": "jadencha"
+    },
+    {
+     "name": "Brian Thomas Jr.",
+     "pos": "WR",
+     "team": "JAX",
+     "status": null,
+     "from": "bradyrife"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
   {
    "week": 8,
    "type": "trade",
