@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-04T19:50:09.871Z",
- "at": 1793821809871,
+ "generated": "2026-11-05T11:02:18.987Z",
+ "at": 1793876538987,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -15,7 +15,8 @@
    "points_against": 921.46,
    "faab_spent": 22,
    "starters_hurt": [
-    "Bhayshul Tuten (Questionable)"
+    "Bhayshul Tuten (Questionable)",
+    "Amon-Ra St. Brown (Questionable)"
    ]
   },
   {
@@ -54,7 +55,8 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Christian McCaffrey (Questionable)",
-    "Garrett Wilson (Questionable)"
+    "Garrett Wilson (Questionable)",
+    "George Pickens (Questionable)"
    ]
   },
   {
@@ -65,7 +67,9 @@
    "points_against": 1070.5,
    "faab_spent": 49,
    "starters_hurt": [
-    "Sam Darnold (Out)"
+    "Sam Darnold (Out)",
+    "Denzel Boston (Questionable)",
+    "Travis Kelce (Questionable)"
    ]
   },
   {
@@ -87,7 +91,8 @@
    "points_against": 1032.58,
    "faab_spent": 100,
    "starters_hurt": [
-    "Michael Wilson (Questionable)"
+    "Michael Wilson (Questionable)",
+    "Rashee Rice (Questionable)"
    ]
   },
   {
@@ -109,6 +114,7 @@
    "points_against": 972.44,
    "faab_spent": 100,
    "starters_hurt": [
+    "Alvin Kamara (Questionable)",
     "A.J. Brown (Questionable)"
    ]
   },
@@ -120,6 +126,7 @@
    "points_against": 1176.1,
    "faab_spent": 16,
    "starters_hurt": [
+    "Saquon Barkley (Questionable)",
     "Cam Skattebo (Questionable)",
     "Christian Watson (Questionable)"
    ]
@@ -331,7 +338,7 @@
      "name": "Chris Rodriguez Jr.",
      "pos": "RB",
      "team": "JAX",
-     "status": "Questionable",
+     "status": null,
      "to": "jadencha"
     }
    ],
