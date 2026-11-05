@@ -57,7 +57,7 @@
       "weeks": 5,
       "checked": "2026-11-04",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [10,11,12,13]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "4866": {
       "kind": "report",
@@ -67,8 +67,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-14",
-      "note": "Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
-      "flag": "uncertain"
+      "note": "Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "4881": {
       "kind": "report",
@@ -83,6 +83,17 @@
       "checked": "2026-11-03",
       "note": "Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
       "flag": "consensus"
+    },
+    "4943": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        9
+      ],
+      "weeks": 1,
+      "checked": "2026-11-05",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "4983": {
       "kind": "report",
@@ -142,12 +153,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        7
+        9
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
-      "checked": "2026-10-22",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "checked": "2026-11-05",
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "6786": {
       "kind": "report",
@@ -200,7 +211,7 @@
       ],
       "source": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir",
       "checked": "2026-11-04",
-      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: changed from audit []; consensus.",
+      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "8121": {
@@ -219,15 +230,14 @@
     },
     "8142": {
       "kind": "report",
-      "weeks": 3,
+      "weeks": 2,
       "weeks_list": [
-        7,
-        8,
-        9
+        9,
+        10
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
-      "checked": "2026-10-23",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
+      "checked": "2026-11-05",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [9]; consensus.",
       "flag": "consensus"
     },
     "8155": {
@@ -238,8 +248,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-01",
-      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "note": "Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "8408": {
       "kind": "report",
@@ -361,8 +371,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-10-24",
-      "note": "Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; uncertain (audit tiebreak wk 8).",
-      "flag": "uncertain"
+      "note": "Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "11560": {
       "kind": "report",
@@ -558,8 +568,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson",
       "checked": "2026-11-03",
-      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; uncertain (audit tiebreak wk 9).",
+      "flag": "uncertain"
     },
     "13286": {
       "kind": "report",
@@ -579,7 +589,7 @@
       "weeks": 1,
       "checked": "2026-11-04",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13296": {
       "kind": "report",
