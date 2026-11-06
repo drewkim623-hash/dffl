@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-06T21:29:46.044Z",
- "at": 1794000586044,
+ "generated": "2026-11-06T23:12:02.493Z",
+ "at": 1794006722493,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -25,9 +25,7 @@
    "points_for": 1052.3,
    "points_against": 999.8,
    "faab_spent": 83,
-   "starters_hurt": [
-    "Malik Nabers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -55,7 +53,6 @@
    "points_against": 917.04,
    "faab_spent": 100,
    "starters_hurt": [
-    "Christian McCaffrey (Questionable)",
     "Garrett Wilson (Out)",
     "George Pickens (Questionable)"
    ]
@@ -87,9 +84,7 @@
    "points_for": 948.38,
    "points_against": 1032.58,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Michael Wilson (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "jskule23",
@@ -99,8 +94,7 @@
    "points_against": 1086.28,
    "faab_spent": 95,
    "starters_hurt": [
-    "Mike Evans (Questionable)",
-    "Treylon Burks (Questionable)"
+    "Mike Evans (Out)"
    ]
   },
   {
@@ -110,9 +104,7 @@
    "points_for": 924.04,
    "points_against": 972.44,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Dalton Kincaid (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -122,7 +114,7 @@
    "points_against": 1176.1,
    "faab_spent": 16,
    "starters_hurt": [
-    "Cam Skattebo (Questionable)"
+    "Cam Skattebo (Doubtful)"
    ]
   },
   {
@@ -418,5 +410,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 47
+ "free_agent_moves": 48
 }
