@@ -1,18 +1,8 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-05T20:50:27.217Z",
+ "generated": "2026-11-06T02:30:22.006Z",
  "week": 9,
  "entries": {
-  "1466": {
-   "n": "Travis Kelce",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
-  },
   "2133": {
    "n": "Davante Adams",
    "s": "IR",
@@ -42,7 +32,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "4034": {
    "n": "Christian McCaffrey",
@@ -52,7 +42,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "4035": {
    "n": "Alvin Kamara",
@@ -62,7 +52,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -87,23 +77,14 @@
   },
   "4881": {
    "n": "Lamar Jackson",
-   "s": "Out",
+   "s": "IR",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-03"
-  },
-  "4943": {
-   "n": "Sam Darnold",
-   "s": "Out",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-03",
+   "irSince": 9
   },
   "4983": {
    "n": "DJ Moore",
@@ -123,7 +104,7 @@
    "retSource": "espn-outlook",
    "retEstimated": true,
    "retNote": "week-to-week",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "5859": {
    "n": "A.J. Brown",
@@ -163,7 +144,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-05",
+   "retChecked": "2026-11-06",
    "irSince": 8
   },
   "6803": {
@@ -174,7 +155,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -216,27 +197,17 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
-  "7567": {
-   "n": "Kenny Gainwell",
+  "8135": {
+   "n": "Treylon Burks",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
-  },
-  "8135": {
-   "n": "Treylon Burks",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 99,
-   "retSource": "espn-outlook",
-   "retEstimated": true,
-   "retNote": "done for the year",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "8137": {
    "n": "George Pickens",
@@ -246,7 +217,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -267,17 +238,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
-  },
-  "8155": {
-   "n": "Breece Hall",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Quadriceps. Week-to-week, ruled out Weeks 4-5; ESPN Q Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-01"
+   "retChecked": "2026-11-06"
   },
   "8167": {
    "n": "Christian Watson",
@@ -287,7 +248,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "8800": {
    "n": "Malik Davis",
@@ -342,16 +303,6 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "10229": {
-   "n": "Rashee Rice",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-24"
-  },
   "10232": {
    "n": "Michael Wilson",
    "s": "Questionable",
@@ -360,7 +311,17 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
+  },
+  "10236": {
+   "n": "Dalton Kincaid",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-06"
   },
   "11632": {
    "n": "Malik Nabers",
@@ -370,7 +331,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -380,7 +341,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -398,15 +359,15 @@
    "retChecked": "2026-11-01",
    "irSince": 8
   },
-  "12490": {
-   "n": "Bhayshul Tuten",
+  "12506": {
+   "n": "Harold Fannin Jr.",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -418,16 +379,6 @@
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
-  },
-  "12514": {
-   "n": "Emeka Egbuka",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-31"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -500,7 +451,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-05"
+   "retChecked": "2026-11-06"
   },
   "13417": {
    "n": "De'Zhaun Stribling",

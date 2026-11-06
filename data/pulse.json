@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-05T20:50:27.790Z",
- "at": 1793911827790,
+ "generated": "2026-11-06T02:30:22.634Z",
+ "at": 1793932222635,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -15,7 +15,6 @@
    "points_against": 921.46,
    "faab_spent": 22,
    "starters_hurt": [
-    "Bhayshul Tuten (Questionable)",
     "Amon-Ra St. Brown (Questionable)"
    ]
   },
@@ -67,9 +66,7 @@
    "points_against": 1070.5,
    "faab_spent": 49,
    "starters_hurt": [
-    "Sam Darnold (Out)",
-    "Denzel Boston (Questionable)",
-    "Travis Kelce (Questionable)"
+    "Denzel Boston (Questionable)"
    ]
   },
   {
@@ -91,9 +88,7 @@
    "points_against": 1032.58,
    "faab_spent": 100,
    "starters_hurt": [
-    "Breece Hall (Questionable)",
-    "Michael Wilson (Questionable)",
-    "Rashee Rice (Questionable)"
+    "Michael Wilson (Questionable)"
    ]
   },
   {
@@ -104,7 +99,8 @@
    "points_against": 1086.28,
    "faab_spent": 95,
    "starters_hurt": [
-    "Mike Evans (Questionable)"
+    "Mike Evans (Questionable)",
+    "Treylon Burks (Questionable)"
    ]
   },
   {
@@ -116,7 +112,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Alvin Kamara (Questionable)",
-    "A.J. Brown (Questionable)"
+    "Dalton Kincaid (Questionable)"
    ]
   },
   {
@@ -129,7 +125,8 @@
    "starters_hurt": [
     "Saquon Barkley (Questionable)",
     "Cam Skattebo (Questionable)",
-    "Christian Watson (Questionable)"
+    "Christian Watson (Questionable)",
+    "Harold Fannin Jr. (Questionable)"
    ]
   },
   {
@@ -140,8 +137,7 @@
    "points_against": 1145.98,
    "faab_spent": 100,
    "starters_hurt": [
-    "DeVonta Smith (Questionable)",
-    "Emeka Egbuka (Questionable)"
+    "DeVonta Smith (Questionable)"
    ]
   }
  ],
@@ -149,19 +145,19 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
+    "points": 5,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "wesley55",
-    "points": 0,
+    "points": 15.48,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
+    "points": 8.2,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -173,7 +169,7 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 0,
+    "points": 18.4,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -197,7 +193,7 @@
   {
    "a": {
     "manager": "bradyrife",
-    "points": 0,
+    "points": 11.88,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -426,5 +422,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 44
+ "free_agent_moves": 46
 }
