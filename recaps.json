@@ -6035,6 +6035,160 @@
      "text": "<b>willie12w 174.4, sizzlemc2 85.06.</b> Ja'Marr Chase's 31.1 led willie12w to the week's high score, and Bucky Irving's 22 and the Tampa Bay defense's 21 backed him up, in a week willie12w also claimed Kyler Murray off waivers for nothing. sizzlemc2's 85.06 was the week's low, with Tucker Kraft's 17.3 the only starter past 13. The 89.34-point margin was the widest of the week."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-playoff-field-just-split-into-a-canyon",
+   "date": "2026-11-06",
+   "source": "watch",
+   "kind": "opinion",
+   "kicker": "2026 · week 9",
+   "headline": "The Playoff Field Just Split Into A Canyon",
+   "dek": "Seven teams are above 61.02% to make the playoffs; the other five are at 13.595% or worse, four of them under 1%. jadencha's title number jumped 15.92 points this week alone — more than three times the next-biggest move anyone in the league made.",
+   "byline": "DFFL desk",
+   "standfirst": "7 teams above 61% · a 47.425-point gap to the rest",
+   "teaser": "🚨 DFFL | WEEK 9\n\nTHE PLAYOFF FIELD JUST SPLIT INTO A CANYON\n\n📊 Gap: chassinator's 61.02% to saucebossandrew's 13.595% — 47.425 points, the widest on the board\n🏆 jadencha's title number: 32.05% to 47.97%, up 15.92 points this week\n📉 Next-biggest move was only 4.78 points — saucebossandrew's title number fell to 0.585%\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-playoff-field-just-split-into-a-canyon",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Nine weeks in, the league's playoff math has stopped sloping and started falling off a cliff. <b>chassinator</b>'s 61.02% is the lowest number anyone in the top seven carries. <b>saucebossandrew</b>'s 13.595% is the highest number anyone in the bottom five carries. Nothing the site's simulation currently prints sits between those two figures — a 47.425-point gap, by far the widest space anywhere on the board. At the top of that group, <b>jadencha</b> is having a different kind of week than anyone else: the title odds climbed from 32.05% to 47.97% since this week's games began, a 15.92-point jump nobody else came within three times of matching, in either direction."
+    },
+    {
+     "type": "stat",
+     "n": "15.92",
+     "text": "percentage points jadencha's title odds gained this week, from 32.05% to 47.97%. The next-biggest move in the league, in either direction, was saucebossandrew's title number falling 4.78 points."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the gap",
+     "text": "Sixty-One Or Thirteen. Nothing In Between."
+    },
+    {
+     "type": "p",
+     "text": "Seven teams — jadencha, Domo112, willie12w, wesley55, sizzlemc2, bradyrife and chassinator — are all above 61.02% to make the playoffs. The other five — saucebossandrew, victorthompson, jskule23, moseslin and drewkim — are all at 13.595% or lower, and four of those five, victorthompson, jskule23, moseslin and drewkim, are under 1%. saucebossandrew is the only team in the bottom five whose playoff number still has two digits in front of the decimal. Only six spots exist, and seven teams are above that 61.02% line — which means at least one of those seven, not one of the five below the gap, is going to miss."
+    },
+    {
+     "type": "tiers",
+     "title": "Who's In, Who's Buried",
+     "intro": "Playoff odds midweek, week 9.",
+     "foot": "The site's own season simulation, updated with this week's results as they come in. 'Last' is each team's number entering this week, before Thursday's early games.",
+     "tiers": [
+      {
+       "name": "Comfortable",
+       "rows": [
+        {
+         "team": "jadencha",
+         "managers": "Pandas slave trade",
+         "pct": 99.995,
+         "last": 91.9,
+         "rec": "7-1"
+        },
+        {
+         "team": "Domo112",
+         "managers": "Pablo Escobars Cartel",
+         "pct": 99.075,
+         "last": 82.245,
+         "rec": "6-2"
+        },
+        {
+         "team": "willie12w",
+         "managers": "Squirt",
+         "pct": 90.015,
+         "last": 72.305,
+         "rec": "5-3"
+        },
+        {
+         "team": "wesley55",
+         "managers": "James Cook's team",
+         "pct": 89.13,
+         "last": 58.77,
+         "rec": "5-3"
+        }
+       ]
+      },
+      {
+       "name": "Fighting for what's left",
+       "rows": [
+        {
+         "team": "sizzlemc2",
+         "managers": "Managerial Wizard",
+         "pct": 74.665,
+         "last": 32.82,
+         "rec": "5-3"
+        },
+        {
+         "team": "bradyrife",
+         "managers": "Brady Lawrence",
+         "pct": 71.13,
+         "last": 45.32,
+         "rec": "5-3"
+        },
+        {
+         "team": "chassinator",
+         "managers": "Ann Michael Maye",
+         "pct": 61.02,
+         "last": 41.455,
+         "rec": "4-4"
+        }
+       ]
+      },
+      {
+       "name": "Buried",
+       "rows": [
+        {
+         "team": "saucebossandrew",
+         "managers": "saucebossandrew",
+         "pct": 13.595,
+         "last": 46.99,
+         "rec": "3-5"
+        },
+        {
+         "team": "victorthompson",
+         "managers": "marty fakenewsman",
+         "pct": 0.835,
+         "last": 32.165,
+         "rec": "2-6"
+        },
+        {
+         "team": "jskule23",
+         "managers": "THE answer",
+         "pct": 0.375,
+         "last": 31.12,
+         "rec": "2-6"
+        },
+        {
+         "team": "moseslin",
+         "managers": "mosey",
+         "pct": 0.115,
+         "last": 41.41,
+         "rec": "2-6"
+        },
+        {
+         "team": "drewkim",
+         "managers": "inova hospital",
+         "pct": 0.05,
+         "last": 23.5,
+         "rec": "2-6"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "the mover",
+     "text": "Nobody Else's Number Moved Like jadencha's"
+    },
+    {
+     "type": "p",
+     "text": "Entering this week, jadencha was a 32.05% favorite for the title — a real number, but not a commanding one, with Domo112 (18.815%) and willie12w (13.68%) both within shouting distance. By the time this week's early games were underway, jadencha's number had jumped to 47.97%, while Domo112 slipped to 16.41% and willie12w to 11.65%. The next-largest move anyone in the league made this week, in either direction, was saucebossandrew's title number falling from 5.365% to 0.585% — a drop of 4.78 points, less than a third the size of jadencha's gain."
+    },
+    {
+     "type": "p",
+     "text": "None of it is final. Ten of the league's twelve rosters still have at least nine starters left to play this week, and these numbers will move again before Monday. But the shape of the board right now is not subtle: a seven-team fight for six spots at the top, and a five-team group the model has all but stopped counting."
+    }
+   ]
   }
  ]
 }
