@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 8,
- "generated": "2026-11-05T11:02:16.137Z",
- "generated_at": "2026-11-05T11:02:16.137Z",
+ "generated": "2026-11-06T11:02:19.916Z",
+ "generated_at": "2026-11-06T11:02:19.916Z",
  "final": true,
  "standings_through_week": 8,
  "standings_folded": false,
@@ -1362,6 +1362,43 @@
      "pos": "QB",
      "team": "ARI",
      "from": "sizzlemc2"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Chris Godwin Jr.",
+     "pos": "WR",
+     "team": "TB",
+     "to": "bradyrife"
+    },
+    {
+     "name": "Brian Thomas Jr.",
+     "pos": "WR",
+     "team": "JAX",
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chris Godwin Jr.",
+     "pos": "WR",
+     "team": "TB",
+     "from": "jadencha"
+    },
+    {
+     "name": "Brian Thomas Jr.",
+     "pos": "WR",
+     "team": "JAX",
+     "from": "bradyrife"
     }
    ],
    "faab": null,
