@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-06T14:25:55.162Z",
+ "generated": "2026-11-06T21:29:45.539Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -44,16 +44,6 @@
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-06"
   },
-  "4035": {
-   "n": "Alvin Kamara",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
-  },
   "4454": {
    "n": "Kendrick Bourne",
    "s": "IR",
@@ -64,16 +54,6 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-04",
    "irSince": 9
-  },
-  "4866": {
-   "n": "Saquon Barkley",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -108,7 +88,7 @@
   },
   "5859": {
    "n": "A.J. Brown",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
@@ -170,7 +150,7 @@
   },
   "7525": {
    "n": "DeVonta Smith",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
@@ -232,22 +212,12 @@
   },
   "8146": {
    "n": "Garrett Wilson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
-  },
-  "8167": {
-   "n": "Christian Watson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
+   "s": "Out",
+   "ret": "2026-11-15",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
    "retChecked": "2026-11-06"
   },
   "8800": {
@@ -359,16 +329,6 @@
    "retChecked": "2026-11-01",
    "irSince": 8
   },
-  "12506": {
-   "n": "Harold Fannin Jr.",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
-  },
   "12508": {
    "n": "Jaxson Dart",
    "s": "IR",
@@ -380,9 +340,19 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "12514": {
+   "n": "Emeka Egbuka",
+   "s": "Questionable",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-31"
+  },
   "12529": {
    "n": "TreVeyon Henderson",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -442,16 +412,6 @@
    "retNote": "consensus.mjs — Consensus: changed from audit [9]; consensus.",
    "retChecked": "2026-11-06",
    "irSince": 9
-  },
-  "13346": {
-   "n": "Denzel Boston",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
   },
   "13417": {
    "n": "De'Zhaun Stribling",

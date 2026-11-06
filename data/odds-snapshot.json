@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-06T14:26:16.854Z",
- "at": 1793975176854,
+ "generated": "2026-11-06T21:30:14.581Z",
+ "at": 1794000614581,
  "season": "2026",
  "week": 9,
  "liveWeek": 9,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.3205,
-   "titleNow": 0.4797,
+   "titleNow": 0.4831,
    "playoffWas": 0.919,
    "playoffNow": 0.99995,
-   "wins": 11.3614,
+   "wins": 11.36195,
    "titleOdds": -105,
    "titleOddsOpen": 195,
    "playoffOdds": -19900
@@ -26,11 +26,11 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.18815,
-   "titleNow": 0.1641,
+   "titleNow": 0.1631,
    "playoffWas": 0.82245,
-   "playoffNow": 0.99075,
-   "wins": 9.8114,
-   "titleOdds": 470,
+   "playoffNow": 0.9903,
+   "wins": 9.8491,
+   "titleOdds": 480,
    "titleOddsOpen": 400,
    "playoffOdds": -19900
   },
@@ -39,11 +39,11 @@
    "rid": 10,
    "manager": "moseslin",
    "titleWas": 0.04315,
-   "titleNow": 0.0001,
+   "titleNow": 0,
    "playoffWas": 0.4141,
    "playoffNow": 0.00115,
-   "wins": 3.9173,
-   "titleOdds": 943300,
+   "wins": 3.9168,
+   "titleOdds": null,
    "titleOddsOpen": 2090,
    "playoffOdds": 81930
   },
@@ -54,48 +54,48 @@
    "titleWas": 0.01435,
    "titleNow": 0.00005,
    "playoffWas": 0.235,
-   "playoffNow": 0.0005,
-   "wins": 3.6121,
+   "playoffNow": 0.0006,
+   "wins": 3.5971,
    "titleOdds": 1886690,
    "titleOddsOpen": 6470,
-   "playoffOdds": 188580
+   "playoffOdds": 157130
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1368,
-   "titleNow": 0.1165,
+   "titleNow": 0.1111,
    "playoffWas": 0.72305,
-   "playoffNow": 0.90015,
-   "wins": 8.421,
-   "titleOdds": 710,
+   "playoffNow": 0.89795,
+   "wins": 8.4208,
+   "titleOdds": 750,
    "titleOddsOpen": 590,
-   "playoffOdds": -2080
+   "playoffOdds": -1980
   },
   {
    "uid": "850946675743793152",
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.05365,
-   "titleNow": 0.00585,
+   "titleNow": 0.0055,
    "playoffWas": 0.4699,
-   "playoffNow": 0.13595,
-   "wins": 5.6891,
-   "titleOdds": 16030,
+   "playoffNow": 0.14255,
+   "wins": 5.74475,
+   "titleOdds": 17050,
    "titleOddsOpen": 1660,
-   "playoffOdds": 590
+   "playoffOdds": 560
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.05095,
-   "titleNow": 0.04335,
+   "titleNow": 0.0456,
    "playoffWas": 0.4532,
-   "playoffNow": 0.7113,
-   "wins": 7.6288,
-   "titleOdds": 2080,
+   "playoffNow": 0.71395,
+   "wins": 7.6417,
+   "titleOdds": 1970,
    "titleOddsOpen": 1750,
    "playoffOdds": -310
   },
@@ -104,63 +104,63 @@
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.0276,
-   "titleNow": 0.0001,
+   "titleNow": 0.0002,
    "playoffWas": 0.3112,
-   "playoffNow": 0.00375,
-   "wins": 3.9514,
-   "titleOdds": 943300,
+   "playoffNow": 0.0046,
+   "wins": 4.0066,
+   "titleOdds": 471600,
    "titleOddsOpen": 3320,
-   "playoffOdds": 25060
+   "playoffOdds": 20410
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0753,
-   "titleNow": 0.1043,
+   "titleNow": 0.10675,
    "playoffWas": 0.5877,
-   "playoffNow": 0.8913,
-   "wins": 8.264,
-   "titleOdds": 800,
+   "playoffNow": 0.88955,
+   "wins": 8.2687,
+   "titleOdds": 780,
    "titleOddsOpen": 1150,
-   "playoffOdds": -1710
+   "playoffOdds": -1650
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.0391,
-   "titleNow": 0.0477,
+   "titleNow": 0.0469,
    "playoffWas": 0.41455,
-   "playoffNow": 0.6102,
-   "wins": 6.93475,
-   "titleOdds": 1880,
+   "playoffNow": 0.60745,
+   "wins": 6.9346,
+   "titleOdds": 1910,
    "titleOddsOpen": 2310,
-   "playoffOdds": -185
+   "playoffOdds": -180
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02605,
-   "titleNow": 0.00075,
+   "titleNow": 0.00055,
    "playoffWas": 0.32165,
-   "playoffNow": 0.00835,
-   "wins": 4.4535,
-   "titleOdds": 125690,
+   "playoffNow": 0.0061,
+   "wins": 4.29915,
+   "titleOdds": 171430,
    "titleOddsOpen": 3520,
-   "playoffOdds": 11200
+   "playoffOdds": 15370
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0244,
-   "titleNow": 0.0375,
+   "titleNow": 0.03715,
    "playoffWas": 0.3282,
-   "playoffNow": 0.74665,
-   "wins": 7.95525,
-   "titleOdds": 2420,
+   "playoffNow": 0.74585,
+   "wins": 7.95875,
+   "titleOdds": 2440,
    "titleOddsOpen": 3770,
    "playoffOdds": -380
   }
@@ -171,8 +171,8 @@
    "b": "saucebossandrew",
    "aPts": 8.9,
    "bPts": 0,
-   "pA": 0.602736078175102,
-   "pB": 0.397263921824898,
+   "pA": 0.6034266690885586,
+   "pB": 0.3965733309114414,
    "settled": false,
    "aLeft": 9,
    "bLeft": 10,
@@ -184,8 +184,8 @@
    "b": "willie12w",
    "aPts": 21.4,
    "bPts": 0,
-   "pA": 0.377252352227261,
-   "pB": 0.6227476477727389,
+   "pA": 0.37728352193830283,
+   "pB": 0.6227164780616972,
    "settled": false,
    "aLeft": 8,
    "bLeft": 10,
@@ -193,30 +193,30 @@
    "bFrac": 1
   },
   {
-   "a": "Domo112",
-   "b": "wesley55",
-   "aPts": 17,
-   "bPts": 21.78,
-   "pA": 0.7212235628573012,
-   "pB": 0.27877643714269884,
-   "settled": false,
-   "aLeft": 8,
-   "bLeft": 7,
-   "aFrac": 0.8478120623352837,
-   "bFrac": 0.7184521549392737
-  },
-  {
    "a": "bradyrife",
    "b": "sizzlemc2",
    "aPts": 13.58,
    "bPts": 0,
-   "pA": 0.23798932170993503,
-   "pB": 0.762010678290065,
+   "pA": 0.23785232166419884,
+   "pB": 0.7621476783358012,
    "settled": false,
    "aLeft": 9,
    "bLeft": 10,
    "aFrac": 0.8517634492500383,
    "bFrac": 1
+  },
+  {
+   "a": "Domo112",
+   "b": "wesley55",
+   "aPts": 17,
+   "bPts": 21.78,
+   "pA": 0.7643377645804988,
+   "pB": 0.23566223541950115,
+   "settled": false,
+   "aLeft": 9,
+   "bLeft": 7,
+   "aFrac": 0.9347449801749035,
+   "bFrac": 0.7184521549392737
   }
  ],
  "hurt": [
@@ -299,6 +299,16 @@
    ]
   },
   {
+   "manager": "Domo112",
+   "cost": 0.014351282959136902,
+   "players": [
+    {
+     "name": "Malik Nabers",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "jadencha",
    "cost": 0.012489445538981125,
    "players": [
@@ -319,16 +329,6 @@
    ]
   },
   {
-   "manager": "drewkim",
-   "cost": 0.01090208140220783,
-   "players": [
-    {
-     "name": "DeVonta Smith",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
    "manager": "chassinator",
    "cost": 0.006545190566391246,
    "players": [
@@ -344,9 +344,17 @@
   "pre": 14,
   "live": 0,
   "post": 1,
-  "at": 1793975175964
+  "at": 1794000613343
  },
  "articles": [
+  {
+   "slug": "the-playoff-field-just-split-into-a-canyon",
+   "kicker": "2026 · week 9",
+   "headline": "The Playoff Field Just Split Into A Canyon",
+   "dek": "Seven teams are above 61.02% to make the playoffs; the other five are at 13.595% or worse, four of them under 1%. jadencha's title number jumped 15.92 points this week alone — more than three times the next-biggest move anyone in the league made.",
+   "byline": "DFFL desk",
+   "date": "2026-11-06"
+  },
   {
    "slug": "the-full-budget-doesnt-buy-a-winning-record",
    "kicker": "2026 · week 8",
@@ -362,14 +370,6 @@
    "dek": "jskule23, victorthompson, moseslin, saucebossandrew and drewkim are all 2-5 — the most common record in the league. Their points differ by 123.06, and their playoff odds run from victorthompson's 15.715% down to drewkim's 2.68%, the lowest number anyone in the league carries.",
    "byline": "DFFL desk",
    "date": "2026-10-31"
-  },
-  {
-   "slug": "the-points-dont-match-the-record",
-   "kicker": "2026 · week 8",
-   "headline": "964.24 Points, Still Below .500",
-   "dek": "chassinator has the league's second-most points this season — more than Domo112, bradyrife, sizzlemc2, wesley55 or willie12w have scored — and a worse record than all five.",
-   "byline": "DFFL desk",
-   "date": "2026-10-30"
   }
  ]
 }
