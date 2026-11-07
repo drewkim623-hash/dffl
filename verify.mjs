@@ -5513,7 +5513,7 @@ const PL_NAMES = [
   "points lost: the source label reads Sleeper projections, ESPN return dates",
   "injuries tab: rows are injuryLossPlan's rows, the ones the odds worker measures",
   "injuries tab: each row leads with its playoff odds impact as a hero −X.X% labelled playoff odds, ~0% under 0.5",
-  "injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk in lineup × wks = total pts",
+  "injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk lineup drop × wks = total pts",
   "injuries tab: bench players are tagged bench; players who wouldn't start cost 0 pts",
   "injuries tab: the return source and its checked date are shown beside the return",
   "injuries tab: with injuryPlayoffDeltas() null every row reads calculating…",
@@ -5990,7 +5990,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   check("points lost: the source label reads Sleeper projections, ESPN return dates",
     PL.srcLabel === "Sleeper projections, ESPN return dates", PL.srcLabel);
 
-  /* The Injuries tab's playoff-odds view (full-value healthy-lineup pricing). */
+  /* The Injuries tab's playoff-odds view (remaining-roster lineup-delta pricing). */
   {
     const LT = PL.lossTeams || [];
     const lossOf = new Map(LT.flatMap(t => t.rows.map(x => [x.pid, { ...x, rid: t.rid }])));
@@ -6022,7 +6022,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if (!d && (x.lead !== "not measured" || x.title)) secBad.push(`${x.pid} unmeasured: ${x.lead}`);
       if (!L) continue;
       const want = !L.weeksOut ? "0 pts" : L.wouldStart === false ? "wouldn't start · 0 pts"
-        : `${f1(L.lineupPerWeek)} pts/wk in lineup × ${L.weeksOut} wk${L.weeksOut === 1 ? "" : "s"}${L.weight < 1 ? ` × ${Math.round(L.weight * 100)}%` : ""} = ${f1(L.totalLost)} pts`;
+        : `${f1(L.lineupPerWeek)} pts/wk lineup drop × ${L.weeksOut} wk${L.weeksOut === 1 ? "" : "s"}${L.weight < 1 ? ` × ${Math.round(L.weight * 100)}%` : ""} = ${f1(L.totalLost)} pts`;
       if (x.pts !== want) ptsBad.push(`${x.pid}: "${x.pts}" vs "${want}"`);
       if (x.benchTag !== L.bench || x.benchCls !== L.bench) benchBad.push(x.pid);
       if (L.bench) benchSeen++;
@@ -6039,8 +6039,8 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       ST.length > 0 && leadBad.length === 0 && secBad.length === 0 && F.join("|") === "−3.5%|~0%|−0.5%|"
         && ST.some(t => t.rows.some(x => x.lead === "~0%")) && ST.some(t => t.rows.some(x => x.lead === "not measured")),
       `${F.join("|")} ${[...leadBad, ...secBad].slice(0, 4).join(" ; ")}`);
-    check("injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk in lineup × wks = total pts",
-      ptsBad.length === 0 && wordBad.length === 0 && ST.some(t => t.rows.some(x => /pts\/wk in lineup ×/.test(x.pts))),
+    check("injuries tab: title odds and lineup points are secondary: −X.X% title, pts/wk lineup drop × wks = total pts",
+      ptsBad.length === 0 && wordBad.length === 0 && ST.some(t => t.rows.some(x => /pts\/wk lineup drop ×/.test(x.pts))),
       [...ptsBad, ...wordBad.map(p => `${p}: replacement wording`)].slice(0, 4).join(" ; "));
     check("injuries tab: bench players are tagged bench; players who wouldn't start cost 0 pts",
       benchBad.length === 0 && benchSeen > 0, `${benchSeen} bench, ${zeroSeen} wouldn't start; ${benchBad.slice(0, 4).join(", ")}`);
@@ -6302,11 +6302,11 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
     !!mainSrc && moved.length === 0 && consts.length === 0 && !fb.err && fb.bad.length === 0 && !fb.lossAttached && fb.sims > 0,
     mainSrc ? `changed: ${[...moved, ...consts].join(", ")} · ${JSON.stringify(fb).slice(0, 300)}` : "git show origin/main:index.html failed");
   // The fallback explainer only renders without a loss plan, so check its source.
-  check("odds copy: no replacement constant or bench-replacement claim left in the page",
-    !/\bREPLACEMENT\b/.test(hereSrc) && !/comes off the bench and scores/.test(hereSrc) && !/\(1 - REPLACEMENT\)/.test(hereSrc)
-      && !/loses without him/.test(hereSrc) && !/same lineup-delta numbers/.test(hereSrc)
-      && /his full share of the lineup; injured bench players cost nothing/.test(hereSrc)
-      && /costs his team his full projected points<\/b>/.test(hereSrc) && /no bench player's points are credited back/.test(hereSrc));
+  check("odds copy: remaining roster and real next-man-up, no generic haircut or full-value penalty",
+    !/\bREPLACEMENT\b/.test(hereSrc) && !/comes off the bench and scores/.test(hereSrc)
+      && !/no bench player's points are credited back|costs his team his full projected points<\/b>/.test(hereSrc)
+      && /Rule him out, then rebuild the best lineup from the remaining roster/.test(hereSrc)
+      && /real rostered next-man-up/.test(hereSrc));
 }
 
 const injNarrow = await injPage.evaluate(() => {
@@ -6507,7 +6507,7 @@ group("Tab bar scroll hint");
   await dctx.close();
 }
 
-group("Injury odds: full healthy value per out week, filtered by healthy-lineup eligibility");
+group("Injury odds: healthy optimal minus available remaining roster, weighted by status");
 {
   // injury-returns.mjs, in Node.
   const IR = await import(new URL("./injury-returns.mjs", import.meta.url));
@@ -6621,7 +6621,7 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
 
   const io = await page.evaluate(async () => {
     const D = window.__DFFL;
-    // Synthetic: weeks 6-14 regular, 15-17 playoffs. No replacement offset: full value per out week.
+    // Healthy-value inputs (no lineup slots), then the live remaining-roster plan over weeks 6-17.
     const reg = [6, 7, 8, 9, 10, 11, 12, 13, 14], all = [...reg, 15, 16, 17];
     const sundays = Object.fromEntries(all.map((w, i) => [w, new Date(Date.UTC(2026, 9, 18 + 7 * i)).toISOString().slice(0, 10)]));
     const P = { current_week: 6, playoff_week_start: 15, sundays: Object.fromEntries(reg.map(w => [w, sundays[w]])),
@@ -6675,12 +6675,14 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
 
     // The real board: totals, sims, deltas.
     const model = window.__ODDS, live = window.__LIVE, plan = window.__PLAN;
+    out.livePricing = !!plan?.loss && D.INJ_ODDS.lineupDelta === true
+      && [...plan.loss.byTeam.values()].every(T => T.rows.every(r => r.pricing === "lineup-delta"));
     // Real-data spot check (printed, not asserted): named players' W0 charge in the live plan.
     out.examples = plan && plan.loss ? [...plan.loss.byTeam.values()].flatMap(T => T.rows)
       .filter(r => /St\. Brown|Mike Evans|Garrett Wilson/.test(r.name || ""))
       .map(r => `${r.name} ${r.status} w${plan.W0}=${Number((r.perWeek || {})[plan.W0] || 0).toFixed(2)} wt${r.weight}`) : null;
     out.realRows = plan && plan.loss ? [...plan.loss.byTeam.values()].flatMap(T => T.rows)
-      .filter(r => r.pricing !== "healthy-lineup" ? Math.abs(r.totalLost - r.ptsPerWeek * r.weeksOut) > 1e-9
+      .filter(r => r.pricing !== "lineup-delta" ? Math.abs(r.totalLost - r.ptsPerWeek * r.weeksOut) > 1e-9
         : Math.abs(r.totalLost - Object.values(r.perWeek).reduce((a, x) => a + x, 0)) > 1e-9).length : null;
     if (model && model.ok && live) {
       const n = live.teams.length, wk0 = live.weeks.length ? live.weeks[0].week : null;
@@ -6714,9 +6716,9 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
     }
     return out;
   });
-  check("injury impact: full projected value per out week, no replacement offset (20 -> 20 a week)",
+  check("injury value input (no lineup slots): healthy projection 20 per out week, no generic haircut",
     JSON.stringify(io.full) === JSON.stringify([20, 1, 20, "proj", false, false]), JSON.stringify(io.full));
-  check("injury impact: a low projection still costs its full value (3 -> 3)", io.low === 3, String(io.low));
+  check("injury value input (no lineup slots): low healthy projection remains 3", io.low === 3, String(io.low));
   check("injury impact: bench, projection 12, out 2 weeks -> 24; zero projection -> last_nonzero 12 x 2 -> 24",
     JSON.stringify(io.two) === JSON.stringify([true, 12, 2, 24, 12, 24, "last_nonzero"]), JSON.stringify(io.two));
   check("injury impact: the odds' status weights are 1 − INJ_AVAIL (Q .25, D .75, Out/IR 1) on a 20-pt player",
@@ -6734,21 +6736,22 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
     JSON.stringify([io.season, io.ir14]));
   check("injury impact: IR without date/estimate is one week, explicit season-ending still reaches playoffs",
     JSON.stringify(io.bareIR) === "[\"6\",false,12]", JSON.stringify(io.bareIR));
-  check("injury impact: full-value pricing prices a bench player (15) but does not charge him",
+  check("injury value input (no lineup slots): a bench player has a projection (15) but is not charged",
     io.team.bench === 15 && io.team.benchFlag === true && io.team.benchCharged === false && io.team.wk6 === 20
       && io.team.ros === 20, JSON.stringify(io.team));
   check("injury impact: includeBench false leaves the bench out (benchROS still reported)",
     io.team.noBench === 20 && io.team.noBenchROS === 20 && io.team.benchROS === 15, JSON.stringify(io.team));
-  // Healthy lineup: starter A (20) would start it, so costs his full 20; bench BN
-  // (15) would not, so costs 0. Scale 0.5 -> 10.
-  check("odds loss: team-week loss is the healthy starters' full value from teamInjuryImpact, lost[w][teamIdx], source projections",
+  // A (20) and BN (15) are BOTH out: there is no available rostered backup.
+  // Joint drop is 20, attributed to A; BN is outside the healthy lineup. Scale 0.5 -> 10.
+  check("odds loss: team-week loss excludes both unavailable rostered WRs, no available backup, from teamInjuryImpact, lost[w][teamIdx], source projections",
     io.plan.wk6 === 20 && io.plan.wk7 === 0 && JSON.stringify(io.plan.lost) === "[20,0]" && io.plan.source === "projections", JSON.stringify(io.plan));
   check("odds loss: capped at 30% of the team's level", near(io.plan.cap, 15, 1e-9), String(io.plan.cap));
-  check("odds loss: injuryPlan's scale applied to the full value", io.plan.scale === 10, String(io.plan.scale));
+  check("odds loss: injuryPlan's scale applied to the remaining-roster drop", io.plan.scale === 10, String(io.plan.scale));
   check("odds loss: no projections -> no loss plan", io.noProj);
   console.log(`  info real W0 charges: ${JSON.stringify(io.examples)}`);
   check("odds loss: totalLost = the sum of its per-week lineup drops on every real row (ptsPerWeek × weeksOut without slots)", io.realRows === 0, String(io.realRows));
-  // Healthy-lineup eligibility on synthetic teams (slots supplied, full-value pricing).
+  check("odds live path: attached loss plan prices every row with remaining-roster lineup-delta", io.livePricing === true);
+  // Live remaining-roster pricing on synthetic teams (slots supplied).
   const ld = await page.evaluate(() => {
     const D = window.__DFFL;
     const reg = [6, 7, 8, 9, 10, 11, 12, 13, 14], all = [...reg, 15, 16, 17];
@@ -6765,20 +6768,24 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
     out.bench = loss({ roster_id: 1, starters: ["A"], players: ["A", "BN"], reserve: [], taxi: [] },
       { BN: { s: "Out", n: "BN", p: "WR", t: "NYJ", retWeeks: 1 } }).weekLoss(6);
     // Healthy-lineup eligibility, wherever Sleeper has him. Bench BN (15) out,
-    // Sleeper starting B12 (12): healthy, BN starts -> his full 15, not 15 - 12.
+    // Sleeper starting B12 (12): healthy BN starts -> marginal drop 15 - 12 = 3.
     // With a return estimate and without one (the coming week only).
     const benchTeam = { roster_id: 1, starters: ["B12"], players: ["B12", "BN"], reserve: [], taxi: [] };
     out.benchStarts = [loss(benchTeam, { BN: { s: "Out", n: "BN", p: "WR", t: "NYJ", retWeeks: 2 } }).weekLoss(6),
       loss(benchTeam, { BN: { s: "Out", n: "BN", p: "WR", t: "NYJ" } }).weekLoss(6)];
     // Sleeper starter B12 (12) out, healthy bench BN (15) outranks him: 0.
     out.starterSits = loss(benchTeam, { B12: { s: "Out", n: "B12", p: "WR", t: "NYJ", retWeeks: 2 } }).weekLoss(6);
-    // Questionable / Doubtful starter A (20), B12 behind him: 25% / 75% of 20.
+    // Q/D starter A (20), B12 (12): 25% / 75% of the marginal drop 8.
     out.qdLine = ["Questionable", "Doubtful"].map(s => loss({ roster_id: 1, starters: ["A"], players: ["A", "B12"], reserve: [], taxi: [] },
       { A: { s, n: "A", p: "WR", t: "KC", retWeeks: 1 } }).weekLoss(6));
-    // Starter A (20) out, healthy B12 (12) would step in: still his full 20, nothing credited.
+    // Starter A (20) out, real rostered B12 (12) steps in: loss 8, not 20 or 9.
     const st = loss({ roster_id: 1, starters: ["A"], players: ["A", "B12"], reserve: [], taxi: [] },
       { A: { s: "Out", n: "A", p: "WR", t: "KC", retWeeks: 3 } });
     out.starter = st.weekLoss(6);
+    // A rostered backup whose club is on bye cannot fill an available lineup slot.
+    out.backupBye = D.injuryLossPlan({ rosters: [{ roster_id: 1, starters: ["A"], players: ["A", "B12"] }] },
+      new Map([["A", { s: "Out", n: "A", p: "WR", t: "KC", retWeeks: 1 }]]),
+      { ...P, byes: { ...P.byes, 6: ["NYJ"] } }, { plan, player, slots: ["WR", "BN"] }).byTeam.get(1).weekLoss(6);
     // A's club KC is on bye in week 7: not charged; week 8 is.
     out.bye = [st.weekLoss(7), st.weekLoss(8)];
     // Shares: X (10) and Y (1) start, Z (0.9) is the only, also-injured, stand-in.
@@ -6807,22 +6814,23 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
     return out;
   });
   check("odds loss: a bench injury that would not start costs 0 in the weekly line", ld.bench === 0, String(ld.bench));
-  check("odds loss: an injured healthy-lineup starter costs his full projection (20), not the drop to his stand-in (8)",
-    near(ld.starter, 20, 1e-9), String(ld.starter));
-  check("odds loss: an injured bench player who'd start the healthy lineup costs his full value (15), with or without an estimate",
-    JSON.stringify(ld.benchStarts) === "[15,15]", JSON.stringify(ld.benchStarts));
+  check("odds loss: ruled-out starter 20 with real rostered backup 12 costs 8, not full 20 or generic 9",
+    near(ld.starter, 8, 1e-9), String(ld.starter));
+  check("odds loss: a real rostered backup on bye is unavailable, not credited", near(ld.backupBye, 20, 1e-9), String(ld.backupBye));
+  check("odds loss: an injured bench player who'd start the healthy lineup costs the drop to the rostered starter (15 - 12 = 3), with or without an estimate",
+    JSON.stringify(ld.benchStarts) === "[3,3]", JSON.stringify(ld.benchStarts));
   check("odds loss: an injured Sleeper starter outside the healthy lineup costs 0", ld.starterSits === 0, String(ld.starterSits));
-  check("odds loss: a Questionable starter costs 25% and a Doubtful one 75% of his full value",
-    near(ld.qdLine[0], 5, 1e-9) && near(ld.qdLine[1], 15, 1e-9), JSON.stringify(ld.qdLine));
-  check("odds loss: a bye week is not charged (bye 0, next week 20)", ld.bye[0] === 0 && near(ld.bye[1], 20, 1e-9), JSON.stringify(ld.bye));
+  check("odds loss: a Questionable starter costs 25% and a Doubtful one 75% of the remaining-roster drop",
+    near(ld.qdLine[0], 2, 1e-9) && near(ld.qdLine[1], 6, 1e-9), JSON.stringify(ld.qdLine));
+  check("odds loss: a bye week is not charged (bye 0, next week 8)", ld.bye[0] === 0 && near(ld.bye[1], 8, 1e-9), JSON.stringify(ld.bye));
   check("odds loss: a player's share is capped at his own projection (capShare)",
     ld.cap[0] > 10 && near(ld.cap[1], 10, 1e-9), JSON.stringify(ld.cap));
   check("weeks_list: a gap list is charged on exactly those weeks (injuryImpact and PTS_LOST)",
     ld.listImpact === "6,8" && ld.listLost === "6,8", JSON.stringify(ld));
-  // none[0] is projectedPointsLost's own lineup drop (20 - 12), which the odds no longer charge; none[3] is the odds' full 20.
+  // Both the helper and live odds charge the remaining-roster drop (20 - 12).
   check("0 weeks out (weeks_list [] / ret this Sunday): the Injuries tab shows 0 this week, matching the odds; no estimate still counts this week",
     JSON.stringify(ld.zero.ret) === "[0,0,0,0]" && JSON.stringify(ld.zero.list) === "[0,0,0,0]"
-      && near(ld.zero.none[0], 8, 1e-9) && ld.zero.none[1] === null && ld.zero.none[2] === 1 && near(ld.zero.none[3], 20, 1e-9),
+      && near(ld.zero.none[0], 8, 1e-9) && ld.zero.none[1] === null && ld.zero.none[2] === 1 && near(ld.zero.none[3], 8, 1e-9),
     JSON.stringify(ld.zero));
   // Live-path regressions requested in review: use injuryLossPlan, not a replacement approximation.
   const liveEdges = await page.evaluate(() => {
@@ -6853,14 +6861,14 @@ group("Injury odds: full healthy value per out week, filtered by healthy-lineup 
     const betterBench = { ...byeP, weeks: { 13: { R: 20, B: 25 }, 14: { R: 0, B: 25 } } };
     const positiveBye = { ...byeP, weeks: { ...byeP.weeks, 14: { R: 20, B: 10 } } };
     return { mixed: mixed(), known: mixed("Out", true), questionable: mixed("Questionable"),
-      bye: bye(), nonstarter: bye(betterBench), returned: bye(byeP, 1), positiveBye: bye(positiveBye) };
+      bye: bye(), noBackup: bye({ ...byeP, weeks: { 13: { R: 20, B: 0 }, 14: { R: 0, B: 0 } } }), nonstarter: bye(betterBench), returned: bye(byeP, 1), positiveBye: bye(positiveBye) };
   });
   check("live injury eligibility: mixed known/unknown returns share one healthy WR lineup (30, never 50)",
     JSON.stringify(liveEdges.mixed) === "[30,0,30]" && JSON.stringify(liveEdges.known) === "[30,0,30]"
       && JSON.stringify(liveEdges.questionable) === "[7.5,0,30]", JSON.stringify(liveEdges));
-  check("live injury playoffs: week-14 ARI bye does not erase explicit ROS losses (0,20,20,20)",
-    JSON.stringify(liveEdges.bye) === "[0,20,20,20]" && JSON.stringify(liveEdges.positiveBye) === "[0,20,20,20]"
-      && JSON.stringify(liveEdges.nonstarter) === "[0,0,0,0]" && JSON.stringify(liveEdges.returned) === "[0,0,0,0]", JSON.stringify(liveEdges));
+  check("live injury playoffs: week-14 ARI bye does not erase ROS remaining-roster drops (0,10,10,10)",
+    JSON.stringify(liveEdges.bye) === "[0,10,10,10]" && JSON.stringify(liveEdges.positiveBye) === "[0,10,10,10]"
+      && JSON.stringify(liveEdges.noBackup) === "[0,20,20,20]" && JSON.stringify(liveEdges.nonstarter) === "[0,0,0,0]" && JSON.stringify(liveEdges.returned) === "[0,0,0,0]", JSON.stringify(liveEdges));
   {
     const sundayOf = w => ({ 6: "2026-10-18", 7: "2026-10-25", 8: "2026-11-01", 9: "2026-11-08", 10: "2026-11-15", 11: "2026-11-22" })[w] || null;
     const rr = (report, week) => IR.resolveReturn({ rec: { s: "Out", t: "NYJ" }, report, week, lastReg: 14, sundayOf, today: "2026-10-14" });
