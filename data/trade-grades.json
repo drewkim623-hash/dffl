@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T11:02:40.490Z",
+ "generated": "2026-11-07T22:02:29.414Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -270,7 +270,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -65.2
+      "marginPts": -64.9
      },
      "hindsight": "Pending"
     },
@@ -282,7 +282,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 167.9,
+       "value": 167.6,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -297,11 +297,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 291.7,
+     "total": 291.4,
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 65.2
+      "marginPts": 64.9
      },
      "hindsight": "Pending"
     }
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 121.1,
+       "value": 121,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -348,7 +348,7 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 165.3,
+     "total": 165.2,
      "tradeDay": {
       "letter": "A",
       "marginPct": 77,
@@ -428,7 +428,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 13,
-      "marginPts": 75.2
+      "marginPts": 75.5
      },
      "hindsight": "Pending"
     },
@@ -440,7 +440,7 @@
       {
        "asset": "Christian McCaffrey",
        "pid": "4034",
-       "value": 167.9,
+       "value": 167.6,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -449,11 +449,11 @@
        "basis": "next cost R1 (regressed from R1), kept 4 yr, shrunk"
       }
      ],
-     "total": 262.2,
+     "total": 261.9,
      "tradeDay": {
       "letter": "C",
       "marginPct": -13,
-      "marginPts": -75.2
+      "marginPts": -75.5
      },
      "hindsight": "Pending"
     }
@@ -596,11 +596,11 @@
        "basis": "next cost R2 (regressed from R3), kept 4 yr, shrunk"
       }
      ],
-     "total": 171.1,
+     "total": 171.2,
      "tradeDay": {
       "letter": "B",
       "marginPct": 55,
-      "marginPts": 121
+      "marginPts": 121.1
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 58.3,
+       "value": 58.2,
        "basis": "actual to wk 8 + Sleeper projection"
       }
      ],
-     "total": 58.3,
+     "total": 58.2,
      "tradeDay": {
       "letter": "D",
       "marginPct": -29,
-      "marginPts": -48.3
+      "marginPts": -48.4
      },
      "hindsight": "Pending"
     }

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-07T14:24:20.042Z",
+ "generated": "2026-11-07T22:02:00.629Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -37,24 +37,24 @@
   "4454": {
    "n": "Kendrick Bourne",
    "s": "IR",
+   "irSince": 9,
    "ret": null,
    "retWeeks": 99,
    "retSource": "report",
    "retEstimated": true,
    "retNote": "https://www.azcardinals.com/news/jeremiyah-love-kendrick-bourne-placed-on-injured-reserve — Broken leg; coach fears season-ending. Rest of season is approved conservative pricing, uncertain, not a confirmed diagnosis.",
-   "retChecked": "2026-11-07",
-   "irSince": 9
+   "retChecked": "2026-11-07"
   },
   "4881": {
    "n": "Lamar Jackson",
    "s": "IR",
+   "irSince": 9,
    "ret": null,
    "retWeeks": 99,
    "retSource": "report",
    "retEstimated": true,
    "retNote": "https://www.baltimoreravens.com/news/lamar-jackson-tyler-huntley-injured-reserve-austin-reed-adisa-isaac-jake-moody — Right thumb; IR, minimum 4 games, possible season absence. Rest of season is approved conservative pricing, uncertain, not a confirmed season-ending diagnosis.",
-   "retChecked": "2026-11-07",
-   "irSince": 9
+   "retChecked": "2026-11-07"
   },
   "5849": {
    "n": "Kyler Murray",
@@ -120,13 +120,13 @@
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
+   "irSince": 6,
    "ret": null,
    "retWeeks": 99,
    "retSource": "report",
    "retEstimated": true,
    "retNote": "https://www.espn.com/nfl/story/_/id/50218378/eagles-jalen-hurts-season-due-blood-clots-lungs — Blood clots in lungs; expected season absence, anticoagulants at least 3 months. Rest of season.",
-   "retChecked": "2026-11-07",
-   "irSince": 6
+   "retChecked": "2026-11-07"
   },
   "7525": {
    "n": "DeVonta Smith",
@@ -272,13 +272,13 @@
   "12508": {
    "n": "Jaxson Dart",
    "s": "IR",
+   "irSince": 6,
    "ret": null,
    "retWeeks": 99,
    "retSource": "report",
    "retEstimated": true,
    "retNote": "https://www.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery — Season-ending knee surgery, 4-6 month recovery; an NFL postseason return is possible, not a fantasy-playoff one. Rest of season.",
-   "retChecked": "2026-11-07",
-   "irSince": 6
+   "retChecked": "2026-11-07"
   },
   "12514": {
    "n": "Emeka Egbuka",
