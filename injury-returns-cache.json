@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-06T23:12:01.828Z",
+ "generated": "2026-11-07T11:02:08.338Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -32,7 +32,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
+   "retChecked": "2026-11-07"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -114,18 +114,18 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-06",
+   "retChecked": "2026-11-07",
    "irSince": 8
   },
   "6803": {
    "n": "Brandon Aiyuk",
    "s": "DNR",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-11-06"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: DNR = coming week only",
+   "retChecked": "2026-11-07"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -167,7 +167,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
+   "retChecked": "2026-11-07"
   },
   "8137": {
    "n": "George Pickens",
@@ -177,7 +177,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-06"
+   "retChecked": "2026-11-07"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -193,12 +193,12 @@
   "8146": {
    "n": "Garrett Wilson",
    "s": "Out",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-11-06"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-11-07"
   },
   "8800": {
    "n": "Malik Davis",
@@ -261,7 +261,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Doubtful = coming week only",
-   "retChecked": "2026-11-06"
+   "retChecked": "2026-11-07"
   },
   "12489": {
    "n": "RJ Harvey",
