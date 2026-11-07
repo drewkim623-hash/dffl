@@ -46,18 +46,12 @@
     },
     "4454": {
       "kind": "report",
-      "source": "consensus.mjs",
-      "weeks_list": [
-        9,
-        10,
-        11,
-        12,
-        13
-      ],
-      "weeks": 5,
-      "checked": "2026-11-04",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "weeks": "season",
+      "source": "https://www.azcardinals.com/news/jeremiyah-love-kendrick-bourne-placed-on-injured-reserve",
+      "checked": "2026-11-07",
+      "flag": "uncertain",
+      "override": "approved 2026-11-07: rest of season through fantasy playoffs (no date); https://www.azcardinals.com/news/jeremiyah-love-kendrick-bourne-placed-on-injured-reserve",
+      "note": "Broken leg; coach fears season-ending. Rest of season is approved conservative pricing, uncertain, not a confirmed diagnosis."
     },
     "4866": {
       "kind": "report",
@@ -72,17 +66,12 @@
     },
     "4881": {
       "kind": "report",
-      "weeks": 4,
-      "weeks_list": [
-        9,
-        10,
-        11,
-        12
-      ],
-      "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-03",
-      "note": "Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "weeks": "season",
+      "source": "https://www.baltimoreravens.com/news/lamar-jackson-tyler-huntley-injured-reserve-austin-reed-adisa-isaac-jake-moody",
+      "checked": "2026-11-07",
+      "flag": "uncertain",
+      "override": "approved 2026-11-07: rest of season through fantasy playoffs (no date); https://www.baltimoreravens.com/news/lamar-jackson-tyler-huntley-injured-reserve-austin-reed-adisa-isaac-jake-moody",
+      "note": "Right thumb; IR, minimum 4 games, possible season absence. Rest of season is approved conservative pricing, uncertain, not a confirmed season-ending diagnosis."
     },
     "4943": {
       "kind": "report",
@@ -95,17 +84,6 @@
       "flag": "consensus",
       "note": "Consensus: changed from audit []; consensus."
     },
-    "4983": {
-      "kind": "report",
-      "weeks": 1,
-      "weeks_list": [
-        6
-      ],
-      "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-10-18",
-      "note": "Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: matches audit; consensus.",
-      "flag": "consensus"
-    },
     "5844": {
       "kind": "report",
       "weeks": 0,
@@ -117,14 +95,14 @@
     },
     "5849": {
       "kind": "report",
-      "source": "consensus.mjs",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
       "weeks_list": [
         9
       ],
       "weeks": 1,
-      "checked": "2026-11-06",
+      "checked": "2026-11-07",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Ruled out Monday by the coach (ESPN Nov 7 report); Nov 15 estimate unchanged. Consensus: matches audit; consensus."
     },
     "5850": {
       "kind": "report",
@@ -181,17 +159,12 @@
     },
     "6904": {
       "kind": "report",
-      "source": "consensus.mjs",
-      "weeks_list": [
-        6,
-        7,
-        8,
-        9
-      ],
-      "weeks": 4,
-      "checked": "2026-10-18",
+      "weeks": "season",
+      "source": "https://www.espn.com/nfl/story/_/id/50218378/eagles-jalen-hurts-season-due-blood-clots-lungs",
+      "checked": "2026-11-07",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "override": "approved 2026-11-07: rest of season through fantasy playoffs (no date); https://www.espn.com/nfl/story/_/id/50218378/eagles-jalen-hurts-season-due-blood-clots-lungs",
+      "note": "Blood clots in lungs; expected season absence, anticoagulants at least 3 months. Rest of season."
     },
     "7021": {
       "kind": "report",
@@ -478,21 +451,12 @@
     },
     "12508": {
       "kind": "report",
-      "weeks": 8,
-      "weeks_list": [
-        6,
-        7,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14
-      ],
-      "source": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh",
-      "checked": "2026-10-14",
-      "note": "Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "weeks": "season",
+      "source": "https://www.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery",
+      "checked": "2026-11-07",
+      "flag": "consensus",
+      "override": "approved 2026-11-07: rest of season through fantasy playoffs (no date); https://www.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery",
+      "note": "Season-ending knee surgery, 4-6 month recovery; an NFL postseason return is possible, not a fantasy-playoff one. Rest of season."
     },
     "12509": {
       "kind": "report",
@@ -541,13 +505,11 @@
     "12529": {
       "kind": "report",
       "weeks": 1,
-      "weeks_list": [
-        9
-      ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
       "checked": "2026-11-07",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
-      "flag": "consensus"
+      "flag": "consensus",
+      "override": "approved 2026-11-07: no timetable, coming week only (no date); https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
+      "note": "Out (illness). Vrabel gives no timetable after unexpected neurological symptoms (ESPN, Nov 6; https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries). Coming week only, estimated."
     },
     "12533": {
       "kind": "report",
@@ -596,13 +558,11 @@
     "13281": {
       "kind": "report",
       "weeks": 1,
-      "weeks_list": [
-        9
-      ],
-      "source": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson",
-      "checked": "2026-11-03",
-      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "source": "https://www.neworleanssaints.com/news/saints-roster-moves-week-9-elevations-game-status-browns-2026",
+      "checked": "2026-11-07",
+      "flag": "consensus",
+      "override": "approved 2026-11-07: no timetable, coming week only (no date); https://www.neworleanssaints.com/news/saints-roster-moves-week-9-elevations-game-status-browns-2026",
+      "note": "Activated from IR; Questionable (hamstring). No timetable: coming week only at Questionable availability."
     },
     "13286": {
       "kind": "report",

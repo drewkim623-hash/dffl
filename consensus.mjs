@@ -247,6 +247,10 @@ async function main() {
     // The entry: a new one only when the signals put him out; an unchanged one
     // keeps its weeks_list and checked date (so the stale guard still sees it age).
     if (!ae && !out.length) continue;
+    // An explicit official or approved timetable (entry.override, a reason
+    // string) is not the projections' to undo: its weeks stand. Status still
+    // comes from Sleeper, so a player who is cleared drops out of `hurt`.
+    if (ae && ae.override) continue;
     const e = ae || { kind: "report", source: "consensus.mjs" };
     if (changed || !ae) {
       e.weeks_list = out;
