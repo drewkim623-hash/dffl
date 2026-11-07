@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-07T23:11:39.355Z",
- "at": 1794093099355,
+ "generated": "2026-11-07T23:50:20.333Z",
+ "at": 1794095420333,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -201,6 +201,41 @@
   }
  ],
  "trades": [
+  {
+   "week": 9,
+   "type": "trade",
+   "managers": [
+    "willie12w",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "status": null,
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Kendre Miller",
+     "pos": "RB",
+     "team": "NO",
+     "status": null,
+     "from": "willie12w"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2029",
+     "round": 15,
+     "from": "saucebossandrew",
+     "to": "willie12w"
+    }
+   ]
+  },
   {
    "week": 8,
    "type": "trade",
