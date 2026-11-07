@@ -5538,7 +5538,7 @@ const PL_NAMES = [
   "points lost: the stand-in is who enters the rebuilt lineup, never an injured player; else lineup shuffle",
   "points lost: this week is the same best-lineup drop as rest of season, so both figures on a row mean the same thing",
   "points lost: splitLineupDrop shares the drop by (with - with minus just him), scaled to the drop; all 0 -> even",
-  "points lost: IR with no date reads season (IR), not no estimate",
+  "points lost: IR without a date or estimate does not claim a season absence",
   "points lost: retWeeks without a date reads ~N wk (est.) with its source, never no estimate",
   "odds fallback: without projections the old multiplier path is origin/main's, byte for byte"];
 // With the tab missing or never ready, name every check below as failed
@@ -5929,7 +5929,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       // An exact weeks list (retWeeksList) beats everything; then the date.
       if (Array.isArray(rec.retWeeksList)) weeks = season.filter(w => rec.retWeeksList.map(Number).includes(w));
       else if (!/^\d{4}-\d{2}-\d{2}/.test(String(rec.ret || "")) && rw > 0) weeks = season.slice(0, rw);
-      else if (/season/i.test(rec.sev || "") || (rec.s === "IR" && !rec.ret)) weeks = season;
+      else if (/season/i.test(rec.sev || "")) weeks = season;
       else if (rec.ret) weeks = season.filter(w => P.sundays[w] < rec.ret);
       out[p] = { weeks, ros: weeks ? 0 : null, thisWeek: 0 };
     }
@@ -5990,7 +5990,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
   check("points lost: the source label reads Sleeper projections, ESPN return dates",
     PL.srcLabel === "Sleeper projections, ESPN return dates", PL.srcLabel);
 
-  /* The Injuries tab's playoff-odds view (Research's lineup-delta model). */
+  /* The Injuries tab's playoff-odds view (full-value healthy-lineup pricing). */
   {
     const LT = PL.lossTeams || [];
     const lossOf = new Map(LT.flatMap(t => t.rows.map(x => [x.pid, { ...x, rid: t.rid }])));
@@ -6069,7 +6069,7 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       PL.capNote && PL.explainers && /playoff odds/i.test(PL.text), `cap ${PL.capPct}% note ${PL.capNote}, explainers ${PL.explainers}`);
   }
 
-  // projectedPointsLost() itself, which the odds' lineup-delta pricing reads.
+  // projectedPointsLost() itself, whose healthy lineup the odds pricing reads.
   const reBad = [], qBad = [], dupBad = [];
   const standBad = [];
   let qSeen = 0;
@@ -6507,7 +6507,7 @@ group("Tab bar scroll hint");
   await dctx.close();
 }
 
-group("Injury odds: lineup drop per out week (full value only without lineup slots)");
+group("Injury odds: full healthy value per out week, filtered by healthy-lineup eligibility");
 {
   // injury-returns.mjs, in Node.
   const IR = await import(new URL("./injury-returns.mjs", import.meta.url));
@@ -6680,7 +6680,7 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       .filter(r => /St\. Brown|Mike Evans|Garrett Wilson/.test(r.name || ""))
       .map(r => `${r.name} ${r.status} w${plan.W0}=${Number((r.perWeek || {})[plan.W0] || 0).toFixed(2)} wt${r.weight}`) : null;
     out.realRows = plan && plan.loss ? [...plan.loss.byTeam.values()].flatMap(T => T.rows)
-      .filter(r => r.pricing !== "lineup-delta" ? Math.abs(r.totalLost - r.ptsPerWeek * r.weeksOut) > 1e-9
+      .filter(r => r.pricing !== "healthy-lineup" ? Math.abs(r.totalLost - r.ptsPerWeek * r.weeksOut) > 1e-9
         : Math.abs(r.totalLost - Object.values(r.perWeek).reduce((a, x) => a + x, 0)) > 1e-9).length : null;
     if (model && model.ok && live) {
       const n = live.teams.length, wk0 = live.weeks.length ? live.weeks[0].week : null;
@@ -6748,7 +6748,7 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   check("odds loss: no projections -> no loss plan", io.noProj);
   console.log(`  info real W0 charges: ${JSON.stringify(io.examples)}`);
   check("odds loss: totalLost = the sum of its per-week lineup drops on every real row (ptsPerWeek × weeksOut without slots)", io.realRows === 0, String(io.realRows));
-  // The lineup-delta rule on its own synthetic teams (slots given, so not full value).
+  // Healthy-lineup eligibility on synthetic teams (slots supplied, full-value pricing).
   const ld = await page.evaluate(() => {
     const D = window.__DFFL;
     const reg = [6, 7, 8, 9, 10, 11, 12, 13, 14], all = [...reg, 15, 16, 17];
@@ -6824,6 +6824,43 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     JSON.stringify(ld.zero.ret) === "[0,0,0,0]" && JSON.stringify(ld.zero.list) === "[0,0,0,0]"
       && near(ld.zero.none[0], 8, 1e-9) && ld.zero.none[1] === null && ld.zero.none[2] === 1 && near(ld.zero.none[3], 20, 1e-9),
     JSON.stringify(ld.zero));
+  // Live-path regressions requested in review: use injuryLossPlan, not a replacement approximation.
+  const liveEdges = await page.evaluate(() => {
+    const D = window.__DFFL;
+    const plan = W0 => ({ W0, lastReg: 14, inFlight: false, ptsIn: () => 0,
+      scaleOf: () => ({ scale: 1 }), levelOf: () => 1000 });
+    const mixedP = { current_week: 9, playoff_week_start: 15,
+      sundays: Object.fromEntries([9, 10, 11, 12, 13, 14].map((w, i) => [w, new Date(Date.UTC(2026, 10, 8 + 7 * i)).toISOString().slice(0, 10)])),
+      weeks: Object.fromEntries([9, 10, 11, 12, 13, 14].map(w => [w, { A: 20, C: 0 }])),
+      last_nonzero: { C: { week: 8, pts: 30 } }, byes: {} };
+    const mixedTeam = { roster_id: 1, starters: ["A"], players: ["A", "C"], reserve: [], taxi: [] };
+    const mixed = (status = "Out", known = false) => {
+      const injuries = new Map([["A", { n: "A", p: "WR", t: "NYJ", s: "Out", retWeeks: 99 }],
+        ["C", { n: "C", p: "WR", t: "DEN", s: status, ...(known ? { retWeeks: 1 } : {}) }]]);
+      const T = D.injuryLossPlan({ rosters: [mixedTeam] }, injuries, mixedP,
+        { plan: plan(9), slots: ["WR", "BN"], player: pid => ({ p: "WR", t: pid === "A" ? "NYJ" : "DEN" }) }).byTeam.get(1);
+      return [T.weekLoss(9), T.rows.find(r => r.pid === "A").perWeek[9], T.rows.find(r => r.pid === "C").perWeek[9]];
+    };
+    const byeP = { current_week: 14, playoff_week_start: 15, sundays: { 13: "2026-12-06", 14: "2026-12-13" },
+      weeks: { 13: { R: 20, B: 10 }, 14: { R: 0, B: 10 } },
+      last_nonzero: { R: { week: 13, pts: 20 } }, byes: { 14: ["ARI", "DAL"] } };
+    const byeTeam = { roster_id: 1, starters: ["R"], players: ["R", "B"], reserve: [], taxi: [] };
+    const bye = (P = byeP, retWeeks = 99) => {
+      const T = D.injuryLossPlan({ rosters: [byeTeam] }, new Map([["R", { n: "R", p: "WR", t: "ARI", s: "IR", retWeeks }]]), P,
+        { plan: plan(14), slots: ["WR", "BN"], player: pid => ({ p: "WR", t: pid === "R" ? "ARI" : "NYJ" }) }).byTeam.get(1);
+      return [14, 15, 16, 17].map(w => T.weekLoss(w));
+    };
+    const betterBench = { ...byeP, weeks: { 13: { R: 20, B: 25 }, 14: { R: 0, B: 25 } } };
+    const positiveBye = { ...byeP, weeks: { ...byeP.weeks, 14: { R: 20, B: 10 } } };
+    return { mixed: mixed(), known: mixed("Out", true), questionable: mixed("Questionable"),
+      bye: bye(), nonstarter: bye(betterBench), returned: bye(byeP, 1), positiveBye: bye(positiveBye) };
+  });
+  check("live injury eligibility: mixed known/unknown returns share one healthy WR lineup (30, never 50)",
+    JSON.stringify(liveEdges.mixed) === "[30,0,30]" && JSON.stringify(liveEdges.known) === "[30,0,30]"
+      && JSON.stringify(liveEdges.questionable) === "[7.5,0,30]", JSON.stringify(liveEdges));
+  check("live injury playoffs: week-14 ARI bye does not erase explicit ROS losses (0,20,20,20)",
+    JSON.stringify(liveEdges.bye) === "[0,20,20,20]" && JSON.stringify(liveEdges.positiveBye) === "[0,20,20,20]"
+      && JSON.stringify(liveEdges.nonstarter) === "[0,0,0,0]" && JSON.stringify(liveEdges.returned) === "[0,0,0,0]", JSON.stringify(liveEdges));
   {
     const sundayOf = w => ({ 6: "2026-10-18", 7: "2026-10-25", 8: "2026-11-01", 9: "2026-11-08", 10: "2026-11-15", 11: "2026-11-22" })[w] || null;
     const rr = (report, week) => IR.resolveReturn({ rec: { s: "Out", t: "NYJ" }, report, week, lastReg: 14, sundayOf, today: "2026-10-14" });
