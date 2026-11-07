@@ -24,7 +24,7 @@
       "weeks": 1,
       "checked": "2026-11-06",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "2449": {
       "kind": "report",
@@ -124,7 +124,7 @@
       "weeks": 1,
       "checked": "2026-11-06",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "5850": {
       "kind": "report",
@@ -145,7 +145,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
       "checked": "2026-11-06",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5872": {
@@ -156,7 +156,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/3126486/deebo-samuel-sr",
       "checked": "2026-11-06",
-      "note": "Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: changed from audit []; consensus.",
+      "note": "Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5892": {
@@ -210,7 +210,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-06",
-      "note": "Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: changed from audit []; consensus.",
+      "note": "Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "7543": {
@@ -248,8 +248,19 @@
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
       "checked": "2026-11-06",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [9,10]; consensus.",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
       "flag": "consensus"
+    },
+    "8146": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        9
+      ],
+      "weeks": 1,
+      "checked": "2026-11-07",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "8155": {
       "kind": "report",
@@ -431,6 +442,17 @@
       "note": "Quad strain. Canales: 'on track' to play Week 6; practiced Tuesday. Sleeper still says Out -> count 0 weeks. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
       "flag": "uncertain"
     },
+    "12481": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        9
+      ],
+      "weeks": 1,
+      "checked": "2026-11-07",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
+    },
     "12489": {
       "kind": "report",
       "source": "consensus.mjs",
@@ -520,12 +542,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        8
+        9
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
-      "checked": "2026-11-01",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "checked": "2026-11-07",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "12533": {
       "kind": "report",
@@ -603,7 +625,7 @@
       "weeks": 4,
       "checked": "2026-11-06",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [9]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13296": {
       "kind": "report",
