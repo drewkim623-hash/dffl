@@ -238,6 +238,17 @@
       "flag": "consensus",
       "note": "Consensus: matches audit; consensus."
     },
+    "8137": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        9
+      ],
+      "weeks": 1,
+      "checked": "2026-11-08",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
+    },
     "8142": {
       "kind": "report",
       "weeks": 3,
@@ -570,7 +581,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-08",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13276": {

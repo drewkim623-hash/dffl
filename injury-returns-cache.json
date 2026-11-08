@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-08T15:49:40.292Z",
+ "generated": "2026-11-08T16:54:49.573Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -149,24 +149,14 @@
    "retChecked": "2026-11-04",
    "irSince": 6
   },
-  "7547": {
-   "n": "Amon-Ra St. Brown",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-08"
-  },
   "8137": {
    "n": "George Pickens",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
+   "s": "Out",
+   "ret": "2026-11-15",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-11-08"
   },
   "8142": {
@@ -245,7 +235,7 @@
   },
   "12481": {
    "n": "Cam Skattebo",
-   "s": "Doubtful",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
@@ -318,7 +308,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-08"
   },
   "13279": {
@@ -330,16 +320,6 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-10-31"
-  },
-  "13281": {
-   "n": "Jordyn Tyson",
-   "s": "Questionable",
-   "ret": "2026-11-08",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson — Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: changed from audit [9]; consensus.",
-   "retChecked": "2026-11-08"
   },
   "13287": {
    "n": "Jeremiyah Love",
