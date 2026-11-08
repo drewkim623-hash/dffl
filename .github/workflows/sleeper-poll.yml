@@ -1,12 +1,16 @@
 # Poll Sleeper every 20 minutes and rebuild only when something moved.
 #
 # The first step is the whole cost of a quiet run: sleeper-fingerprint.mjs
-# --check hashes this week's (and last week's) transactions and every roster,
-# and compares that with the committed data/sleeper-fingerprint.json. Only on a
-# change does the job go on to the roster/injury builds, the browser install
-# and the odds snapshot. Injury statuses are not polled: Sleeper asks that its
-# 5MB player file be pulled about once a day, so injury changes come from
-# injury-refresh.yml (daily) and the weekly build.
+# --check hashes this week's (and last week's) transactions, every roster, and
+# every rostered player's injury tags (injury_status, body part, notes,
+# practice status, status), and compares that with the committed
+# data/sleeper-fingerprint.json. Only on a change does the job go on to the
+# roster/injury builds, the browser install and the odds snapshot.
+#
+# When an injury tag moved (injuries == 'true') the poll also runs the same
+# consensus step injury-refresh.yml does (consensus.mjs) ahead of the snapshot
+# and return-date builds, so a status change gets its return date re-checked
+# against the club / ESPN within 20 minutes rather than at the next refresh slot.
 #
 # Nothing here sends anything. build-email.mjs only drives the published site
 # in a headless browser and writes data/odds-snapshot.json; composing and
@@ -25,7 +29,7 @@ permissions:
 # Shared with injury-refresh.yml: both write the same files and push to main.
 # weekly-data.yml keeps its own group so a queued poll can never cancel a
 # pending weekly-data run (GitHub keeps one pending run per group); a collision
-# with it is left to the commit step's rebase-and-retry below.
+# with it is left to publish-data.sh's rebase-and-retry below.
 concurrency:
   group: sleeper-data
   cancel-in-progress: false
@@ -48,6 +52,12 @@ jobs:
       - name: Refresh the roster map
         if: steps.fp.outputs.changed == 'true'
         run: node build-rosters.mjs
+
+      # Only when an injury tag moved. Always exits 0; a feed that fails falls
+      # back to data/consensus-cache/, and a no-change run writes nothing.
+      - name: Reconcile the injury consensus
+        if: steps.fp.outputs.changed == 'true' && steps.fp.outputs.injuries == 'true'
+        run: node consensus.mjs
 
       - name: Refresh the injury snapshot
         if: steps.fp.outputs.changed == 'true'
@@ -87,41 +97,26 @@ jobs:
         if: steps.fp.outputs.changed == 'true'
         run: node sleeper-fingerprint.mjs --write
 
+      # publish-data.sh: rebase onto origin and push, up to 5 attempts with
+      # backoff; a failed push keeps the commit, a conflicting rebase resets to
+      # origin and reruns the builds below. No force push.
       - name: Commit anything that changed
         if: steps.fp.outputs.changed == 'true'
+        env:
+          INJURIES: ${{ steps.fp.outputs.injuries }}
         run: |
           git config user.name  "dffl-data[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch="${GITHUB_REF_NAME:-main}"
-          commit() {
-            git add -A data injuries.json injury-returns.json injury-returns-cache.json rosters.json
-            if git diff --staged --quiet; then return 1; fi
-            git commit -m "Data: Sleeper change"
-          }
-          if ! commit; then
-            echo "Nothing changed."
-            exit 0
-          fi
-          # No force push. On a rebase (or push) failure: abort, start again from
-          # origin, rerun the build steps above, recommit and try once more.
-          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
-          git rebase --abort || true
-          echo "::warning::Rebase or push failed; regenerating on top of origin/$branch and retrying once."
-          git fetch origin "$branch"
-          git reset --hard "origin/$branch"
-          node build-rosters.mjs
-          node build-injuries.mjs
-          node injury-returns.mjs
-          node build-pulse.mjs
-          node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
-          node build-email.mjs
-          node build-odds-history.mjs || echo "::warning::odds history not updated"
-          node sleeper-fingerprint.mjs --write
-          if ! commit; then
-            echo "Nothing changed on top of origin/$branch."
-            exit 0
-          fi
-          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
-          git rebase --abort || true
-          echo "::error::Could not rebase the poll commit onto $branch after one retry; nothing pushed."
-          exit 1
+          rebuild='
+            node build-rosters.mjs
+            if [ "$INJURIES" = true ]; then node consensus.mjs; fi
+            node build-injuries.mjs
+            node injury-returns.mjs
+            node build-pulse.mjs
+            node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
+            node build-email.mjs
+            node build-odds-history.mjs || echo "::warning::odds history not updated"
+            node sleeper-fingerprint.mjs --write
+          '
+          bash publish-data.sh "Data: Sleeper change" "$rebuild" \
+            data injuries.json injury-returns.json injury-returns-cache.json rosters.json

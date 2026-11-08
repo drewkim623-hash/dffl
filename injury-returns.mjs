@@ -11,6 +11,12 @@
  *      a timetable in ESPN's outlook prose                   retSource "espn-outlook"  (estimated)
  *      injury-returns.json kind "report"                      retSource "report" (estimated unless dated)
  *   4. RETURN_DEFAULTS for the status                         retSource "default"  (estimated)
+ * After 1, a season-ending outlook (2 or 3's prose) is the rest of the season
+ * over an undated report and the defaults; only a date (a dated report, ESPN's
+ * returnDate) still outranks it. A report checked before his status last
+ * changed (statusSince, kept in the cache) is ignored.
+ * No date is ever made up: ret is only a date a source gave, or the Sunday of
+ * a week a source or report named; with none, ret is left out.
  *
  * Fields written: ret (ISO date, only when one is derivable), retWeeks (weeks
  * from the coming one, when there is no date; 99 = rest of season, playoffs
@@ -78,10 +84,11 @@ export function parseOutlook(text) {
  *   lastReg  the last regular-season week (playoff_week_start - 1)
  *   sundayOf (w) -> that week's Sunday, ISO, or null
  *   irSince  IR / PUP: the fantasy week he went on the list, or null
+ *   statusSince  ISO day his Sleeper status last changed (from the cache), or null
  * retWeeks counts fantasy weeks starting with `week` — what PTS_LOST
  * .retWeeksStartsThisWeek reads; SEASON (99) runs past the regular season.
  */
-export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = null, week, lastReg = 14, sundayOf = null, byes = null, today, irSince = null }) {
+export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = null, week, lastReg = 14, sundayOf = null, byes = null, today, irSince = null, statusSince = null }) {
   const retChecked = today || new Date().toISOString().slice(0, 10);
   // A hand entry: { ret } or { weeks }, from the team ("team") or a report ("report").
   // unit "games" (the injury audit): games he misses, his club's bye weeks not
@@ -174,9 +181,23 @@ export function resolveReturn({ rec, notes = [], sleeperNotes = [], report = nul
   };
   // 1. The club's own timetable (injury-returns.json, kind "team"): a date or a
   //    number of weeks the team gave is not an estimate.
-  const entry = report ? live(report) : null;
+  // A non-team entry checked before his status last changed (statusSince) was
+  // written against the old status: it is ignored and the sources re-read.
+  const fresh = e => {
+    if (!e || e.kind === "team" || !statusSince || !(String(e.checked || "") < statusSince)) return e;
+    ignored = `${e.kind || "report"} entry checked ${e.checked || "?"} ignored: status changed ${statusSince}`;
+    return null;
+  };
+  const entry = report ? fresh(live(report)) : null;
   const withIgnored = r => (ignored ? { ...r, retNote: `${r.retNote} (${ignored})` } : r);
   if (entry && entry.kind === "team") return fromEntry(entry, "team", false);
+  // A season-ending outlook is the rest of the season, never the shorter weeks
+  // a report (often consensus.mjs's one-week placeholder) or the defaults would
+  // give. A timetable outranks it: the club's (above) or ESPN's real returnDate.
+  const isSeason = n => (parseOutlook(n) || {}).weeks === SEASON;
+  const seasonEnd = !rec.ret && fromProse([...sleeperNotes, ...notes].filter(isSeason),
+    sleeperNotes.some(isSeason) ? "sleeper-outlook" : "espn-outlook");
+  if (seasonEnd && !(entry && (entry.weeks === "season" || entry.ret))) return withIgnored(seasonEnd);
   // 2. Sleeper outlook/news. Sleeper exposes none today: players/nfl carries only
   //    injury_notes (the injury type — "Sprain", "Fracture"), practice_description
   //    is empty and there is no news endpoint. The hook stays for if it ever does.
@@ -294,17 +315,20 @@ async function main() {
         .map(([w]) => Number(w)).sort((a, b) => a - b)[0] : null;
       irSince = fromDate || (c && onIR(c.s) ? Number(c.irSince) || Number(cache.week) || null : null) || week;
     }
+    // The day his status last changed, as seen by this script: carried while it
+    // holds, today when it differs from the last run's. First sighting: unknown.
+    const statusSince = c && c.s ? (c.s === rec.s ? c.statusSince || null : today) : null;
     // ESPN down: reuse a cached ESPN-derived result; defaults need no feed.
     const r = !feed && !rec.ret && c && c.s === rec.s && c.retSource && c.retSource !== "default"
       ? Object.fromEntries(FIELDS.filter(f => c[f] != null).map(f => [f, c[f]]))
       : resolveReturn({ rec, notes: [...((match(rec) || {}).notes || []), rec.note].filter(Boolean),
-        report: reports[pid] || null, week, lastReg, sundayOf, byes: proj.byes || null, today, irSince });
+        report: reports[pid] || null, week, lastReg, sundayOf, byes: proj.byes || null, today, irSince, statusSince });
     if (r.ret == null) delete rec.ret; // a report in weeks replaces ESPN's date
     for (const f of FIELDS) if (r[f] != null) rec[f] = r[f];
     entries[pid] = { n: rec.n, s: rec.s, ret: rec.ret || null, retWeeks: rec.retWeeks ?? null,
       ...(rec.retWeeksList ? { retWeeksList: rec.retWeeksList } : {}), retSource: rec.retSource,
       retEstimated: !!rec.retEstimated, retNote: rec.retNote, retChecked: rec.retChecked,
-      ...(irSince ? { irSince } : {}) };
+      ...(irSince ? { irSince } : {}), ...(statusSince ? { statusSince } : {}) };
     tally[rec.retSource] = (tally[rec.retSource] || 0) + 1;
   }
   fs.writeFileSync("injuries.json", JSON.stringify(inj));

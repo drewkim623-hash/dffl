@@ -6516,6 +6516,45 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   check("returns: outlook parser reads season-ending, out until Week N, IR, week-to-week",
     IR.parseOutlook("suffered a season-ending ACL tear").weeks === IR.SEASON && IR.parseOutlook("He is out until Week 9").untilWeek === 9
     && IR.parseOutlook("was placed on IR Tuesday").weeks === 4 && IR.parseOutlook("considered week-to-week").weeks === 2);
+  // Season-ending: the rest of the season over a short undated report and the
+  // defaults; a date (ESPN's, a dated report) and the club's timetable still win.
+  const oneWk = { kind: "report", source: "consensus.mjs", weeks_list: [6], weeks: 1, checked: "2026-10-12" };
+  const seR = IR.resolveReturn({ rec: { s: "IR" }, notes: ["He suffered a season-ending knee injury."], report: oneWk, week: 6, today });
+  const seD = IR.resolveReturn({ rec: { s: "IR" }, notes: ["Out for the rest of the season."], week: 6, today, irSince: 6 });
+  const seT = IR.resolveReturn({ rec: { s: "IR" }, notes: ["season-ending surgery"], report: { kind: "team", weeks: 3, checked: "2026-10-12" }, week: 6, today });
+  const seE = IR.resolveReturn({ rec: { s: "IR", ret: "2026-11-20" }, notes: ["season-ending surgery"], report: oneWk, week: 6, today });
+  check("returns: season-ending outlook -> rest of season over a 1-week report and the IR default; team / dated entries still win",
+    seR.retWeeks === IR.SEASON && seR.retSource === "espn-outlook" && !seR.ret && seD.retWeeks === IR.SEASON
+      && seT.retSource === "team" && seT.retWeeks === 3 && seE.retSource === "report" && seE.retWeeks === 1,
+    JSON.stringify([seR, seD, seT, seE]));
+  // A report checked before his status changed is ignored and the sources re-read;
+  // one checked on or after the change, or a team entry, still holds.
+  const stOld = IR.resolveReturn({ rec: { s: "IR" }, notes: [], report: oneWk, week: 6, today, irSince: 6, statusSince: "2026-10-13" });
+  const stNew = IR.resolveReturn({ rec: { s: "IR" }, notes: [], report: { ...oneWk, checked: "2026-10-13" }, week: 6, today, statusSince: "2026-10-13" });
+  const stTeam = IR.resolveReturn({ rec: { s: "IR" }, notes: [], report: { kind: "team", weeks: 2, checked: "2026-10-01" }, week: 6, today, statusSince: "2026-10-13" });
+  check("returns: a report checked before the status change is ignored (IR default, noted); a fresh one or a team entry holds",
+    stOld.retSource === "default" && stOld.retWeeks === 4 && /status changed 2026-10-13/.test(stOld.retNote) && !stOld.ret
+      && stNew.retSource === "report" && stTeam.retSource === "team" && stTeam.retWeeks === 2,
+    JSON.stringify([stOld, stNew, stTeam]));
+  {
+    // The CLI stamps statusSince when the status differs from the cached one and carries it after.
+    const { spawnSync } = await import("node:child_process");
+    const fs = await import("node:fs"), os = await import("node:os");
+    const dir = fs.mkdtempSync(join(os.tmpdir(), "inj-sts-"));
+    for (const f of ["injury-returns.mjs", "fetch-json.mjs"]) fs.copyFileSync(join(ROOT, f), join(dir, f));
+    fs.writeFileSync(join(dir, "injuries.json"), JSON.stringify({ map: { 1: { n: "Moved", s: "IR", p: "RB" }, 2: { n: "Same", s: "Out", p: "WR" },
+      3: { n: "Carried", s: "Out", p: "TE" }, 4: { n: "New", s: "Out", p: "QB" } } }));
+    fs.writeFileSync(join(dir, "injury-returns-cache.json"), JSON.stringify({ entries: { 1: { s: "Out" }, 2: { s: "Out" },
+      3: { s: "Out", statusSince: "2026-10-01" } } }));
+    const run = spawnSync(process.execPath, ["injury-returns.mjs"], { cwd: dir, encoding: "utf8", timeout: 60000,
+      env: { ...process.env, ESPN_INJURIES_URL: "http://127.0.0.1:9/injuries" } });
+    const ce = JSON.parse(fs.readFileSync(join(dir, "injury-returns-cache.json"), "utf8")).entries;
+    fs.rmSync(dir, { recursive: true, force: true });
+    const day = new Date().toISOString().slice(0, 10);
+    check("returns CLI: statusSince = today on a status change, carried while it holds, absent when unknown",
+      run.status === 0 && ce[1].statusSince === day && !ce[2].statusSince && ce[3].statusSince === "2026-10-01" && !ce[4].statusSince,
+      JSON.stringify([run.status, ce]));
+  }
 
   const tm = IR.resolveReturn({ rec: { s: "Out", ret: "2026-11-20" }, notes: ["expected to miss 4-6 weeks"],
     report: { kind: "team", weeks: 2, source: "club", checked: "2026-10-12" }, week: 6, today });
@@ -6768,20 +6807,88 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       JSON.stringify([wrun.status, wrun.stdout.slice(-300), wReport]));
   }
   {
-    // injury-refresh.yml: ±30 min gate, its own concurrency group, Sunday skip
-    // while weekly-data runs, one regenerate-and-retry on a rebase failure, no force push.
+    // injury-refresh.yml: -10..+55 min gate with catch-up slots and a done-already
+    // check, the shared concurrency group, Sunday wait for weekly-data, publish-data.sh.
     const fs = await import("node:fs");
     const y = fs.readFileSync(join(ROOT, ".github", "workflows", "injury-refresh.yml"), "utf8");
     const script = (y.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
-    check("injury-refresh.yml: gate within 30 min, shared sleeper-data concurrency group, actions: read + GH_TOKEN",
-      /\[ \$d -lt 30 \]/.test(y) && !/-le 7/.test(y) && /group: sleeper-data/.test(y) && !/group: (weekly-data|injury-refresh)\b/.test(y)
+    check("injury-refresh.yml: gate -10..+55 min, shared sleeper-data concurrency group, actions: read + GH_TOKEN",
+      /\[ \$d -ge -10 \] && \[ \$d -lt 55 \]/.test(y) && !/-le 7/.test(y) && /group: sleeper-data/.test(y) && !/group: (weekly-data|injury-refresh)\b/.test(y)
         && /^\s+actions: read$/m.test(y) && /GH_TOKEN: \$\{\{ github\.token \}\}/.test(y));
-    check("injury-refresh.yml: Sundays skip while a weekly-data.yml run is in progress or queued",
-      /"\$dow" = 7/.test(y) && /gh run list[^\n]*--workflow weekly-data\.yml[^\n]*--status "\$st"/.test(y) && /for st in in_progress queued/.test(y) && /go=false/.test(y));
-    check("injury-refresh.yml: pull --rebase; on failure abort, reset to origin, rerun the three scripts, retry once, then error; no force push",
-      (script.match(/git pull --rebase/g) || []).length === 2 && /git rebase --abort/.test(script) && /git reset --hard "origin\/\$branch"/.test(script)
+    // Every slot, EDT and EST: the on-time cron passes, the off-DST copy does not, and a catch-up 30 min later exists.
+    {
+      const crons = [...y.matchAll(/cron: "([^"]+)"/g)].map(m => m[1].split(" "));
+      const fires = (dowNY, utcMin) => crons.some(([mi, hr, , , dw]) => {
+        const ms = mi.split(",").map(Number), hs = hr.split(",").map(Number);
+        const dws = dw === "*" ? null : dw.split(",").map(Number);
+        return ms.includes(utcMin % 60) && hs.includes(Math.floor(utcMin / 60)) && (!dws || dws.includes(dowNY % 7));
+      });
+      const gate = (dow, ny) => { // the workflow's gate, in JS
+        const ts = [560, ...(dow === 1 || dow === 4 ? [1100] : []), ...(dow === 7 ? [710, 950] : [])];
+        return ts.some(t => ny - t >= -10 && ny - t < 55);
+      };
+      const slots = [[1, 560], [2, 560], [7, 560], [1, 1100], [4, 1100], [7, 710], [7, 950]];
+      const bad = [];
+      for (const off of [240, 300]) for (const [dow, t] of slots) { // EDT = UTC-4, EST = UTC-5
+        const utc = t + off;
+        if (!fires(dow, utc) || !gate(dow, t)) bad.push(`${dow}/${t}/${off} on-time`);
+        if (!fires(dow, utc + 30) || !gate(dow, t + 30)) bad.push(`${dow}/${t}/${off} catch-up`);
+        const twin = off === 240 ? utc + 60 : utc - 60; // the other DST's copy of the slot
+        if (fires(dow, twin) && gate(dow, twin - off)) bad.push(`${dow}/${t}/${off} twin passes`);
+      }
+      check("injury-refresh.yml: every slot (09:20 daily, 18:20 Mon/Thu, 11:50/15:50 Sun) fires on time and as a catch-up in EDT and EST; the off-DST twin is gated out",
+        bad.length === 0, bad.join(" "));
+    }
+    check("injury-refresh.yml: a run skips when an earlier scheduled run for the slot got its commit step through",
+      /gh run list[^\n]*--workflow injury-refresh\.yml[^\n]*--event schedule/.test(y) && /fromdateiso8601/.test(y)
+        && /select\(\.name == "Commit anything that changed" and \.conclusion == "success"\)/.test(y) && /github\.run_id/.test(y));
+    check("injury-refresh.yml: Sundays wait (bounded) while a weekly-data.yml run is in progress or queued, then go ahead",
+      /"\$dow" = 7/.test(y) && /gh run list[^\n]*--workflow weekly-data\.yml[^\n]*--status "\$st"/.test(y) && /for st in in_progress queued/.test(y)
+        && /for i in \$\(seq 1 10\)/.test(y) && /sleep 150/.test(y) && !/skipping this refresh/.test(y));
+    check("injury-refresh.yml: publishes through publish-data.sh, rebuilding with consensus, snapshot and return dates; no force push",
+      /bash publish-data\.sh "Data: injury refresh"/.test(script)
         && ["consensus.mjs", "build-injuries.mjs", "injury-returns.mjs"].every(f => script.includes(`node ${f}`))
-        && /::error::/.test(script) && /exit 1\s*$/.test(script) && !/--force|push -f\b/.test(y));
+        && !/--force|push -f\b/.test(y));
+  }
+  {
+    // publish-data.sh against a real bare remote: a push rejected twice (as by
+    // "fatal error in commit_refs_rules") still lands, once; a conflicting
+    // upstream commit is rebuilt on top of; nothing to commit exits 0.
+    const { spawnSync } = await import("node:child_process");
+    const fs = await import("node:fs"), os = await import("node:os");
+    const tmp = fs.mkdtempSync(join(os.tmpdir(), "publish-"));
+    const sh = (cwd, cmd, env = {}) => spawnSync("bash", ["-c", cmd], { cwd, encoding: "utf8", timeout: 60000, env: { ...process.env, ...env } });
+    const git = "git -c user.name=t -c user.email=t@t -c init.defaultBranch=main";
+    sh(tmp, `${git} init -q --bare remote.git && ${git} clone -q remote.git a 2>/dev/null && cd a && echo 1 > f.json && git add f.json && ${git} commit -qm init && git push -q origin HEAD:main`);
+    const a = join(tmp, "a");
+    fs.copyFileSync(join(ROOT, "publish-data.sh"), join(a, "publish-data.sh"));
+    const env = { GITHUB_REF_NAME: "main", PUBLISH_BACKOFF: "0", GIT_AUTHOR_NAME: "t", GIT_AUTHOR_EMAIL: "t@t", GIT_COMMITTER_NAME: "t", GIT_COMMITTER_EMAIL: "t@t" };
+    // A pre-receive hook that refuses the first two pushes.
+    fs.writeFileSync(join(tmp, "remote.git", "hooks", "pre-receive"),
+      `#!/bin/sh\nn=$(cat "$GIT_DIR/rejects" 2>/dev/null || echo 0)\nif [ "$n" -lt 2 ]; then echo $((n+1)) > "$GIT_DIR/rejects"; echo "fatal error in commit_refs_rules" >&2; exit 1; fi\n`);
+    fs.chmodSync(join(tmp, "remote.git", "hooks", "pre-receive"), 0o755);
+    fs.writeFileSync(join(a, "f.json"), "2\n");
+    const flaky = sh(a, `bash publish-data.sh "Data: test" "false" f.json`, env);
+    const log1 = sh(join(tmp, "remote.git"), "git log --format=%s main").stdout.trim().split("\n");
+    // Upstream moves f.json meanwhile: the rebase conflicts, the rebuild reruns on top.
+    sh(tmp, `${git} clone -q remote.git b 2>/dev/null && cd b && echo 3 > f.json && ${git} commit -qam upstream && git push -q origin HEAD:main`);
+    fs.writeFileSync(join(a, "f.json"), "4\n");
+    const conflict = sh(a, `bash publish-data.sh "Data: test2" "echo 5 > f.json" f.json`, env);
+    const log2 = sh(join(tmp, "remote.git"), "git log --format=%s main").stdout.trim().split("\n");
+    const head = sh(join(tmp, "remote.git"), "git show main:f.json").stdout.trim();
+    const quiet = sh(a, `bash publish-data.sh "Data: none" "false" f.json`, env);
+    fs.rmSync(tmp, { recursive: true, force: true });
+    check("publish-data.sh: two rejected pushes, then published once (commit kept, not rebuilt)",
+      flaky.status === 0 && (flaky.stdout.match(/::warning::push to main failed/g) || []).length === 2 && /attempt 3 of 5/.test(flaky.stdout)
+        && log1[0] === "Data: test" && log1.filter(s => s === "Data: test").length === 1,
+      JSON.stringify([flaky.status, flaky.stdout.slice(-400), flaky.stderr.slice(-200), log1]));
+    check("publish-data.sh: a conflicting upstream commit -> reset to origin, rebuild, publish on top; nothing to commit -> exit 0",
+      conflict.status === 0 && /regenerating/.test(conflict.stdout) && log2[0] === "Data: test2" && log2[1] === "upstream" && head === "5"
+        && quiet.status === 0 && /Nothing changed\./.test(quiet.stdout),
+      JSON.stringify([conflict.status, conflict.stdout.slice(-400), log2, head, quiet.stdout]));
+    const src = fs.readFileSync(join(ROOT, "publish-data.sh"), "utf8");
+    check("publish-data.sh: no force push; 5 attempts by default; ::error:: + exit 1 when all fail",
+      !/--force|push -f\b|push\s+\+/.test(src) && /PUBLISH_ATTEMPTS:-5/.test(src) && /::error::/.test(src) && /exit 1\s*$/.test(src));
   }
   {
     // sleeper-poll.yml and the concurrency groups. Static: files only.
@@ -6799,12 +6906,17 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       group("sleeper-poll.yml", "sleeper-data") && group("injury-refresh.yml", "sleeper-data"));
     check("weekly-data.yml keeps its own concurrency group weekly-data, no cancel-in-progress",
       group("weekly-data.yml", "weekly-data") && !/group: sleeper-data/.test(wfs["weekly-data.yml"]));
+    // weekly-data.yml keeps its inline one-retry step; the poll and the refresh
+    // publish through publish-data.sh (tested above against a real remote).
     const retry = w => { const s = (w.match(/name: Commit anything that changed[\s\S]*$/) || [""])[0];
       return (s.match(/git pull --rebase origin "\$branch" && git push origin "HEAD:\$branch"/g) || []).length === 2
         && /git rebase --abort/.test(s) && /git reset --hard "origin\/\$branch"/.test(s)
         && /::error::/.test(s) && /exit 1\s*$/.test(s) && !/--force|push -f\b|push\s+\+/.test(w); };
-    check("all three workflows: pull --rebase + push; on failure abort, reset to origin, regenerate, retry once; no force",
-      names.every(f => retry(wfs[f])), names.filter(f => !retry(wfs[f])).join(","));
+    const helper = w => /bash publish-data\.sh "Data: [^"]+" "\$rebuild"/.test(w) && /rebuild='[\s\S]*node sleeper-fingerprint\.mjs --write[\s\S]*'/.test(w)
+      && !/--force|push -f\b|push\s+\+/.test(w);
+    check("weekly-data.yml: pull --rebase + push, abort/reset/regenerate/retry once; poll + refresh: publish-data.sh with a rebuild; no force",
+      retry(wfs["weekly-data.yml"]) && helper(wfs["sleeper-poll.yml"]) && helper(wfs["injury-refresh.yml"]),
+      names.filter(f => !(f === "weekly-data.yml" ? retry : helper)(wfs[f])).join(","));
     // build-email.mjs only writes data/odds-snapshot.json; every other mail-ish script is the routine's.
     const mailish = s => s !== "build-email.mjs" && /compose-email|send|sent-emails|mail|blast|poll-tally/.test(s);
     const bad = names.filter(f => [...wfs[f].matchAll(/node\s+([\w.-]+\.mjs)/g)].some(m => mailish(m[1]))
@@ -6816,13 +6928,45 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
       /permissions:\s*\n\s+contents: write\s*\n\s*\n/.test(poll) && !/actions: |pull-requests: |id-token: /.test(poll));
     let fp = null;
     try { fp = JSON.parse(fs.readFileSync(join(ROOT, "data", "sleeper-fingerprint.json"), "utf8")); } catch {}
-    check("data/sleeper-fingerprint.json present and parses (season, week, transactions, rosters; no injuries)",
+    check("data/sleeper-fingerprint.json present and parses (season, week, transactions, rosters; injuries a map if present)",
       !!fp && !!fp.season && Number.isFinite(fp.week) && Array.isArray(fp.transactions)
-        && Object.keys(fp.rosters || {}).length >= 12 && !("injuries" in fp));
-    // Sleeper asks that the 5MB player file be pulled about once a day; the poll runs 72 times.
+        && Object.keys(fp.rosters || {}).length >= 12 && (!("injuries" in fp) || (fp.injuries && typeof fp.injuries === "object")));
     const fpSrc = fs.existsSync(join(ROOT, "sleeper-fingerprint.mjs")) ? fs.readFileSync(join(ROOT, "sleeper-fingerprint.mjs"), "utf8") : "";
-    check("sleeper-fingerprint.mjs never fetches players/nfl (state, transactions and rosters only)",
-      !!fpSrc && !/players\/nfl/.test(fpSrc) && /state\/nfl/.test(fpSrc) && /\/transactions\//.test(fpSrc) && /\/rosters/.test(fpSrc));
+    check("sleeper-fingerprint.mjs reads state, transactions, rosters and the player file (injury tags)",
+      !!fpSrc && /players\/nfl/.test(fpSrc) && /state\/nfl/.test(fpSrc) && /\/transactions\//.test(fpSrc) && /\/rosters/.test(fpSrc));
+    {
+      // Injury tags: a status / body part / notes / practice change on a rostered
+      // player is an injury change; an unrostered one is not; no player file = no evidence.
+      const FP = await import(new URL("./sleeper-fingerprint.mjs", import.meta.url));
+      const pl = { 1: { injury_status: "Questionable", injury_body_part: "Ankle", status: "Active" }, 2: { status: "Active" },
+        3: { injury_status: "Out" } };
+      const base = { season: "2026", week: 9, transactions: ["t"], rosters: { 1: "a" } };
+      const was = { ...base, injuries: FP.injuryTags(pl, ["1", "2"]) };
+      const edit = (id, o) => FP.injuryTags({ ...pl, [id]: { ...pl[id], ...o } }, ["1", "2"]);
+      const moved = [{ injury_status: "Out" }, { injury_body_part: "Knee" }, { injury_notes: "Sprain" },
+        { practice_participation: "DNP" }, { practice_description: "limited" }, { injury_status: null, injury_body_part: null }]
+        .map(o => FP.diff(was, { ...base, injuries: edit("1", o) }).injuries);
+      const hurt2 = FP.diff(was, { ...base, injuries: edit("2", { status: "Injured Reserve" }) });
+      const off = FP.diff(was, { ...base, injuries: FP.injuryTags({ ...pl, 3: { injury_status: "IR" } }, ["1", "2"]) });
+      const none = FP.diff(was, { ...base, injuries: null });
+      const first = FP.diff(base, { ...base, injuries: was.injuries });
+      check("fingerprint: injury_status, body part, notes, practice status, status changes on a rostered player -> injuries change",
+        moved.every(Boolean) && hurt2.injuries && hurt2.changes.length === 1 && Object.keys(was.injuries).join() === "1",
+        JSON.stringify([moved, hurt2, was.injuries]));
+      check("fingerprint: unrostered change, missing player file -> no change; no committed injury tags -> change",
+        !off.injuries && off.changes.length === 0 && !none.injuries && none.changes.length === 0 && first.injuries,
+        JSON.stringify([off, none, first]));
+      // The CLI, against dead endpoints: a fetch failure still reports changed=false, injuries=false.
+      const { spawnSync } = await import("node:child_process");
+      const os = await import("node:os");
+      const out = join(fs.mkdtempSync(join(os.tmpdir(), "fp-")), "out");
+      const r = spawnSync(process.execPath, [join(ROOT, "sleeper-fingerprint.mjs"), "--check"], { cwd: os.tmpdir(), encoding: "utf8", timeout: 60000,
+        env: { ...process.env, GITHUB_OUTPUT: out, SLEEPER_API: "http://127.0.0.1:9/v1", SLEEPER_PLAYERS_URL: "http://127.0.0.1:9/players" } });
+      const o = fs.existsSync(out) ? fs.readFileSync(out, "utf8") : "";
+      check("fingerprint CLI: Sleeper unreachable -> warning, changed=false and injuries=false, exit 0",
+        r.status === 0 && /^changed=false$/m.test(o) && /^injuries=false$/m.test(o) && /fetch failed/.test(r.stdout),
+        JSON.stringify([r.status, o, r.stdout.slice(-300)]));
+    }
     const ir = wfs["injury-refresh.yml"];
     check("injury-refresh.yml runs build-email.mjs and build-odds-history.mjs (|| warning) and stages the odds files",
       /run: node build-email\.mjs/.test(ir) && /node build-odds-history\.mjs \|\| echo "::warning::/.test(ir)
@@ -6835,11 +6979,16 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
     const afterCheck = steps.slice(steps.findIndex(s => s.includes("--check")) + 1);
     check("sleeper-poll.yml: every step after the check is gated on changed == 'true'",
       afterCheck.length >= 9 && afterCheck.every(s => /if: steps\.fp\.outputs\.changed == 'true'/.test(s)));
-    check("all three workflows write the fingerprint before committing; the poll rebases, retries once, never forces",
+    check("all three workflows write the fingerprint before committing; the poll publishes through publish-data.sh, never forces",
       names.every(f => { const w = wfs[f]; const at = w.indexOf("sleeper-fingerprint.mjs --write");
         return at > 0 && at < w.indexOf("name: Commit anything that changed"); })
-        && (poll.match(/git pull --rebase/g) || []).length === 2 && /git reset --hard "origin\/\$branch"/.test(poll)
-        && !/--force|push -f\b/.test(poll));
+        && /bash publish-data\.sh "Data: Sleeper change"/.test(poll) && !/--force|push -f\b/.test(poll));
+    // An injury-tag change runs the consensus before the snapshot and return dates, in the steps and the rebuild.
+    const consAt = poll.indexOf("run: node consensus.mjs"), snapAt = poll.indexOf("run: node build-injuries.mjs");
+    check("sleeper-poll.yml: injuries == 'true' runs consensus.mjs before build-injuries/injury-returns (and in the rebuild)",
+      consAt > 0 && consAt < snapAt && snapAt < poll.indexOf("run: node injury-returns.mjs")
+        && /if: steps\.fp\.outputs\.changed == 'true' && steps\.fp\.outputs\.injuries == 'true'\s*\n\s*run: node consensus\.mjs/.test(poll)
+        && /INJURIES: \$\{\{ steps\.fp\.outputs\.injuries \}\}/.test(poll) && /if \[ "\$INJURIES" = true \]; then node consensus\.mjs; fi/.test(poll));
     check("no Claude/AI steps in the three workflows",
       names.every(f => !/anthropic|claude-code|claude_code|ANTHROPIC/i.test(wfs[f])));
   }
