@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "rankings", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -7317,6 +7317,202 @@ group("Next week's matchups: tale of the tape");
       !!bye.pit && bye.pit.chip && /^\d+ starters? can't score$/.test(bye.pit.cant || ""), JSON.stringify(bye.pit));
   }
   await mctx.close();
+}
+
+/* ============================================================ Rankings */
+group("Rankings: DFFL scoring formula and competition ties");
+{
+  const u = await page.evaluate(() => {
+    const D = window.__DFFL;
+    const sc = { rec: 0, bonus_rec_rb: 0.5, bonus_rec_wr: 1, bonus_rec_te: 1, rec_yd: 0.1, rush_yd: 0.1, rush_td: 6, rec_td: 6,
+      rec_40p: 1, rec_td_40p: 1, rush_td_40p: 1, rush_td_50p: 1, bonus_pass_yd_400: 2, bonus_rush_yd_100: 1, bonus_rush_yd_200: 3,
+      bonus_rec_yd_200: 3, pass_yd: 0.04, pass_td: 4, pass_int: -1, fum_lost: -2 };
+    const P = (s, pos, ss = sc) => D.roundPts(D.dfflPoints(s, ss, pos));
+    // Sleeper's season line carries a bonus_rec_rb counter equal to the receptions; it must not be added on top.
+    const rb = P({ rec: 34, bonus_rec_rb: 34, rec_yd: 251, rush_yd: 389, rush_td: 8, fum_lost: 1 }, "RB");
+    const wr = P({ rec: 10, bonus_rec_wr: 10, rec_yd: 100 }, "WR");
+    const te = P({ rec: 10, bonus_rec_te: 10, rec_yd: 100 }, "TE");
+    const asRb = P({ rec: 10, rec_yd: 100 }, "RB");
+    const qb = P({ rec: 3, pass_yd: 300, pass_td: 2, pass_int: 1 }, "QB");
+    // Distance and yardage bonuses come from their own counters only; season-long fields add nothing.
+    const longs = P({ rec: 0, rec_lng: 75, rush_lng: 60, rec_yd: 0, rush_yd: 250 }, "RB");
+    const counters = P({ rec_40p: 2, rec_td_40p: 1, rush_td_40p: 1, rush_td_50p: 1, bonus_rush_yd_100: 2, bonus_rush_yd_200: 1, bonus_rec_yd_200: 1, bonus_pass_yd_400: 1 }, "WR");
+    const withRec = P({ rec: 4, bonus_rec_rb: 4 }, "RB", { ...sc, rec: 0.5 });
+    const unknown = P({ rec: 0, bonus_rush_rec_yd_100: 3, pts_ppr: 200, pos_rank_ppr: 1 }, "RB");
+    const ranks = rows => D.competitionRanks(rows.map((pts, i) => ({ name: "p" + i, pts }))).map(r => r.rank).join(",");
+    return { rb, wr, te, asRb, qb, longs, counters, withRec, unknown,
+      t1: ranks([10, 9, 9, 7]), t2: ranks([10, 9.999, 9.996, 8]), t3: ranks([5, 5, 5]), t4: ranks([3, 1, 2]),
+      norm: D.normName("Ja'Marr  Chase") === D.normName("jamarr chase") && D.normName("Smith-Njigba") === "smithnjigba" };
+  });
+  check("formula: RB receptions earn bonus_rec_rb once (Sleeper's bonus_rec_rb counter not double-added) — 127.00", u.rb === 127, `${u.rb}`);
+  check("formula: WR and TE receptions earn a full point each", u.wr === 20 && u.te === 20, `${u.wr}/${u.te}`);
+  check("formula: the same line as an RB earns half a point a catch", u.asRb === 15, `${u.asRb}`);
+  check("formula: a QB's catches earn no position PPR bonus here", u.qb === 19, `${u.qb}`);
+  check("formula: rec_lng / rush_lng never become distance bonuses; yardage bonuses need their own counter", u.longs === 25, `${u.longs}`);
+  check("formula: distance and yardage bonus counters times their settings", u.counters === 2 + 1 + 1 + 1 + 2 + 3 + 3 + 2, `${u.counters}`);
+  check("formula: a non-zero rec setting adds to the position bonus rather than replacing it", u.withRec === 4, `${u.withRec}`);
+  check("formula: counters with no scoring setting (and Sleeper's own PPR totals) score nothing", u.unknown === 0, `${u.unknown}`);
+  check("ties: competition ranking 1,2,2,4", u.t1 === "1,2,2,4", u.t1);
+  check("ties: decided at the two-place precision shown (10, 9.999, 9.996 all tie)", u.t2 === "1,1,1,4", u.t2);
+  check("ties: an all-tied field shares #1 and unsorted input is ordered", u.t3 === "1,1,1" && u.t4 === "1,2,3", `${u.t3} ${u.t4}`);
+  check("search key ignores case, spaces and punctuation", u.norm);
+}
+
+group("Rankings: tab, routing and live board");
+{
+  // An independent recompute in Node from Sleeper's own endpoints — nothing on the page is trusted for this.
+  const jj = u => fetch(u).then(r => r.json());
+  const sstate = await jj("https://api.sleeper.app/v1/state/nfl");
+  const rSeason = String(sstate.season);
+  const [rStats, rLeague] = await Promise.all([jj(`https://api.sleeper.app/v1/stats/nfl/regular/${rSeason}`), jj("https://api.sleeper.app/v1/league/1318040218183417856")]);
+  const SS = rLeague.scoring_settings || {};
+  const indep = (s, pos) => { let t = 0; for (const k of Object.keys(SS)) { if (/^bonus_rec_(rb|wr|te)$/.test(k)) continue; t += (Number(s[k]) || 0) * SS[k]; }
+    return Math.round((t + (Number(s.rec) || 0) * (SS["bonus_rec_" + pos.toLowerCase()] || 0)) * 100) / 100; };
+
+  const rctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const rp = await rctx.newPage();
+  const rErr = [];
+  rp.on("pageerror", e => rErr.push(String(e)));
+  await rp.goto(BASE + "?t=rankings", { waitUntil: "domcontentloaded" });
+  await rp.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const routed = await rp.evaluate(() => ({ hash: location.hash, sel: document.querySelector('#tabs button[aria-selected="true"]')?.dataset.tab,
+    vis: [...document.querySelectorAll("#app > [data-panel]")].filter(x => !x.hidden).map(x => x.dataset.panel).join(","),
+    label: document.querySelector('#tabs button[data-tab="rankings"]')?.textContent }));
+  check("?t=rankings opens the Rankings tab", routed.sel === "rankings" && routed.vis === "rankings" && routed.hash === "#rankings", JSON.stringify(routed));
+  check("the tab is labelled Rankings", routed.label === "Rankings", routed.label);
+  await rp.waitForFunction(() => document.body.dataset.rankingsReady === "1" || document.body.dataset.rankingsReady === "error", null, { timeout: 90000 });
+  const rReady = await rp.evaluate(() => document.body.dataset.rankingsReady);
+  check("rankings load from Sleeper", rReady === "1", rReady);
+  const shell = await rp.evaluate(() => {
+    const p = document.querySelector('[data-panel="rankings"]'), card = p.querySelector("#rkTitle")?.closest(".rk-card");
+    const q = p.querySelector("#rkQ"), lab = p.querySelector('label[for="rkQ"]');
+    return { h: p.querySelector(".rk-intro h2")?.textContent, title: card && card.querySelector("#rkTitle").textContent,
+      ph: q && q.placeholder, label: lab && lab.textContent.trim(), inCard: !!(card && card.contains(q) && card.contains(lab)),
+      clear: !!(card && card.querySelector(".rk-clear")), chips: [...p.querySelectorAll(".rk-chips button")].map(b => b.textContent + ":" + b.getAttribute("aria-pressed")).join(","),
+      side: [...p.querySelectorAll(".rk-side h3, .rk-side h4")].map(h => h.textContent).join("|"),
+      text: p.textContent };
+  });
+  check("headline: The rank that counts.", shell.h === "The rank that counts.", shell.h);
+  check("Position leaderboard card holds the Search players field and its Clear control", shell.title === "Position leaderboard" && shell.inCard && shell.clear && shell.label === "Search players", JSON.stringify({ t: shell.title, i: shell.inCard, l: shell.label }));
+  check("the search field's placeholder is Search players", shell.ph === "Search players", shell.ph);
+  check("QB/RB/WR/TE tabs, RB selected by default", shell.chips === "QB:false,RB:true,WR:false,TE:false", shell.chips);
+  check("side cards: Your league. Your finish. and Across the league", shell.side === "Your league. Your finish.|Across the league", shell.side);
+  check("no mock-only labels or frozen timestamps", !/mock only|visual study|nov 7|2:23 pm|search study/i.test(shell.text));
+  check("scoring card reads the league's settings (RB 0.5, WR/TE 1.0 PPR, 40+ yd +1)",
+    shell.text.includes(`RB receptions${((SS.rec || 0) + (SS.bonus_rec_rb || 0)).toFixed(1)} PPR`) && shell.text.includes(`${((SS.rec || 0) + (SS.bonus_rec_wr || 0)).toFixed(1)} PPR`)
+    && (!SS.rec_40p || shell.text.includes(`40+ yd reception+${SS.rec_40p} point`)));
+
+  // Every position: top 12, ranks match an independent recompute, Sleeper full PPR rank is pos_rank_ppr.
+  const board = await rp.evaluate(() => { const B = window.__DFFL.rankingsState().board; return Object.fromEntries(Object.entries(B).map(([k, v]) => [k, v.map(r => ({ pid: r.pid, name: r.name, pts: r.pts, rank: r.rank, pprRank: r.pprRank, owner: r.owner }))])); });
+  for (const pos of ["QB", "RB", "WR", "TE"]) {
+    await rp.click(`.rk-chips button[data-pos="${pos}"]`);
+    const dom = await rp.evaluate(() => [...document.querySelectorAll("#rkList .rk-row")].map(r => ({ pid: r.dataset.pid, rank: Number(r.dataset.rank),
+      shown: Number(r.querySelector(".rk-rank").textContent), pts: Number(r.querySelector(".rk-num").textContent), ppr: r.querySelector("[data-ppr]").dataset.ppr,
+      pprTxt: r.querySelector("[data-ppr]").textContent })));
+    const pressed = await rp.evaluate(p => document.querySelector(`.rk-chips button[data-pos="${p}"]`).getAttribute("aria-pressed"), pos);
+    const all = board[pos];
+    // Independent: score each player at this position from the raw line, rank with ties at two places.
+    const mine = all.map(r => ({ pid: r.pid, v: indep(rStats[r.pid] || {}, pos) }));
+    const rankOf = v => 1 + mine.filter(x => x.v > v).length;
+    const bad = dom.filter(d => { const v = indep(rStats[d.pid] || {}, pos); const sp = Number(rStats[d.pid]?.pos_rank_ppr);
+      return d.pts !== v || d.rank !== rankOf(v) || d.shown !== d.rank || String(Number.isFinite(sp) && sp > 0 ? sp : "") !== d.ppr; });
+    check(`${pos}: tab selects and shows the top 12`, pressed === "true" && dom.length === Math.min(12, all.length), `${pressed} ${dom.length}`);
+    check(`${pos}: every row's points and rank match an independent recompute; Sleeper full PPR # is pos_rank_ppr`, dom.length > 0 && bad.length === 0, JSON.stringify(bad.slice(0, 2)));
+    check(`${pos}: rows run in rank order`, dom.every((d, i) => !i || (d.rank >= dom[i - 1].rank && d.pts <= dom[i - 1].pts)));
+    check(`${pos}: comparator is labelled Sleeper full PPR, never half PPR`, dom.every(d => /Sleeper full PPR/.test(d.pprTxt) && !/half/i.test(d.pprTxt)));
+    const allBad = mine.filter((m, i) => m.v !== all[i].pts || rankOf(m.v) !== all[i].rank).length;
+    check(`${pos}: the whole position universe (${all.length}) is ranked, not just the top 12`, all.length > 40 && allBad === 0, `${all.length} players, ${allBad} off`);
+  }
+  const fa = Object.fromEntries(Object.entries(board).map(([k, v]) => [k, v.filter(r => !r.owner).length]));
+  check("free agents are in the universe at every position", Object.values(fa).every(n => n > 10), JSON.stringify(fa));
+  const tiesLive = Object.values(board).some(v => v.some((r, i) => i && r.rank === v[i - 1].rank && r.rank < i + 1));
+  check("live board uses competition ranks (a tie shares a rank and skips the next)", tiesLive && Object.values(board).every(v => v.every((r, i) => r.rank === 1 + v.filter(x => x.pts > r.pts).length)));
+
+  // McCaffrey: hero above his own filtered row, both carrying his true DFFL RB rank.
+  await rp.click('.rk-chips button[data-pos="RB"]');
+  await rp.fill("#rkQ", "McCaffrey");
+  const cmc = board.RB.find(r => /^Christian McCaffrey$/.test(r.name));
+  const s1 = await rp.evaluate(() => {
+    const h = document.querySelector("#rkHero"), rows = [...document.querySelectorAll("#rkList .rk-row")];
+    const m = rows.find(r => r.dataset.pid === (h && h.dataset.pid));
+    return h && { pid: h.dataset.pid, big: h.querySelector(".rk-big").textContent, text: h.textContent.replace(/\s+/g, " "), rows: rows.length,
+      rowRank: m && Number(m.dataset.rank), match: !!(m && m.classList.contains("rk-match")),
+      above: !!(m && (h.compareDocumentPosition(m) & Node.DOCUMENT_POSITION_FOLLOWING) && h.getBoundingClientRect().bottom <= m.getBoundingClientRect().top),
+      order: [...h.querySelectorAll(".rk-big, .rk-eyebrow, h4, .rk-metric")].map(x => x.className || x.tagName).join(">"),
+      heroPpr: h.querySelector(".rk-r [data-ppr]").dataset.ppr, status: document.querySelector("#rkStatus").textContent,
+      clearOn: !document.querySelector(".rk-clear").disabled };
+  });
+  const cmcSleeper = cmc && Number(rStats[cmc.pid]?.pos_rank_ppr);
+  check("McCaffrey: the hero is above his matching row", !!s1 && s1.above && s1.match, JSON.stringify(s1 && { a: s1.above, m: s1.match }));
+  check("McCaffrey: hero leads with the big gold #rank, then TRUE DFFL RB RANK, then name",
+    !!s1 && !!cmc && s1.pid === cmc.pid && s1.big === `#${cmc.rank}` && /True DFFL RB rank/i.test(s1.text) && s1.text.indexOf(`#${cmc.rank}`) < s1.text.search(/True DFFL RB rank/i) && s1.text.search(/True DFFL RB rank/i) < s1.text.indexOf("Christian McCaffrey"),
+    JSON.stringify(s1 && { big: s1.big, want: cmc && cmc.rank }));
+  check("McCaffrey: the filtered row keeps his real DFFL rank (not re-ranked to 1)", !!s1 && s1.rowRank === cmc.rank && (cmc.rank === 1 || s1.rowRank !== 1), `${s1 && s1.rowRank} vs ${cmc && cmc.rank}`);
+  check("McCaffrey: hero shows DFFL points, season to date and Sleeper full PPR pos_rank_ppr",
+    !!s1 && s1.text.includes(cmc.pts.toFixed(2)) && /DFFL points/.test(s1.text) && /season to date/.test(s1.text) && /Sleeper full PPR RB/.test(s1.text)
+    && s1.heroPpr === String(cmcSleeper) && !/half/i.test(s1.text), JSON.stringify(s1 && { ppr: s1.heroPpr, want: cmcSleeper }));
+  check("McCaffrey: status announces the match and Clear is enabled", !!s1 && /matching RB/.test(s1.status) && s1.clearOn, s1 && s1.status);
+  console.log(`  live McCaffrey: DFFL RB${cmc && cmc.rank} ${cmc && cmc.pts.toFixed(2)} pts · Sleeper full PPR RB${cmcSleeper} (${rStats[cmc?.pid]?.pts_ppr} pts)`);
+
+  // Multi-result search: every match keeps its own rank, best first.
+  await rp.fill("#rkQ", "williams");
+  const multi = await rp.evaluate(() => ({ hero: document.querySelector("#rkHero")?.dataset.rank, rows: [...document.querySelectorAll("#rkList .rk-row")].map(r => Number(r.dataset.rank)) }));
+  check("multi-match: hero is the best-ranked match and rows keep true ranks in order",
+    multi.rows.length > 1 && Number(multi.hero) === multi.rows[0] && multi.rows.every((r, i) => !i || r >= multi.rows[i - 1]) && multi.rows.some(r => r > multi.rows.length), JSON.stringify(multi.rows.slice(0, 6)));
+
+  // A free agent is searchable.
+  const faRb = board.RB.find(r => !r.owner && r.pts > 0 && board.RB.filter(x => x.name === r.name).length === 1);
+  await rp.fill("#rkQ", faRb.name);
+  const faHero = await rp.evaluate(() => ({ pid: document.querySelector("#rkHero")?.dataset.pid, text: document.querySelector("#rkHero")?.textContent || "" }));
+  check(`a free agent (${faRb.name}, RB${faRb.rank}) is found by search and marked Free agent`, faHero.pid === faRb.pid && /Free agent/.test(faHero.text), JSON.stringify(faHero.pid));
+
+  // No results, then a match at another position, then Clear.
+  await rp.fill("#rkQ", "zzqxnobody");
+  const none = await rp.evaluate(() => ({ hero: !!document.querySelector("#rkHero"), rows: document.querySelectorAll("#rkList .rk-row").length, none: !!document.querySelector("#rkNone"), status: document.querySelector("#rkStatus").textContent }));
+  check("no results: no hero, no rows, a message and a status announcement", !none.hero && none.rows === 0 && none.none && /No RB matches/.test(none.status), JSON.stringify(none));
+  // The full name: "McCaffrey" alone also finds Luke McCaffrey at WR.
+  await rp.fill("#rkQ", "Christian McCaffrey");
+  await rp.click('.rk-chips button[data-pos="WR"]');
+  const sw = await rp.evaluate(() => ({ q: document.querySelector("#rkQ").value, btn: [...document.querySelectorAll("#rkNone [data-goto]")].map(b => b.dataset.goto).join(","), status: document.querySelector("#rkStatus").textContent }));
+  check("switching position keeps the query and points to positions where the name exists", sw.q === "Christian McCaffrey" && sw.btn.includes("RB") && /No WR matches/.test(sw.status), JSON.stringify(sw));
+  if (await rp.$('#rkNone [data-goto="RB"]')) await rp.click('#rkNone [data-goto="RB"]');
+  check("the other-position shortcut switches the tab and shows the hero", await rp.evaluate(() => document.querySelector('.rk-chips [data-pos="RB"]').getAttribute("aria-pressed") === "true" && !!document.querySelector("#rkHero")));
+  await rp.click(".rk-clear");
+  const cleared = await rp.evaluate(() => ({ q: document.querySelector("#rkQ").value, focus: document.activeElement && document.activeElement.id, hero: !!document.querySelector("#rkHero"),
+    rows: [...document.querySelectorAll("#rkList .rk-row")].map(r => Number(r.dataset.rank)), dis: document.querySelector(".rk-clear").disabled }));
+  check("Clear empties the field, returns focus to it and restores the top-12 leaderboard", cleared.q === "" && cleared.focus === "rkQ" && !cleared.hero && cleared.rows.length === 12 && cleared.rows[0] === 1 && cleared.dis, JSON.stringify(cleared));
+  await rp.fill("#rkQ", "McCaffrey");
+  await rp.press("#rkQ", "Escape");
+  check("Escape in the field clears it too", await rp.evaluate(() => document.querySelector("#rkQ").value === "" && !document.querySelector("#rkHero")));
+  const leaders = await rp.evaluate(() => [...document.querySelectorAll("[data-lead]")].map(d => d.dataset.lead + ":" + d.querySelector("strong")?.textContent).join("|"));
+  check("Across the league shows each position's DFFL #1", leaders === ["QB", "RB", "WR", "TE"].map(p => `${p}:${board[p][0].name}`).join("|"), leaders);
+
+  // A hash load and a click both land on the tab.
+  const hp = await rctx.newPage();
+  await hp.goto(BASE + "#rankings", { waitUntil: "domcontentloaded" });
+  await hp.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  check("#rankings opens the Rankings tab", await hp.evaluate(() => !document.querySelector('[data-panel="rankings"]').hidden && document.querySelector('#tabs button[data-tab="rankings"]').getAttribute("aria-selected") === "true"));
+  await hp.close();
+  check("Rankings raised no page errors", rErr.length === 0, rErr.slice(0, 2).join(" | "));
+
+  // Phone: no horizontal overflow, text at least 11px, the hero unclipped.
+  for (const w of [390, 1280]) {
+    await rp.setViewportSize({ width: w, height: 900 });
+    await rp.fill("#rkQ", "McCaffrey");
+    const lay = await rp.evaluate(() => {
+      const p = document.querySelector('[data-panel="rankings"]'), vw = document.documentElement.clientWidth;
+      const over = [...p.querySelectorAll("*")].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.right > vw + 1 || r.left < -1); }).map(e => e.className || e.tagName);
+      const small = [...p.querySelectorAll("*")].filter(e => e.childNodes.length && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !e.closest(".rk-sr") && parseFloat(getComputedStyle(e).fontSize) < 11).map(e => e.className || e.tagName);
+      const h = p.querySelector("#rkHero .rk-big"), hr = h.getBoundingClientRect();
+      const twoCol = (() => { const a = p.querySelector(".rk-primary").getBoundingClientRect(), b = p.querySelector(".rk-side").getBoundingClientRect(); return b.left >= a.right - 1; })();
+      return { doc: document.documentElement.scrollWidth <= vw, over: over.slice(0, 4), small: small.slice(0, 4), clipped: h.scrollWidth > h.clientWidth + 1 || hr.right > vw, twoCol };
+    });
+    check(`${w}px: no horizontal overflow on Rankings`, lay.doc && lay.over.length === 0, JSON.stringify(lay.over));
+    check(`${w}px: no Rankings text under 11px`, lay.small.length === 0, JSON.stringify(lay.small));
+    check(`${w}px: the hero rank is unclipped`, !lay.clipped);
+    check(`${w}px: ${w >= 800 ? "two columns" : "stacked columns"}`, w >= 800 ? lay.twoCol : !lay.twoCol);
+  }
+  await rctx.close();
 }
 
 /* -------------------------------------------------------------- done */

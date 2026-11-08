@@ -82,9 +82,9 @@
     box-sizing:border-box;min-height:44px;min-width:44px;flex:none}
   .tabrow button:hover{color:var(--ink-2);background:var(--raised)}
   .tabrow button[aria-selected="true"]{color:var(--on-a);background:var(--blue);border-color:var(--blue)}
-  /* Desktop: all twelve tabs fit the row without scrolling. Phones keep the scrolling row. */
+  /* Desktop: all thirteen tabs fit the row without scrolling from 1180px up. Narrower screens keep the scrolling row and its hint. */
   @media (min-width:1024px){.tabrow button{padding:8px 7px}}
-  @media (min-width:1180px){.tabrow button{padding:8px 10px}}
+  @media (min-width:1180px){.tabrow button{padding:8px 8px}}
 
   main{padding:22px 0 90px;min-height:60vh}
   .panel[hidden]{display:none}
@@ -1627,6 +1627,70 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   }
+
+  /* ---- Rankings: DFFL position ranks, with a player search inside the leaderboard card */
+  .rk{font-size:14px;overflow-wrap:break-word;word-break:normal}
+  .rk .rk-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--ink-2);font-weight:600;margin:0 0 10px}
+  .rk-intro{padding:6px 0 22px}
+  .rk-intro h2{font:700 34px/1.05 var(--disp);letter-spacing:-1.5px;margin:0 0 12px}
+  .rk-intro p.rk-sub{color:var(--ink-2);font-size:13px;line-height:1.65;margin:0;max-width:62ch}
+  .rk-two{display:block}
+  .rk-card{background:var(--surface);border:1px solid var(--edge);border-radius:14px;padding:20px;margin-bottom:16px;min-width:0}
+  .rk-card h3{font:700 22px/1.12 var(--disp);letter-spacing:-.5px;margin:0}
+  .rk-card h4{font:700 18px/1.2 var(--disp);margin:0}
+  .rk-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .rk-badge{display:inline-block;background:var(--raised);color:var(--ink-2);padding:5px 8px;border-radius:5px;font-size:11px;letter-spacing:.3px;line-height:1.3;white-space:nowrap}
+  .rk-chips{display:flex;gap:7px;margin:14px 0}
+  .rk-chips button{flex:1 1 0;min-width:0;min-height:44px;padding:12px 8px;appearance:none;color:var(--ink-2);border:1px solid var(--edge);border-radius:7px;background:var(--surface);font:600 12px var(--body);cursor:pointer}
+  .rk-chips button[aria-pressed="true"]{color:var(--plane);background:var(--a);border-color:var(--a)}
+  .rk button:focus-visible,.rk input:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+  .rk-search{margin:17px 0 15px}
+  .rk-search label{display:block;font-size:12px;font-weight:600;margin-bottom:8px;color:var(--ink)}
+  .rk-shell{display:flex;gap:9px;align-items:center;border:1px solid var(--a);background:var(--plane);border-radius:9px;padding:4px 5px 4px 12px;min-height:50px}
+  .rk-shell .rk-ico{font-size:22px;line-height:1;color:var(--a);flex-shrink:0}
+  .rk-shell input{font:14px var(--body);color:var(--ink);background:transparent;border:0;outline:0;padding:9px 0;flex:1;min-width:0;width:100%;-webkit-appearance:none;appearance:none}
+  .rk-shell input::-webkit-search-cancel-button{display:none}
+  .rk-shell input::placeholder{color:var(--ink-2);opacity:1}
+  .rk .rk-shell input:focus-visible{outline:0}
+  .rk-shell:focus-within{outline:2px solid var(--violet);outline-offset:2px}
+  .rk-shell .rk-ico{font-size:24px}
+  .rk-clear{flex:0 0 auto;min-width:58px;min-height:44px;padding:10px 12px;background:var(--raised);color:var(--ink-2);border:0;border-radius:6px;font:600 12px var(--body);cursor:pointer}
+  .rk-clear[disabled]{opacity:.55;cursor:default}
+  .rk-status{margin:8px 0 0;font-size:11px;color:var(--ink-2);line-height:1.5}
+  .rk-small{font-size:11px;line-height:1.6;color:var(--ink-2);margin:0}
+  .rk-small.up{color:var(--plus)} .rk-small.down{color:var(--red)}
+  .rk-row{display:flex;gap:10px;align-items:center;padding:15px 0;border-top:1px solid var(--edge)}
+  .rk-row .rk-main{flex:1;min-width:0}
+  .rk-row strong{font-size:14px;display:block}
+  .rk-row .rk-val{text-align:right;min-width:62px;flex-shrink:0}
+  .rk-rank{white-space:nowrap;flex-shrink:0;font:700 30px var(--disp);min-width:35px;color:var(--a);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-num{font:700 22px var(--disp);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-lbl{display:block;color:var(--ink-2);font-size:11px;margin-top:5px}
+  .rk-row.rk-match{border-top:1px solid var(--a);margin-top:15px}
+  .rk-hero{margin:17px 0 7px;padding:19px;background:var(--raised);border:1px solid var(--edge);border-left:3px solid var(--a);border-radius:10px}
+  .rk-hero .rk-big{font:700 73px/1 var(--disp);letter-spacing:-3px;color:var(--a);font-variant-numeric:tabular-nums}
+  .rk-hero h4{font:700 23px/1.15 var(--disp);letter-spacing:-.5px;margin:13px 0 4px}
+  .rk-metric{display:flex;gap:16px;justify-content:space-between;padding:16px 0;border-top:1px solid var(--edge)}
+  .rk-metric .rk-n{font:700 26px var(--disp);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-metric .rk-r{text-align:right}
+  .rk-hero .rk-metric{margin-top:18px;padding-bottom:0}
+  .rk-note{font-size:11px;line-height:1.65;color:var(--ink-2);padding-top:14px;margin:0}
+  .rk-note .up{color:var(--plus)} .rk-note .down{color:var(--red)}
+  .rk-empty{padding:18px 0 4px;border-top:1px solid var(--edge);color:var(--ink-2);font-size:13px;line-height:1.6}
+  .rk-empty button,.rk-retry{margin:10px 8px 0 0;min-height:44px;padding:10px 14px;background:var(--raised);color:var(--ink);border:1px solid var(--edge);border-radius:7px;font:600 12px var(--body);cursor:pointer}
+  .rk-side .rk-metric strong{font:700 16px var(--disp);white-space:nowrap}
+  .rk-leaders{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
+  .rk-leaders>div{flex:1;min-width:130px;background:var(--raised);border-radius:8px;padding:13px}
+  .rk-leaders strong{display:block;font:700 15px/1.25 var(--disp)}
+  .rk-foot{padding:16px 0 0;margin-top:4px;border-top:1px solid var(--edge);font-size:11px;line-height:1.7;color:var(--ink-2)}
+  .rk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (min-width:800px){
+    .rk-intro h2{font-size:49px}
+    .rk-two{display:flex;gap:22px;align-items:flex-start}
+    .rk-two>.rk-primary{flex:1.7;min-width:0}
+    .rk-two>.rk-side{flex:1;min-width:0}
+    .rk-hero .rk-big{font-size:88px}
+  }
 </style>
 </head>
 <body>
@@ -2028,6 +2092,7 @@ async function loadSeason(lg) {
     meta, divCount, divNames, divOf,
     // The league's own rules, kept raw so the Playoff Picture reads them rather than assuming them.
     settings: lg.settings || {},
+    scoring: lg.scoring_settings || {},
   });
 }
 
@@ -2257,6 +2322,7 @@ const TABS = [
   { id: "picture", label: "Playoff Picture" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
+  { id: "rankings", label: "Rankings" },
   // The id stays "recaps" so links people have already shared keep working.
   { id: "recaps", label: "News & Articles" },
 ];
@@ -2344,6 +2410,8 @@ function show(id) {
   if (id === "picture") ensurePicture();
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   if (id === "injuries") ensureInjuries();
+  // Season stats plus Sleeper's player file: only fetched once somebody opens Rankings.
+  if (id === "rankings") ensureRankings();
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
@@ -11399,6 +11467,300 @@ function panelTrades() {
   return p;
 }
 
+/* ============================================================ RANKINGS */
+
+/**
+ * Season-to-date position ranks in DFFL's own scoring, for every QB, RB, WR and
+ * TE Sleeper has a season line for — rostered or not.
+ *
+ * A player's DFFL points are each official counter on his season line times the
+ * matching scoring_settings value, plus receptions times his NFL position's
+ * reception bonus (bonus_rec_rb / _wr / _te). Sleeper also publishes counters
+ * named bonus_rec_rb and so on, which are those same receptions again; they are
+ * skipped so the position PPR is only ever added once. Distance and yardage
+ * bonuses (rec_40p, rush_td_50p, bonus_rush_yd_100 …) come from their own
+ * counters, never from a season-long field or a season total.
+ */
+const RANK_POS = ["QB", "RB", "WR", "TE"];
+const POS_PPR_KEY = /^bonus_rec_(rb|wr|te)$/;
+function dfflPoints(stat, scoring, pos) {
+  if (!stat || !scoring) return 0;
+  let t = 0;
+  for (const [k, w] of Object.entries(scoring)) {
+    if (POS_PPR_KEY.test(k)) continue;
+    const v = Number(stat[k]), m = Number(w);
+    if (v && m && isFinite(v) && isFinite(m)) t += v * m;
+  }
+  const rec = Number(stat.rec), bonus = Number(scoring["bonus_rec_" + String(pos || "").toLowerCase()]);
+  if (rec && bonus && isFinite(rec) && isFinite(bonus)) t += rec * bonus;
+  return t;
+}
+/** Points are shown to two places, so ties are decided at two places too. */
+const roundPts = n => Math.round(n * 100) / 100;
+/** Standard competition ranking: 1, 2, 2, 4. Sorts a copy; ties keep a stable name order. */
+function competitionRanks(rows, key = "pts") {
+  const out = [...rows].sort((a, b) => roundPts(b[key]) - roundPts(a[key]) || String(a.name || "").localeCompare(String(b.name || "")));
+  let prev = null, rank = 0;
+  out.forEach((r, i) => {
+    const v = roundPts(r[key]);
+    if (v !== prev) { rank = i + 1; prev = v; }
+    r.rank = rank;
+  });
+  return out;
+}
+/** Case, accents, spaces and punctuation all drop out: "smith njigba" finds Smith-Njigba. */
+const normName = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/** { QB: [...], RB: [...], ... } — every player at each position, ranked. */
+function rankingsBoard(stats, players, scoring, owners = new Map()) {
+  const by = Object.fromEntries(RANK_POS.map(p => [p, []]));
+  // The endpoint has answered both as a map keyed by player_id and as a list of { player_id, stats }.
+  const lines = Array.isArray(stats) ? stats.map(x => [String(x.player_id), x.stats || x]) : Object.entries(stats || {});
+  for (const [pid, s] of lines) {
+    const p = players && players[pid];
+    const pos = p && p.position;
+    if (!s || !by[pos]) continue;
+    const name = (p.full_name || `${p.first_name || ""} ${p.last_name || ""}`).trim() || pid;
+    const pr = Number(s.pos_rank_ppr), pp = Number(s.pts_ppr);
+    by[pos].push({
+      pid, name, key: normName(name), pos, team: p.team || "FA", gp: Number(s.gp) || 0,
+      pts: roundPts(dfflPoints(s, scoring, pos)),
+      // Sleeper's own full-PPR position rank. Missing stays missing: nothing is computed in its place.
+      pprRank: Number.isFinite(pr) && pr > 0 ? pr : null,
+      ppr: s.pts_ppr != null && Number.isFinite(pp) ? pp : null,
+      owner: owners.get(pid) || null,
+    });
+  }
+  for (const pos of RANK_POS) by[pos] = competitionRanks(by[pos]);
+  return by;
+}
+/** Matches keep their real DFFL rank; the list is filtered, never re-ranked. */
+function rankSearch(board, pos, q) {
+  const k = normName(q);
+  if (!k) return null;
+  const hit = r => r.key.includes(k);
+  return {
+    matches: (board[pos] || []).filter(hit),
+    elsewhere: RANK_POS.filter(p => p !== pos).map(p => ({ pos: p, n: (board[p] || []).filter(hit).length })).filter(x => x.n),
+  };
+}
+
+const RK = { pos: "RB", q: "", board: null, scoring: null, season: null, at: null, err: null };
+let RK_P = null;
+const RK_SHOWN = 12, RK_MATCH_MAX = 25;
+
+function rankSeason() {
+  const season = String((DB.state && DB.state.season) || (DB.seasons[0] && DB.seasons[0].season) || "");
+  return { season, cur: DB.seasons.find(s => String(s.season) === season) || DB.seasons[0] };
+}
+/** player_id → the DFFL manager holding him this season; anybody else is a free agent. */
+function rankOwners(cur) {
+  const m = new Map();
+  if (!cur || !cur.rosters) return m;
+  for (const r of cur.rosters) {
+    const u = cur.userById && cur.userById.get(r.owner_id);
+    const nm = (u && (u.display_name || (u.metadata && u.metadata.team_name))) || `Team ${r.roster_id}`;
+    for (const pid of r.players || []) m.set(String(pid), nm);
+  }
+  return m;
+}
+
+function ensureRankings() {
+  if (RK_P) return RK_P;
+  RK.err = null;
+  document.body.dataset.rankingsReady = "0";
+  paintRankings();
+  return (RK_P = (async () => {
+    const { season, cur } = rankSeason();
+    let scoring = cur && cur.scoring;
+    if (!scoring || !Object.keys(scoring).length)
+      scoring = ((await jget(`${API}/league/${cur ? cur.leagueId : CURRENT_LEAGUE_ID}`)) || {}).scoring_settings || {};
+    const [stats, players] = await Promise.all([jget(`${API}/stats/nfl/regular/${season}`), jget(`${API}/players/nfl`)]);
+    RK.board = rankingsBoard(stats, players, scoring, rankOwners(cur));
+    if (!RANK_POS.some(p => RK.board[p].length)) throw new Error(`Sleeper has no ${season} season lines yet.`);
+    Object.assign(RK, { scoring, season, at: new Date() });
+    paintRankings();
+    paintRankSide();
+    document.body.dataset.rankingsReady = "1";
+  })().catch(e => {
+    RK_P = null;
+    RK.err = e.message || String(e);
+    paintRankings();
+    document.body.dataset.rankingsReady = "error";
+    console.warn("rankings:", e);
+  }));
+}
+
+function rankMove(r) {
+  if (r.pprRank == null) return { cls: "", txt: "", sr: "" };
+  const d = r.pprRank - r.rank;
+  if (!d) return { cls: "", txt: "same", sr: "" };
+  const n = Math.abs(d);
+  return d > 0
+    ? { cls: "up", txt: `↑${n}`, sr: `${n} place${n === 1 ? "" : "s"} higher in DFFL` }
+    : { cls: "down", txt: `↓${n}`, sr: `${n} place${n === 1 ? "" : "s"} lower in DFFL` };
+}
+const rkWho = r => r.owner ? `Rostered by ${esc(r.owner)}` : "Free agent";
+function rankRowHTML(r, match) {
+  const mv = rankMove(r);
+  const ppr = r.pprRank == null ? "Sleeper full PPR rank not listed"
+    : `Sleeper full PPR #${r.pprRank} · <span aria-hidden="true">${mv.txt}</span>${mv.sr ? `<span class="rk-sr">${mv.sr}</span>` : ""}`;
+  return `<div class="rk-row${match ? " rk-match" : ""}" data-pid="${esc(r.pid)}" data-rank="${r.rank}">
+    <div class="rk-rank" aria-label="DFFL ${r.pos} rank ${r.rank}">${r.rank}</div>
+    <div class="rk-main"><strong>${esc(r.name)}</strong>
+      <p class="rk-small">${r.pos} · ${esc(r.team)} · ${r.gp} game${r.gp === 1 ? "" : "s"} · ${rkWho(r)}</p>
+      <p class="rk-small ${mv.cls}" data-ppr="${r.pprRank ?? ""}">${ppr}</p></div>
+    <div class="rk-val"><div class="rk-num">${f2(r.pts)}</div><span class="rk-lbl">DFFL pts</span></div>
+  </div>`;
+}
+function rankHeroHTML(r, rows) {
+  const mv = rankMove(r);
+  const tied = rows.filter(x => x.rank === r.rank).length - 1;
+  const vs = r.pprRank == null
+    ? `Sleeper hasn't published a full-PPR position rank for him, so there is nothing to compare.`
+    : mv.txt === "same" ? `Same place as Sleeper full PPR. DFFL scoring is the reference here.`
+    : `<span class="${mv.cls}">${mv.txt} place${Math.abs(r.pprRank - r.rank) === 1 ? "" : "s"}</span> versus Sleeper full PPR. DFFL scoring is the reference here.`;
+  return `<section class="rk-hero" id="rkHero" aria-labelledby="rkHeroName" data-pid="${esc(r.pid)}" data-rank="${r.rank}">
+    <p class="rk-eyebrow">Search match / ${r.pos}</p>
+    <div class="rk-big" aria-hidden="true">#${r.rank}</div>
+    <p class="rk-eyebrow" style="margin:6px 0 0">True DFFL ${r.pos} rank</p>
+    <h4 id="rkHeroName"><span class="rk-sr">DFFL ${r.pos} rank ${r.rank}: </span>${esc(r.name)}</h4>
+    <p class="rk-small">${esc(r.team)} · ${esc(RK.season)} season to date · ${r.gp} game${r.gp === 1 ? "" : "s"} · ${rkWho(r)}</p>
+    <div class="rk-metric">
+      <div><div class="rk-n">${f2(r.pts)}</div><span class="rk-lbl">DFFL points</span></div>
+      <div class="rk-r"><div class="rk-n" data-ppr="${r.pprRank ?? ""}">${r.pprRank == null ? "—" : "#" + r.pprRank}</div>
+        <span class="rk-lbl">Sleeper full PPR ${r.pos}${r.ppr != null ? ` · ${f1(r.ppr)} pts` : ""}</span></div>
+    </div>
+    <p class="rk-note">${vs}${tied > 0 ? ` Tied at ${f2(r.pts)} with ${tied} other ${r.pos}${tied === 1 ? "" : "s"}, so they share #${r.rank}.` : ""}</p>
+  </section>`;
+}
+
+function paintRankings() {
+  const p = $('[data-panel="rankings"]');
+  if (!p) return;
+  const list = $("#rkList", p), status = $("#rkStatus", p), asOf = $("#rkAsOf", p);
+  for (const b of p.querySelectorAll(".rk-chips button")) b.setAttribute("aria-pressed", String(b.dataset.pos === RK.pos));
+  $(".rk-clear", p).disabled = !RK.q;
+  if (RK.err) {
+    status.textContent = "";
+    list.innerHTML = `<div class="rk-empty" role="alert"><b>Couldn't load the rankings.</b> ${esc(RK.err)}<br>
+      Sleeper may be rate-limiting. The rest of the site is unaffected.<br><button type="button" class="rk-retry">Try again</button></div>`;
+    list.querySelector(".rk-retry").onclick = () => ensureRankings();
+    return;
+  }
+  if (!RK.board) {
+    status.textContent = "Loading players…";
+    list.innerHTML = `<div class="rk-empty">Reading every player's ${esc(rankSeason().season)} season from Sleeper and scoring it with DFFL's settings…</div>`;
+    return;
+  }
+  const wk = DB.state && DB.state.week;
+  const t = RK.at ? RK.at.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+  asOf.textContent = `${RK.season} season to date${wk ? ` · includes week ${wk} games already played` : ""} · read from Sleeper at ${t}`;
+  const rows = RK.board[RK.pos];
+  const s = rankSearch(RK.board, RK.pos, RK.q);
+  if (!s) {
+    status.textContent = `Top ${Math.min(RK_SHOWN, rows.length)} of ${rows.length} ${RK.pos}s. Search covers all of them, rostered or free agent.`;
+    list.innerHTML = rows.slice(0, RK_SHOWN).map(r => rankRowHTML(r, false)).join("");
+    return;
+  }
+  const n = s.matches.length;
+  if (!n) {
+    const other = s.elsewhere.map(x => `<button type="button" data-goto="${x.pos}">Show ${x.n} ${x.pos} match${x.n === 1 ? "" : "es"}</button>`).join("");
+    status.textContent = `No ${RK.pos} matches “${RK.q.trim()}”.${s.elsewhere.length ? ` Found at ${s.elsewhere.map(x => x.pos).join(", ")}.` : ""}`;
+    list.innerHTML = `<div class="rk-empty" id="rkNone"><b>No ${RK.pos} matches “${esc(RK.q.trim())}”.</b><br>
+      ${s.elsewhere.length ? "That name is at another position:" : "Check the spelling, or clear the search to see the leaderboard."}<br>${other}</div>`;
+    for (const b of list.querySelectorAll("[data-goto]")) b.onclick = () => {
+      RK.pos = b.dataset.goto; paintRankings();
+      // The button just clicked is gone; keep keyboard focus on the position now selected.
+      const chip = $(`.rk-chips button[data-pos="${RK.pos}"]`); if (chip) chip.focus();
+    };
+    return;
+  }
+  const top = s.matches[0];
+  status.textContent = n === 1
+    ? `1 matching ${RK.pos} · ${top.name} is ${RK.pos}${top.rank} in DFFL scoring`
+    : `${n} matching ${RK.pos}s · the best ranked, ${top.name} (${RK.pos}${top.rank}), is surfaced first`;
+  list.innerHTML = rankHeroHTML(top, rows) + s.matches.slice(0, RK_MATCH_MAX).map(r => rankRowHTML(r, true)).join("")
+    + (n > RK_MATCH_MAX ? `<p class="rk-note">Showing the ${RK_MATCH_MAX} best ranked of ${n} matches. Keep typing to narrow it.</p>` : "");
+}
+
+const RK_BONUS = [
+  ["rec_td_40p", "40+ yd receiving TD"], ["rec_td_50p", "50+ yd receiving TD"],
+  ["rush_40p", "40+ yd rush"], ["rush_td_40p", "40+ yd rushing TD"], ["rush_td_50p", "50+ yd rushing TD"],
+  ["pass_td_40p", "40+ yd passing TD"], ["pass_td_50p", "50+ yd passing TD"],
+  ["bonus_pass_yd_300", "300-yd passing game"], ["bonus_pass_yd_400", "400-yd passing game"],
+  ["bonus_rush_yd_100", "100-yd rushing game"], ["bonus_rush_yd_200", "200-yd rushing game"],
+  ["bonus_rec_yd_100", "100-yd receiving game"], ["bonus_rec_yd_200", "200-yd receiving game"],
+];
+const rkSigned = v => `${v > 0 ? "+" : ""}${Number(v)}`;
+function paintRankSide() {
+  const side = $("#rkSide");
+  if (!side) return;
+  const sc = RK.scoring || (rankSeason().cur || {}).scoring || {};
+  const ppr = pos => (Number(sc.rec) || 0) + (Number(sc["bonus_rec_" + pos]) || 0);
+  const rb = ppr("rb"), wr = ppr("wr"), te = ppr("te");
+  const metric = (k, v) => `<div class="rk-metric"><span>${k}</span><strong>${v}</strong></div>`;
+  const recRows = wr === te
+    ? metric("RB receptions", `${f1(rb)} PPR`) + metric("WR / TE receptions", `${f1(wr)} PPR`)
+    : metric("RB receptions", `${f1(rb)} PPR`) + metric("WR receptions", `${f1(wr)} PPR`) + metric("TE receptions", `${f1(te)} PPR`);
+  const r40 = Number(sc.rec_40p) || 0;
+  const extras = RK_BONUS.filter(([k]) => Number(sc[k])).map(([k, l]) => `${l} ${rkSigned(sc[k])}`);
+  let lead = `<p class="rk-small">Loading the leaders…</p>`;
+  if (RK.board) {
+    lead = `<div class="rk-leaders">${RANK_POS.map(pos => {
+      const r = RK.board[pos][0];
+      return `<div data-lead="${pos}"><p class="rk-eyebrow">${pos} / #1 DFFL</p>${r ? `<strong>${esc(r.name)}</strong><span class="rk-lbl">${f2(r.pts)} pts</span>` : `<span class="rk-lbl">No ${pos}s yet</span>`}</div>`;
+    }).join("")}</div>`;
+  }
+  side.innerHTML = `<section class="rk-card" aria-labelledby="rkScTitle">
+      <p class="rk-eyebrow">DFFL scoring</p><h3 id="rkScTitle">Your league. Your finish.</h3>
+      <div style="margin-top:14px">${recRows}${r40 ? metric("40+ yd reception", `${rkSigned(r40)} point${Math.abs(r40) === 1 ? "" : "s"}`) : ""}</div>
+      <p class="rk-note">Full league settings applied${extras.length ? `, including ${esc(extras.join(", "))}` : ""}. Ties share a rank.</p>
+      <p class="rk-note">Sleeper full PPR is Sleeper's own full-PPR points, ranked within the same position. It is not DFFL's scoring.</p>
+    </section>
+    <section class="rk-card" aria-labelledby="rkLeadTitle"><h4 id="rkLeadTitle">Across the league</h4>${lead}</section>`;
+}
+
+function panelRankings() {
+  const p = el("div", "panel rk"); p.dataset.panel = "rankings";
+  p.innerHTML = `
+    <header class="rk-intro">
+      <p class="rk-eyebrow">DFFL / Rankings</p>
+      <h2>The rank that counts.</h2>
+      <p class="rk-sub">Every quarterback, running back, receiver and tight end, ranked on the points they've scored in DFFL's own settings. Rostered players and free agents alike.</p>
+    </header>
+    <div class="rk-two">
+      <div class="rk-primary">
+        <section class="rk-card" aria-labelledby="rkTitle">
+          <div class="rk-head"><h3 id="rkTitle">Position leaderboard</h3><span class="rk-badge">DFFL RANK</span></div>
+          <div class="rk-chips" role="group" aria-label="Player position">${RANK_POS.map(x =>
+            `<button type="button" data-pos="${x}" aria-pressed="${x === RK.pos}">${x}</button>`).join("")}</div>
+          <div class="rk-search" role="search">
+            <label for="rkQ">Search players</label>
+            <div class="rk-shell"><span class="rk-ico" aria-hidden="true">⌕</span>
+              <input id="rkQ" type="search" placeholder="Search players" autocomplete="off" spellcheck="false" aria-describedby="rkStatus" aria-controls="rkList">
+              <button type="button" class="rk-clear" aria-label="Clear player search" disabled>Clear</button></div>
+            <p class="rk-status" id="rkStatus" role="status" aria-live="polite"></p>
+          </div>
+          <p class="rk-small" id="rkAsOf"></p>
+          <div id="rkList" aria-live="off"></div>
+        </section>
+      </div>
+      <div class="rk-side" id="rkSide"></div>
+    </div>
+    <p class="rk-foot">The comparison is Sleeper's own full-PPR position rank (pos_rank_ppr), not half PPR and not its overall search rank.
+      DFFL ranks are worked out in your browser from Sleeper's live season stats and this league's scoring settings, so a game
+      in progress counts as it goes. These are season-to-date standings, not projections.</p>`;
+  const q = $("#rkQ", p), clear = $(".rk-clear", p);
+  q.addEventListener("input", () => { RK.q = q.value; paintRankings(); });
+  q.addEventListener("keydown", e => { if (e.key === "Escape" && q.value) { e.preventDefault(); clear.click(); } });
+  clear.onclick = () => { q.value = ""; RK.q = ""; q.focus(); paintRankings(); };
+  for (const b of p.querySelectorAll(".rk-chips button")) b.onclick = () => { RK.pos = b.dataset.pos; paintRankings(); };
+  // The panel is built before anybody opens it; paint the scoring card from the league settings already in hand.
+  setTimeout(paintRankSide, 0);
+  return p;
+}
+
 /* ---------------------------------------------------------------- boot */
 async function boot() {
   try {
@@ -11456,6 +11818,7 @@ async function boot() {
     app.appendChild(panelPicture());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
+    app.appendChild(panelRankings());
     app.appendChild(await panelRecaps());
 
     buildTabs();
@@ -11534,6 +11897,8 @@ async function boot() {
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
       gradeTrade, ptsFrom, verdictOf, resolvePick, seasonPlayed, markReversals,
       TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,
+      RANK_POS, dfflPoints, roundPts, competitionRanks, rankingsBoard, rankSearch, normName, ensureRankings, panelRankings,
+      rankingsState: () => RK,
     };
     document.body.dataset.ready = "1";
   } catch (e) {
