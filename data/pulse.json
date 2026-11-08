@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-08T11:02:13.374Z",
- "at": 1794135733374,
+ "generated": "2026-11-08T15:34:55.361Z",
+ "at": 1794152095362,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -110,9 +110,7 @@
    "points_for": 917.68,
    "points_against": 1176.1,
    "faab_spent": 16,
-   "starters_hurt": [
-    "Cam Skattebo (Doubtful)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -130,19 +128,19 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 17,
+    "points": 23.4,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "wesley55",
-    "points": 21.78,
+    "points": 41.44,
     "startersLeftToPlay": 7
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 8.9,
+    "points": 10.9,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -159,7 +157,7 @@
    },
    "b": {
     "manager": "willie12w",
-    "points": 0,
+    "points": 24.5,
     "startersLeftToPlay": 10
    }
   },
@@ -178,7 +176,7 @@
   {
    "a": {
     "manager": "bradyrife",
-    "points": 13.58,
+    "points": 18.08,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -190,12 +188,12 @@
   {
    "a": {
     "manager": "moseslin",
-    "points": 0,
+    "points": 4,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
+    "points": 2.5,
     "startersLeftToPlay": 10
    }
   }
