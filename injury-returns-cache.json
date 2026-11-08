@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-08T16:54:49.573Z",
+ "generated": "2026-11-08T20:54:28.797Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -23,16 +23,6 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
-  },
-  "3214": {
-   "n": "Hunter Henry",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-08"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -99,11 +89,11 @@
   "5927": {
    "n": "Terry McLaurin",
    "s": "IR",
-   "ret": "2027-02-15",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
+   "ret": null,
+   "retWeeks": 3,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR minimum 4 weeks from wk 8 (3 left)",
    "retChecked": "2026-11-08",
    "irSince": 8
   },
@@ -137,6 +127,16 @@
    "retEstimated": false,
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. 'Has a shot' at Week 6; ESPN Q. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
+  },
+  "7526": {
+   "n": "Jaylen Waddle",
+   "s": "Out",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-08"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -232,6 +232,16 @@
    "retNote": "https://www.nfl.com/news/packers-wr-jayden-reed-to-undergo-neck-surgery-miss-rest-of-2026-season — Neck surgery. LaFleur: season-ending. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "11565": {
+   "n": "J.J. McCarthy",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-08"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -331,6 +341,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06",
    "irSince": 9
+  },
+  "13298": {
+   "n": "KC Concepcion Jr.",
+   "s": "Questionable",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4870653/kc-concepcion — Concussion. In protocol; Week 6 status pending. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
