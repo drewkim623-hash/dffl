@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T22:02:29.414Z",
+ "generated": "2026-11-08T11:02:48.405Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 71.6,
+       "value": 71.5,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -600,7 +600,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 55,
-      "marginPts": 121.1
+      "marginPts": 121.3
      },
      "hindsight": "Pending"
     },
@@ -612,7 +612,7 @@
       {
        "asset": "J.K. Dobbins",
        "pid": "6806",
-       "value": 10.4,
+       "value": 10,
        "basis": "actual to wk 8 + Sleeper projection"
       },
       {
@@ -628,11 +628,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 42,
+     "total": 41.6,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -46,
-      "marginPts": -72.7
+      "marginPct": -47,
+      "marginPts": -73.1
      },
      "hindsight": "Pending"
     },
@@ -652,7 +652,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -29,
-      "marginPts": -48.4
+      "marginPts": -48.2
      },
      "hindsight": "Pending"
     }
@@ -866,6 +866,54 @@
       "small": true,
       "marginPct": 100,
       "marginPts": 11.6
+     },
+     "hindsight": "Pending"
+    }
+   ]
+  },
+  "1424938869337440256": {
+   "season": 2026,
+   "week": 9,
+   "sides": [
+    {
+     "rid": 4,
+     "uid": "845540882697547776",
+     "manager": "willie12w",
+     "assets": [
+      {
+       "asset": "2029 R15",
+       "value": 3.4,
+       "basis": "mid-slot curve",
+       "hindsight": "Pending"
+      }
+     ],
+     "total": 3.4,
+     "tradeDay": {
+      "letter": "C",
+      "small": true,
+      "marginPct": 100,
+      "marginPts": 3.4
+     },
+     "hindsight": "Pending"
+    },
+    {
+     "rid": 9,
+     "uid": "850946675743793152",
+     "manager": "saucebossandrew",
+     "assets": [
+      {
+       "asset": "Kendre Miller",
+       "pid": "9757",
+       "value": 0,
+       "basis": "actual to wk 8 + Sleeper projection"
+      }
+     ],
+     "total": 0,
+     "tradeDay": {
+      "letter": "C",
+      "small": true,
+      "marginPct": -100,
+      "marginPts": -3.4
      },
      "hindsight": "Pending"
     }
