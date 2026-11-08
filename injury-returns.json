@@ -260,7 +260,7 @@
       "weeks": 1,
       "checked": "2026-11-07",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "8155": {
       "kind": "report",
@@ -451,7 +451,7 @@
       "weeks": 1,
       "checked": "2026-11-07",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "12489": {
       "kind": "report",
@@ -546,7 +546,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
       "checked": "2026-11-07",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "12533": {
@@ -566,12 +566,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        8
+        9
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-01",
-      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "checked": "2026-11-08",
+      "note": "Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "13276": {
       "kind": "report",
@@ -595,14 +595,12 @@
     },
     "13281": {
       "kind": "report",
-      "weeks": 1,
-      "weeks_list": [
-        9
-      ],
+      "weeks": 0,
+      "weeks_list": [],
       "source": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson",
-      "checked": "2026-11-03",
-      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; uncertain (audit tiebreak wk 9).",
-      "flag": "uncertain"
+      "checked": "2026-11-08",
+      "note": "Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: changed from audit [9]; consensus.",
+      "flag": "consensus"
     },
     "13286": {
       "kind": "report",
