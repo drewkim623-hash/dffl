@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-09T20:14:39.678Z",
+ "generated": "2026-11-09T23:21:33.513Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -21,7 +21,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-06"
   },
   "4046": {
@@ -59,16 +59,16 @@
   "5849": {
    "n": "Kyler Murray",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-06"
+   "retNote": "consensus.mjs — Consensus: changed from audit [9]; consensus.",
+   "retChecked": "2026-11-09"
   },
   "5850": {
    "n": "Josh Jacobs",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-08",
    "retWeeks": null,
    "retSource": "report",
@@ -93,7 +93,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/3126486/deebo-samuel-sr — Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/3126486/deebo-samuel-sr — Hamstring strain. Shanahan: miss at least a couple weeks; SF bye Week 8, return Week 9 likely. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-06"
   },
   "5892": {
@@ -103,7 +103,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-05"
   },
   "5927": {
@@ -116,6 +116,16 @@
    "retNote": "default: IR minimum 4 weeks from wk 8 (3 left)",
    "retChecked": "2026-11-09",
    "irSince": 8
+  },
+  "6011": {
+   "n": "Gardner Minshew II",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 99,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "season-ending",
+   "retChecked": "2026-11-09"
   },
   "6797": {
    "n": "Justin Herbert",
@@ -130,11 +140,11 @@
   "6803": {
    "n": "Brandon Aiyuk",
    "s": "DNR",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: DNR = coming week only",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
    "retChecked": "2026-11-09"
   },
   "6904": {
@@ -196,7 +206,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-08"
   },
   "8142": {
@@ -217,11 +227,21 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-07"
   },
   "8161": {
    "n": "Malik Willis",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-09"
+  },
+  "8210": {
+   "n": "Chig Okonkwo",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
@@ -266,10 +286,10 @@
    "n": "Puka Nacua",
    "s": "Questionable",
    "ret": null,
-   "retWeeks": 99,
-   "retSource": "espn-outlook",
+   "retWeeks": 1,
+   "retSource": "default",
    "retEstimated": true,
-   "retNote": "torn ACL",
+   "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-09"
   },
   "10222": {
@@ -292,6 +312,16 @@
    "retNote": "https://www.nfl.com/news/packers-wr-jayden-reed-to-undergo-neck-surgery-miss-rest-of-2026-season — Neck surgery. LaFleur: season-ending. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "10232": {
+   "n": "Michael Wilson",
+   "s": "Out",
+   "ret": "2027-02-15",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-09"
   },
   "11565": {
    "n": "J.J. McCarthy",
@@ -330,7 +360,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-07"
   },
   "12489": {
@@ -377,7 +407,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson — High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson — High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; uncertain (audit tiebreak wk 9).",
    "retChecked": "2026-11-07"
   },
   "12533": {
