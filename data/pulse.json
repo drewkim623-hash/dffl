@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-08T15:49:40.776Z",
- "at": 1794152980777,
+ "generated": "2026-11-09T11:02:50.009Z",
+ "at": 1794222170009,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 1301.16,
    "points_against": 921.46,
    "faab_spent": 22,
-   "starters_hurt": [
-    "Amon-Ra St. Brown (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "Domo112",
@@ -25,7 +23,9 @@
    "points_for": 1052.3,
    "points_against": 999.8,
    "faab_spent": 83,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Puka Nacua (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -52,9 +52,7 @@
    "points_for": 1037.08,
    "points_against": 917.04,
    "faab_spent": 100,
-   "starters_hurt": [
-    "George Pickens (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -72,7 +70,9 @@
    "points_for": 1088.5,
    "points_against": 1026.76,
    "faab_spent": 64,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Rhamondre Stevenson (Out)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -91,7 +91,10 @@
    "points_against": 1086.28,
    "faab_spent": 95,
    "starters_hurt": [
-    "Mike Evans (Out)"
+    "Patrick Mahomes (Questionable)",
+    "Josh Jacobs (Questionable)",
+    "Mike Evans (Out)",
+    "Luther Burden III (Questionable)"
    ]
   },
   {
@@ -101,7 +104,9 @@
    "points_for": 924.04,
    "points_against": 972.44,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Ladd McConkey (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -110,7 +115,9 @@
    "points_for": 917.68,
    "points_against": 1176.1,
    "faab_spent": 16,
-   "starters_hurt": []
+   "starters_hurt": [
+    "J.J. McCarthy (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -120,7 +127,7 @@
    "points_against": 1145.98,
    "faab_spent": 100,
    "starters_hurt": [
-    "Emeka Egbuka (Questionable)"
+    "KC Concepcion Jr. (Questionable)"
    ]
   }
  ],
@@ -128,73 +135,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 26.1,
-    "startersLeftToPlay": 9
+    "points": 150.96,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "wesley55",
-    "points": 54.24,
-    "startersLeftToPlay": 7
+    "points": 89.72,
+    "startersLeftToPlay": 2
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 11.9,
-    "startersLeftToPlay": 9
+    "points": 128.1,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 134.08,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 21.4,
-    "startersLeftToPlay": 8
+    "points": 98.06,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "willie12w",
-    "points": 30.2,
-    "startersLeftToPlay": 10
+    "points": 101.8,
+    "startersLeftToPlay": 3
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 95.58,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "drewkim",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 129.78,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "bradyrife",
-    "points": 18.08,
-    "startersLeftToPlay": 9
+    "points": 97.58,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 145.42,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "moseslin",
-    "points": 4,
-    "startersLeftToPlay": 10
+    "points": 111.68,
+    "startersLeftToPlay": 1
    },
    "b": {
     "manager": "victorthompson",
-    "points": 2.5,
-    "startersLeftToPlay": 10
+    "points": 95.9,
+    "startersLeftToPlay": 1
    }
   }
  ],
@@ -210,7 +217,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "NO",
+     "team": "FA",
      "status": null,
      "to": "saucebossandrew"
     }
@@ -219,7 +226,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "NO",
+     "team": "FA",
      "status": null,
      "from": "willie12w"
     }
@@ -423,7 +430,7 @@
      "name": "J.J. McCarthy",
      "pos": "QB",
      "team": "NYG",
-     "status": null,
+     "status": "Questionable",
      "to": "moseslin"
     }
    ],

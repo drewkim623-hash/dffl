@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-08T20:54:28.797Z",
+ "generated": "2026-11-09T11:02:49.482Z",
  "week": 9,
  "entries": {
   "2133": {
@@ -23,6 +23,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
+  },
+  "4046": {
+   "n": "Patrick Mahomes",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-09"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -55,6 +65,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
+  },
+  "5850": {
+   "n": "Josh Jacobs",
+   "s": "Questionable",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "5859": {
    "n": "A.J. Brown",
@@ -94,8 +114,18 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 8 (3 left)",
-   "retChecked": "2026-11-08",
+   "retChecked": "2026-11-09",
    "irSince": 8
+  },
+  "6797": {
+   "n": "Justin Herbert",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-09"
   },
   "6803": {
    "n": "Brandon Aiyuk",
@@ -105,7 +135,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: DNR = coming week only",
-   "retChecked": "2026-11-08"
+   "retChecked": "2026-11-09"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -136,7 +166,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-08"
+   "retChecked": "2026-11-09"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -148,6 +178,16 @@
    "retNote": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir — Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-04",
    "irSince": 6
+  },
+  "7611": {
+   "n": "Rhamondre Stevenson",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-11-09"
   },
   "8137": {
    "n": "George Pickens",
@@ -212,6 +252,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "9493": {
+   "n": "Puka Nacua",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 99,
+   "retSource": "espn-outlook",
+   "retEstimated": true,
+   "retNote": "torn ACL",
+   "retChecked": "2026-11-09"
+  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -241,7 +291,27 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-08"
+   "retChecked": "2026-11-09"
+  },
+  "11624": {
+   "n": "Xavier Worthy",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-11-09"
+  },
+  "11635": {
+   "n": "Ladd McConkey",
+   "s": "Questionable",
+   "ret": "2026-11-08",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-15"
   },
   "12481": {
    "n": "Cam Skattebo",
@@ -280,15 +350,15 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
-  "12514": {
-   "n": "Emeka Egbuka",
+  "12519": {
+   "n": "Luther Burden III",
    "s": "Questionable",
-   "ret": "2026-11-08",
+   "ret": "2026-11-22",
    "retWeeks": null,
-   "retSource": "report",
+   "retSource": "espn-return-date",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-31"
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-09"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -313,7 +383,7 @@
   },
   "12534": {
    "n": "Kyle Monangai",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
