@@ -111,8 +111,18 @@ export default {
       })());
     }
 
+    answer = stripIds(answer);
     if (!answer) answer = "I don't know — that isn't in the league data.";
     const asOf = tc.asOfs.filter(Boolean).map(String).sort()[0] || now.toISOString(); // oldest source wins
     return reply(200, { ok: true, answer, sources: [...tc.sources].slice(0, 6), asOf, session });
   },
 };
+
+// Members should never see Sleeper's internal ids, even if the model echoes one.
+export function stripIds(t) {
+  return String(t || "")
+    .replace(/\s*\((?:[^()]*?\b(?:owner_id|user_id|roster_id)\b[^()]*?)\)/gi, "")
+    .replace(/,?\s*\b(?:owner_id|user_id|roster_id)\b\s*[:=#]?\s*\d+/gi, "")
+    .replace(/\b\d{15,20}\b/g, "")
+    .replace(/[ \t]{2,}/g, " ").replace(/ +([,.;:!?])/g, "$1").trim();
+}
