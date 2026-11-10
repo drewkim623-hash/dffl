@@ -121,9 +121,6 @@ export default {
 // Members should never see Sleeper's internal ids, even if the model echoes one.
 export function stripIds(t) {
   return String(t || "")
-    // Strip full ISO datetimes and human-readable date + time forms, but keep
-    // date-only values such as 2026-11-10 intact.
-    .replace(/\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d{1,9})?)?(?:Z|[+-]\d{2}:?\d{2})?\b/gi, "")
     .replace(/\s*\((?:[^()]*?\b(?:owner_id|user_id|roster_id)\b[^()]*?)\)/gi, "")
     .replace(/,?\s*\b(?:owner_id|user_id|roster_id)\b\s*[:=#]?\s*\d+/gi, "")
     .replace(/\b\d{15,20}\b/g, "")

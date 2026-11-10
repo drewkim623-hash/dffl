@@ -2,7 +2,6 @@
 // from fixed paths; the model never supplies a URL. Results are small objects
 // with a `source` label and an `as_of` time.
 import HISTORY from "../data/matchup-history.json";
-import TRADES from "../data/trades-2026.json";
 
 const SLEEPER = "https://api.sleeper.app/v1";
 const RAW = "https://raw.githubusercontent.com/drewkim623-hash/dffl/main";
@@ -380,48 +379,9 @@ const T = {
       if (m && keys[0] && keys[0] !== m.name) alias = `keepers.json lists ${m.name} under the old name "${keys[0]}"`;
       if (!keys.length) return { error: `no keepers listed for ${manager} in ${s}` };
     }
-    return { source: `keepers ${s}`, as_of: at, season: s, scope: `start-of-season keepers: who was kept going into the ${s} season`,
-      not: "not current ownership (use get_roster / search_player) and not current keeper rights (use get_trades)",
-      ...(alias ? { name_change: alias } : {}),
+    return { source: `keepers ${s}`, as_of: at, season: s, ...(alias ? { name_change: alias } : {}),
       keepers: Object.fromEntries(keys.map(k => [k, list[k].map(n => ({ name: n, ...(byName[norm(n)] || {}) }))])),
       exceptions: d.exceptions };
-  },
-
-  // Bundled 2026 trade log + off-Sleeper rights (data/trades-2026.json). No fetches.
-  async get_trades(c, { player, manager, other_manager, trade } = {}) {
-    const base = { source: "trades-2026 log (FACTS research files)", as_of: TRADES.generated, scope: TRADES.scope, status_key: TRADES.status_key,
-      keeper_rules: TRADES.keeper_rules, pick_values: TRADES.pick_values };
-    const mgr = q => {
-      if (!q) return null;
-      const k = norm(q), nick = TRADES.nicknames[k];
-      if (nick) return { name: nick.manager, ...(nick.status !== "confirmed by Drew" ? { identity: `${q} = ${nick.manager} is ${nick.status}` } : {}) };
-      const all = [...new Set(TRADES.trades.flatMap(t => t.managers))];
-      const hit = all.find(m => norm(m) === k) || (k.length >= 3 && all.find(m => norm(m).includes(k)));
-      if (!hit) throw new Error(`no 2026 trade involves a manager matching "${String(q).slice(0, 40)}"`);
-      return { name: hit };
-    };
-    const A = mgr(manager), B = mgr(other_manager);
-    const p = player ? norm(player) : "";
-    if (player && p.length < 3) return { error: "player name too short" };
-    const n = trade != null ? Number(trade) : null;
-    if (!p && !A && !B && n == null) {
-      return { ...base, note: "every executed 2026 trade, one line each; ask with player, manager or trade for terms, rights and analysis",
-        trades: TRADES.trades.map(t => ({ trade: t.trade, completed: t.completed, managers: t.managers, title: t.title })),
-        rights: TRADES.rights.map(r => ({ player: r.player, trade: r.trade, rights_2027: r.rights_2027, roster_2026: r.roster_2026, status: r.status })) };
-    }
-    const hasP = s => p && norm(s).includes(p);
-    const trades = TRADES.trades.filter(t => (n == null || t.trade === n)
-      && (!A || t.managers.includes(A.name)) && (!B || t.managers.includes(B.name))
-      && (!p || t.sides.some(s => hasP(s.receives)) || (Array.isArray(t.commissioner_notes) && t.commissioner_notes.some(x => hasP(x.player)))));
-    const nums = new Set(trades.map(t => t.trade));
-    const rights = TRADES.rights.filter(r => p ? hasP(r.player) : nums.has(r.trade));
-    // Open items that name one of these managers or players (by last name: the list says "Puka", "Harrison").
-    const last = s => s.replace(/ (?:Jr\.|Sr\.|II|III)$/, "").split(" ").pop();
-    const terms = [A?.name, B?.name, ...rights.map(r => last(r.player))].filter(Boolean).map(norm);
-    const unverified = TRADES.unverified.filter(u => terms.some(x => norm(u).includes(x)));
-    return { ...base, ...(A?.identity || B?.identity ? { identity: [A?.identity, B?.identity].filter(Boolean) } : {}),
-      ...(trades.length || rights.length ? {} : { note: "no 2026 trade or rights entry matches; trades outside 2026 are not covered" }),
-      rights, trades, ...(unverified.length ? { unverified } : {}) };
   },
 
   async get_pulse(c) {
