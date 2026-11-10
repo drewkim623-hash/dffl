@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T18:15:39.633Z",
- "at": 1794334539633,
+ "generated": "2026-11-10T18:50:13.983Z",
+ "at": 1794336613983,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -208,6 +208,69 @@
   }
  ],
  "trades": [
+  {
+   "week": 9,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "status": null,
+     "to": "Domo112"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "status": null,
+     "to": "drewkim"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "status": null,
+     "from": "drewkim"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "status": null,
+     "from": "Domo112"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "status": null,
+     "from": "drewkim"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 7,
+     "from": "Domo112",
+     "to": "drewkim"
+    }
+   ]
+  },
   {
    "week": 9,
    "type": "trade",
