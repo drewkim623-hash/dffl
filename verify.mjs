@@ -7185,79 +7185,35 @@ group("Ask the league");
     deep.hash === "#ask" && deep.selected === "ask" && deep.visible && deep.inPanel && deep.shown && !deep.fab && !deep.hdr && dlHits.length === 0, JSON.stringify({ ...deep, dlHits }));
   await dl.close();
 
-  // Phone width: the entry button and the open sheet stay inside the viewport.
+  // Phone width: the floating launcher is absent; the Ask tab remains the entry point.
   const ph = await ctx.newPage();
   await ph.setViewportSize({ width: 390, height: 844 });
   await ph.goto(BASE, { waitUntil: "domcontentloaded" });
   await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
   const fit = () => ph.evaluate(() => {
-    const W = window.innerWidth, H = window.innerHeight, over = [];
-    const fab = document.querySelector("#askFab").getBoundingClientRect();
-    for (const n of [document.querySelector("#askFab"), ...document.querySelectorAll("#askLeague *")]) {
+    const W = window.innerWidth, over = [];
+    for (const n of document.querySelectorAll("#askLeague *")) {
       const r = n.getBoundingClientRect();
       if (r.width && (r.right > W + 1 || r.left < -1)) over.push((n.id || n.className || n.tagName) + " → " + Math.round(r.left) + ".." + Math.round(r.right));
     }
-    return { doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, W, over,
-      fab: { visible: fab.width > 0, inside: fab.left >= 0 && fab.right <= W && fab.bottom <= H && fab.top >= 0 } };
+    return { doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, W, over };
   });
+  const launcher = await ph.evaluate(() => {
+    const wrap = document.querySelector("#askFabWrap"), buttons = [document.querySelector("#askFab"), document.querySelector("#askFabHide")];
+    return { hidden: wrap.hidden, inert: wrap.inert, ariaHidden: wrap.getAttribute("aria-hidden"), shown: wrap.getClientRects().length > 0,
+      buttonsFocusable: buttons.some(b => b.tabIndex >= 0 && !b.closest("[hidden], [inert]")) };
+  });
+  check("Ask the league at 390px: floating launcher is hidden and unavailable to focus", launcher.hidden && launcher.inert && launcher.ariaHidden === "true" && !launcher.shown && !launcher.buttonsFocusable, JSON.stringify(launcher));
   const closed = await fit();
-  check("Ask the league at 390px: entry button visible and inside the viewport", closed.fab.visible && closed.fab.inside, JSON.stringify(closed.fab));
-  check("Ask the league at 390px: closed, no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
-  // The pill floats over the page; the page's bottom padding must let the last card scroll clear of it.
-  await ph.click('#tabs button[data-tab="home"]');
-  await ph.waitForTimeout(150);
-  await ph.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
-  await ph.waitForTimeout(100);
-  const clear = await ph.evaluate(() => {
-    const fab = document.querySelector("#askFab").getBoundingClientRect();
-    const panel = document.querySelector('[data-panel="home"]');
-    const kids = [...(panel?.querySelectorAll(":scope > *") || [])].filter(n => n.getBoundingClientRect().height > 0);
-    const lastCard = kids[kids.length - 1]?.getBoundingClientRect();
-    const foot = document.querySelector("footer .wrap")?.getBoundingClientRect();
-    return { fabTop: Math.round(fab.top), card: lastCard ? Math.round(lastCard.bottom) : null, foot: foot ? Math.round(foot.bottom) : null,
-      pad: getComputedStyle(document.body).paddingBottom };
-  });
-  check("Ask the league at 390px: scrolled to the bottom, the last card and footer clear the pill",
-    clear.card != null && clear.card <= clear.fabTop + 1 && clear.foot != null && clear.foot <= clear.fabTop + 1, JSON.stringify(clear));
-  await ph.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  check("Ask the league at 390px: no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
   await ph.click('#tabs button[data-tab="records"]');
-  check("Ask the league at 390px: tabs stay tappable with the entry button showing",
-    await ph.evaluate(() => !!document.querySelector('[data-panel="records"]')?.offsetParent));
-  await ph.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
-  await ph.click("#askFab");
-  check("Ask the league at 390px: opening does not focus the text field (no keyboard pop)",
-    await ph.evaluate(() => { const a = document.activeElement; return a !== document.querySelector("#askInput") && !!a?.closest("#askLeaguePanel"); }));
-  const opened = await fit();
-  const sheet = await ph.evaluate(() => { const r = document.querySelector("#askLeaguePanel").getBoundingClientRect(); return { w: Math.round(r.width), bottom: Math.round(r.bottom), H: window.innerHeight }; });
-  check("Ask the league at 390px: opens as a full-width bottom sheet with chips",
-    (await chatState(ph)) === "open" && sheet.w === 390 && sheet.bottom === sheet.H && await ph.locator("#askChips button").count() >= 5, JSON.stringify(sheet));
-  check("Ask the league at 390px: open, no horizontal overflow", opened.doc <= opened.W && opened.body <= opened.W && !opened.over.length, JSON.stringify(opened));
-  await ph.keyboard.press("Escape");
-  check("Ask the league at 390px: Escape closes and returns focus to the pill",
-    (await chatState(ph)) === "closed" && await ph.evaluate(() => document.activeElement === document.querySelector("#askFab")));
-
-  // The pill's own X hides it for the session; the tab still reaches the chat.
-  const hideX = await ph.evaluate(() => { const x = document.querySelector("#askFabHide"), r = x.getBoundingClientRect();
-    return { label: x.getAttribute("aria-label"), w: Math.round(r.width), h: Math.round(r.height), inside: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight }; });
-  check("Ask the league at 390px: the pill has its own labelled X with a 44px hit area",
-    /hide/i.test(hideX.label || "") && /ask the league/i.test(hideX.label || "") && hideX.w >= 44 && hideX.h >= 44 && hideX.inside, JSON.stringify(hideX));
-  await ph.click("#askFabHide");
-  const gone = () => ph.evaluate(() => ({ fab: !!document.querySelector("#askFab").getClientRects().length, x: !!document.querySelector("#askFabHide").getClientRects().length,
-    stored: sessionStorage.getItem("dffl-ask-fab"), focus: document.activeElement?.dataset?.tab || document.activeElement?.id || document.activeElement?.tagName,
-    pad: getComputedStyle(document.body).paddingBottom }));
-  const g1 = await gone();
-  check("Ask the league at 390px: the pill's X hides the launcher, remembers it for the session and moves focus to the Ask tab",
-    !g1.fab && !g1.x && g1.stored === "hidden" && g1.focus === "ask" && g1.pad === "0px", JSON.stringify(g1));
-  await ph.reload({ waitUntil: "domcontentloaded" });
-  await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
-  const g2 = await gone();
-  check("Ask the league at 390px: a dismissed launcher stays hidden after a reload", !g2.fab && g2.stored === "hidden", JSON.stringify(g2));
+  check("Ask the league at 390px: tabs remain tappable", await ph.evaluate(() => !!document.querySelector('[data-panel="records"]')?.offsetParent));
   await ph.click('#tabs button[data-tab="ask"]');
   const phTab = await fit();
   const phSheet = await ph.evaluate(() => { const s = document.querySelector("#askLeaguePanel"), r = s.getBoundingClientRect();
     return { shown: r.width > 0, inPanel: !!document.querySelector('[data-panel="ask"]').contains(s), left: Math.round(r.left), right: Math.round(r.right), W: innerWidth }; });
-  check("Ask the League tab at 390px: still reachable with the launcher dismissed, chat on the page, no overflow",
-    phSheet.shown && phSheet.inPanel && phSheet.left >= 0 && phSheet.right <= phSheet.W && phTab.doc <= phTab.W && !phTab.over.length, JSON.stringify({ phSheet, over: phTab.over }));
+  check("Ask the League tab at 390px: reachable, chat on the page, no overflow",
+    phSheet.shown && phSheet.inPanel && phSheet.left >= 0 && phSheet.right <= phSheet.W && phTab.doc <= phTab.W && phTab.body <= phTab.W && !phTab.over.length, JSON.stringify({ phSheet, over: phTab.over }));
   await ph.close();
 }
 

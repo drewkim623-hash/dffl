@@ -1751,13 +1751,9 @@
     font-size:20px;line-height:1;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45)}
   .ask-fab-x:hover{background:var(--raised)}
   @media (min-width:900px){ .ask-fabw{display:none} .ask-hdr{display:inline-flex;align-items:center} }
+  @media (max-width:899.98px){ .ask-fabw{display:none} }
   /* On the Ask the League tab the chat is the page, so the launchers step aside. */
   body[data-ask-fab="hidden"] .ask-fabw,body[data-ask-tab] .ask-fabw,body[data-ask-tab] .ask-hdr{display:none}
-  /* Phones: room under the last card for the pill (pill height + gap + its bottom offset + home indicator). */
-  @media (max-width:899.98px){
-    body{padding-bottom:calc(44px + 16px + 16px + env(safe-area-inset-bottom))}
-    body[data-ask-fab="hidden"],body[data-ask-tab]{padding-bottom:0}
-  }
   #askLeague button:focus,#askLeague input:focus,.ask-fab-x:focus{outline:none}
   .ask-fab:focus-visible,.ask-fab-x:focus-visible,.ask-hdr:focus-visible,#askLeague button:focus-visible,#askLeague input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .ask-back{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
@@ -12349,6 +12345,16 @@ const askChat = (() => {
   // getClientRects, not offsetParent: the pill is position:fixed, so its offsetParent is always null.
   const shown = n => !!n && n.getClientRects().length > 0;
   const visibleOpener = () => [...openers()].find(shown);
+
+  const fabWrap = $("#askFabWrap"), fabMedia = matchMedia("(max-width: 899.98px)");
+  const syncFabAvailability = () => {
+    fabWrap.hidden = fabMedia.matches;
+    fabWrap.inert = fabMedia.matches;
+    if (fabMedia.matches) fabWrap.setAttribute("aria-hidden", "true");
+    else fabWrap.removeAttribute("aria-hidden");
+  };
+  syncFabAvailability();
+  fabMedia.addEventListener("change", syncFabAvailability);
 
   function open(from) {
     if (docked) { if (!input.disabled) input.focus({ preventScroll: true }); return; }
