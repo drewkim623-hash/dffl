@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-09T20:14:40.190Z",
- "at": 1794255280190,
+ "generated": "2026-11-10T00:33:23.871Z",
+ "at": 1794270803872,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
@@ -83,7 +83,9 @@
    "points_for": 948.38,
    "points_against": 1032.58,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Michael Wilson (Out)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -94,9 +96,10 @@
    "faab_spent": 95,
    "starters_hurt": [
     "Patrick Mahomes (Questionable)",
-    "Josh Jacobs (Questionable)",
+    "Josh Jacobs (Out)",
     "Mike Evans (Out)",
-    "Luther Burden III (Questionable)"
+    "Luther Burden III (Questionable)",
+    "Chig Okonkwo (Questionable)"
    ]
   },
   {
@@ -297,7 +300,7 @@
      "name": "Chig Okonkwo",
      "pos": "TE",
      "team": "WAS",
-     "status": null,
+     "status": "Questionable",
      "to": "jskule23"
     },
     {
@@ -313,7 +316,7 @@
      "name": "Chig Okonkwo",
      "pos": "TE",
      "team": "WAS",
-     "status": null,
+     "status": "Questionable",
      "from": "Domo112"
     },
     {
@@ -449,5 +452,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 52
+ "free_agent_moves": 53
 }
