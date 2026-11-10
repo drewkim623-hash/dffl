@@ -41,7 +41,8 @@ globalThis.fetch = async (url, init) => {
 };
 
 const { default: worker } = await import("./src/index.js");
-const { TOOL_NAMES } = await import("./src/tools.js");
+const { TOOL_NAMES, runTool } = await import("./src/tools.js");
+const { TOOLS } = await import("./src/prompt.js");
 const env = { ...vars, ANTHROPIC_API_KEY: "test-key", LIMITS, CHAT_RL };
 const waits = [];
 const ctx = { waitUntil: p => waits.push(p) };
@@ -136,5 +137,59 @@ await t("answers never show Sleeper ids", async () => {
   assert.equal(r.body.answer, "jadencha is in first, ahead of Domo112, at 141.96.");
   const { stripIds } = await import("./src/index.js");
   assert.equal(stripIds("Scored 141.96 in week 9 (as of Nov 10)."), "Scored 141.96 in week 9 (as of Nov 10).");
+});
+await t("stripIds removes datetimes and ids but keeps calendar dates", async () => {
+  const { stripIds } = await import("./src/index.js");
+  for (const stamp of ["2026-11-10T15:13:00Z", "2026-11-10T15:13:00.000Z", "2026-11-10T15:13:00.123Z", "2026-11-10 15:13:00", "2026-11-10T15:13:00-05:00", "2026-11-10T15:13:00+0530"])
+    assert.ok(!stripIds(`answer ${stamp} done`).includes(stamp), stamp);
+  assert.equal(stripIds("Season began 2026-11-10."), "Season began 2026-11-10.");
+  assert.equal(stripIds("Scored 141.96 in week 9 (as of Nov 10)."), "Scored 141.96 in week 9 (as of Nov 10).");
+});
+await t("full answer path strips timestamp and Sleeper ids", async () => {
+  script = () => ({ stop_reason: "end_turn", content: [{ type: "text", text: "At 2026-11-10T15:13:00.123Z owner_id 850931930408001536 user_id=123456789012345678 roster_id: 99999999999999999." }], usage: { input_tokens: 10, output_tokens: 1 } });
+  const r = await ask("answer with internal details");
+  assert.equal(r.status, 200);
+  assert.doesNotMatch(r.body.answer, /2026-11-10T|owner_id|user_id|roster_id|\b\d{15,20}\b/);
+});
+await t("get_trades returns the specified keeper-rights terms", async () => {
+  const c = { env, ctx, memo: new Map(), budget: { used: 0, max: 50 }, sources: new Set(), asOfs: [] };
+  const bowersOut = JSON.parse(await runTool(c, "get_trades", { player: "Bowers" }));
+  assert.ok(!bowersOut.error, JSON.stringify(bowersOut));
+  const bowers = bowersOut.rights.find(x => x.player.toLowerCase().includes("bowers"));
+  assert.ok(bowers, "Bowers");
+  assert.match(bowers.terms, /2026-only loan/i);
+  assert.match(bowers.terms, /drewkim keeps his keeper rights/i);
+  assert.equal(bowers.roster_2026, "Domo112");
+  assert.equal(bowers.rights_2027, "drewkim");
+  assert.equal(bowers.note, "drew keeps rights,doesnt finish top 3 drew gets 9th instead of 7th");
+  assert.match(bowers.condition.text, /not finish as a top-3 TE/i);
+  assert.match(bowers.condition.text, /2027 9th instead of .*2027 7th/i);
+  assert.match(bowers.condition.measured_by, /2026 season finish/i);
+  assert.match(bowers.condition.measured_by, /league scoring/i);
+
+  for (const [player, terms, note, roster, rights] of [
+    ["Coker", "2026-only loan", "dom owns rights ", "drewkim", "Domo112"],
+    ["Bijan", "2026 roster", "drew gets rights ", "Domo112", "drewkim"],
+  ]) {
+    const out = JSON.parse(await runTool(c, "get_trades", { player }));
+    assert.ok(!out.error, JSON.stringify(out));
+    const item = out.rights.find(x => x.player.toLowerCase().includes(player.toLowerCase()));
+    assert.ok(item, player);
+    assert.equal(item.roster_2026, roster);
+    assert.equal(item.rights_2027, rights);
+    assert.ok(item.terms.toLowerCase().includes(terms.toLowerCase()), item.terms);
+    assert.ok(item.note === note || JSON.stringify(out.trades).includes(note), JSON.stringify(item));
+  }
+  const empty = JSON.parse(await runTool(c, "get_trades", {}));
+  assert.ok(empty.trades.length && !empty.error);
+});
+await t("get_keepers explicitly means start-of-season keeper list", async () => {
+  const d = TOOLS.find(x => x.name === "get_keepers").description;
+  assert.match(d, /start-of-season keeper list/i);
+  assert.match(d, /not current ownership/i);
+  assert.match(d, /not current keeper rights/i);
+  const c = { env, ctx, memo: new Map(), budget: { used: 0, max: 50 }, sources: new Set(), asOfs: [] };
+  const out = JSON.parse(await runTool(c, "get_keepers", { season: "2026" }));
+  assert.match(out.scope, /start-of-season keepers/i);
 });
 console.log(`\n${n} passed`);

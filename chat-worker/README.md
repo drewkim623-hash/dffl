@@ -97,6 +97,7 @@ blocked outright; player names come from `rosters.json`.
 | `get_recap(season, week)` | one week of `recaps.json` |
 | `get_rankings(season, week?)` | `rankings.json` |
 | `get_keepers(season, manager?)` | `keepers.json` |
+| `get_trades(player?, manager?, trade?)` | bundled `data/trades-2026.json`: 2026 trades, keeper rights, loans, clauses and terms |
 | `get_pulse` | `data/pulse.json` |
 | `get_week(season, week)` | `data/week-YYYY-WW.json` (games, standings, marquee) |
 | `get_faab` | Sleeper league + rosters |
@@ -126,6 +127,25 @@ cd chat-worker && npx wrangler deploy
 
 When the league rolls over to a new season, also update `CURRENT_LEAGUE_ID` in `wrangler.toml`.
 The script is not part of the weekly data workflow and should not be added to it.
+
+## 2026 trades and keeper rights
+
+`get_trades` reads the bundled `data/trades-2026.json` file. It contains the executed 2026 trade
+log plus off-Sleeper keeper rights, loans, clauses, notes, and their status. Empty input returns
+the one-line-per-trade index; filter by player, manager, or trade number for details.
+
+Rebuild locally with:
+
+```bash
+node chat-worker/scripts/build-trades.mjs
+```
+
+The script reads `FACTS-season.md` and `FACTS-short.md` under `TRADES_INPUTS` (default
+`/Users/drewkim/Desktop/dffl-worktrees/trades-inputs`) and cross-checks the article at
+`TRADES_ARTICLE` (default
+`/Users/drewkim/Desktop/dffl-worktrees/dev-trades-article/recaps.json`). That `recaps.json`
+source on `dev-trades-article` was uncommitted when this file was built. This is a local,
+reproducible rebuild, not part of the weekly data workflow.
 
 ## Tests
 
