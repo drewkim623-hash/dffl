@@ -6868,6 +6868,227 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   await page.setViewportSize({ width: 1280, height: 900 });
 }
 
+/* --------------------------------------------- ask the league (chat) */
+// The chat Worker is always mocked here with page.route: no real Worker, no
+// Anthropic. The committed CHAT_WORKER_URL is empty, so the panel starts in
+// "not set up"; the test hook points it at a mock origin.
+group("Ask the league");
+{
+  const MOCK_URL = "https://chat-mock.test";
+  const ap = await ctx.newPage();
+  const workerHits = [];
+  ap.on("request", r => { if (/chat-mock\.test|workers\.dev|api\.anthropic\.com/.test(r.url())) workerHits.push(r.method() + " " + r.url()); });
+  await ap.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ap.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const chatState = p => p.evaluate(() => document.querySelector("#askLeague").dataset.chatState);
+  const waitState = (p, s) => p.waitForFunction(s => document.querySelector("#askLeague").dataset.chatState === s, s, { timeout: 5000 }).then(() => true, () => false);
+  const bodyText = p => p.evaluate(() => document.querySelector("#askBody").textContent);
+
+  check("Ask the league: committed CHAT_WORKER_URL is empty", await ap.evaluate(() => window.__DFFL_CHAT.getWorkerUrl()) === "");
+  check("Ask the league: starts closed with the header control visible at 1280",
+    (await chatState(ap)) === "closed" && await ap.locator(".ask-hdr").isVisible() && await ap.locator("#askLeaguePanel").isHidden());
+  await ap.click(".ask-hdr");
+  check("Ask the league: opening with no Worker URL shows 'Chat not set up yet'",
+    (await chatState(ap)) === "not-set-up" && /Chat not set up yet/.test(await bodyText(ap)), await chatState(ap));
+  check("Ask the league: entry control reports aria-expanded", await ap.getAttribute(".ask-hdr", "aria-expanded") === "true");
+  const dialog = await ap.evaluate(() => {
+    const d = document.querySelector("#askLeaguePanel"), t = document.getElementById(d.getAttribute("aria-labelledby") || "");
+    return { role: d.getAttribute("role"), modal: d.getAttribute("aria-modal"), name: (t?.textContent || d.getAttribute("aria-label") || "").trim() };
+  });
+  check("Ask the league: the sheet is a modal dialog with an accessible name",
+    dialog.role === "dialog" && dialog.modal === "true" && /ask the league/i.test(dialog.name), JSON.stringify(dialog));
+  const nsu = await ap.evaluate(() => {
+    const vis = n => !!n && n.getClientRects().length > 0;
+    const usable = n => vis(n) && !n.disabled;
+    return { chips: [...document.querySelectorAll("#askChips button")].filter(vis).length, input: usable(document.querySelector("#askInput")),
+      send: usable(document.querySelector("#askSend")), inputDisabled: document.querySelector("#askInput").disabled, form: vis(document.querySelector("#askForm")) };
+  });
+  check("Ask the league: not-set-up hides the chips, text field and Ask button",
+    nsu.chips === 0 && !nsu.input && !nsu.send && !nsu.form && nsu.inputDisabled, JSON.stringify(nsu));
+  await ap.evaluate(() => window.__DFFL_CHAT.ask("Who leads the playoff odds?"));
+  await ap.waitForTimeout(150);
+  check("Ask the league: asking in not-set-up stays put and makes no request",
+    (await chatState(ap)) === "not-set-up" && workerHits.length === 0, workerHits.join(" | "));
+  await ap.keyboard.press("Escape");
+  check("Ask the league: Escape closes the panel", (await chatState(ap)) === "closed" && await ap.locator("#askLeaguePanel").isHidden());
+  check("Ask the league: Escape returns focus to the header entry button at 1280",
+    await ap.evaluate(() => document.activeElement?.classList.contains("ask-hdr")));
+
+  // Scroll lock: the page behind the sheet stays put and comes back to the same place.
+  await ap.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
+  const y0 = await ap.evaluate(() => Math.round(window.scrollY));
+  await ap.evaluate(() => window.__DFFL_CHAT.open());
+  const locked = await ap.evaluate(() => {
+    const b = document.body, cs = getComputedStyle(b);
+    window.scrollBy({ top: 400, behavior: "instant" });
+    return { position: cs.position, overflow: cs.overflow, scrollY: Math.round(window.scrollY), top: b.style.top };
+  });
+  check("Ask the league: body scroll is locked while the sheet is open",
+    locked.position === "fixed" && locked.overflow === "hidden" && locked.scrollY === 0 && locked.top === `-${y0}px`, JSON.stringify({ y0, ...locked }));
+  await ap.click("#askClose");
+  const unlocked = await ap.evaluate(() => ({ position: document.body.style.position, overflow: document.body.style.overflow, scrollY: Math.round(window.scrollY),
+    focus: document.activeElement?.classList.contains("ask-hdr") }));
+  check("Ask the league: closing restores the body styles and scroll position",
+    unlocked.position === "" && unlocked.overflow === "" && Math.abs(unlocked.scrollY - y0) <= 1, JSON.stringify({ y0, ...unlocked }));
+  check("Ask the league: the X returns focus to the visible entry button", unlocked.focus);
+  await ap.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+
+  // Mock Worker. Each POST takes the next handler off the queue.
+  const queue = [];
+  const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type, x-dffl-session", "access-control-allow-methods": "POST, OPTIONS" };
+  const reply = (status, obj) => route => route.fulfill({ status, headers: { ...CORS, "content-type": "application/json" }, body: JSON.stringify(obj) });
+  await ap.route(MOCK_URL + "/**", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
+    const h = queue.shift() || reply(500, { ok: false, code: "ERROR", error: "unexpected" });
+    await h(route);
+  });
+  await ap.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ap.click(".ask-hdr");
+  check("Ask the league: with a Worker URL the panel opens with chips",
+    (await chatState(ap)) === "open" && await ap.locator("#askChips button").count() >= 4, await chatState(ap));
+  const chipText = await ap.evaluate(() => [...document.querySelectorAll("#askChips button")].map(b => b.textContent));
+  const MANAGERS = /drewkim|jadencha|domo112|moseslin|chassinator|sizzlemc2|wesley55|victorthompson|jskule23|saucebossandrew|bertalicious|willie12w|bradyrife|jakevickers5|\bI'?m\b|my roster/i;
+  check("Ask the league: no suggested chip names a manager", chipText.length >= 4 && chipText.length <= 6 && !chipText.some(t => MANAGERS.test(t)), chipText.join(" | "));
+  check("Ask the league: before the first question the chips wrap (not compact)",
+    await ap.evaluate(() => document.querySelector("#askLeague").dataset.chatChips !== "compact"));
+
+  // Loading, then an answer card. The answer carries markup that must be escaped.
+  let release;
+  const held = new Promise(r => { release = r; });
+  queue.push(async route => { await held; await reply(200, {
+    ok: true,
+    answer: "**jadencha leads the playoff odds** at 100% with a title line of -105.\njadencha is 8-1 through week 9. <img src=x onerror=\"window.__chatPwned=1\">",
+    sources: ["odds-snapshot", "week 10"], asOf: "2026-11-10T15:13:00Z",
+  })(route); });
+  await ap.click("#askChips button >> nth=1");
+  const sawLoading = await waitState(ap, "loading");
+  check("Ask the league: loading state shows 'Checking the league books…'",
+    sawLoading && /Checking the league books…/.test(await bodyText(ap)) && await ap.locator("#askBody .ask-pulse").count() === 1);
+  release();
+  const sawAnswer = await waitState(ap, "answer");
+  const lastCard = () => ap.evaluate(() => {
+    const all = document.querySelectorAll("#askBody .ask-card"), c = all[all.length - 1];
+    const src = c?.querySelector(".ask-src"), scs = src && getComputedStyle(src);
+    return { cards: all.length, res: c?.querySelector(".ask-res")?.textContent, text: c?.textContent || "", src: src?.textContent || "",
+      srcPx: scs ? parseFloat(scs.fontSize) : 0, srcColor: scs?.color || "",
+      imgs: c ? c.querySelectorAll("img").length : -1, pwned: !!window.__chatPwned,
+      nums: [...(c?.querySelectorAll(".num") || [])].map(n => ({ t: n.textContent, font: getComputedStyle(n).fontFamily, ws: getComputedStyle(n).whiteSpace, wt: getComputedStyle(n).fontWeight })),
+      mono: c ? c.querySelectorAll(".mono").length : -1 };
+  });
+  const card = await lastCard();
+  check("Ask the league: answer card shows the bold result line", sawAnswer && card.res === "jadencha leads the playoff odds at 100% with a title line of -105.", JSON.stringify(card));
+  check("Ask the league: model text is escaped, never parsed as HTML", card.imgs === 0 && !card.pwned && /<img src=x/.test(card.text), JSON.stringify(card));
+  check("Ask the league: source line is plain words with week and an ET as-of time",
+    card.src === "Playoff odds · week 10 · as of Nov 10, 10:13 AM ET", card.src);
+  check("Ask the league: source line never shows file names or slugs",
+    !/\.json|odds-snapshot|wrangler|\b[a-z]+-[a-z]+\b/i.test(card.src), card.src);
+  check("Ask the league: source line is at least 11px in --ink-2", card.srcPx >= 11 && card.srcColor === "rgb(212, 203, 224)", `${card.srcPx}px ${card.srcColor}`);
+  const numText = card.nums.map(n => n.t);
+  check("Ask the league: records, odds and percents are marked as numbers",
+    numText.includes("8-1") && numText.includes("-105") && numText.includes("100%") && card.mono === 0, numText.join(","));
+  check("Ask the league: answer numbers use Space Grotesk bold, not monospace, and never wrap",
+    card.nums.length && card.nums.every(n => /Space Grotesk/.test(n.font) && !/mono|Menlo|Consolas|Courier/i.test(n.font) && n.ws === "nowrap" && Number(n.wt) >= 700), JSON.stringify(card.nums[0]));
+  const compact = await ap.evaluate(() => {
+    const ch = document.querySelector("#askChips"), f = document.querySelector("#askForm"), cs = getComputedStyle(ch);
+    const a = ch.getBoundingClientRect(), b = f.getBoundingClientRect();
+    return { mode: document.querySelector("#askLeague").dataset.chatChips, wrap: cs.flexWrap, ox: cs.overflowX, next: ch.nextElementSibling === f,
+      gap: Math.round(b.top - a.bottom), rows: new Set([...ch.querySelectorAll("button")].map(x => Math.round(x.getBoundingClientRect().top))).size };
+  });
+  check("Ask the league: after an answer the chips fold into one sideways row",
+    compact.mode === "compact" && compact.wrap === "nowrap" && compact.ox === "auto" && compact.rows === 1, JSON.stringify(compact));
+  check("Ask the league: the compact chip row sits directly above the composer", compact.next && compact.gap >= -1 && compact.gap <= 2, JSON.stringify(compact));
+
+  // I don't know.
+  queue.push(reply(200, { ok: true, answer: "I don't know — that isn't in the league data.", sources: [], asOf: "2026-11-10T15:13:00Z" }));
+  await ap.fill("#askInput", "Who won the 1998 Super Bowl?");
+  await ap.press("#askInput", "Enter");
+  check("Ask the league: an 'I don't know' answer shows the unknown state",
+    await waitState(ap, "unknown") && /I don’t know — that isn’t in the league data\./.test(await bodyText(ap)));
+
+  // Error, then retry resends the last question.
+  queue.push(reply(500, { ok: false, code: "ERROR", error: "boom" }));
+  await ap.click("#askChips button >> nth=0");
+  const sawError = await waitState(ap, "error");
+  check("Ask the league: an error shows 'Couldn't reach the league books' and a retry control",
+    sawError && /Couldn’t reach the league books\. Try again\./.test(await bodyText(ap)) && await ap.locator("[data-ask-retry]").count() === 1);
+  let resent = null;
+  queue.push(async route => { resent = JSON.parse(route.request().postData() || "{}").question; await reply(200, { ok: true, answer: "jadencha has 1,443.12 points.", sources: ["Sleeper rosters"], asOf: "2026-11-10T16:00:00Z" })(route); });
+  await ap.click("[data-ask-retry]");
+  check("Ask the league: retry resends the last question and shows the answer",
+    await waitState(ap, "answer") && resent === "Who has the most points this season?", String(resent));
+  const stack = await ap.evaluate(() => ({ turns: document.querySelectorAll("#askBody [data-ask-turn]").length,
+    firstStill: /leads the playoff odds/.test(document.querySelector("#askBody [data-ask-turn]")?.textContent || ""), src: [...document.querySelectorAll("#askBody .ask-src")].pop()?.textContent }));
+  check("Ask the league: answers stack; earlier questions stay in the panel", stack.turns === 4 && stack.firstStill, JSON.stringify(stack));
+  check("Ask the league: Sleeper sources get a plain label", /^Sleeper standings · as of Nov 10, 11:00 AM ET$/.test(stack.src || ""), stack.src);
+
+  // Monthly cap.
+  queue.push(reply(402, { ok: false, code: "MONTHLY_CAP", error: "Out of questions this month" }));
+  await ap.click("#askChips button >> nth=2");
+  const sawCap = await waitState(ap, "monthly-cap");
+  const capInfo = await ap.evaluate(() => ({ chips: [...document.querySelectorAll("#askChips button")].map(b => b.disabled), input: document.querySelector("#askInput").disabled }));
+  check("Ask the league: MONTHLY_CAP shows 'Out of questions this month'",
+    sawCap && /Out of questions this month/.test(await bodyText(ap)) && /opens again on the 1st/.test(await bodyText(ap)));
+  check("Ask the league: MONTHLY_CAP disables the suggested chips", capInfo.chips.length >= 5 && capInfo.chips.every(Boolean) && capInfo.input, JSON.stringify(capInfo));
+  check("Ask the league: only the mock origin was ever contacted", workerHits.every(h => /chat-mock\.test/.test(h)), workerHits.join(" | "));
+  await ap.click("#askClose");
+  check("Ask the league: close button closes; tabs still switch",
+    (await chatState(ap)) === "closed" && await ap.locator("#tabs button").count() === EXPECT.length &&
+    await ap.click('#tabs button[data-tab="odds"]').then(() => ap.evaluate(() => !!document.querySelector('[data-panel="odds"]')?.offsetParent)));
+  await ap.close();
+
+  // Phone width: the entry button and the open sheet stay inside the viewport.
+  const ph = await ctx.newPage();
+  await ph.setViewportSize({ width: 390, height: 844 });
+  await ph.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const fit = () => ph.evaluate(() => {
+    const W = window.innerWidth, H = window.innerHeight, over = [];
+    const fab = document.querySelector("#askFab").getBoundingClientRect();
+    for (const n of [document.querySelector("#askFab"), ...document.querySelectorAll("#askLeague *")]) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > W + 1 || r.left < -1)) over.push((n.id || n.className || n.tagName) + " → " + Math.round(r.left) + ".." + Math.round(r.right));
+    }
+    return { doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, W, over,
+      fab: { visible: fab.width > 0, inside: fab.left >= 0 && fab.right <= W && fab.bottom <= H && fab.top >= 0 } };
+  });
+  const closed = await fit();
+  check("Ask the league at 390px: entry button visible and inside the viewport", closed.fab.visible && closed.fab.inside, JSON.stringify(closed.fab));
+  check("Ask the league at 390px: closed, no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
+  // The pill floats over the page; the page's bottom padding must let the last card scroll clear of it.
+  await ph.click('#tabs button[data-tab="home"]');
+  await ph.waitForTimeout(150);
+  await ph.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+  await ph.waitForTimeout(100);
+  const clear = await ph.evaluate(() => {
+    const fab = document.querySelector("#askFab").getBoundingClientRect();
+    const panel = document.querySelector('[data-panel="home"]');
+    const kids = [...(panel?.querySelectorAll(":scope > *") || [])].filter(n => n.getBoundingClientRect().height > 0);
+    const lastCard = kids[kids.length - 1]?.getBoundingClientRect();
+    const foot = document.querySelector("footer .wrap")?.getBoundingClientRect();
+    return { fabTop: Math.round(fab.top), card: lastCard ? Math.round(lastCard.bottom) : null, foot: foot ? Math.round(foot.bottom) : null,
+      pad: getComputedStyle(document.body).paddingBottom };
+  });
+  check("Ask the league at 390px: scrolled to the bottom, the last card and footer clear the pill",
+    clear.card != null && clear.card <= clear.fabTop + 1 && clear.foot != null && clear.foot <= clear.fabTop + 1, JSON.stringify(clear));
+  await ph.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await ph.click('#tabs button[data-tab="records"]');
+  check("Ask the league at 390px: tabs stay tappable with the entry button showing",
+    await ph.evaluate(() => !!document.querySelector('[data-panel="records"]')?.offsetParent));
+  await ph.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ph.click("#askFab");
+  check("Ask the league at 390px: opening does not focus the text field (no keyboard pop)",
+    await ph.evaluate(() => { const a = document.activeElement; return a !== document.querySelector("#askInput") && !!a?.closest("#askLeaguePanel"); }));
+  const opened = await fit();
+  const sheet = await ph.evaluate(() => { const r = document.querySelector("#askLeaguePanel").getBoundingClientRect(); return { w: Math.round(r.width), bottom: Math.round(r.bottom), H: window.innerHeight }; });
+  check("Ask the league at 390px: opens as a full-width bottom sheet with chips",
+    (await chatState(ph)) === "open" && sheet.w === 390 && sheet.bottom === sheet.H && await ph.locator("#askChips button").count() >= 5, JSON.stringify(sheet));
+  check("Ask the league at 390px: open, no horizontal overflow", opened.doc <= opened.W && opened.body <= opened.W && !opened.over.length, JSON.stringify(opened));
+  await ph.keyboard.press("Escape");
+  check("Ask the league at 390px: Escape closes and returns focus to the pill",
+    (await chatState(ph)) === "closed" && await ph.evaluate(() => document.activeElement === document.querySelector("#askFab")));
+  await ph.close();
+}
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);

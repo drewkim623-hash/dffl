@@ -1,0 +1,11 @@
+{
+  "name": "dffl-ask-the-league",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dry-run": "wrangler deploy --dry-run --outdir /tmp/dffl-chat-dryrun",
+    "history": "node scripts/build-matchup-history.mjs",
+    "test": "node test-limits.mjs"
+  }
+}

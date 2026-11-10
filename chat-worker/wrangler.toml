@@ -1,0 +1,51 @@
+# DFFL "Ask the league" chat Worker. Setup steps: chat-worker/README.md.
+# Never put ANTHROPIC_API_KEY here. It is a secret: `wrangler secret put ANTHROPIC_API_KEY`.
+name = "dffl-ask-the-league"
+main = "src/index.js"
+compatibility_date = "2026-11-10"
+workers_dev = true
+
+[vars]
+# Model id from https://docs.anthropic.com/en/docs/about-claude/models/overview (checked 2026-11-10).
+MODEL = "claude-haiku-5-5"
+
+# Claude Haiku 5.5 prices, USD per million tokens, prompts up to 100,000 tokens.
+# Source: https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-11-10).
+# The spend counter reads these; update here if Anthropic changes them (no code change needed).
+# Prompts over 100k tokens cost more, but MAX_INPUT_TOKENS keeps every call far below that.
+PRICE_INPUT_USD_PER_MTOK = "0.10"
+PRICE_OUTPUT_USD_PER_MTOK = "0.50"
+PRICE_CACHE_WRITE_5M_USD_PER_MTOK = "0.125"
+PRICE_CACHE_WRITE_1H_USD_PER_MTOK = "0.20"   # not used: the Worker only writes 5-minute cache entries
+PRICE_CACHE_HIT_USD_PER_MTOK = "0.01"
+
+# Hard monthly AI spend cap, USD, counted in KV per UTC calendar month.
+MONTHLY_CAP_USD = "5"
+
+# Per-question caps.
+MAX_INPUT_TOKENS = "20000"
+MAX_OUTPUT_TOKENS = "1024"
+MAX_TOOL_ROUNDS = "4"
+MAX_TOOL_RESULT_TOKENS = "8000"
+MAX_QUESTION_CHARS = "500"
+
+# Per-session daily cap (UTC day).
+SESSION_DAILY_LIMIT = "20"
+
+# Data sources. Tools only fetch api.sleeper.app, this origin, and
+# raw.githubusercontent.com/drewkim623-hash/dffl/main as a fallback.
+DATA_BASE_URL = "https://drewkim623-hash.github.io/dffl"
+CURRENT_LEAGUE_ID = "1318040218183417856"
+
+# Spend counter (spend:YYYY-MM) and session counters (sess:{id}:YYYY-MM-DD).
+# Create it with `npx wrangler kv namespace create LIMITS` and paste the id below.
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Per-IP rate limit: 8 requests per 60 seconds (period must be 10 or 60).
+# namespace_id is any integer unique to this rate limiter within the account.
+[[ratelimits]]
+name = "CHAT_RL"
+namespace_id = "1001"
+simple = { limit = 8, period = 60 }
