@@ -1233,6 +1233,24 @@
   }
 
   #toiletHost .tbv{margin-top:28px;padding-top:20px;border-top:1px solid var(--ring);min-width:0}
+  #toiletHost .tbv.ppv{color:var(--ink);--blue:var(--gold);--a:var(--gold);--on-a:#1a1200}
+  #toiletHost .tbv .pp-eye{color:#ffd27a}
+  #toiletHost .tbv .pp-br{max-width:none}
+  #toiletHost .tbv .pp-rd{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #toiletHost .tbv .pp-mt.byeg{border-color:rgba(255,194,61,.45)}
+  #toiletHost .tbv .pp-hh{padding:10px 14px 4px}
+  #toiletHost .tbv .pp-li{grid-template-columns:22px 28px minmax(0,1fr) auto}
+  #toiletHost .tbv .pp-bars{gap:8px}
+  #toiletHost .tbv .pp-pb{width:56px}
+  #toiletHost .tbv .pp-hn{color:#ffd27a}
+  #toiletHost .tbv .pp-sd.bye{color:#1a1200}
+  #toiletHost .tbv .pp-rd .pp-mw{align-self:start}
+  #toiletHost .tbv .pp-rd.semifinals{padding-top:18px}
+  #toiletHost .tbv .pp-fin{width:74%}
+  #toiletHost .tbv .pp-place{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin:12px auto 0;opacity:.86}
+  #toiletHost .tbv .pp-slot-hint{display:block;font:10px var(--mono);letter-spacing:-.03em;color:#a9c9f5;white-space:nowrap}
+  #toiletHost .tbv .pp-tm:has(.pp-slot-hint){height:54px}
+  @media(max-width:520px){#toiletHost .tbv .pp-li{grid-template-columns:22px 28px minmax(0,1fr);row-gap:6px}#toiletHost .tbv .pp-li .pp-bars{grid-column:3;justify-content:flex-start;gap:14px}#toiletHost .tbv .pp-rd{grid-template-columns:minmax(0,1fr);gap:10px}#toiletHost .tbv .pp-place{grid-template-columns:1fr;gap:8px}#toiletHost .tbv .pp-tm{padding:0 7px;gap:6px}#toiletHost .tbv .pp-hn{font-size:10px}}
   .tbv .tb-eye{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
   .tbv .tb-head{font:700 23px var(--disp);color:var(--gold);margin-top:5px}
   .tbv .tb-lede,.tbv .tb-note{font-size:13px;line-height:1.55;color:var(--ink-2);max-width:100ch}
@@ -5259,7 +5277,7 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
   const zeros = () => new Array(N).fill(0);
   const C = {
     sims, live: !!live, title: zeros(), playoff: zeros(), divWin: zeros(), divLast: zeros(),
-    last: zeros(), bye: zeros(), wins: zeros(),
+    last: zeros(), bye: zeros(), bowlBye: zeros(), wins: zeros(),
     winDist: teams.map(() => new Array(maxWins + 1).fill(0)),
     // seed[i][k] = seasons team i finished as seed k+1; miss[i] = seasons it didn't.
     seed: teams.map(() => new Array(playoffTeams).fill(0)), miss: zeros(),
@@ -5361,6 +5379,8 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
     // game from the bottom. Losing again puts you in the final, and losing the
     // final is last place. You fall by losing, all the way down.
     const L = rest.slice(wilds);
+    // Seeds 11 and 12 skip round one in the inverted bracket.
+    C.bowlBye[L[4]]++; C.bowlBye[L[5]]++;
     const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
     const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
     const [, b1] = duel(L[5], a1, 1);       // worst seed meets one of them
@@ -10146,7 +10166,7 @@ function pictureRun(job) {
     });
     return { base: { playoff: base.playoff, title: base.title, sims: base.sims }, injuries };
   }
-  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss });
+  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss, bowlBye: C.bowlBye });
   // The live board's own run, when the caller already has it: only the what-ifs are new work.
   const main = job.main || pick(simulateSeason(job.model, job.sims, job.live));
   const forced = job.games.map(([a, b]) => ({
@@ -10272,7 +10292,7 @@ function swingBoard(out) {
 async function computePicture(model, live, R, season, { main = false, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS, lsim = null } = {}) {
   const rules = leagueRules(season);
   const job = pictureJob(model, live, whatIfSims, sims);
-  if (lsim && lsim.sims === sims) job.main = { sims: lsim.sims, playoff: lsim.playoff, seed: lsim.seed, miss: lsim.miss };
+  if (lsim && lsim.sims === sims) job.main = { sims: lsim.sims, playoff: lsim.playoff, seed: lsim.seed, miss: lsim.miss, bowlBye: lsim.bowlBye };
   const out = main ? runPictureMain(job) : await runPicture(job);
   const N = live.teams.length;
   const L = new Array(N).fill(0), T = new Array(N).fill(0);
@@ -10301,6 +10321,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     w: live.W0[i] - T[i] / 2, l: L[i], t: T[i], pf: live.PF0[i],
     seed: out.main.seed[i].map(c => c / out.main.sims), miss: out.main.miss[i] / out.main.sims,
     playoff: out.main.playoff[i] / out.main.sims,
+    bowlBye: out.main.bowlBye ? out.main.bowlBye[i] / out.main.sims : null,
     // Bye % is the run's own top-seed counts: seeds 1 through `byes`, added up.
     bye: out.main.seed[i].slice(0, rules.byes).reduce((a, c) => a + c, 0) / out.main.sims,
     todaySeed: todaySeed[i], leader: field.champs.includes(i),
@@ -10716,21 +10737,25 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   const playedWinners=[g15a?.a,g15b?.a,semiA?.a,semiB?.a,finalA?.a].filter(x=>x!=null);
   const escaped=toiletEscapes(playedWinners,finalA?[finalA.b]:[]);
   const chipRows=toiletChipMap(PP.clinch,escaped), chips=new Map(chipRows.map(c=>[c.rid,c]));
-  const data = bowl.map((r, j) => { const c=chips.get(r.rid)||{}; return {rid:r.rid,uid:r.uid,name:nameOf(r.uid),seed:j+7,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,chip:c.label||"",provingSource:c.provingSource||"none",w:r.w,l:r.l,t:r.t||0,pf:r.pf}; });
+  const data = bowl.map((r, j) => { const c=chips.get(r.rid)||{}; return {rid:r.rid,uid:r.uid,name:nameOf(r.uid),seed:j+7,bowlPct:r.miss,bowlByePct:PP.settled?null:r.bowlBye,lastPct:last?last[r.i]/lsim.sims:null,chip:c.label||"",provingSource:c.provingSource||"none",w:r.w,l:r.l,t:r.t||0,pf:r.pf}; });
   const seedsByRid=new Map(data.map(d=>[d.rid,d.seed]));
-  const gslot=(rid,seed,hint)=>{const d=byRid.get(rid);return d?slot(d.todaySeed):slot(seed,hint);};
-  const bracket=`<div class="tb-round">${renderGame(rules.playoffWeekStart,"7 v 10",gslot(g15a?.a,7),gslot(g15a?.b,10))}${renderGame(rules.playoffWeekStart,"8 v 9",gslot(g15b?.a,8),gslot(g15b?.b,9))}<div class="tb-byebox">Week ${rules.playoffWeekStart} byes: ${slot(11)}${slot(12)} Seeds 11 and 12 are already one defeat from the final.</div>${renderGame(rules.playoffWeekStart+1,"12 vs 8/9 advancer",slot(12),gslot(advB,null,"loser of 8 v 9"))}${renderGame(rules.playoffWeekStart+1,"11 vs 7/10 advancer",slot(11),gslot(advA,null,"loser of 7 v 10"))}${renderGame(rules.playoffWeekStart+1,"7th/8th",gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}</div><div class="tb-round">${renderGame(rules.playoffWeekStart+2,"Last place",gslot(finalA?.a,null,"semi loser"),gslot(finalA?.b,null,"semi loser"),"last")}${renderGame(rules.playoffWeekStart+2,"9th/10th",gslot(place9?.a,null,"semi winner"),gslot(place9?.b,null,"semi winner"))}</div>`;
-  const bar=(label,v)=>`<div class="tb-barbox">${label}<b>${pct(v)}</b><div class="tb-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`;
+  const gslot=(rid,seed,hint)=>{const d=byRid.get(rid);return d?ppslot(d.todaySeed):ppslot(seed,hint);};
+  const ppsd=(seed)=>{const r=seedRow(seed);return r?`<span class="pp-sd${seed>=11?" bye":" wc"}">${seed}</span>`:`<span class="pp-sd">${seed??"?"}</span>`;};
+  const ppslot=(seed,hint)=>{const r=seed==null?null:seedRow(seed);if(!r)return `<div class="pp-tm tbd"><span class="pp-q"></span>${esc(hint||"Advancer")}</div>`;const dd=data.find(x=>x.seed===seed)||{};const value=seed>=11?`Bye ${pct(dd.bowlByePct)} · Last ${pct(dd.lastPct)}`:`Bowl ${pct(dd.bowlPct)} · Last ${pct(dd.lastPct)}`;return `<div class="pp-tm">${ppsd(seed)}${avatarHTML(r.uid,"pp-xs")}<div class="pp-tn"><span class="pp-tnm" title="${esc(nameOf(r.uid))}">${esc(nameOf(r.uid))}</span><span class="pp-slot-hint">${value}</span></div></div>`;};
+  const ppMatch=(label,a,b,cls="")=>`<div class="pp-mw"><div class="pp-lb">${esc(label)}</div><div class="pp-mt ${cls}">${a}${b}</div></div>`;
+  const bracket=`<div class="pp-br"><div class="pp-rd">${ppMatch(`Wk ${rules.playoffWeekStart} · 7 v 10`,ppslot(7),ppslot(10))}${ppMatch(`Wk ${rules.playoffWeekStart} · 8 v 9`,ppslot(8),ppslot(9))}</div><div class="pp-cn"><i></i><i></i></div><div class="pp-rd semifinals">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 12 v loser of 8/9`,ppslot(12),gslot(advB,null,"Loser of 8/9"),"byeg")}${ppMatch(`Wk ${rules.playoffWeekStart+1} · 11 v loser of 7/10`,ppslot(11),gslot(advA,null,"Loser of 7/10"),"byeg")}</div><div class="pp-join"></div><div class="pp-fin">${ppMatch(`Wk ${rules.playoffWeekStart+2} · Final`,gslot(finalA?.a,null,"Semi loser"),gslot(finalA?.b,null,"Semi loser"),"fin")}</div><div class="pp-troph">Loser finishes last</div><div class="pp-place">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 7th/8th`,gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}${ppMatch(`Wk ${rules.playoffWeekStart+2} · 9th/10th`,gslot(place9?.a,null,"Semi winner"),gslot(place9?.b,null,"Semi winner"))}</div></div>`;
   const badge=d=>d.chip?ppBadge(d.chip==="Locked into the bowl"?"red":"blue",d.chip,d.chip):"";
-  const row=d=>`<div class="tb-row"><div><div class="tb-rowtop"><span class="tb-seed">${d.seed}</span>${avatarHTML(d.uid,"sm")}<span class="tb-name">${esc(d.name)}${badge(d)}</span></div><div class="tb-rec">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</div></div><div class="tb-bars">${bar("Bowl",d.bowlPct)}${bar("Last",d.lastPct)}</div></div>`;
+  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm">${esc(d.name)}${badge(d)}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Bowl",d.bowlPct,""],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}" data-k="${label.toLowerCase()}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
   const bubbles=PP.order.map(i=>rows[i]).filter(r=>r.todaySeed<=rules.playoffTeams&&!r.clinch?.clinchedPlayoff).map(r=>({rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,w:r.w,l:r.l,t:r.t||0,pf:r.pf,uid:r.uid,chip:""}));
   const safe=rows.filter(r=>r.clinch?.clinchedPlayoff||escaped.some(x=>String(x)===String(r.rid))).map(r=>{const c=chips.get(r.rid)||{};return {rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,chip:"Safe from last",provingSource:c.provingSource||null};});
   const pair=(week,label,seeds,rids)=>({week,label,seeds,names:rids.map(rid=>{const r=byRid.get(rid);return r?nameOf(r.uid):null;})});
   const enrichedPairs=[pair(rules.playoffWeekStart,"7 v 10",[7,10],[g15a?.a||seedRid(7),g15a?.b||seedRid(10)]),pair(rules.playoffWeekStart,"8 v 9",[8,9],[g15b?.a||seedRid(8),g15b?.b||seedRid(9)]),pair(rules.playoffWeekStart+1,"12 vs 8/9 advancer",[12,advB?seedsByRid.get(advB):"TBD"],[seedRid(12),advB]),pair(rules.playoffWeekStart+1,"11 vs 7/10 advancer",[11,advA?seedsByRid.get(advA):"TBD"],[seedRid(11),advA]),pair(rules.playoffWeekStart+1,"7th/8th",[placeA?seedsByRid.get(placeA):"TBD",placeB?seedsByRid.get(placeB):"TBD"],[placeA,placeB]),pair(rules.playoffWeekStart+2,"Last place",[finalA?seedsByRid.get(finalA.a):"TBD",finalA?seedsByRid.get(finalA.b):"TBD"],[finalA?.a,finalA?.b]),pair(rules.playoffWeekStart+2,"9th/10th",[place9?seedsByRid.get(place9.a):"TBD",place9?seedsByRid.get(place9.b):"TBD"],[place9?.a,place9?.b])];
   window.__TOILET={seeds:data.map(d=>({...d})),bubbles,safeFromLast:safe,bracket:enrichedPairs,clinches:chipRows,clinchMethod:"exactClinch",sims:PP.sims,settled};
   const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
-  const bowlLine=`${rows.filter(r=>r.todaySeed<=rules.playoffTeams).length} playoff seeds · six bowl seeds`;
-  host.innerHTML=`<section class="tbv"><div class="tb-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="tb-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-17 final finishes last.</p><div class="tb-meta"><span class="tb-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="tb-pill">Losers advance</span>${settled?"":`<span class="tb-pill">${PP.sims.toLocaleString()} simulations</span>`}</div><div class="tb-layout"><div class="tb-games"><h3>The bracket</h3>${bracket}</div><div class="tb-list"><h3>In the bowl · ${esc(bowlLine)}</h3>${data.map(row).join("")}<div class="tb-cut">Toilet bowl line</div>${bubbles.length?`<h4>On the bubble</h4>${bubbles.map(row).join("")}`:""}${safe.length?`<div class="tb-safe"><h4>Safe from last</h4>${safe.map(x=>`${esc(x.name)} ${ppBadge("blue","Safe from last","Safe from last")}`).join(", ")}</div>`:""}</div></div><p class="tb-note">Last place is the week-17 final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, so they are not always the six worst records. ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the Odds tab's miss rate (1 − Playoff %); Last % is C.last from this same simulation run."} Clinched chips are exact, not simulated. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p></section>`;
+  const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
+  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>`;
+  const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bye</div><div class="pp-nm">${esc(d.name)}</div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
+  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bye line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first. ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bye % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p></section>`;
 }
 
 function panelPicture() {
