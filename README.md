@@ -2,7 +2,9 @@
 
 A single-page site for the DFFL fantasy football league. It reads the **public Sleeper API
 directly from the visitor's browser**, so there is no server, no database, no API key, and
-nothing to keep in sync — the page always matches what the Sleeper app shows.
+nothing to keep in sync — the page always matches what the Sleeper app shows. The one exception
+is the optional **Ask the league** chat, which talks to a small Cloudflare Worker
+(`chat-worker/`); the site works the same with it switched off.
 
 Six sections:
 
@@ -150,4 +152,20 @@ python3 -m http.server 8000     # then open http://localhost:8000
 `verify.mjs` is the test harness (Node + Playwright). It serves the site, drives it in real
 Chromium against a frozen 2025 fixture, and asserts the computed numbers against Sleeper's
 official standings, checks manager profiles open and render, and asserts no horizontal overflow at
-390px on every section. Run `node verify.mjs` — 44 checks, all must pass.
+390px on every section. Run `node verify.mjs` — all checks must pass.
+
+## Ask the league (optional chat)
+
+A phone-first chat panel ("Ask the league" button, bottom-right on phones, in the header on
+desktop) that answers league questions — standings, scores, all-time head-to-head, odds,
+injuries and returns, projections for start/sit, keepers, FAAB, recaps — from live Sleeper data
+and this repo's JSON, using Claude Haiku 5.5 behind a Cloudflare Worker in `chat-worker/`.
+
+- Off by default: `CHAT_WORKER_URL` in `index.html` is `""`, and the panel shows
+  "Chat not set up yet" without making any request.
+- Setup (KV namespace, API key secret, deploy, paste the URL, Anthropic console limit):
+  see [`chat-worker/README.md`](chat-worker/README.md).
+- Limits: 8 questions/minute per IP, 20 per session per UTC day, and a $5/month AI spend cap
+  counted in Workers KV (approximate — see the README for why), with a $5 Anthropic console
+  limit as the backstop. No passcode.
+- The API key lives only in `wrangler secret`, never in this repo.

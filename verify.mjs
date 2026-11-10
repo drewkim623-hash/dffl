@@ -6868,6 +6868,140 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   await page.setViewportSize({ width: 1280, height: 900 });
 }
 
+/* --------------------------------------------- ask the league (chat) */
+// The chat Worker is always mocked here with page.route: no real Worker, no
+// Anthropic. The committed CHAT_WORKER_URL is empty, so the panel starts in
+// "not set up"; the test hook points it at a mock origin.
+group("Ask the league");
+{
+  const MOCK_URL = "https://chat-mock.test";
+  const ap = await ctx.newPage();
+  const workerHits = [];
+  ap.on("request", r => { if (/chat-mock\.test|workers\.dev|api\.anthropic\.com/.test(r.url())) workerHits.push(r.method() + " " + r.url()); });
+  await ap.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ap.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const chatState = p => p.evaluate(() => document.querySelector("#askLeague").dataset.chatState);
+  const waitState = (p, s) => p.waitForFunction(s => document.querySelector("#askLeague").dataset.chatState === s, s, { timeout: 5000 }).then(() => true, () => false);
+  const bodyText = p => p.evaluate(() => document.querySelector("#askBody").textContent);
+
+  check("Ask the league: committed CHAT_WORKER_URL is empty", await ap.evaluate(() => window.__DFFL_CHAT.getWorkerUrl()) === "");
+  check("Ask the league: starts closed with the header control visible at 1280",
+    (await chatState(ap)) === "closed" && await ap.locator(".ask-hdr").isVisible() && await ap.locator("#askLeaguePanel").isHidden());
+  await ap.click(".ask-hdr");
+  check("Ask the league: opening with no Worker URL shows 'Chat not set up yet'",
+    (await chatState(ap)) === "not-set-up" && /Chat not set up yet/.test(await bodyText(ap)), await chatState(ap));
+  check("Ask the league: entry control reports aria-expanded", await ap.getAttribute(".ask-hdr", "aria-expanded") === "true");
+  await ap.click("#askChips button");
+  await ap.waitForTimeout(150);
+  check("Ask the league: a chip in not-set-up stays put and makes no request",
+    (await chatState(ap)) === "not-set-up" && workerHits.length === 0, workerHits.join(" | "));
+  await ap.keyboard.press("Escape");
+  check("Ask the league: Escape closes the panel", (await chatState(ap)) === "closed" && await ap.locator("#askLeaguePanel").isHidden());
+
+  // Mock Worker. Each POST takes the next handler off the queue.
+  const queue = [];
+  const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type, x-dffl-session", "access-control-allow-methods": "POST, OPTIONS" };
+  const reply = (status, obj) => route => route.fulfill({ status, headers: { ...CORS, "content-type": "application/json" }, body: JSON.stringify(obj) });
+  await ap.route(MOCK_URL + "/**", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
+    const h = queue.shift() || reply(500, { ok: false, code: "ERROR", error: "unexpected" });
+    await h(route);
+  });
+  await ap.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ap.click(".ask-hdr");
+  check("Ask the league: with a Worker URL the panel opens with chips",
+    (await chatState(ap)) === "open" && await ap.locator("#askChips button").count() >= 5, await chatState(ap));
+
+  // Loading, then an answer card. The answer carries markup that must be escaped.
+  let release;
+  const held = new Promise(r => { release = r; });
+  queue.push(async route => { await held; await reply(200, {
+    ok: true,
+    answer: "**jadencha leads the playoff odds** at 100% with a title line of -105.\njadencha is 8-1 through week 9. <img src=x onerror=\"window.__chatPwned=1\">",
+    sources: ["odds-snapshot", "week 10"], asOf: "2026-11-10T15:13:00Z",
+  })(route); });
+  await ap.click("#askChips button >> nth=1");
+  const sawLoading = await waitState(ap, "loading");
+  check("Ask the league: loading state shows 'Checking the league books…'",
+    sawLoading && /Checking the league books…/.test(await bodyText(ap)) && await ap.locator("#askBody .ask-pulse").count() === 1);
+  release();
+  const sawAnswer = await waitState(ap, "answer");
+  const card = await ap.evaluate(() => {
+    const c = document.querySelector("#askBody .ask-card");
+    return { res: c?.querySelector(".ask-res")?.textContent, text: c?.textContent || "", src: c?.querySelector(".ask-src")?.textContent || "",
+      imgs: c ? c.querySelectorAll("img").length : -1, mono: [...(c?.querySelectorAll(".mono") || [])].map(n => n.textContent), pwned: !!window.__chatPwned };
+  });
+  check("Ask the league: answer card shows the bold result line", sawAnswer && card.res === "jadencha leads the playoff odds at 100% with a title line of -105.", JSON.stringify(card));
+  check("Ask the league: model text is escaped, never parsed as HTML", card.imgs === 0 && !card.pwned && /<img src=x/.test(card.text), JSON.stringify(card));
+  check("Ask the league: source line names the source and an ET as-of time",
+    /odds-snapshot/.test(card.src) && /week 10/.test(card.src) && /as of Nov 10, 10:13 AM ET/.test(card.src), card.src);
+  check("Ask the league: records and odds render in mono", card.mono.includes("8-1") && card.mono.includes("-105") && card.mono.includes("100%"), card.mono.join(","));
+
+  // I don't know.
+  queue.push(reply(200, { ok: true, answer: "I don't know — that isn't in the league data.", sources: [], asOf: "2026-11-10T15:13:00Z" }));
+  await ap.fill("#askInput", "Who won the 1998 Super Bowl?");
+  await ap.press("#askInput", "Enter");
+  check("Ask the league: an 'I don't know' answer shows the unknown state",
+    await waitState(ap, "unknown") && /I don’t know — that isn’t in the league data\./.test(await bodyText(ap)));
+
+  // Error, then retry resends the last question.
+  queue.push(reply(500, { ok: false, code: "ERROR", error: "boom" }));
+  await ap.click("#askChips button >> nth=0");
+  const sawError = await waitState(ap, "error");
+  check("Ask the league: an error shows 'Couldn't reach the league books' and a retry control",
+    sawError && /Couldn’t reach the league books\. Try again\./.test(await bodyText(ap)) && await ap.locator("[data-ask-retry]").count() === 1);
+  let resent = null;
+  queue.push(async route => { resent = JSON.parse(route.request().postData() || "{}").question; await reply(200, { ok: true, answer: "jadencha has 1,443.12 points.", sources: ["Sleeper rosters"], asOf: "2026-11-10T16:00:00Z" })(route); });
+  await ap.click("[data-ask-retry]");
+  check("Ask the league: retry resends the last question and shows the answer",
+    await waitState(ap, "answer") && resent === "Who has the most points this season?", String(resent));
+
+  // Monthly cap.
+  queue.push(reply(402, { ok: false, code: "MONTHLY_CAP", error: "Out of questions this month" }));
+  await ap.click("#askChips button >> nth=2");
+  const sawCap = await waitState(ap, "monthly-cap");
+  const capInfo = await ap.evaluate(() => ({ chips: [...document.querySelectorAll("#askChips button")].map(b => b.disabled), input: document.querySelector("#askInput").disabled }));
+  check("Ask the league: MONTHLY_CAP shows 'Out of questions this month'",
+    sawCap && /Out of questions this month/.test(await bodyText(ap)) && /opens again on the 1st/.test(await bodyText(ap)));
+  check("Ask the league: MONTHLY_CAP disables the suggested chips", capInfo.chips.length >= 5 && capInfo.chips.every(Boolean) && capInfo.input, JSON.stringify(capInfo));
+  check("Ask the league: only the mock origin was ever contacted", workerHits.every(h => /chat-mock\.test/.test(h)), workerHits.join(" | "));
+  await ap.click("#askClose");
+  check("Ask the league: close button closes; tabs still switch",
+    (await chatState(ap)) === "closed" && await ap.locator("#tabs button").count() === EXPECT.length &&
+    await ap.click('#tabs button[data-tab="odds"]').then(() => ap.evaluate(() => !!document.querySelector('[data-panel="odds"]')?.offsetParent)));
+  await ap.close();
+
+  // Phone width: the entry button and the open sheet stay inside the viewport.
+  const ph = await ctx.newPage();
+  await ph.setViewportSize({ width: 390, height: 844 });
+  await ph.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const fit = () => ph.evaluate(() => {
+    const W = window.innerWidth, H = window.innerHeight, over = [];
+    const fab = document.querySelector("#askFab").getBoundingClientRect();
+    for (const n of [document.querySelector("#askFab"), ...document.querySelectorAll("#askLeague *")]) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > W + 1 || r.left < -1)) over.push((n.id || n.className || n.tagName) + " → " + Math.round(r.left) + ".." + Math.round(r.right));
+    }
+    return { doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, W, over,
+      fab: { visible: fab.width > 0, inside: fab.left >= 0 && fab.right <= W && fab.bottom <= H && fab.top >= 0 } };
+  });
+  const closed = await fit();
+  check("Ask the league at 390px: entry button visible and inside the viewport", closed.fab.visible && closed.fab.inside, JSON.stringify(closed.fab));
+  check("Ask the league at 390px: closed, no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
+  await ph.click('#tabs button[data-tab="records"]');
+  check("Ask the league at 390px: tabs stay tappable with the entry button showing",
+    await ph.evaluate(() => !!document.querySelector('[data-panel="records"]')?.offsetParent));
+  await ph.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ph.click("#askFab");
+  const opened = await fit();
+  const sheet = await ph.evaluate(() => { const r = document.querySelector("#askLeaguePanel").getBoundingClientRect(); return { w: Math.round(r.width), bottom: Math.round(r.bottom), H: window.innerHeight }; });
+  check("Ask the league at 390px: opens as a full-width bottom sheet with chips",
+    (await chatState(ph)) === "open" && sheet.w === 390 && sheet.bottom === sheet.H && await ph.locator("#askChips button").count() >= 5, JSON.stringify(sheet));
+  check("Ask the league at 390px: open, no horizontal overflow", opened.doc <= opened.W && opened.body <= opened.W && !opened.over.length, JSON.stringify(opened));
+  await ph.close();
+}
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);
