@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T00:33:23.871Z",
- "at": 1794270803872,
+ "generated": "2026-11-10T04:35:40.537Z",
+ "at": 1794285340537,
  "season": "2026",
  "nfl_week": 9,
  "season_type": "regular",
- "week_in_progress": true,
+ "week_in_progress": false,
  "standings": [
   {
    "manager": "jadencha",
@@ -145,15 +145,15 @@
    },
    "b": {
     "manager": "wesley55",
-    "points": 89.72,
-    "startersLeftToPlay": 2
+    "points": 114.72,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 128.1,
-    "startersLeftToPlay": 1
+    "points": 141.96,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "saucebossandrew",
@@ -164,20 +164,20 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 98.06,
-    "startersLeftToPlay": 1
+    "points": 104.66,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "willie12w",
-    "points": 101.8,
-    "startersLeftToPlay": 3
+    "points": 132.2,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 95.58,
-    "startersLeftToPlay": 1
+    "points": 104.58,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "drewkim",
@@ -193,20 +193,20 @@
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 145.42,
-    "startersLeftToPlay": 1
+    "points": 151.42,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "moseslin",
-    "points": 111.68,
-    "startersLeftToPlay": 1
+    "points": 120.48,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "victorthompson",
-    "points": 95.9,
-    "startersLeftToPlay": 1
+    "points": 101.7,
+    "startersLeftToPlay": 0
    }
   }
  ],
