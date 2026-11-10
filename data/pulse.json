@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T15:13:18.290Z",
- "at": 1794323598290,
+ "generated": "2026-11-10T16:50:24.080Z",
+ "at": 1794329424080,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -212,6 +212,55 @@
   }
  ],
  "trades": [
+  {
+   "week": 9,
+   "type": "trade",
+   "managers": [
+    "chassinator",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "status": null,
+     "to": "saucebossandrew"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "status": null,
+     "from": "chassinator"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 2,
+     "from": "chassinator",
+     "to": "saucebossandrew"
+    }
+   ]
+  },
   {
    "week": 9,
    "type": "trade",
