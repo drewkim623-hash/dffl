@@ -130,4 +130,11 @@ await t("missing API key is a config error, no model call", async () => {
   const b = await r.json();
   assert.equal(b.code, "ERROR"); assert.equal(b.reason, "CONFIG"); assert.equal(modelCalls, 0);
 });
+await t("answers never show Sleeper ids", async () => {
+  script = () => ({ stop_reason: "end_turn", content: [{ type: "text", text: "jadencha (owner_id 850931930408001536, team Foo) is in first, ahead of Domo112, owner_id 123456789012345678, at 141.96." }], usage: { input_tokens: 10, output_tokens: 1 } });
+  const r = await ask("who is first");
+  assert.equal(r.body.answer, "jadencha is in first, ahead of Domo112, at 141.96.");
+  const { stripIds } = await import("./src/index.js");
+  assert.equal(stripIds("Scored 141.96 in week 9 (as of Nov 10)."), "Scored 141.96 in week 9 (as of Nov 10).");
+});
 console.log(`\n${n} passed`);
