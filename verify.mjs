@@ -2628,6 +2628,40 @@ check("2025 at week 13: eliminated teams are behind on win bounds", pp13.elimBou
 check("2025 at week 13: badges are consistent with each other and the win bounds", pp13.consistent && pp13.divReal);
 check("2025 at week 13: with one week left the check is by enumeration", pp13.games <= 24 && pp13.clinched > 0, `${pp13.clinched} clinched, method ${pp13.method}`);
 
+group("Toilet Bowl Picture: section and chip proofs");
+const tbProof = await page.evaluate(() => {
+  const D=window.__DFFL, T=window.__TOILET, P=window.__PICTURE, host=document.querySelector("#toiletHost"), L=window.__LSIM;
+  const teams=(ws,ds)=>ws.map((w,i)=>({rid:i+1,div:ds[i],w,pf:1000-i}));
+  const decided=D.exactClinch({teams:teams([10,2,2,6,6,5],[1,1,1,2,2,2]),remaining:[[0,1],[2,3],[4,5]],playoffTeams:4,byes:2});
+  const tied=D.exactClinch({teams:teams([5,5,5,1],[1,1,2,2]),remaining:[],playoffTeams:2,byes:0});
+  const fixture=D.toiletChipMap([decided[0],decided[1],tied[0]],[]), escaped=D.toiletChipMap([{rid:99,eliminated:false,clinchedPlayoff:false}],[99]);
+  const escapeGate=D.toiletEscapes([40,42],[42]);
+  const seedOrder=P&&P.full?P.full.order.slice(P.rules.playoffTeams).map(i=>P.full.rows[i].rid):[];
+  const shown=d=>{const x=host.querySelector(`.pp-li[data-rid="${CSS.escape(String(d.rid))}"]`);return x&&x.textContent;};
+  const fmt=v=>v<=0?"0%":v>=1?"100%":v<.005?"<1%":v>.995?">99%":`${(v*100).toFixed(0)}%`;
+  const chipMap=new Map((T?.clinches||[]).map(c=>[c.rid,c]));
+  return {ready:!!T&&!!P&&!!host,after:!!host&&!!document.querySelector("#pictureHost")&&!!(document.querySelector("#pictureHost").compareDocumentPosition(host)&Node.DOCUMENT_POSITION_FOLLOWING),
+    six:T?.seeds.length===6,seedOrder:T?.seeds.map(x=>x.rid).join(",")===seedOrder.join(","),
+    labels:host?[...host.querySelectorAll(".pp-lb")].map(x=>x.textContent):[],text:host?.textContent||"",
+    odds:T?.seeds.every(d=>{const r=P.full.rows.find(x=>x.rid===d.rid),i=P.rids.indexOf(d.rid),txt=shown(d);return d.bowlPct===r?.miss&&d.bowlByePct===r?.bowlBye&&txt?.includes(`Bowl${fmt(r.miss)}`)&&txt?.includes(`Bye${fmt(r.bowlBye)}`)&&(!L||L.sims!==P.sims||(d.lastPct===L.last[i]/L.sims&&txt.includes(`Last${fmt(d.lastPct)}`)))}),
+    byeTotal:T?.seeds.reduce((a,d)=>a+d.bowlByePct,0),
+    liveChips:T?.seeds.every(d=>d.chip===(chipMap.get(d.rid)?.label||"")&&(!d.chip||!!d.provingSource)),liveChipDetails:T?.seeds.map(x=>({rid:x.rid,chip:x.chip,source:x.provingSource})),
+    fixture,escaped,escapeGate,oddsLabels:host?[...host.querySelector(".pp-li .pp-bars")?.querySelectorAll(".pp-pb span")||[]].map(x=>x.textContent.trim()):[],
+    byeColumn:!!host?.querySelector('.pp-pb[data-k="bye"]'),
+    bracket:!!host?.querySelector(".pp-br .pp-rd .pp-mt")&&host.querySelectorAll(".pp-mt").length===7&&host.querySelectorAll(".pp-rd")[0]?.children.length===2&&host.querySelectorAll(".pp-rd")[1]?.children.length===2&&!!host.querySelector(".pp-cn")&&!!host.querySelector(".pp-join")&&host.querySelector(".pp-fin .pp-lb")?.textContent.includes("Wk 17 · Final")&&host.querySelector(".pp-troph")?.textContent.trim()==="Loser finishes last"&&host.querySelectorAll(".pp-hero").length===2,
+    noPunishment:host?!/punishment|CAGE/i.test(host.querySelector(".pp-br")?.textContent||""):false};
+});
+check("toilet section renders after the playoff picture without changing its host",tbProof.ready&&tbProof.after,JSON.stringify(tbProof));
+check("the six seeds match the playoff picture's non-playoff order",tbProof.six&&tbProof.seedOrder,JSON.stringify(tbProof));
+check("graphic bracket has week 15 pairs, seeded week 16 semis, and centered week 17 final",["7 v 10","8 v 9","12 v loser of 8/9","11 v loser of 7/10","7th/8th","9th/10th"].every(x=>tbProof.labels.some(y=>y.includes(x)))&&tbProof.bracket,JSON.stringify(tbProof.labels));
+check("bowl rows include the Bye probability column",tbProof.byeColumn,JSON.stringify(tbProof.oddsLabels));
+check("Bye chances sum to the two bowl byes",near(tbProof.byeTotal,2,0.002),String(tbProof.byeTotal));
+check("bowl and last place odds come from the picture's same simulation",tbProof.odds,"displayed values should match PP miss and same-run C.last");
+check("the final is labelled Final and shows no punishment or lower-place distribution",tbProof.labels.some(x=>x.includes("Wk 17 · Final"))&&tbProof.noPunishment&&tbProof.oddsLabels.join(",")==="Bye,Bowl,Last",JSON.stringify(tbProof.oddsLabels));
+check("chip helper maps only exact clinch/elimination and completed escape proofs",tbProof.fixture[0].label==="Safe from last"&&tbProof.fixture[0].provingSource==="exactClinch.clinchedPlayoff"&&tbProof.fixture[1].label==="Locked into the bowl"&&tbProof.fixture[1].provingSource==="exactClinch.eliminated"&&!tbProof.fixture[2].label&&tbProof.escaped[0].label==="Safe from last"&&tbProof.escaped[0].provingSource==="completed inverted bracket",JSON.stringify({fixture:tbProof.fixture,escaped:tbProof.escaped}));
+check("scored bowl winners escape without placements; placements-only and last-place teams do not",tbProof.escapeGate.length===1&&String(tbProof.escapeGate[0])==="40"&&!tbProof.escapeGate.includes(41)&&!tbProof.escapeGate.includes(42),JSON.stringify(tbProof.escapeGate));
+check("every live chip is backed by the exposed exact or completed-bracket proof",tbProof.liveChips,JSON.stringify(tbProof.liveChipDetails));
+
 group("Playoff Picture: the board renders");
 const ppDrawn = await page.evaluate(async () => {
   const D = window.__DFFL, M = window.__ODDS;
@@ -4703,7 +4737,9 @@ const ppNarrow = await mobile.evaluate(async () => {
   const season = D.DB.seasons.find(s => s.season === "2025");
   const R = D.raceAsOf(season, 10);
   const live = D.liveState(M, season, R, null, null, 10);
-  D.renderPicture(document.querySelector("#pictureHost"), await D.computePicture(M, live, R, season, { whatIfSims: 500 }));
+  const PP = await D.computePicture(M, live, R, season, { whatIfSims: 500 });
+  D.renderPicture(document.querySelector("#pictureHost"), PP);
+  D.drawToiletPicture(document.querySelector("#toiletHost"), PP, null, season, season.games, false);
   const panel = document.querySelector('[data-panel="picture"]');
   const over = [];
   for (const n of panel.querySelectorAll("*")) {
@@ -4722,6 +4758,8 @@ check("picture: nothing outside a scroller overflows at 390px", ppNarrow.over.le
 check("picture: the whole board renders at 390px", ppNarrow.rows >= 18, `${ppNarrow.rows} rows`);
 check("picture: the manager column stays pinned and compact at 390px",
   ppNarrow.sticky === "sticky" && ppNarrow.nameW > 60 && ppNarrow.nameW <= 170, `${ppNarrow.sticky}, ${Math.round(ppNarrow.nameW)}px`);
+const tbNarrow=await mobile.evaluate(()=>{const h=document.querySelector("#toiletHost"),l=h&&h.querySelector(".pp-lay"),over=[];for(const n of h?.querySelectorAll(".tbv *")||[]){const r=n.getBoundingClientRect();if(r.width&&r.right>innerWidth+1)over.push(n.className||n.tagName);}return {cols:l?getComputedStyle(l).gridTemplateColumns.split(" ").length:0,doc:document.documentElement.scrollWidth,W:innerWidth,host:h&&h.getBoundingClientRect().width,section:!!h?.querySelector(".tbv"),over:over.slice(0,5)};});
+check("toilet picture: one column and no overflow at 390px",tbNarrow.section&&tbNarrow.cols===1&&tbNarrow.doc<=tbNarrow.W&&tbNarrow.host<=tbNarrow.W&&!tbNarrow.over.length,JSON.stringify(tbNarrow));
 
 // Clinch badges at 390px, on a week late enough that somebody has clinched.
 const ppBadges = await mobile.evaluate(async () => {
