@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T04:35:40.537Z",
- "at": 1794285340537,
+ "generated": "2026-11-10T05:14:50.464Z",
+ "at": 1794287690464,
  "season": "2026",
- "nfl_week": 9,
+ "nfl_week": 10,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -140,73 +140,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 150.96,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "wesley55",
-    "points": 114.72,
-    "startersLeftToPlay": 0
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 141.96,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
-    "points": 134.08,
-    "startersLeftToPlay": 0
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 104.66,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
     "manager": "willie12w",
-    "points": 132.2,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 104.58,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "drewkim",
-    "points": 129.78,
-    "startersLeftToPlay": 0
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "bradyrife",
-    "points": 97.58,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "sizzlemc2",
-    "points": 151.42,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "moseslin",
-    "points": 120.48,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
-    "points": 101.7,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -245,212 +245,8 @@
      "to": "willie12w"
     }
    ]
-  },
-  {
-   "week": 8,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Chris Godwin Jr.",
-     "pos": "WR",
-     "team": "TB",
-     "status": null,
-     "to": "bradyrife"
-    },
-    {
-     "name": "Brian Thomas Jr.",
-     "pos": "WR",
-     "team": "JAX",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chris Godwin Jr.",
-     "pos": "WR",
-     "team": "TB",
-     "status": null,
-     "from": "jadencha"
-    },
-    {
-     "name": "Brian Thomas Jr.",
-     "pos": "WR",
-     "team": "JAX",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": null,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Chig Okonkwo",
-     "pos": "TE",
-     "team": "WAS",
-     "status": "Questionable",
-     "to": "jskule23"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chig Okonkwo",
-     "pos": "TE",
-     "team": "WAS",
-     "status": "Questionable",
-     "from": "Domo112"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": null,
-   "picks": []
   }
  ],
- "waivers": [
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Tyler Allgeier",
-     "pos": "RB",
-     "team": "ARI",
-     "status": null,
-     "to": "saucebossandrew"
-    }
-   ],
-   "drops": [],
-   "faab": 41,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Kaelon Black",
-     "pos": "RB",
-     "team": "SF",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [],
-   "faab": 11,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Houston Texans",
-     "pos": "DEF",
-     "team": "HOU",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Malachi Fields",
-     "pos": "WR",
-     "team": "NYG",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 10,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Chris Rodriguez Jr.",
-     "pos": "RB",
-     "team": "JAX",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Los Angeles Rams",
-     "pos": "DEF",
-     "team": "LAR",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 8,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "J.J. McCarthy",
-     "pos": "QB",
-     "team": "NYG",
-     "status": "Questionable",
-     "to": "moseslin"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Aaron Rodgers",
-     "pos": "QB",
-     "team": "PIT",
-     "status": null,
-     "from": "moseslin"
-    }
-   ],
-   "faab": 4,
-   "picks": []
-  }
- ],
- "free_agent_moves": 53
+ "waivers": [],
+ "free_agent_moves": 25
 }
