@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T05:32:47.911Z",
- "at": 1794288767911,
+ "generated": "2026-11-10T11:02:23.341Z",
+ "at": 1794308543341,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -9,68 +9,68 @@
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 7,
+   "wins": 8,
    "losses": 1,
-   "points_for": 1301.16,
-   "points_against": 921.46,
+   "points_for": 1443.12,
+   "points_against": 1055.54,
    "faab_spent": 22,
    "starters_hurt": []
   },
   {
    "manager": "Domo112",
-   "wins": 6,
+   "wins": 7,
    "losses": 2,
-   "points_for": 1052.3,
-   "points_against": 999.8,
+   "points_for": 1203.26,
+   "points_against": 1114.52,
    "faab_spent": 83,
    "starters_hurt": [
     "Puka Nacua (Questionable)"
    ]
   },
   {
-   "manager": "wesley55",
-   "wins": 5,
-   "losses": 3,
-   "points_for": 1074.88,
-   "points_against": 996.66,
-   "faab_spent": 26,
-   "starters_hurt": []
-  },
-  {
    "manager": "willie12w",
-   "wins": 5,
+   "wins": 6,
    "losses": 3,
-   "points_for": 1041.14,
-   "points_against": 901.46,
+   "points_for": 1173.34,
+   "points_against": 1006.12,
    "faab_spent": 65,
    "starters_hurt": []
   },
   {
-   "manager": "bradyrife",
-   "wins": 5,
-   "losses": 3,
-   "points_for": 1037.08,
-   "points_against": 917.04,
-   "faab_spent": 100,
-   "starters_hurt": []
-  },
-  {
    "manager": "sizzlemc2",
-   "wins": 5,
+   "wins": 6,
    "losses": 3,
-   "points_for": 996.46,
-   "points_against": 1070.5,
+   "points_for": 1147.88,
+   "points_against": 1168.08,
    "faab_spent": 49,
    "starters_hurt": [
     "Malik Willis (Questionable)"
    ]
   },
   {
+   "manager": "wesley55",
+   "wins": 5,
+   "losses": 4,
+   "points_for": 1189.6,
+   "points_against": 1147.62,
+   "faab_spent": 26,
+   "starters_hurt": []
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 5,
+   "losses": 4,
+   "points_for": 1134.66,
+   "points_against": 1068.46,
+   "faab_spent": 100,
+   "starters_hurt": []
+  },
+  {
    "manager": "chassinator",
    "wins": 4,
-   "losses": 4,
-   "points_for": 1088.5,
-   "points_against": 1026.76,
+   "losses": 5,
+   "points_for": 1193.16,
+   "points_against": 1158.96,
    "faab_spent": 64,
    "starters_hurt": [
     "Rhamondre Stevenson (Out)"
@@ -79,20 +79,42 @@
   {
    "manager": "saucebossandrew",
    "wins": 3,
-   "losses": 5,
-   "points_for": 948.38,
-   "points_against": 1032.58,
+   "losses": 6,
+   "points_for": 1082.46,
+   "points_against": 1174.54,
    "faab_spent": 100,
    "starters_hurt": [
     "Michael Wilson (Out)"
    ]
   },
   {
+   "manager": "moseslin",
+   "wins": 3,
+   "losses": 6,
+   "points_for": 1038.16,
+   "points_against": 1277.8,
+   "faab_spent": 16,
+   "starters_hurt": [
+    "J.J. McCarthy (Questionable)"
+   ]
+  },
+  {
+   "manager": "drewkim",
+   "wins": 3,
+   "losses": 6,
+   "points_for": 994.14,
+   "points_against": 1250.56,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "KC Concepcion Jr. (Questionable)"
+   ]
+  },
+  {
    "manager": "jskule23",
    "wins": 2,
-   "losses": 6,
-   "points_for": 1001.08,
-   "points_against": 1086.28,
+   "losses": 7,
+   "points_for": 1105.66,
+   "points_against": 1216.06,
    "faab_spent": 95,
    "starters_hurt": [
     "Patrick Mahomes (Questionable)",
@@ -105,34 +127,12 @@
   {
    "manager": "victorthompson",
    "wins": 2,
-   "losses": 6,
-   "points_for": 924.04,
-   "points_against": 972.44,
+   "losses": 7,
+   "points_for": 1025.74,
+   "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
     "Ladd McConkey (Questionable)"
-   ]
-  },
-  {
-   "manager": "moseslin",
-   "wins": 2,
-   "losses": 6,
-   "points_for": 917.68,
-   "points_against": 1176.1,
-   "faab_spent": 16,
-   "starters_hurt": [
-    "J.J. McCarthy (Questionable)"
-   ]
-  },
-  {
-   "manager": "drewkim",
-   "wins": 2,
-   "losses": 6,
-   "points_for": 864.36,
-   "points_against": 1145.98,
-   "faab_spent": 100,
-   "starters_hurt": [
-    "KC Concepcion Jr. (Questionable)"
    ]
   }
  ],

@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-10T05:33:12.608Z",
+ "generated": "2026-11-10T11:05:02.355Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -484,7 +484,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -37,
-      "marginPts": -84.1
+      "marginPts": -83.7
      },
      "hindsight": "Pending"
     },
@@ -496,7 +496,7 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 48.5,
+       "value": 48.1,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 156.8,
+     "total": 156.5,
      "tradeDay": {
       "letter": "B",
       "marginPct": 37,
-      "marginPts": 84.1
+      "marginPts": 83.7
      },
      "hindsight": "Pending"
     }
@@ -587,7 +587,7 @@
       {
        "asset": "Josh Allen",
        "pid": "4984",
-       "value": 138.4,
+       "value": 138.2,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -596,11 +596,11 @@
        "basis": "next cost R2 (regressed from R3), kept 4 yr, shrunk"
       }
      ],
-     "total": 169,
+     "total": 168.9,
      "tradeDay": {
       "letter": "B",
       "marginPct": 46,
-      "marginPts": 106.8
+      "marginPts": 106.7
      },
      "hindsight": "Pending"
     },
@@ -652,7 +652,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -12,
-      "marginPts": -22.4
+      "marginPts": -22.3
      },
      "hindsight": "Pending"
     }
@@ -670,7 +670,7 @@
       {
        "asset": "Khalil Shakir",
        "pid": "8134",
-       "value": 7.8,
+       "value": 7.6,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -680,12 +680,12 @@
        "basis": "actual to wk 9 + Sleeper projection"
       }
      ],
-     "total": 7.8,
+     "total": 7.6,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -15,
-      "marginPts": -2.7
+      "marginPct": -16,
+      "marginPts": -2.9
      },
      "hindsight": "Pending"
     },
@@ -705,8 +705,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 15,
-      "marginPts": 2.7
+      "marginPct": 16,
+      "marginPts": 2.9
      },
      "hindsight": "Pending"
     }
