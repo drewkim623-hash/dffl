@@ -1736,33 +1736,26 @@
     .rk-hero .rk-big{font-size:88px}
   }
   /* ============ ask the league (chat) ============ */
-  /* Phones: a dismissible pop-up card at the bottom, not a pinned button. It pops in on load
-     until its X is pressed, then stays gone for the session; the Ask the League tab is the way in. */
-  .ask-fabw{position:fixed;z-index:50;left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));
-    bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:8px;padding:6px 4px 6px 14px;
-    background:var(--surface);border:1px solid rgba(var(--a-rgb),.45);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.5);
-    animation:ask-pop .32s cubic-bezier(.2,.8,.2,1) both}
-  @keyframes ask-pop{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.ask-fabw{animation:none}}
-  .ask-fab-t{flex:1;min-width:0;margin:0;font:600 13px/1.25 var(--disp);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ask-fab{display:inline-flex;align-items:center;gap:8px;flex:none;min-height:44px;min-width:0;padding:0 16px;border:0;border-radius:999px;
-    background:var(--a);color:var(--on-a);font:700 14px/1 var(--disp);letter-spacing:.01em;cursor:pointer}
+  .ask-fabw{position:fixed;z-index:50;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;gap:6px;max-width:calc(100vw - 32px)}
+  .ask-fab{display:inline-flex;align-items:center;gap:8px;min-height:44px;min-width:0;padding:0 18px;border:0;border-radius:999px;
+    background:var(--a);color:var(--on-a);font:700 14px/1 var(--disp);letter-spacing:.01em;cursor:pointer;
+    box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 0 1px rgba(var(--a-rgb),.4)}
   .ask-fab:hover{background:var(--a-lt)}
   .ask-fab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--on-a);opacity:.75}
   .ask-hdr{display:none;position:absolute;right:var(--pad);top:4px;min-height:40px;padding:0 16px;border-radius:999px;cursor:pointer;
     background:transparent;border:1px solid rgba(var(--a-rgb),.55);color:var(--a);font:700 13.5px/1 var(--disp)}
   .ask-hdr:hover{background:rgba(var(--a-rgb),.1)}
-  /* The pop-up's own X: dismisses it for the session. The Ask the League tab still opens the chat. */
-  .ask-fab-x{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:var(--a);
-    font-size:22px;line-height:1;cursor:pointer}
+  /* The pill's own X: hides it for the session. The Ask the League tab still opens the chat. */
+  .ask-fab-x{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(var(--a-rgb),.55);background:var(--surface);color:var(--a);
+    font-size:20px;line-height:1;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45)}
   .ask-fab-x:hover{background:var(--raised)}
   @media (min-width:900px){ .ask-fabw{display:none} .ask-hdr{display:inline-flex;align-items:center} }
   /* On the Ask the League tab the chat is the page, so the launchers step aside. */
   body[data-ask-fab="hidden"] .ask-fabw,body[data-ask-tab] .ask-fabw,body[data-ask-tab] .ask-hdr{display:none}
-  /* Phones: room under the last card while the pop-up shows (card height 44 + 2×6 + 2×1 border, a gap,
-     its bottom offset, home indicator). Dismissed, or on the Ask tab, no extra room. */
+  /* Phones: room under the last card for the pill (pill height + gap + its bottom offset + home indicator). */
   @media (max-width:899.98px){
-    body{padding-bottom:calc(58px + 16px + 16px + env(safe-area-inset-bottom))}
+    body{padding-bottom:calc(44px + 16px + 16px + env(safe-area-inset-bottom))}
     body[data-ask-fab="hidden"],body[data-ask-tab]{padding-bottom:0}
   }
   #askLeague button:focus,#askLeague input:focus,.ask-fab-x:focus{outline:none}
@@ -1851,10 +1844,9 @@
 <div class="tip" id="tip"></div>
 
 <!-- Ask the league: optional AI chat, backed by chat-worker/. Off until CHAT_WORKER_URL is set. -->
-<div class="ask-fabw" id="askFabWrap" role="region" aria-label="Ask the league pop-up">
-  <p class="ask-fab-t">Got a league question?</p>
+<div class="ask-fabw" id="askFabWrap">
+  <button type="button" class="ask-fab-x" id="askFabHide" aria-label="Hide the Ask the league button">×</button>
   <button type="button" class="ask-fab" id="askFab" data-ask-open aria-controls="askLeaguePanel" aria-expanded="false" aria-haspopup="dialog">Ask the league</button>
-  <button type="button" class="ask-fab-x" id="askFabHide" aria-label="Hide the Ask the league pop-up">×</button>
 </div>
 <div id="askLeague" data-chat-state="closed">
   <div class="ask-back" id="askBack" hidden></div>
@@ -12375,8 +12367,7 @@ const askChat = (() => {
     for (const b of openers()) b.setAttribute("aria-expanded", "false");
     setState("closed");
     unlockScroll();
-    // Pop-up dismissed and no header control (phones): the Ask tab is the way back in.
-    const to = shown(opener) ? opener : visibleOpener() || $('#tabs [data-tab="ask"]');
+    const to = shown(opener) ? opener : visibleOpener();
     if (to) to.focus({ preventScroll: true });
   }
 
@@ -12411,7 +12402,7 @@ const askChat = (() => {
     }
   }
 
-  // The pop-up's X dismisses it for this session; the tab still reaches the chat.
+  // The pill's X hides the pill for this session; the tab still reaches the chat.
   const fabHidden = () => { try { return sessionStorage.getItem(FAB_KEY) === "hidden"; } catch { return false; } };
   if (fabHidden()) document.body.dataset.askFab = "hidden";
   $("#askFabHide").addEventListener("click", () => {
