@@ -41,7 +41,7 @@ CURRENT_LEAGUE_ID = "1318040218183417856"
 # Create it with `npx wrangler kv namespace create LIMITS` and paste the id below.
 [[kv_namespaces]]
 binding = "LIMITS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "c183f24f908242cc81fa29461621293f"
 
 # Per-IP rate limit: 8 requests per 60 seconds (period must be 10 or 60).
 # namespace_id is any integer unique to this rate limiter within the account.
