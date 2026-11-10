@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T16:50:24.080Z",
- "at": 1794329424080,
+ "generated": "2026-11-10T18:15:39.633Z",
+ "at": 1794334539633,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -72,9 +72,7 @@
    "points_for": 1193.16,
    "points_against": 1158.96,
    "faab_spent": 64,
-   "starters_hurt": [
-    "Rhamondre Stevenson (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -83,9 +81,7 @@
    "points_for": 1082.46,
    "points_against": 1174.54,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Xavier Worthy (Out)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -166,7 +162,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "moseslin",
