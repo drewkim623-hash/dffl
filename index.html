@@ -1732,8 +1732,9 @@
     .rk-hero .rk-big{font-size:88px}
   }
   /* ============ ask the league (chat) ============ */
-  .ask-fab{position:fixed;z-index:50;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
-    display:inline-flex;align-items:center;gap:8px;min-height:44px;max-width:calc(100vw - 32px);padding:0 18px;border:0;border-radius:999px;
+  .ask-fabw{position:fixed;z-index:50;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;gap:6px;max-width:calc(100vw - 32px)}
+  .ask-fab{display:inline-flex;align-items:center;gap:8px;min-height:44px;min-width:0;padding:0 18px;border:0;border-radius:999px;
     background:var(--a);color:var(--on-a);font:700 14px/1 var(--disp);letter-spacing:.01em;cursor:pointer;
     box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 0 1px rgba(var(--a-rgb),.4)}
   .ask-fab:hover{background:var(--a-lt)}
@@ -1741,11 +1742,20 @@
   .ask-hdr{display:none;position:absolute;right:var(--pad);top:4px;min-height:40px;padding:0 16px;border-radius:999px;cursor:pointer;
     background:transparent;border:1px solid rgba(var(--a-rgb),.55);color:var(--a);font:700 13.5px/1 var(--disp)}
   .ask-hdr:hover{background:rgba(var(--a-rgb),.1)}
-  @media (min-width:900px){ .ask-fab{display:none} .ask-hdr{display:inline-flex;align-items:center} }
+  /* The pill's own X: hides it for the session. The Ask the League tab still opens the chat. */
+  .ask-fab-x{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(var(--a-rgb),.55);background:var(--surface);color:var(--a);
+    font-size:20px;line-height:1;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+  .ask-fab-x:hover{background:var(--raised)}
+  @media (min-width:900px){ .ask-fabw{display:none} .ask-hdr{display:inline-flex;align-items:center} }
+  /* On the Ask the League tab the chat is the page, so the launchers step aside. */
+  body[data-ask-fab="hidden"] .ask-fabw,body[data-ask-tab] .ask-fabw,body[data-ask-tab] .ask-hdr{display:none}
   /* Phones: room under the last card for the pill (pill height + gap + its bottom offset + home indicator). */
-  @media (max-width:899.98px){ body{padding-bottom:calc(44px + 16px + 16px + env(safe-area-inset-bottom))} }
-  #askLeague button:focus,#askLeague input:focus{outline:none}
-  .ask-fab:focus-visible,.ask-hdr:focus-visible,#askLeague button:focus-visible,#askLeague input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  @media (max-width:899.98px){
+    body{padding-bottom:calc(44px + 16px + 16px + env(safe-area-inset-bottom))}
+    body[data-ask-fab="hidden"],body[data-ask-tab]{padding-bottom:0}
+  }
+  #askLeague button:focus,#askLeague input:focus,.ask-fab-x:focus{outline:none}
+  .ask-fab:focus-visible,.ask-fab-x:focus-visible,.ask-hdr:focus-visible,#askLeague button:focus-visible,#askLeague input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .ask-back{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
   .ask-sheet{position:fixed;z-index:71;left:0;right:0;bottom:0;width:100%;max-height:86vh;max-height:86dvh;
     display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--edge);border-bottom:0;
@@ -1757,7 +1767,12 @@
   .ask-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px var(--pad) 10px;border-bottom:1px solid var(--grid)}
   .ask-hd h2{margin:0;font:700 19px/1.1 var(--disp);letter-spacing:-.01em;text-transform:uppercase}
   .ask-hd h2 b{color:var(--a)}
-  .ask-x{width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--edge);background:var(--raised);font-size:20px;line-height:1;cursor:pointer}
+  .ask-x{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--edge);background:var(--raised);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+  .ask-x:hover{border-color:var(--a);color:var(--a)}
+  /* The tab: the same sheet, docked into the page as a full-height card. Nothing to close. */
+  #askLeague[data-chat-mode="page"] .ask-sheet{position:static;width:auto;max-height:none;height:max(440px,calc(100vh - 220px));height:max(440px,calc(100dvh - 220px));
+    border:1px solid var(--edge);border-radius:18px;box-shadow:none;padding-bottom:0}
+  #askLeague[data-chat-mode="page"] .ask-x{display:none}
   .ask-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px var(--pad);display:flex;flex-direction:column;gap:12px}
   /* Anchor content to the composer: the free space sits above it, not between it and the chips. */
   .ask-body>:first-child{margin-top:auto}
@@ -1825,11 +1840,14 @@
 <div class="tip" id="tip"></div>
 
 <!-- Ask the league: optional AI chat, backed by chat-worker/. Off until CHAT_WORKER_URL is set. -->
-<button type="button" class="ask-fab" id="askFab" data-ask-open aria-controls="askLeaguePanel" aria-expanded="false" aria-haspopup="dialog">Ask the league</button>
+<div class="ask-fabw" id="askFabWrap">
+  <button type="button" class="ask-fab-x" id="askFabHide" aria-label="Hide the Ask the league button">×</button>
+  <button type="button" class="ask-fab" id="askFab" data-ask-open aria-controls="askLeaguePanel" aria-expanded="false" aria-haspopup="dialog">Ask the league</button>
+</div>
 <div id="askLeague" data-chat-state="closed">
   <div class="ask-back" id="askBack" hidden></div>
   <section class="ask-sheet" id="askLeaguePanel" role="dialog" aria-modal="true" aria-labelledby="askTitle" hidden>
-    <header class="ask-hd"><h2 id="askTitle">Ask the <b>league</b></h2><button type="button" class="ask-x" id="askClose" aria-label="Close">×</button></header>
+    <header class="ask-hd"><h2 id="askTitle">Ask the <b>league</b></h2><button type="button" class="ask-x" id="askClose" aria-label="Close Ask the league">×</button></header>
     <div class="ask-body" id="askBody" aria-live="polite"></div>
     <div class="ask-chips" id="askChips"></div>
     <form class="ask-form" id="askForm" autocomplete="off">
@@ -2444,6 +2462,7 @@ const TABS = [
   { id: "rankings", label: "Rankings" },
   // The id stays "recaps" so links people have already shared keep working.
   { id: "recaps", label: "News & Articles" },
+  { id: "ask", label: "Ask the League" },
 ];
 // Old addresses that still land somewhere: the Playoff Picture replaced the
 // Race tab, and the Trade Machine is gone, so its links open Trades.
@@ -2533,6 +2552,8 @@ function show(id) {
   if (id === "rankings") ensureRankings();
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
+  // The chat moves into its tab and back out to the floating sheet; one chat, one state.
+  askChat.dock(id === "ask");
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   revealTab(id, document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
@@ -12022,6 +12043,8 @@ async function boot() {
     app.appendChild(panelTrades());
     app.appendChild(panelRankings());
     app.appendChild(await panelRecaps());
+    // Empty until shown: askChat.dock() moves the chat in.
+    app.appendChild(el("div", "panel")).dataset.panel = "ask";
 
     buildTabs();
     // Deliberately not awaited: the front page paints, then fills itself in.
@@ -12129,11 +12152,13 @@ const askChat = (() => {
   const UNKNOWN = "I don’t know — that isn’t in the league data.";
   const SKEY = "dffl-chat-session";
   let url = CHAT_WORKER_URL, last = "", asked = "", busy = false, capped = false, opener = null;
-  let turns = 0, lastState = "open", turn = null, lock = null;
+  let turns = 0, lastState = "open", turn = null, lock = null, docked = false;
   const root = $("#askLeague"), sheet = $("#askLeaguePanel"), back = $("#askBack"), body = $("#askBody"),
     chips = $("#askChips"), form = $("#askForm"), input = $("#askInput"), send = $("#askSend");
   const openers = () => document.querySelectorAll("[data-ask-open]");
-  const isOpen = () => !sheet.hidden;
+  // Open as the floating dialog. Docked into its tab, the sheet shows but is not a dialog.
+  const isOpen = () => !sheet.hidden && !docked;
+  const FAB_KEY = "dffl-ask-fab";
   const wide = () => matchMedia("(min-width:900px)").matches;
 
   const etTime = iso => {
@@ -12313,6 +12338,7 @@ const askChat = (() => {
   const visibleOpener = () => [...openers()].find(shown);
 
   function open(from) {
+    if (docked) { if (!input.disabled) input.focus({ preventScroll: true }); return; }
     opener = from && from.matches?.("[data-ask-open]") ? from : visibleOpener();
     lockScroll();
     sheet.hidden = back.hidden = false;
@@ -12323,6 +12349,7 @@ const askChat = (() => {
     (wide() && url && !capped ? input : $("#askClose")).focus({ preventScroll: true });
   }
   function close() {
+    if (docked) return;
     sheet.hidden = back.hidden = true;
     for (const b of openers()) b.setAttribute("aria-expanded", "false");
     setState("closed");
@@ -12330,6 +12357,46 @@ const askChat = (() => {
     const to = shown(opener) ? opener : visibleOpener();
     if (to) to.focus({ preventScroll: true });
   }
+
+  // The Ask the League tab: the same sheet, moved into the tab's panel as a plain region,
+  // and moved back (closed) when the reader leaves. A question in flight carries on.
+  const spot = document.createComment("ask the league");
+  root.before(spot);
+  function dock(on) {
+    on = !!on;
+    const page = $('[data-panel="ask"]');
+    if (on === docked || (on && !page)) return;
+    if (isOpen()) {
+      sheet.hidden = back.hidden = true;
+      for (const b of openers()) b.setAttribute("aria-expanded", "false");
+      unlockScroll();
+    }
+    docked = on;
+    document.body.toggleAttribute("data-ask-tab", on);
+    if (on) {
+      page.appendChild(root);
+      sheet.setAttribute("role", "region"); sheet.removeAttribute("aria-modal");
+      root.dataset.chatMode = "page";
+      sheet.hidden = false;
+      if (busy) setState("loading");
+      else idle();
+    } else {
+      spot.after(root);
+      sheet.setAttribute("role", "dialog"); sheet.setAttribute("aria-modal", "true");
+      delete root.dataset.chatMode;
+      sheet.hidden = true;
+      setState("closed");
+    }
+  }
+
+  // The pill's X hides the pill for this session; the tab still reaches the chat.
+  const fabHidden = () => { try { return sessionStorage.getItem(FAB_KEY) === "hidden"; } catch { return false; } };
+  if (fabHidden()) document.body.dataset.askFab = "hidden";
+  $("#askFabHide").addEventListener("click", () => {
+    try { sessionStorage.setItem(FAB_KEY, "hidden"); } catch { /* private mode: hide for this page only */ }
+    document.body.dataset.askFab = "hidden";
+    $('#tabs [data-tab="ask"]')?.focus({ preventScroll: true });
+  });
 
   for (const b of openers()) b.addEventListener("click", () => (isOpen() ? close() : open(b)));
   $("#askClose").addEventListener("click", close);
@@ -12349,7 +12416,7 @@ const askChat = (() => {
 
   // Test hook: verify.mjs points the panel at a mocked origin without editing this file.
   window.__DFFL_CHAT = {
-    open: () => open(), close, ask,
+    open: () => open(), close, ask, dock,
     setWorkerUrl(u) {
       url = String(u || ""); capped = false; turns = 0; asked = ""; turn = null; body.textContent = "";
       root.dataset.chatState === "closed" ? paintChips() : idle();

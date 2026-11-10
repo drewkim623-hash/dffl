@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "rankings", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "rankings", "recaps", "ask"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
@@ -87,7 +87,7 @@ for (const id of EXPECT) {
   }, id);
   check(`${id}: panel renders and is selectable`, shown.exists && shown.visible && shown.selected && shown.kids > 0, JSON.stringify(shown));
 }
-check("hash routing follows the tab", (await page.evaluate(() => location.hash)) === "#recaps");
+check("hash routing follows the tab", (await page.evaluate(() => location.hash)) === "#" + EXPECT[EXPECT.length - 1]);
 check("the Trade Machine is gone: no tab, no panel", await page.evaluate(() =>
   !document.querySelector('#tabs button[data-tab="trade"]') && !document.querySelector('[data-panel="trade"]') &&
   ![...document.querySelectorAll("#tabs button")].some(b => /trade machine/i.test(b.textContent))));
@@ -7074,7 +7074,81 @@ group("Ask the league");
   check("Ask the league: close button closes; tabs still switch",
     (await chatState(ap)) === "closed" && await ap.locator("#tabs button").count() === EXPECT.length &&
     await ap.click('#tabs button[data-tab="odds"]').then(() => ap.evaluate(() => !!document.querySelector('[data-panel="odds"]')?.offsetParent)));
+
+  // The X: a labelled, thumb-sized close that hands focus back to the opener.
+  await ap.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ap.click(".ask-hdr");
+  queue.push(reply(200, { ok: true, answer: "jadencha leads the playoff odds at 100%.", sources: ["odds-snapshot"], asOf: "2026-11-10T15:13:00Z" }));
+  await ap.click("#askChips button >> nth=1");
+  await waitState(ap, "answer");
+  const xInfo =await ap.evaluate(() => { const x = document.querySelector("#askClose"), r = x.getBoundingClientRect();
+    return { label: x.getAttribute("aria-label"), w: Math.round(r.width), h: Math.round(r.height), text: x.textContent.trim() }; });
+  check("Ask the league: the X is labelled 'Close Ask the league' with a 44px hit area",
+    xInfo.label === "Close Ask the league" && xInfo.w >= 44 && xInfo.h >= 44 && xInfo.text === "×", JSON.stringify(xInfo));
+  await ap.click("#askClose");
+  const xClosed = await ap.evaluate(() => ({ state: document.querySelector("#askLeague").dataset.chatState, hidden: document.querySelector("#askLeaguePanel").hidden,
+    expanded: [...document.querySelectorAll("[data-ask-open]")].map(b => b.getAttribute("aria-expanded")), focus: document.activeElement?.classList.contains("ask-hdr") }));
+  check("Ask the league: the X closes, sets aria-expanded false and returns focus to the opener",
+    xClosed.state === "closed" && xClosed.hidden && xClosed.expanded.every(v => v === "false") && xClosed.focus, JSON.stringify(xClosed));
+
+  // The tab: the same chat, full page, with the launchers out of the way.
+  const turnsBefore = await ap.evaluate(() => document.querySelectorAll("#askBody [data-ask-turn]").length);
+  await ap.click('#tabs button[data-tab="ask"]');
+  const tabInfo = () => ap.evaluate(() => {
+    const p = document.querySelector('[data-panel="ask"]'), s = document.querySelector("#askLeaguePanel"), b = document.querySelector('#tabs button[data-tab="ask"]');
+    const vis = n => !!n && n.getClientRects().length > 0;
+    const sr = s.getBoundingClientRect(), pr = p?.getBoundingClientRect();
+    return { hash: location.hash, label: b?.textContent, role: b?.getAttribute("role"), selected: b?.getAttribute("aria-selected"),
+      others: [...document.querySelectorAll("#app > [data-panel]")].filter(x => x !== p && !x.hidden).length,
+      inPanel: !!p?.contains(s), shown: vis(s), position: getComputedStyle(s).position, sheetRole: s.getAttribute("role"), modal: s.getAttribute("aria-modal"),
+      fill: pr ? Math.round(sr.width) >= Math.round(pr.width) - 2 : false, h: Math.round(sr.height),
+      state: document.querySelector("#askLeague").dataset.chatState, chips: document.querySelectorAll("#askChips button").length,
+      x: vis(document.querySelector("#askClose")), fab: vis(document.querySelector("#askFab")), hdr: vis(document.querySelector(".ask-hdr")),
+      turns: document.querySelectorAll("#askBody [data-ask-turn]").length };
+  });
+  const onTab = await tabInfo();
+  check("Ask the League tab: is the last tab, labelled 'Ask the League', role=tab, selected, with #ask in the hash",
+    onTab.label === "Ask the League" && onTab.role === "tab" && onTab.selected === "true" && onTab.hash === "#ask" && onTab.others === 0, JSON.stringify(onTab));
+  check("Ask the League tab: renders the chat full page inside the tab panel, not as a dialog",
+    onTab.inPanel && onTab.shown && onTab.position === "static" && onTab.sheetRole !== "dialog" && onTab.modal === null && onTab.fill && onTab.h >= 400 && !onTab.x, JSON.stringify(onTab));
+  check("Ask the League tab: same chat state (earlier turns and chips carry over)",
+    turnsBefore === 1 && onTab.turns === turnsBefore && onTab.chips >= 5 && onTab.state !== "closed", JSON.stringify({ turnsBefore, ...onTab }));
+  check("Ask the League tab: the floating launcher and header control are hidden", !onTab.fab && !onTab.hdr, JSON.stringify(onTab));
+  queue.push(reply(200, { ok: true, answer: "jadencha has 1,443.12 points.", sources: ["Sleeper rosters"], asOf: "2026-11-10T16:00:00Z" }));
+  await ap.fill("#askInput", "Who has the most points this season?");
+  await ap.press("#askInput", "Enter");
+  check("Ask the League tab: asking on the tab goes through the same mocked Worker and answers",
+    await waitState(ap, "answer") && (await tabInfo()).turns === turnsBefore + 1 && workerHits.every(h => /chat-mock\.test/.test(h)), workerHits.join(" | "));
+  await ap.keyboard.press("Escape");
+  check("Ask the League tab: Escape does not tear the chat off the page", (await tabInfo()).shown && (await chatState(ap)) === "answer");
+  await ap.click('#tabs button[data-tab="home"]');
+  const leftTab = await ap.evaluate(() => ({ state: document.querySelector("#askLeague").dataset.chatState, hidden: document.querySelector("#askLeaguePanel").hidden,
+    out: !document.querySelector('[data-panel="ask"]').contains(document.querySelector("#askLeague")), role: document.querySelector("#askLeaguePanel").getAttribute("role"),
+    hdr: !!document.querySelector(".ask-hdr").getClientRects().length }));
+  check("Ask the League tab: leaving it puts the chat back as a closed dialog and brings the launcher back",
+    leftTab.state === "closed" && leftTab.hidden && leftTab.out && leftTab.role === "dialog" && leftTab.hdr, JSON.stringify(leftTab));
+  await ap.click(".ask-hdr");
+  check("Ask the League tab: the floating sheet keeps the conversation from the tab",
+    await ap.evaluate(n => document.querySelectorAll("#askBody [data-ask-turn]").length === n, turnsBefore + 1));
+  await ap.keyboard.press("Escape");
   await ap.close();
+
+  // Deep link straight to the tab. The real Worker is blocked here, and nothing should even try it.
+  const dl = await ctx.newPage();
+  const dlHits = [];
+  dl.on("request", r => { if (/workers\.dev|chat-mock\.test|api\.anthropic\.com/.test(r.url())) dlHits.push(r.url()); });
+  await dl.route(/workers\.dev/, route => route.abort());
+  await dl.goto(BASE + "#ask", { waitUntil: "domcontentloaded" });
+  await dl.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const deep = await dl.evaluate(() => {
+    const p = document.querySelector('[data-panel="ask"]'), s = document.querySelector("#askLeaguePanel");
+    return { hash: location.hash, selected: document.querySelector('#tabs button[aria-selected="true"]')?.dataset.tab, visible: !!p && !p.hidden,
+      inPanel: !!p?.contains(s), shown: s.getClientRects().length > 0, fab: !!document.querySelector("#askFab").getClientRects().length,
+      hdr: !!document.querySelector(".ask-hdr").getClientRects().length };
+  });
+  check("Ask the League tab: a direct load of #ask opens the tab with the chat on the page",
+    deep.hash === "#ask" && deep.selected === "ask" && deep.visible && deep.inPanel && deep.shown && !deep.fab && !deep.hdr && dlHits.length === 0, JSON.stringify({ ...deep, dlHits }));
+  await dl.close();
 
   // Phone width: the entry button and the open sheet stay inside the viewport.
   const ph = await ctx.newPage();
@@ -7126,6 +7200,29 @@ group("Ask the league");
   await ph.keyboard.press("Escape");
   check("Ask the league at 390px: Escape closes and returns focus to the pill",
     (await chatState(ph)) === "closed" && await ph.evaluate(() => document.activeElement === document.querySelector("#askFab")));
+
+  // The pill's own X hides it for the session; the tab still reaches the chat.
+  const hideX = await ph.evaluate(() => { const x = document.querySelector("#askFabHide"), r = x.getBoundingClientRect();
+    return { label: x.getAttribute("aria-label"), w: Math.round(r.width), h: Math.round(r.height), inside: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight }; });
+  check("Ask the league at 390px: the pill has its own labelled X with a 44px hit area",
+    /hide/i.test(hideX.label || "") && /ask the league/i.test(hideX.label || "") && hideX.w >= 44 && hideX.h >= 44 && hideX.inside, JSON.stringify(hideX));
+  await ph.click("#askFabHide");
+  const gone = () => ph.evaluate(() => ({ fab: !!document.querySelector("#askFab").getClientRects().length, x: !!document.querySelector("#askFabHide").getClientRects().length,
+    stored: sessionStorage.getItem("dffl-ask-fab"), focus: document.activeElement?.dataset?.tab || document.activeElement?.id || document.activeElement?.tagName,
+    pad: getComputedStyle(document.body).paddingBottom }));
+  const g1 = await gone();
+  check("Ask the league at 390px: the pill's X hides the launcher, remembers it for the session and moves focus to the Ask tab",
+    !g1.fab && !g1.x && g1.stored === "hidden" && g1.focus === "ask" && g1.pad === "0px", JSON.stringify(g1));
+  await ph.reload({ waitUntil: "domcontentloaded" });
+  await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const g2 = await gone();
+  check("Ask the league at 390px: a dismissed launcher stays hidden after a reload", !g2.fab && g2.stored === "hidden", JSON.stringify(g2));
+  await ph.click('#tabs button[data-tab="ask"]');
+  const phTab = await fit();
+  const phSheet = await ph.evaluate(() => { const s = document.querySelector("#askLeaguePanel"), r = s.getBoundingClientRect();
+    return { shown: r.width > 0, inPanel: !!document.querySelector('[data-panel="ask"]').contains(s), left: Math.round(r.left), right: Math.round(r.right), W: innerWidth }; });
+  check("Ask the League tab at 390px: still reachable with the launcher dismissed, chat on the page, no overflow",
+    phSheet.shown && phSheet.inPanel && phSheet.left >= 0 && phSheet.right <= phSheet.W && phTab.doc <= phTab.W && !phTab.over.length, JSON.stringify({ phSheet, over: phTab.over }));
   await ph.close();
 }
 
