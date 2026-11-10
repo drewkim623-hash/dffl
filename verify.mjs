@@ -3253,7 +3253,8 @@ const ledgerFile = await page.evaluate(async () => {
     danglingSlugs: refs.filter(s => !slugs.has(s)),
     danglingWeeks: l.sent.filter(s => s.recap).map(s => `${s.recap.season}w${s.recap.week}`)
       .filter(w => !weeks.has(w)),
-    reachedTwelve: l.sent[l.sent.length - 1] ? l.sent[l.sent.length - 1].to : 0,
+    reachedTwelve: (l.sent.filter(s => !s.notEmailed).pop() || { to: 0 }).to,
+    markersClean: l.sent.filter(s => s.notEmailed).every(s => s.to === 0 && !s.recap),
     newestArticleSent: refs.includes(((r.articles || []).slice()
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))[0] || {}).slug),
   };
@@ -3267,6 +3268,7 @@ if (ledgerFile.missing) {
     ledgerFile.danglingSlugs.length === 0, ledgerFile.danglingSlugs.join(", "));
   check("every week it says was blasted still exists",
     ledgerFile.danglingWeeks.length === 0, ledgerFile.danglingWeeks.join(", "));
+  check("a not-emailed marker reached no one and carries no recap week", ledgerFile.markersClean);
   check("the most recent send reached all twelve", ledgerFile.reachedTwelve === 12,
     `${ledgerFile.reachedTwelve} addresses`);
   check("the guard can tell the newest piece has been sent",

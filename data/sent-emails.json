@@ -10,7 +10,8 @@
    "to": "number of league addresses it reached",
    "sha256": "sha256 of the HTML body, so a resend is identifiable",
    "by": "routine | hand",
-   "note": "anything a later reader would need to know"
+   "note": "anything a later reader would need to know",
+   "notEmailed": "true only for a hand-made marker: the piece never went to the league, and is logged so no blast leads with or carries it. Such an entry has to: 0 and recap: null."
   }
  },
  "sent": [
@@ -335,6 +336,18 @@
    "sha256": "29cc61de6d7422f13e91717c4fae64e97529c317bae0c79b2a999afbdd3b5aa8",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-10T23:18:40.804Z",
+   "subject": "(not emailed) Deadline Desk: Olave, Bowers and Trade Talk",
+   "lead": "deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "alsoSent": [],
+   "recap": null,
+   "to": 0,
+   "sha256": null,
+   "by": "hand",
+   "notEmailed": true,
+   "note": "Never emailed. Marked as sent on Drew's instruction (Nov 10, 2026) so the weekly blast never leads with or carries this site-only trades article."
   }
  ]
 }

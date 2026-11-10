@@ -6440,6 +6440,432 @@
      "text": "Christian McCaffrey's 21.7 topped bradyrife, with Bo Nix's 16.68 — more than Trevor Lawrence actually started at quarterback — staying on the bench. bradyrife's 97.58 was the week's lowest score, and the 53.84-point margin was its widest."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "date": "2026-11-10",
+   "kind": "trade",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "Deadline Desk: Olave, Bowers and Trade Talk",
+   "dek": "Two trades went through on Tuesday, both with 2027 strings attached. saucebossandrew now holds the league's only four keeper spots, Brock Bowers spends the rest of 2026 on loan to Domo112, and three big names are worth watching before the deadline.",
+   "byline": "DFFL desk",
+   "standfirst": "2 trades · 2 loans · 1 keeper spot moved",
+   "cover": {
+    "type": "trade",
+    "caption": "Deadline desk",
+    "players": [
+     "8144",
+     "5045",
+     "11604",
+     "11646"
+    ]
+   },
+   "teaser": "🚨 DFFL | WEEK 10\n\nDEADLINE DESK: OLAVE, BOWERS AND TRADE TALK\n\n🔁 2 trades on Tuesday, both with 2027 strings attached\n🔑 saucebossandrew now has 4 keeper spots; chassinator has 2\n🏈 Brock Bowers is TE2, 17.20 points clear of TE3, with a 7th-or-9th clause riding on it\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Two trades before Tuesday afternoon was out. At 11:48 a.m. Eastern, <b>chassinator</b> took Chris Olave from <b>saucebossandrew</b> for Courtland Sutton, chassinator's 2027 second-round pick and, per the commissioner, a keeper spot. At 1:41 p.m., <b>drewkim</b> loaned Brock Bowers to <b>Domo112</b> for the rest of 2026 and came away with Bijan Robinson's 2027 rights. The deadline is week 10: this week."
+    },
+    {
+     "type": "stat",
+     "n": "4",
+     "text": "2027 keeper spots for saucebossandrew after the Olave trade, the only team with four. chassinator drops to two; everyone else keeps three."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade one",
+     "text": "Olave Goes One Way, a Keeper Spot Goes the Other"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "saucebossandrew",
+       "big": "A",
+       "lead": true,
+       "sub": "A: a 3–6 team at 1.41% sells a 2026 receiver for a 2nd, Zay Flowers's rights and a fourth keeper spot",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Courtland Sutton (WR, DEN)"
+        },
+        {
+         "label": "Gets",
+         "value": "chassinator's 2027 2nd"
+        },
+        {
+         "label": "Gets",
+         "value": "chassinator's 2027 keeper spot"
+        },
+        {
+         "label": "Sends",
+         "value": "Chris Olave (WR, NO)"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "4 spots: Flowers R2, Pollard R5, LaPorta R7, Rice R2 (projection)"
+        }
+       ]
+      },
+      {
+       "title": "chassinator",
+       "big": "D",
+       "sub": "D: Olave helps a 59.43% playoff push, but the 2nd, Flowers's rights and a keeper slot all leave",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Chris Olave (WR, NO)"
+        },
+        {
+         "label": "Sends",
+         "value": "Courtland Sutton (WR, DEN)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 2nd"
+        },
+        {
+         "label": "Sends",
+         "value": "one 2027 keeper spot"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "2 spots: Maye R10, Kyren Williams R11 (projection)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The commissioner's notes, word for word. On Olave: \"andrew gets connors keeper spot\". On Zay Flowers: \"andrew owns rights\". Andrew is saucebossandrew and Connor is chassinator (Drew confirmed); the spot is a 2027 keeper slot. Flowers is chassinator's 2026 second-rounder, so the note hands a +71.6 keep at a 2nd to the team now holding chassinator's 2nd. <b>How Andrew got the Flowers rights is unconfirmed</b>: the note doesn't say, and Sleeper doesn't show it."
+    },
+    {
+     "type": "p",
+     "text": "On the field it's chassinator's trade: Olave (144.4 so far) projects 122.61 the rest of the way, Sutton (59.7) projects 66.5. The kicker is the slot: Olave's own 2027 keep (+47.0 at a 1st) no longer fits in chassinator's two."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade two",
+     "text": "Bowers Goes on Loan, Bijan's Rights Come Back"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "drewkim",
+       "big": "A",
+       "lead": true,
+       "sub": "A: keeps Bowers's rights, adds Bijan's, and gives up 2026 points at 0.34% playoff odds",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Jalen Coker (WR, CAR), 2026 only"
+        },
+        {
+         "label": "Gets",
+         "value": "Domo112's 2027 7th"
+        },
+        {
+         "label": "Gets",
+         "value": "Bijan Robinson's 2027 rights"
+        },
+        {
+         "label": "Sends",
+         "value": "Brock Bowers (TE, LV), 2026 only"
+        },
+        {
+         "label": "Sends",
+         "value": "Antonio Williams (WR, WAS)"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Purdy R14, Daniels R5, Bowers R4; Bijan R1 if Daniels sits (projection)"
+        }
+       ]
+      },
+      {
+       "title": "Domo112",
+       "big": "B",
+       "sub": "B: 178.73 projected points for a 7–2 title push, paid for with Bijan's 2027 and a 7th",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Brock Bowers (TE, LV), 2026 only"
+        },
+        {
+         "label": "Gets",
+         "value": "Antonio Williams (WR, WAS)"
+        },
+        {
+         "label": "Sends",
+         "value": "Jalen Coker (WR, CAR), 2026 only"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 7th"
+        },
+        {
+         "label": "Sends",
+         "value": "Bijan Robinson's 2027 rights"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Gibbs R1, Caleb Williams R8, Loveland R9 (projection)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The notes: Bijan, \"drew gets rights\". Williams, \"dom gets rights\". Coker, \"dom owns rights\". Bowers, \"drew keeps rights,doesnt finish top 3 drew gets 9th instead of 7th\". Drew's reading: if Bowers isn't a top-3 TE in 2026 league scoring, the 7th becomes Domo112's 9th. Through week 9 he's TE2 at 146.00, 17.20 clear of Isaiah Likely; eight weeks left. Coker projects 107.66 for drewkim the rest of the way."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade talk · rumors and analysis",
+     "text": "Three Names Worth Watching"
+    },
+    {
+     "type": "p",
+     "text": "Analysis, not reporting: no talks are on record for any of these three, and nothing here is a quote."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Amon-Ra St. Brown",
+       "big": "158.6",
+       "sub": "jadencha · 8–1 · 100% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "jadencha"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R4"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "142.08 projected"
+        }
+       ]
+      },
+      {
+       "title": "Derrick Henry",
+       "big": "138.28",
+       "sub": "wesley55 · 5–4 · 91.15% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "wesley55"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R1"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "87.53 projected (week 13 bye)"
+        }
+       ]
+      },
+      {
+       "title": "Tetairoa McMillan",
+       "big": "124.5",
+       "sub": "victorthompson · 2–7 · 0.83% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "victorthompson"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R2"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "108.66 projected"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "<b>Sellers.</b> victorthompson is the likeliest, but McMillan is a +68.09 keep at a 2nd, so a deal has to bring 2027 value back. jadencha (45.31% title odds) has no reason to move Amon-Ra, a +125.18 keep at a 4th. Henry is near break-even as a 1st-round keep (+3.74), a pure 2026 piece on a contender."
+    },
+    {
+     "type": "p",
+     "text": "<b>Buyers.</b> willie12w (96.95%), sizzlemc2 (83.01%) and chassinator (59.43%) are each down to two healthy running backs: Henry's market. bradyrife (65.52%) has four of seven receivers unavailable. And chassinator, with two keeper spots and no 2027 2nd, has the easiest case for a rental."
+    },
+    {
+     "type": "h",
+     "eyebrow": "re-look · Oct 13",
+     "text": "Josh Allen Trade"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "A",
+       "sub": "A: Josh Allen has added 59.72 since the trade; he is QB2 through week 9 at 206.68.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Josh Allen (QB, BUF)"
+        },
+        {
+         "label": "Sends",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "J.K. Dobbins (RB, DEN)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 5th"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Allen is QB2 through week 9; open until week 17"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: JSN R6, Matthew Golden R11, Amon-Ra St. Brown R4 (projection); Allen rights are with jskule23 if the note holds."
+        }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "A",
+       "sub": "A: Jordan Love has scored 97.90 since the trade for a 2027 9th.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 9th"
+        },
+        {
+         "label": "Clause",
+         "value": "None on Love"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "4 spots: Flowers R2, Pollard R5, LaPorta R7, Rice R2 (projection)."
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "C",
+       "sub": "C: Dobbins has 24.40 since, but the rights note keeps Allen's R2 keep with Joe, plus two 2027 picks",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "J.K. Dobbins (RB, DEN), jadencha's 2027 5th, saucebossandrew's 2027 9th"
+        },
+        {
+         "label": "Sends",
+         "value": "Josh Allen (QB, BUF)"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Allen is QB2 through week 9 at 206.68, 2.46 behind Joe Burrow; open until week 17"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Josh Allen R2, Patrick Mahomes R11, Luther Burden III R9 (projection, if the rights note holds)."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "re-look · Oct 14",
+     "text": "Puka Nacua Trade"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Domo112",
+       "big": "B",
+       "sub": "B: Puka has scored 96.8 since the trade, but the rights note assigns his 2027 keep to jskule23.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Puka Nacua (WR, LAR)"
+        },
+        {
+         "label": "Sends",
+         "value": "Marvin Harrison Jr. (WR, HOU), Mike Evans (WR, SF), 2027 2nd"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe keeps rights, Puka misses 3 or more games or misses a playoff game pick becomes a third\""
+        },
+        {
+         "label": "Clause now",
+         "value": "0 games missed since the trade; the playoffs have not started."
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Gibbs R1, Caleb Williams R8, Loveland R9 (projection)."
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "B",
+       "sub": "B: kept Puka's R12 rights and banked Domo's 2027 2nd",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Marvin Harrison Jr. (WR, HOU), Mike Evans (WR, SF), Domo112's 2027 2nd"
+        },
+        {
+         "label": "Sends",
+         "value": "Puka Nacua (WR, LAR)"
+        },
+        {
+         "label": "Clause",
+         "value": "Evans: \"dom owns rights,Mike Evans misses 3 or more games or misses a playoff Joe gets a 8th\"; Harrison: \"dom owns rights\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Evans has missed 2 games since the trade (weeks 7 and 9; week 8 was a bye), is Out, and is listed to return Nov 15. Harrison was dropped by Domo on Nov 9; that ends Domo112's Harrison rights."
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Josh Allen R2, Patrick Mahomes R11, Luther Burden III R9 (projection, if the rights notes hold)."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Joe is read as jskule23 (the league email list and the notes line up), a high-confidence identification, not a name on the Sleeper ticket. Points: official Sleeper, league scoring, through week 9; projections: Sleeper, weeks 11–17; odds: the site's Tuesday snapshot. Keep surplus is full-2026 pace minus that round's 2023–25 average, not a 2027 forecast. Notes are quoted from Sleeper screenshots. A full trade log is coming to Future Outlook."
+    }
+   ]
   }
  ]
 }
