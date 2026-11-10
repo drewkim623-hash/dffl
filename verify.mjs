@@ -6908,8 +6908,8 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
 
 /* --------------------------------------------- ask the league (chat) */
 // The chat Worker is always mocked here with page.route: no real Worker, no
-// Anthropic. The committed CHAT_WORKER_URL is empty, so the panel starts in
-// "not set up"; the test hook points it at a mock origin.
+// Anthropic. The committed CHAT_WORKER_URL is the live Worker; the test hook
+// clears it first ("not set up"), then points it at a mock origin.
 group("Ask the league");
 {
   const MOCK_URL = "https://chat-mock.test";
@@ -6922,7 +6922,9 @@ group("Ask the league");
   const waitState = (p, s) => p.waitForFunction(s => document.querySelector("#askLeague").dataset.chatState === s, s, { timeout: 5000 }).then(() => true, () => false);
   const bodyText = p => p.evaluate(() => document.querySelector("#askBody").textContent);
 
-  check("Ask the league: committed CHAT_WORKER_URL is empty", await ap.evaluate(() => window.__DFFL_CHAT.getWorkerUrl()) === "");
+  check("Ask the league: committed CHAT_WORKER_URL is the deployed DFFL Worker", await ap.evaluate(() => window.__DFFL_CHAT.getWorkerUrl()) === "https://dffl-ask-the-league.drewkim623.workers.dev");
+  // Clear it so the rest of this group runs against "not set up" and the mock, never the real Worker.
+  await ap.evaluate(() => window.__DFFL_CHAT.setWorkerUrl(""));
   check("Ask the league: starts closed with the header control visible at 1280",
     (await chatState(ap)) === "closed" && await ap.locator(".ask-hdr").isVisible() && await ap.locator("#askLeaguePanel").isHidden());
   await ap.click(".ask-hdr");
