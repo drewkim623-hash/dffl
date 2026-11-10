@@ -1232,6 +1232,28 @@
     .ppv .pp-hero .pp-bars{margin-left:66px;gap:14px}
   }
 
+  #toiletHost .tbv{margin-top:28px;padding-top:20px;border-top:1px solid var(--ring);min-width:0}
+  .tbv .tb-eye{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+  .tbv .tb-head{font:700 23px var(--disp);color:var(--gold);margin-top:5px}
+  .tbv .tb-lede,.tbv .tb-note{font-size:13px;line-height:1.55;color:var(--ink-2);max-width:100ch}
+  .tbv .tb-meta{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 18px}.tbv .tb-pill{border:1px solid var(--ring);border-radius:999px;padding:5px 9px;font:11px var(--mono);color:var(--ink-2)}
+  .tbv .tb-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0}.tbv .tb-games,.tbv .tb-list{min-width:0}
+  .tbv .tb-round{display:grid;gap:10px}.tbv .tb-game{padding:9px;border:1px solid var(--ring);border-radius:12px;margin:7px 0;background:rgba(255,255,255,.025);min-width:0}
+  .tbv .tb-game.last{border-color:rgba(185,140,255,.45)}.tbv .tb-glabel{font:600 11px var(--mono);letter-spacing:.06em;color:var(--ink-2);text-transform:uppercase;margin:0 0 5px}
+  .tbv .tb-slot{display:flex;align-items:center;gap:6px;min-height:40px;min-width:0}.tbv .tb-slot+.tb-slot{border-top:1px solid rgba(255,255,255,.06)}
+  .tbv .tb-seed{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;background:rgba(255,194,61,.15);color:var(--gold);font:700 11px var(--mono);flex:none}
+  .tbv .tb-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%;flex:none}.tbv .tb-slotname{min-width:0;overflow-wrap:anywhere;font-size:12px;font-weight:650}
+  .tbv .tb-hint{margin-left:auto;text-align:right;color:var(--ink-2);font:10px var(--mono);white-space:nowrap;flex:none}.tbv .tb-slot.tbd{color:var(--ink-2);font-style:italic}
+  .tbv .tb-byebox{padding:9px;border:1px dashed rgba(255,194,61,.4);border-radius:12px;color:var(--ink-2);font-size:12px}
+  .tbv .tb-row{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--ring);min-width:0}
+  .tbv .tb-rowtop{display:flex;align-items:center;gap:7px;min-width:0}.tbv .tb-rowtop .tb-name{overflow-wrap:anywhere;font-weight:650}
+  .tbv .tb-rec{font:11px var(--mono);color:var(--ink-2);margin-top:3px}.tbv .tb-bars{display:flex;gap:12px}.tbv .tb-barbox{width:min(46%,140px);font-size:10px;color:var(--ink-2)}
+  .tbv .tb-barbox b{display:block;font:700 12px var(--mono);color:var(--ink)}.tbv .tb-bar{height:4px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}
+  .tbv .tb-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold))}.tbv .tb-cut{border-top:1px dashed var(--gold);margin:10px 0;padding-top:7px;color:var(--gold);font:11px var(--mono);text-transform:uppercase}
+  .tbv .tb-chip{margin-left:4px;vertical-align:middle}.tbv .tb-safe{margin-top:12px;padding:10px;border:1px solid var(--ring);border-radius:12px}.tbv .tb-safe h4{margin:0 0 6px}
+  .tbv .tb-note{font-size:11px;color:var(--ink-2);margin-top:16px}
+  @media(min-width:900px){.tbv .tb-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.tbv .tb-row{grid-template-columns:minmax(0,1fr) minmax(160px,auto)}}
+
   /* ============ trades ============ */
   .fleece{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin-top:18px;
     background:radial-gradient(460px 240px at 100% 0,rgba(var(--a-rgb),.22),transparent 70%),
@@ -10602,6 +10624,11 @@ async function drawPicture(host) {
       host.appendChild(pictureEmpty(R.why || (L.live ? null : "not-started"), L.season && L.season.season));
       document.body.dataset.pictureReady = "empty";
       PICTURE_DRAWN = false;
+      const th = $("#toiletHost");
+      if (R.why === "regular-season-over" && th && L.season && L.season.games) {
+        const settled = settledToiletPicture(L, R);
+        drawToiletPicture(th, settled, null, L.season, L.season.games, true);
+      } else if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">${R.why === "no-divisions" ? "Division seeding is unavailable, so the bowl field cannot be determined." : "The toilet bowl picture will appear when the regular season starts."}</p></div>`; }
       return;
     }
     // A refresh keeps the last table up while it works.
@@ -10609,6 +10636,8 @@ async function drawPicture(host) {
       host.innerHTML = "";
       host.appendChild(el("div", "empty", "<b>Calculating…</b>Simulating the rest of the season and every game this week both ways."));
     }
+    const toiletHost = $("#toiletHost");
+    if (toiletHost && !PICTURE_DRAWN) toiletHost.innerHTML = `<div class="tbv"><div class="tb-eye">Calculating</div><p class="tb-note">Building the bowl field from the current standings…</p></div>`;
     const PP = await computePicture(L.model, L.live, R, L.season, { lsim: L.lsim });
     if (seq !== PICTURE_SEQ) return;
     window.__PICTURE = {
@@ -10618,6 +10647,7 @@ async function drawPicture(host) {
       bye: PP.rows.map(r => r.bye), order: PP.order.map(i => PP.rows[i].rid),
       full: PP,  // the whole run, so verify can redraw the board on edited standings
     };
+    drawToiletPicture($("#toiletHost"), PP, L.lsim, L.season, L.season.games, false);
     // A poll that changed nothing leaves the table (and where it's scrolled) alone.
     if (!PICTURE_DRAWN || pictureSig(PP) !== host._ppSig) {
       const lefts = PICTURE_DRAWN ? [...host.querySelectorAll(".scroll")].map(s => s.scrollLeft) : [];
@@ -10629,11 +10659,78 @@ async function drawPicture(host) {
   } catch (e) {
     if (seq !== PICTURE_SEQ) return;
     if (PICTURE_DRAWN) { console.error(e); return; }
+    const th = $("#toiletHost"); if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">The bowl picture could not be calculated. ${esc(e.message)}</p></div>`; }
     host.innerHTML = "";
     host.appendChild(el("div", "empty", `<b>Couldn't work out the playoff picture</b>${esc(e.message)}`));
     document.body.dataset.pictureReady = "error";
     console.error(e);
   }
+}
+
+function toiletChipMap(clinches, escaped = []) {
+  const safe = new Set(escaped.map(String));
+  return (clinches || []).map(c => ({ rid:c.rid,
+    label:c.eliminated ? "Locked into the bowl" : (c.clinchedPlayoff || safe.has(String(c.rid))) ? "Safe from last" : "",
+    provingSource:c.eliminated ? "exactClinch.eliminated" : c.clinchedPlayoff ? "exactClinch.clinchedPlayoff" : safe.has(String(c.rid)) ? "completed inverted bracket" : null }));
+}
+
+function toiletEscapes(completedWinners, lastPlaceRids = []) {
+  const last=new Set((lastPlaceRids||[]).map(String));
+  return [...new Map((completedWinners||[]).filter(rid=>!last.has(String(rid))).map(rid=>[String(rid),rid])).values()];
+}
+
+function settledToiletPicture(L, R) {
+  const season=L.season,rules=leagueRules(season),rosters=season.rosters,idx=new Map(rosters.map((r,i)=>[r.roster_id,i]));
+  const W=rosters.map(()=>0),PF=rosters.map(()=>0),Loss=rosters.map(()=>0),T=rosters.map(()=>0);
+  for(const g of season.games.filter(x=>!x.playoff)){const a=idx.get(g.a.rid),b=idx.get(g.b.rid);if(a==null||b==null)continue;PF[a]+=g.a.pts;PF[b]+=g.b.pts;if(g.a.pts>g.b.pts){W[a]++;Loss[b]++;}else if(g.b.pts>g.a.pts){W[b]++;Loss[a]++;}else{T[a]++;T[b]++;}}
+  const teams=rosters.map((r,i)=>({rid:r.roster_id,uid:season.uidOf.get(r.roster_id),div:season.divOf.get(r.roster_id),w:W[i]+T[i]/2,pf:PF[i]}));
+  const rank=teams.map((_,i)=>i).sort((a,b)=>teams[b].w-teams[a].w||PF[b]-PF[a]);
+  const field=seedField(rank,i=>teams[i].div,rules.playoffTeams), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
+  const todaySeed=new Array(teams.length); order.forEach((i,k)=>todaySeed[i]=k+1);
+  const C=exactClinch({teams,remaining:[],playoffTeams:rules.playoffTeams,byes:rules.byes});
+  const by=new Map(C.map(c=>[c.rid,c]));
+  const rows=teams.map((t,i)=>({i,rid:t.rid,uid:t.uid,div:t.div,w:W[i],l:Loss[i],t:T[i],pf:PF[i],miss:null,playoff:null,todaySeed:todaySeed[i],clinch:by.get(t.rid)||{}}));
+  return {rows,order,rules,clinch:C,week:rules.playoffWeekStart,inFlight:false,sims:0,settled:true};
+}
+
+function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = false) {
+  if (!host) return;
+  const { rows, rules } = PP;
+  const bowl = PP.order.slice(rules.playoffTeams).map(i => rows[i]);
+  const clinch = new Map((PP.clinch || []).map(c => [c.rid, c]));
+  const last = lsim && lsim.sims === PP.sims ? lsim.last : null;
+  const pct = v => v == null ? "—" : pctf(v);
+  const byRid=new Map(rows.map(r=>[r.rid,r])), seedRow=s=>bowl[s-7]||null;
+  const slot=(seed, hint="")=>{const d=seedRow(seed);return d?`<div class="tb-slot"><span class="tb-seed">${seed}</span>${avatarHTML(d.uid,"sm")}<span class="tb-slotname">${esc(nameOf(d.uid))}</span><span class="tb-hint">B ${pct(d.miss)}<br>L ${pct(last?last[d.i]/lsim.sims:null)}</span></div>`:`<div class="tb-slot tbd">TBD · ${esc(hint||"advancer unresolved")}</div>`;};
+  const renderGame=(week,label,a,b,cls="")=>`<div class="tb-game ${cls}"><div class="tb-glabel">Week ${week} · ${label}</div>${a}${b}</div>`;
+  const lb=season?.lb||[], seedRid=s=>seedRow(s)?.rid;
+  const scored=(a,b)=>{const g=(games||[]).filter(x=>x.playoff&&((String(x.a.rid)===String(a)&&String(x.b.rid)===String(b))||(String(x.a.rid)===String(b)&&String(x.b.rid)===String(a)))).at(-1);return g&&g.a.pts!==g.b.pts?{a:g.a.pts>g.b.pts?g.a.rid:g.b.rid,b:g.a.pts>g.b.pts?g.b.rid:g.a.rid}:null;};
+  const actualPair=(a,b)=>{const x=seedRid(a),y=seedRid(b);return x==null||y==null?null:scored(x,y);};
+  const g15a=actualPair(7,10),g15b=actualPair(8,9);
+  const advA=g15a&&g15a.b,advB=g15b&&g15b.b,placeA=g15a&&g15a.a,placeB=g15b&&g15b.a;
+  const semiA=advB&&scored(seedRid(12),advB),semiB=advA&&scored(seedRid(11),advA);
+  const finalA=semiA&&semiB&&scored(semiA.b,semiB.b), place9=semiA&&semiB&&scored(semiA.a,semiB.a);
+  // Only actual scored bowl games prove an escape; Sleeper's prefilled future
+  // placements cannot. The lower scorer in the last-place final remains last.
+  const placements=season?placementsOf(season.wb,season.lb,rules.playoffTeams,games):{};
+  const playedWinners=[g15a?.a,g15b?.a,semiA?.a,semiB?.a,finalA?.a].filter(x=>x!=null);
+  const escaped=toiletEscapes(playedWinners,finalA?[finalA.b]:[]);
+  const chipRows=toiletChipMap(PP.clinch,escaped), chips=new Map(chipRows.map(c=>[c.rid,c]));
+  const data = bowl.map((r, j) => { const c=chips.get(r.rid)||{}; return {rid:r.rid,uid:r.uid,name:nameOf(r.uid),seed:j+7,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,chip:c.label||"",provingSource:c.provingSource||"none",w:r.w,l:r.l,t:r.t||0,pf:r.pf}; });
+  const seedsByRid=new Map(data.map(d=>[d.rid,d.seed]));
+  const gslot=(rid,seed,hint)=>{const d=byRid.get(rid);return d?slot(d.todaySeed):slot(seed,hint);};
+  const bracket=`<div class="tb-round">${renderGame(rules.playoffWeekStart,"7 v 10",gslot(g15a?.a,7),gslot(g15a?.b,10))}${renderGame(rules.playoffWeekStart,"8 v 9",gslot(g15b?.a,8),gslot(g15b?.b,9))}<div class="tb-byebox">Week ${rules.playoffWeekStart} byes: ${slot(11)}${slot(12)} Seeds 11 and 12 are already one defeat from the final.</div>${renderGame(rules.playoffWeekStart+1,"12 vs 8/9 advancer",slot(12),gslot(advB,null,"loser of 8 v 9"))}${renderGame(rules.playoffWeekStart+1,"11 vs 7/10 advancer",slot(11),gslot(advA,null,"loser of 7 v 10"))}${renderGame(rules.playoffWeekStart+1,"7th/8th",gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}</div><div class="tb-round">${renderGame(rules.playoffWeekStart+2,"Last place",gslot(finalA?.a,null,"semi loser"),gslot(finalA?.b,null,"semi loser"),"last")}${renderGame(rules.playoffWeekStart+2,"9th/10th",gslot(place9?.a,null,"semi winner"),gslot(place9?.b,null,"semi winner"))}</div>`;
+  const bar=(label,v)=>`<div class="tb-barbox">${label}<b>${pct(v)}</b><div class="tb-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`;
+  const badge=d=>d.chip?ppBadge(d.chip==="Locked into the bowl"?"red":"blue",d.chip,d.chip):"";
+  const row=d=>`<div class="tb-row"><div><div class="tb-rowtop"><span class="tb-seed">${d.seed}</span>${avatarHTML(d.uid,"sm")}<span class="tb-name">${esc(d.name)}${badge(d)}</span></div><div class="tb-rec">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</div></div><div class="tb-bars">${bar("Bowl",d.bowlPct)}${bar("Last",d.lastPct)}</div></div>`;
+  const bubbles=PP.order.map(i=>rows[i]).filter(r=>r.todaySeed<=rules.playoffTeams&&!r.clinch?.clinchedPlayoff).map(r=>({rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,w:r.w,l:r.l,t:r.t||0,pf:r.pf,uid:r.uid,chip:""}));
+  const safe=rows.filter(r=>r.clinch?.clinchedPlayoff||escaped.some(x=>String(x)===String(r.rid))).map(r=>{const c=chips.get(r.rid)||{};return {rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,chip:"Safe from last",provingSource:c.provingSource||null};});
+  const pair=(week,label,seeds,rids)=>({week,label,seeds,names:rids.map(rid=>{const r=byRid.get(rid);return r?nameOf(r.uid):null;})});
+  const enrichedPairs=[pair(rules.playoffWeekStart,"7 v 10",[7,10],[g15a?.a||seedRid(7),g15a?.b||seedRid(10)]),pair(rules.playoffWeekStart,"8 v 9",[8,9],[g15b?.a||seedRid(8),g15b?.b||seedRid(9)]),pair(rules.playoffWeekStart+1,"12 vs 8/9 advancer",[12,advB?seedsByRid.get(advB):"TBD"],[seedRid(12),advB]),pair(rules.playoffWeekStart+1,"11 vs 7/10 advancer",[11,advA?seedsByRid.get(advA):"TBD"],[seedRid(11),advA]),pair(rules.playoffWeekStart+1,"7th/8th",[placeA?seedsByRid.get(placeA):"TBD",placeB?seedsByRid.get(placeB):"TBD"],[placeA,placeB]),pair(rules.playoffWeekStart+2,"Last place",[finalA?seedsByRid.get(finalA.a):"TBD",finalA?seedsByRid.get(finalA.b):"TBD"],[finalA?.a,finalA?.b]),pair(rules.playoffWeekStart+2,"9th/10th",[place9?seedsByRid.get(place9.a):"TBD",place9?seedsByRid.get(place9.b):"TBD"],[place9?.a,place9?.b])];
+  window.__TOILET={seeds:data.map(d=>({...d})),bubbles,safeFromLast:safe,bracket:enrichedPairs,clinches:chipRows,clinchMethod:"exactClinch",sims:PP.sims,settled};
+  const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
+  const bowlLine=`${rows.filter(r=>r.todaySeed<=rules.playoffTeams).length} playoff seeds · six bowl seeds`;
+  host.innerHTML=`<section class="tbv"><div class="tb-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="tb-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-17 final finishes last.</p><div class="tb-meta"><span class="tb-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="tb-pill">Losers advance</span>${settled?"":`<span class="tb-pill">${PP.sims.toLocaleString()} simulations</span>`}</div><div class="tb-layout"><div class="tb-games"><h3>The bracket</h3>${bracket}</div><div class="tb-list"><h3>In the bowl · ${esc(bowlLine)}</h3>${data.map(row).join("")}<div class="tb-cut">Toilet bowl line</div>${bubbles.length?`<h4>On the bubble</h4>${bubbles.map(row).join("")}`:""}${safe.length?`<div class="tb-safe"><h4>Safe from last</h4>${safe.map(x=>`${esc(x.name)} ${ppBadge("blue","Safe from last","Safe from last")}`).join(", ")}</div>`:""}</div></div><p class="tb-note">Last place is the week-17 final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, so they are not always the six worst records. ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the Odds tab's miss rate (1 − Playoff %); Last % is C.last from this same simulation run."} Clinched chips are exact, not simulated. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p></section>`;
 }
 
 function panelPicture() {
@@ -10649,6 +10746,7 @@ function panelPicture() {
   const host = el("div"); host.id = "pictureHost";
   host.appendChild(el("div", "empty", "<b>Working out the playoff picture…</b>Reading the rest of the schedule and simulating it."));
   p.appendChild(host);
+  const toilet = el("div"); toilet.id = "toiletHost"; p.appendChild(toilet);
   return p;
 }
 
@@ -11954,7 +12052,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
