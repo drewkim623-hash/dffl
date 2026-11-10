@@ -77,8 +77,13 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "rankings", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "toilet", "draft", "trades", "rankings", "recaps"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
+const toiletNav = await page.evaluate(() => {
+  const p=document.querySelector('#tabs button[data-tab="picture"]'),t=document.querySelector('#tabs button[data-tab="toilet"]');
+  return {label:t?.textContent.trim(),next:p?.nextElementSibling===t,role:t?.getAttribute("role"),tablist:t?.parentElement?.getAttribute("role"),selected:t?.getAttribute("aria-selected")};
+});
+check("Toilet Bowl tab follows Playoff Picture with matching tab semantics",toiletNav.label==="Toilet Bowl"&&toiletNav.next&&toiletNav.role==="tab"&&toiletNav.tablist==="tablist",JSON.stringify(toiletNav));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
   const shown = await page.evaluate(t => {
@@ -2629,6 +2634,18 @@ check("2025 at week 13: badges are consistent with each other and the win bounds
 check("2025 at week 13: with one week left the check is by enumeration", pp13.games <= 24 && pp13.clinched > 0, `${pp13.clinched} clinched, method ${pp13.method}`);
 
 group("Toilet Bowl Picture: section and chip proofs");
+await page.click('#tabs button[data-tab="toilet"]');
+const tbNameLines = await page.evaluate(() => {
+  const host=document.querySelector("#toiletHost"), cells=[...(host?.querySelectorAll(".pp-tnm,.pp-nm .tb-name-text,.tb-slotname")||[])];
+  return {width:innerWidth,hidden:!host||!!host.closest('[hidden]'),multi:cells.flatMap(el=>{
+    const range=document.createRange();range.selectNodeContents(el);
+    // Chromium can split one ellipsized line into several rects with the same top; only distinct tops (>1px apart) are separate lines.
+    const tops=[];for(const r of range.getClientRects())if(!tops.some(t=>Math.abs(t-r.top)<=1))tops.push(r.top);
+    const lines=tops.length;
+    return lines>1?[{class:el.className,text:el.textContent.trim(),lines,tops}]:[];
+  }),count:cells.length};
+});
+check("toilet team names stay on one line at 1280px",tbNameLines.width>=1200&&!tbNameLines.hidden&&tbNameLines.count>0&&!tbNameLines.multi.length,JSON.stringify(tbNameLines));
 const tbProof = await page.evaluate(() => {
   const D=window.__DFFL, T=window.__TOILET, P=window.__PICTURE, host=document.querySelector("#toiletHost"), L=window.__LSIM;
   const teams=(ws,ds)=>ws.map((w,i)=>({rid:i+1,div:ds[i],w,pf:1000-i}));
@@ -2640,7 +2657,7 @@ const tbProof = await page.evaluate(() => {
   const shown=d=>{const x=host.querySelector(`.pp-li[data-rid="${CSS.escape(String(d.rid))}"]`);return x&&x.textContent;};
   const fmt=v=>v<=0?"0%":v>=1?"100%":v<.005?"<1%":v>.995?">99%":`${(v*100).toFixed(0)}%`;
   const chipMap=new Map((T?.clinches||[]).map(c=>[c.rid,c]));
-  return {ready:!!T&&!!P&&!!host,after:!!host&&!!document.querySelector("#pictureHost")&&!!(document.querySelector("#pictureHost").compareDocumentPosition(host)&Node.DOCUMENT_POSITION_FOLLOWING),
+  return {ready:!!T&&!!P&&!!host,notInPicture:!!host&&!host.closest('[data-panel="picture"]')&&!document.querySelector('[data-panel="picture"] #toiletHost'),
     six:T?.seeds.length===6,seedOrder:T?.seeds.map(x=>x.rid).join(",")===seedOrder.join(","),
     labels:host?[...host.querySelectorAll(".pp-lb")].map(x=>x.textContent):[],text:host?.textContent||"",
     odds:T?.seeds.every(d=>{const r=P.full.rows.find(x=>x.rid===d.rid),i=P.rids.indexOf(d.rid),txt=shown(d);return d.bowlPct===r?.miss&&d.bowlByePct===r?.bowlBye&&txt?.includes(`Bowl${fmt(r.miss)}`)&&txt?.includes(`Bye${fmt(r.bowlBye)}`)&&(!L||L.sims!==P.sims||(d.lastPct===L.last[i]/L.sims&&txt.includes(`Last${fmt(d.lastPct)}`)))}),
@@ -2651,7 +2668,7 @@ const tbProof = await page.evaluate(() => {
     bracket:!!host?.querySelector(".pp-br .pp-rd .pp-mt")&&host.querySelectorAll(".pp-mt").length===7&&host.querySelectorAll(".pp-rd")[0]?.children.length===2&&host.querySelectorAll(".pp-rd")[1]?.children.length===2&&!!host.querySelector(".pp-cn")&&!!host.querySelector(".pp-join")&&host.querySelector(".pp-fin .pp-lb")?.textContent.includes("Wk 17 · Final")&&host.querySelector(".pp-troph")?.textContent.trim()==="Loser finishes last"&&host.querySelectorAll(".pp-hero").length===2,
     noPunishment:host?!/punishment|CAGE/i.test(host.querySelector(".pp-br")?.textContent||""):false};
 });
-check("toilet section renders after the playoff picture without changing its host",tbProof.ready&&tbProof.after,JSON.stringify(tbProof));
+check("toilet section is outside the Playoff Picture panel",tbProof.ready&&tbProof.notInPicture,JSON.stringify(tbProof));
 check("the six seeds match the playoff picture's non-playoff order",tbProof.six&&tbProof.seedOrder,JSON.stringify(tbProof));
 check("graphic bracket has week 15 pairs, seeded week 16 semis, and centered week 17 final",["7 v 10","8 v 9","12 v loser of 8/9","11 v loser of 7/10","7th/8th","9th/10th"].every(x=>tbProof.labels.some(y=>y.includes(x)))&&tbProof.bracket,JSON.stringify(tbProof.labels));
 check("bowl rows include the Bye probability column",tbProof.byeColumn,JSON.stringify(tbProof.oddsLabels));
@@ -2661,6 +2678,7 @@ check("the final is labelled Final and shows no punishment or lower-place distri
 check("chip helper maps only exact clinch/elimination and completed escape proofs",tbProof.fixture[0].label==="Safe from last"&&tbProof.fixture[0].provingSource==="exactClinch.clinchedPlayoff"&&tbProof.fixture[1].label==="Locked into the bowl"&&tbProof.fixture[1].provingSource==="exactClinch.eliminated"&&!tbProof.fixture[2].label&&tbProof.escaped[0].label==="Safe from last"&&tbProof.escaped[0].provingSource==="completed inverted bracket",JSON.stringify({fixture:tbProof.fixture,escaped:tbProof.escaped}));
 check("scored bowl winners escape without placements; placements-only and last-place teams do not",tbProof.escapeGate.length===1&&String(tbProof.escapeGate[0])==="40"&&!tbProof.escapeGate.includes(41)&&!tbProof.escapeGate.includes(42),JSON.stringify(tbProof.escapeGate));
 check("every live chip is backed by the exposed exact or completed-bracket proof",tbProof.liveChips,JSON.stringify(tbProof.liveChipDetails));
+await page.click('#tabs button[data-tab="picture"]');
 
 group("Playoff Picture: the board renders");
 const ppDrawn = await page.evaluate(async () => {
@@ -4758,8 +4776,10 @@ check("picture: nothing outside a scroller overflows at 390px", ppNarrow.over.le
 check("picture: the whole board renders at 390px", ppNarrow.rows >= 18, `${ppNarrow.rows} rows`);
 check("picture: the manager column stays pinned and compact at 390px",
   ppNarrow.sticky === "sticky" && ppNarrow.nameW > 60 && ppNarrow.nameW <= 170, `${ppNarrow.sticky}, ${Math.round(ppNarrow.nameW)}px`);
+await mobile.click('#tabs button[data-tab="toilet"]');
 const tbNarrow=await mobile.evaluate(()=>{const h=document.querySelector("#toiletHost"),l=h&&h.querySelector(".pp-lay"),over=[];for(const n of h?.querySelectorAll(".tbv *")||[]){const r=n.getBoundingClientRect();if(r.width&&r.right>innerWidth+1)over.push(n.className||n.tagName);}return {cols:l?getComputedStyle(l).gridTemplateColumns.split(" ").length:0,doc:document.documentElement.scrollWidth,W:innerWidth,host:h&&h.getBoundingClientRect().width,section:!!h?.querySelector(".tbv"),over:over.slice(0,5)};});
 check("toilet picture: one column and no overflow at 390px",tbNarrow.section&&tbNarrow.cols===1&&tbNarrow.doc<=tbNarrow.W&&tbNarrow.host<=tbNarrow.W&&!tbNarrow.over.length,JSON.stringify(tbNarrow));
+await mobile.click('#tabs button[data-tab="picture"]');
 
 // Clinch badges at 390px, on a week late enough that somebody has clinched.
 const ppBadges = await mobile.evaluate(async () => {
@@ -4846,6 +4866,21 @@ check("v4: 2025 week 13 has somebody eliminated to show", ppV4Narrow.some(r => r
   }));
   check("v4: a direct load of #picture opens the tab and draws the board",
     d.selected === "picture" && d.visible && ((d.state === "1" && d.board) || (d.state === "empty" && d.empty)), JSON.stringify(d));
+  await direct.close();
+}
+
+// Opening the site straight on #toilet runs the shared picture computation and
+// selects the separate bowl panel with the same tab semantics as every tab.
+{
+  const direct = await ctx.newPage();
+  await direct.goto(BASE + "#toilet", { waitUntil: "domcontentloaded" });
+  await direct.waitForFunction(() => document.body.dataset.pictureReady, null, { timeout: 180000 });
+  const d = await direct.evaluate(() => {
+    const button=document.querySelector('#tabs button[data-tab="toilet"]'),panel=document.querySelector('[data-panel="toilet"]');
+    const pictureButton=document.querySelector('#tabs button[data-tab="picture"]');
+    return {state:document.body.dataset.pictureReady,selected:button?.getAttribute("aria-selected"),pictureSelected:pictureButton?.getAttribute("aria-selected"),visible:panel&&!panel.hidden,host:!!document.querySelector("#toiletHost .tbv"),role:button?.getAttribute("role"),tablist:button?.parentElement?.getAttribute("role"),outside:!document.querySelector('[data-panel="picture"] #toiletHost')};
+  });
+  check("v4: direct #toilet opens and loads the separate bowl tab",d.state&&d.selected==="true"&&d.pictureSelected==="false"&&d.visible&&d.host&&d.role==="tab"&&d.tablist==="tablist"&&d.outside,JSON.stringify(d));
   await direct.close();
 }
 
