@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T20:49:59.876Z",
- "at": 1794343799876,
+ "generated": "2026-11-10T21:29:48.644Z",
+ "at": 1794346188644,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -42,7 +42,7 @@
    "points_against": 1168.08,
    "faab_spent": 49,
    "starters_hurt": [
-    "Malik Willis (Questionable)"
+    "Malik Willis (IR)"
    ]
   },
   {
