@@ -994,7 +994,7 @@
   .abar .v{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;
     text-align:right;color:var(--ink-2)}
 
-  .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin:22px 0}
+  .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:11px;margin:22px 0}
   .acard{background:var(--raised);border:1px solid var(--ring);border-radius:var(--rs);padding:14px 15px}
   .acard.lead{border-color:rgba(255,194,61,.5)}
   .acard .ct{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:800}
@@ -1002,9 +1002,9 @@
     letter-spacing:-.02em}
   .acard .cs{font-size:11.5px;color:var(--muted);line-height:1.4;margin-bottom:10px}
   .acard .cr{display:grid;gap:4px}
-  .acard .cr span{display:flex;align-items:baseline;gap:8px;font-size:13px}
-  .acard .cr i{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .acard .cr b{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:400;
+  .acard .cr span{display:grid;grid-template-columns:minmax(82px,112px) minmax(0,1fr);align-items:start;gap:10px;font-size:13px}
+  .acard .cr i{font-style:normal;white-space:normal;line-height:18px;color:var(--muted)}
+  .acard .cr b{margin-left:0;font-family:var(--mono);font-size:12px;font-weight:400;
     color:var(--muted);font-variant-numeric:tabular-nums}
 
   .apicks{margin:20px 0;border-top:2px solid var(--ink)}
