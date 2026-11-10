@@ -680,6 +680,84 @@
      "body": "jskule23, victorthompson, moseslin and drewkim are all 2-6, but jskule23's 1,001.08 points this season are the most of the group, 136.72 more than drewkim's 864.36."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 9,
+   "note": "",
+   "lede": "Six games produced 1,484.12 points, down from 1,527.48 the week before. sizzlemc2's 151.42 was the week's high, and bradyrife's 97.58 — in the same 53.84-point loss, the week's widest margin — was the low. jadencha's 7.88-point win over saucebossandrew was the tightest finish, and saucebossandrew's 134.08, in that loss, was the best score by anyone who lost. jadencha is 8-1, and willie12w and sizzlemc2 are both 6-3.",
+   "games": [
+    {
+     "headline": "jadencha edges saucebossandrew by 7.88, the week's closest",
+     "winner": "jadencha",
+     "winner_points": 141.96,
+     "loser": "saucebossandrew",
+     "loser_points": 134.08,
+     "body": "Matthew Golden's 34.4 led jadencha, with Amon-Ra St. Brown adding 16.6 and Isaiah Likely 16.3. Jordan Love's 36.18 was the best individual number on either side, and saucebossandrew stayed within range behind Chris Olave's 16.8, but the margin held at 7.88, the tightest game of the week, and jadencha improves to 8-1."
+    },
+    {
+     "headline": "Domo112 routs wesley55, 150.96-114.72",
+     "winner": "Domo112",
+     "winner_points": 150.96,
+     "loser": "wesley55",
+     "loser_points": 114.72,
+     "body": "Puka Nacua's 35 led Domo112, with Bijan Robinson adding 24.7 — though Domo112's bench outscored every starter anyway, with C.J. Stroud going unused for 36.36. Joe Burrow's 29.54 and Tee Higgins's 20.2 led wesley55, but the margin finished at 36.24."
+    },
+    {
+     "headline": "sizzlemc2 posts the week's high, buries bradyrife by 53.84",
+     "winner": "sizzlemc2",
+     "winner_points": 151.42,
+     "loser": "bradyrife",
+     "loser_points": 97.58,
+     "body": "CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 led sizzlemc2 to the week's highest score, 151.42. Christian McCaffrey's 21.7 topped bradyrife, but Bo Nix's 16.68 sat on the bench outscoring every starter except McCaffrey and Jonah Coleman — including the 13.58 Trevor Lawrence started at quarterback — and the 97.58 finish was the week's lowest. The 53.84-point margin was also the widest of the week."
+    },
+    {
+     "headline": "willie12w beats chassinator, 132.2-104.66",
+     "winner": "willie12w",
+     "winner_points": 132.2,
+     "loser": "chassinator",
+     "loser_points": 104.66,
+     "body": "Ja'Marr Chase's 33.5 and Bucky Irving's 26.5 led willie12w. Drake Maye's 21.26 topped chassinator, but Bryce Young outscored him from the bench anyway, 21.34, and the margin finished at 27.54 as chassinator falls to 4-5."
+    },
+    {
+     "headline": "drewkim tops jskule23, 129.78-104.58",
+     "winner": "drewkim",
+     "winner_points": 129.78,
+     "loser": "jskule23",
+     "loser_points": 104.58,
+     "body": "Brock Purdy's 26.28 and Brock Bowers's 22.3 led drewkim to just his third win of the season. Luther Burden III's 22.7 topped jskule23, but Adonai Mitchell on one side and Ja'Kobi Lane on the other both finished scoreless at receiver, and the margin held at 25.2."
+    },
+    {
+     "headline": "moseslin outlasts victorthompson, 120.48-101.7",
+     "winner": "moseslin",
+     "winner_points": 120.48,
+     "loser": "victorthompson",
+     "loser_points": 101.7,
+     "body": "Christian Watson's 31.1 led moseslin, well clear of Nico Collins's 15.5 behind him. Dak Prescott's 19.5 topped victorthompson, with the New York Giants' defense adding 16, but Ladd McConkey was scoreless at receiver and the margin held at 18.78."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "saucebossandrew Trades for the Running Back He Just Dropped",
+     "body": "saucebossandrew released Kendre Miller to free agency, then turned around and traded a 2029 fifteenth-round pick to willie12w to get him back on the same day. No FAAB was attached to the deal in either direction."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Nobody Paid a Dollar in Free Agency This Week",
+     "body": "All 26 roster moves across the league this week, including the willie12w-saucebossandrew trade, carried no FAAB — nobody won a paid waiver claim."
+    },
+    {
+     "kind": "note",
+     "headline": "saucebossandrew and victorthompson Combined for Nine of the Week's Roster Moves",
+     "body": "saucebossandrew made five moves, the most of any manager, including both ends of the Kendre Miller trade. victorthompson was next with four, cycling through Darius Cooper, Elijah Mitchell, Alvin Kamara and a defense swap to the New York Giants."
+    },
+    {
+     "kind": "race",
+     "headline": "jskule23's 2-7 Outscores Every Team at 3-6",
+     "body": "jskule23 has scored 1,105.66 points this season, more than all three teams a game ahead of it in the standings at 3-6 — saucebossandrew's 1,082.46, moseslin's 1,038.16 and drewkim's 994.14. victorthompson, tied with jskule23 at 2-7, sits behind at 1,025.74."
+    }
+   ]
   }
  ],
  "articles": [
@@ -6187,6 +6265,179 @@
     {
      "type": "p",
      "text": "None of it is final. Ten of the league's twelve rosters still have at least nine starters left to play this week, and these numbers will move again before Monday. But the shape of the board right now is not subtle: a seven-team fight for six spots at the top, and a five-team group the model has all but stopped counting."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-high-and-the-low-shared-one-scoreboard",
+   "date": "2026-11-10",
+   "source": "tuesday",
+   "kind": "opinion",
+   "kicker": "2026 · week 9",
+   "headline": "The High and the Low Shared One Scoreboard",
+   "dek": "sizzlemc2's 151.42 was the week's best score anywhere in the league. bradyrife's 97.58 was the worst. They played each other.",
+   "byline": "DFFL desk",
+   "standfirst": "151.42 to 97.58 · one game, both ends of the week",
+   "teaser": "🚨 DFFL | WEEK 9\n\nTHE HIGH AND THE LOW SHARED ONE SCOREBOARD\n\n🔥 sizzlemc2 posted the week's high, 151.42\n🧊 bradyrife posted the week's low, 97.58\n📏 The 53.84-point margin between them was also the widest of the week's six games\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-high-and-the-low-shared-one-scoreboard",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "sizzlemc2 posted the best score of anyone in the league this week, 151.42. bradyrife posted the worst, 97.58. They were not two separate stories — sizzlemc2 and bradyrife played each other, and the 53.84 points between them was also the widest margin of any game in week 9."
+    },
+    {
+     "type": "stat",
+     "n": "53.84",
+     "text": "The margin by which sizzlemc2 beat bradyrife — the same number as the gap between the week's highest score, 151.42, and its lowest, 97.58, because it was the same game."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the game",
+     "text": "Two Big Numbers On One Side, Not Much On The Other"
+    },
+    {
+     "type": "p",
+     "text": "CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 together were just under half of sizzlemc2's 151.42, and both outscored every player bradyrife started. bradyrife's lineup never found a third weapon to match them — Christian McCaffrey's 21.7 and Jonah Coleman's 16.8 were the top two scores on his side, and nothing else in the starting ten reached 14."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the bench",
+     "text": "The Backup Outscored The Starter"
+    },
+    {
+     "type": "p",
+     "text": "bradyrife started Trevor Lawrence at quarterback for 13.58 points. Bo Nix sat on the bench with 16.68 — more than Lawrence, and more than every bradyrife starter except Christian McCaffrey and Jonah Coleman. Swapping them would have added 3.1 points, pushing bradyrife to 100.68. It still wouldn't have come within 50 points of sizzlemc2."
+    },
+    {
+     "type": "bars",
+     "title": "Margins across week 9's six games",
+     "sub": "How many points separated the winner and loser in each game, closest first.",
+     "rows": [
+      {
+       "label": "jadencha def. saucebossandrew",
+       "sub": "141.96-134.08",
+       "value": 7.88,
+       "group": 2
+      },
+      {
+       "label": "moseslin def. victorthompson",
+       "sub": "120.48-101.7",
+       "value": 18.78,
+       "group": 2
+      },
+      {
+       "label": "drewkim def. jskule23",
+       "sub": "129.78-104.58",
+       "value": 25.2,
+       "group": 2
+      },
+      {
+       "label": "willie12w def. chassinator",
+       "sub": "132.2-104.66",
+       "value": 27.54,
+       "group": 2
+      },
+      {
+       "label": "Domo112 def. wesley55",
+       "sub": "150.96-114.72",
+       "value": 36.24,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2 def. bradyrife",
+       "sub": "151.42-97.58",
+       "value": 53.84,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games combined for 1,484.12 points, down from 1,527.48 the week before. Below, in order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Jordan Love's 36.18 Wasn't Enough"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 141.96, saucebossandrew 134.08.</b> Matthew Golden's 34.4 and Amon-Ra St. Brown's 16.6 led jadencha, with the Houston defense adding 15 and Josh Allen 13.86 at quarterback."
+    },
+    {
+     "type": "p",
+     "text": "Jordan Love's 36.18 was the best individual score in the game, and Chris Olave added 16.8, but saucebossandrew came up 7.88 points short — the tightest finish of the week — and jadencha improves to 8-1."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-closest",
+     "text": "Christian Watson's 31.1 Carried moseslin"
+    },
+    {
+     "type": "p",
+     "text": "<b>moseslin 120.48, victorthompson 101.7.</b> Christian Watson's 31.1 led moseslin, well clear of Nico Collins's 15.5, with Jake Bates adding 15 from the kicker spot."
+    },
+    {
+     "type": "p",
+     "text": "Dak Prescott's 19.5 topped victorthompson, and the New York Giants' defense matched it with 16, but Ladd McConkey was scoreless at receiver and the margin held at 18.78."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the third-closest",
+     "text": "drewkim Wins His Third Despite A Zero at Receiver"
+    },
+    {
+     "type": "p",
+     "text": "<b>drewkim 129.78, jskule23 104.58.</b> Brock Purdy's 26.28 and Brock Bowers's 22.3 led drewkim, with KC Concepcion Jr. adding 20.8."
+    },
+    {
+     "type": "p",
+     "text": "Luther Burden III's 22.7 topped jskule23, but Adonai Mitchell on one side and Ja'Kobi Lane on the other both finished scoreless at receiver, and the margin held at 25.2. It's drewkim's third win of the season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fourth-closest",
+     "text": "Bryce Young Outscored chassinator's Actual Quarterback"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 132.2, chassinator 104.66.</b> Ja'Marr Chase's 33.5 and Bucky Irving's 26.5 led willie12w, with the Buffalo defense adding 18."
+    },
+    {
+     "type": "p",
+     "text": "Drake Maye's 21.26 topped chassinator, but Bryce Young outscored him from the bench, 21.34, and the margin finished at 27.54. chassinator falls to 4-5."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-widest",
+     "text": "Domo112 Wins While C.J. Stroud Sits"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 150.96, wesley55 114.72.</b> Puka Nacua's 35 and Bijan Robinson's 24.7 led Domo112, whose bench still outscored its own starting lineup — C.J. Stroud went unused for 36.36, more than Nacua himself put up."
+    },
+    {
+     "type": "p",
+     "text": "Joe Burrow's 29.54 and Tee Higgins's 20.2 led wesley55, but the margin finished at 36.24."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "sizzlemc2's 151.42 Buries bradyrife by 53.84"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 151.42, bradyrife 97.58.</b> CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 led the week's highest score anywhere in the league."
+    },
+    {
+     "type": "p",
+     "text": "Christian McCaffrey's 21.7 topped bradyrife, with Bo Nix's 16.68 — more than Trevor Lawrence actually started at quarterback — staying on the bench. bradyrife's 97.58 was the week's lowest score, and the 53.84-point margin was its widest."
     }
    ]
   }

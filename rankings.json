@@ -442,6 +442,60 @@
      "blurb": "Made eight roster moves this week, the most in the league, cycling through three kickers, and lost by 49.36 anyway."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 9,
+   "teams": [
+    {
+     "manager": "jadencha",
+     "blurb": "Matthew Golden's 34.4 led a 141.96 win over saucebossandrew by 7.88, the week's closest game, and jadencha is 8-1."
+    },
+    {
+     "manager": "Domo112",
+     "blurb": "Puka Nacua's 35 led a 150.96 win over wesley55, even with C.J. Stroud's 36.36 left unused on the bench, and Domo112 is 7-2."
+    },
+    {
+     "manager": "willie12w",
+     "blurb": "Ja'Marr Chase's 33.5 led a 132.2 win over chassinator, and willie12w is 6-3 after also trading Kendre Miller to saucebossandrew for a 2029 pick."
+    },
+    {
+     "manager": "sizzlemc2",
+     "blurb": "CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 led the week's highest score, 151.42, in a 53.84-point win over bradyrife, the week's widest margin, and sizzlemc2 is 6-3."
+    },
+    {
+     "manager": "wesley55",
+     "blurb": "Joe Burrow's 29.54 topped a 114.72 output in a 36.24-point loss to Domo112, and wesley55 is 5-4."
+    },
+    {
+     "manager": "bradyrife",
+     "blurb": "Scored 97.58, the week's low, in a 53.84-point loss to sizzlemc2, the week's widest margin, with Bo Nix's 16.68 left on the bench; bradyrife is 5-4."
+    },
+    {
+     "manager": "chassinator",
+     "blurb": "Drake Maye's 21.26 led a 104.66 loss to willie12w, with Bryce Young outscoring him from the bench, 21.34, and chassinator is 4-5."
+    },
+    {
+     "manager": "saucebossandrew",
+     "blurb": "Jordan Love's 36.18 led a 134.08 output that lost to jadencha anyway — the best score by anyone who lost in the league this week — and saucebossandrew made five roster moves, including trading a future pick to get Kendre Miller back the same day he dropped him."
+    },
+    {
+     "manager": "jskule23",
+     "blurb": "Luther Burden III's 22.7 led a 104.58 loss to drewkim, and jskule23 is 2-7 despite 1,105.66 points this season, more than every team at 3-6."
+    },
+    {
+     "manager": "victorthompson",
+     "blurb": "The New York Giants' defense and Dak Prescott each reached double digits, but a 101.7 output fell to moseslin by 18.78, and victorthompson is 2-7."
+    },
+    {
+     "manager": "moseslin",
+     "blurb": "Christian Watson's 31.1 led a 120.48 win over victorthompson by 18.78, and moseslin is 3-6."
+    },
+    {
+     "manager": "drewkim",
+     "blurb": "Brock Purdy's 26.28 and Brock Bowers's 22.3 led a 129.78 win over jskule23, and drewkim is 3-6, his third win of the season."
+    }
+   ]
   }
  ]
 }
