@@ -7193,7 +7193,7 @@ group("Ask the league");
   const fit = () => ph.evaluate(() => {
     const W = window.innerWidth, H = window.innerHeight, over = [];
     const fab = document.querySelector("#askFab").getBoundingClientRect();
-    for (const n of [document.querySelector("#askFab"), ...document.querySelectorAll("#askLeague *")]) {
+    for (const n of [document.querySelector("#askFabWrap"), ...document.querySelectorAll("#askFabWrap *, #askLeague *")]) {
       const r = n.getBoundingClientRect();
       if (r.width && (r.right > W + 1 || r.left < -1)) over.push((n.id || n.className || n.tagName) + " → " + Math.round(r.left) + ".." + Math.round(r.right));
     }
@@ -7201,15 +7201,26 @@ group("Ask the league");
       fab: { visible: fab.width > 0, inside: fab.left >= 0 && fab.right <= W && fab.bottom <= H && fab.top >= 0 } };
   });
   const closed = await fit();
+  // A fresh session (new page = empty sessionStorage) gets the pop-up, not a pinned pill.
+  const pop = await ph.evaluate(() => {
+    const w = document.querySelector("#askFabWrap"), r = w.getBoundingClientRect();
+    return { shown: w.getClientRects().length > 0, role: w.getAttribute("role"), label: w.getAttribute("aria-label"), stored: sessionStorage.getItem("dffl-ask-fab"),
+      hasAsk: w.contains(document.querySelector("#askFab")), hasX: w.contains(document.querySelector("#askFabHide")),
+      anim: getComputedStyle(w).animationName, reduced: matchMedia("(prefers-reduced-motion:reduce)").matches,
+      inside: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight && r.top >= 0, pad: getComputedStyle(document.body).paddingBottom };
+  });
+  check("Ask the league at 390px: a fresh session shows the launcher as a dismissible pop-up with its X",
+    pop.shown && pop.stored === null && pop.role === "region" && /ask the league/i.test(pop.label || "") && pop.hasAsk && pop.hasX && pop.inside
+      && (pop.reduced || pop.anim === "ask-pop") && pop.pad !== "0px", JSON.stringify(pop));
   check("Ask the league at 390px: entry button visible and inside the viewport", closed.fab.visible && closed.fab.inside, JSON.stringify(closed.fab));
   check("Ask the league at 390px: closed, no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
-  // The pill floats over the page; the page's bottom padding must let the last card scroll clear of it.
+  // While the pop-up shows it floats over the page; the bottom padding must let the last card scroll clear of it.
   await ph.click('#tabs button[data-tab="home"]');
   await ph.waitForTimeout(150);
   await ph.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
   await ph.waitForTimeout(100);
   const clear = await ph.evaluate(() => {
-    const fab = document.querySelector("#askFab").getBoundingClientRect();
+    const fab = document.querySelector("#askFabWrap").getBoundingClientRect();
     const panel = document.querySelector('[data-panel="home"]');
     const kids = [...(panel?.querySelectorAll(":scope > *") || [])].filter(n => n.getBoundingClientRect().height > 0);
     const lastCard = kids[kids.length - 1]?.getBoundingClientRect();
@@ -7217,7 +7228,7 @@ group("Ask the league");
     return { fabTop: Math.round(fab.top), card: lastCard ? Math.round(lastCard.bottom) : null, foot: foot ? Math.round(foot.bottom) : null,
       pad: getComputedStyle(document.body).paddingBottom };
   });
-  check("Ask the league at 390px: scrolled to the bottom, the last card and footer clear the pill",
+  check("Ask the league at 390px: while the pop-up shows, scrolled to the bottom, the last card and footer clear it",
     clear.card != null && clear.card <= clear.fabTop + 1 && clear.foot != null && clear.foot <= clear.fabTop + 1, JSON.stringify(clear));
   await ph.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await ph.click('#tabs button[data-tab="records"]');
@@ -7233,25 +7244,29 @@ group("Ask the league");
     (await chatState(ph)) === "open" && sheet.w === 390 && sheet.bottom === sheet.H && await ph.locator("#askChips button").count() >= 5, JSON.stringify(sheet));
   check("Ask the league at 390px: open, no horizontal overflow", opened.doc <= opened.W && opened.body <= opened.W && !opened.over.length, JSON.stringify(opened));
   await ph.keyboard.press("Escape");
-  check("Ask the league at 390px: Escape closes and returns focus to the pill",
+  check("Ask the league at 390px: Escape closes and returns focus to the pop-up's Ask button",
     (await chatState(ph)) === "closed" && await ph.evaluate(() => document.activeElement === document.querySelector("#askFab")));
 
-  // The pill's own X hides it for the session; the tab still reaches the chat.
+  // The pop-up's own X dismisses it for the session; the tab still reaches the chat.
   const hideX = await ph.evaluate(() => { const x = document.querySelector("#askFabHide"), r = x.getBoundingClientRect();
     return { label: x.getAttribute("aria-label"), w: Math.round(r.width), h: Math.round(r.height), inside: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight }; });
-  check("Ask the league at 390px: the pill has its own labelled X with a 44px hit area",
+  check("Ask the league at 390px: the pop-up has its own labelled X with a 44px hit area",
     /hide/i.test(hideX.label || "") && /ask the league/i.test(hideX.label || "") && hideX.w >= 44 && hideX.h >= 44 && hideX.inside, JSON.stringify(hideX));
   await ph.click("#askFabHide");
   const gone = () => ph.evaluate(() => ({ fab: !!document.querySelector("#askFab").getClientRects().length, x: !!document.querySelector("#askFabHide").getClientRects().length,
     stored: sessionStorage.getItem("dffl-ask-fab"), focus: document.activeElement?.dataset?.tab || document.activeElement?.id || document.activeElement?.tagName,
     pad: getComputedStyle(document.body).paddingBottom }));
   const g1 = await gone();
-  check("Ask the league at 390px: the pill's X hides the launcher, remembers it for the session and moves focus to the Ask tab",
-    !g1.fab && !g1.x && g1.stored === "hidden" && g1.focus === "ask" && g1.pad === "0px", JSON.stringify(g1));
+  check("Ask the league at 390px: the pop-up's X dismisses it, remembers it for the session and moves focus to the Ask tab",
+    !g1.fab && !g1.x && g1.stored === "hidden" && g1.focus === "ask", JSON.stringify(g1));
+  check("Ask the league at 390px: once the pop-up is dismissed, no extra bottom padding is kept for it", g1.pad === "0px", JSON.stringify(g1));
+  const gw = await fit();
+  check("Ask the league at 390px: dismissed, no horizontal overflow", gw.doc <= gw.W && gw.body <= gw.W && !gw.over.length, JSON.stringify(gw));
   await ph.reload({ waitUntil: "domcontentloaded" });
   await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
   const g2 = await gone();
-  check("Ask the league at 390px: a dismissed launcher stays hidden after a reload", !g2.fab && g2.stored === "hidden", JSON.stringify(g2));
+  check("Ask the league at 390px: a dismissed pop-up stays hidden after a reload, with no extra bottom padding",
+    !g2.fab && !g2.x && g2.stored === "hidden" && g2.pad === "0px", JSON.stringify(g2));
   await ph.click('#tabs button[data-tab="ask"]');
   const phTab = await fit();
   const phSheet = await ph.evaluate(() => { const s = document.querySelector("#askLeaguePanel"), r = s.getBoundingClientRect();
