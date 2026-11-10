@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T11:02:23.341Z",
- "at": 1794308543341,
+ "generated": "2026-11-10T15:13:18.290Z",
+ "at": 1794323598290,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -84,7 +84,7 @@
    "points_against": 1174.54,
    "faab_spent": 100,
    "starters_hurt": [
-    "Michael Wilson (Out)"
+    "Xavier Worthy (Out)"
    ]
   },
   {
@@ -95,7 +95,8 @@
    "points_against": 1277.8,
    "faab_spent": 16,
    "starters_hurt": [
-    "J.J. McCarthy (Questionable)"
+    "J.J. McCarthy (Questionable)",
+    "Cam Skattebo (Out)"
    ]
   },
   {
