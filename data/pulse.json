@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T18:50:13.983Z",
- "at": 1794336613983,
+ "generated": "2026-11-10T20:49:59.876Z",
+ "at": 1794343799876,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -23,9 +23,7 @@
    "points_for": 1203.26,
    "points_against": 1114.52,
    "faab_spent": 83,
-   "starters_hurt": [
-    "Puka Nacua (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -357,5 +355,5 @@
   }
  ],
  "waivers": [],
- "free_agent_moves": 25
+ "free_agent_moves": 26
 }
