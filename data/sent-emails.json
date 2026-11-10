@@ -321,6 +321,20 @@
    "sha256": "462a853f35a0cc162f4aefbb4d3ae4d9552c0e39f4ae36015878af1bbcffc542",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-10T12:17:17.288Z",
+   "subject": "DFFL Week 10: The High and the Low Shared One Scoreboard",
+   "lead": "the-high-and-the-low-shared-one-scoreboard",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "29cc61de6d7422f13e91717c4fae64e97529c317bae0c79b2a999afbdd3b5aa8",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
