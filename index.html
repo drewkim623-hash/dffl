@@ -2783,7 +2783,7 @@ async function ensureHomeWeek() {
     }
 
     const data = await recapsOnce();
-    const arts = ((data && data.articles) || []).slice()
+    const arts = ((data && data.articles) || []).slice().reverse() // same date: the later-added piece leads, as in the email
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 2);
     if (arts.length) {
       host.appendChild(sechead("From the desk",
@@ -4490,7 +4490,7 @@ async function panelRecaps() {
   let data = null;
   try { data = await jget("recaps.json"); } catch (e) { data = null; }
 
-  const articles = ((data && data.articles) || []).slice()
+  const articles = ((data && data.articles) || []).slice().reverse() // same date: the later-added piece leads, as in the email
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
   if (articles.length) {
     // The newest piece leads as the hero; the rest run as a list below it.
