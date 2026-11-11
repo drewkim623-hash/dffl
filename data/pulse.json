@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T19:12:27.270Z",
- "at": 1794424347270,
+ "generated": "2026-11-11T19:29:39.968Z",
+ "at": 1794425379968,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -109,8 +109,8 @@
    "faab_spent": 95,
    "starters_hurt": [
     "Patrick Mahomes (Questionable)",
-    "Mike Evans (Questionable)",
-    "Carnell Tate (Questionable)"
+    "Carnell Tate (Questionable)",
+    "Mike Evans (Questionable)"
    ]
   },
   {
@@ -527,5 +527,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 40
+ "free_agent_moves": 41
 }
