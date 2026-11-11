@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-11T20:14:22.652Z",
+ "generated": "2026-11-11T21:29:54.727Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -23,6 +23,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
+  },
+  "3163": {
+   "n": "Jared Goff",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-11"
   },
   "4046": {
    "n": "Patrick Mahomes",
@@ -117,6 +127,16 @@
    "retChecked": "2026-11-11",
    "irSince": 8
   },
+  "5947": {
+   "n": "Jakobi Meyers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-11"
+  },
   "6797": {
    "n": "Justin Herbert",
    "s": "Questionable",
@@ -178,6 +198,16 @@
    "retNote": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir — Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-04",
    "irSince": 6
+  },
+  "7547": {
+   "n": "Amon-Ra St. Brown",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-11"
   },
   "7611": {
    "n": "Rhamondre Stevenson",
@@ -253,12 +283,12 @@
   },
   "9493": {
    "n": "Puka Nacua",
-   "s": "Doubtful",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Doubtful = coming week only",
+   "s": "Out",
+   "ret": "2026-12-13",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
    "retChecked": "2026-11-11"
   },
   "10222": {
@@ -326,6 +356,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-01",
    "irSince": 8
+  },
+  "12490": {
+   "n": "Bhayshul Tuten",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-11"
   },
   "12508": {
    "n": "Jaxson Dart",

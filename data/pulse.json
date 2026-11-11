@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T20:14:23.420Z",
- "at": 1794428063420,
+ "generated": "2026-11-11T21:29:55.426Z",
+ "at": 1794432595426,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -14,7 +14,10 @@
    "points_for": 1443.12,
    "points_against": 1055.54,
    "faab_spent": 22,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Bhayshul Tuten (Questionable)",
+    "Amon-Ra St. Brown (Questionable)"
+   ]
   },
   {
    "manager": "Domo112",
@@ -32,7 +35,9 @@
    "points_for": 1173.34,
    "points_against": 1006.12,
    "faab_spent": 88,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jared Goff (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -64,7 +69,8 @@
    "faab_spent": 100,
    "starters_hurt": [
     "George Pickens (Questionable)",
-    "Garrett Wilson (Questionable)"
+    "Garrett Wilson (Questionable)",
+    "Jakobi Meyers (Questionable)"
    ]
   },
   {
