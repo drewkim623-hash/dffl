@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T19:29:39.968Z",
- "at": 1794425379968,
+ "generated": "2026-11-11T20:14:23.420Z",
+ "at": 1794428063420,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -62,7 +62,10 @@
    "points_for": 1134.66,
    "points_against": 1068.46,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "George Pickens (Questionable)",
+    "Garrett Wilson (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -201,6 +204,61 @@
   }
  ],
  "trades": [
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jskule23",
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Chuba Hubbard",
+     "pos": "RB",
+     "team": "CAR",
+     "status": null,
+     "to": "bradyrife"
+    },
+    {
+     "name": "Chase Brown",
+     "pos": "RB",
+     "team": "CIN",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chuba Hubbard",
+     "pos": "RB",
+     "team": "CAR",
+     "status": null,
+     "from": "jskule23"
+    },
+    {
+     "name": "Chase Brown",
+     "pos": "RB",
+     "team": "CIN",
+     "status": null,
+     "from": "bradyrife"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 8,
+     "from": "jskule23",
+     "to": "bradyrife"
+    },
+    {
+     "season": "2027",
+     "round": 9,
+     "from": "drewkim",
+     "to": "bradyrife"
+    }
+   ]
+  },
   {
    "week": 10,
    "type": "trade",
