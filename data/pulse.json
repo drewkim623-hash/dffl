@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T16:49:58.901Z",
- "at": 1794415798901,
+ "generated": "2026-11-11T18:49:48.429Z",
+ "at": 1794422988429,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -41,7 +41,10 @@
    "points_for": 1147.88,
    "points_against": 1168.08,
    "faab_spent": 67,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Denzel Boston (Questionable)",
+    "Omar Cooper Jr. (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -197,6 +200,90 @@
   }
  ],
  "trades": [
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Justin Jefferson",
+     "pos": "WR",
+     "team": "MIN",
+     "status": null,
+     "to": "jadencha"
+    },
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "to": "moseslin"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Justin Jefferson",
+     "pos": "WR",
+     "team": "MIN",
+     "status": null,
+     "from": "moseslin"
+    },
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 3,
+     "from": "saucebossandrew",
+     "to": "moseslin"
+    }
+   ]
+  },
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 3,
+     "from": "saucebossandrew",
+     "to": "jadencha"
+    }
+   ]
+  },
   {
    "week": 9,
    "type": "trade",
@@ -439,5 +526,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 35
+ "free_agent_moves": 38
 }
