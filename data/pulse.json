@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T18:49:48.429Z",
- "at": 1794422988429,
+ "generated": "2026-11-11T19:12:27.270Z",
+ "at": 1794424347270,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -121,7 +121,8 @@
    "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
-    "Ladd McConkey (Questionable)"
+    "Ladd McConkey (Questionable)",
+    "A.J. Brown (Questionable)"
    ]
   }
  ],
@@ -195,7 +196,7 @@
    "b": {
     "manager": "victorthompson",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -526,5 +527,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 38
+ "free_agent_moves": 40
 }
