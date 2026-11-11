@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-11T21:29:55.426Z",
- "at": 1794432595426,
+ "generated": "2026-11-11T23:13:01.401Z",
+ "at": 1794438781401,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -58,7 +58,9 @@
    "points_for": 1189.6,
    "points_against": 1147.62,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "T.J. Hockenson (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -98,7 +100,9 @@
    "points_for": 1038.16,
    "points_against": 1277.8,
    "faab_spent": 16,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Harold Fannin Jr. (Questionable)"
+   ]
   },
   {
    "manager": "drewkim",
@@ -107,7 +111,9 @@
    "points_for": 994.14,
    "points_against": 1250.56,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Woody Marks (Questionable)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -117,7 +123,6 @@
    "points_against": 1216.06,
    "faab_spent": 95,
    "starters_hurt": [
-    "Patrick Mahomes (Questionable)",
     "Carnell Tate (Questionable)",
     "Mike Evans (Questionable)"
    ]
@@ -130,6 +135,7 @@
    "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
+    "Dalton Kincaid (Questionable)",
     "Ladd McConkey (Questionable)",
     "A.J. Brown (Questionable)"
    ]
@@ -591,5 +597,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 41
+ "free_agent_moves": 42
 }
