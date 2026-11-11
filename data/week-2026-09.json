@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 9,
- "generated": "2026-11-10T11:02:19.779Z",
- "generated_at": "2026-11-10T11:02:19.779Z",
+ "generated": "2026-11-11T11:02:03.018Z",
+ "generated_at": "2026-11-11T11:02:03.018Z",
  "final": true,
  "standings_through_week": 9,
  "standings_folded": false,
@@ -441,7 +441,7 @@
       {
        "name": "Josh Downs",
        "pos": "WR",
-       "team": "IND",
+       "team": "KC",
        "points": 5.4
       },
       {
@@ -999,7 +999,7 @@
       {
        "name": "Keenan Allen",
        "pos": "WR",
-       "team": "IND",
+       "team": "SF",
        "points": 6.6
       },
       {
@@ -1018,7 +1018,7 @@
      "bust": {
       "name": "Keenan Allen",
       "pos": "WR",
-      "team": "IND",
+      "team": "SF",
       "points": 6.6
      },
      "benchBest": {
@@ -1140,7 +1140,7 @@
    "ties": 0,
    "points_for": 1203.26,
    "points_against": 1114.52,
-   "waiver_budget_used": 83
+   "waiver_budget_used": 88
   },
   {
    "manager": "willie12w",
@@ -1151,7 +1151,7 @@
    "ties": 0,
    "points_for": 1173.34,
    "points_against": 1006.12,
-   "waiver_budget_used": 65
+   "waiver_budget_used": 88
   },
   {
    "manager": "sizzlemc2",
@@ -1162,7 +1162,7 @@
    "ties": 0,
    "points_for": 1147.88,
    "points_against": 1168.08,
-   "waiver_budget_used": 49
+   "waiver_budget_used": 67
   },
   {
    "manager": "wesley55",
@@ -1195,7 +1195,7 @@
    "ties": 0,
    "points_for": 1193.16,
    "points_against": 1158.96,
-   "waiver_budget_used": 64
+   "waiver_budget_used": 72
   },
   {
    "manager": "saucebossandrew",
@@ -1255,6 +1255,304 @@
  ],
  "transactions": [
   {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Kaleb Johnson",
+     "pos": "RB",
+     "team": "GB",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [],
+   "faab": 23,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [
+    {
+     "name": "Tyler Bass",
+     "pos": "K",
+     "team": "BUF",
+     "to": "sizzlemc2"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Cairo Santos",
+     "pos": "K",
+     "team": "CHI",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "sizzlemc2"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Malik Willis",
+     "pos": "QB",
+     "team": "MIA",
+     "from": "sizzlemc2"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Los Angeles Rams",
+     "pos": "DEF",
+     "team": "LAR",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
+     "from": "Domo112"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Konata Mumpfield",
+     "pos": "WR",
+     "team": "LAR",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Seth McGowan",
+     "pos": "RB",
+     "team": "IND",
+     "from": "Domo112"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "to": "Domo112"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "to": "drewkim"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "from": "drewkim"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "from": "Domo112"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "from": "drewkim"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 7,
+     "from": "Domo112",
+     "to": "drewkim"
+    }
+   ]
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "victorthompson"
+   ],
+   "adds": [
+    {
+     "name": "Green Bay Packers",
+     "pos": "DEF",
+     "team": "GB",
+     "to": "victorthompson"
+    }
+   ],
+   "drops": [
+    {
+     "name": "New York Giants",
+     "pos": "DEF",
+     "team": "NYG",
+     "from": "victorthompson"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "trade",
+   "managers": [
+    "chassinator",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "to": "saucebossandrew"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "from": "chassinator"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 2,
+     "from": "chassinator",
+     "to": "saucebossandrew"
+    }
+   ]
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Audric Estime",
+     "pos": "RB",
+     "team": "NO",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "willie12w"
+   ],
+   "adds": [
+    {
+     "name": "Corey Kiner",
+     "pos": "RB",
+     "team": "NE",
+     "to": "willie12w"
+    }
+   ],
+   "drops": [],
+   "faab": 23,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Baltimore Ravens",
+     "pos": "DEF",
+     "team": "BAL",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chicago Bears",
+     "pos": "DEF",
+     "team": "CHI",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 8,
+   "picks": []
+  },
+  {
    "type": "free_agent",
    "managers": [
     "saucebossandrew"
@@ -1305,7 +1603,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "FA",
+     "team": "DAL",
      "from": "saucebossandrew"
     }
    ],
@@ -1346,7 +1644,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "FA",
+     "team": "DAL",
      "to": "saucebossandrew"
     }
    ],
@@ -1354,7 +1652,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "FA",
+     "team": "DAL",
      "from": "willie12w"
     }
    ],
@@ -1855,7 +2153,7 @@
     {
      "name": "Josh Downs",
      "pos": "WR",
-     "team": "IND",
+     "team": "KC",
      "points": 5.4
     },
     {
@@ -2221,7 +2519,7 @@
       {
        "name": "Josh Downs",
        "pos": "WR",
-       "team": "IND",
+       "team": "KC",
        "points": 5.4
       },
       {
