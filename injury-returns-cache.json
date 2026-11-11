@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-10T21:29:48.020Z",
+ "generated": "2026-11-11T03:50:16.119Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -32,7 +32,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "4454": {
    "n": "Kendrick Bourne",
@@ -114,7 +114,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 8 (2 left)",
-   "retChecked": "2026-11-10",
+   "retChecked": "2026-11-11",
    "irSince": 8
   },
   "6797": {
@@ -125,7 +125,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "6803": {
    "n": "Brandon Aiyuk",
@@ -135,7 +135,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -166,7 +166,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -220,17 +220,6 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-07"
   },
-  "8161": {
-   "n": "Malik Willis",
-   "s": "IR",
-   "ret": "2026-12-13",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-11-10",
-   "irSince": 10
-  },
   "8210": {
    "n": "Chig Okonkwo",
    "s": "Questionable",
@@ -239,7 +228,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "8800": {
    "n": "Malik Davis",
@@ -280,7 +269,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -304,13 +293,14 @@
   },
   "10232": {
    "n": "Michael Wilson",
-   "s": "Out",
+   "s": "IR",
    "ret": "2027-02-15",
    "retWeeks": null,
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11",
+   "irSince": 10
   },
   "11565": {
    "n": "J.J. McCarthy",
@@ -320,7 +310,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "11624": {
    "n": "Xavier Worthy",
@@ -330,7 +320,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -386,7 +376,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-10"
+   "retChecked": "2026-11-11"
   },
   "12529": {
    "n": "TreVeyon Henderson",

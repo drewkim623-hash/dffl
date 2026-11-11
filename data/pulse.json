@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-10T21:29:48.644Z",
- "at": 1794346188644,
+ "generated": "2026-11-11T03:50:16.630Z",
+ "at": 1794369016630,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -40,10 +40,8 @@
    "losses": 3,
    "points_for": 1147.88,
    "points_against": 1168.08,
-   "faab_spent": 49,
-   "starters_hurt": [
-    "Malik Willis (IR)"
-   ]
+   "faab_spent": 44,
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -329,7 +327,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "FA",
+     "team": "DAL",
      "status": null,
      "to": "saucebossandrew"
     }
@@ -338,7 +336,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "FA",
+     "team": "DAL",
      "status": null,
      "from": "willie12w"
     }
@@ -355,5 +353,5 @@
   }
  ],
  "waivers": [],
- "free_agent_moves": 26
+ "free_agent_moves": 27
 }

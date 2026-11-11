@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-10T21:30:12.248Z",
- "at": 1794346212249,
+ "generated": "2026-11-11T03:50:40.292Z",
+ "at": 1794369040292,
  "season": "2026",
  "week": 10,
  "liveWeek": null,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.31555,
-   "titleNow": 0.4531,
+   "titleNow": 0.453,
    "playoffWas": 0.9171,
    "playoffNow": 1,
-   "wins": 11.7604,
+   "wins": 11.7601,
    "titleOdds": 110,
    "titleOddsOpen": 200,
    "playoffOdds": -19900
@@ -28,8 +28,8 @@
    "titleWas": 0.19455,
    "titleNow": 0.2056,
    "playoffWas": 0.82825,
-   "playoffNow": 0.9966,
-   "wins": 10.15445,
+   "playoffNow": 0.99665,
+   "wins": 10.15555,
    "titleOdds": 360,
    "titleOddsOpen": 380,
    "playoffOdds": -19900
@@ -42,7 +42,7 @@
    "titleNow": 0.0006,
    "playoffWas": 0.41645,
    "playoffNow": 0.01385,
-   "wins": 4.70075,
+   "wins": 4.70105,
    "titleOdds": 157130,
    "titleOddsOpen": 2070,
    "playoffOdds": 6710
@@ -55,7 +55,7 @@
    "titleNow": 0,
    "playoffWas": 0.24065,
    "playoffNow": 0.0034,
-   "wins": 4.31705,
+   "wins": 4.31595,
    "titleOdds": null,
    "titleOddsOpen": 6500,
    "playoffOdds": 27650
@@ -65,10 +65,10 @@
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1385,
-   "titleNow": 0.1303,
+   "titleNow": 0.13045,
    "playoffWas": 0.72415,
    "playoffNow": 0.96945,
-   "wins": 9.07705,
+   "wins": 9.0773,
    "titleOdds": 620,
    "titleOddsOpen": 580,
    "playoffOdds": -19900
@@ -80,11 +80,11 @@
    "titleWas": 0.0548,
    "titleNow": 0.00005,
    "playoffWas": 0.4764,
-   "playoffNow": 0.01405,
-   "wins": 4.6327,
+   "playoffNow": 0.0141,
+   "wins": 4.63235,
    "titleOdds": 1886690,
    "titleOddsOpen": 1620,
-   "playoffOdds": 6610
+   "playoffOdds": 6590
   },
   {
    "uid": "851478209852706816",
@@ -94,7 +94,7 @@
    "titleNow": 0.0296,
    "playoffWas": 0.44555,
    "playoffNow": 0.6552,
-   "wins": 7.4928,
+   "wins": 7.4929,
    "titleOdds": 3090,
    "titleOddsOpen": 1800,
    "playoffOdds": -230
@@ -106,24 +106,24 @@
    "titleWas": 0.02695,
    "titleNow": 0.00005,
    "playoffWas": 0.3057,
-   "playoffNow": 0.0034,
-   "wins": 3.8874,
+   "playoffNow": 0.00345,
+   "wins": 3.8875,
    "titleOdds": 1886690,
    "titleOddsOpen": 3400,
-   "playoffOdds": 27650
+   "playoffOdds": 27240
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0739,
-   "titleNow": 0.0862,
+   "titleNow": 0.08605,
    "playoffWas": 0.5821,
-   "playoffNow": 0.9115,
-   "wins": 8.351,
-   "titleOdds": 990,
+   "playoffNow": 0.9112,
+   "wins": 8.34975,
+   "titleOdds": 1000,
    "titleOddsOpen": 1180,
-   "playoffOdds": -2860
+   "playoffOdds": -2830
   },
   {
    "uid": "850932093394472960",
@@ -132,7 +132,7 @@
    "titleWas": 0.03725,
    "titleNow": 0.0548,
    "playoffWas": 0.40695,
-   "playoffNow": 0.59425,
+   "playoffNow": 0.59435,
    "wins": 6.92885,
    "titleOdds": 1620,
    "titleOddsOpen": 2430,
@@ -146,7 +146,7 @@
    "titleNow": 0.03955,
    "playoffWas": 0.32955,
    "playoffNow": 0.83005,
-   "wins": 8.3162,
+   "wins": 8.3163,
    "titleOdds": 2290,
    "titleOddsOpen": 3400,
    "playoffOdds": -730
@@ -156,13 +156,13 @@
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02415,
-   "titleNow": 0.00015,
+   "titleNow": 0.00025,
    "playoffWas": 0.32715,
-   "playoffNow": 0.00825,
-   "wins": 4.38135,
-   "titleOdds": 628830,
+   "playoffNow": 0.0083,
+   "wins": 4.3824,
+   "titleOdds": 377260,
    "titleOddsOpen": 3810,
-   "playoffOdds": 11340
+   "playoffOdds": 11270
   }
  ],
  "games": [],
@@ -226,16 +226,6 @@
      "status": "Questionable"
     }
    ]
-  },
-  {
-   "manager": "sizzlemc2",
-   "cost": 0.0020311521603005867,
-   "players": [
-    {
-     "name": "Malik Willis",
-     "status": "Questionable"
-    }
-   ]
   }
  ],
  "settled": true,
@@ -250,20 +240,20 @@
    "date": "2026-11-10"
   },
   {
+   "slug": "deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "Deadline Desk: Olave, Bowers and Trade Talk",
+   "dek": "Two trades went through on Tuesday, both with 2027 strings attached. saucebossandrew now holds the league's only four keeper spots, Brock Bowers spends the rest of 2026 on loan to Domo112, and three big names are worth watching before the deadline.",
+   "byline": "DFFL desk",
+   "date": "2026-11-10"
+  },
+  {
    "slug": "the-playoff-field-just-split-into-a-canyon",
    "kicker": "2026 · week 9",
    "headline": "The Playoff Field Just Split Into A Canyon",
    "dek": "Seven teams are above 61.02% to make the playoffs; the other five are at 13.595% or worse, four of them under 1%. jadencha's title number jumped 15.92 points this week alone — more than three times the next-biggest move anyone in the league made.",
    "byline": "DFFL desk",
    "date": "2026-11-06"
-  },
-  {
-   "slug": "the-full-budget-doesnt-buy-a-winning-record",
-   "kicker": "2026 · week 8",
-   "headline": "The Full Budget Doesn't Buy A Winning Record",
-   "dek": "Three managers have already spent their entire $100 FAAB allowance this season. Two of them are tied for the league's fewest wins. The exception is 5-3.",
-   "byline": "DFFL desk",
-   "date": "2026-11-03"
   }
  ]
 }
