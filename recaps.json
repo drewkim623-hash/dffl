@@ -6891,15 +6891,18 @@
    "blocks": [
     {
      "type": "p",
-     "text": "Three trades went through on Wednesday. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to <b>jadencha</b> and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Justin Jefferson, and sent Isaiah Likely's rights for two years. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
+     "text": "Three trades went through on Wednesday. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to <b>jadencha</b> and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Justin Jefferson, and sent Isaiah Likely's rights for two years. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown.",
+     "lead": true
     },
     {
      "type": "stat",
-     "text": "Minutes Breece Hall spent on jadencha's roster between the two trades: saucebossandrew sent him at 1:32 p.m. Eastern, and he was gone to moseslin at 1:38."
+     "text": "Minutes Breece Hall spent on jadencha's roster between the two trades: saucebossandrew sent him at 1:32 p.m. Eastern, and he was gone to moseslin at 1:38.",
+     "n": "6"
     },
     {
      "type": "h",
-     "text": "Hall and a Third, for Amon-Ra's Rights"
+     "text": "Hall and a Third, for Amon-Ra's Rights",
+     "eyebrow": "trade one · 1:32 p.m."
     },
     {
      "type": "cards",
@@ -6959,7 +6962,8 @@
     },
     {
      "type": "h",
-     "text": "Jefferson Goes to the League Leader"
+     "text": "Jefferson Goes to the League Leader",
+     "eyebrow": "trade two · 1:38 p.m."
     },
     {
      "type": "p",
@@ -7039,7 +7043,8 @@
     },
     {
      "type": "h",
-     "text": "Hubbard and Two Picks for Chase Brown"
+     "text": "Hubbard and Two Picks for Chase Brown",
+     "eyebrow": "trade three · 2:52 p.m."
     },
     {
      "type": "p",
