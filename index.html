@@ -1908,6 +1908,50 @@
   @media (hover:hover){.wgame:hover,.teaser:hover,.mcard:hover{transform:translateY(-2px)}}
   ::selection{background:rgba(var(--a-rgb),.38);color:#fff}
   html{scrollbar-color:var(--mid) var(--plane)}
+
+  /* ============ the score ticker ============ */
+  .sticker{display:flex;align-items:stretch;margin:0 0 18px;border-radius:14px;overflow:hidden;cursor:pointer;
+    background:linear-gradient(90deg,var(--surface),var(--raised));border:1px solid var(--edge);height:48px}
+  .sticker[hidden]{display:none}
+  .tklab{flex:none;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:0;border:0;cursor:pointer;
+    padding:0 14px;background:var(--a);color:var(--on-a);font-family:var(--disp);font-weight:700;font-size:14px;
+    letter-spacing:.06em;text-transform:uppercase;line-height:1.05;position:relative;z-index:2}
+  .tklab small{font-size:10.5px;letter-spacing:.08em;opacity:.75}
+  .tklab .livedot{display:inline-block;margin-right:5px;vertical-align:1px;background:var(--on-a)}
+  .sticker.live .tklab{background:var(--red);color:#fff}
+  .sticker.live .tklab .livedot{background:#fff}
+  .tkview{position:relative;flex:1;min-width:0;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+  .tktrack{display:flex;width:max-content;height:100%;animation:tkcrawl var(--tkdur,40s) linear infinite}
+  .sticker:hover .tktrack,.sticker:focus-within .tktrack{animation-play-state:paused}
+  @keyframes tkcrawl{to{transform:translateX(-50%)}}
+  .tkrun{display:flex;align-items:center;height:100%}
+  .tkgame{display:flex;align-items:center;gap:8px;padding:0 22px;height:100%;white-space:nowrap;position:relative}
+  .tkgame::after{content:"";position:absolute;right:0;top:14px;bottom:14px;width:1px;background:var(--edge)}
+  .tkside{display:flex;align-items:center;gap:6px;color:var(--ink-2);font-size:13.5px}
+  .tkside .av{width:22px;height:22px}
+  .tkpt{font-family:var(--disp);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+  .tkside.win .tknm,.tkside.lead .tknm{color:var(--ink);font-weight:600}
+  .tkside.win .tkpt{color:var(--a)}
+  .tkside.lead .tkpt{color:var(--a)}
+  .tkvs{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .tktag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--on-a);background:var(--a);
+    border-radius:999px;padding:2px 7px}
+  .tkpt.bump{animation:tkbump .9s ease-out}
+  @keyframes tkbump{0%{color:#fff;text-shadow:0 0 0 transparent;transform:scale(1.18)}100%{transform:none}}
+  @media (max-width:560px){
+    .sticker{margin:0 0 14px;border-radius:12px;height:44px}
+    .tklab{padding:0 11px;font-size:12.5px}
+    .tkgame{padding:0 16px}
+    .tkside{font-size:12.5px}
+    .tkpt{font-size:15px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .tkview{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+    .tktrack{animation:none}
+    .tkrun[aria-hidden="true"]{display:none}
+  }
 </style>
 </head>
 <body>
@@ -3018,6 +3062,53 @@ function injuryStrip(model, avail) {
  * it changes on its own every week, which is the point — the rest of the home
  * page is history and history does not move.
  */
+/* ------------------------------------------------------- the score ticker */
+/*
+ * A broadcast crawl across the top of the home page: every game of the latest
+ * week, live while it is being played and final once it is not. A live update
+ * changes the numbers in place, so the crawl never jumps back to the start.
+ */
+let TICKER_SUB = null;
+function paintTicker() {
+  const box = $("#scoreTicker");
+  if (!box) return;
+  const w = allWeeks()[0];
+  if (!w || !w.games.length) { box.hidden = true; return; }
+  const sig = `${w.season}|${w.week}|${w.live}|` + w.games.map(g => g.a.uid + g.b.uid).join(",");
+  const best = Math.max(...w.games.flatMap(g => [g.a.pts, g.b.pts]));
+  const side = (s, o) => {
+    const up = s.pts > o.pts, cls = up ? (w.live ? "lead" : "win") : "";
+    return `<span class="tkside ${cls}">${avatarHTML(s.uid, "xs")}<span class="tknm">${esc(nameOf(s.uid))}</span>
+      <b class="tkpt" data-uid="${esc(s.uid)}">${f2(s.pts)}</b></span>`;
+  };
+  const items = w.games.map(g => `<span class="tkgame">${side(g.a, g.b)}<span class="tkvs">${w.live ? "vs" : "–"}</span>${side(g.b, g.a)}${
+    !w.live && (g.a.pts === best || g.b.pts === best) ? `<span class="tktag">Top score</span>` : ""}</span>`).join("");
+  if (box.dataset.sig === sig) {
+    // Same games: only the numbers and who leads change.
+    for (const g of w.games) for (const [s, o] of [[g.a, g.b], [g.b, g.a]])
+      box.querySelectorAll(`.tkpt[data-uid="${CSS.escape(String(s.uid))}"]`).forEach(n => {
+        const v = f2(s.pts);
+        if (n.textContent !== v) { n.textContent = v; n.classList.remove("bump"); void n.offsetWidth; n.classList.add("bump"); }
+        n.parentNode.classList.toggle(w.live ? "lead" : "win", s.pts > o.pts);
+      });
+    return;
+  }
+  box.dataset.sig = sig;
+  box.classList.toggle("live", !!w.live);
+  box.innerHTML = `<button type="button" class="tklab" aria-label="Week ${w.week} ${w.live ? "live scores" : "final scores"}: open the scoreboard">
+      ${w.live ? `<span class="livedot"></span>Live` : "Final"}<small>Week ${w.week}</small></button>
+    <div class="tkview" role="region" aria-label="Week ${w.week} ${w.live ? "live" : "final"} scores">
+      <div class="tktrack"><div class="tkrun">${items}</div><div class="tkrun" aria-hidden="true">${items}</div></div></div>`;
+  box.hidden = false;
+  box.querySelector(".tklab").onclick = () => show("scores");
+  box.querySelector(".tkview").onclick = () => show("scores");
+  // Constant speed whatever the week holds: about 55px a second.
+  requestAnimationFrame(() => {
+    const run = box.querySelector(".tkrun");
+    if (run) box.style.setProperty("--tkdur", Math.max(18, run.offsetWidth / 55).toFixed(1) + "s");
+  });
+}
+
 async function ensureHomeWeek() {
   const host = $("#homeWeek");
   if (!host) return;
@@ -3031,6 +3122,8 @@ async function ensureHomeWeek() {
     // probabilities on first paint rather than flashing in a second later.
     if (w && w.live) { try { await liveOnce(); } catch (e) { /* draw it plain */ } }
 
+    paintTicker();
+    if (!TICKER_SUB) TICKER_SUB = onLive(paintTicker);
     if (w && String(w.season) === String(season.season)) {
       const hero = weekHero(w);
       if (hero) host.appendChild(hero);
@@ -3105,6 +3198,9 @@ function panelHome(AT, RB, model, sim) {
 
   // The front page leads with the season being played, not with a trophy
   // everybody already knows about. Filled in just after first paint.
+  // The ticker: every game of the week, live or final, running across the top.
+  const tick = el("div", "sticker"); tick.id = "scoreTicker"; tick.hidden = true;
+  p.appendChild(tick);
   const week = el("div"); week.id = "homeWeek";
   week.appendChild(el("div", "wskel", "Reading this week\u2026"));
   p.appendChild(week);
