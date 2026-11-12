@@ -349,6 +349,20 @@
    "sha256": "002d6f6b28ee123b400e82d54bc405f895d907f8c8939a84a4c3f7c74c429cc3",
    "by": "hand",
    "note": "Sent by hand at Drew's request; no poll."
+  },
+  {
+   "at": "2026-11-12T16:21:46.703Z",
+   "subject": "DFFL Week 10: A 2027 Third-Round Pick, for Nothing",
+   "lead": "a-third-round-pick-for-nothing",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "16096546137a9ddc0ecaf8f5b1d83de6c172877ae0cf3797ac2b6826ab9e100f",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
