@@ -2224,7 +2224,7 @@
   /* GrowBar: bars fill from zero on first view, and glide when a filter changes their width. */
   [data-rv="go"] .abar .fill,[data-rv="go"] .tbar span,[data-rv="go"] .bar .fill,[data-rv="go"] .divbar .fill{
     animation:barin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i,0),10) * 25ms)}
-  .abar .fill,.tbar span,.bar .fill,.divbar .fill,.hb,.pp-meter i{transition:width 450ms var(--ease),height 450ms var(--ease)}
+  .abar .fill,.tbar span,.bar .fill,.divbar .fill,.hb{transition:width 450ms var(--ease),height 450ms var(--ease)}
   [data-rv="go"] .hb{animation:hbin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i),14) * 20ms)}
   /* Markers pop in with a slight overshoot. */
   [data-rv="go"] .lm-dot,.scard[data-rv="go"] .lm-dot{animation:dotin 520ms var(--ease-pop) both;animation-delay:calc(var(--i) * 30ms + 120ms)}
@@ -2260,77 +2260,6 @@
   }
   @media (max-width:640px){.secsheet{max-height:88dvh}.secsheet .sechd{padding-top:16px}}
 
-  /* ---- player props board ---- */
-  .board.props{margin:0 0 18px}
-  .pp-ctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px 4px}
-  .pp-ctl .fxm-chips{border:0;margin:0}
-  .pp-tier .fxm-chip{min-height:44px}
-  .pp-sel{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .pp-sel select{width:auto;min-width:150px;min-height:44px;padding:0 12px;border-radius:12px;background:var(--plane);color:var(--ink);border:1px solid var(--card-line);font:600 13.5px var(--body)}
-  .pp-head,.pp-row summary{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1.3fr) 104px 112px 168px;gap:12px;align-items:center}
-  .pp-head{padding:10px 16px 6px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .pp-row{border-top:1px solid var(--grid)}
-  .pp-row summary{list-style:none;cursor:pointer;padding:10px 16px;min-height:56px;transition:background-color var(--t-hover) var(--ease)}
-  .pp-row summary::-webkit-details-marker{display:none}
-  .pp-row summary:hover{background:rgba(255,255,255,.035)}
-  .pp-row[open] summary{background:rgba(var(--a-rgb),.05)}
-  .pp-row.closed{opacity:.55}
-  .pp-row small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .pp-row b{font-weight:700;font-variant-numeric:tabular-nums}
-  .pp-who{display:flex;align-items:center;gap:10px;min-width:0}
-  .pp-who > span:last-child{min-width:0}
-  .pp-who b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .pp-px b,.pp-edge b{font-family:var(--disp);font-size:16px}
-  .pp-edge.pos b{color:var(--a)}
-  .pp-conf{display:grid;grid-template-columns:52px 1fr 28px;align-items:center;gap:8px}
-  .pp-tierlab{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-  .t-strong .pp-tierlab{color:var(--a)}
-  .t-lean .pp-tierlab{color:var(--a2)}
-  .pp-meter{height:6px;border-radius:99px;background:var(--grid);overflow:hidden}
-  .pp-meter i{display:block;height:100%;width:var(--w);border-radius:99px;background:var(--muted)}
-  .t-strong .pp-meter i{background:var(--a)}
-  .t-lean .pp-meter i{background:var(--a2)}
-  .pp-meter i{transform-origin:left;animation:barin var(--t-bar) var(--ease) both}
-  .pp-conf b{text-align:right;font-size:13px}
-  .pp-why{display:flex;flex-wrap:wrap;gap:8px 22px;padding:2px 16px 14px 58px}
-  .pp-why small{display:block;font-size:11px;color:var(--muted)}
-  .pp-why b{font-size:14px}
-  .pp-more{padding:10px 16px 0}
-  .pp-all{min-height:44px;padding:0 18px;border-radius:var(--r-pill);border:1px solid var(--card-line);background:rgba(255,255,255,.04);color:var(--ink-2);font:600 13.5px var(--body);cursor:pointer}
-  .pp-all:hover{color:var(--a);border-color:rgba(var(--a-rgb),.4)}
-  .pp-note{margin:10px 16px 16px;font-size:12px;line-height:1.5;color:var(--muted)}
-  .pp-list .empty{margin:12px 16px}
-  @media (max-width:760px){
-    .pp-head{display:none}
-    .pp-row summary{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"who conf" "bet px" "edge edge";gap:6px 12px;padding:12px 16px}
-    .pp-who{grid-area:who}.pp-bet{grid-area:bet}.pp-px{grid-area:px;text-align:right}
-    .pp-edge{grid-area:edge;display:flex;gap:8px;align-items:baseline}
-    .pp-edge small{display:inline}
-    .pp-conf{grid-area:conf;grid-template-columns:auto 44px 24px}
-    .pp-why{padding:2px 16px 14px}
-    .pp-sel{width:100%}
-    .pp-sel select{flex:1;min-width:0}
-  }
-
-  /* ---- More sheet groups ---- */
-  .secgrp{grid-column:1/-1;margin:10px 4px 2px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .secgrp:first-child{margin-top:0}
-  .secgrp[hidden]{display:none}
-
-  /* ---- phone bottom tab bar ---- */
-  .btab{display:none}
-  @media (max-width:640px){
-    .btab{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:60;
-      padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(11,7,16,.86);
-      -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border-top:1px solid var(--card-line)}
-    .btab button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border:0;border-radius:14px;
-      background:transparent;color:var(--muted);font:600 11px var(--body);cursor:pointer;
-      transition:color var(--t-hover) var(--ease),background-color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
-    .btab button svg{width:22px;height:22px}
-    .btab button[aria-current="page"]{color:var(--a);background:rgba(var(--a-rgb),.12)}
-    .btab button:active{transform:scale(.97)}
-    body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
-  }
 </style>
 </head>
 <body>
@@ -3097,7 +3026,7 @@ const TAB_ICONS = {
 const TAB_DESC = {
   home: "This week at a glance", scores: "Every matchup, every week", managers: "Career profiles",
   records: "Trophies and the record book", stats: "Every game, drawn", matchups: "Head-to-head and rivalries", power: "This week's power board",
-  odds: "Game lines, player props, futures", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
+  odds: "Game lines, playoff and title prices", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
   toilet: "The race for last", draft: "Draft board and grades", trades: "Every trade, graded",
   rankings: "DFFL position ranks", recaps: "Columns and weekly write-ups", ask: "Ask anything about the league",
 };
@@ -9790,95 +9719,6 @@ function futuresMarkets(model, sim, hero) {
   return root;
 }
 
-/* ===================================================================
-   PLAYER PROPS — real sportsbook lines for DFFL-rostered players, each with
-   an edge and a confidence score. data/props.json is written on a schedule
-   by build-props.mjs (the odds key stays a repo secret, never in the page).
-   =================================================================== */
-const PROP_MKTS = [
-  ["", "All markets"], ["player_pass_yds", "Passing"], ["player_rush_yds", "Rushing"],
-  ["player_reception_yds", "Receiving"], ["player_anytime_td", "Anytime TD"],
-];
-async function loadProps(host) {
-  const b = el("div", "board props"); b.dataset.board = "props";
-  b.innerHTML = `<div class="bhead"><span class="bt">Player props<span class="bs">Loading this week's lines…</span></span></div>`;
-  host.replaceChildren(b);
-  let d = null;
-  try { d = await jget("data/props.json"); } catch (e) { /* not published yet */ }
-  if (!d || !Array.isArray(d.props) || !d.props.length) {
-    b.innerHTML = `<div class="bhead"><span class="bt">Player props</span></div>`;
-    b.appendChild(el("div", "empty", `<b>No props on the board yet</b><br>Lines for DFFL-rostered players post Thursday afternoon
-      and refresh Sunday morning, once the books have them up.`));
-    return;
-  }
-  const st = { tier: "play", mkt: "", mine: "", all: false };
-  const when = new Date(d.generated);
-  const stamp = when.toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
-  const nBooks = Math.max(...d.props.map(p => p.books || 0));
-  b.innerHTML = `<div class="bhead"><span class="bt">Player props · week ${esc(d.week)}<span class="bs">Up to ${nBooks} US books, checked ${esc(stamp)}.
-    Edge is our chance minus the market's no-vig chance; confidence folds in the edge, how many books agree, and the best price.</span></span></div>
-    <div class="pp-ctl">
-      <div class="fxm-chips pp-tier" role="tablist" aria-label="Confidence">
-        <button type="button" class="fxm-chip" data-tier="play" role="tab">Strong + Lean</button>
-        <button type="button" class="fxm-chip" data-tier="Strong" role="tab">Strong</button>
-        <button type="button" class="fxm-chip" data-tier="all" role="tab">Every line</button>
-      </div>
-      <div class="pp-sel">
-        <select class="pp-mkt" aria-label="Market">${PROP_MKTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("")}</select>
-        <select class="pp-mgr" aria-label="Manager"><option value="">Every roster</option>${[...new Set(d.props.map(p => p.owner))]
-          .filter(Boolean).sort((a, c) => nameOf(a).localeCompare(nameOf(c)))
-          .map(u => `<option value="${esc(u)}">${esc(nameOf(u))}</option>`).join("")}</select>
-        <button type="button" class="sclear pp-clear" hidden>Clear</button>
-      </div>
-    </div>
-    <div class="pp-head" aria-hidden="true"><span>Player</span><span>Bet</span><span>Best price</span><span>Edge</span><span>Confidence</span></div>
-    <div class="pp-list"></div>
-    <div class="pp-more"></div>
-    <p class="pp-note">The comparison is Sleeper's stat projection, calibrated so a typical player in each market grades even,
-      then given 30% weight against the market's 70% — a projection is not sharper than six books. A model's view, not betting advice.</p>`;
-  const list = $(".pp-list", b), more = $(".pp-more", b), clr = $(".pp-clear", b);
-  const mkt = $(".pp-mkt", b), mgr = $(".pp-mgr", b);
-  const sideTxt = p => p.side === "yes" ? "Yes" : p.side === "over" ? `Over ${p.line}` : `Under ${p.line}`;
-  const row = p => {
-    const r = el("details", `pp-row t-${p.tier.toLowerCase()}${p.closed ? " closed" : ""}`);
-    const edge = (p.edge * 100);
-    r.innerHTML = `<summary>
-        <span class="pp-who">${avatarHTML(p.owner, "sm")}<span><b>${esc(p.name)}</b><small>${esc(p.pos)} · ${esc(p.team || "FA")} · ${esc(nameOf(p.owner))}${p.closed ? " · <em>kicked off</em>" : ""}</small></span></span>
-        <span class="pp-bet"><b>${esc(sideTxt(p))}</b><small>${esc(p.label)}</small></span>
-        <span class="pp-px"><b>${p.best ? fmtOdds(p.best.price) : "—"}</b><small>${p.best ? esc(p.best.book) : ""}</small></span>
-        <span class="pp-edge ${edge > 0 ? "pos" : ""}"><b>${edge > 0 ? "+" : ""}${edge.toFixed(1)}</b><small>pts · EV ${p.ev > 0 ? "+" : ""}${(p.ev * 100).toFixed(1)}%</small></span>
-        <span class="pp-conf"><span class="pp-tierlab">${p.tier}</span><span class="pp-meter"><i style="--w:${p.score}%"></i></span><b>${p.score}</b></span>
-      </summary>
-      <div class="pp-why">
-        <span><small>Sleeper projects</small><b>${f1(p.proj)}${p.market === "player_anytime_td" ? " TD" : " yds"}</b></span>
-        <span><small>Market's chance</small><b>${pct(p.p_market)}</b></span>
-        <span><small>Projection's chance</small><b>${pct(p.p_model)}</b></span>
-        <span><small>Blended</small><b>${pct(p.p)}</b></span>
-        <span><small>Books on the line</small><b>${p.books}</b></span>
-      </div>`;
-    return r;
-  };
-  const paint = () => {
-    for (const c of b.querySelectorAll(".pp-tier .fxm-chip")) c.setAttribute("aria-selected", String(c.dataset.tier === st.tier));
-    clr.hidden = !(st.mkt || st.mine || st.tier !== "play");
-    let rows = d.props.filter(p => (!st.mkt || p.market === st.mkt) && (!st.mine || p.owner === st.mine)
-      && (st.tier === "all" || (st.tier === "play" ? p.tier !== "Pass" : p.tier === st.tier)));
-    const cap = st.all ? rows.length : 25;
-    list.replaceChildren(...rows.slice(0, cap).map(row));
-    if (!rows.length) list.appendChild(el("div", "empty", `<b>Nothing here</b><br>No line clears that filter this week.`));
-    more.innerHTML = rows.length > cap ? `<button type="button" class="pp-all">Show all ${rows.length}</button>` : "";
-  };
-  b.addEventListener("click", e => {
-    const t = e.target.closest("[data-tier]");
-    if (t) { st.tier = t.dataset.tier; st.all = false; paint(); }
-    if (e.target.closest(".pp-all")) { st.all = true; paint(); }
-  });
-  mkt.onchange = () => { st.mkt = mkt.value; st.all = false; paint(); };
-  mgr.onchange = () => { st.mine = mgr.value; st.all = false; paint(); };
-  clr.onclick = () => { st.tier = "play"; st.mkt = st.mine = ""; mkt.value = mgr.value = ""; st.all = false; paint(); };
-  paint();
-}
-
 function panelOdds(model, sim) {
   const p = el("div", "panel"); p.dataset.panel = "odds";
 
@@ -9887,7 +9727,6 @@ function panelOdds(model, sim) {
   // Game lines jumps up to this week's games; the other three pick that futures
   // market (via its own chip) and scroll to the board. Title is the default.
   nav.innerHTML = `<button type="button" data-jump="glHost">Game lines</button>
-    <button type="button" data-jump="propsHost">Player props</button>
     <button type="button" data-jump="futuresTop" data-market="playoff">Playoffs</button>
     <button type="button" data-jump="futuresTop" data-market="divWin">Division</button>
     <button type="button" data-jump="futuresTop" data-market="title" aria-current="true">Title</button>`;
@@ -9909,9 +9748,6 @@ function panelOdds(model, sim) {
   p.appendChild(nav);
   const glHost = el("div"); glHost.id = "glHost";
   p.appendChild(glHost);
-  const propsHost = el("div"); propsHost.id = "propsHost";
-  p.appendChild(propsHost);
-  loadProps(propsHost);
   const futuresTop = el("div"); futuresTop.id = "futuresTop";
   p.appendChild(futuresTop);
 

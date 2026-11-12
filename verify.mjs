@@ -11,7 +11,6 @@
 import { chromium } from "playwright";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
-import { readFileSync as readFileNow } from "node:fs";
 import { extname, join, resolve } from "node:path";
 
 const ROOT = resolve(new URL(".", import.meta.url).pathname);
@@ -501,7 +500,7 @@ const gl = await page.evaluate(() => {
   };
 });
 check("odds tab contains the game-lines board", gl.inOdds);
-check("game lines sit above the futures with an underline tab nav", gl.first && gl.nav.join("/") === "Game lines/Player props/Playoffs/Division/Title", gl.nav.join("/"));
+check("game lines sit above the futures with an underline tab nav", gl.first && gl.nav.join("/") === "Game lines/Playoffs/Division/Title", gl.nav.join("/"));
 check("one card per matchup this week", gl.cards.length === gl.expected && gl.expected > 0, `${gl.cards.length} cards vs ${gl.expected} matchups`);
 check("every card carries both managers' rids", gl.cards.every(c => c.rids));
 check("every card shows a moneyline (or result) for both teams", gl.cards.every(c => c.mlBoth && (c.priced || c.resultOnly)),
@@ -8097,58 +8096,6 @@ group("Rankings: tab, routing and live board");
     check(`${w}px: ${w >= 800 ? "two columns" : "stacked columns"}`, w >= 800 ? lay.twoCol : !lay.twoCol);
   }
   await rctx.close();
-}
-
-/* ------------------------------------------------------- player props */
-// data/props.json is written by build-props.mjs with the odds key held as a
-// repo secret; the page only ever reads the file.
-{
-  const PJ = JSON.parse(readFileNow(join(ROOT, "data/props.json"), "utf8"));
-  const P = PJ.props;
-  check("props: the odds key is never in the page", !/apiKey=|the-odds-api\.com/.test(readFileNow(join(ROOT, "index.html"), "utf8")));
-  check("props: every line has an edge equal to blended minus market", P.every(x => Math.abs(x.edge - (x.p - x.p_market)) < 0.002),
-    JSON.stringify(P.find(x => Math.abs(x.edge - (x.p - x.p_market)) >= 0.002) || ""));
-  check("props: confidence is 0-100 and the tier follows it", P.every(x => x.score >= 0 && x.score <= 100
-    && x.tier === (x.score >= 60 ? "Strong" : x.score >= 35 ? "Lean" : "Pass")));
-  check("props: a line with no value at the best price scores zero", P.every(x => x.ev > 0 || x.score === 0));
-  check("props: the blend never strays from the market by more than the model's weight allows",
-    P.every(x => Math.abs(x.p - x.p_market) <= 0.3 * Math.abs(x.p_model - x.p_market) + 0.002));
-  const yds = P.filter(x => x.side !== "yes"), overs = yds.filter(x => x.side === "over").length;
-  check("props: calibrated, so yardage picks are not all one way", yds.length < 20 || (overs / yds.length > 0.3 && overs / yds.length < 0.7),
-    `${overs} overs of ${yds.length}`);
-  check("props: Strong is a short list, not most of the board", P.filter(x => x.tier === "Strong").length <= Math.max(5, 0.15 * P.length));
-
-  const pctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  const pp = await pctx.newPage(); const ppErr = []; pp.on("pageerror", e => ppErr.push(e.message));
-  await pp.goto(BASE + "/#odds");
-  await pp.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
-  await pp.waitForSelector("#propsHost .pp-row, #propsHost .empty", { timeout: 30000 });
-  const tiers = () => pp.evaluate(() => [...document.querySelectorAll("#propsHost .pp-row")].map(r => r.className.match(/t-(\w+)/)[1]));
-  const t0 = await tiers();
-  const play = P.filter(x => x.tier !== "Pass").length;
-  check("props: the board opens on Strong + Lean, 25 at most", t0.length === Math.min(25, play) && t0.every(t => t !== "pass"), `${t0.length} rows`);
-  await pp.click('#propsHost [data-tier="Strong"]');
-  const t1 = await tiers();
-  check("props: Strong shows only Strong", t1.length === Math.min(25, P.filter(x => x.tier === "Strong").length) && t1.every(t => t === "strong"));
-  check("props: a filter brings up Clear", await pp.isVisible("#propsHost .pp-clear"));
-  await pp.selectOption("#propsHost .pp-mkt", "player_anytime_td");
-  const tdOnly = await pp.evaluate(() => [...document.querySelectorAll("#propsHost .pp-bet small")].every(s => s.textContent === "Anytime TD"));
-  check("props: the market filter narrows to that market", tdOnly);
-  await pp.click("#propsHost .pp-clear");
-  check("props: Clear restores the default board", (await tiers()).length === t0.length && !(await pp.isVisible("#propsHost .pp-clear")));
-  await pp.click("#propsHost .pp-row summary");
-  check("props: a row opens to show the projection behind it", await pp.isVisible("#propsHost .pp-row[open] .pp-why"));
-  await pp.setViewportSize({ width: 390, height: 844 });
-  const lay = await pp.evaluate(() => {
-    const vw = document.documentElement.clientWidth, h = document.querySelector("#propsHost");
-    const over = [...h.querySelectorAll("*")].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > vw + 1; }).map(e => e.className || e.tagName);
-    const tap = [...h.querySelectorAll("button, select, summary")].filter(e => e.offsetParent && e.getBoundingClientRect().height < 44).map(e => e.className || e.tagName);
-    return { over: over.slice(0, 4), tap: tap.slice(0, 4) };
-  });
-  check("props: 390px has no horizontal overflow", lay.over.length === 0, JSON.stringify(lay.over));
-  check("props: 390px controls are 44px tap targets", lay.tap.length === 0, JSON.stringify(lay.tap));
-  check("props: no page errors", ppErr.length === 0, ppErr.slice(0, 2).join(" | "));
-  await pctx.close();
 }
 
 /* -------------------------------------------------------------- done */
