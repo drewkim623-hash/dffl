@@ -82,9 +82,9 @@
     box-sizing:border-box;min-height:44px;min-width:44px;flex:none}
   .tabrow button:hover{color:var(--ink-2);background:var(--raised)}
   .tabrow button[aria-selected="true"]{color:var(--on-a);background:var(--blue);border-color:var(--blue)}
-  /* Desktop: all twelve tabs fit the row without scrolling. Phones keep the scrolling row. */
+  /* Desktop: all thirteen tabs fit the row without scrolling from 1180px up. Narrower screens keep the scrolling row and its hint. */
   @media (min-width:1024px){.tabrow button{padding:8px 7px}}
-  @media (min-width:1180px){.tabrow button{padding:8px 10px}}
+  @media (min-width:1180px){.tabrow button{padding:8px 8px}}
 
   main{padding:22px 0 90px;min-height:60vh}
   .panel[hidden]{display:none}
@@ -994,7 +994,7 @@
   .abar .v{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;
     text-align:right;color:var(--ink-2)}
 
-  .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin:22px 0}
+  .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:11px;margin:22px 0}
   .acard{background:var(--raised);border:1px solid var(--ring);border-radius:var(--rs);padding:14px 15px}
   .acard.lead{border-color:rgba(255,194,61,.5)}
   .acard .ct{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:800}
@@ -1002,9 +1002,9 @@
     letter-spacing:-.02em}
   .acard .cs{font-size:11.5px;color:var(--muted);line-height:1.4;margin-bottom:10px}
   .acard .cr{display:grid;gap:4px}
-  .acard .cr span{display:flex;align-items:baseline;gap:8px;font-size:13px}
-  .acard .cr i{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .acard .cr b{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:400;
+  .acard .cr span{display:grid;grid-template-columns:minmax(82px,112px) minmax(0,1fr);align-items:start;gap:10px;font-size:13px}
+  .acard .cr i{font-style:normal;white-space:normal;line-height:18px;color:var(--muted)}
+  .acard .cr b{margin-left:0;font-family:var(--mono);font-size:12px;font-weight:400;
     color:var(--muted);font-variant-numeric:tabular-nums}
 
   .apicks{margin:20px 0;border-top:2px solid var(--ink)}
@@ -1243,6 +1243,50 @@
     .ppv .pp-hero{flex-wrap:wrap}
     .ppv .pp-hero .pp-bars{margin-left:66px;gap:14px}
   }
+
+  #toiletHost .tbv{margin-top:0;padding-top:0;border-top:0;min-width:0}
+  #toiletHost .tbv .pp-tnm,#toiletHost .tbv .tb-slotname,#toiletHost .tbv .tb-rowtop .tb-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal;word-break:normal}
+  #toiletHost .tbv .pp-nm{display:flex;align-items:center;gap:6px;min-width:0;overflow-wrap:normal;word-break:normal}
+  #toiletHost .tbv .pp-nm .tb-name-text{display:block;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal;word-break:normal}
+  #toiletHost .tbv .pp-nm .badge{flex:0 0 auto}
+  #toiletHost .tbv.ppv{color:var(--ink);--blue:var(--gold);--a:var(--gold);--on-a:#1a1200}
+  #toiletHost .tbv .pp-eye{color:#ffd27a}
+  #toiletHost .tbv .pp-br{max-width:none}
+  #toiletHost .tbv .pp-rd{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #toiletHost .tbv .pp-mt.byeg{border-color:rgba(255,194,61,.45)}
+  #toiletHost .tbv .pp-hh{padding:10px 14px 4px}
+  #toiletHost .tbv .pp-li{grid-template-columns:22px 28px minmax(0,1fr) auto}
+  #toiletHost .tbv .pp-bars{gap:8px}
+  #toiletHost .tbv .pp-pb{width:56px}
+  #toiletHost .tbv .pp-hn{color:#ffd27a}
+  #toiletHost .tbv .pp-sd.bye{color:#1a1200}
+  #toiletHost .tbv .pp-rd .pp-mw{align-self:start}
+  #toiletHost .tbv .pp-rd.semifinals{padding-top:18px}
+  #toiletHost .tbv .pp-fin{width:74%}
+  #toiletHost .tbv .pp-place{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px;margin:12px auto 0;opacity:.86}
+  #toiletHost .tbv .pp-slot-hint{display:block;font:10px var(--mono);letter-spacing:-.03em;color:#a9c9f5;white-space:nowrap}
+  #toiletHost .tbv .pp-tm:has(.pp-slot-hint){height:54px}
+  @media(max-width:520px){#toiletHost .tbv .pp-li{grid-template-columns:22px 28px minmax(0,1fr);row-gap:6px}#toiletHost .tbv .pp-li .pp-bars{grid-column:3;justify-content:flex-start;gap:14px}#toiletHost .tbv .pp-rd{grid-template-columns:minmax(0,1fr);gap:10px}#toiletHost .tbv .pp-place{grid-template-columns:1fr;gap:8px}#toiletHost .tbv .pp-tm{padding:0 7px;gap:6px}#toiletHost .tbv .pp-hn{font-size:10px}}
+  .tbv .tb-eye{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+  .tbv .tb-head{font:700 23px var(--disp);color:var(--gold);margin-top:5px}
+  .tbv .tb-lede,.tbv .tb-note{font-size:13px;line-height:1.55;color:var(--ink-2);max-width:100ch}
+  .tbv .tb-meta{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 18px}.tbv .tb-pill{border:1px solid var(--ring);border-radius:999px;padding:5px 9px;font:11px var(--mono);color:var(--ink-2)}
+  .tbv .tb-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0}.tbv .tb-games,.tbv .tb-list{min-width:0}
+  .tbv .tb-round{display:grid;gap:10px}.tbv .tb-game{padding:9px;border:1px solid var(--ring);border-radius:12px;margin:7px 0;background:rgba(255,255,255,.025);min-width:0}
+  .tbv .tb-game.last{border-color:rgba(185,140,255,.45)}.tbv .tb-glabel{font:600 11px var(--mono);letter-spacing:.06em;color:var(--ink-2);text-transform:uppercase;margin:0 0 5px}
+  .tbv .tb-slot{display:flex;align-items:center;gap:6px;min-height:40px;min-width:0}.tbv .tb-slot+.tb-slot{border-top:1px solid rgba(255,255,255,.06)}
+  .tbv .tb-seed{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;background:rgba(255,194,61,.15);color:var(--gold);font:700 11px var(--mono);flex:none}
+  .tbv .tb-avatar{width:24px;height:24px;object-fit:cover;border-radius:50%;flex:none}.tbv .tb-slotname{min-width:0;overflow-wrap:anywhere;font-size:12px;font-weight:650}
+  .tbv .tb-hint{margin-left:auto;text-align:right;color:var(--ink-2);font:10px var(--mono);white-space:nowrap;flex:none}.tbv .tb-slot.tbd{color:var(--ink-2);font-style:italic}
+  .tbv .tb-byebox{padding:9px;border:1px dashed rgba(255,194,61,.4);border-radius:12px;color:var(--ink-2);font-size:12px}
+  .tbv .tb-row{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--ring);min-width:0}
+  .tbv .tb-rowtop{display:flex;align-items:center;gap:7px;min-width:0}.tbv .tb-rowtop .tb-name{overflow-wrap:anywhere;font-weight:650}
+  .tbv .tb-rec{font:11px var(--mono);color:var(--ink-2);margin-top:3px}.tbv .tb-bars{display:flex;gap:12px}.tbv .tb-barbox{width:min(46%,140px);font-size:10px;color:var(--ink-2)}
+  .tbv .tb-barbox b{display:block;font:700 12px var(--mono);color:var(--ink)}.tbv .tb-bar{height:4px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}
+  .tbv .tb-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold))}.tbv .tb-cut{border-top:1px dashed var(--gold);margin:10px 0;padding-top:7px;color:var(--gold);font:11px var(--mono);text-transform:uppercase}
+  .tbv .tb-chip{margin-left:4px;vertical-align:middle}.tbv .tb-safe{margin-top:12px;padding:10px;border:1px solid var(--ring);border-radius:12px}.tbv .tb-safe h4{margin:0 0 6px}
+  .tbv .tb-note{font-size:11px;color:var(--ink-2);margin-top:16px}
+  @media(min-width:900px){.tbv .tb-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}.tbv .tb-row{grid-template-columns:minmax(0,1fr) minmax(160px,auto)}}
 
   /* ============ trades ============ */
   .fleece{position:relative;overflow:hidden;border-radius:var(--r);padding:18px 20px;margin-top:18px;
@@ -1639,6 +1683,143 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   }
+
+  /* ---- Rankings: DFFL position ranks, with a player search inside the leaderboard card */
+  .rk{font-size:14px;overflow-wrap:break-word;word-break:normal}
+  .rk .rk-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--ink-2);font-weight:600;margin:0 0 10px}
+  .rk-intro{padding:6px 0 22px}
+  .rk-intro h2{font:700 34px/1.05 var(--disp);letter-spacing:-1.5px;margin:0 0 12px}
+  .rk-intro p.rk-sub{color:var(--ink-2);font-size:13px;line-height:1.65;margin:0;max-width:62ch}
+  .rk-two{display:block}
+  .rk-card{background:var(--surface);border:1px solid var(--edge);border-radius:14px;padding:20px;margin-bottom:16px;min-width:0}
+  .rk-card h3{font:700 22px/1.12 var(--disp);letter-spacing:-.5px;margin:0}
+  .rk-card h4{font:700 18px/1.2 var(--disp);margin:0}
+  .rk-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .rk-badge{display:inline-block;background:var(--raised);color:var(--ink-2);padding:5px 8px;border-radius:5px;font-size:11px;letter-spacing:.3px;line-height:1.3;white-space:nowrap}
+  .rk-chips{display:flex;gap:7px;margin:14px 0}
+  .rk-chips button{flex:1 1 0;min-width:0;min-height:44px;padding:12px 8px;appearance:none;color:var(--ink-2);border:1px solid var(--edge);border-radius:7px;background:var(--surface);font:600 12px var(--body);cursor:pointer}
+  .rk-chips button[aria-pressed="true"]{color:var(--plane);background:var(--a);border-color:var(--a)}
+  .rk button:focus-visible,.rk input:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+  .rk-search{margin:17px 0 15px}
+  .rk-search label{display:block;font-size:12px;font-weight:600;margin-bottom:8px;color:var(--ink)}
+  .rk-shell{display:flex;gap:9px;align-items:center;border:1px solid var(--a);background:var(--plane);border-radius:9px;padding:4px 5px 4px 12px;min-height:50px}
+  .rk-shell .rk-ico{font-size:22px;line-height:1;color:var(--a);flex-shrink:0}
+  .rk-shell input{font:14px var(--body);color:var(--ink);background:transparent;border:0;outline:0;padding:9px 0;flex:1;min-width:0;width:100%;-webkit-appearance:none;appearance:none}
+  .rk-shell input::-webkit-search-cancel-button{display:none}
+  .rk-shell input::placeholder{color:var(--ink-2);opacity:1}
+  .rk .rk-shell input:focus-visible{outline:0}
+  .rk-shell:focus-within{outline:2px solid var(--violet);outline-offset:2px}
+  .rk-shell .rk-ico{font-size:24px}
+  .rk-clear{flex:0 0 auto;min-width:58px;min-height:44px;padding:10px 12px;background:var(--raised);color:var(--ink-2);border:0;border-radius:6px;font:600 12px var(--body);cursor:pointer}
+  .rk-clear[disabled]{opacity:.55;cursor:default}
+  .rk-status{margin:8px 0 0;font-size:11px;color:var(--ink-2);line-height:1.5}
+  .rk-small{font-size:11px;line-height:1.6;color:var(--ink-2);margin:0}
+  .rk-small.up{color:var(--plus)} .rk-small.down{color:var(--red)}
+  .rk-row{display:flex;gap:10px;align-items:center;padding:15px 0;border-top:1px solid var(--edge)}
+  .rk-row .rk-main{flex:1;min-width:0}
+  .rk-row strong{font-size:14px;display:block}
+  .rk-row .rk-val{text-align:right;min-width:62px;flex-shrink:0}
+  .rk-rank{white-space:nowrap;flex-shrink:0;font:700 30px var(--disp);min-width:35px;color:var(--a);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-num{font:700 22px var(--disp);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-lbl{display:block;color:var(--ink-2);font-size:11px;margin-top:5px}
+  .rk-row.rk-match{border-top:1px solid var(--a);margin-top:15px}
+  .rk-hero{margin:17px 0 7px;padding:19px;background:var(--raised);border:1px solid var(--edge);border-left:3px solid var(--a);border-radius:10px}
+  .rk-hero .rk-big{font:700 73px/1 var(--disp);letter-spacing:-3px;color:var(--a);font-variant-numeric:tabular-nums}
+  .rk-hero h4{font:700 23px/1.15 var(--disp);letter-spacing:-.5px;margin:13px 0 4px}
+  .rk-metric{display:flex;gap:16px;justify-content:space-between;padding:16px 0;border-top:1px solid var(--edge)}
+  .rk-metric .rk-n{font:700 26px var(--disp);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+  .rk-metric .rk-r{text-align:right}
+  .rk-hero .rk-metric{margin-top:18px;padding-bottom:0}
+  .rk-note{font-size:11px;line-height:1.65;color:var(--ink-2);padding-top:14px;margin:0}
+  .rk-note .up{color:var(--plus)} .rk-note .down{color:var(--red)}
+  .rk-empty{padding:18px 0 4px;border-top:1px solid var(--edge);color:var(--ink-2);font-size:13px;line-height:1.6}
+  .rk-empty button,.rk-retry{margin:10px 8px 0 0;min-height:44px;padding:10px 14px;background:var(--raised);color:var(--ink);border:1px solid var(--edge);border-radius:7px;font:600 12px var(--body);cursor:pointer}
+  .rk-side .rk-metric strong{font:700 16px var(--disp);white-space:nowrap}
+  .rk-leaders{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}
+  .rk-leaders>div{flex:1;min-width:130px;background:var(--raised);border-radius:8px;padding:13px}
+  .rk-leaders strong{display:block;font:700 15px/1.25 var(--disp)}
+  .rk-foot{padding:16px 0 0;margin-top:4px;border-top:1px solid var(--edge);font-size:11px;line-height:1.7;color:var(--ink-2)}
+  .rk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (min-width:800px){
+    .rk-intro h2{font-size:49px}
+    .rk-two{display:flex;gap:22px;align-items:flex-start}
+    .rk-two>.rk-primary{flex:1.7;min-width:0}
+    .rk-two>.rk-side{flex:1;min-width:0}
+    .rk-hero .rk-big{font-size:88px}
+  }
+  /* ============ ask the league (chat) ============ */
+  .ask-fabw{position:fixed;z-index:50;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;gap:6px;max-width:calc(100vw - 32px)}
+  .ask-fab{display:inline-flex;align-items:center;gap:8px;min-height:44px;min-width:0;padding:0 18px;border:0;border-radius:999px;
+    background:var(--a);color:var(--on-a);font:700 14px/1 var(--disp);letter-spacing:.01em;cursor:pointer;
+    box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 0 1px rgba(var(--a-rgb),.4)}
+  .ask-fab:hover{background:var(--a-lt)}
+  .ask-fab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--on-a);opacity:.75}
+  .ask-hdr{display:none;position:absolute;right:var(--pad);top:4px;min-height:40px;padding:0 16px;border-radius:999px;cursor:pointer;
+    background:transparent;border:1px solid rgba(var(--a-rgb),.55);color:var(--a);font:700 13.5px/1 var(--disp)}
+  .ask-hdr:hover{background:rgba(var(--a-rgb),.1)}
+  /* The pill's own X: hides it for the session. The Ask the League tab still opens the chat. */
+  .ask-fab-x{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(var(--a-rgb),.55);background:var(--surface);color:var(--a);
+    font-size:20px;line-height:1;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+  .ask-fab-x:hover{background:var(--raised)}
+  @media (min-width:900px){ .ask-fabw{display:none} .ask-hdr{display:inline-flex;align-items:center} }
+  @media (max-width:899.98px){ .ask-fabw{display:none} }
+  /* On the Ask the League tab the chat is the page, so the launchers step aside. */
+  body[data-ask-fab="hidden"] .ask-fabw,body[data-ask-tab] .ask-fabw,body[data-ask-tab] .ask-hdr{display:none}
+  #askLeague button:focus,#askLeague input:focus,.ask-fab-x:focus{outline:none}
+  .ask-fab:focus-visible,.ask-fab-x:focus-visible,.ask-hdr:focus-visible,#askLeague button:focus-visible,#askLeague input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .ask-back{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+  .ask-sheet{position:fixed;z-index:71;left:0;right:0;bottom:0;width:100%;max-height:86vh;max-height:86dvh;
+    display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--edge);border-bottom:0;
+    border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom)}
+  .ask-sheet[hidden],.ask-back[hidden]{display:none}
+  @media (min-width:900px){
+    .ask-sheet{left:auto;right:16px;top:16px;bottom:16px;width:400px;max-height:none;border-radius:18px;border-bottom:1px solid var(--edge)}
+  }
+  .ask-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px var(--pad) 10px;border-bottom:1px solid var(--grid)}
+  .ask-hd h2{margin:0;font:700 19px/1.1 var(--disp);letter-spacing:-.01em;text-transform:uppercase}
+  .ask-hd h2 b{color:var(--a)}
+  .ask-x{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--edge);background:var(--raised);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+  .ask-x:hover{border-color:var(--a);color:var(--a)}
+  /* The tab: the same sheet, docked into the page as a full-height card. Nothing to close. */
+  #askLeague[data-chat-mode="page"] .ask-sheet{position:static;width:auto;max-height:none;height:max(440px,calc(100vh - 220px));height:max(440px,calc(100dvh - 220px));
+    border:1px solid var(--edge);border-radius:18px;box-shadow:none;padding-bottom:0}
+  #askLeague[data-chat-mode="page"] .ask-x{display:none}
+  .ask-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px var(--pad);display:flex;flex-direction:column;gap:12px}
+  /* Anchor content to the composer: the free space sits above it, not between it and the chips. */
+  .ask-body>:first-child{margin-top:auto}
+  .ask-turn{display:flex;flex-direction:column;gap:10px}
+  .ask-note{margin:0;color:var(--ink-2);font-size:14px}
+  .ask-q{align-self:flex-end;max-width:85%;margin:0;padding:8px 12px;border-radius:14px 14px 4px 14px;background:var(--deep);border:1px solid var(--edge);
+    color:var(--ink);font-size:14px;overflow-wrap:anywhere}
+  .ask-card{padding:14px;border-radius:var(--r);background:var(--raised);border:1px solid var(--edge);overflow-wrap:break-word}
+  .ask-card.warn{border-color:rgba(230,103,103,.5)}
+  .ask-card.cap{border-color:rgba(var(--a-rgb),.45);background:var(--deep)}
+  .ask-res{margin:0 0 6px;font:700 17px/1.3 var(--disp);color:var(--ink)}
+  .ask-sub{margin:0 0 4px;color:var(--ink-2);font-size:14px}
+  .ask-src{margin:10px 0 0;color:var(--ink-2);font-size:12px}
+  .ask-card .num{font-family:var(--disp);font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ask-pulse{height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--a),transparent);background-size:50% 100%;
+    background-repeat:no-repeat;animation:askpulse 1.1s ease-in-out infinite}
+  @keyframes askpulse{0%{background-position:-50% 0}100%{background-position:150% 0}}
+  .ask-retry{margin-top:10px;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--a);background:transparent;color:var(--a);font:700 13.5px var(--disp);cursor:pointer}
+  .ask-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 var(--pad) 10px}
+  .ask-chips button{min-height:36px;max-width:100%;padding:6px 12px;border-radius:999px;border:1px solid var(--edge);background:var(--raised);
+    color:var(--ink-2);font-size:13px;text-align:left;cursor:pointer;overflow-wrap:anywhere}
+  .ask-chips button:hover:not(:disabled){border-color:var(--a);color:var(--ink)}
+  .ask-chips button:disabled{opacity:.4;cursor:not-allowed}
+  .ask-chips button[data-asked]{border-color:rgba(var(--a-rgb),.6);color:var(--ink)}
+  /* After the first question: one sideways-scrolling row right above the composer. */
+  #askLeague[data-chat-chips="compact"] .ask-chips{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding-top:8px;border-top:1px solid var(--grid)}
+  #askLeague[data-chat-chips="compact"] .ask-chips::-webkit-scrollbar{display:none}
+  #askLeague[data-chat-chips="compact"] .ask-chips button{flex:none;max-width:none;white-space:nowrap;min-height:34px}
+  #askLeague[data-chat-chips="compact"] .ask-form{border-top:0;padding-top:4px}
+  /* Not set up: nothing to type into. */
+  #askLeague[data-chat-state="not-set-up"] .ask-chips,#askLeague[data-chat-state="not-set-up"] .ask-form{display:none}
+  .ask-form{display:flex;gap:8px;padding:10px var(--pad) 14px;border-top:1px solid var(--grid)}
+  .ask-form input{flex:1 1 auto;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--edge);background:var(--plane);color:var(--ink);font:16px var(--body)}
+  .ask-form button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--a);color:var(--on-a);font:700 14px var(--disp);cursor:pointer}
+  .ask-form :disabled{opacity:.45;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -1648,6 +1829,7 @@
     <div class="eyebrow" id="eyebrow">Fantasy Football</div>
     <h1 class="name" id="lgName">DFFL</h1>
     <p class="tagline" id="lgSub">Loading every season from Sleeper…</p>
+    <button type="button" class="ask-hdr" data-ask-open aria-controls="askLeaguePanel" aria-expanded="false" aria-haspopup="dialog">Ask the league</button>
   </div>
 </header>
 
@@ -1669,12 +1851,31 @@
 
 <div class="tip" id="tip"></div>
 
+<!-- Ask the league: optional AI chat, backed by chat-worker/. Off until CHAT_WORKER_URL is set. -->
+<div class="ask-fabw" id="askFabWrap">
+  <button type="button" class="ask-fab-x" id="askFabHide" aria-label="Hide the Ask the league button">×</button>
+  <button type="button" class="ask-fab" id="askFab" data-ask-open aria-controls="askLeaguePanel" aria-expanded="false" aria-haspopup="dialog">Ask the league</button>
+</div>
+<div id="askLeague" data-chat-state="closed">
+  <div class="ask-back" id="askBack" hidden></div>
+  <section class="ask-sheet" id="askLeaguePanel" role="dialog" aria-modal="true" aria-labelledby="askTitle" hidden>
+    <header class="ask-hd"><h2 id="askTitle">Ask the <b>league</b></h2><button type="button" class="ask-x" id="askClose" aria-label="Close Ask the league">×</button></header>
+    <div class="ask-body" id="askBody" aria-live="polite"></div>
+    <div class="ask-chips" id="askChips"></div>
+    <form class="ask-form" id="askForm" autocomplete="off">
+      <input id="askInput" type="text" maxlength="500" placeholder="Ask about scores, odds, injuries…" aria-label="Your question">
+      <button type="submit" id="askSend">Ask</button>
+    </form>
+  </section>
+</div>
+
 <script>
 /* =========================================================================
    DFFL League Record Book — pure client-side, reads the public Sleeper API.
    ========================================================================= */
 
 const CURRENT_LEAGUE_ID = "1318040218183417856";
+const CHAT_WORKER_URL = "https://dffl-ask-the-league.drewkim623.workers.dev"; // paste the deployed Worker URL, e.g. "https://dffl-ask-the-league.<subdomain>.workers.dev"
 const API = "https://api.sleeper.app/v1";
 const MOCK = new URLSearchParams(location.search).has("mock");
 
@@ -2040,6 +2241,7 @@ async function loadSeason(lg) {
     meta, divCount, divNames, divOf,
     // The league's own rules, kept raw so the Playoff Picture reads them rather than assuming them.
     settings: lg.settings || {},
+    scoring: lg.scoring_settings || {},
   });
 }
 
@@ -2267,10 +2469,13 @@ const TABS = [
   { id: "odds", label: "Odds" },
   { id: "injuries", label: "Injuries" },
   { id: "picture", label: "Playoff Picture" },
+  { id: "toilet", label: "Toilet Bowl" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
+  { id: "rankings", label: "Rankings" },
   // The id stays "recaps" so links people have already shared keep working.
   { id: "recaps", label: "News & Articles" },
+  { id: "ask", label: "Ask the League" },
 ];
 // Old addresses that still land somewhere: the Playoff Picture replaced the
 // Race tab, and the Trade Machine is gone, so its links open Trades.
@@ -2353,11 +2558,15 @@ function show(id) {
   if (id === "trades") ensureTrades();
   // Same deal for the playoff picture: it reads the rest of the schedule and
   // runs tens of thousands of seasons, so it waits until somebody asks for it.
-  if (id === "picture") ensurePicture();
+  if (id === "picture" || id === "toilet") ensurePicture();
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   if (id === "injuries") ensureInjuries();
+  // Season stats plus Sleeper's player file: only fetched once somebody opens Rankings.
+  if (id === "rankings") ensureRankings();
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
+  // The chat moves into its tab and back out to the floating sheet; one chat, one state.
+  askChat.dock(id === "ask");
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   revealTab(id, document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
@@ -5102,7 +5311,7 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
   const zeros = () => new Array(N).fill(0);
   const C = {
     sims, live: !!live, title: zeros(), playoff: zeros(), divWin: zeros(), divLast: zeros(),
-    last: zeros(), bye: zeros(), wins: zeros(),
+    last: zeros(), bye: zeros(), bowlBye: zeros(), wins: zeros(),
     winDist: teams.map(() => new Array(maxWins + 1).fill(0)),
     // seed[i][k] = seasons team i finished as seed k+1; miss[i] = seasons it didn't.
     seed: teams.map(() => new Array(playoffTeams).fill(0)), miss: zeros(),
@@ -5204,6 +5413,8 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
     // game from the bottom. Losing again puts you in the final, and losing the
     // final is last place. You fall by losing, all the way down.
     const L = rest.slice(wilds);
+    // Seeds 11 and 12 skip round one in the inverted bracket.
+    C.bowlBye[L[4]]++; C.bowlBye[L[5]]++;
     const [, a1] = duel(L[1], L[2]);        // 8 v 9, loser falls
     const [, a2] = duel(L[0], L[3]);        // 7 v 10, loser falls
     const [, b1] = duel(L[5], a1, 1);       // worst seed meets one of them
@@ -10366,7 +10577,7 @@ function pictureRun(job) {
     });
     return { base: { playoff: base.playoff, title: base.title, sims: base.sims }, injuries };
   }
-  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss });
+  const pick = C => ({ sims: C.sims, playoff: C.playoff, seed: C.seed, miss: C.miss, bowlBye: C.bowlBye });
   // The live board's own run, when the caller already has it: only the what-ifs are new work.
   const main = job.main || pick(simulateSeason(job.model, job.sims, job.live));
   const forced = job.games.map(([a, b]) => ({
@@ -10492,7 +10703,7 @@ function swingBoard(out) {
 async function computePicture(model, live, R, season, { main = false, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS, lsim = null } = {}) {
   const rules = leagueRules(season);
   const job = pictureJob(model, live, whatIfSims, sims);
-  if (lsim && lsim.sims === sims) job.main = { sims: lsim.sims, playoff: lsim.playoff, seed: lsim.seed, miss: lsim.miss };
+  if (lsim && lsim.sims === sims) job.main = { sims: lsim.sims, playoff: lsim.playoff, seed: lsim.seed, miss: lsim.miss, bowlBye: lsim.bowlBye };
   const out = main ? runPictureMain(job) : await runPicture(job);
   const N = live.teams.length;
   const L = new Array(N).fill(0), T = new Array(N).fill(0);
@@ -10544,6 +10755,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     w: live.W0[i] - T[i] / 2, l: L[i], t: T[i], pf: live.PF0[i],
     seed: out.main.seed[i].map(c => c / out.main.sims), miss: out.main.miss[i] / out.main.sims,
     playoff: out.main.playoff[i] / out.main.sims,
+    bowlBye: out.main.bowlBye ? out.main.bowlBye[i] / out.main.sims : null,
     // Bye % is the run's own top-seed counts: seeds 1 through `byes`, added up.
     bye: out.main.seed[i].slice(0, rules.byes).reduce((a, c) => a + c, 0) / out.main.sims,
     todaySeed: todaySeed[i], leader: field.champs.includes(i),
@@ -10884,8 +11096,9 @@ async function ensurePicture() {
   // From here on the tab follows the live board: every reprice redraws it —
   // unless nobody is looking, in which case it waits for the next visit.
   onLive(() => {
-    const panel = host.closest("[data-panel]");
-    if (panel && panel.hidden) PICTURE_STALE = true;
+    const picturePanel = host.closest('[data-panel="picture"]');
+    const toiletPanel = $('[data-panel="toilet"]');
+    if ((!picturePanel || picturePanel.hidden) && (!toiletPanel || toiletPanel.hidden)) PICTURE_STALE = true;
     else drawPicture(host);
   });
   startLivePolling();
@@ -10915,6 +11128,11 @@ async function drawPicture(host) {
       host.appendChild(pictureEmpty(R.why || (L.live ? null : "not-started"), L.season && L.season.season));
       document.body.dataset.pictureReady = "empty";
       PICTURE_DRAWN = false;
+      const th = $("#toiletHost");
+      if (R.why === "regular-season-over" && th && L.season && L.season.games) {
+        const settled = settledToiletPicture(L, R);
+        drawToiletPicture(th, settled, null, L.season, L.season.games, true);
+      } else if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">${R.why === "no-divisions" ? "Division seeding is unavailable, so the bowl field cannot be determined." : "The toilet bowl picture will appear when the regular season starts."}</p></div>`; }
       return;
     }
     // A refresh keeps the last table up while it works.
@@ -10922,6 +11140,8 @@ async function drawPicture(host) {
       host.innerHTML = "";
       host.appendChild(el("div", "empty", "<b>Calculating…</b>Simulating the rest of the season and every game this week both ways."));
     }
+    const toiletHost = $("#toiletHost");
+    if (toiletHost && !PICTURE_DRAWN) toiletHost.innerHTML = `<div class="tbv"><div class="tb-eye">Calculating</div><p class="tb-note">Building the bowl field from the current standings…</p></div>`;
     const PP = await computePicture(L.model, L.live, R, L.season, { lsim: L.lsim });
     if (seq !== PICTURE_SEQ) return;
     window.__PICTURE = {
@@ -10931,6 +11151,7 @@ async function drawPicture(host) {
       bye: PP.rows.map(r => r.bye), order: PP.order.map(i => PP.rows[i].rid),
       full: PP,  // the whole run, so verify can redraw the board on edited standings
     };
+    drawToiletPicture($("#toiletHost"), PP, L.lsim, L.season, L.season.games, false);
     // A poll that changed nothing leaves the table (and where it's scrolled) alone.
     if (!PICTURE_DRAWN || pictureSig(PP) !== host._ppSig) {
       const lefts = PICTURE_DRAWN ? [...host.querySelectorAll(".scroll")].map(s => s.scrollLeft) : [];
@@ -10942,11 +11163,82 @@ async function drawPicture(host) {
   } catch (e) {
     if (seq !== PICTURE_SEQ) return;
     if (PICTURE_DRAWN) { console.error(e); return; }
+    const th = $("#toiletHost"); if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">The bowl picture could not be calculated. ${esc(e.message)}</p></div>`; }
     host.innerHTML = "";
     host.appendChild(el("div", "empty", `<b>Couldn't work out the playoff picture</b>${esc(e.message)}`));
     document.body.dataset.pictureReady = "error";
     console.error(e);
   }
+}
+
+function toiletChipMap(clinches, escaped = []) {
+  const safe = new Set(escaped.map(String));
+  return (clinches || []).map(c => ({ rid:c.rid,
+    label:c.eliminated ? "Locked into the bowl" : (c.clinchedPlayoff || safe.has(String(c.rid))) ? "Safe from last" : "",
+    provingSource:c.eliminated ? "exactClinch.eliminated" : c.clinchedPlayoff ? "exactClinch.clinchedPlayoff" : safe.has(String(c.rid)) ? "completed inverted bracket" : null }));
+}
+
+function toiletEscapes(completedWinners, lastPlaceRids = []) {
+  const last=new Set((lastPlaceRids||[]).map(String));
+  return [...new Map((completedWinners||[]).filter(rid=>!last.has(String(rid))).map(rid=>[String(rid),rid])).values()];
+}
+
+function settledToiletPicture(L, R) {
+  const season=L.season,rules=leagueRules(season),rosters=season.rosters,idx=new Map(rosters.map((r,i)=>[r.roster_id,i]));
+  const W=rosters.map(()=>0),PF=rosters.map(()=>0),Loss=rosters.map(()=>0),T=rosters.map(()=>0);
+  for(const g of season.games.filter(x=>!x.playoff)){const a=idx.get(g.a.rid),b=idx.get(g.b.rid);if(a==null||b==null)continue;PF[a]+=g.a.pts;PF[b]+=g.b.pts;if(g.a.pts>g.b.pts){W[a]++;Loss[b]++;}else if(g.b.pts>g.a.pts){W[b]++;Loss[a]++;}else{T[a]++;T[b]++;}}
+  const teams=rosters.map((r,i)=>({rid:r.roster_id,uid:season.uidOf.get(r.roster_id),div:season.divOf.get(r.roster_id),w:W[i]+T[i]/2,pf:PF[i]}));
+  const rank=teams.map((_,i)=>i).sort((a,b)=>teams[b].w-teams[a].w||PF[b]-PF[a]);
+  const field=seedField(rank,i=>teams[i].div,rules.playoffTeams), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
+  const todaySeed=new Array(teams.length); order.forEach((i,k)=>todaySeed[i]=k+1);
+  const C=exactClinch({teams,remaining:[],playoffTeams:rules.playoffTeams,byes:rules.byes});
+  const by=new Map(C.map(c=>[c.rid,c]));
+  const rows=teams.map((t,i)=>({i,rid:t.rid,uid:t.uid,div:t.div,w:W[i],l:Loss[i],t:T[i],pf:PF[i],miss:null,playoff:null,todaySeed:todaySeed[i],clinch:by.get(t.rid)||{}}));
+  return {rows,order,rules,clinch:C,week:rules.playoffWeekStart,inFlight:false,sims:0,settled:true};
+}
+
+function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = false) {
+  if (!host) return;
+  const { rows, rules } = PP;
+  const bowl = PP.order.slice(rules.playoffTeams).map(i => rows[i]);
+  const clinch = new Map((PP.clinch || []).map(c => [c.rid, c]));
+  const last = lsim && lsim.sims === PP.sims ? lsim.last : null;
+  const pct = v => v == null ? "—" : pctf(v);
+  const byRid=new Map(rows.map(r=>[r.rid,r])), seedRow=s=>bowl[s-7]||null;
+  const slot=(seed, hint="")=>{const d=seedRow(seed);return d?`<div class="tb-slot"><span class="tb-seed">${seed}</span>${avatarHTML(d.uid,"sm")}<span class="tb-slotname" title="${esc(nameOf(d.uid))}">${esc(nameOf(d.uid))}</span><span class="tb-hint">B ${pct(d.miss)}<br>L ${pct(last?last[d.i]/lsim.sims:null)}</span></div>`:`<div class="tb-slot tbd">TBD · ${esc(hint||"advancer unresolved")}</div>`;};
+  const renderGame=(week,label,a,b,cls="")=>`<div class="tb-game ${cls}"><div class="tb-glabel">Week ${week} · ${label}</div>${a}${b}</div>`;
+  const lb=season?.lb||[], seedRid=s=>seedRow(s)?.rid;
+  const scored=(a,b)=>{const g=(games||[]).filter(x=>x.playoff&&((String(x.a.rid)===String(a)&&String(x.b.rid)===String(b))||(String(x.a.rid)===String(b)&&String(x.b.rid)===String(a)))).at(-1);return g&&g.a.pts!==g.b.pts?{a:g.a.pts>g.b.pts?g.a.rid:g.b.rid,b:g.a.pts>g.b.pts?g.b.rid:g.a.rid}:null;};
+  const actualPair=(a,b)=>{const x=seedRid(a),y=seedRid(b);return x==null||y==null?null:scored(x,y);};
+  const g15a=actualPair(7,10),g15b=actualPair(8,9);
+  const advA=g15a&&g15a.b,advB=g15b&&g15b.b,placeA=g15a&&g15a.a,placeB=g15b&&g15b.a;
+  const semiA=advB&&scored(seedRid(12),advB),semiB=advA&&scored(seedRid(11),advA);
+  const finalA=semiA&&semiB&&scored(semiA.b,semiB.b), place9=semiA&&semiB&&scored(semiA.a,semiB.a);
+  // Only actual scored bowl games prove an escape; Sleeper's prefilled future
+  // placements cannot. The lower scorer in the last-place final remains last.
+  const placements=season?placementsOf(season.wb,season.lb,rules.playoffTeams,games):{};
+  const playedWinners=[g15a?.a,g15b?.a,semiA?.a,semiB?.a,finalA?.a].filter(x=>x!=null);
+  const escaped=toiletEscapes(playedWinners,finalA?[finalA.b]:[]);
+  const chipRows=toiletChipMap(PP.clinch,escaped), chips=new Map(chipRows.map(c=>[c.rid,c]));
+  const data = bowl.map((r, j) => { const c=chips.get(r.rid)||{}; return {rid:r.rid,uid:r.uid,name:nameOf(r.uid),seed:j+7,bowlPct:r.miss,bowlByePct:PP.settled?null:r.bowlBye,lastPct:last?last[r.i]/lsim.sims:null,chip:c.label||"",provingSource:c.provingSource||"none",w:r.w,l:r.l,t:r.t||0,pf:r.pf}; });
+  const seedsByRid=new Map(data.map(d=>[d.rid,d.seed]));
+  const gslot=(rid,seed,hint)=>{const d=byRid.get(rid);return d?ppslot(d.todaySeed):ppslot(seed,hint);};
+  const ppsd=(seed)=>{const r=seedRow(seed);return r?`<span class="pp-sd${seed>=11?" bye":" wc"}">${seed}</span>`:`<span class="pp-sd">${seed??"?"}</span>`;};
+  const ppslot=(seed,hint)=>{const r=seed==null?null:seedRow(seed);if(!r)return `<div class="pp-tm tbd"><span class="pp-q"></span>${esc(hint||"Advancer")}</div>`;const dd=data.find(x=>x.seed===seed)||{};const value=seed>=11?`Bye ${pct(dd.bowlByePct)} · Last ${pct(dd.lastPct)}`:`Bowl ${pct(dd.bowlPct)} · Last ${pct(dd.lastPct)}`;return `<div class="pp-tm">${ppsd(seed)}${avatarHTML(r.uid,"pp-xs")}<div class="pp-tn"><span class="pp-tnm" title="${esc(nameOf(r.uid))}">${esc(nameOf(r.uid))}</span><span class="pp-slot-hint">${value}</span></div></div>`;};
+  const ppMatch=(label,a,b,cls="")=>`<div class="pp-mw"><div class="pp-lb">${esc(label)}</div><div class="pp-mt ${cls}">${a}${b}</div></div>`;
+  const bracket=`<div class="pp-br"><div class="pp-rd">${ppMatch(`Wk ${rules.playoffWeekStart} · 7 v 10`,ppslot(7),ppslot(10))}${ppMatch(`Wk ${rules.playoffWeekStart} · 8 v 9`,ppslot(8),ppslot(9))}</div><div class="pp-cn"><i></i><i></i></div><div class="pp-rd semifinals">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 12 v loser of 8/9`,ppslot(12),gslot(advB,null,"Loser of 8/9"),"byeg")}${ppMatch(`Wk ${rules.playoffWeekStart+1} · 11 v loser of 7/10`,ppslot(11),gslot(advA,null,"Loser of 7/10"),"byeg")}</div><div class="pp-join"></div><div class="pp-fin">${ppMatch(`Wk ${rules.playoffWeekStart+2} · Final`,gslot(finalA?.a,null,"Semi loser"),gslot(finalA?.b,null,"Semi loser"),"fin")}</div><div class="pp-troph">Loser finishes last</div><div class="pp-place">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 7th/8th`,gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}${ppMatch(`Wk ${rules.playoffWeekStart+2} · 9th/10th`,gslot(place9?.a,null,"Semi winner"),gslot(place9?.b,null,"Semi winner"))}</div></div>`;
+  const badge=d=>d.chip?ppBadge(d.chip==="Locked into the bowl"?"red":"blue",d.chip,d.chip):"";
+  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span>${badge(d)}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Bowl",d.bowlPct,""],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}" data-k="${label.toLowerCase()}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
+  const bubbles=PP.order.map(i=>rows[i]).filter(r=>r.todaySeed<=rules.playoffTeams&&!r.clinch?.clinchedPlayoff).map(r=>({rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,w:r.w,l:r.l,t:r.t||0,pf:r.pf,uid:r.uid,chip:""}));
+  const safe=rows.filter(r=>r.clinch?.clinchedPlayoff||escaped.some(x=>String(x)===String(r.rid))).map(r=>{const c=chips.get(r.rid)||{};return {rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,chip:"Safe from last",provingSource:c.provingSource||null};});
+  const pair=(week,label,seeds,rids)=>({week,label,seeds,names:rids.map(rid=>{const r=byRid.get(rid);return r?nameOf(r.uid):null;})});
+  const enrichedPairs=[pair(rules.playoffWeekStart,"7 v 10",[7,10],[g15a?.a||seedRid(7),g15a?.b||seedRid(10)]),pair(rules.playoffWeekStart,"8 v 9",[8,9],[g15b?.a||seedRid(8),g15b?.b||seedRid(9)]),pair(rules.playoffWeekStart+1,"12 vs 8/9 advancer",[12,advB?seedsByRid.get(advB):"TBD"],[seedRid(12),advB]),pair(rules.playoffWeekStart+1,"11 vs 7/10 advancer",[11,advA?seedsByRid.get(advA):"TBD"],[seedRid(11),advA]),pair(rules.playoffWeekStart+1,"7th/8th",[placeA?seedsByRid.get(placeA):"TBD",placeB?seedsByRid.get(placeB):"TBD"],[placeA,placeB]),pair(rules.playoffWeekStart+2,"Last place",[finalA?seedsByRid.get(finalA.a):"TBD",finalA?seedsByRid.get(finalA.b):"TBD"],[finalA?.a,finalA?.b]),pair(rules.playoffWeekStart+2,"9th/10th",[place9?seedsByRid.get(place9.a):"TBD",place9?seedsByRid.get(place9.b):"TBD"],[place9?.a,place9?.b])];
+  window.__TOILET={seeds:data.map(d=>({...d})),bubbles,safeFromLast:safe,bracket:enrichedPairs,clinches:chipRows,clinchMethod:"exactClinch",sims:PP.sims,settled};
+  const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
+  const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
+  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>`;
+  const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bye</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
+  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bye line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first. ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bye % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p></section>`;
 }
 
 function panelPicture() {
@@ -10962,6 +11254,13 @@ function panelPicture() {
   const host = el("div"); host.id = "pictureHost";
   host.appendChild(el("div", "empty", "<b>Working out the playoff picture…</b>Reading the rest of the schedule and simulating it."));
   p.appendChild(host);
+  return p;
+}
+
+function panelToilet() {
+  const p = el("div", "panel"); p.dataset.panel = "toilet";
+  p.appendChild(sechead("Toilet Bowl", "The consolation bracket for teams that miss the playoffs, built from the same season simulation."));
+  const host = el("div"); host.id = "toiletHost"; p.appendChild(host);
   return p;
 }
 
@@ -11859,6 +12158,300 @@ function panelTrades() {
   return p;
 }
 
+/* ============================================================ RANKINGS */
+
+/**
+ * Season-to-date position ranks in DFFL's own scoring, for every QB, RB, WR and
+ * TE Sleeper has a season line for — rostered or not.
+ *
+ * A player's DFFL points are each official counter on his season line times the
+ * matching scoring_settings value, plus receptions times his NFL position's
+ * reception bonus (bonus_rec_rb / _wr / _te). Sleeper also publishes counters
+ * named bonus_rec_rb and so on, which are those same receptions again; they are
+ * skipped so the position PPR is only ever added once. Distance and yardage
+ * bonuses (rec_40p, rush_td_50p, bonus_rush_yd_100 …) come from their own
+ * counters, never from a season-long field or a season total.
+ */
+const RANK_POS = ["QB", "RB", "WR", "TE"];
+const POS_PPR_KEY = /^bonus_rec_(rb|wr|te)$/;
+function dfflPoints(stat, scoring, pos) {
+  if (!stat || !scoring) return 0;
+  let t = 0;
+  for (const [k, w] of Object.entries(scoring)) {
+    if (POS_PPR_KEY.test(k)) continue;
+    const v = Number(stat[k]), m = Number(w);
+    if (v && m && isFinite(v) && isFinite(m)) t += v * m;
+  }
+  const rec = Number(stat.rec), bonus = Number(scoring["bonus_rec_" + String(pos || "").toLowerCase()]);
+  if (rec && bonus && isFinite(rec) && isFinite(bonus)) t += rec * bonus;
+  return t;
+}
+/** Points are shown to two places, so ties are decided at two places too. */
+const roundPts = n => Math.round(n * 100) / 100;
+/** Standard competition ranking: 1, 2, 2, 4. Sorts a copy; ties keep a stable name order. */
+function competitionRanks(rows, key = "pts") {
+  const out = [...rows].sort((a, b) => roundPts(b[key]) - roundPts(a[key]) || String(a.name || "").localeCompare(String(b.name || "")));
+  let prev = null, rank = 0;
+  out.forEach((r, i) => {
+    const v = roundPts(r[key]);
+    if (v !== prev) { rank = i + 1; prev = v; }
+    r.rank = rank;
+  });
+  return out;
+}
+/** Case, accents, spaces and punctuation all drop out: "smith njigba" finds Smith-Njigba. */
+const normName = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/** { QB: [...], RB: [...], ... } — every player at each position, ranked. */
+function rankingsBoard(stats, players, scoring, owners = new Map()) {
+  const by = Object.fromEntries(RANK_POS.map(p => [p, []]));
+  // The endpoint has answered both as a map keyed by player_id and as a list of { player_id, stats }.
+  const lines = Array.isArray(stats) ? stats.map(x => [String(x.player_id), x.stats || x]) : Object.entries(stats || {});
+  for (const [pid, s] of lines) {
+    const p = players && players[pid];
+    const pos = p && p.position;
+    if (!s || !by[pos]) continue;
+    const name = (p.full_name || `${p.first_name || ""} ${p.last_name || ""}`).trim() || pid;
+    const pr = Number(s.pos_rank_ppr), pp = Number(s.pts_ppr);
+    by[pos].push({
+      pid, name, key: normName(name), pos, team: p.team || "FA", gp: Number(s.gp) || 0,
+      pts: roundPts(dfflPoints(s, scoring, pos)),
+      // Sleeper's own full-PPR position rank. Missing stays missing: nothing is computed in its place.
+      pprRank: Number.isFinite(pr) && pr > 0 ? pr : null,
+      ppr: s.pts_ppr != null && Number.isFinite(pp) ? pp : null,
+      owner: owners.get(pid) || null,
+    });
+  }
+  for (const pos of RANK_POS) by[pos] = competitionRanks(by[pos]);
+  return by;
+}
+/** Matches keep their real DFFL rank; the list is filtered, never re-ranked. */
+function rankSearch(board, pos, q) {
+  const k = normName(q);
+  if (!k) return null;
+  const hit = r => r.key.includes(k);
+  return {
+    matches: (board[pos] || []).filter(hit),
+    elsewhere: RANK_POS.filter(p => p !== pos).map(p => ({ pos: p, n: (board[p] || []).filter(hit).length })).filter(x => x.n),
+  };
+}
+
+const RK = { pos: "RB", q: "", board: null, scoring: null, season: null, at: null, err: null };
+let RK_P = null;
+const RK_SHOWN = 12, RK_MATCH_MAX = 25;
+
+function rankSeason() {
+  const season = String((DB.state && DB.state.season) || (DB.seasons[0] && DB.seasons[0].season) || "");
+  return { season, cur: DB.seasons.find(s => String(s.season) === season) || DB.seasons[0] };
+}
+/** player_id → the DFFL manager holding him this season; anybody else is a free agent. */
+function rankOwners(cur) {
+  const m = new Map();
+  if (!cur || !cur.rosters) return m;
+  for (const r of cur.rosters) {
+    const u = cur.userById && cur.userById.get(r.owner_id);
+    const nm = (u && (u.display_name || (u.metadata && u.metadata.team_name))) || `Team ${r.roster_id}`;
+    for (const pid of r.players || []) m.set(String(pid), nm);
+  }
+  return m;
+}
+
+function ensureRankings() {
+  if (RK_P) return RK_P;
+  RK.err = null;
+  document.body.dataset.rankingsReady = "0";
+  paintRankings();
+  return (RK_P = (async () => {
+    const { season, cur } = rankSeason();
+    let scoring = cur && cur.scoring;
+    if (!scoring || !Object.keys(scoring).length)
+      scoring = ((await jget(`${API}/league/${cur ? cur.leagueId : CURRENT_LEAGUE_ID}`)) || {}).scoring_settings || {};
+    const [stats, players] = await Promise.all([jget(`${API}/stats/nfl/regular/${season}`), jget(`${API}/players/nfl`)]);
+    RK.board = rankingsBoard(stats, players, scoring, rankOwners(cur));
+    if (!RANK_POS.some(p => RK.board[p].length)) throw new Error(`Sleeper has no ${season} season lines yet.`);
+    Object.assign(RK, { scoring, season, at: new Date() });
+    paintRankings();
+    paintRankSide();
+    document.body.dataset.rankingsReady = "1";
+  })().catch(e => {
+    RK_P = null;
+    RK.err = e.message || String(e);
+    paintRankings();
+    document.body.dataset.rankingsReady = "error";
+    console.warn("rankings:", e);
+  }));
+}
+
+function rankMove(r) {
+  if (r.pprRank == null) return { cls: "", txt: "", sr: "" };
+  const d = r.pprRank - r.rank;
+  if (!d) return { cls: "", txt: "same", sr: "" };
+  const n = Math.abs(d);
+  return d > 0
+    ? { cls: "up", txt: `↑${n}`, sr: `${n} place${n === 1 ? "" : "s"} higher in DFFL` }
+    : { cls: "down", txt: `↓${n}`, sr: `${n} place${n === 1 ? "" : "s"} lower in DFFL` };
+}
+const rkWho = r => r.owner ? `Rostered by ${esc(r.owner)}` : "Free agent";
+function rankRowHTML(r, match) {
+  const mv = rankMove(r);
+  const ppr = r.pprRank == null ? "Sleeper full PPR rank not listed"
+    : `Sleeper full PPR #${r.pprRank} · <span aria-hidden="true">${mv.txt}</span>${mv.sr ? `<span class="rk-sr">${mv.sr}</span>` : ""}`;
+  return `<div class="rk-row${match ? " rk-match" : ""}" data-pid="${esc(r.pid)}" data-rank="${r.rank}">
+    <div class="rk-rank" aria-label="DFFL ${r.pos} rank ${r.rank}">${r.rank}</div>
+    <div class="rk-main"><strong>${esc(r.name)}</strong>
+      <p class="rk-small">${r.pos} · ${esc(r.team)} · ${r.gp} game${r.gp === 1 ? "" : "s"} · ${rkWho(r)}</p>
+      <p class="rk-small ${mv.cls}" data-ppr="${r.pprRank ?? ""}">${ppr}</p></div>
+    <div class="rk-val"><div class="rk-num">${f2(r.pts)}</div><span class="rk-lbl">DFFL pts</span></div>
+  </div>`;
+}
+function rankHeroHTML(r, rows) {
+  const mv = rankMove(r);
+  const tied = rows.filter(x => x.rank === r.rank).length - 1;
+  const vs = r.pprRank == null
+    ? `Sleeper hasn't published a full-PPR position rank for him, so there is nothing to compare.`
+    : mv.txt === "same" ? `Same place as Sleeper full PPR. DFFL scoring is the reference here.`
+    : `<span class="${mv.cls}">${mv.txt} place${Math.abs(r.pprRank - r.rank) === 1 ? "" : "s"}</span> versus Sleeper full PPR. DFFL scoring is the reference here.`;
+  return `<section class="rk-hero" id="rkHero" aria-labelledby="rkHeroName" data-pid="${esc(r.pid)}" data-rank="${r.rank}">
+    <p class="rk-eyebrow">Search match / ${r.pos}</p>
+    <div class="rk-big" aria-hidden="true">#${r.rank}</div>
+    <p class="rk-eyebrow" style="margin:6px 0 0">True DFFL ${r.pos} rank</p>
+    <h4 id="rkHeroName"><span class="rk-sr">DFFL ${r.pos} rank ${r.rank}: </span>${esc(r.name)}</h4>
+    <p class="rk-small">${esc(r.team)} · ${esc(RK.season)} season to date · ${r.gp} game${r.gp === 1 ? "" : "s"} · ${rkWho(r)}</p>
+    <div class="rk-metric">
+      <div><div class="rk-n">${f2(r.pts)}</div><span class="rk-lbl">DFFL points</span></div>
+      <div class="rk-r"><div class="rk-n" data-ppr="${r.pprRank ?? ""}">${r.pprRank == null ? "—" : "#" + r.pprRank}</div>
+        <span class="rk-lbl">Sleeper full PPR ${r.pos}${r.ppr != null ? ` · ${f1(r.ppr)} pts` : ""}</span></div>
+    </div>
+    <p class="rk-note">${vs}${tied > 0 ? ` Tied at ${f2(r.pts)} with ${tied} other ${r.pos}${tied === 1 ? "" : "s"}, so they share #${r.rank}.` : ""}</p>
+  </section>`;
+}
+
+function paintRankings() {
+  const p = $('[data-panel="rankings"]');
+  if (!p) return;
+  const list = $("#rkList", p), status = $("#rkStatus", p), asOf = $("#rkAsOf", p);
+  for (const b of p.querySelectorAll(".rk-chips button")) b.setAttribute("aria-pressed", String(b.dataset.pos === RK.pos));
+  $(".rk-clear", p).disabled = !RK.q;
+  if (RK.err) {
+    status.textContent = "";
+    list.innerHTML = `<div class="rk-empty" role="alert"><b>Couldn't load the rankings.</b> ${esc(RK.err)}<br>
+      Sleeper may be rate-limiting. The rest of the site is unaffected.<br><button type="button" class="rk-retry">Try again</button></div>`;
+    list.querySelector(".rk-retry").onclick = () => ensureRankings();
+    return;
+  }
+  if (!RK.board) {
+    status.textContent = "Loading players…";
+    list.innerHTML = `<div class="rk-empty">Reading every player's ${esc(rankSeason().season)} season from Sleeper and scoring it with DFFL's settings…</div>`;
+    return;
+  }
+  const wk = DB.state && DB.state.week;
+  const t = RK.at ? RK.at.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+  asOf.textContent = `${RK.season} season to date${wk ? ` · includes week ${wk} games already played` : ""} · read from Sleeper at ${t}`;
+  const rows = RK.board[RK.pos];
+  const s = rankSearch(RK.board, RK.pos, RK.q);
+  if (!s) {
+    status.textContent = `Top ${Math.min(RK_SHOWN, rows.length)} of ${rows.length} ${RK.pos}s. Search covers all of them, rostered or free agent.`;
+    list.innerHTML = rows.slice(0, RK_SHOWN).map(r => rankRowHTML(r, false)).join("");
+    return;
+  }
+  const n = s.matches.length;
+  if (!n) {
+    const other = s.elsewhere.map(x => `<button type="button" data-goto="${x.pos}">Show ${x.n} ${x.pos} match${x.n === 1 ? "" : "es"}</button>`).join("");
+    status.textContent = `No ${RK.pos} matches “${RK.q.trim()}”.${s.elsewhere.length ? ` Found at ${s.elsewhere.map(x => x.pos).join(", ")}.` : ""}`;
+    list.innerHTML = `<div class="rk-empty" id="rkNone"><b>No ${RK.pos} matches “${esc(RK.q.trim())}”.</b><br>
+      ${s.elsewhere.length ? "That name is at another position:" : "Check the spelling, or clear the search to see the leaderboard."}<br>${other}</div>`;
+    for (const b of list.querySelectorAll("[data-goto]")) b.onclick = () => {
+      RK.pos = b.dataset.goto; paintRankings();
+      // The button just clicked is gone; keep keyboard focus on the position now selected.
+      const chip = $(`.rk-chips button[data-pos="${RK.pos}"]`); if (chip) chip.focus();
+    };
+    return;
+  }
+  const top = s.matches[0];
+  status.textContent = n === 1
+    ? `1 matching ${RK.pos} · ${top.name} is ${RK.pos}${top.rank} in DFFL scoring`
+    : `${n} matching ${RK.pos}s · the best ranked, ${top.name} (${RK.pos}${top.rank}), is surfaced first`;
+  list.innerHTML = rankHeroHTML(top, rows) + s.matches.slice(0, RK_MATCH_MAX).map(r => rankRowHTML(r, true)).join("")
+    + (n > RK_MATCH_MAX ? `<p class="rk-note">Showing the ${RK_MATCH_MAX} best ranked of ${n} matches. Keep typing to narrow it.</p>` : "");
+}
+
+const RK_BONUS = [
+  ["rec_td_40p", "40+ yd receiving TD"], ["rec_td_50p", "50+ yd receiving TD"],
+  ["rush_40p", "40+ yd rush"], ["rush_td_40p", "40+ yd rushing TD"], ["rush_td_50p", "50+ yd rushing TD"],
+  ["pass_td_40p", "40+ yd passing TD"], ["pass_td_50p", "50+ yd passing TD"],
+  ["bonus_pass_yd_300", "300-yd passing game"], ["bonus_pass_yd_400", "400-yd passing game"],
+  ["bonus_rush_yd_100", "100-yd rushing game"], ["bonus_rush_yd_200", "200-yd rushing game"],
+  ["bonus_rec_yd_100", "100-yd receiving game"], ["bonus_rec_yd_200", "200-yd receiving game"],
+];
+const rkSigned = v => `${v > 0 ? "+" : ""}${Number(v)}`;
+function paintRankSide() {
+  const side = $("#rkSide");
+  if (!side) return;
+  const sc = RK.scoring || (rankSeason().cur || {}).scoring || {};
+  const ppr = pos => (Number(sc.rec) || 0) + (Number(sc["bonus_rec_" + pos]) || 0);
+  const rb = ppr("rb"), wr = ppr("wr"), te = ppr("te");
+  const metric = (k, v) => `<div class="rk-metric"><span>${k}</span><strong>${v}</strong></div>`;
+  const recRows = wr === te
+    ? metric("RB receptions", `${f1(rb)} PPR`) + metric("WR / TE receptions", `${f1(wr)} PPR`)
+    : metric("RB receptions", `${f1(rb)} PPR`) + metric("WR receptions", `${f1(wr)} PPR`) + metric("TE receptions", `${f1(te)} PPR`);
+  const r40 = Number(sc.rec_40p) || 0;
+  const extras = RK_BONUS.filter(([k]) => Number(sc[k])).map(([k, l]) => `${l} ${rkSigned(sc[k])}`);
+  let lead = `<p class="rk-small">Loading the leaders…</p>`;
+  if (RK.board) {
+    lead = `<div class="rk-leaders">${RANK_POS.map(pos => {
+      const r = RK.board[pos][0];
+      return `<div data-lead="${pos}"><p class="rk-eyebrow">${pos} / #1 DFFL</p>${r ? `<strong>${esc(r.name)}</strong><span class="rk-lbl">${f2(r.pts)} pts</span>` : `<span class="rk-lbl">No ${pos}s yet</span>`}</div>`;
+    }).join("")}</div>`;
+  }
+  side.innerHTML = `<section class="rk-card" aria-labelledby="rkScTitle">
+      <p class="rk-eyebrow">DFFL scoring</p><h3 id="rkScTitle">Your league. Your finish.</h3>
+      <div style="margin-top:14px">${recRows}${r40 ? metric("40+ yd reception", `${rkSigned(r40)} point${Math.abs(r40) === 1 ? "" : "s"}`) : ""}</div>
+      <p class="rk-note">Full league settings applied${extras.length ? `, including ${esc(extras.join(", "))}` : ""}. Ties share a rank.</p>
+      <p class="rk-note">Sleeper full PPR is Sleeper's own full-PPR points, ranked within the same position. It is not DFFL's scoring.</p>
+    </section>
+    <section class="rk-card" aria-labelledby="rkLeadTitle"><h4 id="rkLeadTitle">Across the league</h4>${lead}</section>`;
+}
+
+function panelRankings() {
+  const p = el("div", "panel rk"); p.dataset.panel = "rankings";
+  p.innerHTML = `
+    <header class="rk-intro">
+      <p class="rk-eyebrow">DFFL / Rankings</p>
+      <h2>The rank that counts.</h2>
+      <p class="rk-sub">Every quarterback, running back, receiver and tight end, ranked on the points they've scored in DFFL's own settings. Rostered players and free agents alike.</p>
+    </header>
+    <div class="rk-two">
+      <div class="rk-primary">
+        <section class="rk-card" aria-labelledby="rkTitle">
+          <div class="rk-head"><h3 id="rkTitle">Position leaderboard</h3><span class="rk-badge">DFFL RANK</span></div>
+          <div class="rk-chips" role="group" aria-label="Player position">${RANK_POS.map(x =>
+            `<button type="button" data-pos="${x}" aria-pressed="${x === RK.pos}">${x}</button>`).join("")}</div>
+          <div class="rk-search" role="search">
+            <label for="rkQ">Search players</label>
+            <div class="rk-shell"><span class="rk-ico" aria-hidden="true">⌕</span>
+              <input id="rkQ" type="search" placeholder="Search players" autocomplete="off" spellcheck="false" aria-describedby="rkStatus" aria-controls="rkList">
+              <button type="button" class="rk-clear" aria-label="Clear player search" disabled>Clear</button></div>
+            <p class="rk-status" id="rkStatus" role="status" aria-live="polite"></p>
+          </div>
+          <p class="rk-small" id="rkAsOf"></p>
+          <div id="rkList" aria-live="off"></div>
+        </section>
+      </div>
+      <div class="rk-side" id="rkSide"></div>
+    </div>
+    <p class="rk-foot">The comparison is Sleeper's own full-PPR position rank (pos_rank_ppr), not half PPR and not its overall search rank.
+      DFFL ranks are worked out in your browser from Sleeper's live season stats and this league's scoring settings, so a game
+      in progress counts as it goes. These are season-to-date standings, not projections.</p>`;
+  const q = $("#rkQ", p), clear = $(".rk-clear", p);
+  q.addEventListener("input", () => { RK.q = q.value; paintRankings(); });
+  q.addEventListener("keydown", e => { if (e.key === "Escape" && q.value) { e.preventDefault(); clear.click(); } });
+  clear.onclick = () => { q.value = ""; RK.q = ""; q.focus(); paintRankings(); };
+  for (const b of p.querySelectorAll(".rk-chips button")) b.onclick = () => { RK.pos = b.dataset.pos; paintRankings(); };
+  // The panel is built before anybody opens it; paint the scoring card from the league settings already in hand.
+  setTimeout(paintRankSide, 0);
+  return p;
+}
+
 /* ---------------------------------------------------------------- boot */
 async function boot() {
   try {
@@ -11914,9 +12507,13 @@ async function boot() {
     app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelInjuries());
     app.appendChild(panelPicture());
+    app.appendChild(panelToilet());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
+    app.appendChild(panelRankings());
     app.appendChild(await panelRecaps());
+    // Empty until shown: askChat.dock() moves the chat in.
+    app.appendChild(el("div", "panel")).dataset.panel = "ask";
 
     buildTabs();
     // Deliberately not awaited: the front page paints, then fills itself in.
@@ -11972,7 +12569,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
@@ -11994,6 +12591,8 @@ async function boot() {
       ensureTrades, loadTransactions, loadPlayerNames, loadDraftSlots, tradeLedger, waiverReport,
       gradeTrade, ptsFrom, verdictOf, resolvePick, seasonPlayed, markReversals,
       TRADE_EVEN, TRADE_CLEAR, TRADE_LOPSIDED, FAAB_MIN,
+      RANK_POS, dfflPoints, roundPts, competitionRanks, rankingsBoard, rankSearch, normName, ensureRankings, panelRankings,
+      rankingsState: () => RK,
     };
     document.body.dataset.ready = "1";
   } catch (e) {
@@ -12005,6 +12604,306 @@ async function boot() {
     console.error(e);
   }
 }
+
+/* ------------------------------------------------------ ask the league */
+// Optional chat panel. Talks only to CHAT_WORKER_URL (chat-worker/), which
+// answers from tools over Sleeper and this repo's JSON. Model text is
+// untrusted: it is escaped before it touches innerHTML.
+const askChat = (() => {
+  // Generic on purpose: no chip names a manager.
+  const CHIPS = [
+    "Who has the most points this season?",
+    "Who leads the playoff odds?",
+    "Who is hurt this week?",
+    "How much FAAB does everyone have left?",
+    "What’s the all-time record between two managers?",
+  ];
+  const UNKNOWN = "I don’t know — that isn’t in the league data.";
+  const SKEY = "dffl-chat-session";
+  let url = CHAT_WORKER_URL, last = "", asked = "", busy = false, capped = false, opener = null;
+  let turns = 0, lastState = "open", turn = null, lock = null, docked = false;
+  const root = $("#askLeague"), sheet = $("#askLeaguePanel"), back = $("#askBack"), body = $("#askBody"),
+    chips = $("#askChips"), form = $("#askForm"), input = $("#askInput"), send = $("#askSend");
+  const openers = () => document.querySelectorAll("[data-ask-open]");
+  // Open as the floating dialog. Docked into its tab, the sheet shows but is not a dialog.
+  const isOpen = () => !sheet.hidden && !docked;
+  const FAB_KEY = "dffl-ask-fab";
+  const wide = () => matchMedia("(min-width:900px)").matches;
+
+  const etTime = iso => {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " ET";
+  };
+  // Escape first, then mark records (8-1, 3-2-1), American odds (+200, -105) and percents as numbers.
+  const fmt = s => esc(String(s).replace(/\*\*|__|^#+\s*/g, ""))
+    .replace(/(^|[\s(])(\d{1,2}-\d{1,2}(?:-\d{1,2})?|[+\-−]\d{3,5}|\d+(?:\.\d+)?%)(?=$|[\s.,;:)])/g, '$1<span class="num">$2</span>');
+
+  // The Worker labels sources by file or endpoint; readers get plain words.
+  // First match wins, so the combined sources (injuries + pulse + odds) land on the right label.
+  const SOURCE_LABELS = [
+    [/injur/i, "Injuries"], [/odds-history/i, "Odds history"], [/odds/i, "Playoff odds"],
+    [/projection/i, "Projections"], [/recap/i, "Recap"], [/ranking/i, "Rankings"], [/keeper/i, "Keepers"],
+    [/pulse/i, "League pulse"], [/matchup-history|head-to-head/i, "Head-to-head"], [/matchups/i, "Matchups"],
+    [/rosters\.json/i, "Rosters"], [/sleeper rosters|standings/i, "Sleeper standings"],
+    [/sleeper league|settings/i, "League settings"], [/nfl state/i, "NFL week"], [/faab/i, "FAAB"],
+  ];
+  function sourceLine(sources, asOf) {
+    const labels = [], weeks = [];
+    for (const s of sources || []) {
+      const str = String(s);
+      const hit = SOURCE_LABELS.find(([re]) => re.test(str));
+      const w = str.match(/\bweek (\d{1,2})\b/i);
+      if (w && !weeks.includes(`week ${+w[1]}`)) weeks.push(`week ${+w[1]}`);
+      const label = hit ? hit[1] : (w && /^week \d+$/i.test(str.trim()) ? null : "League data");
+      if (label && !labels.includes(label)) labels.push(label);
+    }
+    const when = asOf ? etTime(asOf) : "";
+    return [...labels, ...weeks, when && `as of ${when}`].filter(Boolean).join(" · ");
+  }
+
+  function setState(s) { root.dataset.chatState = s; }
+  function paintChips() {
+    chips.textContent = "";
+    const off = !url;
+    for (const q of CHIPS) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = q; b.disabled = capped || off;
+      if (off) b.setAttribute("aria-disabled", "true");
+      if (q === asked) b.dataset.asked = "";
+      b.addEventListener("click", () => ask(q));
+      chips.appendChild(b);
+    }
+    input.disabled = send.disabled = capped || busy || off;
+    for (const n of [input, send]) n.disabled ? n.setAttribute("aria-disabled", "true") : n.removeAttribute("aria-disabled");
+    root.dataset.chatChips = turns ? "compact" : "wrap";
+  }
+  function note(text, cls = "ask-note") { const p = el("p", cls); p.textContent = text; return p; }
+  function idle() {
+    if (!url) {
+      body.textContent = "";
+      const c = el("div", "ask-card");
+      c.append(note("Chat not set up yet", "ask-res"), note("The league chat isn’t switched on. Everything else on this page works as usual.", "ask-sub"));
+      body.appendChild(c);
+      setState("not-set-up");
+    } else if (turns) {
+      setState(capped ? "monthly-cap" : lastState);   // keep the conversation
+    } else {
+      body.textContent = "";
+      body.appendChild(note("Ask about scores, records, odds, injuries, projections, keepers or FAAB. Answers come only from the league’s data.", "ask-note ask-intro"));
+      setState(capped ? "monthly-cap" : "open");
+    }
+    paintChips();
+  }
+
+  // Each question is a turn: the echoed question, then a loading line, then its card.
+  // Turns stack; nothing earlier is wiped.
+  function startTurn(q) {
+    body.querySelector(".ask-intro")?.remove();
+    turn = el("div", "ask-turn");
+    turn.dataset.askTurn = "";
+    turn.appendChild(note(q, "ask-q"));
+    body.appendChild(turn);
+    return turn;
+  }
+  function finish(card, state) {
+    if (!turn) startTurn(last || "");
+    turn.querySelector(".ask-loading")?.remove();
+    turn.appendChild(card);
+    turns++; lastState = state;
+    setState(state);
+    const t = turn;
+    body.scrollTop += t.getBoundingClientRect().top - body.getBoundingClientRect().top - 8;
+    turn = null;
+  }
+
+  function showAnswer(q, res) {
+    const text = String(res.answer || "").trim();
+    const unknown = !text || /i don[’']t know/i.test(text);
+    const c = el("div", "ask-card");
+    if (unknown) {
+      c.append(note(UNKNOWN, "ask-res"), note("Try standings, a week’s scores, head-to-head records, odds, injuries, projections, keepers or FAAB.", "ask-sub"));
+    } else {
+      const lines = text.split(/\n+/).map(x => x.trim()).filter(Boolean);
+      c.appendChild(el("p", "ask-res", fmt(lines[0])));
+      for (const l of lines.slice(1)) c.appendChild(el("p", "ask-sub", fmt(l)));
+    }
+    const src = sourceLine(res.sources, res.asOf);
+    if (src) c.appendChild(note(src, "ask-src"));
+    finish(c, unknown ? "unknown" : "answer");
+  }
+  function showError(q, msg, state = "error", retry = true) {
+    const c = el("div", "ask-card warn");
+    c.appendChild(note(msg, "ask-res"));
+    if (retry) {
+      const b = el("button", "ask-retry");
+      b.type = "button"; b.textContent = "Try again"; b.dataset.askRetry = "";
+      b.addEventListener("click", () => { b.remove(); ask(last); });
+      c.appendChild(b);
+    }
+    finish(c, state);
+  }
+  function showCap(q) {
+    capped = true;
+    const c = el("div", "ask-card cap");
+    c.append(note("Out of questions this month", "ask-res"), note("The league chat has reached this month’s limit. It opens again on the 1st.", "ask-sub"));
+    finish(c, "monthly-cap");
+    paintChips();
+  }
+
+  async function ask(q) {
+    q = String(q || "").trim().slice(0, 500);
+    if (!q || busy) return;
+    if (!url) { idle(); return; }           // not set up: no network, ever
+    asked = CHIPS.includes(q) ? q : "";
+    if (capped) { startTurn(q); showCap(q); return; }
+    last = q; busy = true;
+    const t = startTurn(q);
+    const ld = el("div", "ask-loading");
+    ld.append(el("div", "ask-pulse"), note("Checking the league books…"));
+    t.appendChild(ld);
+    body.scrollTop = body.scrollHeight;
+    setState("loading");
+    paintChips();
+    let res = null, status = 0;
+    try {
+      const sid = sessionStorage.getItem(SKEY);
+      const r = await fetch(url.replace(/\/+$/, "") + "/", {
+        method: "POST",
+        headers: { "content-type": "application/json", ...(sid ? { "X-DFFL-Session": sid } : {}) },
+        body: JSON.stringify({ question: q }),
+        signal: AbortSignal.timeout ? AbortSignal.timeout(45000) : undefined,
+      });
+      status = r.status;
+      res = await r.json().catch(() => null);
+      if (res?.session) sessionStorage.setItem(SKEY, res.session);
+    } catch { res = null; }
+    busy = false;
+    if (res?.ok) showAnswer(q, res);
+    else if (res?.code === "MONTHLY_CAP") showCap(q);
+    else if (res?.code === "SESSION_CAP") showError(q, "That’s today’s 20 questions. The chat resets at midnight UTC.", "daily-cap", false);
+    else if (res?.code === "RATE_LIMIT") showError(q, "Too many questions at once. Wait a minute, then try again.");
+    else showError(q, "Couldn’t reach the league books. Try again.");
+    if (status) root.dataset.chatStatus = String(status);
+    paintChips();
+  }
+
+  // Scroll lock: pin the page where it is while the sheet is open, put it back on close.
+  function lockScroll() {
+    if (lock) return;
+    const s = document.body.style;
+    lock = { y: window.scrollY, position: s.position, top: s.top, left: s.left, right: s.right, width: s.width, overflow: s.overflow };
+    Object.assign(s, { position: "fixed", top: `-${lock.y}px`, left: "0", right: "0", width: "100%", overflow: "hidden" });
+  }
+  function unlockScroll() {
+    if (!lock) return;
+    const { y, ...prev } = lock;
+    Object.assign(document.body.style, prev);
+    lock = null;
+    window.scrollTo({ top: y, left: 0, behavior: "instant" });
+  }
+  // getClientRects, not offsetParent: the pill is position:fixed, so its offsetParent is always null.
+  const shown = n => !!n && n.getClientRects().length > 0;
+  const visibleOpener = () => [...openers()].find(shown);
+
+  const fabWrap = $("#askFabWrap"), fabMedia = matchMedia("(max-width: 899.98px)");
+  const syncFabAvailability = () => {
+    fabWrap.hidden = fabMedia.matches;
+    fabWrap.inert = fabMedia.matches;
+    if (fabMedia.matches) fabWrap.setAttribute("aria-hidden", "true");
+    else fabWrap.removeAttribute("aria-hidden");
+  };
+  syncFabAvailability();
+  fabMedia.addEventListener("change", syncFabAvailability);
+
+  function open(from) {
+    if (docked) { if (!input.disabled) input.focus({ preventScroll: true }); return; }
+    opener = from && from.matches?.("[data-ask-open]") ? from : visibleOpener();
+    lockScroll();
+    sheet.hidden = back.hidden = false;
+    for (const b of openers()) b.setAttribute("aria-expanded", "true");
+    if (busy) setState("loading");
+    else idle();
+    // Never focus the text field on a phone: it pops the keyboard over the sheet.
+    (wide() && url && !capped ? input : $("#askClose")).focus({ preventScroll: true });
+  }
+  function close() {
+    if (docked) return;
+    sheet.hidden = back.hidden = true;
+    for (const b of openers()) b.setAttribute("aria-expanded", "false");
+    setState("closed");
+    unlockScroll();
+    const to = shown(opener) ? opener : visibleOpener();
+    if (to) to.focus({ preventScroll: true });
+  }
+
+  // The Ask the League tab: the same sheet, moved into the tab's panel as a plain region,
+  // and moved back (closed) when the reader leaves. A question in flight carries on.
+  const spot = document.createComment("ask the league");
+  root.before(spot);
+  function dock(on) {
+    on = !!on;
+    const page = $('[data-panel="ask"]');
+    if (on === docked || (on && !page)) return;
+    if (isOpen()) {
+      sheet.hidden = back.hidden = true;
+      for (const b of openers()) b.setAttribute("aria-expanded", "false");
+      unlockScroll();
+    }
+    docked = on;
+    document.body.toggleAttribute("data-ask-tab", on);
+    if (on) {
+      page.appendChild(root);
+      sheet.setAttribute("role", "region"); sheet.removeAttribute("aria-modal");
+      root.dataset.chatMode = "page";
+      sheet.hidden = false;
+      if (busy) setState("loading");
+      else idle();
+    } else {
+      spot.after(root);
+      sheet.setAttribute("role", "dialog"); sheet.setAttribute("aria-modal", "true");
+      delete root.dataset.chatMode;
+      sheet.hidden = true;
+      setState("closed");
+    }
+  }
+
+  // The pill's X hides the pill for this session; the tab still reaches the chat.
+  const fabHidden = () => { try { return sessionStorage.getItem(FAB_KEY) === "hidden"; } catch { return false; } };
+  if (fabHidden()) document.body.dataset.askFab = "hidden";
+  $("#askFabHide").addEventListener("click", () => {
+    try { sessionStorage.setItem(FAB_KEY, "hidden"); } catch { /* private mode: hide for this page only */ }
+    document.body.dataset.askFab = "hidden";
+    $('#tabs [data-tab="ask"]')?.focus({ preventScroll: true });
+  });
+
+  for (const b of openers()) b.addEventListener("click", () => (isOpen() ? close() : open(b)));
+  $("#askClose").addEventListener("click", close);
+  back.addEventListener("click", close);
+  form.addEventListener("submit", e => { e.preventDefault(); const q = input.value; input.value = ""; ask(q); });
+  document.addEventListener("keydown", e => {
+    if (!isOpen()) return;
+    if (e.key === "Escape") { e.preventDefault(); close(); return; }
+    if (e.key !== "Tab") return;
+    // Focus trap: keep Tab inside the sheet while it is open.
+    const f = [...sheet.querySelectorAll("button,input")].filter(n => !n.disabled && n.offsetParent);
+    if (!f.length) return;
+    const first = f[0], end = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); end.focus(); }
+    else if (!e.shiftKey && (document.activeElement === end || !sheet.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+  });
+
+  // Test hook: verify.mjs points the panel at a mocked origin without editing this file.
+  window.__DFFL_CHAT = {
+    open: () => open(), close, ask, dock,
+    setWorkerUrl(u) {
+      url = String(u || ""); capped = false; turns = 0; asked = ""; turn = null; body.textContent = "";
+      root.dataset.chatState === "closed" ? paintChips() : idle();
+    },
+    getWorkerUrl: () => url,
+  };
+  return window.__DFFL_CHAT;
+})();
 boot();
 </script>
 </body>

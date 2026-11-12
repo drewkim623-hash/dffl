@@ -321,6 +321,48 @@
    "sha256": "462a853f35a0cc162f4aefbb4d3ae4d9552c0e39f4ae36015878af1bbcffc542",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-10T12:17:17.288Z",
+   "subject": "DFFL Week 10: The High and the Low Shared One Scoreboard",
+   "lead": "the-high-and-the-low-shared-one-scoreboard",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "29cc61de6d7422f13e91717c4fae64e97529c317bae0c79b2a999afbdd3b5aa8",
+   "by": "routine",
+   "note": ""
+  },
+  {
+   "at": "2026-11-10T23:55:49Z",
+   "subject": "DFFL Week 10: Deadline Desk: Olave, Bowers and Trade Talk",
+   "lead": "deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "002d6f6b28ee123b400e82d54bc405f895d907f8c8939a84a4c3f7c74c429cc3",
+   "by": "hand",
+   "note": "Sent by hand at Drew's request; no poll."
+  },
+  {
+   "at": "2026-11-12T16:21:46.703Z",
+   "subject": "DFFL Week 10: A 2027 Third-Round Pick, for Nothing",
+   "lead": "a-third-round-pick-for-nothing",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "16096546137a9ddc0ecaf8f5b1d83de6c172877ae0cf3797ac2b6826ab9e100f",
+   "by": "routine",
+   "note": ""
   }
  ]
 }

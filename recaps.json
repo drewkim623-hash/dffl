@@ -680,6 +680,84 @@
      "body": "jskule23, victorthompson, moseslin and drewkim are all 2-6, but jskule23's 1,001.08 points this season are the most of the group, 136.72 more than drewkim's 864.36."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 9,
+   "note": "",
+   "lede": "Six games produced 1,484.12 points, down from 1,527.48 the week before. sizzlemc2's 151.42 was the week's high, and bradyrife's 97.58 — in the same 53.84-point loss, the week's widest margin — was the low. jadencha's 7.88-point win over saucebossandrew was the tightest finish, and saucebossandrew's 134.08, in that loss, was the best score by anyone who lost. jadencha is 8-1, and willie12w and sizzlemc2 are both 6-3.",
+   "games": [
+    {
+     "headline": "jadencha edges saucebossandrew by 7.88, the week's closest",
+     "winner": "jadencha",
+     "winner_points": 141.96,
+     "loser": "saucebossandrew",
+     "loser_points": 134.08,
+     "body": "Matthew Golden's 34.4 led jadencha, with Amon-Ra St. Brown adding 16.6 and Isaiah Likely 16.3. Jordan Love's 36.18 was the best individual number on either side, and saucebossandrew stayed within range behind Chris Olave's 16.8, but the margin held at 7.88, the tightest game of the week, and jadencha improves to 8-1."
+    },
+    {
+     "headline": "Domo112 routs wesley55, 150.96-114.72",
+     "winner": "Domo112",
+     "winner_points": 150.96,
+     "loser": "wesley55",
+     "loser_points": 114.72,
+     "body": "Puka Nacua's 35 led Domo112, with Bijan Robinson adding 24.7 — though Domo112's bench outscored every starter anyway, with C.J. Stroud going unused for 36.36. Joe Burrow's 29.54 and Tee Higgins's 20.2 led wesley55, but the margin finished at 36.24."
+    },
+    {
+     "headline": "sizzlemc2 posts the week's high, buries bradyrife by 53.84",
+     "winner": "sizzlemc2",
+     "winner_points": 151.42,
+     "loser": "bradyrife",
+     "loser_points": 97.58,
+     "body": "CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 led sizzlemc2 to the week's highest score, 151.42. Christian McCaffrey's 21.7 topped bradyrife, but Bo Nix's 16.68 sat on the bench outscoring every starter except McCaffrey and Jonah Coleman — including the 13.58 Trevor Lawrence started at quarterback — and the 97.58 finish was the week's lowest. The 53.84-point margin was also the widest of the week."
+    },
+    {
+     "headline": "willie12w beats chassinator, 132.2-104.66",
+     "winner": "willie12w",
+     "winner_points": 132.2,
+     "loser": "chassinator",
+     "loser_points": 104.66,
+     "body": "Ja'Marr Chase's 33.5 and Bucky Irving's 26.5 led willie12w. Drake Maye's 21.26 topped chassinator, but Bryce Young outscored him from the bench anyway, 21.34, and the margin finished at 27.54 as chassinator falls to 4-5."
+    },
+    {
+     "headline": "drewkim tops jskule23, 129.78-104.58",
+     "winner": "drewkim",
+     "winner_points": 129.78,
+     "loser": "jskule23",
+     "loser_points": 104.58,
+     "body": "Brock Purdy's 26.28 and Brock Bowers's 22.3 led drewkim to just his third win of the season. Luther Burden III's 22.7 topped jskule23, but Adonai Mitchell on one side and Ja'Kobi Lane on the other both finished scoreless at receiver, and the margin held at 25.2."
+    },
+    {
+     "headline": "moseslin outlasts victorthompson, 120.48-101.7",
+     "winner": "moseslin",
+     "winner_points": 120.48,
+     "loser": "victorthompson",
+     "loser_points": 101.7,
+     "body": "Christian Watson's 31.1 led moseslin, well clear of Nico Collins's 15.5 behind him. Dak Prescott's 19.5 topped victorthompson, with the New York Giants' defense adding 16, but Ladd McConkey was scoreless at receiver and the margin held at 18.78."
+    }
+   ],
+   "around": [
+    {
+     "kind": "trade",
+     "headline": "saucebossandrew Trades for the Running Back He Just Dropped",
+     "body": "saucebossandrew released Kendre Miller to free agency, then turned around and traded a 2029 fifteenth-round pick to willie12w to get him back on the same day. No FAAB was attached to the deal in either direction."
+    },
+    {
+     "kind": "waivers",
+     "headline": "Nobody Paid a Dollar in Free Agency This Week",
+     "body": "All 26 roster moves across the league this week, including the willie12w-saucebossandrew trade, carried no FAAB — nobody won a paid waiver claim."
+    },
+    {
+     "kind": "note",
+     "headline": "saucebossandrew and victorthompson Combined for Nine of the Week's Roster Moves",
+     "body": "saucebossandrew made five moves, the most of any manager, including both ends of the Kendre Miller trade. victorthompson was next with four, cycling through Darius Cooper, Elijah Mitchell, Alvin Kamara and a defense swap to the New York Giants."
+    },
+    {
+     "kind": "race",
+     "headline": "jskule23's 2-7 Outscores Every Team at 3-6",
+     "body": "jskule23 has scored 1,105.66 points this season, more than all three teams a game ahead of it in the standings at 3-6 — saucebossandrew's 1,082.46, moseslin's 1,038.16 and drewkim's 994.14. victorthompson, tied with jskule23 at 2-7, sits behind at 1,025.74."
+    }
+   ]
   }
  ],
  "articles": [
@@ -6187,6 +6265,744 @@
     {
      "type": "p",
      "text": "None of it is final. Ten of the league's twelve rosters still have at least nine starters left to play this week, and these numbers will move again before Monday. But the shape of the board right now is not subtle: a seven-team fight for six spots at the top, and a five-team group the model has all but stopped counting."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-high-and-the-low-shared-one-scoreboard",
+   "date": "2026-11-10",
+   "source": "tuesday",
+   "kind": "opinion",
+   "kicker": "2026 · week 9",
+   "headline": "The High and the Low Shared One Scoreboard",
+   "dek": "sizzlemc2's 151.42 was the week's best score anywhere in the league. bradyrife's 97.58 was the worst. They played each other.",
+   "byline": "DFFL desk",
+   "standfirst": "151.42 to 97.58 · one game, both ends of the week",
+   "teaser": "🚨 DFFL | WEEK 9\n\nTHE HIGH AND THE LOW SHARED ONE SCOREBOARD\n\n🔥 sizzlemc2 posted the week's high, 151.42\n🧊 bradyrife posted the week's low, 97.58\n📏 The 53.84-point margin between them was also the widest of the week's six games\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-high-and-the-low-shared-one-scoreboard",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "sizzlemc2 posted the best score of anyone in the league this week, 151.42. bradyrife posted the worst, 97.58. They were not two separate stories — sizzlemc2 and bradyrife played each other, and the 53.84 points between them was also the widest margin of any game in week 9."
+    },
+    {
+     "type": "stat",
+     "n": "53.84",
+     "text": "The margin by which sizzlemc2 beat bradyrife — the same number as the gap between the week's highest score, 151.42, and its lowest, 97.58, because it was the same game."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the game",
+     "text": "Two Big Numbers On One Side, Not Much On The Other"
+    },
+    {
+     "type": "p",
+     "text": "CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 together were just under half of sizzlemc2's 151.42, and both outscored every player bradyrife started. bradyrife's lineup never found a third weapon to match them — Christian McCaffrey's 21.7 and Jonah Coleman's 16.8 were the top two scores on his side, and nothing else in the starting ten reached 14."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the bench",
+     "text": "The Backup Outscored The Starter"
+    },
+    {
+     "type": "p",
+     "text": "bradyrife started Trevor Lawrence at quarterback for 13.58 points. Bo Nix sat on the bench with 16.68 — more than Lawrence, and more than every bradyrife starter except Christian McCaffrey and Jonah Coleman. Swapping them would have added 3.1 points, pushing bradyrife to 100.68. It still wouldn't have come within 50 points of sizzlemc2."
+    },
+    {
+     "type": "bars",
+     "title": "Margins across week 9's six games",
+     "sub": "How many points separated the winner and loser in each game, closest first.",
+     "rows": [
+      {
+       "label": "jadencha def. saucebossandrew",
+       "sub": "141.96-134.08",
+       "value": 7.88,
+       "group": 2
+      },
+      {
+       "label": "moseslin def. victorthompson",
+       "sub": "120.48-101.7",
+       "value": 18.78,
+       "group": 2
+      },
+      {
+       "label": "drewkim def. jskule23",
+       "sub": "129.78-104.58",
+       "value": 25.2,
+       "group": 2
+      },
+      {
+       "label": "willie12w def. chassinator",
+       "sub": "132.2-104.66",
+       "value": 27.54,
+       "group": 2
+      },
+      {
+       "label": "Domo112 def. wesley55",
+       "sub": "150.96-114.72",
+       "value": 36.24,
+       "group": 2
+      },
+      {
+       "label": "sizzlemc2 def. bradyrife",
+       "sub": "151.42-97.58",
+       "value": 53.84,
+       "group": 1
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games combined for 1,484.12 points, down from 1,527.48 the week before. Below, in order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Jordan Love's 36.18 Wasn't Enough"
+    },
+    {
+     "type": "p",
+     "text": "<b>jadencha 141.96, saucebossandrew 134.08.</b> Matthew Golden's 34.4 and Amon-Ra St. Brown's 16.6 led jadencha, with the Houston defense adding 15 and Josh Allen 13.86 at quarterback."
+    },
+    {
+     "type": "p",
+     "text": "Jordan Love's 36.18 was the best individual score in the game, and Chris Olave added 16.8, but saucebossandrew came up 7.88 points short — the tightest finish of the week — and jadencha improves to 8-1."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-closest",
+     "text": "Christian Watson's 31.1 Carried moseslin"
+    },
+    {
+     "type": "p",
+     "text": "<b>moseslin 120.48, victorthompson 101.7.</b> Christian Watson's 31.1 led moseslin, well clear of Nico Collins's 15.5, with Jake Bates adding 15 from the kicker spot."
+    },
+    {
+     "type": "p",
+     "text": "Dak Prescott's 19.5 topped victorthompson, and the New York Giants' defense matched it with 16, but Ladd McConkey was scoreless at receiver and the margin held at 18.78."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the third-closest",
+     "text": "drewkim Wins His Third Despite A Zero at Receiver"
+    },
+    {
+     "type": "p",
+     "text": "<b>drewkim 129.78, jskule23 104.58.</b> Brock Purdy's 26.28 and Brock Bowers's 22.3 led drewkim, with KC Concepcion Jr. adding 20.8."
+    },
+    {
+     "type": "p",
+     "text": "Luther Burden III's 22.7 topped jskule23, but Adonai Mitchell on one side and Ja'Kobi Lane on the other both finished scoreless at receiver, and the margin held at 25.2. It's drewkim's third win of the season."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fourth-closest",
+     "text": "Bryce Young Outscored chassinator's Actual Quarterback"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 132.2, chassinator 104.66.</b> Ja'Marr Chase's 33.5 and Bucky Irving's 26.5 led willie12w, with the Buffalo defense adding 18."
+    },
+    {
+     "type": "p",
+     "text": "Drake Maye's 21.26 topped chassinator, but Bryce Young outscored him from the bench, 21.34, and the margin finished at 27.54. chassinator falls to 4-5."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-widest",
+     "text": "Domo112 Wins While C.J. Stroud Sits"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 150.96, wesley55 114.72.</b> Puka Nacua's 35 and Bijan Robinson's 24.7 led Domo112, whose bench still outscored its own starting lineup — C.J. Stroud went unused for 36.36, more than Nacua himself put up."
+    },
+    {
+     "type": "p",
+     "text": "Joe Burrow's 29.54 and Tee Higgins's 20.2 led wesley55, but the margin finished at 36.24."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "sizzlemc2's 151.42 Buries bradyrife by 53.84"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 151.42, bradyrife 97.58.</b> CeeDee Lamb's 36.5 and Kenneth Walker III's 35.3 led the week's highest score anywhere in the league."
+    },
+    {
+     "type": "p",
+     "text": "Christian McCaffrey's 21.7 topped bradyrife, with Bo Nix's 16.68 — more than Trevor Lawrence actually started at quarterback — staying on the bench. bradyrife's 97.58 was the week's lowest score, and the 53.84-point margin was its widest."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "date": "2026-11-10",
+   "kind": "trade",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "Deadline Desk: Olave, Bowers and Trade Talk",
+   "dek": "Two trades went through on Tuesday, both with 2027 strings attached. saucebossandrew now holds the league's only four keeper spots, Brock Bowers spends the rest of 2026 on loan to Domo112, and three big names are worth watching before the deadline.",
+   "byline": "DFFL desk",
+   "standfirst": "2 trades · 2 loans · 1 keeper spot moved",
+   "cover": {
+    "type": "trade",
+    "caption": "Deadline desk",
+    "players": [
+     "8144",
+     "5045",
+     "11604",
+     "11646"
+    ]
+   },
+   "teaser": "🚨 DFFL | WEEK 10\n\nDEADLINE DESK: OLAVE, BOWERS AND TRADE TALK\n\n🔁 2 trades on Tuesday, both with 2027 strings attached\n🔑 saucebossandrew now has 4 keeper spots; chassinator has 2\n🏈 Brock Bowers is TE2, 17.20 points clear of TE3, with a 7th-or-9th clause riding on it\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=deadline-desk-sutton-olave-bowers-and-trade-talk",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Two trades before Tuesday afternoon was out. At 11:48 a.m. Eastern, <b>chassinator</b> took Chris Olave from <b>saucebossandrew</b> for Courtland Sutton, chassinator's 2027 second-round pick and, per the commissioner, a keeper spot. At 1:41 p.m., <b>drewkim</b> loaned Brock Bowers to <b>Domo112</b> for the rest of 2026 and came away with Bijan Robinson's 2027 rights. The deadline is week 10: this week."
+    },
+    {
+     "type": "stat",
+     "n": "4",
+     "text": "2027 keeper spots for saucebossandrew after the Olave trade, the only team with four. chassinator drops to two; everyone else keeps three."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade one",
+     "text": "Olave Goes One Way, a Keeper Spot Goes the Other"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "saucebossandrew",
+       "big": "A",
+       "lead": true,
+       "sub": "A: a 3–6 team at 1.41% sells a 2026 receiver for a 2nd, Zay Flowers's rights and a fourth keeper spot",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Courtland Sutton (WR, DEN)"
+        },
+        {
+         "label": "Gets",
+         "value": "chassinator's 2027 2nd"
+        },
+        {
+         "label": "Gets",
+         "value": "chassinator's 2027 keeper spot"
+        },
+        {
+         "label": "Sends",
+         "value": "Chris Olave (WR, NO)"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "4 spots: Flowers R2, Pollard R5, LaPorta R7, Rice R2 (projection)"
+        }
+       ]
+      },
+      {
+       "title": "chassinator",
+       "big": "D",
+       "sub": "D: Olave helps a 59.43% playoff push, but the 2nd, Flowers's rights and a keeper slot all leave",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Chris Olave (WR, NO)"
+        },
+        {
+         "label": "Sends",
+         "value": "Courtland Sutton (WR, DEN)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 2nd"
+        },
+        {
+         "label": "Sends",
+         "value": "one 2027 keeper spot"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "2 spots: Maye R10, Kyren Williams R11 (projection)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The commissioner's notes, word for word. On Olave: \"andrew gets connors keeper spot\". On Zay Flowers: \"andrew owns rights\". Andrew is saucebossandrew and Connor is chassinator (Drew confirmed); the spot is a 2027 keeper slot. Flowers is chassinator's 2026 second-rounder, so the note hands a +71.6 keep at a 2nd to the team now holding chassinator's 2nd. <b>How Andrew got the Flowers rights is unconfirmed</b>: the note doesn't say, and Sleeper doesn't show it."
+    },
+    {
+     "type": "p",
+     "text": "On the field it's chassinator's trade: Olave (144.4 so far) projects 122.61 the rest of the way, Sutton (59.7) projects 66.5. The kicker is the slot: Olave's own 2027 keep (+47.0 at a 1st) no longer fits in chassinator's two."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade two",
+     "text": "Bowers Goes on Loan, Bijan's Rights Come Back"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "drewkim",
+       "big": "A",
+       "lead": true,
+       "sub": "A: keeps Bowers's rights, adds Bijan's, and gives up 2026 points at 0.34% playoff odds",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Jalen Coker (WR, CAR), 2026 only"
+        },
+        {
+         "label": "Gets",
+         "value": "Domo112's 2027 7th"
+        },
+        {
+         "label": "Gets",
+         "value": "Bijan Robinson's 2027 rights"
+        },
+        {
+         "label": "Sends",
+         "value": "Brock Bowers (TE, LV), 2026 only"
+        },
+        {
+         "label": "Sends",
+         "value": "Antonio Williams (WR, WAS)"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Purdy R14, Daniels R5, Bowers R4; Bijan R1 if Daniels sits (projection)"
+        }
+       ]
+      },
+      {
+       "title": "Domo112",
+       "big": "B",
+       "sub": "B: 178.73 projected points for a 7–2 title push, paid for with Bijan's 2027 and a 7th",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Brock Bowers (TE, LV), 2026 only"
+        },
+        {
+         "label": "Gets",
+         "value": "Antonio Williams (WR, WAS)"
+        },
+        {
+         "label": "Sends",
+         "value": "Jalen Coker (WR, CAR), 2026 only"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 7th"
+        },
+        {
+         "label": "Sends",
+         "value": "Bijan Robinson's 2027 rights"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Gibbs R1, Caleb Williams R8, Loveland R9 (projection)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The notes: Bijan, \"drew gets rights\". Williams, \"dom gets rights\". Coker, \"dom owns rights\". Bowers, \"drew keeps rights,doesnt finish top 3 drew gets 9th instead of 7th\". Drew's reading: if Bowers isn't a top-3 TE in 2026 league scoring, the 7th becomes Domo112's 9th. Through week 9 he's TE2 at 146.00, 17.20 clear of Isaiah Likely; eight weeks left. Coker projects 107.66 for drewkim the rest of the way."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade talk · rumors and analysis",
+     "text": "Three Names Worth Watching"
+    },
+    {
+     "type": "p",
+     "text": "Analysis, not reporting: no talks are on record for any of these three, and nothing here is a quote."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Amon-Ra St. Brown",
+       "big": "158.6",
+       "sub": "jadencha · 8–1 · 100% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "jadencha"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R4"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "142.08 projected"
+        }
+       ]
+      },
+      {
+       "title": "Derrick Henry",
+       "big": "138.28",
+       "sub": "wesley55 · 5–4 · 91.15% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "wesley55"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R1"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "87.53 projected (week 13 bye)"
+        }
+       ]
+      },
+      {
+       "title": "Tetairoa McMillan",
+       "big": "124.5",
+       "sub": "victorthompson · 2–7 · 0.83% playoff odds",
+       "rows": [
+        {
+         "label": "2027 rights",
+         "value": "victorthompson"
+        },
+        {
+         "label": "Keep cost",
+         "value": "R2"
+        },
+        {
+         "label": "Weeks 11–17",
+         "value": "108.66 projected"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "<b>Sellers.</b> victorthompson is the likeliest, but McMillan is a +68.09 keep at a 2nd, so a deal has to bring 2027 value back. jadencha (45.31% title odds) has no reason to move Amon-Ra, a +125.18 keep at a 4th. Henry is near break-even as a 1st-round keep (+3.74), a pure 2026 piece on a contender."
+    },
+    {
+     "type": "p",
+     "text": "<b>Buyers.</b> willie12w (96.95%), sizzlemc2 (83.01%) and chassinator (59.43%) are each down to two healthy running backs: Henry's market. bradyrife (65.52%) has four of seven receivers unavailable. And chassinator, with two keeper spots and no 2027 2nd, has the easiest case for a rental."
+    },
+    {
+     "type": "h",
+     "eyebrow": "re-look · Oct 13",
+     "text": "Josh Allen Trade"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "A",
+       "sub": "A: Josh Allen has added 59.72 since the trade; he is QB2 through week 9 at 206.68.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Josh Allen (QB, BUF)"
+        },
+        {
+         "label": "Sends",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "J.K. Dobbins (RB, DEN)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 5th"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Allen is QB2 through week 9; open until week 17"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: JSN R6, Matthew Golden R11, Amon-Ra St. Brown R4 (projection); Allen rights are with jskule23 if the note holds."
+        }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "A",
+       "sub": "A: Jordan Love has scored 97.90 since the trade for a 2027 9th.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Jordan Love (QB, GB)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 9th"
+        },
+        {
+         "label": "Clause",
+         "value": "None on Love"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "4 spots: Flowers R2, Pollard R5, LaPorta R7, Rice R2 (projection)."
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "C",
+       "sub": "C: Dobbins has 24.40 since, but the rights note keeps Allen's R2 keep with Joe, plus two 2027 picks",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "J.K. Dobbins (RB, DEN), jadencha's 2027 5th, saucebossandrew's 2027 9th"
+        },
+        {
+         "label": "Sends",
+         "value": "Josh Allen (QB, BUF)"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Allen is QB2 through week 9 at 206.68, 2.46 behind Joe Burrow; open until week 17"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Josh Allen R2, Patrick Mahomes R11, Luther Burden III R9 (projection, if the rights note holds)."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "re-look · Oct 14",
+     "text": "Puka Nacua Trade"
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "Domo112",
+       "big": "B",
+       "sub": "B: Puka has scored 96.8 since the trade, but the rights note assigns his 2027 keep to jskule23.",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Puka Nacua (WR, LAR)"
+        },
+        {
+         "label": "Sends",
+         "value": "Marvin Harrison Jr. (WR, HOU), Mike Evans (WR, SF), 2027 2nd"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe keeps rights, Puka misses 3 or more games or misses a playoff game pick becomes a third\""
+        },
+        {
+         "label": "Clause now",
+         "value": "0 games missed since the trade; the playoffs have not started."
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Gibbs R1, Caleb Williams R8, Loveland R9 (projection)."
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "B",
+       "sub": "B: kept Puka's R12 rights and banked Domo's 2027 2nd",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Marvin Harrison Jr. (WR, HOU), Mike Evans (WR, SF), Domo112's 2027 2nd"
+        },
+        {
+         "label": "Sends",
+         "value": "Puka Nacua (WR, LAR)"
+        },
+        {
+         "label": "Clause",
+         "value": "Evans: \"dom owns rights,Mike Evans misses 3 or more games or misses a playoff Joe gets a 8th\"; Harrison: \"dom owns rights\""
+        },
+        {
+         "label": "Clause now",
+         "value": "Evans has missed 2 games since the trade (weeks 7 and 9; week 8 was a bye), is Out, and is listed to return Nov 15. Harrison was dropped by Domo on Nov 9; that ends Domo112's Harrison rights."
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Josh Allen R2, Patrick Mahomes R11, Luther Burden III R9 (projection, if the rights notes hold)."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Joe is read as jskule23 (the league email list and the notes line up), a high-confidence identification, not a name on the Sleeper ticket. Points: official Sleeper, league scoring, through week 9; projections: Sleeper, weeks 11–17; odds: the site's Tuesday snapshot. Keep surplus is full-2026 pace minus that round's 2023–25 average, not a 2027 forecast. Notes are quoted from Sleeper screenshots. A full trade log is coming to Future Outlook."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "a-third-round-pick-for-nothing",
+   "date": "2026-11-12",
+   "kind": "trade",
+   "source": "watch",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "A 2027 Third-Round Pick, for Nothing",
+   "dek": "saucebossandrew sent jadencha a 2027 third-round pick at this week's deadline and got nothing back, a trade the grading engine scored A+ for jadencha and F- for saucebossandrew — a 100% margin. jadencha also walked away from the same deadline with Justin Jefferson, off a separate trade with moseslin graded B to D in his favor.",
+   "byline": "DFFL desk",
+   "standfirst": "2 trades · 1 for nothing",
+   "cover": {
+    "type": "trade"
+   },
+   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n📉 saucebossandrew's playoff odds: 47.6% on draft day, 1.8% now\n🔁 jadencha's trade with saucebossandrew graded A+/F-, a 100% margin\n🏆 jadencha leads the league at 8-1, with a 51.2% title chance\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Two more trades went through at this week's deadline, and <b>jadencha</b> came away ahead on both. The league leader, 8-1, added Justin Jefferson from <b>moseslin</b> in a deal the trade grading engine scored 34% in his favor, then took a 2027 third-round pick from <b>saucebossandrew</b> in a separate trade and sent nothing back — a 100% margin, graded A+ for jadencha and F- for saucebossandrew."
+    },
+    {
+     "type": "stat",
+     "n": "100",
+     "text": "The margin, in percent, the trade grading engine gave jadencha's deal with saucebossandrew: a 2027 third-round pick for nothing in return. A+ for jadencha, F- for saucebossandrew."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade one",
+     "text": "Jefferson Goes to the League Leader"
+    },
+    {
+     "type": "p",
+     "text": "jadencha gave up Breece Hall and got Justin Jefferson back from moseslin, who is 3-6. The grading engine put jadencha's side at 67 in value against moseslin's 32.8 — Breece Hall plus a 2027 third-round pick — a 34% margin in jadencha's favor, graded B for jadencha and D for moseslin."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "B",
+       "sub": "a 34% margin in his favor",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Justin Jefferson (WR, MIN)"
+        },
+        {
+         "label": "Sends",
+         "value": "Breece Hall (RB, NYJ)"
+        }
+       ]
+      },
+      {
+       "title": "moseslin",
+       "big": "D",
+       "sub": "a 34% margin against him",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Gets",
+         "value": "jadencha's 2027 3rd"
+        },
+        {
+         "label": "Sends",
+         "value": "Justin Jefferson (WR, MIN)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade two",
+     "text": "A Third-Rounder, for Nothing"
+    },
+    {
+     "type": "p",
+     "text": "In a separate deal the same week, saucebossandrew sent jadencha a 2027 third-round pick and got nothing back. The grading engine valued jadencha's side at 32.8 and saucebossandrew's at zero — a 100% margin. It is the worst trade grade saucebossandrew has gotten all season; the three before it this year were a C, a D and another C, and he has yet to win a trade grade in 2026."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "A+",
+       "sub": "a 100% margin, a pick for nothing back",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "saucebossandrew's 2027 3rd"
+        }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "F-",
+       "sub": "zero value returned, his worst grade of 2026",
+       "rows": [
+        {
+         "label": "Sends",
+         "value": "2027 3rd-round pick"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "jadencha is 8-1 with 1,443.12 points for, the most in the league, and now a 51.2% chance to win the title, up from 31.6% on draft day. saucebossandrew is 3-6, and this week's deadline leaves the team at a 1.8% chance to make the playoffs, down from 47.6% in the preseason line."
+    },
+    {
+     "type": "bars",
+     "title": "saucebossandrew's playoff odds",
+     "sub": "percent chance to make the playoffs",
+     "rows": [
+      {
+       "label": "Draft day",
+       "value": 47.6,
+       "group": 2
+      },
+      {
+       "label": "Now",
+       "value": 1.8,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Trades and rosters from data/pulse.json; trade values and letter grades from the trade grading engine in data/trade-grades.json; records, points-for and playoff/title odds from data/pulse.json and data/odds-snapshot.json as refreshed this morning."
     }
    ]
   }

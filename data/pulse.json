@@ -1,128 +1,143 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-08T00:37:43.656Z",
- "at": 1794098263656,
+ "generated": "2026-11-12T11:02:18.443Z",
+ "at": 1794481338443,
  "season": "2026",
- "nfl_week": 9,
+ "nfl_week": 10,
  "season_type": "regular",
  "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
-   "wins": 7,
+   "wins": 8,
    "losses": 1,
-   "points_for": 1301.16,
-   "points_against": 921.46,
+   "points_for": 1443.12,
+   "points_against": 1055.54,
    "faab_spent": 22,
    "starters_hurt": [
+    "Bhayshul Tuten (Questionable)",
     "Amon-Ra St. Brown (Questionable)"
    ]
   },
   {
    "manager": "Domo112",
-   "wins": 6,
+   "wins": 7,
    "losses": 2,
-   "points_for": 1052.3,
-   "points_against": 999.8,
-   "faab_spent": 83,
-   "starters_hurt": []
-  },
-  {
-   "manager": "wesley55",
-   "wins": 5,
-   "losses": 3,
-   "points_for": 1074.88,
-   "points_against": 996.66,
-   "faab_spent": 26,
+   "points_for": 1203.26,
+   "points_against": 1114.52,
+   "faab_spent": 88,
    "starters_hurt": []
   },
   {
    "manager": "willie12w",
-   "wins": 5,
+   "wins": 6,
    "losses": 3,
-   "points_for": 1041.14,
-   "points_against": 901.46,
-   "faab_spent": 65,
-   "starters_hurt": []
-  },
-  {
-   "manager": "bradyrife",
-   "wins": 5,
-   "losses": 3,
-   "points_for": 1037.08,
-   "points_against": 917.04,
-   "faab_spent": 100,
+   "points_for": 1173.34,
+   "points_against": 1006.12,
+   "faab_spent": 88,
    "starters_hurt": [
-    "George Pickens (Questionable)"
+    "Jared Goff (Questionable)"
    ]
   },
   {
    "manager": "sizzlemc2",
-   "wins": 5,
+   "wins": 6,
    "losses": 3,
-   "points_for": 996.46,
-   "points_against": 1070.5,
-   "faab_spent": 49,
-   "starters_hurt": []
+   "points_for": 1147.88,
+   "points_against": 1168.08,
+   "faab_spent": 67,
+   "starters_hurt": [
+    "Denzel Boston (Questionable)",
+    "Omar Cooper Jr. (Questionable)"
+   ]
+  },
+  {
+   "manager": "wesley55",
+   "wins": 5,
+   "losses": 4,
+   "points_for": 1189.6,
+   "points_against": 1147.62,
+   "faab_spent": 26,
+   "starters_hurt": [
+    "T.J. Hockenson (Questionable)"
+   ]
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 5,
+   "losses": 4,
+   "points_for": 1134.66,
+   "points_against": 1068.46,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "George Pickens (Questionable)",
+    "Garrett Wilson (Questionable)",
+    "Jakobi Meyers (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
    "wins": 4,
-   "losses": 4,
-   "points_for": 1088.5,
-   "points_against": 1026.76,
-   "faab_spent": 64,
+   "losses": 5,
+   "points_for": 1193.16,
+   "points_against": 1158.96,
+   "faab_spent": 72,
    "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
    "wins": 3,
-   "losses": 5,
-   "points_for": 948.38,
-   "points_against": 1032.58,
-   "faab_spent": 100,
-   "starters_hurt": []
-  },
-  {
-   "manager": "jskule23",
-   "wins": 2,
    "losses": 6,
-   "points_for": 1001.08,
-   "points_against": 1086.28,
-   "faab_spent": 95,
-   "starters_hurt": [
-    "Mike Evans (Out)"
-   ]
-  },
-  {
-   "manager": "victorthompson",
-   "wins": 2,
-   "losses": 6,
-   "points_for": 924.04,
-   "points_against": 972.44,
+   "points_for": 1082.46,
+   "points_against": 1174.54,
    "faab_spent": 100,
    "starters_hurt": []
   },
   {
    "manager": "moseslin",
-   "wins": 2,
+   "wins": 3,
    "losses": 6,
-   "points_for": 917.68,
-   "points_against": 1176.1,
+   "points_for": 1038.16,
+   "points_against": 1277.8,
    "faab_spent": 16,
    "starters_hurt": [
-    "Cam Skattebo (Doubtful)"
+    "Harold Fannin Jr. (Questionable)"
    ]
   },
   {
    "manager": "drewkim",
-   "wins": 2,
+   "wins": 3,
    "losses": 6,
-   "points_for": 864.36,
-   "points_against": 1145.98,
+   "points_for": 994.14,
+   "points_against": 1250.56,
    "faab_spent": 100,
    "starters_hurt": [
-    "Emeka Egbuka (Questionable)"
+    "Woody Marks (Questionable)"
+   ]
+  },
+  {
+   "manager": "jskule23",
+   "wins": 2,
+   "losses": 7,
+   "points_for": 1105.66,
+   "points_against": 1216.06,
+   "faab_spent": 95,
+   "starters_hurt": [
+    "Carnell Tate (Questionable)",
+    "Mike Evans (Questionable)"
+   ]
+  },
+  {
+   "manager": "victorthompson",
+   "wins": 2,
+   "losses": 7,
+   "points_for": 1025.74,
+   "points_against": 1092.92,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "Dalton Kincaid (Questionable)",
+    "Ladd McConkey (Questionable)",
+    "A.J. Brown (Questionable)"
    ]
   }
  ],
@@ -130,23 +145,23 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 17,
-    "startersLeftToPlay": 9
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "wesley55",
-    "points": 21.78,
-    "startersLeftToPlay": 7
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 8.9,
-    "startersLeftToPlay": 9
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
+    "manager": "bradyrife",
     "points": 0,
     "startersLeftToPlay": 10
    }
@@ -154,18 +169,18 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 21.4,
-    "startersLeftToPlay": 8
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "willie12w",
+    "manager": "moseslin",
     "points": 0,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "jskule23",
+    "manager": "willie12w",
     "points": 0,
     "startersLeftToPlay": 10
    },
@@ -177,19 +192,19 @@
   },
   {
    "a": {
-    "manager": "bradyrife",
-    "points": 13.58,
-    "startersLeftToPlay": 9
+    "manager": "jskule23",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "sizzlemc2",
+    "manager": "wesley55",
     "points": 0,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "moseslin",
+    "manager": "saucebossandrew",
     "points": 0,
     "startersLeftToPlay": 10
    },
@@ -202,6 +217,257 @@
  ],
  "trades": [
   {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jskule23",
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Chuba Hubbard",
+     "pos": "RB",
+     "team": "CAR",
+     "status": null,
+     "to": "bradyrife"
+    },
+    {
+     "name": "Chase Brown",
+     "pos": "RB",
+     "team": "CIN",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Chuba Hubbard",
+     "pos": "RB",
+     "team": "CAR",
+     "status": null,
+     "from": "jskule23"
+    },
+    {
+     "name": "Chase Brown",
+     "pos": "RB",
+     "team": "CIN",
+     "status": null,
+     "from": "bradyrife"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 8,
+     "from": "jskule23",
+     "to": "bradyrife"
+    },
+    {
+     "season": "2027",
+     "round": 9,
+     "from": "drewkim",
+     "to": "bradyrife"
+    }
+   ]
+  },
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Justin Jefferson",
+     "pos": "WR",
+     "team": "MIN",
+     "status": null,
+     "to": "jadencha"
+    },
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "to": "moseslin"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Justin Jefferson",
+     "pos": "WR",
+     "team": "MIN",
+     "status": null,
+     "from": "moseslin"
+    },
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 3,
+     "from": "saucebossandrew",
+     "to": "moseslin"
+    }
+   ]
+  },
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "jadencha",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Breece Hall",
+     "pos": "RB",
+     "team": "NYJ",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 3,
+     "from": "saucebossandrew",
+     "to": "jadencha"
+    }
+   ]
+  },
+  {
+   "week": 9,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "status": null,
+     "to": "Domo112"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "status": null,
+     "to": "drewkim"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Brock Bowers",
+     "pos": "TE",
+     "team": "LV",
+     "status": null,
+     "from": "drewkim"
+    },
+    {
+     "name": "Jalen Coker",
+     "pos": "WR",
+     "team": "CAR",
+     "status": null,
+     "from": "Domo112"
+    },
+    {
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "team": "WAS",
+     "status": null,
+     "from": "drewkim"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 7,
+     "from": "Domo112",
+     "to": "drewkim"
+    }
+   ]
+  },
+  {
+   "week": 9,
+   "type": "trade",
+   "managers": [
+    "chassinator",
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "status": null,
+     "to": "saucebossandrew"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Courtland Sutton",
+     "pos": "WR",
+     "team": "DEN",
+     "status": null,
+     "from": "chassinator"
+    },
+    {
+     "name": "Chris Olave",
+     "pos": "WR",
+     "team": "NO",
+     "status": null,
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 2,
+     "from": "chassinator",
+     "to": "saucebossandrew"
+    }
+   ]
+  },
+  {
    "week": 9,
    "type": "trade",
    "managers": [
@@ -212,7 +478,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "NO",
+     "team": "DAL",
      "status": null,
      "to": "saucebossandrew"
     }
@@ -221,7 +487,7 @@
     {
      "name": "Kendre Miller",
      "pos": "RB",
-     "team": "NO",
+     "team": "DAL",
      "status": null,
      "from": "willie12w"
     }
@@ -235,212 +501,101 @@
      "to": "willie12w"
     }
    ]
-  },
-  {
-   "week": 8,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Chris Godwin Jr.",
-     "pos": "WR",
-     "team": "TB",
-     "status": null,
-     "to": "bradyrife"
-    },
-    {
-     "name": "Brian Thomas Jr.",
-     "pos": "WR",
-     "team": "JAX",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chris Godwin Jr.",
-     "pos": "WR",
-     "team": "TB",
-     "status": null,
-     "from": "jadencha"
-    },
-    {
-     "name": "Brian Thomas Jr.",
-     "pos": "WR",
-     "team": "JAX",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": null,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Chig Okonkwo",
-     "pos": "TE",
-     "team": "WAS",
-     "status": null,
-     "to": "jskule23"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chig Okonkwo",
-     "pos": "TE",
-     "team": "WAS",
-     "status": null,
-     "from": "Domo112"
-    },
-    {
-     "name": "Marvin Harrison Jr.",
-     "pos": "WR",
-     "team": "HOU",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": null,
-   "picks": []
   }
  ],
  "waivers": [
   {
-   "week": 8,
+   "week": 9,
    "type": "waiver",
    "managers": [
-    "saucebossandrew"
+    "sizzlemc2"
    ],
    "adds": [
     {
-     "name": "Tyler Allgeier",
+     "name": "Kaleb Johnson",
      "pos": "RB",
-     "team": "ARI",
+     "team": "GB",
      "status": null,
-     "to": "saucebossandrew"
+     "to": "sizzlemc2"
     }
    ],
    "drops": [],
-   "faab": 41,
+   "faab": 23,
    "picks": []
   },
   {
-   "week": 8,
+   "week": 9,
    "type": "waiver",
    "managers": [
-    "jskule23"
+    "willie12w"
    ],
    "adds": [
     {
-     "name": "Kaelon Black",
+     "name": "Corey Kiner",
      "pos": "RB",
-     "team": "SF",
+     "team": "NE",
      "status": null,
-     "to": "jskule23"
+     "to": "willie12w"
     }
    ],
    "drops": [],
-   "faab": 11,
+   "faab": 23,
    "picks": []
   },
   {
-   "week": 8,
+   "week": 9,
    "type": "waiver",
    "managers": [
-    "jadencha"
+    "chassinator"
    ],
    "adds": [
     {
-     "name": "Houston Texans",
+     "name": "Baltimore Ravens",
      "pos": "DEF",
-     "team": "HOU",
+     "team": "BAL",
      "status": null,
-     "to": "jadencha"
+     "to": "chassinator"
     }
    ],
    "drops": [
     {
-     "name": "Malachi Fields",
-     "pos": "WR",
-     "team": "NYG",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": 10,
-   "picks": []
-  },
-  {
-   "week": 8,
-   "type": "waiver",
-   "managers": [
-    "jadencha"
-   ],
-   "adds": [
-    {
-     "name": "Chris Rodriguez Jr.",
-     "pos": "RB",
-     "team": "JAX",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Los Angeles Rams",
+     "name": "Chicago Bears",
      "pos": "DEF",
-     "team": "LAR",
+     "team": "CHI",
      "status": null,
-     "from": "jadencha"
+     "from": "chassinator"
     }
    ],
    "faab": 8,
    "picks": []
   },
   {
-   "week": 8,
+   "week": 9,
    "type": "waiver",
    "managers": [
-    "moseslin"
+    "Domo112"
    ],
    "adds": [
     {
-     "name": "J.J. McCarthy",
-     "pos": "QB",
-     "team": "NYG",
+     "name": "Los Angeles Rams",
+     "pos": "DEF",
+     "team": "LAR",
      "status": null,
-     "to": "moseslin"
+     "to": "Domo112"
     }
    ],
    "drops": [
     {
-     "name": "Aaron Rodgers",
-     "pos": "QB",
-     "team": "PIT",
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
      "status": null,
-     "from": "moseslin"
+     "from": "Domo112"
     }
    ],
-   "faab": 4,
+   "faab": 5,
    "picks": []
   }
  ],
- "free_agent_moves": 50
+ "free_agent_moves": 42
 }

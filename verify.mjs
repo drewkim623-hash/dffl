@@ -77,8 +77,13 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "draft", "trades", "recaps"];
+const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
+const toiletNav = await page.evaluate(() => {
+  const p=document.querySelector('#tabs button[data-tab="picture"]'),t=document.querySelector('#tabs button[data-tab="toilet"]');
+  return {label:t?.textContent.trim(),next:p?.nextElementSibling===t,role:t?.getAttribute("role"),tablist:t?.parentElement?.getAttribute("role"),selected:t?.getAttribute("aria-selected")};
+});
+check("Toilet Bowl tab follows Playoff Picture with matching tab semantics",toiletNav.label==="Toilet Bowl"&&toiletNav.next&&toiletNav.role==="tab"&&toiletNav.tablist==="tablist",JSON.stringify(toiletNav));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
   const shown = await page.evaluate(t => {
@@ -87,7 +92,7 @@ for (const id of EXPECT) {
   }, id);
   check(`${id}: panel renders and is selectable`, shown.exists && shown.visible && shown.selected && shown.kids > 0, JSON.stringify(shown));
 }
-check("hash routing follows the tab", (await page.evaluate(() => location.hash)) === "#recaps");
+check("hash routing follows the tab", (await page.evaluate(() => location.hash)) === "#" + EXPECT[EXPECT.length - 1]);
 check("the Trade Machine is gone: no tab, no panel", await page.evaluate(() =>
   !document.querySelector('#tabs button[data-tab="trade"]') && !document.querySelector('[data-panel="trade"]') &&
   ![...document.querySelectorAll("#tabs button")].some(b => /trade machine/i.test(b.textContent))));
@@ -2862,6 +2867,52 @@ if (!mgLive.skip) {
     mgLive.certOk, `${mgLive.certLines} lines`);
   check("live: a playoff clinch is exactly a magic 0, and no eliminated team carries a number", mgLive.zeroIsClinch && mgLive.elimHasNoNumber);
 }
+group("Toilet Bowl Picture: section and chip proofs");
+await page.click('#tabs button[data-tab="toilet"]');
+const tbNameLines = await page.evaluate(() => {
+  const host=document.querySelector("#toiletHost"), cells=[...(host?.querySelectorAll(".pp-tnm,.pp-nm .tb-name-text,.tb-slotname")||[])];
+  return {width:innerWidth,hidden:!host||!!host.closest('[hidden]'),multi:cells.flatMap(el=>{
+    const range=document.createRange();range.selectNodeContents(el);
+    // Chromium can split one ellipsized line into several rects with the same top; only distinct tops (>1px apart) are separate lines.
+    const tops=[];for(const r of range.getClientRects())if(!tops.some(t=>Math.abs(t-r.top)<=1))tops.push(r.top);
+    const lines=tops.length;
+    return lines>1?[{class:el.className,text:el.textContent.trim(),lines,tops}]:[];
+  }),count:cells.length};
+});
+check("toilet team names stay on one line at 1280px",tbNameLines.width>=1200&&!tbNameLines.hidden&&tbNameLines.count>0&&!tbNameLines.multi.length,JSON.stringify(tbNameLines));
+const tbProof = await page.evaluate(() => {
+  const D=window.__DFFL, T=window.__TOILET, P=window.__PICTURE, host=document.querySelector("#toiletHost"), L=window.__LSIM;
+  const teams=(ws,ds)=>ws.map((w,i)=>({rid:i+1,div:ds[i],w,pf:1000-i}));
+  const decided=D.exactClinch({teams:teams([10,2,2,6,6,5],[1,1,1,2,2,2]),remaining:[[0,1],[2,3],[4,5]],playoffTeams:4,byes:2});
+  const tied=D.exactClinch({teams:teams([5,5,5,1],[1,1,2,2]),remaining:[],playoffTeams:2,byes:0});
+  const fixture=D.toiletChipMap([decided[0],decided[1],tied[0]],[]), escaped=D.toiletChipMap([{rid:99,eliminated:false,clinchedPlayoff:false}],[99]);
+  const escapeGate=D.toiletEscapes([40,42],[42]);
+  const seedOrder=P&&P.full?P.full.order.slice(P.rules.playoffTeams).map(i=>P.full.rows[i].rid):[];
+  const shown=d=>{const x=host.querySelector(`.pp-li[data-rid="${CSS.escape(String(d.rid))}"]`);return x&&x.textContent;};
+  const fmt=v=>v<=0?"0%":v>=1?"100%":v<.005?"<1%":v>.995?">99%":`${(v*100).toFixed(0)}%`;
+  const chipMap=new Map((T?.clinches||[]).map(c=>[c.rid,c]));
+  return {ready:!!T&&!!P&&!!host,notInPicture:!!host&&!host.closest('[data-panel="picture"]')&&!document.querySelector('[data-panel="picture"] #toiletHost'),
+    six:T?.seeds.length===6,seedOrder:T?.seeds.map(x=>x.rid).join(",")===seedOrder.join(","),
+    labels:host?[...host.querySelectorAll(".pp-lb")].map(x=>x.textContent):[],text:host?.textContent||"",
+    odds:T?.seeds.every(d=>{const r=P.full.rows.find(x=>x.rid===d.rid),i=P.rids.indexOf(d.rid),txt=shown(d);return d.bowlPct===r?.miss&&d.bowlByePct===r?.bowlBye&&txt?.includes(`Bowl${fmt(r.miss)}`)&&txt?.includes(`Bye${fmt(r.bowlBye)}`)&&(!L||L.sims!==P.sims||(d.lastPct===L.last[i]/L.sims&&txt.includes(`Last${fmt(d.lastPct)}`)))}),
+    byeTotal:T?.seeds.reduce((a,d)=>a+d.bowlByePct,0),
+    liveChips:T?.seeds.every(d=>d.chip===(chipMap.get(d.rid)?.label||"")&&(!d.chip||!!d.provingSource)),liveChipDetails:T?.seeds.map(x=>({rid:x.rid,chip:x.chip,source:x.provingSource})),
+    fixture,escaped,escapeGate,oddsLabels:host?[...host.querySelector(".pp-li .pp-bars")?.querySelectorAll(".pp-pb span")||[]].map(x=>x.textContent.trim()):[],
+    byeColumn:!!host?.querySelector('.pp-pb[data-k="bye"]'),
+    bracket:!!host?.querySelector(".pp-br .pp-rd .pp-mt")&&host.querySelectorAll(".pp-mt").length===7&&host.querySelectorAll(".pp-rd")[0]?.children.length===2&&host.querySelectorAll(".pp-rd")[1]?.children.length===2&&!!host.querySelector(".pp-cn")&&!!host.querySelector(".pp-join")&&host.querySelector(".pp-fin .pp-lb")?.textContent.includes("Wk 17 · Final")&&host.querySelector(".pp-troph")?.textContent.trim()==="Loser finishes last"&&host.querySelectorAll(".pp-hero").length===2,
+    noPunishment:host?!/punishment|CAGE/i.test(host.querySelector(".pp-br")?.textContent||""):false};
+});
+check("toilet section is outside the Playoff Picture panel",tbProof.ready&&tbProof.notInPicture,JSON.stringify(tbProof));
+check("the six seeds match the playoff picture's non-playoff order",tbProof.six&&tbProof.seedOrder,JSON.stringify(tbProof));
+check("graphic bracket has week 15 pairs, seeded week 16 semis, and centered week 17 final",["7 v 10","8 v 9","12 v loser of 8/9","11 v loser of 7/10","7th/8th","9th/10th"].every(x=>tbProof.labels.some(y=>y.includes(x)))&&tbProof.bracket,JSON.stringify(tbProof.labels));
+check("bowl rows include the Bye probability column",tbProof.byeColumn,JSON.stringify(tbProof.oddsLabels));
+check("Bye chances sum to the two bowl byes",near(tbProof.byeTotal,2,0.002),String(tbProof.byeTotal));
+check("bowl and last place odds come from the picture's same simulation",tbProof.odds,"displayed values should match PP miss and same-run C.last");
+check("the final is labelled Final and shows no punishment or lower-place distribution",tbProof.labels.some(x=>x.includes("Wk 17 · Final"))&&tbProof.noPunishment&&tbProof.oddsLabels.join(",")==="Bye,Bowl,Last",JSON.stringify(tbProof.oddsLabels));
+check("chip helper maps only exact clinch/elimination and completed escape proofs",tbProof.fixture[0].label==="Safe from last"&&tbProof.fixture[0].provingSource==="exactClinch.clinchedPlayoff"&&tbProof.fixture[1].label==="Locked into the bowl"&&tbProof.fixture[1].provingSource==="exactClinch.eliminated"&&!tbProof.fixture[2].label&&tbProof.escaped[0].label==="Safe from last"&&tbProof.escaped[0].provingSource==="completed inverted bracket",JSON.stringify({fixture:tbProof.fixture,escaped:tbProof.escaped}));
+check("scored bowl winners escape without placements; placements-only and last-place teams do not",tbProof.escapeGate.length===1&&String(tbProof.escapeGate[0])==="40"&&!tbProof.escapeGate.includes(41)&&!tbProof.escapeGate.includes(42),JSON.stringify(tbProof.escapeGate));
+check("every live chip is backed by the exposed exact or completed-bracket proof",tbProof.liveChips,JSON.stringify(tbProof.liveChipDetails));
+await page.click('#tabs button[data-tab="picture"]');
 
 group("Playoff Picture: the board renders");
 const ppDrawn = await page.evaluate(async () => {
@@ -4938,7 +4989,9 @@ const ppNarrow = await mobile.evaluate(async () => {
   const season = D.DB.seasons.find(s => s.season === "2025");
   const R = D.raceAsOf(season, 10);
   const live = D.liveState(M, season, R, null, null, 10);
-  D.renderPicture(document.querySelector("#pictureHost"), await D.computePicture(M, live, R, season, { whatIfSims: 500 }));
+  const PP = await D.computePicture(M, live, R, season, { whatIfSims: 500 });
+  D.renderPicture(document.querySelector("#pictureHost"), PP);
+  D.drawToiletPicture(document.querySelector("#toiletHost"), PP, null, season, season.games, false);
   const panel = document.querySelector('[data-panel="picture"]');
   const over = [];
   for (const n of panel.querySelectorAll("*")) {
@@ -4957,6 +5010,10 @@ check("picture: nothing outside a scroller overflows at 390px", ppNarrow.over.le
 check("picture: the whole board renders at 390px", ppNarrow.rows >= 18, `${ppNarrow.rows} rows`);
 check("picture: the manager column stays pinned and compact at 390px",
   ppNarrow.sticky === "sticky" && ppNarrow.nameW > 60 && ppNarrow.nameW <= 170, `${ppNarrow.sticky}, ${Math.round(ppNarrow.nameW)}px`);
+await mobile.click('#tabs button[data-tab="toilet"]');
+const tbNarrow=await mobile.evaluate(()=>{const h=document.querySelector("#toiletHost"),l=h&&h.querySelector(".pp-lay"),over=[];for(const n of h?.querySelectorAll(".tbv *")||[]){const r=n.getBoundingClientRect();if(r.width&&r.right>innerWidth+1)over.push(n.className||n.tagName);}return {cols:l?getComputedStyle(l).gridTemplateColumns.split(" ").length:0,doc:document.documentElement.scrollWidth,W:innerWidth,host:h&&h.getBoundingClientRect().width,section:!!h?.querySelector(".tbv"),over:over.slice(0,5)};});
+check("toilet picture: one column and no overflow at 390px",tbNarrow.section&&tbNarrow.cols===1&&tbNarrow.doc<=tbNarrow.W&&tbNarrow.host<=tbNarrow.W&&!tbNarrow.over.length,JSON.stringify(tbNarrow));
+await mobile.click('#tabs button[data-tab="picture"]');
 
 // Clinch badges at 390px, on a week late enough that somebody has clinched.
 const ppBadges = await mobile.evaluate(async () => {
@@ -5043,6 +5100,21 @@ check("v4: 2025 week 13 has somebody eliminated to show", ppV4Narrow.some(r => r
   }));
   check("v4: a direct load of #picture opens the tab and draws the board",
     d.selected === "picture" && d.visible && ((d.state === "1" && d.board) || (d.state === "empty" && d.empty)), JSON.stringify(d));
+  await direct.close();
+}
+
+// Opening the site straight on #toilet runs the shared picture computation and
+// selects the separate bowl panel with the same tab semantics as every tab.
+{
+  const direct = await ctx.newPage();
+  await direct.goto(BASE + "#toilet", { waitUntil: "domcontentloaded" });
+  await direct.waitForFunction(() => document.body.dataset.pictureReady, null, { timeout: 180000 });
+  const d = await direct.evaluate(() => {
+    const button=document.querySelector('#tabs button[data-tab="toilet"]'),panel=document.querySelector('[data-panel="toilet"]');
+    const pictureButton=document.querySelector('#tabs button[data-tab="picture"]');
+    return {state:document.body.dataset.pictureReady,selected:button?.getAttribute("aria-selected"),pictureSelected:pictureButton?.getAttribute("aria-selected"),visible:panel&&!panel.hidden,host:!!document.querySelector("#toiletHost .tbv"),role:button?.getAttribute("role"),tablist:button?.parentElement?.getAttribute("role"),outside:!document.querySelector('[data-panel="picture"] #toiletHost')};
+  });
+  check("v4: direct #toilet opens and loads the separate bowl tab",d.state&&d.selected==="true"&&d.pictureSelected==="false"&&d.visible&&d.host&&d.role==="tab"&&d.tablist==="tablist"&&d.outside,JSON.stringify(d));
   await direct.close();
 }
 
@@ -7103,6 +7175,282 @@ group("Injury odds: lineup drop per out week (full value only without lineup slo
   await page.setViewportSize({ width: 1280, height: 900 });
 }
 
+/* --------------------------------------------- ask the league (chat) */
+// The chat Worker is always mocked here with page.route: no real Worker, no
+// Anthropic. The committed CHAT_WORKER_URL is the live Worker; the test hook
+// clears it first ("not set up"), then points it at a mock origin.
+group("Ask the league");
+{
+  const MOCK_URL = "https://chat-mock.test";
+  const ap = await ctx.newPage();
+  const workerHits = [];
+  ap.on("request", r => { if (/chat-mock\.test|workers\.dev|api\.anthropic\.com/.test(r.url())) workerHits.push(r.method() + " " + r.url()); });
+  await ap.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ap.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const chatState = p => p.evaluate(() => document.querySelector("#askLeague").dataset.chatState);
+  const waitState = (p, s) => p.waitForFunction(s => document.querySelector("#askLeague").dataset.chatState === s, s, { timeout: 5000 }).then(() => true, () => false);
+  const bodyText = p => p.evaluate(() => document.querySelector("#askBody").textContent);
+
+  check("Ask the league: committed CHAT_WORKER_URL is the deployed DFFL Worker", await ap.evaluate(() => window.__DFFL_CHAT.getWorkerUrl()) === "https://dffl-ask-the-league.drewkim623.workers.dev");
+  // Clear it so the rest of this group runs against "not set up" and the mock, never the real Worker.
+  await ap.evaluate(() => window.__DFFL_CHAT.setWorkerUrl(""));
+  check("Ask the league: starts closed with the header control visible at 1280",
+    (await chatState(ap)) === "closed" && await ap.locator(".ask-hdr").isVisible() && await ap.locator("#askLeaguePanel").isHidden());
+  await ap.click(".ask-hdr");
+  check("Ask the league: opening with no Worker URL shows 'Chat not set up yet'",
+    (await chatState(ap)) === "not-set-up" && /Chat not set up yet/.test(await bodyText(ap)), await chatState(ap));
+  check("Ask the league: entry control reports aria-expanded", await ap.getAttribute(".ask-hdr", "aria-expanded") === "true");
+  const dialog = await ap.evaluate(() => {
+    const d = document.querySelector("#askLeaguePanel"), t = document.getElementById(d.getAttribute("aria-labelledby") || "");
+    return { role: d.getAttribute("role"), modal: d.getAttribute("aria-modal"), name: (t?.textContent || d.getAttribute("aria-label") || "").trim() };
+  });
+  check("Ask the league: the sheet is a modal dialog with an accessible name",
+    dialog.role === "dialog" && dialog.modal === "true" && /ask the league/i.test(dialog.name), JSON.stringify(dialog));
+  const nsu = await ap.evaluate(() => {
+    const vis = n => !!n && n.getClientRects().length > 0;
+    const usable = n => vis(n) && !n.disabled;
+    return { chips: [...document.querySelectorAll("#askChips button")].filter(vis).length, input: usable(document.querySelector("#askInput")),
+      send: usable(document.querySelector("#askSend")), inputDisabled: document.querySelector("#askInput").disabled, form: vis(document.querySelector("#askForm")) };
+  });
+  check("Ask the league: not-set-up hides the chips, text field and Ask button",
+    nsu.chips === 0 && !nsu.input && !nsu.send && !nsu.form && nsu.inputDisabled, JSON.stringify(nsu));
+  await ap.evaluate(() => window.__DFFL_CHAT.ask("Who leads the playoff odds?"));
+  await ap.waitForTimeout(150);
+  check("Ask the league: asking in not-set-up stays put and makes no request",
+    (await chatState(ap)) === "not-set-up" && workerHits.length === 0, workerHits.join(" | "));
+  await ap.keyboard.press("Escape");
+  check("Ask the league: Escape closes the panel", (await chatState(ap)) === "closed" && await ap.locator("#askLeaguePanel").isHidden());
+  check("Ask the league: Escape returns focus to the header entry button at 1280",
+    await ap.evaluate(() => document.activeElement?.classList.contains("ask-hdr")));
+
+  // Scroll lock: the page behind the sheet stays put and comes back to the same place.
+  await ap.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
+  const y0 = await ap.evaluate(() => Math.round(window.scrollY));
+  await ap.evaluate(() => window.__DFFL_CHAT.open());
+  const locked = await ap.evaluate(() => {
+    const b = document.body, cs = getComputedStyle(b);
+    window.scrollBy({ top: 400, behavior: "instant" });
+    return { position: cs.position, overflow: cs.overflow, scrollY: Math.round(window.scrollY), top: b.style.top };
+  });
+  check("Ask the league: body scroll is locked while the sheet is open",
+    locked.position === "fixed" && locked.overflow === "hidden" && locked.scrollY === 0 && locked.top === `-${y0}px`, JSON.stringify({ y0, ...locked }));
+  await ap.click("#askClose");
+  const unlocked = await ap.evaluate(() => ({ position: document.body.style.position, overflow: document.body.style.overflow, scrollY: Math.round(window.scrollY),
+    focus: document.activeElement?.classList.contains("ask-hdr") }));
+  check("Ask the league: closing restores the body styles and scroll position",
+    unlocked.position === "" && unlocked.overflow === "" && Math.abs(unlocked.scrollY - y0) <= 1, JSON.stringify({ y0, ...unlocked }));
+  check("Ask the league: the X returns focus to the visible entry button", unlocked.focus);
+  await ap.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+
+  // Mock Worker. Each POST takes the next handler off the queue.
+  const queue = [];
+  const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "content-type, x-dffl-session", "access-control-allow-methods": "POST, OPTIONS" };
+  const reply = (status, obj) => route => route.fulfill({ status, headers: { ...CORS, "content-type": "application/json" }, body: JSON.stringify(obj) });
+  await ap.route(MOCK_URL + "/**", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
+    const h = queue.shift() || reply(500, { ok: false, code: "ERROR", error: "unexpected" });
+    await h(route);
+  });
+  await ap.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ap.click(".ask-hdr");
+  check("Ask the league: with a Worker URL the panel opens with chips",
+    (await chatState(ap)) === "open" && await ap.locator("#askChips button").count() >= 4, await chatState(ap));
+  const chipText = await ap.evaluate(() => [...document.querySelectorAll("#askChips button")].map(b => b.textContent));
+  const MANAGERS = /drewkim|jadencha|domo112|moseslin|chassinator|sizzlemc2|wesley55|victorthompson|jskule23|saucebossandrew|bertalicious|willie12w|bradyrife|jakevickers5|\bI'?m\b|my roster/i;
+  check("Ask the league: no suggested chip names a manager", chipText.length >= 4 && chipText.length <= 6 && !chipText.some(t => MANAGERS.test(t)), chipText.join(" | "));
+  check("Ask the league: before the first question the chips wrap (not compact)",
+    await ap.evaluate(() => document.querySelector("#askLeague").dataset.chatChips !== "compact"));
+
+  // Loading, then an answer card. The answer carries markup that must be escaped.
+  let release;
+  const held = new Promise(r => { release = r; });
+  queue.push(async route => { await held; await reply(200, {
+    ok: true,
+    answer: "**jadencha leads the playoff odds** at 100% with a title line of -105.\njadencha is 8-1 through week 9. <img src=x onerror=\"window.__chatPwned=1\">",
+    sources: ["odds-snapshot", "week 10"], asOf: "2026-11-10T15:13:00Z",
+  })(route); });
+  await ap.click("#askChips button >> nth=1");
+  const sawLoading = await waitState(ap, "loading");
+  check("Ask the league: loading state shows 'Checking the league books…'",
+    sawLoading && /Checking the league books…/.test(await bodyText(ap)) && await ap.locator("#askBody .ask-pulse").count() === 1);
+  release();
+  const sawAnswer = await waitState(ap, "answer");
+  const lastCard = () => ap.evaluate(() => {
+    const all = document.querySelectorAll("#askBody .ask-card"), c = all[all.length - 1];
+    const src = c?.querySelector(".ask-src"), scs = src && getComputedStyle(src);
+    return { cards: all.length, res: c?.querySelector(".ask-res")?.textContent, text: c?.textContent || "", src: src?.textContent || "",
+      srcPx: scs ? parseFloat(scs.fontSize) : 0, srcColor: scs?.color || "",
+      imgs: c ? c.querySelectorAll("img").length : -1, pwned: !!window.__chatPwned,
+      nums: [...(c?.querySelectorAll(".num") || [])].map(n => ({ t: n.textContent, font: getComputedStyle(n).fontFamily, ws: getComputedStyle(n).whiteSpace, wt: getComputedStyle(n).fontWeight })),
+      mono: c ? c.querySelectorAll(".mono").length : -1 };
+  });
+  const card = await lastCard();
+  check("Ask the league: answer card shows the bold result line", sawAnswer && card.res === "jadencha leads the playoff odds at 100% with a title line of -105.", JSON.stringify(card));
+  check("Ask the league: model text is escaped, never parsed as HTML", card.imgs === 0 && !card.pwned && /<img src=x/.test(card.text), JSON.stringify(card));
+  check("Ask the league: source line is plain words with week and an ET as-of time",
+    card.src === "Playoff odds · week 10 · as of Nov 10, 10:13 AM ET", card.src);
+  check("Ask the league: source line never shows file names or slugs",
+    !/\.json|odds-snapshot|wrangler|\b[a-z]+-[a-z]+\b/i.test(card.src), card.src);
+  check("Ask the league: source line is at least 11px in --ink-2", card.srcPx >= 11 && card.srcColor === "rgb(212, 203, 224)", `${card.srcPx}px ${card.srcColor}`);
+  const numText = card.nums.map(n => n.t);
+  check("Ask the league: records, odds and percents are marked as numbers",
+    numText.includes("8-1") && numText.includes("-105") && numText.includes("100%") && card.mono === 0, numText.join(","));
+  check("Ask the league: answer numbers use Space Grotesk bold, not monospace, and never wrap",
+    card.nums.length && card.nums.every(n => /Space Grotesk/.test(n.font) && !/mono|Menlo|Consolas|Courier/i.test(n.font) && n.ws === "nowrap" && Number(n.wt) >= 700), JSON.stringify(card.nums[0]));
+  const compact = await ap.evaluate(() => {
+    const ch = document.querySelector("#askChips"), f = document.querySelector("#askForm"), cs = getComputedStyle(ch);
+    const a = ch.getBoundingClientRect(), b = f.getBoundingClientRect();
+    return { mode: document.querySelector("#askLeague").dataset.chatChips, wrap: cs.flexWrap, ox: cs.overflowX, next: ch.nextElementSibling === f,
+      gap: Math.round(b.top - a.bottom), rows: new Set([...ch.querySelectorAll("button")].map(x => Math.round(x.getBoundingClientRect().top))).size };
+  });
+  check("Ask the league: after an answer the chips fold into one sideways row",
+    compact.mode === "compact" && compact.wrap === "nowrap" && compact.ox === "auto" && compact.rows === 1, JSON.stringify(compact));
+  check("Ask the league: the compact chip row sits directly above the composer", compact.next && compact.gap >= -1 && compact.gap <= 2, JSON.stringify(compact));
+
+  // I don't know.
+  queue.push(reply(200, { ok: true, answer: "I don't know — that isn't in the league data.", sources: [], asOf: "2026-11-10T15:13:00Z" }));
+  await ap.fill("#askInput", "Who won the 1998 Super Bowl?");
+  await ap.press("#askInput", "Enter");
+  check("Ask the league: an 'I don't know' answer shows the unknown state",
+    await waitState(ap, "unknown") && /I don’t know — that isn’t in the league data\./.test(await bodyText(ap)));
+
+  // Error, then retry resends the last question.
+  queue.push(reply(500, { ok: false, code: "ERROR", error: "boom" }));
+  await ap.click("#askChips button >> nth=0");
+  const sawError = await waitState(ap, "error");
+  check("Ask the league: an error shows 'Couldn't reach the league books' and a retry control",
+    sawError && /Couldn’t reach the league books\. Try again\./.test(await bodyText(ap)) && await ap.locator("[data-ask-retry]").count() === 1);
+  let resent = null;
+  queue.push(async route => { resent = JSON.parse(route.request().postData() || "{}").question; await reply(200, { ok: true, answer: "jadencha has 1,443.12 points.", sources: ["Sleeper rosters"], asOf: "2026-11-10T16:00:00Z" })(route); });
+  await ap.click("[data-ask-retry]");
+  check("Ask the league: retry resends the last question and shows the answer",
+    await waitState(ap, "answer") && resent === "Who has the most points this season?", String(resent));
+  const stack = await ap.evaluate(() => ({ turns: document.querySelectorAll("#askBody [data-ask-turn]").length,
+    firstStill: /leads the playoff odds/.test(document.querySelector("#askBody [data-ask-turn]")?.textContent || ""), src: [...document.querySelectorAll("#askBody .ask-src")].pop()?.textContent }));
+  check("Ask the league: answers stack; earlier questions stay in the panel", stack.turns === 4 && stack.firstStill, JSON.stringify(stack));
+  check("Ask the league: Sleeper sources get a plain label", /^Sleeper standings · as of Nov 10, 11:00 AM ET$/.test(stack.src || ""), stack.src);
+
+  // Monthly cap.
+  queue.push(reply(402, { ok: false, code: "MONTHLY_CAP", error: "Out of questions this month" }));
+  await ap.click("#askChips button >> nth=2");
+  const sawCap = await waitState(ap, "monthly-cap");
+  const capInfo = await ap.evaluate(() => ({ chips: [...document.querySelectorAll("#askChips button")].map(b => b.disabled), input: document.querySelector("#askInput").disabled }));
+  check("Ask the league: MONTHLY_CAP shows 'Out of questions this month'",
+    sawCap && /Out of questions this month/.test(await bodyText(ap)) && /opens again on the 1st/.test(await bodyText(ap)));
+  check("Ask the league: MONTHLY_CAP disables the suggested chips", capInfo.chips.length >= 5 && capInfo.chips.every(Boolean) && capInfo.input, JSON.stringify(capInfo));
+  check("Ask the league: only the mock origin was ever contacted", workerHits.every(h => /chat-mock\.test/.test(h)), workerHits.join(" | "));
+  await ap.click("#askClose");
+  check("Ask the league: close button closes; tabs still switch",
+    (await chatState(ap)) === "closed" && await ap.locator("#tabs button").count() === EXPECT.length &&
+    await ap.click('#tabs button[data-tab="odds"]').then(() => ap.evaluate(() => !!document.querySelector('[data-panel="odds"]')?.offsetParent)));
+
+  // The X: a labelled, thumb-sized close that hands focus back to the opener.
+  await ap.evaluate(u => window.__DFFL_CHAT.setWorkerUrl(u), MOCK_URL);
+  await ap.click(".ask-hdr");
+  queue.push(reply(200, { ok: true, answer: "jadencha leads the playoff odds at 100%.", sources: ["odds-snapshot"], asOf: "2026-11-10T15:13:00Z" }));
+  await ap.click("#askChips button >> nth=1");
+  await waitState(ap, "answer");
+  const xInfo =await ap.evaluate(() => { const x = document.querySelector("#askClose"), r = x.getBoundingClientRect();
+    return { label: x.getAttribute("aria-label"), w: Math.round(r.width), h: Math.round(r.height), text: x.textContent.trim() }; });
+  check("Ask the league: the X is labelled 'Close Ask the league' with a 44px hit area",
+    xInfo.label === "Close Ask the league" && xInfo.w >= 44 && xInfo.h >= 44 && xInfo.text === "×", JSON.stringify(xInfo));
+  await ap.click("#askClose");
+  const xClosed = await ap.evaluate(() => ({ state: document.querySelector("#askLeague").dataset.chatState, hidden: document.querySelector("#askLeaguePanel").hidden,
+    expanded: [...document.querySelectorAll("[data-ask-open]")].map(b => b.getAttribute("aria-expanded")), focus: document.activeElement?.classList.contains("ask-hdr") }));
+  check("Ask the league: the X closes, sets aria-expanded false and returns focus to the opener",
+    xClosed.state === "closed" && xClosed.hidden && xClosed.expanded.every(v => v === "false") && xClosed.focus, JSON.stringify(xClosed));
+
+  // The tab: the same chat, full page, with the launchers out of the way.
+  const turnsBefore = await ap.evaluate(() => document.querySelectorAll("#askBody [data-ask-turn]").length);
+  await ap.click('#tabs button[data-tab="ask"]');
+  const tabInfo = () => ap.evaluate(() => {
+    const p = document.querySelector('[data-panel="ask"]'), s = document.querySelector("#askLeaguePanel"), b = document.querySelector('#tabs button[data-tab="ask"]');
+    const vis = n => !!n && n.getClientRects().length > 0;
+    const sr = s.getBoundingClientRect(), pr = p?.getBoundingClientRect();
+    return { hash: location.hash, label: b?.textContent, role: b?.getAttribute("role"), selected: b?.getAttribute("aria-selected"),
+      others: [...document.querySelectorAll("#app > [data-panel]")].filter(x => x !== p && !x.hidden).length,
+      inPanel: !!p?.contains(s), shown: vis(s), position: getComputedStyle(s).position, sheetRole: s.getAttribute("role"), modal: s.getAttribute("aria-modal"),
+      fill: pr ? Math.round(sr.width) >= Math.round(pr.width) - 2 : false, h: Math.round(sr.height),
+      state: document.querySelector("#askLeague").dataset.chatState, chips: document.querySelectorAll("#askChips button").length,
+      x: vis(document.querySelector("#askClose")), fab: vis(document.querySelector("#askFab")), hdr: vis(document.querySelector(".ask-hdr")),
+      turns: document.querySelectorAll("#askBody [data-ask-turn]").length };
+  });
+  const onTab = await tabInfo();
+  check("Ask the League tab: is the last tab, labelled 'Ask the League', role=tab, selected, with #ask in the hash",
+    onTab.label === "Ask the League" && onTab.role === "tab" && onTab.selected === "true" && onTab.hash === "#ask" && onTab.others === 0, JSON.stringify(onTab));
+  check("Ask the League tab: renders the chat full page inside the tab panel, not as a dialog",
+    onTab.inPanel && onTab.shown && onTab.position === "static" && onTab.sheetRole !== "dialog" && onTab.modal === null && onTab.fill && onTab.h >= 400 && !onTab.x, JSON.stringify(onTab));
+  check("Ask the League tab: same chat state (earlier turns and chips carry over)",
+    turnsBefore === 1 && onTab.turns === turnsBefore && onTab.chips >= 5 && onTab.state !== "closed", JSON.stringify({ turnsBefore, ...onTab }));
+  check("Ask the League tab: the floating launcher and header control are hidden", !onTab.fab && !onTab.hdr, JSON.stringify(onTab));
+  queue.push(reply(200, { ok: true, answer: "jadencha has 1,443.12 points.", sources: ["Sleeper rosters"], asOf: "2026-11-10T16:00:00Z" }));
+  await ap.fill("#askInput", "Who has the most points this season?");
+  await ap.press("#askInput", "Enter");
+  check("Ask the League tab: asking on the tab goes through the same mocked Worker and answers",
+    await waitState(ap, "answer") && (await tabInfo()).turns === turnsBefore + 1 && workerHits.every(h => /chat-mock\.test/.test(h)), workerHits.join(" | "));
+  await ap.keyboard.press("Escape");
+  check("Ask the League tab: Escape does not tear the chat off the page", (await tabInfo()).shown && (await chatState(ap)) === "answer");
+  await ap.click('#tabs button[data-tab="home"]');
+  const leftTab = await ap.evaluate(() => ({ state: document.querySelector("#askLeague").dataset.chatState, hidden: document.querySelector("#askLeaguePanel").hidden,
+    out: !document.querySelector('[data-panel="ask"]').contains(document.querySelector("#askLeague")), role: document.querySelector("#askLeaguePanel").getAttribute("role"),
+    hdr: !!document.querySelector(".ask-hdr").getClientRects().length }));
+  check("Ask the League tab: leaving it puts the chat back as a closed dialog and brings the launcher back",
+    leftTab.state === "closed" && leftTab.hidden && leftTab.out && leftTab.role === "dialog" && leftTab.hdr, JSON.stringify(leftTab));
+  await ap.click(".ask-hdr");
+  check("Ask the League tab: the floating sheet keeps the conversation from the tab",
+    await ap.evaluate(n => document.querySelectorAll("#askBody [data-ask-turn]").length === n, turnsBefore + 1));
+  await ap.keyboard.press("Escape");
+  await ap.close();
+
+  // Deep link straight to the tab. The real Worker is blocked here, and nothing should even try it.
+  const dl = await ctx.newPage();
+  const dlHits = [];
+  dl.on("request", r => { if (/workers\.dev|chat-mock\.test|api\.anthropic\.com/.test(r.url())) dlHits.push(r.url()); });
+  await dl.route(/workers\.dev/, route => route.abort());
+  await dl.goto(BASE + "#ask", { waitUntil: "domcontentloaded" });
+  await dl.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const deep = await dl.evaluate(() => {
+    const p = document.querySelector('[data-panel="ask"]'), s = document.querySelector("#askLeaguePanel");
+    return { hash: location.hash, selected: document.querySelector('#tabs button[aria-selected="true"]')?.dataset.tab, visible: !!p && !p.hidden,
+      inPanel: !!p?.contains(s), shown: s.getClientRects().length > 0, fab: !!document.querySelector("#askFab").getClientRects().length,
+      hdr: !!document.querySelector(".ask-hdr").getClientRects().length };
+  });
+  check("Ask the League tab: a direct load of #ask opens the tab with the chat on the page",
+    deep.hash === "#ask" && deep.selected === "ask" && deep.visible && deep.inPanel && deep.shown && !deep.fab && !deep.hdr && dlHits.length === 0, JSON.stringify({ ...deep, dlHits }));
+  await dl.close();
+
+  // Phone width: the floating launcher is absent; the Ask tab remains the entry point.
+  const ph = await ctx.newPage();
+  await ph.setViewportSize({ width: 390, height: 844 });
+  await ph.goto(BASE, { waitUntil: "domcontentloaded" });
+  await ph.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const fit = () => ph.evaluate(() => {
+    const W = window.innerWidth, over = [];
+    for (const n of document.querySelectorAll("#askLeague *")) {
+      const r = n.getBoundingClientRect();
+      if (r.width && (r.right > W + 1 || r.left < -1)) over.push((n.id || n.className || n.tagName) + " → " + Math.round(r.left) + ".." + Math.round(r.right));
+    }
+    return { doc: document.documentElement.scrollWidth, body: document.body.scrollWidth, W, over };
+  });
+  const launcher = await ph.evaluate(() => {
+    const wrap = document.querySelector("#askFabWrap"), buttons = [document.querySelector("#askFab"), document.querySelector("#askFabHide")];
+    return { hidden: wrap.hidden, inert: wrap.inert, ariaHidden: wrap.getAttribute("aria-hidden"), shown: wrap.getClientRects().length > 0,
+      buttonsFocusable: buttons.some(b => b.tabIndex >= 0 && !b.closest("[hidden], [inert]")) };
+  });
+  check("Ask the league at 390px: floating launcher is hidden and unavailable to focus", launcher.hidden && launcher.inert && launcher.ariaHidden === "true" && !launcher.shown && !launcher.buttonsFocusable, JSON.stringify(launcher));
+  const closed = await fit();
+  check("Ask the league at 390px: no horizontal overflow", closed.doc <= closed.W && closed.body <= closed.W && !closed.over.length, JSON.stringify(closed));
+  await ph.click('#tabs button[data-tab="records"]');
+  check("Ask the league at 390px: tabs remain tappable", await ph.evaluate(() => !!document.querySelector('[data-panel="records"]')?.offsetParent));
+  await ph.click('#tabs button[data-tab="ask"]');
+  const phTab = await fit();
+  const phSheet = await ph.evaluate(() => { const s = document.querySelector("#askLeaguePanel"), r = s.getBoundingClientRect();
+    return { shown: r.width > 0, inPanel: !!document.querySelector('[data-panel="ask"]').contains(s), left: Math.round(r.left), right: Math.round(r.right), W: innerWidth }; });
+  check("Ask the League tab at 390px: reachable, chat on the page, no overflow",
+    phSheet.shown && phSheet.inPanel && phSheet.left >= 0 && phSheet.right <= phSheet.W && phTab.doc <= phTab.W && phTab.body <= phTab.W && !phTab.over.length, JSON.stringify({ phSheet, over: phTab.over }));
+  await ph.close();
+}
+
 group("Screenshots");
 await page.click('#tabs button[data-tab="power"]');
 await page.waitForTimeout(200);
@@ -7552,6 +7900,202 @@ group("Next week's matchups: tale of the tape");
       !!bye.pit && bye.pit.chip && /^\d+ starters? can't score$/.test(bye.pit.cant || ""), JSON.stringify(bye.pit));
   }
   await mctx.close();
+}
+
+/* ============================================================ Rankings */
+group("Rankings: DFFL scoring formula and competition ties");
+{
+  const u = await page.evaluate(() => {
+    const D = window.__DFFL;
+    const sc = { rec: 0, bonus_rec_rb: 0.5, bonus_rec_wr: 1, bonus_rec_te: 1, rec_yd: 0.1, rush_yd: 0.1, rush_td: 6, rec_td: 6,
+      rec_40p: 1, rec_td_40p: 1, rush_td_40p: 1, rush_td_50p: 1, bonus_pass_yd_400: 2, bonus_rush_yd_100: 1, bonus_rush_yd_200: 3,
+      bonus_rec_yd_200: 3, pass_yd: 0.04, pass_td: 4, pass_int: -1, fum_lost: -2 };
+    const P = (s, pos, ss = sc) => D.roundPts(D.dfflPoints(s, ss, pos));
+    // Sleeper's season line carries a bonus_rec_rb counter equal to the receptions; it must not be added on top.
+    const rb = P({ rec: 34, bonus_rec_rb: 34, rec_yd: 251, rush_yd: 389, rush_td: 8, fum_lost: 1 }, "RB");
+    const wr = P({ rec: 10, bonus_rec_wr: 10, rec_yd: 100 }, "WR");
+    const te = P({ rec: 10, bonus_rec_te: 10, rec_yd: 100 }, "TE");
+    const asRb = P({ rec: 10, rec_yd: 100 }, "RB");
+    const qb = P({ rec: 3, pass_yd: 300, pass_td: 2, pass_int: 1 }, "QB");
+    // Distance and yardage bonuses come from their own counters only; season-long fields add nothing.
+    const longs = P({ rec: 0, rec_lng: 75, rush_lng: 60, rec_yd: 0, rush_yd: 250 }, "RB");
+    const counters = P({ rec_40p: 2, rec_td_40p: 1, rush_td_40p: 1, rush_td_50p: 1, bonus_rush_yd_100: 2, bonus_rush_yd_200: 1, bonus_rec_yd_200: 1, bonus_pass_yd_400: 1 }, "WR");
+    const withRec = P({ rec: 4, bonus_rec_rb: 4 }, "RB", { ...sc, rec: 0.5 });
+    const unknown = P({ rec: 0, bonus_rush_rec_yd_100: 3, pts_ppr: 200, pos_rank_ppr: 1 }, "RB");
+    const ranks = rows => D.competitionRanks(rows.map((pts, i) => ({ name: "p" + i, pts }))).map(r => r.rank).join(",");
+    return { rb, wr, te, asRb, qb, longs, counters, withRec, unknown,
+      t1: ranks([10, 9, 9, 7]), t2: ranks([10, 9.999, 9.996, 8]), t3: ranks([5, 5, 5]), t4: ranks([3, 1, 2]),
+      norm: D.normName("Ja'Marr  Chase") === D.normName("jamarr chase") && D.normName("Smith-Njigba") === "smithnjigba" };
+  });
+  check("formula: RB receptions earn bonus_rec_rb once (Sleeper's bonus_rec_rb counter not double-added) — 127.00", u.rb === 127, `${u.rb}`);
+  check("formula: WR and TE receptions earn a full point each", u.wr === 20 && u.te === 20, `${u.wr}/${u.te}`);
+  check("formula: the same line as an RB earns half a point a catch", u.asRb === 15, `${u.asRb}`);
+  check("formula: a QB's catches earn no position PPR bonus here", u.qb === 19, `${u.qb}`);
+  check("formula: rec_lng / rush_lng never become distance bonuses; yardage bonuses need their own counter", u.longs === 25, `${u.longs}`);
+  check("formula: distance and yardage bonus counters times their settings", u.counters === 2 + 1 + 1 + 1 + 2 + 3 + 3 + 2, `${u.counters}`);
+  check("formula: a non-zero rec setting adds to the position bonus rather than replacing it", u.withRec === 4, `${u.withRec}`);
+  check("formula: counters with no scoring setting (and Sleeper's own PPR totals) score nothing", u.unknown === 0, `${u.unknown}`);
+  check("ties: competition ranking 1,2,2,4", u.t1 === "1,2,2,4", u.t1);
+  check("ties: decided at the two-place precision shown (10, 9.999, 9.996 all tie)", u.t2 === "1,1,1,4", u.t2);
+  check("ties: an all-tied field shares #1 and unsorted input is ordered", u.t3 === "1,1,1" && u.t4 === "1,2,3", `${u.t3} ${u.t4}`);
+  check("search key ignores case, spaces and punctuation", u.norm);
+}
+
+group("Rankings: tab, routing and live board");
+{
+  // An independent recompute in Node from Sleeper's own endpoints — nothing on the page is trusted for this.
+  const jj = u => fetch(u).then(r => r.json());
+  const sstate = await jj("https://api.sleeper.app/v1/state/nfl");
+  const rSeason = String(sstate.season);
+  const [rStats, rLeague] = await Promise.all([jj(`https://api.sleeper.app/v1/stats/nfl/regular/${rSeason}`), jj("https://api.sleeper.app/v1/league/1318040218183417856")]);
+  const SS = rLeague.scoring_settings || {};
+  const indep = (s, pos) => { let t = 0; for (const k of Object.keys(SS)) { if (/^bonus_rec_(rb|wr|te)$/.test(k)) continue; t += (Number(s[k]) || 0) * SS[k]; }
+    return Math.round((t + (Number(s.rec) || 0) * (SS["bonus_rec_" + pos.toLowerCase()] || 0)) * 100) / 100; };
+
+  const rctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const rp = await rctx.newPage();
+  const rErr = [];
+  rp.on("pageerror", e => rErr.push(String(e)));
+  await rp.goto(BASE + "?t=rankings", { waitUntil: "domcontentloaded" });
+  await rp.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  const routed = await rp.evaluate(() => ({ hash: location.hash, sel: document.querySelector('#tabs button[aria-selected="true"]')?.dataset.tab,
+    vis: [...document.querySelectorAll("#app > [data-panel]")].filter(x => !x.hidden).map(x => x.dataset.panel).join(","),
+    label: document.querySelector('#tabs button[data-tab="rankings"]')?.textContent }));
+  check("?t=rankings opens the Rankings tab", routed.sel === "rankings" && routed.vis === "rankings" && routed.hash === "#rankings", JSON.stringify(routed));
+  check("the tab is labelled Rankings", routed.label === "Rankings", routed.label);
+  await rp.waitForFunction(() => document.body.dataset.rankingsReady === "1" || document.body.dataset.rankingsReady === "error", null, { timeout: 90000 });
+  const rReady = await rp.evaluate(() => document.body.dataset.rankingsReady);
+  check("rankings load from Sleeper", rReady === "1", rReady);
+  const shell = await rp.evaluate(() => {
+    const p = document.querySelector('[data-panel="rankings"]'), card = p.querySelector("#rkTitle")?.closest(".rk-card");
+    const q = p.querySelector("#rkQ"), lab = p.querySelector('label[for="rkQ"]');
+    return { h: p.querySelector(".rk-intro h2")?.textContent, title: card && card.querySelector("#rkTitle").textContent,
+      ph: q && q.placeholder, label: lab && lab.textContent.trim(), inCard: !!(card && card.contains(q) && card.contains(lab)),
+      clear: !!(card && card.querySelector(".rk-clear")), chips: [...p.querySelectorAll(".rk-chips button")].map(b => b.textContent + ":" + b.getAttribute("aria-pressed")).join(","),
+      side: [...p.querySelectorAll(".rk-side h3, .rk-side h4")].map(h => h.textContent).join("|"),
+      text: p.textContent };
+  });
+  check("headline: The rank that counts.", shell.h === "The rank that counts.", shell.h);
+  check("Position leaderboard card holds the Search players field and its Clear control", shell.title === "Position leaderboard" && shell.inCard && shell.clear && shell.label === "Search players", JSON.stringify({ t: shell.title, i: shell.inCard, l: shell.label }));
+  check("the search field's placeholder is Search players", shell.ph === "Search players", shell.ph);
+  check("QB/RB/WR/TE tabs, RB selected by default", shell.chips === "QB:false,RB:true,WR:false,TE:false", shell.chips);
+  check("side cards: Your league. Your finish. and Across the league", shell.side === "Your league. Your finish.|Across the league", shell.side);
+  check("no mock-only labels or frozen timestamps", !/mock only|visual study|nov 7|2:23 pm|search study/i.test(shell.text));
+  check("scoring card reads the league's settings (RB 0.5, WR/TE 1.0 PPR, 40+ yd +1)",
+    shell.text.includes(`RB receptions${((SS.rec || 0) + (SS.bonus_rec_rb || 0)).toFixed(1)} PPR`) && shell.text.includes(`${((SS.rec || 0) + (SS.bonus_rec_wr || 0)).toFixed(1)} PPR`)
+    && (!SS.rec_40p || shell.text.includes(`40+ yd reception+${SS.rec_40p} point`)));
+
+  // Every position: top 12, ranks match an independent recompute, Sleeper full PPR rank is pos_rank_ppr.
+  const board = await rp.evaluate(() => { const B = window.__DFFL.rankingsState().board; return Object.fromEntries(Object.entries(B).map(([k, v]) => [k, v.map(r => ({ pid: r.pid, name: r.name, pts: r.pts, rank: r.rank, pprRank: r.pprRank, owner: r.owner }))])); });
+  for (const pos of ["QB", "RB", "WR", "TE"]) {
+    await rp.click(`.rk-chips button[data-pos="${pos}"]`);
+    const dom = await rp.evaluate(() => [...document.querySelectorAll("#rkList .rk-row")].map(r => ({ pid: r.dataset.pid, rank: Number(r.dataset.rank),
+      shown: Number(r.querySelector(".rk-rank").textContent), pts: Number(r.querySelector(".rk-num").textContent), ppr: r.querySelector("[data-ppr]").dataset.ppr,
+      pprTxt: r.querySelector("[data-ppr]").textContent })));
+    const pressed = await rp.evaluate(p => document.querySelector(`.rk-chips button[data-pos="${p}"]`).getAttribute("aria-pressed"), pos);
+    const all = board[pos];
+    // Independent: score each player at this position from the raw line, rank with ties at two places.
+    const mine = all.map(r => ({ pid: r.pid, v: indep(rStats[r.pid] || {}, pos) }));
+    const rankOf = v => 1 + mine.filter(x => x.v > v).length;
+    const bad = dom.filter(d => { const v = indep(rStats[d.pid] || {}, pos); const sp = Number(rStats[d.pid]?.pos_rank_ppr);
+      return d.pts !== v || d.rank !== rankOf(v) || d.shown !== d.rank || String(Number.isFinite(sp) && sp > 0 ? sp : "") !== d.ppr; });
+    check(`${pos}: tab selects and shows the top 12`, pressed === "true" && dom.length === Math.min(12, all.length), `${pressed} ${dom.length}`);
+    check(`${pos}: every row's points and rank match an independent recompute; Sleeper full PPR # is pos_rank_ppr`, dom.length > 0 && bad.length === 0, JSON.stringify(bad.slice(0, 2)));
+    check(`${pos}: rows run in rank order`, dom.every((d, i) => !i || (d.rank >= dom[i - 1].rank && d.pts <= dom[i - 1].pts)));
+    check(`${pos}: comparator is labelled Sleeper full PPR, never half PPR`, dom.every(d => /Sleeper full PPR/.test(d.pprTxt) && !/half/i.test(d.pprTxt)));
+    const allBad = mine.filter((m, i) => m.v !== all[i].pts || rankOf(m.v) !== all[i].rank).length;
+    check(`${pos}: the whole position universe (${all.length}) is ranked, not just the top 12`, all.length > 40 && allBad === 0, `${all.length} players, ${allBad} off`);
+  }
+  const fa = Object.fromEntries(Object.entries(board).map(([k, v]) => [k, v.filter(r => !r.owner).length]));
+  check("free agents are in the universe at every position", Object.values(fa).every(n => n > 10), JSON.stringify(fa));
+  const tiesLive = Object.values(board).some(v => v.some((r, i) => i && r.rank === v[i - 1].rank && r.rank < i + 1));
+  check("live board uses competition ranks (a tie shares a rank and skips the next)", tiesLive && Object.values(board).every(v => v.every((r, i) => r.rank === 1 + v.filter(x => x.pts > r.pts).length)));
+
+  // McCaffrey: hero above his own filtered row, both carrying his true DFFL RB rank.
+  await rp.click('.rk-chips button[data-pos="RB"]');
+  await rp.fill("#rkQ", "McCaffrey");
+  const cmc = board.RB.find(r => /^Christian McCaffrey$/.test(r.name));
+  const s1 = await rp.evaluate(() => {
+    const h = document.querySelector("#rkHero"), rows = [...document.querySelectorAll("#rkList .rk-row")];
+    const m = rows.find(r => r.dataset.pid === (h && h.dataset.pid));
+    return h && { pid: h.dataset.pid, big: h.querySelector(".rk-big").textContent, text: h.textContent.replace(/\s+/g, " "), rows: rows.length,
+      rowRank: m && Number(m.dataset.rank), match: !!(m && m.classList.contains("rk-match")),
+      above: !!(m && (h.compareDocumentPosition(m) & Node.DOCUMENT_POSITION_FOLLOWING) && h.getBoundingClientRect().bottom <= m.getBoundingClientRect().top),
+      order: [...h.querySelectorAll(".rk-big, .rk-eyebrow, h4, .rk-metric")].map(x => x.className || x.tagName).join(">"),
+      heroPpr: h.querySelector(".rk-r [data-ppr]").dataset.ppr, status: document.querySelector("#rkStatus").textContent,
+      clearOn: !document.querySelector(".rk-clear").disabled };
+  });
+  const cmcSleeper = cmc && Number(rStats[cmc.pid]?.pos_rank_ppr);
+  check("McCaffrey: the hero is above his matching row", !!s1 && s1.above && s1.match, JSON.stringify(s1 && { a: s1.above, m: s1.match }));
+  check("McCaffrey: hero leads with the big gold #rank, then TRUE DFFL RB RANK, then name",
+    !!s1 && !!cmc && s1.pid === cmc.pid && s1.big === `#${cmc.rank}` && /True DFFL RB rank/i.test(s1.text) && s1.text.indexOf(`#${cmc.rank}`) < s1.text.search(/True DFFL RB rank/i) && s1.text.search(/True DFFL RB rank/i) < s1.text.indexOf("Christian McCaffrey"),
+    JSON.stringify(s1 && { big: s1.big, want: cmc && cmc.rank }));
+  check("McCaffrey: the filtered row keeps his real DFFL rank (not re-ranked to 1)", !!s1 && s1.rowRank === cmc.rank && (cmc.rank === 1 || s1.rowRank !== 1), `${s1 && s1.rowRank} vs ${cmc && cmc.rank}`);
+  check("McCaffrey: hero shows DFFL points, season to date and Sleeper full PPR pos_rank_ppr",
+    !!s1 && s1.text.includes(cmc.pts.toFixed(2)) && /DFFL points/.test(s1.text) && /season to date/.test(s1.text) && /Sleeper full PPR RB/.test(s1.text)
+    && s1.heroPpr === String(cmcSleeper) && !/half/i.test(s1.text), JSON.stringify(s1 && { ppr: s1.heroPpr, want: cmcSleeper }));
+  check("McCaffrey: status announces the match and Clear is enabled", !!s1 && /matching RB/.test(s1.status) && s1.clearOn, s1 && s1.status);
+  console.log(`  live McCaffrey: DFFL RB${cmc && cmc.rank} ${cmc && cmc.pts.toFixed(2)} pts · Sleeper full PPR RB${cmcSleeper} (${rStats[cmc?.pid]?.pts_ppr} pts)`);
+
+  // Multi-result search: every match keeps its own rank, best first.
+  await rp.fill("#rkQ", "williams");
+  const multi = await rp.evaluate(() => ({ hero: document.querySelector("#rkHero")?.dataset.rank, rows: [...document.querySelectorAll("#rkList .rk-row")].map(r => Number(r.dataset.rank)) }));
+  check("multi-match: hero is the best-ranked match and rows keep true ranks in order",
+    multi.rows.length > 1 && Number(multi.hero) === multi.rows[0] && multi.rows.every((r, i) => !i || r >= multi.rows[i - 1]) && multi.rows.some(r => r > multi.rows.length), JSON.stringify(multi.rows.slice(0, 6)));
+
+  // A free agent is searchable.
+  const faRb = board.RB.find(r => !r.owner && r.pts > 0 && board.RB.filter(x => x.name === r.name).length === 1);
+  await rp.fill("#rkQ", faRb.name);
+  const faHero = await rp.evaluate(() => ({ pid: document.querySelector("#rkHero")?.dataset.pid, text: document.querySelector("#rkHero")?.textContent || "" }));
+  check(`a free agent (${faRb.name}, RB${faRb.rank}) is found by search and marked Free agent`, faHero.pid === faRb.pid && /Free agent/.test(faHero.text), JSON.stringify(faHero.pid));
+
+  // No results, then a match at another position, then Clear.
+  await rp.fill("#rkQ", "zzqxnobody");
+  const none = await rp.evaluate(() => ({ hero: !!document.querySelector("#rkHero"), rows: document.querySelectorAll("#rkList .rk-row").length, none: !!document.querySelector("#rkNone"), status: document.querySelector("#rkStatus").textContent }));
+  check("no results: no hero, no rows, a message and a status announcement", !none.hero && none.rows === 0 && none.none && /No RB matches/.test(none.status), JSON.stringify(none));
+  // The full name: "McCaffrey" alone also finds Luke McCaffrey at WR.
+  await rp.fill("#rkQ", "Christian McCaffrey");
+  await rp.click('.rk-chips button[data-pos="WR"]');
+  const sw = await rp.evaluate(() => ({ q: document.querySelector("#rkQ").value, btn: [...document.querySelectorAll("#rkNone [data-goto]")].map(b => b.dataset.goto).join(","), status: document.querySelector("#rkStatus").textContent }));
+  check("switching position keeps the query and points to positions where the name exists", sw.q === "Christian McCaffrey" && sw.btn.includes("RB") && /No WR matches/.test(sw.status), JSON.stringify(sw));
+  if (await rp.$('#rkNone [data-goto="RB"]')) await rp.click('#rkNone [data-goto="RB"]');
+  check("the other-position shortcut switches the tab and shows the hero", await rp.evaluate(() => document.querySelector('.rk-chips [data-pos="RB"]').getAttribute("aria-pressed") === "true" && !!document.querySelector("#rkHero")));
+  await rp.click(".rk-clear");
+  const cleared = await rp.evaluate(() => ({ q: document.querySelector("#rkQ").value, focus: document.activeElement && document.activeElement.id, hero: !!document.querySelector("#rkHero"),
+    rows: [...document.querySelectorAll("#rkList .rk-row")].map(r => Number(r.dataset.rank)), dis: document.querySelector(".rk-clear").disabled }));
+  check("Clear empties the field, returns focus to it and restores the top-12 leaderboard", cleared.q === "" && cleared.focus === "rkQ" && !cleared.hero && cleared.rows.length === 12 && cleared.rows[0] === 1 && cleared.dis, JSON.stringify(cleared));
+  await rp.fill("#rkQ", "McCaffrey");
+  await rp.press("#rkQ", "Escape");
+  check("Escape in the field clears it too", await rp.evaluate(() => document.querySelector("#rkQ").value === "" && !document.querySelector("#rkHero")));
+  const leaders = await rp.evaluate(() => [...document.querySelectorAll("[data-lead]")].map(d => d.dataset.lead + ":" + d.querySelector("strong")?.textContent).join("|"));
+  check("Across the league shows each position's DFFL #1", leaders === ["QB", "RB", "WR", "TE"].map(p => `${p}:${board[p][0].name}`).join("|"), leaders);
+
+  // A hash load and a click both land on the tab.
+  const hp = await rctx.newPage();
+  await hp.goto(BASE + "#rankings", { waitUntil: "domcontentloaded" });
+  await hp.waitForFunction(() => document.body.dataset.ready, null, { timeout: 90000 });
+  check("#rankings opens the Rankings tab", await hp.evaluate(() => !document.querySelector('[data-panel="rankings"]').hidden && document.querySelector('#tabs button[data-tab="rankings"]').getAttribute("aria-selected") === "true"));
+  await hp.close();
+  check("Rankings raised no page errors", rErr.length === 0, rErr.slice(0, 2).join(" | "));
+
+  // Phone: no horizontal overflow, text at least 11px, the hero unclipped.
+  for (const w of [390, 1280]) {
+    await rp.setViewportSize({ width: w, height: 900 });
+    await rp.fill("#rkQ", "McCaffrey");
+    const lay = await rp.evaluate(() => {
+      const p = document.querySelector('[data-panel="rankings"]'), vw = document.documentElement.clientWidth;
+      const over = [...p.querySelectorAll("*")].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.right > vw + 1 || r.left < -1); }).map(e => e.className || e.tagName);
+      const small = [...p.querySelectorAll("*")].filter(e => e.childNodes.length && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !e.closest(".rk-sr") && parseFloat(getComputedStyle(e).fontSize) < 11).map(e => e.className || e.tagName);
+      const h = p.querySelector("#rkHero .rk-big"), hr = h.getBoundingClientRect();
+      const twoCol = (() => { const a = p.querySelector(".rk-primary").getBoundingClientRect(), b = p.querySelector(".rk-side").getBoundingClientRect(); return b.left >= a.right - 1; })();
+      return { doc: document.documentElement.scrollWidth <= vw, over: over.slice(0, 4), small: small.slice(0, 4), clipped: h.scrollWidth > h.clientWidth + 1 || hr.right > vw, twoCol };
+    });
+    check(`${w}px: no horizontal overflow on Rankings`, lay.doc && lay.over.length === 0, JSON.stringify(lay.over));
+    check(`${w}px: no Rankings text under 11px`, lay.small.length === 0, JSON.stringify(lay.small));
+    check(`${w}px: the hero rank is unclipped`, !lay.clipped);
+    check(`${w}px: ${w >= 800 ? "two columns" : "stacked columns"}`, w >= 800 ? lay.twoCol : !lay.twoCol);
+  }
+  await rctx.close();
 }
 
 /* -------------------------------------------------------------- done */

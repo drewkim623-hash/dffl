@@ -1,6 +1,6 @@
 {
  "_comment": "Written by build-odds-history.mjs from data/odds-snapshot.json: every committed copy git can see plus the working-tree one. Rows are merged across runs and never removed or rewritten. One row per matchup per snapshot; pA is the chance manager a beats manager b as the site priced it at that moment. teams holds each finalized week's playoff and title chances (0..1) per team, from the newest snapshot read after that week went final; a newer reading of the same week replaces that week's team rows.",
- "generated": "2026-11-08T00:38:10.517Z",
+ "generated": "2026-11-12T14:26:29.390Z",
  "weeks": {
   "2026-1": [
    {
@@ -5382,6 +5382,573 @@
     "aPts": 17,
     "bPts": 21.78,
     "settled": false
+   },
+   {
+    "at": "2026-11-08T05:14:21.889Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.44529712762363816,
+    "aPts": 13.58,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T05:14:21.889Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.5848754238325795,
+    "aPts": 8.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T05:14:21.889Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.363701552342873,
+    "aPts": 21.4,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T05:14:21.889Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.8297696311402891,
+    "aPts": 17,
+    "bPts": 21.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T11:02:42.872Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.44527329347833616,
+    "aPts": 13.58,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T11:02:42.872Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.5847309495228414,
+    "aPts": 8.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T11:02:42.872Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.3637111371593569,
+    "aPts": 21.4,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T11:02:42.872Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.8297668131353964,
+    "aPts": 17,
+    "bPts": 21.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T14:25:12.355Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.4455318466524898,
+    "aPts": 13.58,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T14:25:12.355Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.5846646472174155,
+    "aPts": 8.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T14:25:12.355Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.36375375662605797,
+    "aPts": 21.4,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T14:25:12.355Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.8297754768007104,
+    "aPts": 17,
+    "bPts": 21.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:35:22.990Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.5403003597543923,
+    "aPts": 4,
+    "bPts": 2.5,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:35:22.990Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.5544082267130594,
+    "aPts": 10.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:35:22.990Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.4175414146159591,
+    "aPts": 18.08,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:35:22.990Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.18684695737819207,
+    "aPts": 21.4,
+    "bPts": 25.6,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:35:22.990Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.8659985712682831,
+    "aPts": 23.4,
+    "bPts": 41.44,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:50:02.212Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.5403417419007727,
+    "aPts": 4,
+    "bPts": 2.5,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:50:02.212Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.5659256873450574,
+    "aPts": 11.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:50:02.212Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.4177433965263392,
+    "aPts": 18.08,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:50:02.212Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.7765978030803601,
+    "aPts": 26.1,
+    "bPts": 54.24,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T15:50:02.212Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.1510219663422977,
+    "aPts": 21.4,
+    "bPts": 30.2,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T16:55:19.988Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.5080890494376035,
+    "aPts": 22.38,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T16:55:19.988Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.4345307966560712,
+    "aPts": 2,
+    "bPts": 9.5,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T16:55:19.988Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.6354013016146774,
+    "aPts": 17.9,
+    "bPts": 0,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T16:55:19.988Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.7494703241200077,
+    "aPts": 39.7,
+    "bPts": 70.4,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T16:55:19.988Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.1510219663422977,
+    "aPts": 21.4,
+    "bPts": 30.2,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.5664385524821307,
+    "aPts": 51.48,
+    "bPts": 61.36,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.41495034587408325,
+    "aPts": 49.98,
+    "bPts": 39.3,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.38274819386244263,
+    "aPts": 33.3,
+    "bPts": 56.7,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.7712844501108826,
+    "aPts": 68,
+    "bPts": 38.1,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0.02661264639556543,
+    "aPts": 57.48,
+    "bPts": 113.32,
+    "settled": false
+   },
+   {
+    "at": "2026-11-08T20:54:51.357Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.9971563785536748,
+    "aPts": 110.5,
+    "bPts": 79.62,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.9568649471203245,
+    "aPts": 111.68,
+    "bPts": 95.9,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.9599421894116797,
+    "aPts": 128.1,
+    "bPts": 134.08,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.034509736176405015,
+    "aPts": 98.06,
+    "bPts": 101.8,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.9990440306184867,
+    "aPts": 150.96,
+    "bPts": 89.72,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.000010910352758186637,
+    "aPts": 95.58,
+    "bPts": 129.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T11:03:15.208Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 97.58,
+    "bPts": 145.42,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.9569004190972223,
+    "aPts": 111.68,
+    "bPts": 95.9,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.959970480815614,
+    "aPts": 128.1,
+    "bPts": 134.08,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.0345104885969818,
+    "aPts": 98.06,
+    "bPts": 101.8,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.9990435243191118,
+    "aPts": 150.96,
+    "bPts": 89.72,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.00001088470316806811,
+    "aPts": 95.58,
+    "bPts": 129.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T14:26:31.119Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 97.58,
+    "bPts": 145.42,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.9569001022582744,
+    "aPts": 111.68,
+    "bPts": 95.9,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.959997571120413,
+    "aPts": 128.1,
+    "bPts": 134.08,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.03449377342458376,
+    "aPts": 98.06,
+    "bPts": 101.8,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.999043069929267,
+    "aPts": 150.96,
+    "bPts": 89.72,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.000010874901854363017,
+    "aPts": 95.58,
+    "bPts": 129.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T20:18:05.459Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 97.58,
+    "bPts": 145.42,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.9568836484158894,
+    "aPts": 111.68,
+    "bPts": 95.9,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.9600461270236136,
+    "aPts": 128.1,
+    "bPts": 134.08,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.03470514351592002,
+    "aPts": 98.06,
+    "bPts": 101.8,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.9990428836466549,
+    "aPts": 150.96,
+    "bPts": 89.72,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.000010856838898121168,
+    "aPts": 95.58,
+    "bPts": 129.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-09T23:22:01.167Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 97.58,
+    "bPts": 145.42,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "moseslin",
+    "b": "victorthompson",
+    "pA": 0.9568843260656654,
+    "aPts": 111.68,
+    "bPts": 95.9,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "jadencha",
+    "b": "saucebossandrew",
+    "pA": 0.9600503543629983,
+    "aPts": 128.1,
+    "bPts": 134.08,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "chassinator",
+    "b": "willie12w",
+    "pA": 0.03470662837585242,
+    "aPts": 98.06,
+    "bPts": 101.8,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "Domo112",
+    "b": "wesley55",
+    "pA": 0.9990418846040994,
+    "aPts": 150.96,
+    "bPts": 89.72,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "jskule23",
+    "b": "drewkim",
+    "pA": 0.000010855261326436771,
+    "aPts": 95.58,
+    "bPts": 129.78,
+    "settled": false
+   },
+   {
+    "at": "2026-11-10T00:33:52.686Z",
+    "a": "bradyrife",
+    "b": "sizzlemc2",
+    "pA": 0,
+    "aPts": 97.58,
+    "bPts": 145.42,
+    "settled": false
    }
   ]
  },
@@ -6072,6 +6639,92 @@
     "manager": "sizzlemc2",
     "playoff": 0.70735,
     "title": 0.035
+   }
+  ],
+  "2026-9": [
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "850931930408001536",
+    "manager": "jadencha",
+    "playoff": 1,
+    "title": 0.51205
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "844705266430742528",
+    "manager": "Domo112",
+    "playoff": 0.9926,
+    "title": 0.17645
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "851564369144852480",
+    "manager": "moseslin",
+    "playoff": 0.00525,
+    "title": 0.00005
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "646481339029475328",
+    "manager": "drewkim",
+    "playoff": 0.00635,
+    "title": 0.00005
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "845540882697547776",
+    "manager": "willie12w",
+    "playoff": 0.9492,
+    "title": 0.11485
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "850946675743793152",
+    "manager": "saucebossandrew",
+    "playoff": 0.0182,
+    "title": 0.00015
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "851478209852706816",
+    "manager": "bradyrife",
+    "playoff": 0.72975,
+    "title": 0.0392
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "845119622473699328",
+    "manager": "jskule23",
+    "playoff": 0.00355,
+    "title": 0
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "980916620434440192",
+    "manager": "wesley55",
+    "playoff": 0.86635,
+    "title": 0.07045
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "850932093394472960",
+    "manager": "chassinator",
+    "playoff": 0.5931,
+    "title": 0.05135
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "851570417528332288",
+    "manager": "sizzlemc2",
+    "playoff": 0.8302,
+    "title": 0.0353
+   },
+   {
+    "at": "2026-11-12T14:26:29.322Z",
+    "uid": "851571292711804928",
+    "manager": "victorthompson",
+    "playoff": 0.00545,
+    "title": 0.0001
    }
   ]
  }
