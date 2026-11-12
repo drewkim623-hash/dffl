@@ -6875,9 +6875,9 @@
    "source": "watch",
    "kicker": "2026 · week 10 · trades",
    "headline": "A 2027 Third-Round Pick, for Nothing",
-   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got nothing back. Six minutes later, jadencha flipped both to moseslin for Justin Jefferson. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
+   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to moseslin for Justin Jefferson and Isaiah Likely's rights. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
    "byline": "DFFL desk",
-   "standfirst": "3 trades · Hall and a 3rd for nothing",
+   "standfirst": "3 trades · Andrew gets Amon-Ra's keeper rights",
    "cover": {
     "type": "trade",
     "players": [
@@ -6887,12 +6887,12 @@
      "9224"
     ]
    },
-   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n🔁 saucebossandrew sent Breece Hall and a 2027 3rd and got nothing back\n⏱ Breece Hall lasted 6 minutes on jadencha's roster\n🏈 3 trades on Wednesday, including Hubbard and two 2027 picks for Chase Brown\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
+   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n🔁 saucebossandrew sent Breece Hall and a 2027 3rd for Amon-Ra St. Brown's keeper rights\n⏱ Breece Hall lasted 6 minutes on jadencha's roster\n🏈 3 trades on Wednesday, including Hubbard and two 2027 picks for Chase Brown\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
    "blocks": [
     {
      "type": "p",
      "lead": true,
-     "text": "Three trades went through on Wednesday, and <b>jadencha</b> came away with Justin Jefferson after sending nothing net. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to jadencha and got nothing back. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Jefferson. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
+     "text": "Three trades went through on Wednesday. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to <b>jadencha</b> and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Justin Jefferson and Isaiah Likely's rights for two years. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
     },
     {
      "type": "stat",
@@ -6902,15 +6902,15 @@
     {
      "type": "h",
      "eyebrow": "trade one · 1:32 p.m.",
-     "text": "Hall and a Third, for Nothing"
+     "text": "Hall and a Third, for Amon-Ra's Rights"
     },
     {
      "type": "cards",
      "items": [
       {
        "title": "jadencha",
-       "big": "A+",
-       "sub": "A+: received Breece Hall and a 2027 3rd, sent nothing",
+       "big": "B",
+       "sub": "B: received Breece Hall and a 2027 3rd; sent Amon-Ra St. Brown's keeper rights",
        "lead": true,
        "rows": [
         {
@@ -6923,15 +6923,19 @@
         },
         {
          "label": "Sends",
-         "value": "nothing"
+         "value": "Amon-Ra St. Brown's 2027 keeper rights"
         }
        ]
       },
       {
        "title": "saucebossandrew",
-       "big": "F",
-       "sub": "F: sent Breece Hall and a 2027 3rd, received nothing",
+       "big": "C",
+       "sub": "C: received Amon-Ra St. Brown's keeper rights; sent Breece Hall and a 2027 3rd",
        "rows": [
+        {
+         "label": "Gets",
+         "value": "Amon-Ra St. Brown's 2027 keeper rights"
+        },
         {
          "label": "Sends",
          "value": "Breece Hall (RB, NYJ)"
@@ -6939,10 +6943,6 @@
         {
          "label": "Sends",
          "value": "2027 3rd-round pick"
-        },
-        {
-         "label": "Gets",
-         "value": "nothing"
         }
        ]
       }
@@ -6950,7 +6950,7 @@
     },
     {
      "type": "p",
-     "text": "The ticket shows nothing coming back. In the chat, willie12w said \"Andrews in on the sweepstakes,\" wesley55 said \"The rich get richer,\" and saucebossandrew said \"And the poor gets poorer.\" Around the trade, saucebossandrew added Simi Fehoko at 1:30 p.m. and Pat Freiermuth at 1:33; jadencha dropped Chris Rodriguez Jr. at 1:33."
+     "text": "saucebossandrew got Amon-Ra St. Brown's 2027 keeper rights on this ticket. The commissioner's note, word for word: \"andrew owns rights\". In the chat, willie12w said \"Andrews in on the sweepstakes,\" wesley55 said \"The rich get richer,\" and saucebossandrew said \"And the poor gets poorer.\" Around the trade, saucebossandrew added Simi Fehoko at 1:30 p.m. and Pat Freiermuth at 1:33; jadencha dropped Chris Rodriguez Jr. at 1:33."
     },
     {
      "type": "h",
@@ -6959,7 +6959,7 @@
     },
     {
      "type": "p",
-     "text": "jadencha, 8-1, flipped Hall and the same 2027 third to moseslin, 3-6, for Justin Jefferson. Net for jadencha: Jefferson for nothing. drewkim, in the chat: \"Quickest stint ever.\""
+     "text": "jadencha flipped Hall and the same 2027 third to moseslin for Justin Jefferson and, per the note, Isaiah Likely's keeper rights. drewkim, in the chat: \"Quickest stint ever.\""
     },
     {
      "type": "cards",
@@ -6967,7 +6967,7 @@
       {
        "title": "jadencha",
        "big": "B",
-       "sub": "B: received Justin Jefferson, sent Breece Hall and a 2027 3rd",
+       "sub": "B: received Justin Jefferson; sent Breece Hall, a 2027 3rd, and Isaiah Likely's keeper rights",
        "lead": true,
        "rows": [
         {
@@ -6981,13 +6981,17 @@
         {
          "label": "Sends",
          "value": "saucebossandrew's 2027 3rd"
+        },
+        {
+         "label": "Sends",
+         "value": "Isaiah Likely's keeper rights for 2 years"
         }
        ]
       },
       {
        "title": "moseslin",
        "big": "B",
-       "sub": "B: received Breece Hall and a 2027 3rd, sent Justin Jefferson",
+       "sub": "B: received Breece Hall, a 2027 3rd, and Isaiah Likely's rights for 2 years; sent Justin Jefferson",
        "rows": [
         {
          "label": "Gets",
@@ -6996,6 +7000,10 @@
         {
          "label": "Gets",
          "value": "saucebossandrew's 2027 3rd"
+        },
+        {
+         "label": "Gets",
+         "value": "Isaiah Likely's keeper rights for 2 years"
         },
         {
          "label": "Sends",
@@ -7007,7 +7015,7 @@
     },
     {
      "type": "p",
-     "text": "The commissioner's notes on the Wednesday tickets, word for word. On Amon-Ra St. Brown: \"andrew owns rights\". On Isaiah Likely: \"moses owns rights for 2 years\". jadencha, in chat: \"Plus isaiah likely keeper rights only\". Sleeper does not list rights on the ticket."
+     "text": "The commissioner's note, word for word: \"moses owns rights for 2 years\". jadencha, in chat: \"Plus isaiah likely keeper rights only\"."
     },
     {
      "type": "h",
@@ -7016,7 +7024,7 @@
     },
     {
      "type": "p",
-     "text": "At 2:52 p.m., jskule23, 2-7 at 0.36% playoff odds, sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to bradyrife, 5-4 at 72.98%, for Chase Brown."
+     "text": "At 2:52 p.m., jskule23 sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to bradyrife for Chase Brown."
     },
     {
      "type": "cards",
@@ -7040,8 +7048,16 @@
          "value": "drewkim's 2027 9th"
         },
         {
+         "label": "Gets",
+         "value": "Chase Brown's 2027 rights"
+        },
+        {
          "label": "Sends",
          "value": "Chase Brown (RB, CIN)"
+        },
+        {
+         "label": "Sends",
+         "value": "one 2027 keeper spot"
         }
        ]
       },
@@ -7053,6 +7069,14 @@
         {
          "label": "Gets",
          "value": "Chase Brown (RB, CIN)"
+        },
+        {
+         "label": "Gets",
+         "value": "one 2027 keeper spot"
+        },
+        {
+         "label": "Gets",
+         "value": "keeps Chuba Hubbard's 2027 rights"
         },
         {
          "label": "Sends",
@@ -7097,7 +7121,7 @@
     },
     {
      "type": "note",
-     "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket."
+     "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots and are treated as part of each ticket's consideration; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket."
     }
    ]
   }
