@@ -2248,6 +2248,17 @@
     [data-stg="wait"] > *{opacity:1}
     .tabind,.secsheet,.secbg{transition:none}
   }
+  /* The More sheet always fits the window: it scrolls inside, search pinned at the top. */
+  .secsheet{max-height:calc(100dvh - var(--top,76px) - 16px);overflow-y:auto;overscroll-behavior:contain;padding-top:0;scrollbar-width:thin}
+  .secsheet .sechd,.secsheet .secsearch{position:sticky;z-index:2}
+  .secsheet .sechd{background:var(--card-a)}
+  .secsheet .sechd{top:0;padding-top:14px;margin:0 -14px;padding-left:16px;padding-right:16px}
+  .secsheet .secsearch{top:56px;box-shadow:0 -12px 0 var(--card-a),0 10px 16px -6px var(--card-a)}
+  @media (min-width:641px) and (max-height:820px){
+    .secgrid button{min-height:52px;padding:6px 10px}
+    .secic{width:34px;height:34px;border-radius:10px}
+  }
+  @media (max-width:640px){.secsheet{max-height:88dvh}.secsheet .sechd{padding-top:16px}}
 </style>
 </head>
 <body>
