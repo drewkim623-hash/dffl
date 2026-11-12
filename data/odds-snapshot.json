@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-12T14:26:29.322Z",
- "at": 1794493589322,
+ "generated": "2026-11-12T17:14:24.648Z",
+ "at": 1794503664648,
  "season": "2026",
  "week": 10,
  "liveWeek": null,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.31555,
-   "titleNow": 0.51205,
+   "titleNow": 0.51435,
    "playoffWas": 0.9171,
    "playoffNow": 1,
-   "wins": 11.88815,
+   "wins": 11.8943,
    "titleOdds": -120,
    "titleOddsOpen": 200,
    "playoffOdds": -19900
@@ -26,11 +26,11 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.19455,
-   "titleNow": 0.17645,
+   "titleNow": 0.1757,
    "playoffWas": 0.82825,
-   "playoffNow": 0.9926,
-   "wins": 9.9317,
-   "titleOdds": 430,
+   "playoffNow": 0.99255,
+   "wins": 9.94485,
+   "titleOdds": 440,
    "titleOddsOpen": 380,
    "playoffOdds": -19900
   },
@@ -42,7 +42,7 @@
    "titleNow": 0.00005,
    "playoffWas": 0.41645,
    "playoffNow": 0.00525,
-   "wins": 4.4305,
+   "wins": 4.4289,
    "titleOdds": 1886690,
    "titleOddsOpen": 2070,
    "playoffOdds": 17870
@@ -54,21 +54,21 @@
    "titleWas": 0.0143,
    "titleNow": 0.00005,
    "playoffWas": 0.24065,
-   "playoffNow": 0.00635,
-   "wins": 4.6774,
+   "playoffNow": 0.0058,
+   "wins": 4.64035,
    "titleOdds": 1886690,
    "titleOddsOpen": 6500,
-   "playoffOdds": 14760
+   "playoffOdds": 16170
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1385,
-   "titleNow": 0.11485,
+   "titleNow": 0.11455,
    "playoffWas": 0.72415,
-   "playoffNow": 0.9492,
-   "wins": 8.8732,
+   "playoffNow": 0.95115,
+   "wins": 8.9109,
    "titleOdds": 720,
    "titleOddsOpen": 580,
    "playoffOdds": -19900
@@ -80,24 +80,24 @@
    "titleWas": 0.0548,
    "titleNow": 0.00015,
    "playoffWas": 0.4764,
-   "playoffNow": 0.0182,
-   "wins": 4.8244,
+   "playoffNow": 0.01755,
+   "wins": 4.82095,
    "titleOdds": 628830,
    "titleOddsOpen": 1620,
-   "playoffOdds": 5080
+   "playoffOdds": 5280
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.04955,
-   "titleNow": 0.0392,
+   "titleNow": 0.0382,
    "playoffWas": 0.44555,
-   "playoffNow": 0.72975,
-   "wins": 7.72605,
-   "titleOdds": 2310,
+   "playoffNow": 0.7245,
+   "wins": 7.7181,
+   "titleOdds": 2370,
    "titleOddsOpen": 1800,
-   "playoffOdds": -340
+   "playoffOdds": -330
   },
   {
    "uid": "845119622473699328",
@@ -106,50 +106,50 @@
    "titleWas": 0.02695,
    "titleNow": 0,
    "playoffWas": 0.3057,
-   "playoffNow": 0.00355,
-   "wins": 3.8093,
+   "playoffNow": 0.0023,
+   "wins": 3.6967,
    "titleOdds": null,
    "titleOddsOpen": 3400,
-   "playoffOdds": 26470
+   "playoffOdds": 40920
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0739,
-   "titleNow": 0.07045,
+   "titleNow": 0.07195,
    "playoffWas": 0.5821,
-   "playoffNow": 0.86635,
-   "wins": 8.16075,
-   "titleOdds": 1240,
+   "playoffNow": 0.88725,
+   "wins": 8.28385,
+   "titleOdds": 1210,
    "titleOddsOpen": 1180,
-   "playoffOdds": -1120
+   "playoffOdds": -1580
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.03725,
-   "titleNow": 0.05135,
+   "titleNow": 0.0501,
    "playoffWas": 0.40695,
-   "playoffNow": 0.5931,
-   "wins": 6.9836,
-   "titleOdds": 1740,
+   "playoffNow": 0.5858,
+   "wins": 6.9829,
+   "titleOdds": 1780,
    "titleOddsOpen": 2430,
-   "playoffOdds": -170
+   "playoffOdds": -165
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.02695,
-   "titleNow": 0.0353,
+   "titleNow": 0.0348,
    "playoffWas": 0.32955,
-   "playoffNow": 0.8302,
-   "wins": 8.3822,
-   "titleOdds": 2570,
+   "playoffNow": 0.8226,
+   "wins": 8.36725,
+   "titleOdds": 2610,
    "titleOddsOpen": 3400,
-   "playoffOdds": -730
+   "playoffOdds": -680
   },
   {
    "uid": "851571292711804928",
@@ -158,11 +158,11 @@
    "titleWas": 0.02415,
    "titleNow": 0.0001,
    "playoffWas": 0.32715,
-   "playoffNow": 0.00545,
-   "wins": 4.31275,
+   "playoffNow": 0.00525,
+   "wins": 4.31095,
    "titleOdds": 943300,
    "titleOddsOpen": 3810,
-   "playoffOdds": 17210
+   "playoffOdds": 17870
   }
  ],
  "games": [],
@@ -286,6 +286,14 @@
  "nfl": null,
  "articles": [
   {
+   "slug": "a-third-round-pick-for-nothing",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "A 2027 Third-Round Pick, for Nothing",
+   "dek": "saucebossandrew sent jadencha a 2027 third-round pick at this week's deadline and got nothing back, a trade the grading engine scored A+ for jadencha and F- for saucebossandrew — a 100% margin. jadencha also walked away from the same deadline with Justin Jefferson, off a separate trade with moseslin graded B to D in his favor.",
+   "byline": "DFFL desk",
+   "date": "2026-11-12"
+  },
+  {
    "slug": "the-high-and-the-low-shared-one-scoreboard",
    "kicker": "2026 · week 9",
    "headline": "The High and the Low Shared One Scoreboard",
@@ -300,14 +308,6 @@
    "dek": "Two trades went through on Tuesday, both with 2027 strings attached. saucebossandrew now holds the league's only four keeper spots, Brock Bowers spends the rest of 2026 on loan to Domo112, and three big names are worth watching before the deadline.",
    "byline": "DFFL desk",
    "date": "2026-11-10"
-  },
-  {
-   "slug": "the-playoff-field-just-split-into-a-canyon",
-   "kicker": "2026 · week 9",
-   "headline": "The Playoff Field Just Split Into A Canyon",
-   "dek": "Seven teams are above 61.02% to make the playoffs; the other five are at 13.595% or worse, four of them under 1%. jadencha's title number jumped 15.92 points this week alone — more than three times the next-biggest move anyone in the league made.",
-   "byline": "DFFL desk",
-   "date": "2026-11-06"
   }
  ]
 }

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-12T11:02:18.443Z",
- "at": 1794481338443,
+ "generated": "2026-11-12T17:13:33.185Z",
+ "at": 1794503613185,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -15,7 +15,6 @@
    "points_against": 1055.54,
    "faab_spent": 22,
    "starters_hurt": [
-    "Bhayshul Tuten (Questionable)",
     "Amon-Ra St. Brown (Questionable)"
    ]
   },
@@ -597,5 +596,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 42
+ "free_agent_moves": 45
 }
