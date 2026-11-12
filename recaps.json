@@ -6875,81 +6875,34 @@
    "source": "watch",
    "kicker": "2026 · week 10 · trades",
    "headline": "A 2027 Third-Round Pick, for Nothing",
-   "dek": "saucebossandrew sent jadencha a 2027 third-round pick at this week's deadline and got nothing back, a trade the grading engine scored A+ for jadencha and F- for saucebossandrew — a 100% margin. jadencha also walked away from the same deadline with Justin Jefferson, off a separate trade with moseslin graded B to D in his favor.",
+   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got nothing back. Six minutes later, jadencha flipped both to moseslin for Justin Jefferson. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
    "byline": "DFFL desk",
-   "standfirst": "2 trades · 1 for nothing",
+   "standfirst": "3 trades · Hall and a 3rd for nothing",
    "cover": {
-    "type": "trade"
+    "type": "trade",
+    "players": [
+     "8155",
+     "6794",
+     "7594",
+     "9224"
+    ]
    },
-   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n📉 saucebossandrew's playoff odds: 47.6% on draft day, 1.8% now\n🔁 jadencha's trade with saucebossandrew graded A+/F-, a 100% margin\n🏆 jadencha leads the league at 8-1, with a 51.2% title chance\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
+   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n🔁 saucebossandrew sent Breece Hall and a 2027 3rd and got nothing back\n⏱ Breece Hall lasted 6 minutes on jadencha's roster\n🏈 3 trades on Wednesday, including Hubbard and two 2027 picks for Chase Brown\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
    "blocks": [
     {
      "type": "p",
      "lead": true,
-     "text": "Two more trades went through at this week's deadline, and <b>jadencha</b> came away ahead on both. The league leader, 8-1, added Justin Jefferson from <b>moseslin</b> in a deal the trade grading engine scored 34% in his favor, then took a 2027 third-round pick from <b>saucebossandrew</b> in a separate trade and sent nothing back — a 100% margin, graded A+ for jadencha and F- for saucebossandrew."
+     "text": "Three trades went through on Wednesday, and <b>jadencha</b> came away with Justin Jefferson after sending nothing net. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to jadencha and got nothing back. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Jefferson. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
     },
     {
      "type": "stat",
-     "n": "100",
-     "text": "The margin, in percent, the trade grading engine gave jadencha's deal with saucebossandrew: a 2027 third-round pick for nothing in return. A+ for jadencha, F- for saucebossandrew."
+     "n": "6",
+     "text": "Minutes Breece Hall spent on jadencha's roster between the two trades: saucebossandrew sent him at 1:32 p.m. Eastern, and he was gone to moseslin at 1:38."
     },
     {
      "type": "h",
-     "eyebrow": "trade one",
-     "text": "Jefferson Goes to the League Leader"
-    },
-    {
-     "type": "p",
-     "text": "jadencha gave up Breece Hall and got Justin Jefferson back from moseslin, who is 3-6. The grading engine put jadencha's side at 67 in value against moseslin's 32.8 — Breece Hall plus a 2027 third-round pick — a 34% margin in jadencha's favor, graded B for jadencha and D for moseslin."
-    },
-    {
-     "type": "cards",
-     "items": [
-      {
-       "title": "jadencha",
-       "big": "B",
-       "sub": "a 34% margin in his favor",
-       "lead": true,
-       "rows": [
-        {
-         "label": "Gets",
-         "value": "Justin Jefferson (WR, MIN)"
-        },
-        {
-         "label": "Sends",
-         "value": "Breece Hall (RB, NYJ)"
-        }
-       ]
-      },
-      {
-       "title": "moseslin",
-       "big": "D",
-       "sub": "a 34% margin against him",
-       "rows": [
-        {
-         "label": "Gets",
-         "value": "Breece Hall (RB, NYJ)"
-        },
-        {
-         "label": "Gets",
-         "value": "jadencha's 2027 3rd"
-        },
-        {
-         "label": "Sends",
-         "value": "Justin Jefferson (WR, MIN)"
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "type": "h",
-     "eyebrow": "trade two",
-     "text": "A Third-Rounder, for Nothing"
-    },
-    {
-     "type": "p",
-     "text": "In a separate deal the same week, saucebossandrew sent jadencha a 2027 third-round pick and got nothing back. The grading engine valued jadencha's side at 32.8 and saucebossandrew's at zero — a 100% margin. It is the worst trade grade saucebossandrew has gotten all season; the three before it this year were a C, a D and another C, and he has yet to win a trade grade in 2026."
+     "eyebrow": "trade one · 1:32 p.m.",
+     "text": "Hall and a Third, for Nothing"
     },
     {
      "type": "cards",
@@ -6957,27 +6910,169 @@
       {
        "title": "jadencha",
        "big": "A+",
-       "sub": "a 100% margin, a pick for nothing back",
+       "sub": "A+: Hall and a 2027 3rd, nothing sent",
        "lead": true,
        "rows": [
         {
          "label": "Gets",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Gets",
          "value": "saucebossandrew's 2027 3rd"
+        },
+        {
+         "label": "Sends",
+         "value": "nothing"
         }
        ]
       },
       {
        "title": "saucebossandrew",
-       "big": "F-",
-       "sub": "zero value returned, his worst grade of 2026",
+       "big": "F",
+       "sub": "F: 3–6 at 1.8% playoff odds, sent both and got nothing",
        "rows": [
         {
          "label": "Sends",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Sends",
          "value": "2027 3rd-round pick"
+        },
+        {
+         "label": "Gets",
+         "value": "nothing"
         }
        ]
       }
      ]
+    },
+    {
+     "type": "p",
+     "text": "The ticket shows nothing coming back. In the chat, willie12w said \"Andrews in on the sweepstakes,\" wesley55 said \"The rich get richer,\" and saucebossandrew said \"And the poor gets poorer.\" Around the trade, saucebossandrew added Simi Fehoko at 1:30 p.m. and Pat Freiermuth at 1:33; jadencha dropped Chris Rodriguez Jr. at 1:33."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade two · 1:38 p.m.",
+     "text": "Jefferson Goes to the League Leader"
+    },
+    {
+     "type": "p",
+     "text": "jadencha, 8-1, flipped Hall and the same 2027 third to moseslin, 3-6, for Justin Jefferson. Net for jadencha: Jefferson for nothing. drewkim, in the chat: \"Quickest stint ever.\""
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "A",
+       "sub": "A: Jefferson in; Hall and the same 3rd out six minutes later",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Justin Jefferson (WR, MIN)"
+        },
+        {
+         "label": "Sends",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Sends",
+         "value": "saucebossandrew's 2027 3rd"
+        }
+       ]
+      },
+      {
+       "title": "moseslin",
+       "big": "C",
+       "sub": "C: 3–6 at 0.53%, sold Jefferson for Hall and a 3rd",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Gets",
+         "value": "saucebossandrew's 2027 3rd"
+        },
+        {
+         "label": "Sends",
+         "value": "Justin Jefferson (WR, MIN)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The commissioner's notes on the Wednesday tickets, word for word. On Amon-Ra St. Brown: \"andrew owns rights\". On Isaiah Likely: \"moses owns rights for 2 years\". jadencha, in chat: \"Plus isaiah likely keeper rights only\". Sleeper does not list rights on the ticket."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade three · 2:52 p.m.",
+     "text": "Hubbard and Two Picks for Chase Brown"
+    },
+    {
+     "type": "p",
+     "text": "At 2:52 p.m., jskule23, 2-7 at 0.36% playoff odds, sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to bradyrife, 5-4 at 72.98%, for Chase Brown."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "bradyrife",
+       "big": "B",
+       "sub": "B: 5–4 at 72.98%, adds Hubbard and two 2027 picks",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Chuba Hubbard (RB, CAR)"
+        },
+        {
+         "label": "Gets",
+         "value": "jskule23's 2027 8th"
+        },
+        {
+         "label": "Gets",
+         "value": "drewkim's 2027 9th"
+        },
+        {
+         "label": "Sends",
+         "value": "Chase Brown (RB, CIN)"
+        }
+       ]
+      },
+      {
+       "title": "jskule23",
+       "big": "B",
+       "sub": "B: 2–7 at 0.36%, Brown and a keeper spot, Hubbard rights if the notes hold",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Chase Brown (RB, CIN)"
+        },
+        {
+         "label": "Sends",
+         "value": "Chuba Hubbard (RB, CAR)"
+        },
+        {
+         "label": "Sends",
+         "value": "2027 8th"
+        },
+        {
+         "label": "Sends",
+         "value": "drewkim's 2027 9th"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "The notes, word for word. On Chase Brown: \"joe gets one keeper spot from brady and brady owns rights\". On Chuba Hubbard: \"joe owns rights\". On Josh Allen: \"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17 if allen finishes top 5 at postion andrew owes 8th instead of 9th\". That last line adds a second trigger to the Oct 13 Allen trade already on file: if Allen finishes top 5 at the position, Andrew owes an 8th instead of a 9th. In the chat, wesley55 said \"Wtf,\" and drewkim said \"Holy clauses.\""
     },
     {
      "type": "p",
@@ -7002,7 +7097,7 @@
     },
     {
      "type": "note",
-     "text": "Trades and rosters from data/pulse.json; trade values and letter grades from the trade grading engine in data/trade-grades.json; records, points-for and playoff/title odds from data/pulse.json and data/odds-snapshot.json as refreshed this morning."
+     "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket."
     }
    ]
   }
