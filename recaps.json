@@ -6866,6 +6866,145 @@
      "text": "Joe is read as jskule23 (the league email list and the notes line up), a high-confidence identification, not a name on the Sleeper ticket. Points: official Sleeper, league scoring, through week 9; projections: Sleeper, weeks 11–17; odds: the site's Tuesday snapshot. Keep surplus is full-2026 pace minus that round's 2023–25 average, not a 2027 forecast. Notes are quoted from Sleeper screenshots. A full trade log is coming to Future Outlook."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "a-third-round-pick-for-nothing",
+   "date": "2026-11-12",
+   "kind": "trade",
+   "source": "watch",
+   "kicker": "2026 · week 10 · trades",
+   "headline": "A 2027 Third-Round Pick, for Nothing",
+   "dek": "saucebossandrew sent jadencha a 2027 third-round pick at this week's deadline and got nothing back, a trade the grading engine scored A+ for jadencha and F- for saucebossandrew — a 100% margin. jadencha also walked away from the same deadline with Justin Jefferson, off a separate trade with moseslin graded B to D in his favor.",
+   "byline": "DFFL desk",
+   "standfirst": "2 trades · 1 for nothing",
+   "cover": {
+    "type": "trade"
+   },
+   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n📉 saucebossandrew's playoff odds: 47.6% on draft day, 1.8% now\n🔁 jadencha's trade with saucebossandrew graded A+/F-, a 100% margin\n🏆 jadencha leads the league at 8-1, with a 51.2% title chance\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Two more trades went through at this week's deadline, and <b>jadencha</b> came away ahead on both. The league leader, 8-1, added Justin Jefferson from <b>moseslin</b> in a deal the trade grading engine scored 34% in his favor, then took a 2027 third-round pick from <b>saucebossandrew</b> in a separate trade and sent nothing back — a 100% margin, graded A+ for jadencha and F- for saucebossandrew."
+    },
+    {
+     "type": "stat",
+     "n": "100",
+     "text": "The margin, in percent, the trade grading engine gave jadencha's deal with saucebossandrew: a 2027 third-round pick for nothing in return. A+ for jadencha, F- for saucebossandrew."
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade one",
+     "text": "Jefferson Goes to the League Leader"
+    },
+    {
+     "type": "p",
+     "text": "jadencha gave up Breece Hall and got Justin Jefferson back from moseslin, who is 3-6. The grading engine put jadencha's side at 67 in value against moseslin's 32.8 — Breece Hall plus a 2027 third-round pick — a 34% margin in jadencha's favor, graded B for jadencha and D for moseslin."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "B",
+       "sub": "a 34% margin in his favor",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Justin Jefferson (WR, MIN)"
+        },
+        {
+         "label": "Sends",
+         "value": "Breece Hall (RB, NYJ)"
+        }
+       ]
+      },
+      {
+       "title": "moseslin",
+       "big": "D",
+       "sub": "a 34% margin against him",
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "Breece Hall (RB, NYJ)"
+        },
+        {
+         "label": "Gets",
+         "value": "jadencha's 2027 3rd"
+        },
+        {
+         "label": "Sends",
+         "value": "Justin Jefferson (WR, MIN)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "trade two",
+     "text": "A Third-Rounder, for Nothing"
+    },
+    {
+     "type": "p",
+     "text": "In a separate deal the same week, saucebossandrew sent jadencha a 2027 third-round pick and got nothing back. The grading engine valued jadencha's side at 32.8 and saucebossandrew's at zero — a 100% margin. It is the worst trade grade saucebossandrew has gotten all season; the three before it this year were a C, a D and another C, and he has yet to win a trade grade in 2026."
+    },
+    {
+     "type": "cards",
+     "items": [
+      {
+       "title": "jadencha",
+       "big": "A+",
+       "sub": "a 100% margin, a pick for nothing back",
+       "lead": true,
+       "rows": [
+        {
+         "label": "Gets",
+         "value": "saucebossandrew's 2027 3rd"
+        }
+       ]
+      },
+      {
+       "title": "saucebossandrew",
+       "big": "F-",
+       "sub": "zero value returned, his worst grade of 2026",
+       "rows": [
+        {
+         "label": "Sends",
+         "value": "2027 3rd-round pick"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "jadencha is 8-1 with 1,443.12 points for, the most in the league, and now a 51.2% chance to win the title, up from 31.6% on draft day. saucebossandrew is 3-6, and this week's deadline leaves the team at a 1.8% chance to make the playoffs, down from 47.6% in the preseason line."
+    },
+    {
+     "type": "bars",
+     "title": "saucebossandrew's playoff odds",
+     "sub": "percent chance to make the playoffs",
+     "rows": [
+      {
+       "label": "Draft day",
+       "value": 47.6,
+       "group": 2
+      },
+      {
+       "label": "Now",
+       "value": 1.8,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Trades and rosters from data/pulse.json; trade values and letter grades from the trade grading engine in data/trade-grades.json; records, points-for and playoff/title odds from data/pulse.json and data/odds-snapshot.json as refreshed this morning."
+    }
+   ]
   }
  ]
 }
