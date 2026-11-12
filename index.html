@@ -1820,6 +1820,94 @@
   .ask-form input{flex:1 1 auto;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--edge);background:var(--plane);color:var(--ink);font:16px var(--body)}
   .ask-form button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--a);color:var(--on-a);font:700 14px var(--disp);cursor:pointer}
   .ask-form :disabled{opacity:.45;cursor:not-allowed}
+
+  /* ============ navigation: one-tap sections, a sliding pill ============ */
+  nav.tabs .wrap{display:flex;align-items:center;gap:6px}
+  nav.tabs .tabrow{flex:1 1 auto;min-width:0;position:relative}
+  nav.tabs .wrap::after{right:calc(var(--pad) + 50px)}
+  .tabarr-r{right:calc(var(--pad) + 44px)}
+  .taball{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;
+    background:var(--raised);border:1px solid var(--edge);color:var(--ink-2);transition:background .18s,color .18s,transform .12s}
+  .taball svg{width:20px;height:20px}
+  .taball:hover,.taball[aria-expanded="true"]{color:var(--on-a);background:var(--a);border-color:var(--a)}
+  .taball:active{transform:scale(.93)}
+  /* The lit pill is one element that travels; the buttons it sits under go clear. */
+  .tabrow.has-ind button[aria-selected="true"]{background:transparent;border-color:transparent;box-shadow:none}
+  .tabrow button{position:relative;z-index:1}
+  .tabind{position:absolute;z-index:0;left:0;top:8px;height:44px;width:0;border-radius:999px;pointer-events:none;
+    background:var(--a);box-shadow:0 6px 18px -6px rgba(var(--a-rgb),.55);
+    transition:transform .45s cubic-bezier(.16,1,.3,1),width .45s cubic-bezier(.16,1,.3,1),opacity .2s}
+  .tabind.off{opacity:0}
+
+  .secbg{position:fixed;inset:0;z-index:90;background:rgba(6,3,10,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    opacity:0;transition:opacity .25s}
+  .secbg.on{opacity:1}
+  .secsheet{position:fixed;z-index:91;left:50%;top:76px;width:min(720px,calc(100vw - 32px));transform:translate(-50%,-10px) scale(.98);
+    opacity:0;background:var(--surface);border:1px solid var(--edge);border-radius:22px;padding:14px 14px 16px;
+    box-shadow:0 30px 70px rgba(0,0,0,.6);max-height:calc(100vh - 100px);overflow:auto;
+    transition:transform .32s cubic-bezier(.16,1,.3,1),opacity .2s}
+  .secsheet.on{opacity:1;transform:translate(-50%,0) scale(1)}
+  .sechd{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 12px;
+    font-family:var(--disp);font-weight:700;font-size:17px}
+  .secx{width:36px;height:36px;border-radius:50%;border:0;background:var(--raised);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+  .secx svg{width:16px;height:16px}
+  .secgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+  .secgrid button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;cursor:pointer;
+    background:var(--raised);border:1px solid transparent;border-radius:16px;padding:12px 13px 12px;color:var(--ink);
+    font:inherit;min-height:96px;transition:background .18s,border-color .18s,transform .12s}
+  .secgrid button:hover{background:var(--hover)}
+  .secgrid button:active{transform:scale(.97)}
+  .secgrid button svg{width:22px;height:22px;color:var(--ink-2);margin-bottom:8px}
+  .secgrid button b{font-family:var(--disp);font-weight:700;font-size:15px;line-height:1.2}
+  .secgrid button span{font-size:11.5px;line-height:1.35;color:var(--muted)}
+  .secgrid button[aria-current="true"]{border-color:rgba(var(--a-rgb),.6);
+    background:linear-gradient(160deg,rgba(var(--a-rgb),.18),var(--raised) 65%)}
+  .secgrid button[aria-current="true"] svg{color:var(--a)}
+  .secsheet.on .secgrid button{animation:secin .45s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 18ms + 40ms)}
+  @keyframes secin{from{opacity:0;transform:translateY(10px)}}
+  @media (max-width:640px){
+    /* On a phone it is a bottom sheet, under the thumb. */
+    .secsheet{left:0;right:0;top:auto;bottom:0;width:auto;transform:translateY(100%);opacity:1;
+      border-radius:24px 24px 0 0;border-bottom:0;padding:10px 14px max(18px,env(safe-area-inset-bottom));max-height:86vh}
+    .secsheet.on{transform:none}
+    .sechd{position:relative;padding-top:12px}
+    .sechd::before{content:"";position:absolute;top:0;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:var(--mid)}
+    .secgrid{grid-template-columns:repeat(3,1fr)}
+    .secgrid button{min-height:92px;padding:11px 10px;border-radius:14px}
+    .secgrid button b{font-size:13.5px}
+    .secgrid button span{font-size:10.5px}
+  }
+  body.sec-open{overflow:hidden}
+
+  /* ============ motion that carries meaning ============ */
+  /* Reading progress while a piece is open. */
+  .rprog{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;pointer-events:none;opacity:0;transition:opacity .25s}
+  .rprog.on{opacity:1}
+  .rprog i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));
+    background:linear-gradient(90deg,var(--a),var(--a2))}
+  /* Count-ups paint over the real figure; the text underneath never changes. */
+  .counting{position:relative;color:transparent !important;-webkit-text-fill-color:transparent}
+  .counting::after{content:attr(data-c);position:absolute;inset:0;color:var(--cc);-webkit-text-fill-color:var(--cc);white-space:nowrap;text-align:inherit}
+  /* Bars grow out of their zero line once they are on screen. */
+  [data-rv] .abar .fill,[data-rv] .tbar span,[data-rv] .bar .fill,[data-rv] .divbar .fill{transform-origin:0 50%}
+  [data-rv] .divbar .fill[style*="right:50%"]{transform-origin:100% 50%}
+  [data-rv="go"] .abar .fill,[data-rv="go"] .tbar span,[data-rv="go"] .bar .fill,[data-rv="go"] .divbar .fill{
+    animation:barin .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i,0),14) * 35ms)}
+  @keyframes barin{from{transform:scaleX(0)}}
+  [data-rv="go"].acards .acard,[data-rv="go"] .tcard{animation:cardin .55s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i,0),10) * 45ms)}
+  @keyframes cardin{from{opacity:0;transform:translateY(12px)}}
+  [data-rv="go"].astat::before{animation:rulein 1s cubic-bezier(.16,1,.3,1) both}
+  @keyframes rulein{from{transform:scaleX(0)}}
+  /* The week's top score lands with a little weight. */
+  .whero .big{transition:filter .3s}
+  .whero.landed .big{animation:heroin .9s cubic-bezier(.16,1,.3,1)}
+  @keyframes heroin{0%{letter-spacing:.04em;opacity:.4;filter:blur(6px)}100%{letter-spacing:inherit}}
+  /* Press feedback on the things people tap most. */
+  .wgame,.teaser,.tile,.mcard{transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s,border-color .2s,box-shadow .2s}
+  .wgame:active,.teaser:active,.mcard:active{transform:scale(.985)}
+  @media (hover:hover){.wgame:hover,.teaser:hover,.mcard:hover{transform:translateY(-2px)}}
+  ::selection{background:rgba(var(--a-rgb),.38);color:#fff}
+  html{scrollbar-color:var(--mid) var(--plane)}
 </style>
 </head>
 <body>
@@ -1833,7 +1921,14 @@
   </div>
 </header>
 
-<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button></div></nav>
+<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button><button type="button" class="taball" id="tabAll" aria-label="All sections" aria-haspopup="dialog" aria-expanded="false" aria-controls="secSheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg></button></div></nav>
+<div class="secbg" id="secBg" hidden></div>
+<div class="secsheet" id="secSheet" role="dialog" aria-modal="true" aria-label="All sections" hidden>
+  <div class="sechd"><span>All sections</span><button type="button" class="secx" id="secX" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="secgrid" id="secGrid"></div>
+</div>
+<div class="rprog" id="rprog" aria-hidden="true"><i></i></div>
 
 <main class="wrap">
   <div id="loader">
@@ -2488,6 +2583,9 @@ function buildTabs() {
     b.onclick = () => show(t.id);
     bar.appendChild(b);
   });
+  bar.appendChild(el("span", "tabind off"));
+  bar.classList.add("has-ind");
+  buildSections();
   tabHint();
   if (!bar.dataset.hint) {
     bar.dataset.hint = "1";
@@ -2546,7 +2644,171 @@ function tabNudge() {
   bar.scrollTo({ left: start + 40, behavior: "smooth" });
   setTimeout(() => bar.scrollTo({ left: start, behavior: "smooth" }), 550);
 }
+/* -------------------------------------------- every section, one tap away */
+// Line icons for the section sheet, on a 24-unit grid with a 1.8 stroke.
+const TAB_ICONS = {
+  home: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z",
+  scores: "M4 5h16v14H4zM12 5v14M4 12h3M17 12h3",
+  managers: "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21v-1a6 6 0 0 1 12 0v1M16 3.5a4 4 0 0 1 0 7.5M22 21v-1a6 6 0 0 0-4-5.6",
+  records: "M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3",
+  matchups: "M7 4 3 8l4 4M3 8h13M17 12l4 4-4 4M21 16H8",
+  power: "M13 2 4 14h7l-1 8 9-12h-7z",
+  odds: "M3 3v18h18M7 15l4-4 3 3 6-7",
+  injuries: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+  picture: "M3 5h5v5H3zM3 14h5v5H3zM8 7.5h3v9H8M11 12h4M15 9.5h6v5h-6z",
+  toilet: "M12 3v14M6 11l6 6 6-6M5 21h14",
+  draft: "M4 4h16v16H4zM4 9.5h16M4 15h16M9.5 4v16M15 4v16",
+  trades: "M17 3l4 4-4 4M21 7H7M7 21l-4-4 4-4M3 17h14",
+  rankings: "M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01",
+  recaps: "M5 3h11l3 3v15H5zM9 8h6M9 12h6M9 16h4",
+  ask: "M4 5h16v11H9l-5 4z",
+};
+const TAB_DESC = {
+  home: "This week at a glance", scores: "Every matchup, every week", managers: "Career profiles",
+  records: "Trophies and the record book", matchups: "Head-to-head and rivalries", power: "This week's power board",
+  odds: "Title, playoff and game prices", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
+  toilet: "The race for last", draft: "Draft board and grades", trades: "Every trade, graded",
+  rankings: "DFFL position ranks", recaps: "Columns and weekly write-ups", ask: "Ask anything about the league",
+};
+const icon24 = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const REDUCED = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+function buildSections() {
+  const grid = $("#secGrid"); if (!grid) return;
+  grid.innerHTML = "";
+  TABS.forEach((t, i) => {
+    const b = el("button", null, `${icon24(TAB_ICONS[t.id] || "M4 6h16M4 12h16M4 18h16")}<b>${esc(t.label)}</b><span>${esc(TAB_DESC[t.id] || "")}</span>`);
+    b.type = "button"; b.dataset.go = t.id; b.style.setProperty("--i", i);
+    b.onclick = () => { closeSections(true); show(t.id); };
+    grid.appendChild(b);
+  });
+  const all = $("#tabAll");
+  all.onclick = () => all.getAttribute("aria-expanded") === "true" ? closeSections() : openSections();
+  $("#secBg").onclick = () => closeSections();
+  $("#secX").onclick = () => closeSections();
+  $("#secSheet").addEventListener("keydown", e => {
+    if (e.key === "Escape") { e.preventDefault(); closeSections(); return; }
+    if (e.key !== "Tab") return;
+    // Keep focus inside the sheet while it is open.
+    const f = [...$("#secSheet").querySelectorAll("button")], a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+    else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
+  addEventListener("resize", () => placeTabInd(false), { passive: true });
+  $("#tabs").addEventListener("scroll", () => placeTabInd(false), { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => placeTabInd(false));
+}
+let SEC_T = 0;
+function openSections() {
+  const sh = $("#secSheet"), bg = $("#secBg");
+  clearTimeout(SEC_T);
+  const cur = $('#tabs button[aria-selected="true"]');
+  for (const b of $("#secGrid").children) b.setAttribute("aria-current", String(!!cur && b.dataset.go === cur.dataset.tab));
+  sh.hidden = false; bg.hidden = false;
+  void sh.offsetWidth;
+  sh.classList.add("on"); bg.classList.add("on");
+  document.body.classList.add("sec-open");
+  $("#tabAll").setAttribute("aria-expanded", "true");
+  const first = $('#secGrid button[aria-current="true"]') || $("#secGrid button");
+  if (first) first.focus({ preventScroll: true });
+}
+function closeSections(quiet) {
+  const sh = $("#secSheet"), bg = $("#secBg");
+  if (!sh || sh.hidden) return;
+  sh.classList.remove("on"); bg.classList.remove("on");
+  document.body.classList.remove("sec-open");
+  $("#tabAll").setAttribute("aria-expanded", "false");
+  SEC_T = setTimeout(() => { sh.hidden = true; bg.hidden = true; }, REDUCED() ? 0 : 320);
+  if (!quiet) $("#tabAll").focus({ preventScroll: true });
+}
+addEventListener("keydown", e => { if (e.key === "Escape") closeSections(); });
+
+/** Move the lit pill under whichever tab is open; hide it when none is. */
+function placeTabInd(animate = true) {
+  const ind = $("#tabs .tabind"); if (!ind) return;
+  const b = $('#tabs button[aria-selected="true"]');
+  if (!b || !b.offsetWidth) { ind.classList.add("off"); return; }
+  const was = ind.classList.contains("off");
+  if (!animate || was || REDUCED()) ind.style.transition = "none";
+  ind.style.width = b.offsetWidth + "px";
+  ind.style.top = b.offsetTop + "px";
+  ind.style.height = b.offsetHeight + "px";
+  ind.style.transform = `translateX(${b.offsetLeft}px)`;
+  ind.classList.remove("off");
+  if (ind.style.transition === "none") { void ind.offsetWidth; ind.style.transition = ""; }
+}
+
+/* ============================================================== MOTION */
+/*
+ * Charts, big numbers and cards play once, when they come into view. The
+ * resting state is always the finished one: nothing waits hidden, so a page
+ * with no script, no IntersectionObserver or reduced motion just shows it.
+ */
+const REVEAL_SEL = ".abars,.tiers,.astat,.acards,.barbox,.whero";
+const REVEAL = ("IntersectionObserver" in window && !REDUCED())
+  ? new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      REVEAL.unobserve(e.target);
+      playReveal(e.target);
+    }), { threshold: 0.15 })
+  : null;
+function armReveals(root) {
+  if (!REVEAL || !root) return;
+  root.querySelectorAll(REVEAL_SEL).forEach(n => {
+    if (n.dataset.rv) return;
+    n.dataset.rv = "wait";
+    n.querySelectorAll(".abar,.tcard,.bar,.divbar,.acard").forEach((r, i) => r.style.setProperty("--i", i));
+    REVEAL.observe(n);
+  });
+}
+function playReveal(n) {
+  n.dataset.rv = "go";
+  if (n.matches(".whero")) { n.classList.add("landed"); n.querySelectorAll(".big").forEach(countUp); }
+  if (n.matches(".astat")) n.querySelectorAll(".n").forEach(countUp);
+  if (n.matches(".acards")) n.querySelectorAll(".cb").forEach(countUp);
+}
+/** Run a single figure up from zero, painted over the real text. */
+function countUp(n) {
+  if (n.dataset.counted) return;
+  n.dataset.counted = "1";
+  const m = n.textContent.trim().match(/^([^\d]{0,3}?)(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?([^\d]{0,6})$/);
+  if (!m) return;
+  const [, pre, whole, frac = "", suf] = m;
+  const target = parseFloat(whole.replace(/,/g, "") + frac), dec = frac ? frac.length - 1 : 0;
+  if (!isFinite(target) || target === 0) return;
+  const fmt = v => pre + (whole.includes(",")
+    ? v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec)) + suf;
+  n.style.setProperty("--cc", getComputedStyle(n).color);
+  n.dataset.c = fmt(0);
+  n.classList.add("counting");
+  const t0 = performance.now(), D = 1000;
+  const step = t => {
+    const k = Math.min(1, (t - t0) / D), e = k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
+    n.dataset.c = fmt(target * e);
+    if (k < 1) requestAnimationFrame(step);
+    else { n.classList.remove("counting"); delete n.dataset.c; }
+  };
+  requestAnimationFrame(step);
+}
+/** The thin bar across the top while an article is open. */
+let RP_ON = false;
+function readingProgress(on) {
+  RP_ON = on;
+  const bar = $("#rprog"); if (!bar) return;
+  bar.classList.toggle("on", on);
+  if (on) updateProgress(); else bar.style.setProperty("--p", 0);
+}
+function updateProgress() {
+  if (!RP_ON) return;
+  const a = $('[data-panel="article"] .artl') || $('[data-panel="article"]'); if (!a) return;
+  const r = a.getBoundingClientRect(), total = r.height - innerHeight * 0.6;
+  $("#rprog").style.setProperty("--p", Math.max(0, Math.min(1, -r.top / Math.max(1, total))).toFixed(4));
+}
+addEventListener("scroll", () => { if (RP_ON) requestAnimationFrame(updateProgress); }, { passive: true });
+
 function show(id) {
+  closeSections(true);
+  readingProgress(false);
   const prof = $('[data-panel="profile"]');
   if (prof) prof.remove();
   const art = $('[data-panel="article"]');
@@ -2569,6 +2831,7 @@ function show(id) {
   askChat.dock(id === "ask");
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   revealTab(id, document.body.dataset.ready === "1");
+  placeTabInd(document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
   scrollTo(0, 0);
@@ -2959,6 +3222,7 @@ function openProfile(uid) {
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", "false");
+  placeTabInd();
   scrollTo(0, 0);
 }
 
@@ -4436,6 +4700,8 @@ function openArticle(a, keepHash) {
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", "false");
+  placeTabInd();
+  readingProgress(true);
   if (!keepHash && a.slug) history.replaceState(null, "", "#article/" + encodeURIComponent(a.slug));
   scrollTo(0, 0);
 }
@@ -12516,6 +12782,15 @@ async function boot() {
     app.appendChild(el("div", "panel")).dataset.panel = "ask";
 
     buildTabs();
+    {
+      const app = $("#app");
+      armReveals(app);
+      let armRaf = 0;
+      new MutationObserver(() => {
+        cancelAnimationFrame(armRaf);
+        armRaf = requestAnimationFrame(() => armReveals(app));
+      }).observe(app, { childList: true, subtree: true });
+    }
     // Deliberately not awaited: the front page paints, then fills itself in.
     ensureHomeWeek();
     $("#loader").hidden = true;
