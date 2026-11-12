@@ -6910,7 +6910,7 @@
       {
        "title": "jadencha",
        "big": "A+",
-       "sub": "A+: Hall and a 2027 3rd, nothing sent",
+       "sub": "A+: received Breece Hall and a 2027 3rd, sent nothing",
        "lead": true,
        "rows": [
         {
@@ -6930,7 +6930,7 @@
       {
        "title": "saucebossandrew",
        "big": "F",
-       "sub": "F: 3–6 at 1.8% playoff odds, sent both and got nothing",
+       "sub": "F: sent Breece Hall and a 2027 3rd, received nothing",
        "rows": [
         {
          "label": "Sends",
@@ -6966,8 +6966,8 @@
      "items": [
       {
        "title": "jadencha",
-       "big": "A",
-       "sub": "A: Jefferson in; Hall and the same 3rd out six minutes later",
+       "big": "B",
+       "sub": "B: received Justin Jefferson, sent Breece Hall and a 2027 3rd",
        "lead": true,
        "rows": [
         {
@@ -6986,8 +6986,8 @@
       },
       {
        "title": "moseslin",
-       "big": "C",
-       "sub": "C: 3–6 at 0.53%, sold Jefferson for Hall and a 3rd",
+       "big": "B",
+       "sub": "B: received Breece Hall and a 2027 3rd, sent Justin Jefferson",
        "rows": [
         {
          "label": "Gets",
@@ -7024,7 +7024,7 @@
       {
        "title": "bradyrife",
        "big": "B",
-       "sub": "B: 5–4 at 72.98%, adds Hubbard and two 2027 picks",
+       "sub": "B: received Hubbard, a 2027 8th, a 2027 9th, and Brown's rights; sent Brown and one keeper spot",
        "lead": true,
        "rows": [
         {
@@ -7048,7 +7048,7 @@
       {
        "title": "jskule23",
        "big": "B",
-       "sub": "B: 2–7 at 0.36%, Brown and a keeper spot, Hubbard rights if the notes hold",
+       "sub": "B: received Brown and one keeper spot, keeps Hubbard's rights; sent Hubbard, a 2027 8th, and a 2027 9th",
        "rows": [
         {
          "label": "Gets",
