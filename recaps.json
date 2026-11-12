@@ -6875,9 +6875,9 @@
    "source": "watch",
    "kicker": "2026 · week 10 · trades",
    "headline": "A 2027 Third-Round Pick, for Nothing",
-   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to moseslin for Justin Jefferson and Isaiah Likely's rights. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
+   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to moseslin for Justin Jefferson, and sent Isaiah Likely's rights for two years. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
    "byline": "DFFL desk",
-   "standfirst": "3 trades · C/C, B/D and B/D",
+   "standfirst": "3 trades · B/D, D/A- and B+/D",
    "cover": {
     "type": "trade",
     "players": [
@@ -6887,21 +6887,18 @@
      "9224"
     ]
    },
-   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n🔁 jadencha's Jefferson flip graded B to D, a 34.4% margin\n🔑 Amon-Ra St. Brown's 2027 rights price at 47.7 VOR on Andrew's ticket\n🏈 bradyrife B / jskule23 D on Hubbard and Brown, a 25.6% margin for Brady\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
+   "teaser": "🚨 DFFL | WEEK 10\n\nA 2027 THIRD-ROUND PICK, FOR NOTHING\n\n🔁 jadencha flipped Hall and a 3rd for Jefferson, graded D to Moses's A-\n🔑 Amon-Ra St. Brown's 2027 rights are a +125.18 keep at a 4th on Andrew's ticket\n🏈 bradyrife B+ / jskule23 D on Hubbard and Brown; Brady keeps Brown's rights\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=a-third-round-pick-for-nothing",
    "blocks": [
     {
      "type": "p",
-     "lead": true,
-     "text": "Three trades went through on Wednesday. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to <b>jadencha</b> and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Justin Jefferson and Isaiah Likely's rights for two years. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
+     "text": "Three trades went through on Wednesday. At 1:32 p.m. Eastern, <b>saucebossandrew</b> sent Breece Hall and his 2027 third-round pick to <b>jadencha</b> and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to <b>moseslin</b> for Justin Jefferson, and sent Isaiah Likely's rights for two years. At 2:52 p.m., <b>jskule23</b> sent Chuba Hubbard, his 2027 eighth, and drewkim's 2027 ninth to <b>bradyrife</b> for Chase Brown."
     },
     {
      "type": "stat",
-     "n": "6",
      "text": "Minutes Breece Hall spent on jadencha's roster between the two trades: saucebossandrew sent him at 1:32 p.m. Eastern, and he was gone to moseslin at 1:38."
     },
     {
      "type": "h",
-     "eyebrow": "trade one · 1:32 p.m.",
      "text": "Hall and a Third, for Amon-Ra's Rights"
     },
     {
@@ -6909,48 +6906,48 @@
      "items": [
       {
        "title": "jadencha",
-       "big": "C",
-       "sub": "C: received 32.7 VOR (Hall 3.2 + a 2027 3rd 29.5), sent Amon-Ra rights 47.7; margin −18.7%",
+       "big": "B",
+       "sub": "B: a 2027 3rd (181.4) and Hall (52.04 weeks 11–17) for Amon-Ra's rights (+125.18 at a 4th)",
        "lead": true,
        "rows": [
         {
          "label": "Gets",
-         "value": "Breece Hall (RB, NYJ), 3.2 ROS VOR"
+         "value": "Breece Hall (RB, NYJ), 52.04 projected weeks 11–17 (week 13 bye)"
         },
         {
          "label": "Gets",
-         "value": "saucebossandrew's 2027 3rd, 29.5"
+         "value": "saucebossandrew's 2027 3rd (181.4)"
         },
         {
          "label": "Sends",
-         "value": "Amon-Ra St. Brown's 2027 keeper rights, 47.7"
+         "value": "Amon-Ra St. Brown's 2027 keeper rights, +125.18 at a 4th"
         },
         {
-         "label": "Total in / out",
-         "value": "32.7 / 47.7"
+         "label": "2027 outlook",
+         "value": "3 spots: Jaxon Smith-Njigba R6, Matthew Golden R11, Isaiah Likely R9 (projection); Amon-Ra's rights leave on this ticket."
         }
        ]
       },
       {
        "title": "saucebossandrew",
-       "big": "C",
-       "sub": "C: received Amon-Ra rights 47.7, sent 32.7; margin +18.7%, under the 21.6% B/D cutoff",
+       "big": "D",
+       "sub": "D: pays Hall's 52.04 remaining and a 3rd (181.4) for Amon-Ra rights (+125.18), which become his top 2027 keep",
        "rows": [
         {
          "label": "Gets",
-         "value": "Amon-Ra St. Brown's 2027 keeper rights, 47.7"
+         "value": "Amon-Ra St. Brown's 2027 keeper rights, +125.18 at a 4th"
         },
         {
          "label": "Sends",
-         "value": "Breece Hall (RB, NYJ), 3.2 ROS VOR"
+         "value": "Breece Hall (RB, NYJ), 52.04 projected weeks 11–17 (week 13 bye)"
         },
         {
          "label": "Sends",
-         "value": "2027 3rd-round pick, 29.5"
+         "value": "2027 3rd-round pick (181.4)"
         },
         {
-         "label": "Total in / out",
-         "value": "47.7 / 32.7"
+         "label": "2027 outlook",
+         "value": "4 spots: Amon-Ra St. Brown R4, Zay Flowers R2, Tony Pollard R5, Sam LaPorta R7 (projection)."
         }
        ]
       }
@@ -6958,72 +6955,79 @@
     },
     {
      "type": "p",
-     "text": "The site's trade-grade engine prices Hall's remaining 2026 VOR at 3.2 and the 2027 3rd at 29.5; Amon-Ra's 2027 rights, at a regressed R4 keep, are 47.7. That is an 18.7% margin, under the 21.6% cutoff, so both sides grade C. saucebossandrew got Amon-Ra St. Brown's 2027 keeper rights on this ticket. The commissioner's note, word for word: \"andrew owns rights\". In the chat, willie12w said \"Andrews in on the sweepstakes,\" wesley55 said \"The rich get richer,\" and saucebossandrew said \"And the poor gets poorer.\" Around the trade, saucebossandrew added Simi Fehoko at 1:30 p.m. and Pat Freiermuth at 1:33; jadencha dropped Chris Rodriguez Jr. at 1:33."
+     "text": "Hall projects 52.04 points weeks 11–17, with a week 13 bye. The 2027 3rd is valued at 181.4, the 2023–25 average for a third. Amon-Ra's 2027 rights, at a regressed R4 keep, are a +125.18 surplus. saucebossandrew got those rights on this ticket. The commissioner's note, word for word: \"andrew owns rights\". In the chat, willie12w said \"Andrews in on the sweepstakes,\" wesley55 said \"The rich get richer,\" and saucebossandrew said \"And the poor gets poorer.\" Around the trade, saucebossandrew added Simi Fehoko at 1:30 p.m. and Pat Freiermuth at 1:33; jadencha dropped Chris Rodriguez Jr. at 1:33."
     },
     {
      "type": "h",
-     "eyebrow": "trade two · 1:38 p.m.",
      "text": "Jefferson Goes to the League Leader"
     },
     {
      "type": "p",
-     "text": "jadencha flipped Hall and the same 2027 third to moseslin for Justin Jefferson and, per the note, Isaiah Likely's keeper rights. drewkim, in the chat: \"Quickest stint ever.\""
+     "text": "jadencha flipped Hall and the same 2027 third to moseslin for Justin Jefferson. The commissioner's note, word for word: \"moses owns rights for 2 years\". jadencha, in chat: \"Plus isaiah likely keeper rights only\". Those Likely rights go to moseslin for two years; Likely the 2026 player stays put. drewkim, in the chat: \"Quickest stint ever.\""
     },
     {
      "type": "cards",
      "items": [
       {
        "title": "jadencha",
-       "big": "B",
-       "sub": "B: received Jefferson 67.0, sent 32.7 (Hall 3.2 + the 3rd 29.5 + Likely rights 0); margin +34.4%",
+       "big": "D",
+       "sub": "D: Jefferson projects 132.55 weeks 11–17, 80 more than Hall, but the bill is a 3rd (181.4) and two years of Likely rights (+210.88)",
        "lead": true,
        "rows": [
         {
          "label": "Gets",
-         "value": "Justin Jefferson (WR, MIN), 67.0 ROS VOR"
+         "value": "Justin Jefferson (WR, MIN), 132.55 projected weeks 11–17"
+        },
+        {
+         "label": "Gets",
+         "value": "Jefferson's 2027 rights, +9.64 at a 1st (does not change the top 3)"
         },
         {
          "label": "Sends",
-         "value": "Breece Hall (RB, NYJ), 3.2 ROS VOR"
+         "value": "Breece Hall (RB, NYJ), 52.04 projected weeks 11–17 (week 13 bye)"
         },
         {
          "label": "Sends",
-         "value": "saucebossandrew's 2027 3rd, 29.5"
+         "value": "saucebossandrew's 2027 3rd (181.4)"
         },
         {
          "label": "Sends",
-         "value": "Isaiah Likely's keeper rights for 2 years, 0"
+         "value": "Isaiah Likely's keeper rights for 2 years, +105.44 at a 9th, counted twice (+210.88)"
         },
         {
-         "label": "Total in / out",
-         "value": "67.0 / 32.7"
+         "label": "2027 outlook",
+         "value": "3 spots: Jaxon Smith-Njigba R6, Matthew Golden R11, Jonathan Taylor R1 (projection); Likely rights leave, and Jefferson at a 1st is +9.64."
         }
        ]
       },
       {
        "title": "moseslin",
-       "big": "D",
-       "sub": "D: received 32.7, sent Jefferson 67.0; margin −34.4%",
+       "big": "A-",
+       "sub": "A-: trades Jefferson's 132.55 remaining for Hall, a 3rd (181.4), and two years of Likely at a 9th (+210.88)",
        "rows": [
         {
          "label": "Gets",
-         "value": "Breece Hall (RB, NYJ), 3.2 ROS VOR"
+         "value": "Breece Hall (RB, NYJ), 52.04 projected weeks 11–17 (week 13 bye)"
         },
         {
          "label": "Gets",
-         "value": "saucebossandrew's 2027 3rd, 29.5"
+         "value": "saucebossandrew's 2027 3rd (181.4)"
         },
         {
          "label": "Gets",
-         "value": "Isaiah Likely's keeper rights for 2 years, 0"
+         "value": "Isaiah Likely's keeper rights for 2 years, +105.44 at a 9th, counted twice (+210.88)"
         },
         {
          "label": "Sends",
-         "value": "Justin Jefferson (WR, MIN), 67.0 ROS VOR"
+         "value": "Justin Jefferson (WR, MIN), 132.55 projected weeks 11–17"
         },
         {
-         "label": "Total in / out",
-         "value": "32.7 / 67.0"
+         "label": "Sends",
+         "value": "Jefferson's 2027 rights, +9.64 at a 1st"
+        },
+        {
+         "label": "2027 outlook",
+         "value": "3 spots: Christian Watson R4, Isaiah Likely R9, Nico Collins R10 (projection), plus a banked 3rd."
         }
        ]
       }
@@ -7031,11 +7035,10 @@
     },
     {
      "type": "p",
-     "text": "The commissioner's note, word for word: \"moses owns rights for 2 years\". jadencha, in chat: \"Plus isaiah likely keeper rights only\". Those rights count twice under the two-year note; last full season VOR is 0 at an R9 keep, so they add 0."
+     "text": "Jefferson projects 132.55 points weeks 11–17, 80.51 more than Hall. No Jefferson-rights note is on the ticket, so those rights travel with the player: +9.64 at a 1st, not enough to crack jadencha's top three. Likely's rights, counted twice under the two-year note, are +105.44 at a 9th each year."
     },
     {
      "type": "h",
-     "eyebrow": "trade three · 2:52 p.m.",
      "text": "Hubbard and Two Picks for Chase Brown"
     },
     {
@@ -7047,72 +7050,76 @@
      "items": [
       {
        "title": "bradyrife",
-       "big": "B",
-       "sub": "B: received 129.7 (Hubbard 54.0, two picks 23.1, Brown rights 52.6), sent 76.8 (Brown 32.7 + a keep slot worth 44.1); margin +25.6%",
+       "big": "B+",
+       "sub": "B+: Hubbard projects 106.38 weeks 11–17 vs Brown's 89.96, plus an 8th (142.2) and a 9th (124.5), after giving up a keep slot worth Kittle's +97.8",
        "lead": true,
        "rows": [
         {
          "label": "Gets",
-         "value": "Chuba Hubbard (RB, CAR), 54.0 ROS VOR"
+         "value": "Chuba Hubbard (RB, CAR), 106.38 projected weeks 11–17"
         },
         {
          "label": "Gets",
-         "value": "jskule23's 2027 8th, 12.6"
+         "value": "jskule23's 2027 8th (142.2)"
         },
         {
          "label": "Gets",
-         "value": "drewkim's 2027 9th, 10.5"
-        },
-        {
-         "label": "Gets",
-         "value": "Chase Brown's 2027 rights, 52.6"
+         "value": "drewkim's 2027 9th (124.5)"
         },
         {
          "label": "Sends",
-         "value": "Chase Brown (RB, CIN), 32.7 ROS VOR"
+         "value": "Chase Brown (RB, CIN), 89.96 projected weeks 11–17, 2026 only"
+        },
+        {
+         "label": "Keeps",
+         "value": "Chase Brown's 2027 rights, +40.40 at a 7th (already owned; \"brady owns rights\")"
         },
         {
          "label": "Sends",
-         "value": "one 2027 keeper spot, 44.1 (3rd keep: Trevor Lawrence)"
+         "value": "one 2027 keeper spot (3rd keep: George Kittle, +97.8 at an 8th)"
         },
         {
-         "label": "Total in / out",
-         "value": "129.7 / 76.8"
+         "label": "2027 outlook",
+         "value": "2 spots: Trevor Lawrence R15, Bo Nix R12 (projection); Brown rights stay but do not crack the top 2."
         }
        ]
       },
       {
        "title": "jskule23",
        "big": "D",
-       "sub": "D: received 44.6 (Brown 32.7 + a keep slot worth 11.9), sent 77.1 (Hubbard 54.0 + two picks 23.1); margin −26.7%",
+       "sub": "D: a fourth keep slot unlocks Hubbard's +109.18 rights, but that does not cover an 8th (142.2) and a 9th (124.5), and Hubbard out-projects Brown",
        "rows": [
         {
          "label": "Gets",
-         "value": "Chase Brown (RB, CIN), 32.7 ROS VOR"
+         "value": "Chase Brown (RB, CIN), 89.96 projected weeks 11–17, 2026 only"
         },
         {
          "label": "Gets",
-         "value": "one 2027 keeper spot, 11.9 (4th keep: Patrick Mahomes)"
+         "value": "one 2027 keeper spot (4th keep: Chuba Hubbard, +109.18 at a 5th)"
         },
         {
-         "label": "Gets",
-         "value": "keeps Chuba Hubbard's 2027 rights, 0"
-        },
-        {
-         "label": "Sends",
-         "value": "Chuba Hubbard (RB, CAR), 54.0 ROS VOR"
+         "label": "Keeps",
+         "value": "Chuba Hubbard's 2027 rights, +109.18 at a 5th (already owned; \"joe owns rights\")"
         },
         {
          "label": "Sends",
-         "value": "2027 8th, 12.6"
+         "value": "Chuba Hubbard (RB, CAR), 106.38 projected weeks 11–17"
         },
         {
          "label": "Sends",
-         "value": "drewkim's 2027 9th, 10.5"
+         "value": "2027 8th (142.2)"
         },
         {
-         "label": "Total in / out",
-         "value": "44.6 / 77.1"
+         "label": "Sends",
+         "value": "drewkim's 2027 9th (124.5)"
+        },
+        {
+         "label": "Clause",
+         "value": "\"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17 if allen finishes top 5 at postion andrew owes 8th instead of 9th\""
+        },
+        {
+         "label": "2027 outlook",
+         "value": "4 spots: Josh Allen R2, Patrick Mahomes R11, Luther Burden III R9, Chuba Hubbard R5 (projection, if the rights notes hold)."
         }
        ]
       }
@@ -7120,7 +7127,7 @@
     },
     {
      "type": "p",
-     "text": "The notes, word for word. On Chase Brown: \"joe gets one keeper spot from brady and brady owns rights\". On Chuba Hubbard: \"joe owns rights\". On Josh Allen: \"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17 if allen finishes top 5 at postion andrew owes 8th instead of 9th\". That last line is a Joe–Andrew pick swing, not a Brady asset: if Allen finishes top 2 by week 17, Joe's already-owned 2027 5th becomes a 4th (+3.88 VOR); if Allen finishes top 5, Andrew's 9th, which Joe still holds, becomes an 8th (+2.04 to Joe). Through week 9 Allen was QB2, so both triggers are currently on track; they are not added as expected value into the B/D above. In the chat, wesley55 said \"Wtf,\" and drewkim said \"Holy clauses.\""
+     "text": "The notes, word for word. On Chase Brown: \"joe gets one keeper spot from brady and brady owns rights\". On Chuba Hubbard: \"joe owns rights\". On Josh Allen: \"joe owns rights, 5th becomes 4th if finishes top 2 by end of week 17 if allen finishes top 5 at postion andrew owes 8th instead of 9th\". Brady keeps Brown's 2027 rights; they were already his, and at +40.40 for an R7 keep they do not crack a two-keep set of Lawrence and Nix. Joe already owned Hubbard's rights; the new piece is the fourth slot, which unlocks Hubbard at +109.18. The Allen line is a Joe–Andrew pick swing, not a Brady asset: if Allen finishes top 2 by week 17, Joe's already-owned 2027 5th becomes a 4th; if Allen finishes top 5, Andrew's 9th, which Joe still holds, becomes an 8th. Through week 9 Allen was QB2, so both triggers are currently on track; they are not added as expected value into the B+/D above. In the chat, wesley55 said \"Wtf,\" and drewkim said \"Holy clauses.\""
     },
     {
      "type": "p",
@@ -7145,7 +7152,7 @@
     },
     {
      "type": "note",
-     "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots and are treated as part of each ticket's consideration; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket. Player rest-of-season VOR and pick values are from data/trade-grades.json (generated this morning): remaining VOR from week 10 through 17, and mid-slot pick curve. Keeper surplus is 0.8 × max(0, 0.58 × 2025 season VOR − the curve value of the next cost round), per build-trade-grades.mjs and keepers.json. A keeper spot is valued at that team's marginal 2027 keep after the rights notes. Letters use the engine's v2 cutoffs (C under 21.6%, B/D through 55.3%)."
+     "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots and are treated as part of each ticket's consideration; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket. Grades use the same method as Deadline Desk: rest-of-season points are Sleeper projections for weeks 11–17, scored in league settings (week 10 is still unscored); pick values are 2023–25 non-keeper round averages; keep surplus is the 2026 pace (official weeks 1–9 plus projections for weeks 10–17) minus that cost round's average. Cost rounds come from keepers.json nextCostRound when the player is listed there, otherwise the 2026 draft round. A keeper spot is valued at that team's marginal 2027 keep after the rights notes. Retained rights are not counted as new incoming value. Letters use the Deadline Desk A–F scale, pluses and minuses included; they are not the site engine's VOR cutoffs."
     }
    ]
   }
