@@ -2116,7 +2116,7 @@
   :root{
     --r:18px; --rs:14px; --r-pill:999px;
     --ease:cubic-bezier(.2,.8,.2,1); --ease-pop:cubic-bezier(.2,.8,.2,1.2);
-    --t-press:150ms; --t-hover:200ms; --t-enter:420ms; --t-bar:700ms; --t-count:800ms;
+    --t-press:150ms; --t-hover:200ms; --t-enter:500ms; --t-bar:700ms; --t-count:800ms;
     --card-a:#1d1429; --card-b:#170f22;
     --card-line:rgba(214,186,255,.11); --card-line-hi:rgba(var(--a-rgb),.34);
     --card-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 14px 34px -18px rgba(0,0,0,.75);
@@ -2219,12 +2219,12 @@
   /* ---- motion utilities ---- */
   /* Stagger: a list's items fade and rise in turn; the whole list is done inside ~600ms. */
   [data-stg="wait"] > *{opacity:0}
-  [data-stg="go"] > *{animation:rise var(--t-enter) var(--ease) both;animation-delay:calc(min(var(--si,0),7) * 28ms)}
+  [data-stg="go"] > *{animation:rise var(--t-enter) var(--ease) both;animation-delay:calc(min(var(--si,0),12) * 35ms)}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}}
   /* GrowBar: bars fill from zero on first view, and glide when a filter changes their width. */
   [data-rv="go"] .abar .fill,[data-rv="go"] .tbar span,[data-rv="go"] .bar .fill,[data-rv="go"] .divbar .fill{
     animation:barin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i,0),10) * 25ms)}
-  .abar .fill,.tbar span,.bar .fill,.divbar .fill,.hb{transition:width var(--t-bar) var(--ease),height var(--t-bar) var(--ease)}
+  .abar .fill,.tbar span,.bar .fill,.divbar .fill,.hb,.pp-meter i{transition:width 450ms var(--ease),height 450ms var(--ease)}
   [data-rv="go"] .hb{animation:hbin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i),14) * 20ms)}
   /* Markers pop in with a slight overshoot. */
   [data-rv="go"] .lm-dot,.scard[data-rv="go"] .lm-dot{animation:dotin 520ms var(--ease-pop) both;animation-delay:calc(var(--i) * 30ms + 120ms)}
@@ -2311,6 +2311,26 @@
     .pp-sel{width:100%}
     .pp-sel select{flex:1;min-width:0}
   }
+
+  /* ---- More sheet groups ---- */
+  .secgrp{grid-column:1/-1;margin:10px 4px 2px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .secgrp:first-child{margin-top:0}
+  .secgrp[hidden]{display:none}
+
+  /* ---- phone bottom tab bar ---- */
+  .btab{display:none}
+  @media (max-width:640px){
+    .btab{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:60;
+      padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(11,7,16,.86);
+      -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border-top:1px solid var(--card-line)}
+    .btab button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border:0;border-radius:14px;
+      background:transparent;color:var(--muted);font:600 11px var(--body);cursor:pointer;
+      transition:color var(--t-hover) var(--ease),background-color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
+    .btab button svg{width:22px;height:22px}
+    .btab button[aria-current="page"]{color:var(--a);background:rgba(var(--a-rgb),.12)}
+    .btab button:active{transform:scale(.97)}
+    body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  }
 </style>
 </head>
 <body>
@@ -2337,6 +2357,7 @@
   <p class="secnone" id="secNone" hidden>No page matches that.</p>
 </div>
 <div class="rprog" id="rprog" aria-hidden="true"><i></i></div>
+<nav class="btab" id="btab" aria-label="Quick pages"></nav>
 
 <main class="wrap">
   <div id="loader">
@@ -2994,7 +3015,7 @@ function buildTabs() {
   });
   bar.appendChild(el("span", "tabind off"));
   bar.classList.add("has-ind");
-  buildSections();
+  buildSections(); buildBottomBar();
   tabHint();
   if (!bar.dataset.hint) {
     bar.dataset.hint = "1";
@@ -3076,20 +3097,56 @@ const TAB_ICONS = {
 const TAB_DESC = {
   home: "This week at a glance", scores: "Every matchup, every week", managers: "Career profiles",
   records: "Trophies and the record book", stats: "Every game, drawn", matchups: "Head-to-head and rivalries", power: "This week's power board",
-  odds: "Title, playoff and game prices", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
+  odds: "Game lines, player props, futures", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
   toilet: "The race for last", draft: "Draft board and grades", trades: "Every trade, graded",
   rankings: "DFFL position ranks", recaps: "Columns and weekly write-ups", ask: "Ask anything about the league",
 };
 const icon24 = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 const REDUCED = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 
+// The More sheet groups its pages so the list reads like a menu, not a pile.
+const SEC_GROUPS = [
+  { name: "This week", ids: ["home", "scores", "power", "odds", "injuries", "picture", "toilet"] },
+  { name: "League history", ids: ["managers", "records", "matchups", "draft", "trades"] },
+  { name: "Numbers", ids: ["stats", "rankings"] },
+  { name: "Reads", ids: ["recaps", "ask"] },
+];
+// Phone bottom bar: the four pages people open most, then More.
+const BTAB_IDS = ["home", "scores", "stats", "odds"];
+function buildBottomBar() {
+  const bar = $("#btab"); if (!bar) return;
+  bar.innerHTML = BTAB_IDS.map(id => {
+    const t = TABS.find(x => x.id === id); if (!t) return "";
+    const lab = { scores: "Scores" }[id] || t.label;
+    return `<button type="button" data-go="${id}">${icon24(TAB_ICONS[id])}<span>${esc(lab)}</span></button>`;
+  }).join("") + `<button type="button" data-more="1" aria-haspopup="dialog" aria-controls="secSheet">${icon24("M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z")}<span>More</span></button>`;
+  bar.onclick = e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.more) { $("#tabAll").getAttribute("aria-expanded") === "true" ? closeSections() : openSections(); return; }
+    show(b.dataset.go); scrollTo({ top: 0, behavior: REDUCED() ? "auto" : "smooth" });
+  };
+}
+function syncBottomBar() {
+  const cur = $('#tabs button[aria-selected="true"]');
+  const id = cur ? cur.dataset.tab : null;
+  for (const b of document.querySelectorAll("#btab button")) {
+    const on = b.dataset.more ? !!id && !BTAB_IDS.includes(id) : b.dataset.go === id;
+    if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+  }
+}
+
 function buildSections() {
   const grid = $("#secGrid"); if (!grid) return;
   grid.innerHTML = "";
-  TABS.forEach((t, i) => {
+  const groupOf = id => SEC_GROUPS.find(g => g.ids.includes(id)) || SEC_GROUPS[SEC_GROUPS.length - 1];
+  const order = [...TABS].sort((a, b) => SEC_GROUPS.indexOf(groupOf(a.id)) - SEC_GROUPS.indexOf(groupOf(b.id)));
+  let lastG = null;
+  order.forEach((t, i) => {
+    const g = groupOf(t.id);
+    if (g !== lastG) { const h = el("h3", "secgrp", esc(g.name)); h.dataset.grp = g.name; grid.appendChild(h); lastG = g; }
     const b = el("button", null, `<i class="secic">${icon24(TAB_ICONS[t.id] || "M4 6h16M4 12h16M4 18h16")}</i><span class="sectx"><b>${esc(t.label)}</b><span>${esc(TAB_DESC[t.id] || "")}</span></span>`);
     b.dataset.find = `${t.label} ${TAB_DESC[t.id] || ""} ${t.id}`.toLowerCase();
-    b.type = "button"; b.dataset.go = t.id; b.style.setProperty("--i", i);
+    b.type = "button"; b.dataset.go = t.id; b.dataset.grp = g.name; b.style.setProperty("--i", i);
     b.onclick = () => { closeSections(true); show(t.id); };
     grid.appendChild(b);
   });
@@ -3097,14 +3154,15 @@ function buildSections() {
   const filter = () => {
     const v = q.value.trim().toLowerCase();
     let n = 0;
-    for (const b of grid.children) { const on = !v || b.dataset.find.includes(v); b.hidden = !on; if (on) b.style.setProperty("--i", n++); }
+    for (const b of grid.querySelectorAll("button")) { const on = !v || b.dataset.find.includes(v); b.hidden = !on; if (on) b.style.setProperty("--i", n++); }
+    for (const h of grid.querySelectorAll(".secgrp")) h.hidden = !grid.querySelector(`button[data-grp="${h.dataset.grp}"]:not([hidden])`);
     $("#secNone").hidden = n > 0;
     clr.hidden = !v;
   };
   q.addEventListener("input", filter);
   q.addEventListener("keydown", e => {
     if (e.key !== "Enter") return;
-    const first = [...grid.children].find(b => !b.hidden);
+    const first = [...grid.querySelectorAll("button")].find(b => !b.hidden);
     if (first) { e.preventDefault(); first.click(); }
   });
   clr.onclick = () => { q.value = ""; filter(); q.focus(); };
@@ -3157,6 +3215,7 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeSections(); });
 
 /** Move the lit pill under whichever tab is open; hide it when none is. */
 function placeTabInd(animate = true) {
+  syncBottomBar();
   const ind = $("#tabs .tabind"); if (!ind) return;
   const b = $('#tabs button[aria-selected="true"]');
   if (!b || !b.offsetWidth) { ind.classList.add("off"); return; }
@@ -3500,7 +3559,7 @@ function countUp(n) {
   n.style.setProperty("--cc", getComputedStyle(n).color);
   n.dataset.c = fmt(0);
   n.classList.add("counting");
-  const t0 = performance.now(), D = 800;
+  const t0 = performance.now(), D = 900;
   const step = t => {
     const k = Math.min(1, (t - t0) / D), e = k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
     n.dataset.c = fmt(target * e);
