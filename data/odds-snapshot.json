@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-12T17:30:18.022Z",
- "at": 1794504618022,
+ "generated": "2026-11-12T18:18:09.209Z",
+ "at": 1794507489209,
  "season": "2026",
  "week": 10,
  "liveWeek": null,
@@ -13,7 +13,7 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.31555,
-   "titleNow": 0.51255,
+   "titleNow": 0.51265,
    "playoffWas": 0.9171,
    "playoffNow": 1,
    "wins": 11.89385,
@@ -26,7 +26,7 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.19455,
-   "titleNow": 0.1753,
+   "titleNow": 0.17515,
    "playoffWas": 0.82825,
    "playoffNow": 0.99225,
    "wins": 9.9348,
@@ -65,9 +65,9 @@
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1385,
-   "titleNow": 0.11395,
+   "titleNow": 0.1139,
    "playoffWas": 0.72415,
-   "playoffNow": 0.95005,
+   "playoffNow": 0.9501,
    "wins": 8.91215,
    "titleOdds": 730,
    "titleOddsOpen": 580,
@@ -80,11 +80,11 @@
    "titleWas": 0.0548,
    "titleNow": 0.00015,
    "playoffWas": 0.4764,
-   "playoffNow": 0.01675,
+   "playoffNow": 0.0167,
    "wins": 4.8097,
    "titleOdds": 628830,
    "titleOddsOpen": 1620,
-   "playoffOdds": 5530
+   "playoffOdds": 5550
   },
   {
    "uid": "851478209852706816",
@@ -93,7 +93,7 @@
    "titleWas": 0.04955,
    "titleNow": 0.0376,
    "playoffWas": 0.44555,
-   "playoffNow": 0.719,
+   "playoffNow": 0.71875,
    "wins": 7.7201,
    "titleOdds": 2410,
    "titleOddsOpen": 1800,
@@ -106,24 +106,24 @@
    "titleWas": 0.02695,
    "titleNow": 0,
    "playoffWas": 0.3057,
-   "playoffNow": 0.0022,
-   "wins": 3.69945,
+   "playoffNow": 0.00215,
+   "wins": 3.69635,
    "titleOdds": null,
    "titleOddsOpen": 3400,
-   "playoffOdds": 42780
+   "playoffOdds": 43780
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0739,
-   "titleNow": 0.0716,
+   "titleNow": 0.0717,
    "playoffWas": 0.5821,
-   "playoffNow": 0.88425,
-   "wins": 8.2746,
+   "playoffNow": 0.885,
+   "wins": 8.2777,
    "titleOdds": 1220,
    "titleOddsOpen": 1180,
-   "playoffOdds": -1500
+   "playoffOdds": -1520
   },
   {
    "uid": "850932093394472960",
@@ -132,7 +132,7 @@
    "titleWas": 0.03725,
    "titleNow": 0.0545,
    "playoffWas": 0.40695,
-   "playoffNow": 0.60125,
+   "playoffNow": 0.6009,
    "wins": 7.0283,
    "titleOdds": 1630,
    "titleOddsOpen": 2430,
@@ -145,11 +145,11 @@
    "titleWas": 0.02695,
    "titleNow": 0.03415,
    "playoffWas": 0.32955,
-   "playoffNow": 0.81845,
+   "playoffNow": 0.81835,
    "wins": 8.3581,
    "titleOdds": 2660,
    "titleOddsOpen": 3400,
-   "playoffOdds": -660
+   "playoffOdds": -650
   },
   {
    "uid": "851571292711804928",
@@ -273,10 +273,14 @@
   },
   {
    "manager": "wesley55",
-   "cost": 0.004092191239600362,
+   "cost": 0.00790384374478037,
    "players": [
     {
      "name": "T.J. Hockenson",
+     "status": "Questionable"
+    },
+    {
+     "name": "Tank Dell",
      "status": "Questionable"
     }
    ]
@@ -289,7 +293,7 @@
    "slug": "a-third-round-pick-for-nothing",
    "kicker": "2026 · week 10 · trades",
    "headline": "A 2027 Third-Round Pick, for Nothing",
-   "dek": "saucebossandrew sent jadencha a 2027 third-round pick at this week's deadline and got nothing back, a trade the grading engine scored A+ for jadencha and F- for saucebossandrew — a 100% margin. jadencha also walked away from the same deadline with Justin Jefferson, off a separate trade with moseslin graded B to D in his favor.",
+   "dek": "On Wednesday, saucebossandrew sent Breece Hall and a 2027 third-round pick to jadencha and got Amon-Ra St. Brown's keeper rights. Six minutes later, jadencha flipped Hall and that third to moseslin for Justin Jefferson, and sent Isaiah Likely's rights for two years. A third trade, later in the afternoon, sent Chuba Hubbard and two 2027 picks from jskule23 to bradyrife for Chase Brown.",
    "byline": "DFFL desk",
    "date": "2026-11-12"
   },
