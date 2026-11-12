@@ -1205,6 +1205,18 @@
   .ppv .pp-troph{text-align:center;font:600 11px var(--mono);letter-spacing:.1em;color:var(--violet);text-transform:uppercase;margin-top:8px}
   .ppv .pp-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink-2);margin-top:16px}
   .ppv .pp-legend .pp-mk{margin:0 5px 0 0;vertical-align:0}
+  .ppv .pp-mg{display:inline-block;font:700 11px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;background:linear-gradient(#e66767,#b83b3b);border-radius:4px;padding:0 5px;margin-left:4px;
+    white-space:nowrap;vertical-align:1px;box-shadow:0 0 8px rgba(230,103,103,.35)}
+  .ppv .pp-mg b{font-weight:800}
+  .ppv .pp-mg.help{color:var(--red);background:rgba(230,103,103,.10);box-shadow:inset 0 0 0 1px rgba(230,103,103,.45)}
+  .ppv .pp-mgh{font-size:12px;color:var(--ink-2);margin:-4px 0 12px;line-height:1.45}
+  .ppv .pp-mgc{font-size:12px;color:var(--ink-2);margin:-6px 0 12px;line-height:1.45}
+  .ppv .pp-mgc summary{cursor:pointer;color:var(--red);font-weight:700}
+  .ppv .pp-mgc p{margin:6px 0}
+  .ppv .pp-mgc ul{margin:4px 0 0;padding-left:18px}
+  .ppv .pp-mgc li{margin:2px 0;overflow-wrap:anywhere}
+  .ppv .pp-mgh .pp-mg{margin:0 4px 0 0}
   .ppv .pp-lst{border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--ring);overflow:hidden}
   .ppv .pp-li{display:grid;grid-template-columns:22px 28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px}
   .ppv .pp-li+.pp-li{border-top:1px solid rgba(255,255,255,.05)}
@@ -10132,6 +10144,383 @@ function exactClinch({ teams, remaining, playoffTeams, byes }) {
 }
 
 /**
+ * Playoff-berth magic numbers, exactly — never from a simulation.
+ *
+ * magic = the size of a SMALLEST set of specific remaining results — the team
+ * winning one of its games, or a named rival losing one of its — that
+ * guarantees the team a playoff spot however every other game goes (wins,
+ * losses or ties). That set is the certificate; it is returned so the page can
+ * show which results count. A head-to-head win is one result, and a set never
+ * fixes the same game two ways. A result that isn't in some smallest set can
+ * leave the number unchanged; one that is takes it down by exactly one.
+ *
+ * The oracle: with the set's results fixed and the team losing every other
+ * game of its own, can some chasers all finish level with or ahead of it —
+ * one of its own division plus enough non-champions to fill every wildcard
+ * (exactClinch's makes() test)? Each chaser set is checked by max-flow in half
+ * wins (2–0, 1–1 tie, 0–2 per game). Level on wins counts against the team:
+ * points for are unbounded while either side has a real game left; only two
+ * teams with nothing left are split on actual points (a dead-even tie against).
+ *
+ * The search: a set that doesn't yet guarantee the spot gets a witness — a
+ * concrete finish where the team misses. Any larger certificate must contradict
+ * it somewhere: the team wins one of its games, or a chaser loses a game the
+ * witness gave it. Branching only on those, by iterative deepening, finds the
+ * smallest set exactly. Before that, greedy walks in several orders, each set
+ * shrunk to irreducible and then improved by exchange and neighbourhood
+ * search, give the upper bound the deepening has to beat. A budget caps the
+ * deepening; past it the best set found is reported as an upper bound
+ * (exact: false) with a proven lower bound: the larger of the depth the walk
+ * cleared and k0 + LR (own wins it can't do without, plus the other results
+ * it needs even winning out — see the split bound in solve).
+ *
+ * teams: [{ rid, div, w, pf }] (w with ties as half). remaining: [[a, b]].
+ * Returns per team { rid, magic, exact, lower, cert: [[winner, loser], ...],
+ * status }: magic 0 = clinched; null = no set of results can guarantee it.
+ */
+function magicNumbers({ teams, remaining, playoffTeams, budget = 2500 }) {
+  const N = teams.length, P = playoffTeams;
+  const divOf = teams.map(t => t.div);
+  const divs = [...new Set(divOf)];
+  const slots = P - divs.length;
+  const left = new Array(N).fill(0);
+  for (const [a, b] of remaining) { left[a]++; left[b]++; }
+  const W2 = teams.map(t => Math.round(t.w * 2));
+  const G = remaining.length;
+
+  // Max flow (Dinic). Returns the flow and the residual capacities.
+  const maxflow = (n, edges, s, t) => {
+    const head = new Array(n).fill(-1), to = [], cap = [], nxt = [];
+    for (const [u, v, c] of edges) {
+      to.push(v); cap.push(c); nxt.push(head[u]); head[u] = to.length - 1;
+      to.push(u); cap.push(0); nxt.push(head[v]); head[v] = to.length - 1;
+    }
+    let flow = 0;
+    const level = new Array(n), it = new Array(n);
+    const dfs = (u, f) => {
+      if (u === t) return f;
+      for (; it[u] !== -1; it[u] = nxt[it[u]]) {
+        const e = it[u], v = to[e];
+        if (cap[e] > 0 && level[v] === level[u] + 1) {
+          const d = dfs(v, Math.min(f, cap[e]));
+          if (d > 0) { cap[e] -= d; cap[e ^ 1] += d; return d; }
+        }
+      }
+      return 0;
+    };
+    for (;;) {
+      level.fill(-1); level[s] = 0;
+      const q = [s];
+      for (let h = 0; h < q.length; h++) for (let e = head[q[h]]; e !== -1; e = nxt[e])
+        if (cap[e] > 0 && level[to[e]] < 0) { level[to[e]] = level[q[h]] + 1; q.push(to[e]); }
+      if (level[t] < 0) return { flow, cap };
+      for (let u = 0; u < n; u++) it[u] = head[u];
+      let f; while ((f = dfs(s, Infinity)) > 0) flow += f;
+    }
+  };
+  const combos = (arr, r, start = 0, acc = [], out = []) => {
+    if (acc.length === r) { out.push(acc.slice()); return out; }
+    for (let x = start; x < arr.length; x++) { acc.push(arr[x]); combos(arr, r, x + 1, acc, out); acc.pop(); }
+    return out;
+  };
+
+  let calls = 0;
+  // fixed: Map game index -> winner. Returns null when i is safe, else the
+  // witness's contradicting results [[game, winner], ...] (possibly empty).
+  // K > 1 looks at up to K chaser sets and keeps the witness with the fewest
+  // contradictions — any one witness is a valid branch, a narrow one is cheaper.
+  const oracle = (i, fixed, K = 1) => {
+    calls++;
+    const base = W2.slice(), free = new Array(N).fill(0);
+    const own = [];
+    for (let g = 0; g < G; g++) {
+      const [a, b] = remaining[g];
+      if (fixed.has(g)) { base[fixed.get(g)] += 2; continue; }
+      if (a === i || b === i) { base[a === i ? b : a] += 2; own.push(g); continue; }   // i loses it
+      free[a]++; free[b]++;
+    }
+    const mine = base[i];
+    const need = new Array(N).fill(Infinity);
+    for (let j = 0; j < N; j++) {
+      if (j === i) continue;
+      if (!left[i] && !left[j]) {
+        need[j] = W2[j] > mine || (W2[j] === mine && teams[j].pf >= teams[i].pf) ? 0 : Infinity;
+        continue;
+      }
+      const d = Math.max(0, mine - base[j]);
+      need[j] = d <= 2 * free[j] ? d : Infinity;
+    }
+    const reach = X => {
+      const total = X.reduce((s, j) => s + need[j], 0);
+      if (!total) return [];
+      const inX = new Set(X), id = new Map(X.map((j, n) => [j, n + 2]));
+      const edges = [], gameEdges = [];
+      let n = X.length + 2;
+      for (let g = 0; g < G; g++) {
+        if (fixed.has(g)) continue;
+        const [a, b] = remaining[g];
+        if (a === i || b === i || (!inX.has(a) && !inX.has(b))) continue;
+        const node = n++;
+        edges.push([0, node, 2]);
+        for (const x of [a, b]) if (inX.has(x)) { gameEdges.push([g, x, edges.length]); edges.push([node, id.get(x), 2]); }
+      }
+      for (const j of X) edges.push([id.get(j), 1, need[j]]);
+      const { flow, cap } = maxflow(n, edges, 0, 1);
+      if (flow < total) return null;
+      // Every game the witness hands (part of) a win to a chaser: that chaser losing contradicts it.
+      const out = [];
+      for (const [g, x, k] of gameEdges) if (cap[2 * k] < 2) {
+        const [a, b] = remaining[g];
+        out.push([g, x === a ? b : a]);
+      }
+      return out;
+    };
+    const pools = divs.map(d => ({ d, c: teams.map((_, j) => j)
+      .filter(j => j !== i && divOf[j] === d && need[j] !== Infinity).sort((x, y) => need[x] - need[y]) }));
+    let witness = null, found = 0;
+    const go = (di, extra, X) => {
+      if (extra >= slots && X.some(j => divOf[j] === divOf[i])) {
+        const w = reach(X);
+        if (w == null) return false;
+        if (!witness || w.length < witness.length) witness = w;
+        return ++found >= K || !witness.length;
+      }
+      if (di === pools.length) return false;
+      const { d, c } = pools[di], isOwn = d === divOf[i];
+      if (!isOwn && go(di + 1, extra, X)) return true;
+      for (let r = isOwn ? 1 : 2; r <= c.length; r++) {
+        if (extra + r - 1 > slots) break;
+        for (const pick of combos(c, r)) if (go(di + 1, extra + r - 1, X.concat(pick))) return true;
+      }
+      return false;
+    };
+    go(0, 0, []);
+    if (!witness) return null;
+    // The team's own games: winning any of them contradicts the witness. Own wins first.
+    return [...own.map(g => [g, i]), ...witness];
+  };
+
+  const solve = i => {
+    calls = 0;
+    const ownG = remaining.map((_, g) => g).filter(g => remaining[g][0] === i || remaining[g][1] === i);
+    // A narrower witness: let the team win its own games too, one at a time,
+    // while it still misses. Those wins then agree with the witness, so they
+    // drop out of the branch (results a set can hold for an own game are only
+    // its wins). Any witness is a sound branch; this one is usually far smaller.
+    const narrow = (S, K = 1) => {
+      let w = oracle(i, S, K);
+      if (w == null || !w.length) return w;
+      const H = new Map(S);
+      for (const g of ownG) {
+        if (H.has(g)) continue;
+        H.set(g, i);
+        const v = oracle(i, H, K);
+        if (v != null && v.length <= w.length) w = v; else H.delete(g);
+      }
+      return w;
+    };
+    const top = narrow(new Map());
+    if (top == null) return { magic: 0, exact: true, lower: 0, cert: [] };
+    if (!top.length) return { magic: null, exact: true, lower: null, cert: null };
+    // Upper bound. A greedy walk adds one contradiction of the current witness
+    // at a time until the spot is guaranteed; several pick orders are tried,
+    // and each set found is shrunk before it can become the best.
+    // Shrink: drop any result the set still guarantees without (repeat until
+    // irreducible). Guarantees are monotone, so this never breaks a set.
+    const shrink = S => {
+      for (let changed = true; changed;) {
+        changed = false;
+        for (const [g, w] of [...S]) {
+          S.delete(g);
+          if (oracle(i, S) == null) changed = true; else S.set(g, w);
+        }
+      }
+      return S;
+    };
+    // Exchange: two results out, one contradiction of the new witness in.
+    const exchange = S => {
+      for (let again = true; again && calls < budget;) {
+        again = false;
+        const E = [...S];
+        for (let x = 0; x < E.length && !again && calls < budget; x++) for (let y = x + 1; y < E.length && !again && calls < budget; y++) {
+          const T = new Map(E.filter((_, k) => k !== x && k !== y));
+          const w = narrow(T);
+          if (w == null) { S = shrink(T); again = true; break; }
+          for (const [g, win] of w) {
+            if (T.has(g)) continue;
+            T.set(g, win);
+            if (oracle(i, T) == null) { S = shrink(T); again = true; break; }
+            T.delete(g);
+          }
+        }
+      }
+      return S;
+    };
+    let seed = 7 + i;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const orders = [
+      w => w[0],                                           // own wins first
+      w => w.find(([, win]) => win !== i) || w[0],         // rival losses first
+      w => w[w.length - 1],
+      ...Array.from({ length: 6 }, () => w => w[Math.floor(rnd() * w.length)]),
+    ];
+    const plain = S => oracle(i, S);
+    // Walk from S to a guaranteeing set, shrunk; null if this walk dead-ends.
+    const walk = (S, see, pick) => {
+      for (;;) {
+        const w = see(S);
+        if (w == null) return shrink(S);
+        if (!w.length) return null;
+        const [g, win] = pick(w);
+        S.set(g, win);
+      }
+    };
+    let best = null;
+    for (const pick of orders) for (const see of [plain, narrow]) {
+      const T = walk(new Map(), see, pick);
+      if (T && (!best || T.size < best.size)) best = T;
+    }
+    if (best) best = exchange(best);
+    // Neighbourhood search: drop two to four results, walk back at random,
+    // keep the result if it is no larger (ties let it wander).
+    for (const stop = calls + budget; best && best.size > 1 && calls < stop;) {
+      const E = [...best], drop = new Set();
+      for (let k = Math.min(E.length, 2 + Math.floor(rnd() * 3)); drop.size < k;) drop.add(Math.floor(rnd() * E.length));
+      const T = walk(new Map(E.filter((_, k) => !drop.has(k))), rnd() < .5 ? plain : narrow, orders[3]);
+      if (T && T.size <= best.size) best = T;
+    }
+    if (best) best = [...best];
+    // Exact: iterative deepening over contradicting results only, on top of a
+    // base set that isn't counted. Returns the first set found (base included),
+    // whether the budget ran out, and the proven fewest results to add to the
+    // base. Every safe superset of S must contradict S's witness somewhere, so
+    // a depth that comes back empty proves no set of that size exists.
+    const deepen = (base, cap) => {
+      calls = 0;
+      let lower = 1, exhausted = false;
+      const seen = new Set();
+      const dfs = (S, depth) => {
+        if (calls > budget) { exhausted = true; return null; }
+        const key = [...S].map(([g, w]) => `${g}:${w}`).sort().join(",");
+        if (seen.has(key + "@" + depth)) return null;
+        seen.add(key + "@" + depth);
+        const w = oracle(i, S, depth > 1 ? 8 : 1);
+        if (w == null) return [...S];
+        if (!depth || !w.length) return null;
+        // Results of the best set found so far first: a smaller one is often a neighbour.
+        if (inBest) w.sort((x, y) => (inBest.has(`${y[0]}:${y[1]}`) ? 1 : 0) - (inBest.has(`${x[0]}:${x[1]}`) ? 1 : 0));
+        for (const [g, win] of w) {
+          if (S.has(g)) continue;
+          S.set(g, win);
+          const r = dfs(S, depth - 1);
+          S.delete(g);
+          if (r || exhausted) return r;
+        }
+        return null;
+      };
+      if (oracle(i, base) == null) return { found: [...base], lower: 0, exhausted };
+      let found = null;
+      for (let d = 1; d <= cap; d++) {
+        const r = dfs(new Map(base), d);
+        if (r) { found = r; lower = d; break; }
+        if (exhausted) break;
+        lower = d + 1;
+      }
+      return { found, lower, exhausted };
+    };
+    const inBest = best && new Set(best.map(([g, w]) => `${g}:${w}`));
+    const cap = best ? best.length - 1 : G;
+    const main = deepen(new Map(), cap);
+    const exhausted = main.exhausted;
+    let lower = main.lower;
+    if (main.found) best = main.found;
+    if (!exhausted && best && lower > cap) lower = best.length;
+    if (!best) return { magic: null, exact: !exhausted, lower: exhausted ? lower : null, cert: null };
+    // Split bound when the walk ran out: a guaranteeing set is own wins A plus
+    // other results R. |A| >= k0, the fewest own wins at which the team isn't
+    // already beaten by the teams at or above that total today (wins only
+    // grow). |R| >= the fewest other results that guarantee it even with every
+    // own game won (fixing more only helps, so R must do it alone there).
+    if (lower < best.length) {
+      const k0 = (() => {
+        for (let k = 0; k <= ownG.length; k++) {
+          const F = W2[i] + 2 * k, top = new Set();
+          let n = 0, champ = true;
+          for (let j = 0; j < N; j++) {
+            if (j === i) continue;
+            if (W2[j] > F || (W2[j] === F && !(!left[i] && !left[j] && teams[i].pf > teams[j].pf))) {
+              n++; top.add(divOf[j]); if (divOf[j] === divOf[i]) champ = false;
+            }
+          }
+          if (champ || n - top.size < slots) return k;
+        }
+        return ownG.length + 1;
+      })();
+      const capR = best.length - 1 - k0;
+      if (capR >= 0) {
+        const r = deepen(new Map(ownG.map(g => [g, i])), capR);
+        const LR = r.found || r.exhausted ? r.lower : capR + 1;
+        lower = Math.max(lower, k0 + LR);
+        if (r.found) { const T = shrink(new Map(r.found)); if (T.size < best.length) best = [...T]; }
+      } else lower = best.length;
+      lower = Math.min(lower, best.length);
+    }
+    return { magic: best.length, exact: lower === best.length, lower, cert: best };
+  };
+
+  return teams.map((t, i) => {
+    const r = solve(i);
+    const cert = r.cert && r.cert.map(([g, w]) => {
+      const [a, b] = remaining[g];
+      return [w, w === a ? b : a];
+    });
+    return { rid: t.rid, magic: r.magic, exact: r.exact, lower: r.lower, cert, left: left[i],
+      clinched: r.magic === 0,
+      status: r.magic === 0 ? "clinched" : r.magic == null ? (r.exact ? "needs-help" : "unknown") : "magic" };
+  });
+}
+
+/**
+ * Standings with the current week's individually final games folded in: a game
+ * with nothing left to play on either side (no spread) is a result, not a
+ * remaining game. Everything else in the week stays remaining — including any
+ * game on the schedule (R.upcoming) that the live board didn't price, which
+ * must never drop out of a clinch or magic check.
+ */
+function settledStandings(live, R = null) {
+  const W = live.W0.slice(), PF = live.PF0.slice(), done = [];
+  const remaining = [];
+  const key = (a, b) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  const final = new Map();
+  for (const g of live.pending || []) {
+    if (!g.sdA && !g.sdB && isFinite(g.eA) && isFinite(g.eB)) final.set(key(g.a, g.b), g);
+  }
+  // This week's games: the schedule's own list when we have it, else the board's.
+  let week = (live.pending || []).map(g => [g.a, g.b]);
+  if (R && live.liveWeek != null && live.idx) {
+    const sched = (R.upcoming || []).filter(g => g.week === live.liveWeek)
+      .map(g => [live.idx.get(g.a), live.idx.get(g.b)]).filter(([a, b]) => a != null && b != null);
+    const seen = new Set(sched.map(([a, b]) => key(a, b)));
+    // Already banked in W0 / PF0: never count a game twice.
+    for (const g of R.decided || []) if (g.week === live.liveWeek) {
+      const a = live.idx.get(g.a.rid), b = live.idx.get(g.b.rid);
+      if (a != null && b != null) seen.add(key(a, b));
+    }
+    week = [...sched, ...week.filter(([a, b]) => !seen.has(key(a, b)))];
+  }
+  for (const [a, b] of week) {
+    const g = final.get(key(a, b));
+    if (g) {
+      PF[g.a] += g.eA; PF[g.b] += g.eB;
+      if (g.eA > g.eB) W[g.a]++; else if (g.eB > g.eA) W[g.b]++; else { W[g.a] += 0.5; W[g.b] += 0.5; }
+      done.push([g.a, g.b]);
+    } else remaining.push([a, b]);
+  }
+  for (const w of live.weeks) remaining.push(...w.pairs);
+  return { W, PF, remaining, done };
+}
+
+/**
  * The games of the current week: the one in flight, or else the next one to be
  * played. Games already final in a week in flight carry no spread and are
  * marked so, because there is nothing left for them to swing.
@@ -10323,10 +10712,33 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     if (a == null || b == null) continue;
     if (g.a.pts > g.b.pts) L[b]++; else if (g.b.pts > g.a.pts) L[a]++; else { T[a]++; T[b]++; }
   }
-  const remaining = [...(live.pending || []).map(g => [g.a, g.b]), ...live.weeks.flatMap(w => w.pairs)];
-  const clinch = exactClinch({
-    teams: live.teams.map((t, i) => ({ rid: t.rid, div: t.div, w: live.W0[i], pf: live.PF0[i] })),
-    remaining, playoffTeams: rules.playoffTeams, byes: rules.byes,
+  // This week's individually final games are results; only the rest is remaining.
+  const settled = settledStandings(live, R);
+  const remaining = settled.remaining;
+  const settledTeams = live.teams.map((t, i) => ({ rid: t.rid, div: t.div, w: settled.W[i], pf: settled.PF[i] }));
+  const clinch = exactClinch({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, byes: rules.byes });
+  // The certificate search is deterministic in its inputs: a poll that changed
+  // nothing reuses the last answer instead of walking it again.
+  const magicKey = JSON.stringify([settledTeams.map(t => [t.div, t.w, t.pf]), remaining, rules.playoffTeams]);
+  if (!MAGIC_CACHE || MAGIC_CACHE.key !== magicKey)
+    MAGIC_CACHE = { key: magicKey, v: magicNumbers({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, budget: MAGIC_BUDGET }) };
+  const magic = MAGIC_CACHE.v;
+  clinch.forEach((c, i) => {
+    c.magic = magic[i].magic;
+    c.magicExact = magic[i].exact;
+    c.magicLower = magic[i].lower;
+    // The certificate as roster ids: [[winner, loser], ...].
+    c.cert = magic[i].cert && magic[i].cert.map(([w, l]) => [live.teams[w].rid, live.teams[l].rid]);
+    // exactClinch's enumeration walks wins and losses only, never a future tied
+    // game. The magic walk admits ties, so it has the last word on a playoff
+    // clinch (a division clinch is pure win bounds, sound either way).
+    const was = c.clinchedPlayoff;
+    c.clinchedPlayoff = c.clinchedDiv || magic[i].clinched;
+    if (c.clinchedPlayoff !== was) c.method = "magic";
+    // Eliminations from that same enumeration could be undone by a tie; keep
+    // only the ones the win bounds prove.
+    if (c.eliminated && c.method === "enumeration") { c.eliminated = false; c.method = "bounds+ties"; }
+    if (c.eliminated && c.magic != null) c.eliminated = false;   // can't be both (never fires if both are right)
   });
   const whatIf = whatIfOf(out);
   // Teams whose game this week is already final: no what-if, but not "no game" either.
@@ -10350,7 +10762,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     whatIf: whatIf.get(i) || null, final: final.has(i), clinch: clinch[i],
   }));
   return {
-    rules, rows, clinch, out, via: out.via, sims: out.main.sims, whatIfSims, order,
+    rules, rows, clinch, magic, out, via: out.via, sims: out.main.sims, whatIfSims, order, settledFinals: settled.done.length,
     tied: live.W0.some(w => !Number.isInteger(w)),
     swings: swingBoard(out), remaining: remaining.length,
     week: live.pending && live.pending.length ? live.liveWeek : (live.weeks[0] ? live.weeks[0].week : null),
@@ -10402,6 +10814,30 @@ function clinchBadge(c) {
 /* x / y / z off the exact clinch table: the strongest one a team has earned. */
 const PP_MARKS = { x: "clinched playoff spot", y: "clinched division", z: "clinched first-round bye" };
 const ppMark = c => !c ? "" : c.clinchedBye ? "z" : c.clinchedDiv ? "y" : c.clinchedPlayoff ? "x" : "";
+/* Magic number chip: only for teams still open — clinched ones carry the mark, eliminated ones are listed. */
+function ppMagicHTML(c) {
+  if (!c || c.clinchedPlayoff || c.eliminated || c.magic === undefined) return "";
+  if (c.magic == null && c.magicExact === false) return `<span class="pp-mg help" data-magic="unknown" title="Too many results still in play to settle the smallest set that guarantees a spot">Magic ?</span>`;
+  if (c.magic == null) return `<span class="pp-mg help" data-magic="help" title="No set of its own wins and rivals' losses guarantees a playoff spot — it can't be locked in by results alone">Needs help</span>`;
+  const n = c.magic, s = n === 1 ? "" : "s";
+  const t = c.magicExact
+    ? `Magic number ${n}: the fewest specific results — its own wins or named rivals' losses — that guarantee a playoff spot, whatever else happens`
+    : `Magic number at most ${n}: ${n} specific result${s} guarantee a playoff spot; no set smaller than ${c.magicLower} does, and the exact fewest wasn't settled`;
+  return `<span class="pp-mg" data-magic="${c.magicExact ? n : `<=${n}`}" role="img" title="${t}" aria-label="${t}">Magic <b>${c.magicExact ? "" : "≤"}${n}</b></span>`;
+}
+/* The certificates: which results make up each team's magic number. */
+function ppCertHTML(rows) {
+  const name = rid => { const r = rows.find(x => String(x.rid) === String(rid)); return esc(r ? nameOf(r.uid) : String(rid)); };
+  const open = rows.filter(r => r.clinch && !r.clinch.clinchedPlayoff && !r.clinch.eliminated && r.clinch.cert)
+    .sort((a, b) => a.clinch.magic - b.clinch.magic);
+  if (!open.length) return "";
+  const line = r => `<li data-rid="${esc(String(r.rid))}"><b>${name(r.rid)}</b> · ${r.clinch.magicExact ? r.clinch.magic
+      : `≤${r.clinch.magic} (at least ${r.clinch.magicLower})`}:
+    ${r.clinch.cert.map(([w, l]) => String(w) === String(r.rid) ? `wins v ${name(l)}` : `${name(l)} loses to ${name(w)}`).join("; ")}</li>`;
+  return `<details class="pp-mgc"><summary>Which results make each number</summary>
+    <p>One guaranteeing set for each team. Where the number is exact (N) this set is a proven smallest one; other sets of the same size may exist, and a result outside every smallest set leaves the number where it is. Where it reads ≤N (at least L) the set works and no set smaller than L can, but the exact fewest between them wasn't settled.</p>
+    <ul>${open.map(line).join("")}</ul></details>`;
+}
 function ppMarkHTML(c) {
   const k = ppMark(c);
   return k ? `<span class="pp-mk" role="img" title="${PP_MARKS[k]}" aria-label="${PP_MARKS[k]}">${k}</span>` : "";
@@ -10432,6 +10868,7 @@ function pictureBoard(PP) {
     <div class="pp-bar"><i style="width:${(Math.max(0, Math.min(1, v)) * 100).toFixed(1)}%"></i></div></div>`;
   const bars = r => `<div class="pp-bars">${B ? pb("Bye", r.bye, "by") : ""}${pb("Playoff", r.playoff, "")}</div>`;
   const ids = r => `data-rid="${esc(String(r.rid))}" data-seed="${r.todaySeed}"`;
+  const mg = r => ppMagicHTML(r.clinch);
 
   const wk = PP.week != null ? `Week ${PP.week} ${PP.inFlight ? "in progress" : "up next"}` : "Playoff Picture";
   const byeWords = !B ? "" : B === 1 ? "; seed 1 skips the first round" : `; seeds 1–${B} skip the first round`;
@@ -10446,7 +10883,7 @@ function pictureBoard(PP) {
     <div class="pp-hero" ${ids(r)}>${avatarHTML(r.uid, "lg")}
       <div class="pp-who"><div class="pp-eye">${r.todaySeed} seed · bye</div>
         <div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
-        <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}</span></div></div>
+        <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}</span>${mg(r)}</div></div>
       ${bars(r)}</div>`).join("");
 
   /* the bracket, as it would be drawn today */
@@ -10486,7 +10923,7 @@ function pictureBoard(PP) {
   /* the list, in seed order today */
   const li = r => `<div class="pp-li${r.todaySeed <= B ? " byer" : ""}" ${ids(r)}>${sd(r)}${avatarHTML(r.uid, "sm")}
     <div class="pp-who"><div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
-      <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}${gb(r)}</span></div></div>
+      <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}${gb(r)}</span>${mg(r)}</div></div>
     ${bars(r)}</div>`;
   const inOrder = PP.order.map(i => rows[i]);
   const elim = inOrder.filter(r => r.todaySeed > P && r.clinch && r.clinch.eliminated);
@@ -10513,6 +10950,12 @@ function pictureBoard(PP) {
         <p class="pp-hs">${esc(r1Words)} · slot hint = ${B ? "Bye % · " : ""}Playoff %</p>${bracket}${legend}</div>
       <div class="pp-lcol"><h3 class="pp-h">Seeds &amp; the hunt</h3>
         <p class="pp-hs">Ordered by seed today · ${B ? "Bye % and " : ""}Playoff % bars</p>
+        <p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>the fewest specific results — your wins or
+          named rivals' losses — that lock in a spot whatever else happens. A win over a rival is one result.
+          A result in the smallest set takes it down by one; others can leave it unchanged.
+          <b>≤N</b>: a set that size works, the exact fewest isn't settled.
+          <span class="pp-mg help">Needs help</span>no set of results can lock it in.</p>
+        ${ppCertHTML(rows)}
         <div class="pp-lst pp-seeds">${list}</div>
         <h3 class="pp-h">Eliminated</h3>
         <div class="pp-lst pp-elim">${elim.length ? elim.map(li).join("") : `<div class="pp-empty">Nobody is mathematically out yet.</div>`}</div>
@@ -10615,13 +11058,30 @@ function renderPicture(host, PP) {
        Points for can't be known in advance, so a spot that could come down to a points tiebreak is
        never called clinched or eliminated. When the league has a tied game on record, clinched and
        eliminated are computed from the win bounds only — a half win makes more finishes possible
-       than the win-or-lose check walks.</p>
+       than the win-or-lose check walks. Because any future game can also end tied, a playoff clinch
+       is only called when the magic-number walk below (which plays ties too) says so, and an
+       elimination only when the win bounds alone prove it.</p>
+    <p><b>Magic numbers</b> are the size of a smallest set of specific remaining results — the team
+       winning a given game, or a named rival losing one — that guarantees a playoff spot however every
+       other game goes, ties included. A win over a direct rival is one result, and no set fixes a game
+       both ways. Level finishes on wins count against the team, since points for can't be known while
+       either side still plays (only two teams with nothing left are split on their actual points, and a
+       dead-even tie still counts against). Games this week with nothing left to play count as results;
+       scheduled games the live board couldn't price still count as left to play. A result that belongs
+       to some smallest set takes the number down by exactly one; any other result — a rival's loss
+       included — can leave it where it is. Each set is found by search: a candidate set either proves the
+       spot or yields a finish where the team misses, which any bigger set must contradict. Where the
+       search runs out of room the page shows ≤N: a set of N results that works, with no smaller set below
+       the proven floor. "Needs help" means no set of results guarantees a spot at all.</p>
     <p><b>What-if</b> runs the season twice for each game this week, once with each side forced to win,
        ${PP.whatIfSims.toLocaleString()} times a side on the same random draws. Both scores are still drawn
        and swapped if the wrong side won, so forcing a result doesn't inflate anybody's points for.</p>`;
   host.appendChild(m);
 }
 
+/** Certificate search: per-team oracle budget, and the last answer for unchanged inputs. */
+const MAGIC_BUDGET = 12000;
+let MAGIC_CACHE = null;
 let PICTURE_STARTED = false, PICTURE_SEQ = 0, PICTURE_DRAWN = false, PICTURE_STALE = false;
 async function ensurePicture() {
   const host = $("#pictureHost");
@@ -12109,7 +12569,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,
