@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 9,
- "generated": "2026-11-11T11:02:03.018Z",
- "generated_at": "2026-11-11T11:02:03.018Z",
+ "generated": "2026-11-12T11:02:15.362Z",
+ "generated_at": "2026-11-12T11:02:15.362Z",
  "final": true,
  "standings_through_week": 9,
  "standings_folded": false,
@@ -760,7 +760,7 @@
    "sides": [
     {
      "manager": "drewkim",
-     "team": "inova hospital🏥",
+     "team": "Bowser",
      "roster_id": 7,
      "points": 129.78,
      "starters": [
@@ -1221,7 +1221,7 @@
   },
   {
    "manager": "drewkim",
-   "team": "inova hospital🏥",
+   "team": "Bowser",
    "roster_id": 7,
    "wins": 3,
    "losses": 6,

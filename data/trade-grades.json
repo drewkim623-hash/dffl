@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-11T11:02:41.214Z",
+ "generated": "2026-11-12T11:02:58.777Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -339,7 +339,7 @@
       {
        "asset": "Drake Maye",
        "pid": "11564",
-       "value": 122.1,
+       "value": 122.2,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -348,7 +348,7 @@
        "basis": "next cost R10, kept 1 yr, shrunk"
       }
      ],
-     "total": 166.3,
+     "total": 166.4,
      "tradeDay": {
       "letter": "A",
       "marginPct": 78,
@@ -541,8 +541,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 3,
-      "marginPts": 0.6
+      "marginPct": -1,
+      "marginPts": -0.2
      },
      "hindsight": "Pending"
     },
@@ -554,7 +554,7 @@
       {
        "asset": "Woody Marks",
        "pid": "12474",
-       "value": 2.5,
+       "value": 3.4,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -564,12 +564,12 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 9.9,
+     "total": 10.8,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -3,
-      "marginPts": -0.6
+      "marginPct": 1,
+      "marginPts": 0.2
      },
      "hindsight": "Pending"
     }
@@ -600,7 +600,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 46,
-      "marginPts": 107
+      "marginPts": 106.8
      },
      "hindsight": "Pending"
     },
@@ -631,8 +631,8 @@
      "total": 41.5,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -50,
-      "marginPts": -84.6
+      "marginPct": -51,
+      "marginPts": -84.7
      },
      "hindsight": "Pending"
     },
@@ -644,15 +644,15 @@
       {
        "asset": "Jordan Love",
        "pid": "6804",
-       "value": 83,
+       "value": 83.3,
        "basis": "actual to wk 9 + Sleeper projection"
       }
      ],
-     "total": 83,
+     "total": 83.3,
      "tradeDay": {
       "letter": "C",
       "marginPct": -12,
-      "marginPts": -22.4
+      "marginPts": -22.1
      },
      "hindsight": "Pending"
     }
@@ -897,7 +897,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 29,
-      "marginPts": 43.4
+      "marginPts": 43.5
      },
      "hindsight": "Pending"
     },
@@ -919,11 +919,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 53.5,
+     "total": 53.4,
      "tradeDay": {
       "letter": "D",
       "marginPct": -29,
-      "marginPts": -43.4
+      "marginPts": -43.5
      },
      "hindsight": "Pending"
     }
@@ -1034,6 +1034,166 @@
       "small": true,
       "marginPct": -100,
       "marginPts": -3.4
+     },
+     "hindsight": "Pending"
+    }
+   ]
+  },
+  "1426332587764228096": {
+   "season": 2026,
+   "week": 10,
+   "sides": [
+    {
+     "rid": 5,
+     "uid": "845119622473699328",
+     "manager": "jskule23",
+     "assets": [
+      {
+       "asset": "Chase Brown",
+       "pid": "9224",
+       "value": 32.7,
+       "basis": "actual to wk 9 + Sleeper projection"
+      },
+      {
+       "asset": "Chase Brown keeper",
+       "value": 52.6,
+       "basis": "next cost R7 (regressed from R9), kept 3 yr, shrunk"
+      }
+     ],
+     "total": 85.3,
+     "tradeDay": {
+      "letter": "C",
+      "marginPct": 5,
+      "marginPts": 8.2
+     },
+     "hindsight": "Pending"
+    },
+    {
+     "rid": 8,
+     "uid": "851478209852706816",
+     "manager": "bradyrife",
+     "assets": [
+      {
+       "asset": "Chuba Hubbard",
+       "pid": "7594",
+       "value": 54,
+       "basis": "actual to wk 9 + Sleeper projection"
+      },
+      {
+       "asset": "2027 R8",
+       "value": 12.6,
+       "basis": "mid-slot curve",
+       "hindsight": "Pending"
+      },
+      {
+       "asset": "2027 R9",
+       "value": 10.5,
+       "basis": "mid-slot curve",
+       "hindsight": "Pending"
+      }
+     ],
+     "total": 77.2,
+     "tradeDay": {
+      "letter": "C",
+      "marginPct": -5,
+      "marginPts": -8.2
+     },
+     "hindsight": "Pending"
+    }
+   ]
+  },
+  "1426313266593820672": {
+   "season": 2026,
+   "week": 10,
+   "sides": [
+    {
+     "rid": 2,
+     "uid": "850931930408001536",
+     "manager": "jadencha",
+     "assets": [
+      {
+       "asset": "Justin Jefferson",
+       "pid": "6794",
+       "value": 67,
+       "basis": "actual to wk 9 + Sleeper projection"
+      }
+     ],
+     "total": 67,
+     "tradeDay": {
+      "letter": "B",
+      "marginPct": 34,
+      "marginPts": 34.2
+     },
+     "hindsight": "Pending"
+    },
+    {
+     "rid": 10,
+     "uid": "851564369144852480",
+     "manager": "moseslin",
+     "assets": [
+      {
+       "asset": "Breece Hall",
+       "pid": "8155",
+       "value": 3.2,
+       "basis": "actual to wk 9 + Sleeper projection"
+      },
+      {
+       "asset": "2027 R3",
+       "value": 29.5,
+       "basis": "mid-slot curve",
+       "hindsight": "Pending"
+      }
+     ],
+     "total": 32.8,
+     "tradeDay": {
+      "letter": "D",
+      "marginPct": -34,
+      "marginPts": -34.2
+     },
+     "hindsight": "Pending"
+    }
+   ]
+  },
+  "1426311201389813760": {
+   "season": 2026,
+   "week": 10,
+   "sides": [
+    {
+     "rid": 2,
+     "uid": "850931930408001536",
+     "manager": "jadencha",
+     "assets": [
+      {
+       "asset": "Breece Hall",
+       "pid": "8155",
+       "value": 3.2,
+       "basis": "actual to wk 9 + Sleeper projection"
+      },
+      {
+       "asset": "2027 R3",
+       "value": 29.5,
+       "basis": "mid-slot curve",
+       "hindsight": "Pending"
+      }
+     ],
+     "total": 32.8,
+     "tradeDay": {
+      "letter": "A+",
+      "marginPct": 100,
+      "marginPts": 32.8
+     },
+     "hindsight": "Pending"
+    },
+    {
+     "rid": 9,
+     "uid": "850946675743793152",
+     "manager": "saucebossandrew",
+     "assets": [],
+     "total": 0,
+     "tradeDay": {
+      "letter": "F-",
+      "marginPct": -100,
+      "marginPts": -32.8
      },
      "hindsight": "Pending"
     }

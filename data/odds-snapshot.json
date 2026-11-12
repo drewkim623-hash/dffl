@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-11T23:13:33.841Z",
- "at": 1794438813841,
+ "generated": "2026-11-12T11:02:44.336Z",
+ "at": 1794481364336,
  "season": "2026",
  "week": 10,
  "liveWeek": null,
@@ -13,10 +13,10 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.31555,
-   "titleNow": 0.5187,
+   "titleNow": 0.51485,
    "playoffWas": 0.9171,
    "playoffNow": 1,
-   "wins": 11.9073,
+   "wins": 11.8962,
    "titleOdds": -120,
    "titleOddsOpen": 200,
    "playoffOdds": -19900
@@ -26,10 +26,10 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.19455,
-   "titleNow": 0.1755,
+   "titleNow": 0.1738,
    "playoffWas": 0.82825,
-   "playoffNow": 0.99265,
-   "wins": 9.9217,
+   "playoffNow": 0.99255,
+   "wins": 9.92375,
    "titleOdds": 440,
    "titleOddsOpen": 380,
    "playoffOdds": -19900
@@ -41,11 +41,11 @@
    "titleWas": 0.04355,
    "titleNow": 0.00005,
    "playoffWas": 0.41645,
-   "playoffNow": 0.0076,
-   "wins": 4.5357,
+   "playoffNow": 0.0051,
+   "wins": 4.43195,
    "titleOdds": 1886690,
    "titleOddsOpen": 2070,
-   "playoffOdds": 12310
+   "playoffOdds": 18400
   },
   {
    "uid": "646481339029475328",
@@ -54,22 +54,22 @@
    "titleWas": 0.0143,
    "titleNow": 0.00005,
    "playoffWas": 0.24065,
-   "playoffNow": 0.007,
-   "wins": 4.692,
+   "playoffNow": 0.0061,
+   "wins": 4.67495,
    "titleOdds": 1886690,
    "titleOddsOpen": 6500,
-   "playoffOdds": 13380
+   "playoffOdds": 15370
   },
   {
    "uid": "845540882697547776",
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1385,
-   "titleNow": 0.10445,
+   "titleNow": 0.11575,
    "playoffWas": 0.72415,
-   "playoffNow": 0.94475,
-   "wins": 8.8123,
-   "titleOdds": 800,
+   "playoffNow": 0.9496,
+   "wins": 8.87765,
+   "titleOdds": 720,
    "titleOddsOpen": 580,
    "playoffOdds": -19900
   },
@@ -78,113 +78,95 @@
    "rid": 9,
    "manager": "saucebossandrew",
    "titleWas": 0.0548,
-   "titleNow": 0.00005,
+   "titleNow": 0.00015,
    "playoffWas": 0.4764,
-   "playoffNow": 0.0149,
-   "wins": 4.71095,
-   "titleOdds": 1886690,
+   "playoffNow": 0.018,
+   "wins": 4.8222,
+   "titleOdds": 628830,
    "titleOddsOpen": 1620,
-   "playoffOdds": 6230
+   "playoffOdds": 5140
   },
   {
    "uid": "851478209852706816",
    "rid": 8,
    "manager": "bradyrife",
    "titleWas": 0.04955,
-   "titleNow": 0.04095,
+   "titleNow": 0.0391,
    "playoffWas": 0.44555,
-   "playoffNow": 0.7366,
-   "wins": 7.73695,
-   "titleOdds": 2200,
+   "playoffNow": 0.7288,
+   "wins": 7.7232,
+   "titleOdds": 2310,
    "titleOddsOpen": 1800,
-   "playoffOdds": -360
+   "playoffOdds": -340
   },
   {
    "uid": "845119622473699328",
    "rid": 5,
    "manager": "jskule23",
    "titleWas": 0.02695,
-   "titleNow": 0.00005,
+   "titleNow": 0,
    "playoffWas": 0.3057,
-   "playoffNow": 0.00195,
-   "wins": 3.66535,
-   "titleOdds": 1886690,
+   "playoffNow": 0.0036,
+   "wins": 3.8075,
+   "titleOdds": null,
    "titleOddsOpen": 3400,
-   "playoffOdds": 48280
+   "playoffOdds": 26110
   },
   {
    "uid": "980916620434440192",
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.0739,
-   "titleNow": 0.0763,
+   "titleNow": 0.06985,
    "playoffWas": 0.5821,
-   "playoffNow": 0.8969,
-   "wins": 8.3098,
-   "titleOdds": 1140,
+   "playoffNow": 0.8669,
+   "wins": 8.16225,
+   "titleOdds": 1250,
    "titleOddsOpen": 1180,
-   "playoffOdds": -1930
+   "playoffOdds": -1130
   },
   {
    "uid": "850932093394472960",
    "rid": 3,
    "manager": "chassinator",
    "titleWas": 0.03725,
-   "titleNow": 0.0482,
+   "titleNow": 0.05135,
    "playoffWas": 0.40695,
-   "playoffNow": 0.55575,
-   "wins": 6.8847,
-   "titleOdds": 1860,
+   "playoffNow": 0.59365,
+   "wins": 6.986,
+   "titleOdds": 1740,
    "titleOddsOpen": 2430,
-   "playoffOdds": -145
+   "playoffOdds": -170
   },
   {
    "uid": "851570417528332288",
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.02695,
-   "titleNow": 0.03555,
+   "titleNow": 0.03495,
    "playoffWas": 0.32955,
-   "playoffNow": 0.8345,
+   "playoffNow": 0.8302,
    "wins": 8.38225,
-   "titleOdds": 2550,
+   "titleOdds": 2600,
    "titleOddsOpen": 3400,
-   "playoffOdds": -770
+   "playoffOdds": -730
   },
   {
    "uid": "851571292711804928",
    "rid": 12,
    "manager": "victorthompson",
    "titleWas": 0.02415,
-   "titleNow": 0.00015,
+   "titleNow": 0.0001,
    "playoffWas": 0.32715,
-   "playoffNow": 0.0074,
-   "wins": 4.441,
-   "titleOdds": 628830,
+   "playoffNow": 0.0055,
+   "wins": 4.3121,
+   "titleOdds": 943300,
    "titleOddsOpen": 3810,
-   "playoffOdds": 12650
+   "playoffOdds": 17050
   }
  ],
  "games": [],
  "hurt": [
-  {
-   "manager": "jskule23",
-   "cost": 0.05068740095087165,
-   "players": [
-    {
-     "name": "Patrick Mahomes",
-     "status": "Questionable"
-    },
-    {
-     "name": "Mike Evans",
-     "status": "Questionable"
-    },
-    {
-     "name": "Carnell Tate",
-     "status": "Questionable"
-    }
-   ]
-  },
   {
    "manager": "bradyrife",
    "cost": 0.03302098278335719,
@@ -204,6 +186,38 @@
    ]
   },
   {
+   "manager": "jskule23",
+   "cost": 0.029827654516640267,
+   "players": [
+    {
+     "name": "Mike Evans",
+     "status": "Questionable"
+    },
+    {
+     "name": "Carnell Tate",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
+   "manager": "victorthompson",
+   "cost": 0.023325358851674638,
+   "players": [
+    {
+     "name": "Dalton Kincaid",
+     "status": "Questionable"
+    },
+    {
+     "name": "Ladd McConkey",
+     "status": "Questionable"
+    },
+    {
+     "name": "A.J. Brown",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "jadencha",
    "cost": 0.02305402292103831,
    "players": [
@@ -213,6 +227,16 @@
     },
     {
      "name": "Bhayshul Tuten",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
+   "manager": "moseslin",
+   "cost": 0.015444255079309688,
+   "players": [
+    {
+     "name": "Harold Fannin Jr.",
      "status": "Questionable"
     }
    ]
@@ -242,15 +266,21 @@
    ]
   },
   {
-   "manager": "victorthompson",
-   "cost": 0.010544944701545211,
+   "manager": "drewkim",
+   "cost": 0.009958810388159711,
    "players": [
     {
-     "name": "Ladd McConkey",
+     "name": "Woody Marks",
      "status": "Questionable"
-    },
+    }
+   ]
+  },
+  {
+   "manager": "wesley55",
+   "cost": 0.004092191239600362,
+   "players": [
     {
-     "name": "A.J. Brown",
+     "name": "T.J. Hockenson",
      "status": "Questionable"
     }
    ]
