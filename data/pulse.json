@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-13T01:50:14.134Z",
- "at": 1794534614134,
+ "generated": "2026-11-13T11:02:15.613Z",
+ "at": 1794567735613,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -123,6 +123,7 @@
    "faab_spent": 95,
    "starters_hurt": [
     "Carnell Tate (Questionable)",
+    "Chig Okonkwo (Questionable)",
     "Mike Evans (Questionable)"
    ]
   },
@@ -144,8 +145,8 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 2.3,
-    "startersLeftToPlay": 10
+    "points": 19.6,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "sizzlemc2",
@@ -156,8 +157,8 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 3.5,
-    "startersLeftToPlay": 10
+    "points": 29.7,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "bradyrife",
@@ -168,20 +169,20 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 1.9,
-    "startersLeftToPlay": 10
+    "points": 7.2,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "moseslin",
-    "points": 9.2,
-    "startersLeftToPlay": 10
+    "points": 43.82,
+    "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 1.4,
-    "startersLeftToPlay": 10
+    "points": 20.3,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "drewkim",
@@ -192,20 +193,20 @@
   {
    "a": {
     "manager": "jskule23",
-    "points": 3.7,
-    "startersLeftToPlay": 10
+    "points": 6.4,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "wesley55",
-    "points": -1,
-    "startersLeftToPlay": 10
+    "points": 2,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 0.6,
-    "startersLeftToPlay": 10
+    "points": 5.7,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
