@@ -2250,6 +2250,9 @@
   }
   /* The More sheet always fits the window: it scrolls inside, search pinned at the top. */
   .secsheet{max-height:calc(100dvh - var(--top,76px) - 16px);overflow-y:auto;overscroll-behavior:contain;padding-top:0;scrollbar-width:thin}
+  .secgrp{grid-column:1/-1;margin:10px 4px 2px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .secgrp:first-child{margin-top:0}
+  .secgrp[hidden]{display:none}
   .secsheet .sechd,.secsheet .secsearch{position:sticky;z-index:2}
   .secsheet .sechd{background:var(--card-a)}
   .secsheet .sechd{top:0;padding-top:14px;margin:0 -14px;padding-left:16px;padding-right:16px}
@@ -2286,7 +2289,6 @@
   <p class="secnone" id="secNone" hidden>No page matches that.</p>
 </div>
 <div class="rprog" id="rprog" aria-hidden="true"><i></i></div>
-<nav class="btab" id="btab" aria-label="Quick pages"></nav>
 
 <main class="wrap">
   <div id="loader">
@@ -2944,7 +2946,7 @@ function buildTabs() {
   });
   bar.appendChild(el("span", "tabind off"));
   bar.classList.add("has-ind");
-  buildSections(); buildBottomBar();
+  buildSections();
   tabHint();
   if (!bar.dataset.hint) {
     bar.dataset.hint = "1";
@@ -3040,30 +3042,6 @@ const SEC_GROUPS = [
   { name: "Numbers", ids: ["stats", "rankings"] },
   { name: "Reads", ids: ["recaps", "ask"] },
 ];
-// Phone bottom bar: the four pages people open most, then More.
-const BTAB_IDS = ["home", "scores", "stats", "odds"];
-function buildBottomBar() {
-  const bar = $("#btab"); if (!bar) return;
-  bar.innerHTML = BTAB_IDS.map(id => {
-    const t = TABS.find(x => x.id === id); if (!t) return "";
-    const lab = { scores: "Scores" }[id] || t.label;
-    return `<button type="button" data-go="${id}">${icon24(TAB_ICONS[id])}<span>${esc(lab)}</span></button>`;
-  }).join("") + `<button type="button" data-more="1" aria-haspopup="dialog" aria-controls="secSheet">${icon24("M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z")}<span>More</span></button>`;
-  bar.onclick = e => {
-    const b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.more) { $("#tabAll").getAttribute("aria-expanded") === "true" ? closeSections() : openSections(); return; }
-    show(b.dataset.go); scrollTo({ top: 0, behavior: REDUCED() ? "auto" : "smooth" });
-  };
-}
-function syncBottomBar() {
-  const cur = $('#tabs button[aria-selected="true"]');
-  const id = cur ? cur.dataset.tab : null;
-  for (const b of document.querySelectorAll("#btab button")) {
-    const on = b.dataset.more ? !!id && !BTAB_IDS.includes(id) : b.dataset.go === id;
-    if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
-  }
-}
-
 function buildSections() {
   const grid = $("#secGrid"); if (!grid) return;
   grid.innerHTML = "";
@@ -3144,7 +3122,6 @@ addEventListener("keydown", e => { if (e.key === "Escape") closeSections(); });
 
 /** Move the lit pill under whichever tab is open; hide it when none is. */
 function placeTabInd(animate = true) {
-  syncBottomBar();
   const ind = $("#tabs .tabind"); if (!ind) return;
   const b = $('#tabs button[aria-selected="true"]');
   if (!b || !b.offsetWidth) { ind.classList.add("off"); return; }
