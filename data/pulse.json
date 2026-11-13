@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-13T14:49:47.814Z",
- "at": 1794581387815,
+ "generated": "2026-11-13T17:50:08.169Z",
+ "at": 1794592208169,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -44,8 +44,7 @@
    "points_against": 1168.08,
    "faab_spent": 67,
    "starters_hurt": [
-    "Denzel Boston (Questionable)",
-    "Omar Cooper Jr. (Questionable)"
+    "Denzel Boston (Questionable)"
    ]
   },
   {
@@ -122,7 +121,7 @@
    "points_against": 1216.06,
    "faab_spent": 95,
    "starters_hurt": [
-    "Carnell Tate (Questionable)",
+    "Carnell Tate (Out)",
     "Chig Okonkwo (Questionable)",
     "Mike Evans (Questionable)"
    ]
@@ -622,5 +621,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 47
+ "free_agent_moves": 48
 }
