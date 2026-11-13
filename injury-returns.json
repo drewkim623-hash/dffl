@@ -24,7 +24,7 @@
       "weeks": 1,
       "checked": "2026-11-12",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "2449": {
       "kind": "report",
@@ -135,7 +135,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-12",
-      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: changed from audit []; consensus.",
+      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5859": {
@@ -168,8 +168,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
       "checked": "2026-11-12",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
-      "flag": "consensus"
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
+      "flag": "uncertain"
     },
     "6786": {
       "kind": "report",
@@ -228,13 +228,11 @@
     "7611": {
       "kind": "report",
       "source": "consensus.mjs",
-      "weeks_list": [
-        10
-      ],
-      "weeks": 1,
-      "checked": "2026-11-10",
+      "weeks_list": [],
+      "weeks": 0,
+      "checked": "2026-11-13",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit [10]; consensus."
     },
     "8121": {
       "kind": "report",
@@ -355,6 +353,22 @@
       "checked": "2026-10-14",
       "note": "Ankle. Limited on estimated reports; Q for Thursday Week 6. Consensus: matches audit; consensus.",
       "flag": "consensus"
+    },
+    "9493": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        10,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "weeks": 6,
+      "checked": "2026-11-13",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "9502": {
       "kind": "report",
@@ -569,7 +583,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
       "checked": "2026-11-12",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "12533": {
