@@ -1205,6 +1205,18 @@
   .ppv .pp-troph{text-align:center;font:600 11px var(--mono);letter-spacing:.1em;color:var(--violet);text-transform:uppercase;margin-top:8px}
   .ppv .pp-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink-2);margin-top:16px}
   .ppv .pp-legend .pp-mk{margin:0 5px 0 0;vertical-align:0}
+  .ppv .pp-mg{display:inline-block;font:700 11px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;background:linear-gradient(#e66767,#b83b3b);border-radius:4px;padding:0 5px;margin-left:4px;
+    white-space:nowrap;vertical-align:1px;box-shadow:0 0 8px rgba(230,103,103,.35)}
+  .ppv .pp-mg b{font-weight:800}
+  .ppv .pp-mg.help{color:var(--red);background:rgba(230,103,103,.10);box-shadow:inset 0 0 0 1px rgba(230,103,103,.45)}
+  .ppv .pp-mgh{font-size:12px;color:var(--ink-2);margin:-4px 0 12px;line-height:1.45}
+  .ppv .pp-mgc{font-size:12px;color:var(--ink-2);margin:-6px 0 12px;line-height:1.45}
+  .ppv .pp-mgc summary{cursor:pointer;color:var(--red);font-weight:700}
+  .ppv .pp-mgc p{margin:6px 0}
+  .ppv .pp-mgc ul{margin:4px 0 0;padding-left:18px}
+  .ppv .pp-mgc li{margin:2px 0;overflow-wrap:anywhere}
+  .ppv .pp-mgh .pp-mg{margin:0 4px 0 0}
   .ppv .pp-lst{border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--ring);overflow:hidden}
   .ppv .pp-li{display:grid;grid-template-columns:22px 28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px}
   .ppv .pp-li+.pp-li{border-top:1px solid rgba(255,255,255,.05)}
@@ -1808,11 +1820,455 @@
   .ask-form input{flex:1 1 auto;min-width:0;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--edge);background:var(--plane);color:var(--ink);font:16px var(--body)}
   .ask-form button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--a);color:var(--on-a);font:700 14px var(--disp);cursor:pointer}
   .ask-form :disabled{opacity:.45;cursor:not-allowed}
+
+  /* ============ navigation: one-tap sections, a sliding pill ============ */
+  nav.tabs .wrap{display:flex;align-items:center;gap:6px}
+  nav.tabs .tabrow{flex:1 1 auto;min-width:0;position:relative}
+  nav.tabs .wrap::after{right:calc(var(--pad) + 50px)}
+  .tabarr-r{right:calc(var(--pad) + 44px)}
+  .taball{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;
+    background:var(--raised);border:1px solid var(--edge);color:var(--ink-2);transition:background .18s,color .18s,transform .12s}
+  .taball svg{width:20px;height:20px}
+  .taball:hover,.taball[aria-expanded="true"]{color:var(--on-a);background:var(--a);border-color:var(--a)}
+  .taball:active{transform:scale(.93)}
+  /* The lit pill is one element that travels; the buttons it sits under go clear. */
+  .tabrow.has-ind button[aria-selected="true"]{background:transparent;border-color:transparent;box-shadow:none}
+  .tabrow button{position:relative;z-index:1}
+  .tabind{position:absolute;z-index:0;left:0;top:8px;height:44px;width:0;border-radius:999px;pointer-events:none;
+    background:var(--a);box-shadow:0 6px 18px -6px rgba(var(--a-rgb),.55);
+    transition:transform .45s cubic-bezier(.16,1,.3,1),width .45s cubic-bezier(.16,1,.3,1),opacity .2s}
+  .tabind.off{opacity:0}
+
+  .secbg{position:fixed;inset:0;z-index:90;background:rgba(6,3,10,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    opacity:0;transition:opacity .25s}
+  .secbg.on{opacity:1}
+  .secsheet{position:fixed;z-index:91;left:50%;top:76px;width:min(720px,calc(100vw - 32px));transform:translate(-50%,-10px) scale(.98);
+    opacity:0;background:var(--surface);border:1px solid var(--edge);border-radius:22px;padding:14px 14px 16px;
+    box-shadow:0 30px 70px rgba(0,0,0,.6);max-height:calc(100vh - 100px);overflow:auto;
+    transition:transform .32s cubic-bezier(.16,1,.3,1),opacity .2s}
+  .secsheet.on{opacity:1;transform:translate(-50%,0) scale(1)}
+  .sechd{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 12px;
+    font-family:var(--disp);font-weight:700;font-size:17px}
+  .secx{width:36px;height:36px;border-radius:50%;border:0;background:var(--raised);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+  .secx svg{width:16px;height:16px}
+  .secgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+  .secgrid button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;cursor:pointer;
+    background:var(--raised);border:1px solid transparent;border-radius:16px;padding:12px 13px 12px;color:var(--ink);
+    font:inherit;min-height:96px;transition:background .18s,border-color .18s,transform .12s}
+  .secgrid button:hover{background:var(--hover)}
+  .secgrid button:active{transform:scale(.97)}
+  .secgrid button svg{width:22px;height:22px;color:var(--ink-2);margin-bottom:8px}
+  .secgrid button b{font-family:var(--disp);font-weight:700;font-size:15px;line-height:1.2}
+  .secgrid button span{font-size:11.5px;line-height:1.35;color:var(--muted)}
+  .secgrid button[aria-current="true"]{border-color:rgba(var(--a-rgb),.6);
+    background:linear-gradient(160deg,rgba(var(--a-rgb),.18),var(--raised) 65%)}
+  .secgrid button[aria-current="true"] svg{color:var(--a)}
+  .secsheet.on .secgrid button{animation:secin .45s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 18ms + 40ms)}
+  @keyframes secin{from{opacity:0;transform:translateY(10px)}}
+  @media (max-width:640px){
+    /* On a phone it is a bottom sheet, under the thumb. */
+    .secsheet{left:0;right:0;top:auto;bottom:0;width:auto;transform:translateY(100%);opacity:1;
+      border-radius:24px 24px 0 0;border-bottom:0;padding:10px 14px max(18px,env(safe-area-inset-bottom));max-height:86vh}
+    .secsheet.on{transform:none}
+    .sechd{position:relative;padding-top:12px}
+    .sechd::before{content:"";position:absolute;top:0;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:var(--mid)}
+    .secgrid{grid-template-columns:repeat(3,1fr)}
+    .secgrid button{min-height:92px;padding:11px 10px;border-radius:14px}
+    .secgrid button b{font-size:13.5px}
+    .secgrid button span{font-size:10.5px}
+  }
+  body.sec-open{overflow:hidden}
+
+  /* ============ motion that carries meaning ============ */
+  /* Reading progress while a piece is open. */
+  .rprog{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;pointer-events:none;opacity:0;transition:opacity .25s}
+  .rprog.on{opacity:1}
+  .rprog i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));
+    background:linear-gradient(90deg,var(--a),var(--a2))}
+  /* Count-ups paint over the real figure; the text underneath never changes. */
+  .counting{position:relative;color:transparent !important;-webkit-text-fill-color:transparent}
+  .counting::after{content:attr(data-c);position:absolute;inset:0;color:var(--cc);-webkit-text-fill-color:var(--cc);white-space:nowrap;text-align:inherit}
+  /* Bars grow out of their zero line once they are on screen. */
+  [data-rv] .abar .fill,[data-rv] .tbar span,[data-rv] .bar .fill,[data-rv] .divbar .fill{transform-origin:0 50%}
+  [data-rv] .divbar .fill[style*="right:50%"]{transform-origin:100% 50%}
+  [data-rv="go"] .abar .fill,[data-rv="go"] .tbar span,[data-rv="go"] .bar .fill,[data-rv="go"] .divbar .fill{
+    animation:barin .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i,0),14) * 35ms)}
+  @keyframes barin{from{transform:scaleX(0)}}
+  [data-rv="go"].acards .acard,[data-rv="go"] .tcard{animation:cardin .55s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i,0),10) * 45ms)}
+  @keyframes cardin{from{opacity:0;transform:translateY(12px)}}
+  [data-rv="go"].astat::before{animation:rulein 1s cubic-bezier(.16,1,.3,1) both}
+  @keyframes rulein{from{transform:scaleX(0)}}
+  /* The week's top score lands with a little weight. */
+  .whero .big{transition:filter .3s}
+  .whero.landed .big{animation:heroin .9s cubic-bezier(.16,1,.3,1)}
+  @keyframes heroin{0%{letter-spacing:.04em;opacity:.4;filter:blur(6px)}100%{letter-spacing:inherit}}
+  /* Press feedback on the things people tap most. */
+  .wgame,.teaser,.tile,.mcard{transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s,border-color .2s,box-shadow .2s}
+  .wgame:active,.teaser:active,.mcard:active{transform:scale(.985)}
+  @media (hover:hover){.wgame:hover,.teaser:hover,.mcard:hover{transform:translateY(-2px)}}
+  ::selection{background:rgba(var(--a-rgb),.38);color:#fff}
+  html{scrollbar-color:var(--mid) var(--plane)}
+
+  /* ============ the score ticker ============ */
+  .sticker{display:flex;align-items:stretch;margin:0 0 18px;border-radius:14px;overflow:hidden;cursor:pointer;
+    background:linear-gradient(90deg,var(--surface),var(--raised));border:1px solid var(--edge);height:48px}
+  .sticker[hidden]{display:none}
+  .tklab{flex:none;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:0;border:0;cursor:pointer;
+    padding:0 14px;background:var(--a);color:var(--on-a);font-family:var(--disp);font-weight:700;font-size:14px;
+    letter-spacing:.06em;text-transform:uppercase;line-height:1.05;position:relative;z-index:2}
+  .tklab small{font-size:10.5px;letter-spacing:.08em;opacity:.75}
+  .tklab .livedot{display:inline-block;margin-right:5px;vertical-align:1px;background:var(--on-a)}
+  .sticker.live .tklab{background:var(--red);color:#fff}
+  .sticker.live .tklab .livedot{background:#fff}
+  .tkview{position:relative;flex:1;min-width:0;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+  .tktrack{display:flex;width:max-content;height:100%;animation:tkcrawl var(--tkdur,40s) linear infinite}
+  .sticker:hover .tktrack,.sticker:focus-within .tktrack{animation-play-state:paused}
+  @keyframes tkcrawl{to{transform:translateX(-50%)}}
+  .tkrun{display:flex;align-items:center;height:100%}
+  .tkgame{display:flex;align-items:center;gap:8px;padding:0 22px;height:100%;white-space:nowrap;position:relative}
+  .tkgame::after{content:"";position:absolute;right:0;top:14px;bottom:14px;width:1px;background:var(--edge)}
+  .tkside{display:flex;align-items:center;gap:6px;color:var(--ink-2);font-size:13.5px}
+  .tkside .av{width:22px;height:22px}
+  .tkpt{font-family:var(--disp);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+  .tkside.win .tknm,.tkside.lead .tknm{color:var(--ink);font-weight:600}
+  .tkside.win .tkpt{color:var(--a)}
+  .tkside.lead .tkpt{color:var(--a)}
+  .tkvs{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .tktag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--on-a);background:var(--a);
+    border-radius:999px;padding:2px 7px}
+  .tkpt.bump{animation:tkbump .9s ease-out}
+  @keyframes tkbump{0%{color:#fff;text-shadow:0 0 0 transparent;transform:scale(1.18)}100%{transform:none}}
+  @media (max-width:560px){
+    .sticker{margin:0 0 14px;border-radius:12px;height:44px}
+    .tklab{padding:0 11px;font-size:12.5px}
+    .tkgame{padding:0 16px}
+    .tkside{font-size:12.5px}
+    .tkpt{font-size:15px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .tkview{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+    .tktrack{animation:none}
+    .tkrun[aria-hidden="true"]{display:none}
+  }
+
+  /* ============ futuristic layer ============ */
+  /* A field grid running away under the masthead. */
+  header.hero .hgrid{position:absolute;left:-20%;right:-20%;bottom:-2px;height:150%;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(var(--a-rgb),.42) 1px,transparent 1px),linear-gradient(90deg,rgba(185,140,255,.34) 1px,transparent 1px);
+    background-size:56px 56px;transform:perspective(420px) rotateX(62deg);transform-origin:50% 100%;
+    -webkit-mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.5) 35%,transparent 75%);
+            mask-image:linear-gradient(to top,#000 0%,rgba(0,0,0,.5) 35%,transparent 75%);
+    animation:gridrun 6s linear infinite;opacity:.85}
+  @keyframes gridrun{to{background-position:0 56px,0 0}}
+  header.hero .wrap{position:relative;z-index:1}
+  /* A light that runs round the week's top score. */
+  .whero::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:1;
+    background:conic-gradient(from var(--sweep,0deg),transparent 0 58%,rgba(var(--a-rgb),.35) 68%,rgba(var(--a-rgb),1) 82%,rgba(185,140,255,1) 90%,transparent 97%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+            mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+    animation:sweep 5s linear infinite}
+  @property --sweep{syntax:"<angle>";inherits:false;initial-value:0deg}
+  @keyframes sweep{to{--sweep:360deg}}
+  /* Cards catch the light where the pointer is. */
+  @media (hover:hover){
+    .wgame,.scard,.stile{background-image:radial-gradient(260px circle at var(--mx,-300px) var(--my,-300px),rgba(var(--a-rgb),.10),transparent 60%)}
+  }
+
+  /* ============ stats lab ============ */
+  .sctl{display:flex;gap:10px;align-items:center;margin:4px 0 16px}
+  .sctl label{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .sctl select{width:auto;min-width:200px;min-height:44px;text-transform:none;letter-spacing:0;font-weight:600;color:var(--ink)}
+  .stiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:10px;margin-bottom:12px}
+  .stile,.scard{position:relative;border-radius:18px;border:1px solid transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+      linear-gradient(140deg,rgba(var(--a-rgb),.55),var(--edge) 35%,var(--edge) 65%,rgba(185,140,255,.5)) border-box}
+  @media (hover:hover){
+    .stile,.scard{background:radial-gradient(260px circle at var(--mx,-300px) var(--my,-300px),rgba(var(--a-rgb),.09),transparent 60%) padding-box,
+      linear-gradient(var(--surface),var(--surface)) padding-box,
+      linear-gradient(140deg,rgba(var(--a-rgb),.55),var(--edge) 35%,var(--edge) 65%,rgba(185,140,255,.5)) border-box}
+  }
+  .stile{padding:14px 16px 13px;overflow:hidden}
+  .stile .l{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .stile .v{font:700 34px/1.05 var(--disp);letter-spacing:-.03em;margin:6px 0 3px;font-variant-numeric:tabular-nums}
+  .stile:first-child .v{color:var(--a)}
+  .stile .n{font-size:12px;color:var(--ink-2);line-height:1.4}
+  .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .scard{padding:16px 16px 12px;min-width:0;overflow:hidden}
+  .scard.wide{grid-column:1/-1}
+  .scard::after{content:"";position:absolute;left:0;right:0;top:0;height:40%;pointer-events:none;opacity:0;
+    background:linear-gradient(180deg,transparent,rgba(var(--a-rgb),.10) 85%,rgba(var(--a-rgb),.45) 100%)}
+  [data-rv="go"].scard::after,.scard[data-rv="go"]::after{animation:scan 1.1s cubic-bezier(.4,0,.2,1) 1}
+  @keyframes scan{0%{opacity:1;transform:translateY(-100%)}85%{opacity:1}100%{opacity:0;transform:translateY(260%)}}
+  .sch h3{margin:0;font-size:18px}
+  .sch p{margin:4px 0 12px;font-size:12.5px;color:var(--muted);line-height:1.5;max-width:70ch}
+  .sread{min-height:40px;margin-top:10px;padding:9px 12px;border-radius:10px;background:var(--plane);border:1px solid var(--edge);
+    font-size:12.5px;color:var(--ink-2);line-height:1.45}
+  .sread b{color:var(--ink)}
+  .sbody [tabindex]:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+  @media (max-width:760px){.sgrid{grid-template-columns:1fr}}
+  @media (max-width:560px){.stiles{grid-template-columns:1fr 1fr}.stile .v{font-size:26px}.stile:first-child{grid-column:1/-1}}
+
+  /* luck map */
+  .lmap{position:relative;height:clamp(300px,52vw,470px);margin:6px 8px 26px 26px}
+  .lmap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .lm-up{fill:rgba(var(--a-rgb),.06)} .lm-dn{fill:rgba(185,140,255,.05)}
+  .lm-g{stroke:var(--grid);stroke-width:.25;vector-effect:non-scaling-stroke}
+  .lm-d{stroke:rgba(255,255,255,.35);stroke-width:1.5;stroke-dasharray:6 5;vector-effect:non-scaling-stroke}
+  .lm-q{position:absolute;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .lm-q.up{left:8px;top:6px;color:var(--a-lt)} .lm-q.dn{right:8px;bottom:6px;color:#cdb2ff}
+  .lm-ax{position:absolute;font-size:10.5px;color:var(--muted);letter-spacing:.06em}
+  .lm-ax.x{bottom:-22px;left:50%;transform:translateX(-50%)}
+  .lm-ax.y{left:-26px;top:50%;transform:translate(-50%,-50%) rotate(-90deg);white-space:nowrap}
+  .lm-t{position:absolute;bottom:-20px;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .lm-t.x0{left:0} .lm-t.x1{right:0}
+  .lm-dot{position:absolute;transform:translate(-50%,50%);display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:0;border:0;background:none;cursor:pointer;z-index:1;color:inherit;font:inherit}
+  .lm-dot .av{width:30px;height:30px;box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--mid);transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s}
+  .lm-dot .lm-n{font-size:10px;color:var(--ink-2);background:rgba(11,7,16,.75);padding:0 5px;border-radius:6px;white-space:nowrap;max-width:96px;overflow:hidden;text-overflow:ellipsis}
+  .lm-dot.nolab .lm-n{visibility:hidden} .lm-dot.nolab.hot .lm-n{visibility:visible}
+  .lm-dot.me{z-index:3} .lm-dot.me .av{width:40px;height:40px;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--a)}
+  .lm-dot.me .lm-n{color:var(--on-a);background:var(--a);font-weight:700}
+  .lm-dot.hot{z-index:4} .lm-dot.hot .av{transform:scale(1.18);box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--a-lt)}
+  [data-rv="go"] .lm-dot,.scard[data-rv="go"] .lm-dot{animation:dotin .6s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 45ms + .2s)}
+  @keyframes dotin{from{opacity:0;transform:translate(-50%,50%) scale(.3)}}
+  [data-rv="go"] .lm-d{animation:drawl 1s ease-out both}
+  .lm-d{stroke-dashoffset:0}
+  @keyframes drawl{from{opacity:0}}
+  @media (max-width:560px){.lm-dot .lm-n{display:none}.lm-dot.me .lm-n,.lm-dot.hot .lm-n{display:block}.lm-dot .av{width:24px;height:24px}.lm-dot.me .av{width:32px;height:32px}}
+
+  /* histogram */
+  .slegend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);margin-bottom:10px}
+  .slegend .k{width:12px;height:12px;border-radius:3px;margin-left:8px}
+  .slegend .k:first-child{margin-left:0}
+  .slegend .k.all{background:rgba(var(--a-rgb),.45)} .slegend .k.me{background:var(--a2)}
+  .hbars{position:relative;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:2px;align-items:end;height:220px;
+    border-bottom:1px solid var(--mid);padding-top:22px}
+  .hcol{position:relative;height:100%;display:flex;align-items:flex-end;justify-content:center;cursor:pointer;border-radius:4px}
+  .hcol.hot{background:rgba(255,255,255,.04)}
+  .hb{position:absolute;bottom:0;border-radius:4px 4px 0 0;transform-origin:50% 100%}
+  .hb.all{left:0;right:0;background:linear-gradient(to top,rgba(var(--a-rgb),.18),rgba(var(--a-rgb),.55))}
+  .hb.me{left:28%;right:28%;background:var(--a2);border-radius:3px 3px 0 0}
+  [data-rv="go"] .hb{animation:hbin .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 30ms)}
+  @keyframes hbin{from{transform:scaleY(0)}}
+  .hmed{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed rgba(255,255,255,.5);pointer-events:none}
+  .hmed i{position:absolute;top:0;left:4px;font-style:normal;font-size:10px;color:var(--ink-2);white-space:nowrap}
+  .hmed.me{border-left-color:var(--a2)} .hmed.me i{top:12px;color:#d9c2ff}
+  .hax{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+
+  /* heatmap */
+  .sseg{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+  .sseg button{min-height:36px;padding:0 13px;border-radius:999px;border:1px solid var(--edge);background:var(--raised);color:var(--ink-2);
+    font:600 13px var(--body);cursor:pointer}
+  .sseg button[aria-pressed="true"]{background:var(--a);border-color:var(--a);color:var(--on-a)}
+  .heatscroll{overflow-x:auto;scrollbar-width:thin}
+  .heat{display:grid;grid-template-columns:minmax(92px,150px) repeat(var(--w),minmax(22px,1fr)) 46px;gap:3px;min-width:min(100%,520px);font-size:11px}
+  .hh-w,.hh-c{font-size:10px;color:var(--muted);text-align:center;padding-bottom:2px}
+  .hh-c.t{text-align:right}
+  .hh-n{display:flex;align-items:center;gap:6px;min-width:0;font-size:12px;color:var(--ink-2)}
+  .hh-n .av{width:20px;height:20px;flex:none}
+  .hh-n span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hh-n.me{color:var(--a);font-weight:700}
+  .hh-t{text-align:right;font:600 12px var(--disp);color:var(--ink-2);align-self:center;font-variant-numeric:tabular-nums}
+  .hh-t.me{color:var(--a)}
+  .hc{position:relative;height:28px;border-radius:5px;cursor:pointer;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--a) calc(var(--t) * 88% + 4%),var(--raised));
+    color:var(--ink);font:600 10.5px var(--disp);font-variant-numeric:tabular-nums}
+  .hc.hi{color:var(--on-a)}
+  .hc.none{background:transparent;cursor:default}
+  .hc.w{box-shadow:inset 0 -3px 0 rgba(255,255,255,.75)}
+  .hc.me{outline:1px solid rgba(255,255,255,.35);outline-offset:-1px}
+  .hc.hot{outline:2px solid #fff;outline-offset:0;z-index:1}
+  .hc span{opacity:.92}
+  @media (max-width:620px){.hc span{display:none}.heat{grid-template-columns:minmax(78px,96px) repeat(var(--w),minmax(16px,1fr)) 38px;gap:2px}.hh-n .av{display:none}}
+  [data-rv="go"] .hc{animation:hcin .5s ease-out both;animation-delay:calc(var(--c) * 40ms + var(--r) * 12ms)}
+  @keyframes hcin{from{opacity:0;transform:scale(.6)}}
+
+  /* bump chart */
+  .bump svg{width:100%;height:auto;display:block;overflow:visible}
+  .bump .bp,.bump .bs{font:600 11px var(--body);fill:var(--muted)}
+  .bump .bg{stroke:var(--grid);stroke-width:1}
+  .bump g.bl{cursor:pointer;outline:none}
+  .bump g.bl .ln{fill:none;stroke:var(--mid);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .bump g.bl .hit{fill:none;stroke:transparent;stroke-width:16}
+  .bump g.bl circle{fill:var(--mid);stroke:var(--surface);stroke-width:2}
+  .bump g.bl .bn{font:500 11px var(--body);fill:var(--muted)}
+  .bump g.bl.me .ln{stroke:var(--a);stroke-width:3.5}
+  .bump g.bl.me circle{fill:var(--a)}
+  .bump g.bl.me .bn{fill:var(--a);font-weight:700}
+  .bump g.bl circle.champ{fill:var(--a-lt);stroke:var(--a)}
+  .bump g.bl.hot .ln{stroke:#fff;stroke-width:3}
+  .bump g.bl.hot .bn{fill:#fff}
+  .bump g.bl.hot circle{fill:#fff}
+  .bump svg:hover g.bl:not(.hot):not(.me){opacity:.45}
+  [data-rv="go"] .bump .ln{stroke-dasharray:1;animation:lnin 1.3s cubic-bezier(.65,0,.35,1) both;animation-delay:calc(var(--i) * 50ms)}
+  @keyframes lnin{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @media (max-width:560px){.bump g.bl .bn{font-size:10px}.bump g.bl:not(.me):not(.hot) .bn{display:none}}
+
+  @media (prefers-reduced-motion:reduce){header.hero .hgrid,.whero::before{animation:none}}
+
+  /* ===================================================================
+     DASHBOARD LAYER — tokens first, then nav, cards, type and motion.
+     Colours and fonts stay the league's own (gold on aubergine, Space
+     Grotesk over Inter); this layer sets shape, depth and timing.
+     =================================================================== */
+  :root{
+    --r:18px; --rs:14px; --r-pill:999px;
+    --ease:cubic-bezier(.2,.8,.2,1); --ease-pop:cubic-bezier(.2,.8,.2,1.2);
+    --t-press:150ms; --t-hover:200ms; --t-enter:500ms; --t-bar:700ms; --t-count:800ms;
+    --card-a:#1d1429; --card-b:#170f22;
+    --card-line:rgba(214,186,255,.11); --card-line-hi:rgba(var(--a-rgb),.34);
+    --card-shadow:0 1px 0 rgba(255,255,255,.045) inset,0 14px 34px -18px rgba(0,0,0,.75);
+    --glow-1:rgba(255,194,61,.08); --glow-2:rgba(185,140,255,.10); --glow-3:rgba(255,120,170,.06);
+  }
+  /* Three soft lights fixed behind the page. */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(900px 600px at 8% 12%,var(--glow-2),transparent 70%),
+      radial-gradient(800px 560px at 92% 28%,var(--glow-1),transparent 70%),
+      radial-gradient(900px 700px at 50% 110%,var(--glow-3),transparent 70%)}
+
+  /* ---- nav: 36px pills inside 44px tap targets ---- */
+  .tabrow{gap:2px}
+  .tabrow button{border:4px solid transparent;background-clip:padding-box;padding:0 12px;font-size:14px;
+    color:var(--muted);transition:color var(--t-hover) var(--ease),background-color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
+  .tabrow button:hover{background-color:rgba(255,255,255,.05);color:var(--ink)}
+  .tabrow button:active{transform:scale(.97)}
+  .tabrow button[aria-selected="true"]{color:var(--a);background-color:rgba(var(--a-rgb),.15);box-shadow:inset 0 0 0 1px rgba(var(--a-rgb),.4);font-weight:700}
+  .tabrow.has-ind button[aria-selected="true"]{color:var(--a);background-color:transparent;box-shadow:none}
+  .tabind{background:rgba(var(--a-rgb),.15);box-shadow:inset 0 0 0 1px rgba(var(--a-rgb),.4);
+    transition:transform .45s var(--ease),width .45s var(--ease),opacity .2s}
+  .taball{width:auto;padding:0 14px 0 12px;gap:7px;display:flex;align-items:center;border-radius:var(--r-pill);
+    font:600 14px var(--body);color:var(--ink-2);background:rgba(255,255,255,.04);border:1px solid var(--card-line);
+    transition:background-color var(--t-hover) var(--ease),color var(--t-hover) var(--ease),border-color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
+  .taball svg{width:16px;height:16px}
+  .taball:hover{background:rgba(var(--a-rgb),.12);color:var(--a);border-color:rgba(var(--a-rgb),.4)}
+  .taball[aria-expanded="true"]{background:rgba(var(--a-rgb),.15);color:var(--a);border-color:rgba(var(--a-rgb),.4)}
+  .taball:active{transform:scale(.97)}
+  nav.tabs .wrap::after{right:calc(var(--pad) + 96px)}
+  .tabarr-r{right:calc(var(--pad) + 90px)}
+
+  /* ---- More: a searchable two-column sheet ---- */
+  .secbg{transition:opacity 250ms var(--ease)}
+  .secsheet{left:auto;right:var(--right,16px);top:var(--top,76px);width:min(600px,calc(100vw - 24px));
+    transform:translateY(-8px);opacity:0;border-radius:var(--r);border:1px solid var(--card-line);
+    background:linear-gradient(180deg,var(--card-a),var(--card-b));box-shadow:0 30px 70px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.05) inset;
+    transition:transform 280ms var(--ease),opacity 200ms var(--ease)}
+  .secsheet.on{transform:none;opacity:1}
+  .sechd{padding:2px 2px 10px;font-size:16px}
+  .secsearch{position:relative;display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:0 6px 0 12px;height:44px;
+    border-radius:12px;background:var(--plane);border:1px solid var(--card-line);transition:border-color var(--t-hover) var(--ease)}
+  .secsearch:focus-within{border-color:rgba(var(--a-rgb),.55)}
+  .secsearch svg{width:17px;height:17px;color:var(--muted);flex:none}
+  .secsearch input{flex:1;min-width:0;height:100%;border:0;background:transparent;color:var(--ink);font:500 15px var(--body);outline:none}
+  .secsearch input::-webkit-search-cancel-button{display:none}
+  .secclear{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--card-line);background:var(--raised);color:var(--ink-2);
+    font:600 12.5px var(--body);cursor:pointer}
+  .secclear[hidden]{display:none}
+  .secgrid{grid-template-columns:1fr 1fr;gap:6px}
+  .secgrid button{flex-direction:row;align-items:center;gap:12px;min-height:60px;padding:9px 10px;border-radius:14px;
+    background:transparent;border:1px solid transparent;transition:background-color var(--t-hover) var(--ease),border-color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
+  .secgrid button[hidden]{display:none}
+  .secgrid button:hover,.secgrid button:focus-visible{background:rgba(255,255,255,.05);border-color:var(--card-line)}
+  .secgrid button:active{transform:scale(.97)}
+  .secic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(160deg,rgba(var(--a-rgb),.16),rgba(185,140,255,.10));border:1px solid var(--card-line)}
+  .secgrid button .secic svg{width:20px;height:20px;margin:0;color:var(--a-lt)}
+  .sectx{display:flex;flex-direction:column;min-width:0}
+  .sectx b{font:700 14.5px/1.2 var(--disp)}
+  .sectx span{font-size:12px;line-height:1.35;color:var(--muted)}
+  .secgrid button[aria-current="true"]{background:rgba(var(--a-rgb),.10);border-color:rgba(var(--a-rgb),.4)}
+  .secnone{margin:16px 4px 8px;color:var(--muted);font-size:13.5px;text-align:center}
+  .secsheet.on .secgrid button{animation:secin var(--t-enter) var(--ease) both;animation-delay:calc(min(var(--i),10) * 20ms)}
+  @media (max-width:640px){
+    .taball span{display:none}
+    .taball{padding:0;width:44px;justify-content:center}
+    nav.tabs .wrap::after{right:calc(var(--pad) + 50px)}
+    .tabarr-r{right:calc(var(--pad) + 44px)}
+    .secsheet{left:0;right:0;top:auto;bottom:0;width:auto;transform:translateY(100%);opacity:1;
+      border-radius:22px 22px 0 0;transition:transform 380ms var(--ease)}
+    .secsheet.on{transform:none}
+    .secgrid{grid-template-columns:1fr 1fr}
+    .secgrid button{min-height:56px;gap:9px;padding:8px}
+    .secic{width:34px;height:34px;border-radius:10px}
+    .sectx b{font-size:13.5px}
+    .sectx span{font-size:11px}
+  }
+
+  /* ---- cards: glass, hairline, lift ---- */
+  .tile,.mcard,.rowc,.teaser,.acard,.wgame,.barbox,.card,.dcard,.game,.rec,.recap,.rk-card,.tcard,.trade,.awcard,
+  .compare,.method,.mgrp,.board,.tiers,.sticker,.trophy,.mpc,.wrc-team,.mcol,.empty{
+    border-color:var(--card-line);box-shadow:var(--card-shadow)}
+  .mcard,.rowc,.wgame,.barbox,.card,.dcard,.game,.rec,.recap,.rk-card,.trade,.board,.mgrp,.mcol,.compare,.method{
+    background-color:var(--card-b);background-image:linear-gradient(180deg,var(--card-a),var(--card-b))}
+  .tile,.mcard,.rowc,.teaser,.wgame,.game,.trade,.tcard,.rk-card{
+    transition:transform var(--t-hover) var(--ease),border-color var(--t-hover) var(--ease),box-shadow var(--t-hover) var(--ease),background-color var(--t-hover) var(--ease)}
+  @media (hover:hover){
+    .tile:hover,.mcard:hover,.rowc:hover,.teaser:hover,.wgame:hover,.game:hover,.trade:hover,.tcard:hover{
+      transform:translateY(-2px);border-color:var(--card-line-hi);box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 18px 38px -16px rgba(0,0,0,.8)}
+  }
+  .mcard:active,.rowc:active,.wgame:active,.teaser:active,.back:active,.sseg button:active,.sclear:active,.glnav button:active,.fxm-chip:active{transform:scale(.97)}
+  @media (hover:hover){.wgame,.scard,.stile{background-image:radial-gradient(260px circle at var(--mx,-300px) var(--my,-300px),rgba(var(--a-rgb),.10),transparent 60%),linear-gradient(180deg,var(--card-a),var(--card-b))}}
+
+  /* ---- type: sentence-case headings, tabular stats ---- */
+  .sechead h2{font-size:clamp(21px,2.6vw,26px);letter-spacing:-.02em}
+  .tile .v,.stile .v,.mcard .rec,.rowc .cv,.wp,.tkpt,.pp-pct,.price .o{font-variant-numeric:tabular-nums}
+  .stile .v{font-size:clamp(28px,3.4vw,40px)}
+  .whero .big{font-size:clamp(52px,9vw,84px)}
+
+  /* ---- motion utilities ---- */
+  /* Stagger: a list's items fade and rise in turn; the whole list is done inside ~600ms. */
+  [data-stg="wait"] > *{opacity:0}
+  [data-stg="go"] > *{animation:rise var(--t-enter) var(--ease) both;animation-delay:calc(min(var(--si,0),12) * 35ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}}
+  /* GrowBar: bars fill from zero on first view, and glide when a filter changes their width. */
+  [data-rv="go"] .abar .fill,[data-rv="go"] .tbar span,[data-rv="go"] .bar .fill,[data-rv="go"] .divbar .fill{
+    animation:barin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i,0),10) * 25ms)}
+  .abar .fill,.tbar span,.bar .fill,.divbar .fill,.hb{transition:width 450ms var(--ease),height 450ms var(--ease)}
+  [data-rv="go"] .hb{animation:hbin var(--t-bar) var(--ease) both;animation-delay:calc(min(var(--i),14) * 20ms)}
+  /* Markers pop in with a slight overshoot. */
+  [data-rv="go"] .lm-dot,.scard[data-rv="go"] .lm-dot{animation:dotin 520ms var(--ease-pop) both;animation-delay:calc(var(--i) * 30ms + 120ms)}
+  [data-rv="go"] .bump circle{transform-box:fill-box;transform-origin:center;animation:pop 420ms var(--ease-pop) both;animation-delay:calc(var(--i) * 30ms + 500ms)}
+  @keyframes pop{from{transform:scale(0)}}
+  [data-rv="go"] .bump .ln{animation:lnin 700ms var(--ease) both;animation-delay:calc(var(--i) * 30ms)}
+  [data-rv="go"] .hc{animation:hcin 380ms var(--ease) both;animation-delay:calc(min(var(--c) * 30ms + var(--r) * 10ms,560ms))}
+  .whero.landed .big{animation:heroin 700ms var(--ease)}
+
+  /* ---- stats controls ---- */
+  .sctl{flex-wrap:wrap}
+  .sclear{min-height:44px;padding:0 16px;border-radius:var(--r-pill);border:1px solid var(--card-line);background:rgba(255,255,255,.04);
+    color:var(--ink-2);font:600 13.5px var(--body);cursor:pointer;transition:background-color var(--t-hover) var(--ease),color var(--t-hover) var(--ease),transform var(--t-press) var(--ease)}
+  .sclear:hover{color:var(--a);border-color:rgba(var(--a-rgb),.4)}
+  .sclear[hidden]{display:none}
+
+  /* Two-column ranked tiers read down the left column first. */
+  @media (max-width:430px){.tcards{grid-template-rows:repeat(var(--rows,1),auto);grid-auto-flow:column}}
+
+  @media (prefers-reduced-motion:reduce){
+    [data-stg="wait"] > *{opacity:1}
+    .tabind,.secsheet,.secbg{transition:none}
+  }
+  /* The More sheet always fits the window: it scrolls inside, search pinned at the top. */
+  .secsheet{max-height:calc(100dvh - var(--top,76px) - 16px);overflow-y:auto;overscroll-behavior:contain;padding-top:0;scrollbar-width:thin}
+  .secgrp{grid-column:1/-1;margin:10px 4px 2px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .secgrp:first-child{margin-top:0}
+  .secgrp[hidden]{display:none}
+  .secsheet .sechd,.secsheet .secsearch{position:sticky;z-index:2}
+  .secsheet .sechd{background:var(--card-a)}
+  .secsheet .sechd{top:0;padding-top:14px;margin:0 -14px;padding-left:16px;padding-right:16px}
+  .secsheet .secsearch{top:56px;box-shadow:0 -12px 0 var(--card-a),0 10px 16px -6px var(--card-a)}
+  @media (min-width:641px) and (max-height:820px){
+    .secgrid button{min-height:52px;padding:6px 10px}
+    .secic{width:34px;height:34px;border-radius:10px}
+  }
+  @media (max-width:640px){.secsheet{max-height:88dvh}.secsheet .sechd{padding-top:16px}}
+
 </style>
 </head>
 <body>
 
 <header class="hero">
+  <div class="hgrid" aria-hidden="true"></div>
   <div class="wrap">
     <div class="eyebrow" id="eyebrow">Fantasy Football</div>
     <h1 class="name" id="lgName">DFFL</h1>
@@ -1821,7 +2277,18 @@
   </div>
 </header>
 
-<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button></div></nav>
+<nav class="tabs"><div class="wrap"><div class="tabrow" id="tabs" role="tablist"></div><button type="button" class="tabarr tabarr-l" aria-label="Scroll tabs left" aria-controls="tabs" hidden>‹</button><button type="button" class="tabarr tabarr-r" aria-label="Scroll tabs right" aria-controls="tabs" hidden>›</button><button type="button" class="taball" id="tabAll" aria-label="More pages" aria-haspopup="dialog" aria-expanded="false" aria-controls="secSheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg><span>More</span></button></div></nav>
+<div class="secbg" id="secBg" hidden></div>
+<div class="secsheet" id="secSheet" role="dialog" aria-modal="true" aria-label="All pages" hidden>
+  <div class="sechd"><span>All pages</span><button type="button" class="secx" id="secX" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="secsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input type="search" id="secQ" placeholder="Search pages" autocomplete="off" aria-label="Search pages" aria-controls="secGrid">
+    <button type="button" class="secclear" id="secClear" hidden>Clear</button></div>
+  <div class="secgrid" id="secGrid"></div>
+  <p class="secnone" id="secNone" hidden>No page matches that.</p>
+</div>
+<div class="rprog" id="rprog" aria-hidden="true"><i></i></div>
 
 <main class="wrap">
   <div id="loader">
@@ -2452,6 +2919,7 @@ const TABS = [
   { id: "scores", label: "Scoreboard" },
   { id: "managers", label: "Managers" },
   { id: "records", label: "Records" },
+  { id: "stats", label: "Stats" },
   { id: "matchups", label: "Matchups" },
   { id: "power", label: "Power" },
   { id: "odds", label: "Odds" },
@@ -2476,6 +2944,9 @@ function buildTabs() {
     b.onclick = () => show(t.id);
     bar.appendChild(b);
   });
+  bar.appendChild(el("span", "tabind off"));
+  bar.classList.add("has-ind");
+  buildSections();
   tabHint();
   if (!bar.dataset.hint) {
     bar.dataset.hint = "1";
@@ -2534,7 +3005,525 @@ function tabNudge() {
   bar.scrollTo({ left: start + 40, behavior: "smooth" });
   setTimeout(() => bar.scrollTo({ left: start, behavior: "smooth" }), 550);
 }
+/* -------------------------------------------- every section, one tap away */
+// Line icons for the section sheet, on a 24-unit grid with a 1.8 stroke.
+const TAB_ICONS = {
+  home: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z",
+  scores: "M4 5h16v14H4zM12 5v14M4 12h3M17 12h3",
+  managers: "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21v-1a6 6 0 0 1 12 0v1M16 3.5a4 4 0 0 1 0 7.5M22 21v-1a6 6 0 0 0-4-5.6",
+  records: "M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3",
+  stats: "M4 20V10M10 20V4M16 20v-7M22 20H2",
+  matchups: "M7 4 3 8l4 4M3 8h13M17 12l4 4-4 4M21 16H8",
+  power: "M13 2 4 14h7l-1 8 9-12h-7z",
+  odds: "M3 3v18h18M7 15l4-4 3 3 6-7",
+  injuries: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+  picture: "M3 5h5v5H3zM3 14h5v5H3zM8 7.5h3v9H8M11 12h4M15 9.5h6v5h-6z",
+  toilet: "M12 3v14M6 11l6 6 6-6M5 21h14",
+  draft: "M4 4h16v16H4zM4 9.5h16M4 15h16M9.5 4v16M15 4v16",
+  trades: "M17 3l4 4-4 4M21 7H7M7 21l-4-4 4-4M3 17h14",
+  rankings: "M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01",
+  recaps: "M5 3h11l3 3v15H5zM9 8h6M9 12h6M9 16h4",
+  ask: "M4 5h16v11H9l-5 4z",
+};
+const TAB_DESC = {
+  home: "This week at a glance", scores: "Every matchup, every week", managers: "Career profiles",
+  records: "Trophies and the record book", stats: "Every game, drawn", matchups: "Head-to-head and rivalries", power: "This week's power board",
+  odds: "Game lines, playoff and title prices", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
+  toilet: "The race for last", draft: "Draft board and grades", trades: "Every trade, graded",
+  rankings: "DFFL position ranks", recaps: "Columns and weekly write-ups", ask: "Ask anything about the league",
+};
+const icon24 = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const REDUCED = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+// The More sheet groups its pages so the list reads like a menu, not a pile.
+const SEC_GROUPS = [
+  { name: "This week", ids: ["home", "scores", "power", "odds", "injuries", "picture", "toilet"] },
+  { name: "League history", ids: ["managers", "records", "matchups", "draft", "trades"] },
+  { name: "Numbers", ids: ["stats", "rankings"] },
+  { name: "Reads", ids: ["recaps", "ask"] },
+];
+function buildSections() {
+  const grid = $("#secGrid"); if (!grid) return;
+  grid.innerHTML = "";
+  const groupOf = id => SEC_GROUPS.find(g => g.ids.includes(id)) || SEC_GROUPS[SEC_GROUPS.length - 1];
+  const order = [...TABS].sort((a, b) => SEC_GROUPS.indexOf(groupOf(a.id)) - SEC_GROUPS.indexOf(groupOf(b.id)));
+  let lastG = null;
+  order.forEach((t, i) => {
+    const g = groupOf(t.id);
+    if (g !== lastG) { const h = el("h3", "secgrp", esc(g.name)); h.dataset.grp = g.name; grid.appendChild(h); lastG = g; }
+    const b = el("button", null, `<i class="secic">${icon24(TAB_ICONS[t.id] || "M4 6h16M4 12h16M4 18h16")}</i><span class="sectx"><b>${esc(t.label)}</b><span>${esc(TAB_DESC[t.id] || "")}</span></span>`);
+    b.dataset.find = `${t.label} ${TAB_DESC[t.id] || ""} ${t.id}`.toLowerCase();
+    b.type = "button"; b.dataset.go = t.id; b.dataset.grp = g.name; b.style.setProperty("--i", i);
+    b.onclick = () => { closeSections(true); show(t.id); };
+    grid.appendChild(b);
+  });
+  const q = $("#secQ"), clr = $("#secClear");
+  const filter = () => {
+    const v = q.value.trim().toLowerCase();
+    let n = 0;
+    for (const b of grid.querySelectorAll("button")) { const on = !v || b.dataset.find.includes(v); b.hidden = !on; if (on) b.style.setProperty("--i", n++); }
+    for (const h of grid.querySelectorAll(".secgrp")) h.hidden = !grid.querySelector(`button[data-grp="${h.dataset.grp}"]:not([hidden])`);
+    $("#secNone").hidden = n > 0;
+    clr.hidden = !v;
+  };
+  q.addEventListener("input", filter);
+  q.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    const first = [...grid.querySelectorAll("button")].find(b => !b.hidden);
+    if (first) { e.preventDefault(); first.click(); }
+  });
+  clr.onclick = () => { q.value = ""; filter(); q.focus(); };
+  const all = $("#tabAll");
+  all.onclick = () => all.getAttribute("aria-expanded") === "true" ? closeSections() : openSections();
+  $("#secBg").onclick = () => closeSections();
+  $("#secX").onclick = () => closeSections();
+  $("#secSheet").addEventListener("keydown", e => {
+    if (e.key === "Escape") { e.preventDefault(); closeSections(); return; }
+    if (e.key !== "Tab") return;
+    // Keep focus inside the sheet while it is open.
+    const f = [...$("#secSheet").querySelectorAll("button")], a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+    else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
+  addEventListener("resize", () => placeTabInd(false), { passive: true });
+  $("#tabs").addEventListener("scroll", () => placeTabInd(false), { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => placeTabInd(false));
+}
+let SEC_T = 0;
+function openSections() {
+  const sh = $("#secSheet"), bg = $("#secBg");
+  clearTimeout(SEC_T);
+  const cur = $('#tabs button[aria-selected="true"]');
+  for (const b of $("#secGrid").children) b.setAttribute("aria-current", String(!!cur && b.dataset.go === cur.dataset.tab));
+  const q = $("#secQ"); q.value = ""; q.dispatchEvent(new Event("input"));
+  // On a wide screen the sheet drops from the More button; on a phone it rises from the bottom.
+  const r = $("#tabAll").getBoundingClientRect();
+  sh.style.setProperty("--top", Math.round(r.bottom + 8) + "px");
+  sh.style.setProperty("--right", Math.max(12, Math.round(innerWidth - r.right)) + "px");
+  sh.hidden = false; bg.hidden = false;
+  void sh.offsetWidth;
+  sh.classList.add("on"); bg.classList.add("on");
+  document.body.classList.add("sec-open");
+  $("#tabAll").setAttribute("aria-expanded", "true");
+  // A phone keyboard would cover the sheet, so only a real keyboard gets the search box focused.
+  if (matchMedia("(hover:hover)").matches) q.focus({ preventScroll: true });
+  else { const f = $('#secGrid button[aria-current="true"]') || $("#secGrid button"); if (f) f.focus({ preventScroll: true }); }
+}
+function closeSections(quiet) {
+  const sh = $("#secSheet"), bg = $("#secBg");
+  if (!sh || sh.hidden) return;
+  sh.classList.remove("on"); bg.classList.remove("on");
+  document.body.classList.remove("sec-open");
+  $("#tabAll").setAttribute("aria-expanded", "false");
+  SEC_T = setTimeout(() => { sh.hidden = true; bg.hidden = true; }, REDUCED() ? 0 : 320);
+  if (!quiet) $("#tabAll").focus({ preventScroll: true });
+}
+addEventListener("keydown", e => { if (e.key === "Escape") closeSections(); });
+
+/** Move the lit pill under whichever tab is open; hide it when none is. */
+function placeTabInd(animate = true) {
+  const ind = $("#tabs .tabind"); if (!ind) return;
+  const b = $('#tabs button[aria-selected="true"]');
+  if (!b || !b.offsetWidth) { ind.classList.add("off"); return; }
+  const was = ind.classList.contains("off");
+  if (!animate || was || REDUCED()) ind.style.transition = "none";
+  // The button is a 44px tap target; the pill drawn inside it is 36px.
+  const inset = Math.max(0, (b.offsetHeight - 36) / 2);
+  ind.style.width = b.offsetWidth + "px";
+  ind.style.top = (b.offsetTop + inset) + "px";
+  ind.style.height = (b.offsetHeight - inset * 2) + "px";
+  ind.style.transform = `translateX(${b.offsetLeft}px)`;
+  ind.classList.remove("off");
+  if (ind.style.transition === "none") { void ind.offsetWidth; ind.style.transition = ""; }
+}
+
+
+/* ============================================================ STATS LAB */
+/*
+ * The league, drawn: every regular-season score on record, five ways. One
+ * "focus" manager runs through every chart; tap or hover anything and the
+ * readout under it says exactly what that mark is.
+ */
+const STAT_FOCUS_KEY = "statsFocus";
+function panelStats(AT) {
+  const p = el("div", "panel"); p.dataset.panel = "stats";
+  p.appendChild(sechead("Stats lab",
+    "Every regular-season game the league has ever played, drawn. Pick a manager to follow them through every chart; tap or hover any mark for the number behind it."));
+  const ctl = el("div", "sctl");
+  const lab = el("label", null, "<span>Follow</span>");
+  const sel = el("select"); sel.id = "statFocus";
+  const rows = AT.slice().sort((a, b) => nameOf(a.uid).localeCompare(nameOf(b.uid)));
+  sel.innerHTML = `<option value="">Nobody — whole league</option>` + rows.map(r => `<option value="${esc(r.uid)}">${esc(nameOf(r.uid))}</option>`).join("");
+  let saved = null; try { saved = localStorage.getItem(STAT_FOCUS_KEY); } catch (e) { /* private mode */ }
+  sel.value = saved === "" ? "" : rows.some(r => r.uid === saved) ? saved : AT[0].uid;
+  lab.appendChild(sel); ctl.appendChild(lab);
+  const clr = el("button", "sclear", "Clear"); clr.type = "button";
+  clr.onclick = () => { sel.value = ""; sel.onchange(); };
+  ctl.appendChild(clr);
+  p.appendChild(ctl);
+  const host = el("div", "slab");
+  host.appendChild(el("div", "wskel", "Drawing every game…"));
+  p.appendChild(host);
+  let lastW = 0, rt = 0;
+  const draw = () => { lastW = host.clientWidth; clr.hidden = !sel.value; drawStats(host, AT, sel.value); };
+  sel.onchange = () => {
+    try { localStorage.setItem(STAT_FOCUS_KEY, sel.value); } catch (e) { /* fine */ }
+    draw();
+  };
+  p._draw = draw;
+  addEventListener("resize", () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { if (!p.hidden && p.dataset.drawn && Math.abs(host.clientWidth - lastW) > 20) draw(); }, 180);
+  }, { passive: true });
+  return p;
+}
+
+/** Pick a manager to follow; picking the one already followed lets go. */
+function toggleFocus(uid) {
+  const s = $("#statFocus"); if (!s) return;
+  s.value = s.value === uid ? "" : uid;
+  s.onchange();
+}
+
+/** One card: a title, a line on how to read it, the chart, and its readout. */
+function statCard(title, sub, cls = "") {
+  const c = el("section", `scard ${cls}`);
+  c.innerHTML = `<header class="sch"><h3>${esc(title)}</h3>${sub ? `<p>${esc(sub)}</p>` : ""}</header>
+    <div class="sbody"></div><div class="sread" aria-live="polite"></div>`;
+  return { card: c, body: c.querySelector(".sbody"), read: c.querySelector(".sread") };
+}
+/** Make any element a tappable, hoverable mark that writes into a readout. */
+function statMark(node, readout, html, dflt) {
+  node.setAttribute("tabindex", "0");
+  const on = () => { readout.innerHTML = html; node.classList.add("hot"); };
+  const off = () => { node.classList.remove("hot"); readout.innerHTML = dflt; };
+  node.addEventListener("pointerenter", on); node.addEventListener("focus", on);
+  node.addEventListener("pointerleave", off); node.addEventListener("blur", off);
+  node.addEventListener("click", on);
+}
+
+function drawStats(host, AT, focus) {
+  host.innerHTML = "";
+  const games = regGames();
+  if (!games.length) { host.appendChild(el("div", "empty", "<b>No games yet</b>The charts fill in once a week is final.")); return; }
+  const scores = games.flatMap(g => [
+    { uid: g.a.uid, pts: g.a.pts, opp: g.b.uid, op: g.b.pts, season: g.season, week: g.week },
+    { uid: g.b.uid, pts: g.b.pts, opp: g.a.uid, op: g.a.pts, season: g.season, week: g.week }]);
+  const fname = nameOf(focus);
+
+  /* ---- the tiles */
+  const total = scores.reduce((t, x) => t + x.pts, 0);
+  const hi = scores.reduce((a, b) => b.pts > a.pts ? b : a);
+  const margins = games.map(g => ({ g, m: Math.abs(g.a.pts - g.b.pts) }));
+  const close = margins.reduce((a, b) => b.m < a.m ? b : a), blow = margins.reduce((a, b) => b.m > a.m ? b : a);
+  const mine = scores.filter(x => x.uid === focus);
+  const tiles = el("div", "stiles");
+  const tile = (l, v, n) => `<div class="stile"><div class="l">${esc(l)}</div><div class="v">${esc(v)}</div><div class="n">${n}</div></div>`;
+  const gw = g => `${esc(nameOf(g.a.pts >= g.b.pts ? g.a.uid : g.b.uid))} over ${esc(nameOf(g.a.pts >= g.b.pts ? g.b.uid : g.a.uid))} · ${g.season} wk ${g.week}`;
+  tiles.innerHTML = tile("Points scored, all time", Math.round(total).toLocaleString("en-US"), `${games.length} games · ${scores.length} scores`)
+    + tile("Average score", f1(total / scores.length), focus ? `${esc(fname)}: ${mine.length ? f1(mine.reduce((t, x) => t + x.pts, 0) / mine.length) : "—"}` : `median ${f1(scores.map(x => x.pts).sort((a, b) => a - b)[scores.length >> 1])}`)
+    + tile("Highest score ever", f2(hi.pts), `${esc(nameOf(hi.uid))} · ${hi.season} wk ${hi.week}`)
+    + tile("Biggest blowout", f1(blow.m), gw(blow.g))
+    + tile("Closest game", f2(close.m), gw(close.g));
+  host.appendChild(tiles);
+
+  const grid = el("div", "sgrid");
+  host.appendChild(grid);
+  grid.appendChild(luckMap(AT, focus));
+  grid.appendChild(scoreHist(scores, focus));
+  grid.appendChild(weekHeat(scores, focus));
+  const bump = finishBump(focus);
+  if (bump) grid.appendChild(bump);
+}
+
+/* ---- skill against luck: a scatter of how good each team scored against how often it won */
+function luckMap(AT, focus) {
+  const { card, body, read } = statCard("Luck map",
+    "Across: how often your score would have beaten the rest of the league. Up: how often you actually won. Above the line, the schedule has been kind.", "wide");
+  const rows = AT.filter(r => r.g > 0);
+  const xs = rows.map(r => r.apPct), ys = rows.map(r => r.winPct);
+  const lo = Math.max(0, Math.min(...xs, ...ys) - 0.04), hi = Math.min(1, Math.max(...xs, ...ys) + 0.04);
+  const P = v => ((v - lo) / (hi - lo) * 100);
+  const plot = el("div", "lmap");
+  // Diagonal + regions drawn in a square SVG under the HTML avatars.
+  plot.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <polygon class="lm-up" points="0,100 0,0 100,0"/><polygon class="lm-dn" points="0,100 100,100 100,0"/>
+      ${[0.25, 0.5, 0.75].map(t => `<line class="lm-g" x1="${t * 100}" y1="0" x2="${t * 100}" y2="100"/><line class="lm-g" x1="0" y1="${t * 100}" x2="100" y2="${t * 100}"/>`).join("")}
+      <line class="lm-d" x1="0" y1="100" x2="100" y2="0" pathLength="1"/></svg>
+    <span class="lm-q up">Luckier than their scores</span><span class="lm-q dn">Unluckier than their scores</span>
+    <span class="lm-ax x">All-play win % →</span><span class="lm-ax y">Actual win % →</span>
+    <span class="lm-t x0">${pct(lo).replace(".0", "")}</span><span class="lm-t x1">${pct(hi).replace(".0", "")}</span>`;
+  const f = rows.find(r => r.uid === focus);
+  const dflt = f ? `<b>${esc(nameOf(f.uid))}</b> ${f.luck >= 0 ? "+" : "−"}${f1(Math.abs(f.luck))} wins of luck · scores beat ${pct(f.apPct)} of the league · won ${pct(f.winPct)}` : "Tap a manager.";
+  read.innerHTML = dflt;
+  rows.slice().sort((a, b) => (a.uid === focus) - (b.uid === focus)).forEach((r, i) => {
+    const d = el("button", `lm-dot${r.uid === focus ? " me" : ""}${r.luck >= 0 ? " pos" : " neg"}`);
+    d.type = "button";
+    d.style.left = P(r.apPct).toFixed(2) + "%"; d.style.bottom = P(r.winPct).toFixed(2) + "%"; d.style.setProperty("--i", i);
+    d.innerHTML = `${avatarHTML(r.uid, "xs")}<span class="lm-n">${esc(nameOf(r.uid))}</span>`;
+    d.setAttribute("aria-label", `${nameOf(r.uid)}: all-play ${pct(r.apPct)}, won ${pct(r.winPct)}`);
+    d.addEventListener("click", () => toggleFocus(r.uid));
+    statMark(d, read, `<b>${esc(nameOf(r.uid))}</b> ${r.w}-${r.l}${r.t ? "-" + r.t : ""} · scores beat ${pct(r.apPct)} of the league week to week · ${r.luck >= 0 ? "+" : "−"}${f1(Math.abs(r.luck))} wins ${r.luck >= 0 ? "more" : "fewer"} than their scoring earned`, dflt);
+    plot.appendChild(d);
+  });
+  body.appendChild(plot);
+  // Name every dot that has room; a label that would land on another stays
+  // hidden until its dot is tapped. The followed manager is always named.
+  requestAnimationFrame(() => {
+    const placed = [];
+    const hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    const dots = [...plot.querySelectorAll(".lm-dot")];
+    dots.forEach(d => placed.push(d.querySelector(".av").getBoundingClientRect()));
+    dots.sort((a, b) => b.classList.contains("me") - a.classList.contains("me")).forEach(d => {
+      const n = d.querySelector(".lm-n"), r = n.getBoundingClientRect();
+      if (!r.width) return;
+      if (!d.classList.contains("me") && placed.some(q => hit(r, q))) { d.classList.add("nolab"); return; }
+      placed.push(r);
+    });
+  });
+  return card;
+}
+
+/* ---- the shape of a score: the whole league's spread, with one manager laid over it */
+function scoreHist(scores, focus) {
+  const { card, body, read } = statCard("Where scores land",
+    "Every regular-season score in 10-point bins, as a share of the league's games and of the followed manager's.", "wide");
+  const pts = scores.map(x => x.pts), mine = scores.filter(x => x.uid === focus).map(x => x.pts);
+  const lo = Math.floor(Math.min(...pts) / 10) * 10, hi = Math.ceil((Math.max(...pts) + 0.01) / 10) * 10;
+  const bins = [];
+  for (let b = lo; b < hi; b += 10) bins.push({ b, all: 0, me: 0 });
+  for (const v of pts) bins[Math.min(bins.length - 1, Math.floor((v - lo) / 10))].all++;
+  for (const v of mine) bins[Math.min(bins.length - 1, Math.floor((v - lo) / 10))].me++;
+  bins.forEach(x => { x.pa = x.all / pts.length; x.pm = mine.length ? x.me / mine.length : 0; });
+  const max = Math.max(...bins.map(x => Math.max(x.pa, x.pm)));
+  const med = a => { const s = a.slice().sort((x, y) => x - y), k = s.length >> 1; return s.length % 2 ? s[k] : (s[k - 1] + s[k]) / 2; };
+  const mAll = med(pts), mMe = mine.length ? med(mine) : null;
+  const wrap = el("div", "shist");
+  const fname = esc(nameOf(focus));
+  wrap.innerHTML = `<div class="slegend"><span class="k all"></span>Whole league${focus ? `<span class="k me"></span>${fname}` : ""}</div>
+    <div class="hbars" style="--n:${bins.length}">${bins.map((x, i) => `<div class="hcol" style="--i:${i}">
+      <span class="hb all" style="height:${(x.pa / max * 100).toFixed(1)}%"></span>
+      <span class="hb me" style="height:${(x.pm / max * 100).toFixed(1)}%"></span></div>`).join("")}
+      <span class="hmed" style="left:${((mAll - lo) / (hi - lo) * 100).toFixed(1)}%"><i>League median ${f1(mAll)}</i></span>
+      ${mMe != null ? `<span class="hmed me" style="left:${((mMe - lo) / (hi - lo) * 100).toFixed(1)}%"><i>${fname} ${f1(mMe)}</i></span>` : ""}
+    </div>
+    <div class="hax"><span>${lo}</span><span>${Math.round((lo + hi) / 2)}</span><span>${hi}</span></div>`;
+  const dflt = `Half the league's scores land above <b>${f1(mAll)}</b>${mMe != null ? `; half of ${fname}'s land above <b>${f1(mMe)}</b>` : ""}.`;
+  if (!focus) wrap.querySelectorAll(".hb.me").forEach(n => n.remove());
+  read.innerHTML = dflt;
+  wrap.querySelectorAll(".hcol").forEach((c, i) => {
+    const x = bins[i];
+    statMark(c, read, `<b>${x.b}–${x.b + 10} pts</b> · ${pct(x.pa)} of league scores (${x.all})${focus ? ` · ${pct(x.pm)} of ${fname}'s (${x.me})` : ""}`, dflt);
+  });
+  body.appendChild(wrap);
+  return card;
+}
+
+/* ---- a season at a glance: every team, every week, coloured by how that score ranked that week */
+function weekHeat(scores, focus) {
+  const { card, body, read } = statCard("Every week, every team",
+    "Each square is one team's score. The brighter it is, the higher it ranked among the twelve that week. Gold edge: won the game.", "wide");
+  const seasons = [...new Set(scores.map(x => x.season))].sort((a, b) => b - a);
+  const pick = el("div", "sseg");
+  let cur = seasons[0];
+  const grid = el("div", "heat");
+  const paint = () => {
+    pick.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.s === String(cur))));
+    const ss = scores.filter(x => String(x.season) === String(cur));
+    const weeks = [...new Set(ss.map(x => x.week))].sort((a, b) => a - b);
+    const byW = new Map(weeks.map(w => [w, ss.filter(x => x.week === w).sort((a, b) => b.pts - a.pts)]));
+    const uids = [...new Set(ss.map(x => x.uid))];
+    const pf = u => ss.filter(x => x.uid === u).reduce((t, x) => t + x.pts, 0);
+    uids.sort((a, b) => pf(b) - pf(a));
+    grid.style.setProperty("--w", weeks.length);
+    let html = `<div class="hh-c"></div>${weeks.map(w => `<div class="hh-w">${w}</div>`).join("")}<div class="hh-c t">PF</div>`;
+    uids.forEach((u, ri) => {
+      html += `<div class="hh-n${u === focus ? " me" : ""}">${avatarHTML(u, "xs")}<span>${esc(nameOf(u))}</span></div>`;
+      weeks.forEach((w, ci) => {
+        const arr = byW.get(w), x = arr.find(y => y.uid === u);
+        if (!x) { html += `<div class="hc none"></div>`; return; }
+        const rank = arr.indexOf(x), t = arr.length > 1 ? 1 - rank / (arr.length - 1) : 1;
+        html += `<div class="hc${t >= 0.5 ? " hi" : ""}${x.pts > x.op ? " w" : ""}${u === focus ? " me" : ""}" style="--t:${t.toFixed(3)};--c:${ci};--r:${ri}" data-u="${esc(u)}" data-w="${w}"><span>${Math.round(x.pts)}</span></div>`;
+      });
+      html += `<div class="hh-t${u === focus ? " me" : ""}">${Math.round(pf(u))}</div>`;
+    });
+    grid.innerHTML = html;
+    const dflt = `${cur}: <b>${esc(nameOf(uids[0]))}</b> scored the most, ${Math.round(pf(uids[0]))} points over ${weeks.length} weeks.`;
+    read.innerHTML = dflt;
+    grid.querySelectorAll(".hc[data-u]").forEach(c => {
+      const x = ss.find(y => y.uid === c.dataset.u && String(y.week) === c.dataset.w), arr = byW.get(x.week);
+      statMark(c, read, `<b>${esc(nameOf(x.uid))}</b> · week ${x.week}: ${f2(x.pts)} (${ord(arr.indexOf(x) + 1)} of ${arr.length}) · ${x.pts > x.op ? "beat" : x.pts < x.op ? "lost to" : "tied"} ${esc(nameOf(x.opp))} ${f2(x.op)}`, dflt);
+    });
+    delete grid.dataset.rv;
+    armReveals(card);
+  };
+  pick.innerHTML = seasons.map(sn => `<button type="button" data-s="${sn}">${sn}</button>`).join("");
+  pick.querySelectorAll("button").forEach(b => b.onclick = () => { cur = b.dataset.s; paint(); });
+  body.appendChild(pick);
+  const sc = el("div", "heatscroll"); sc.appendChild(grid); body.appendChild(sc);
+  paint();
+  return card;
+}
+
+/* ---- where everyone finished, season by season */
+function finishBump(focus) {
+  const done = DB.seasons.filter(s => s.complete && Object.keys(s.places).length).slice().sort((a, b) => a.season - b.season);
+  if (done.length < 2) return null;
+  const { card, body, read } = statCard("Where everyone finished",
+    "Final place each completed season, first at the top. Tap a line to follow it.", "wide");
+  const n = Math.max(...done.map(s => Math.max(...Object.keys(s.places).map(Number))));
+  const lines = new Map();
+  done.forEach((s, si) => {
+    for (const [pl, rid] of Object.entries(s.places)) {
+      const u = s.uidOf.get(Number(rid)); if (!u) continue;
+      if (!lines.has(u)) lines.set(u, []);
+      lines.get(u).push({ si, p: Number(pl), season: s.season });
+    }
+  });
+  // Drawn at the size it shows, so the type stays readable on a phone.
+  const W = Math.max(320, Math.round(($(".slab") || {}).clientWidth || 1000) - 34), narrow = W < 560;
+  const H = narrow ? 360 : 420, L = narrow ? 40 : 64, R = narrow ? 104 : 150, T = 18, B = 32;
+  const X = si => L + si * (W - L - R) / (done.length - 1), Y = p => T + (p - 1) * (H - T - B) / (n - 1);
+  let svg = `<svg class="bumpsvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Final place by season for every manager">`;
+  for (let p = 1; p <= n; p++) svg += `<text class="bp" x="${L - 18}" y="${Y(p) + 4}" text-anchor="end">${ord(p)}</text>`;
+  done.forEach((s, si) => { svg += `<line class="bg" x1="${X(si)}" y1="${T - 8}" x2="${X(si)}" y2="${H - B + 6}"/><text class="bs" x="${X(si)}" y="${H - 8}" text-anchor="middle">${s.season}</text>`; });
+  const order = [...lines.keys()].sort((a, b) => (a === focus) - (b === focus));
+  order.forEach((u, i) => {
+    const pts = lines.get(u).sort((a, b) => a.si - b.si);
+    const d = pts.map((q, k) => `${k ? "L" : "M"}${X(q.si).toFixed(1)} ${Y(q.p).toFixed(1)}`).join("");
+    const last = pts[pts.length - 1];
+    svg += `<g class="bl${u === focus ? " me" : ""}" data-u="${esc(u)}" style="--i:${i}" tabindex="0">
+      <path class="hit" d="${d}"/><path class="ln" d="${d}" pathLength="1"/>
+      ${pts.map(q => `<circle cx="${X(q.si).toFixed(1)}" cy="${Y(q.p).toFixed(1)}" r="${q.p === 1 ? 7 : 5}" class="${q.p === 1 ? "champ" : ""}"/>`).join("")}
+      <text class="bn" x="${X(last.si) + 14}" y="${Y(last.p) + 4}">${esc(nameOf(u))}</text></g>`;
+  });
+  svg += `</svg>`;
+  const wrap = el("div", "bump"); wrap.innerHTML = svg;
+  const fl = lines.get(focus);
+  const say = u => { const q = lines.get(u).sort((a, b) => a.si - b.si); return `<b>${esc(nameOf(u))}</b> · ${q.map(x => `${x.season}: ${ord(x.p)}`).join(" · ")}`; };
+  const dflt = fl ? say(focus) : "Tap a line.";
+  read.innerHTML = dflt;
+  wrap.querySelectorAll("g.bl").forEach(g => {
+    statMark(g, read, say(g.dataset.u), dflt);
+    g.addEventListener("click", () => toggleFocus(g.dataset.u));
+  });
+  body.appendChild(wrap);
+  return card;
+}
+
+/* ============================================================== MOTION */
+/*
+ * Charts, big numbers and cards play once, when they come into view. The
+ * resting state is always the finished one: nothing waits hidden, so a page
+ * with no script, no IntersectionObserver or reduced motion just shows it.
+ */
+const REVEAL_SEL = ".abars,.tiers,.astat,.acards,.barbox,.whero,.scard,.stiles,.tiles";
+// Lists whose items enter one after another (fade and rise, staggered, capped).
+const STAGGER_SEL = ".wstrip,.rows,.tlist,.tcards,.stiles,.tiles,.mgrid,.movers,.sgrid";
+const REVEAL = ("IntersectionObserver" in window && !REDUCED())
+  ? new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      REVEAL.unobserve(e.target);
+      playReveal(e.target);
+    }), { threshold: 0.15 })
+  : null;
+function armReveals(root) {
+  if (!REVEAL || !root) return;
+  root.querySelectorAll(STAGGER_SEL).forEach(n => {
+    if (n.dataset.stg) return;
+    n.dataset.stg = "wait";
+    [...n.children].forEach((c, i) => c.style.setProperty("--si", i));
+    REVEAL.observe(n);
+  });
+  root.querySelectorAll(REVEAL_SEL).forEach(n => {
+    if (n.dataset.rv) return;
+    n.dataset.rv = "wait";
+    n.querySelectorAll(".abar,.tcard,.bar,.divbar,.acard").forEach((r, i) => r.style.setProperty("--i", i));
+    REVEAL.observe(n);
+  });
+}
+function playReveal(n) {
+  if (n.dataset.stg === "wait") n.dataset.stg = "go";
+  if (!n.dataset.rv) return;
+  n.dataset.rv = "go";
+  if (n.matches(".whero")) { n.classList.add("landed"); n.querySelectorAll(".big").forEach(countUp); }
+  if (n.matches(".astat")) n.querySelectorAll(".n").forEach(countUp);
+  if (n.matches(".acards")) n.querySelectorAll(".cb").forEach(countUp);
+  if (n.matches(".stiles,.tiles")) n.querySelectorAll(".v").forEach(countUp);
+}
+/** Run a single figure up from zero, painted over the real text. */
+function countUp(n) {
+  if (n.dataset.counted) return;
+  n.dataset.counted = "1";
+  const m = n.textContent.trim().match(/^([^\d]{0,3}?)(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?([^\d]{0,6})$/);
+  if (!m) return;
+  const [, pre, whole, frac = "", suf] = m;
+  const target = parseFloat(whole.replace(/,/g, "") + frac), dec = frac ? frac.length - 1 : 0;
+  if (!isFinite(target) || target === 0) return;
+  const fmt = v => pre + (whole.includes(",")
+    ? v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec)) + suf;
+  n.style.setProperty("--cc", getComputedStyle(n).color);
+  n.dataset.c = fmt(0);
+  n.classList.add("counting");
+  const t0 = performance.now(), D = 900;
+  const step = t => {
+    const k = Math.min(1, (t - t0) / D), e = k >= 1 ? 1 : 1 - Math.pow(2, -10 * k);
+    n.dataset.c = fmt(target * e);
+    if (k < 1) requestAnimationFrame(step);
+    else { n.classList.remove("counting"); delete n.dataset.c; }
+  };
+  requestAnimationFrame(step);
+}
+/**
+ * SlideRow: re-order a list and let every row travel to its new place instead
+ * of jumping. Rows are matched before and after by key (default: the element).
+ */
+function slideRows(root, sel, mutate, keyOf = n => n) {
+  if (!root || REDUCED() || !Element.prototype.animate) { mutate(); return; }
+  const before = new Map();
+  root.querySelectorAll(sel).forEach(n => {
+    const r = n.getBoundingClientRect();
+    if (r.height) before.set(keyOf(n), r.top);
+  });
+  mutate();
+  root.querySelectorAll(sel).forEach(n => {
+    const t0 = before.get(keyOf(n)), r = n.getBoundingClientRect();
+    if (t0 == null || !r.height) return;
+    const dy = t0 - r.top;
+    if (Math.abs(dy) < 1) return;
+    n.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }],
+      { duration: 500, easing: "cubic-bezier(.2,.8,.2,1)" });
+  });
+}
+
+/** The thin bar across the top while an article is open. */
+let RP_ON = false;
+function readingProgress(on) {
+  RP_ON = on;
+  const bar = $("#rprog"); if (!bar) return;
+  bar.classList.toggle("on", on);
+  if (on) updateProgress(); else bar.style.setProperty("--p", 0);
+}
+function updateProgress() {
+  if (!RP_ON) return;
+  const a = $('[data-panel="article"] .artl') || $('[data-panel="article"]'); if (!a) return;
+  const r = a.getBoundingClientRect(), total = r.height - innerHeight * 0.6;
+  $("#rprog").style.setProperty("--p", Math.max(0, Math.min(1, -r.top / Math.max(1, total))).toFixed(4));
+}
+addEventListener("scroll", () => { if (RP_ON) requestAnimationFrame(updateProgress); }, { passive: true });
+/* Cards catch the light under the pointer: one listener for the whole page. */
+document.addEventListener("pointermove", e => {
+  if (e.pointerType !== "mouse") return;
+  const c = e.target.closest && e.target.closest(".wgame,.scard,.stile");
+  if (!c) return;
+  const r = c.getBoundingClientRect();
+  c.style.setProperty("--mx", (e.clientX - r.left).toFixed(0) + "px");
+  c.style.setProperty("--my", (e.clientY - r.top).toFixed(0) + "px");
+}, { passive: true });
+
 function show(id) {
+  closeSections(true);
+  readingProgress(false);
   const prof = $('[data-panel="profile"]');
   if (prof) prof.remove();
   const art = $('[data-panel="article"]');
@@ -2551,12 +3540,15 @@ function show(id) {
   if (id === "injuries") ensureInjuries();
   // Season stats plus Sleeper's player file: only fetched once somebody opens Rankings.
   if (id === "rankings") ensureRankings();
+  const stp = $('[data-panel="stats"]');
+  if (id === "stats" && stp && stp._draw && !stp.dataset.drawn) { stp.dataset.drawn = "1"; stp._draw(); }
   const dp = $('[data-panel="draft"]');
   if (id === "draft" && dp && dp._draw && !dp.dataset.drawn) { dp.dataset.drawn = "1"; dp._draw(); }
   // The chat moves into its tab and back out to the floating sheet; one chat, one state.
   askChat.dock(id === "ask");
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", String(b.dataset.tab === id));
   revealTab(id, document.body.dataset.ready === "1");
+  placeTabInd(document.body.dataset.ready === "1");
   for (const p of $("#app").children) p.hidden = p.dataset.panel !== id;
   history.replaceState(null, "", "#" + id);
   scrollTo(0, 0);
@@ -2743,6 +3735,53 @@ function injuryStrip(model, avail) {
  * it changes on its own every week, which is the point — the rest of the home
  * page is history and history does not move.
  */
+/* ------------------------------------------------------- the score ticker */
+/*
+ * A broadcast crawl across the top of the home page: every game of the latest
+ * week, live while it is being played and final once it is not. A live update
+ * changes the numbers in place, so the crawl never jumps back to the start.
+ */
+let TICKER_SUB = null;
+function paintTicker() {
+  const box = $("#scoreTicker");
+  if (!box) return;
+  const w = allWeeks()[0];
+  if (!w || !w.games.length) { box.hidden = true; return; }
+  const sig = `${w.season}|${w.week}|${w.live}|` + w.games.map(g => g.a.uid + g.b.uid).join(",");
+  const best = Math.max(...w.games.flatMap(g => [g.a.pts, g.b.pts]));
+  const side = (s, o) => {
+    const up = s.pts > o.pts, cls = up ? (w.live ? "lead" : "win") : "";
+    return `<span class="tkside ${cls}">${avatarHTML(s.uid, "xs")}<span class="tknm">${esc(nameOf(s.uid))}</span>
+      <b class="tkpt" data-uid="${esc(s.uid)}">${f2(s.pts)}</b></span>`;
+  };
+  const items = w.games.map(g => `<span class="tkgame">${side(g.a, g.b)}<span class="tkvs">${w.live ? "vs" : "–"}</span>${side(g.b, g.a)}${
+    !w.live && (g.a.pts === best || g.b.pts === best) ? `<span class="tktag">Top score</span>` : ""}</span>`).join("");
+  if (box.dataset.sig === sig) {
+    // Same games: only the numbers and who leads change.
+    for (const g of w.games) for (const [s, o] of [[g.a, g.b], [g.b, g.a]])
+      box.querySelectorAll(`.tkpt[data-uid="${CSS.escape(String(s.uid))}"]`).forEach(n => {
+        const v = f2(s.pts);
+        if (n.textContent !== v) { n.textContent = v; n.classList.remove("bump"); void n.offsetWidth; n.classList.add("bump"); }
+        n.parentNode.classList.toggle(w.live ? "lead" : "win", s.pts > o.pts);
+      });
+    return;
+  }
+  box.dataset.sig = sig;
+  box.classList.toggle("live", !!w.live);
+  box.innerHTML = `<button type="button" class="tklab" aria-label="Week ${w.week} ${w.live ? "live scores" : "final scores"}: open the scoreboard">
+      ${w.live ? `<span class="livedot"></span>Live` : "Final"}<small>Week ${w.week}</small></button>
+    <div class="tkview" role="region" aria-label="Week ${w.week} ${w.live ? "live" : "final"} scores">
+      <div class="tktrack"><div class="tkrun">${items}</div><div class="tkrun" aria-hidden="true">${items}</div></div></div>`;
+  box.hidden = false;
+  box.querySelector(".tklab").onclick = () => show("scores");
+  box.querySelector(".tkview").onclick = () => show("scores");
+  // Constant speed whatever the week holds: about 55px a second.
+  requestAnimationFrame(() => {
+    const run = box.querySelector(".tkrun");
+    if (run) box.style.setProperty("--tkdur", Math.max(18, run.offsetWidth / 55).toFixed(1) + "s");
+  });
+}
+
 async function ensureHomeWeek() {
   const host = $("#homeWeek");
   if (!host) return;
@@ -2756,6 +3795,8 @@ async function ensureHomeWeek() {
     // probabilities on first paint rather than flashing in a second later.
     if (w && w.live) { try { await liveOnce(); } catch (e) { /* draw it plain */ } }
 
+    paintTicker();
+    if (!TICKER_SUB) TICKER_SUB = onLive(paintTicker);
     if (w && String(w.season) === String(season.season)) {
       const hero = weekHero(w);
       if (hero) host.appendChild(hero);
@@ -2830,6 +3871,9 @@ function panelHome(AT, RB, model, sim) {
 
   // The front page leads with the season being played, not with a trophy
   // everybody already knows about. Filled in just after first paint.
+  // The ticker: every game of the week, live or final, running across the top.
+  const tick = el("div", "sticker"); tick.id = "scoreTicker"; tick.hidden = true;
+  p.appendChild(tick);
   const week = el("div"); week.id = "homeWeek";
   week.appendChild(el("div", "wskel", "Reading this week\u2026"));
   p.appendChild(week);
@@ -2947,6 +3991,7 @@ function openProfile(uid) {
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", "false");
+  placeTabInd();
   scrollTo(0, 0);
 }
 
@@ -3070,6 +4115,7 @@ function panelManagers(AT) {
     const rows = el("div", "rows");
     sorted.forEach((r, i) => {
       const b = el("button", "rowc");
+      b.dataset.uid = r.uid;
       b.innerHTML = `<span class="pos">${i + 1}</span>
         <span class="nmcell">${avatarHTML(r.uid)}</span>
         <span class="id"><span class="n">${esc(nameOf(r.uid))}
@@ -3086,7 +4132,8 @@ function panelManagers(AT) {
     });
     host.appendChild(rows);
   };
-  sel.onchange = draw; draw();
+  sel.onchange = () => slideRows(host, ".rowc", draw, n => n.dataset.uid);
+  draw();
   p.appendChild(glossary([
     { t: "Record", d: "Regular-season wins and losses across every season this manager has played." },
     { t: "Win rate", d: "Wins divided by games played." },
@@ -4279,7 +5326,7 @@ function tiersHTML(b) {
   let i = 0;
   const body = tiers.map((t, ti) => `<section class="tgrp t${Math.min(ti + 1, 3)}">
       <div class="tn">${esc(t.name || "")}${t.range ? `<span>${esc(t.range)}</span>` : ""}</div>
-      <div class="tcards">${t.rows.map(r => {
+      <div class="tcards" style="--rows:${Math.ceil(t.rows.length / 2)}">${t.rows.map(r => {
         const k = i++, v = Number(r.pct) || 0;
         const last = r.last == null || r.last === "" ? null : Number(r.last);
         const d = last == null || !isFinite(last) ? 0 : v - last;
@@ -4424,6 +5471,8 @@ function openArticle(a, keepHash) {
   $("#app").appendChild(p);
   for (const c of $("#app").children) c.hidden = c !== p;
   for (const b of $("#tabs").children) b.setAttribute("aria-selected", "false");
+  placeTabInd();
+  readingProgress(true);
   if (!keepHash && a.slug) history.replaceState(null, "", "#article/" + encodeURIComponent(a.slug));
   scrollTo(0, 0);
 }
@@ -8627,7 +9676,7 @@ function futuresMarkets(model, sim, hero) {
     const b = e.target.closest("[data-sort]");
     if (!b || b.disabled) return;
     st.sort = b.dataset.sort;
-    apply();
+    slideRows(root, ".orow", apply);
   });
   src.addEventListener("click", e => {
     const b = e.target.closest("[data-line]");
@@ -10132,6 +11181,383 @@ function exactClinch({ teams, remaining, playoffTeams, byes }) {
 }
 
 /**
+ * Playoff-berth magic numbers, exactly — never from a simulation.
+ *
+ * magic = the size of a SMALLEST set of specific remaining results — the team
+ * winning one of its games, or a named rival losing one of its — that
+ * guarantees the team a playoff spot however every other game goes (wins,
+ * losses or ties). That set is the certificate; it is returned so the page can
+ * show which results count. A head-to-head win is one result, and a set never
+ * fixes the same game two ways. A result that isn't in some smallest set can
+ * leave the number unchanged; one that is takes it down by exactly one.
+ *
+ * The oracle: with the set's results fixed and the team losing every other
+ * game of its own, can some chasers all finish level with or ahead of it —
+ * one of its own division plus enough non-champions to fill every wildcard
+ * (exactClinch's makes() test)? Each chaser set is checked by max-flow in half
+ * wins (2–0, 1–1 tie, 0–2 per game). Level on wins counts against the team:
+ * points for are unbounded while either side has a real game left; only two
+ * teams with nothing left are split on actual points (a dead-even tie against).
+ *
+ * The search: a set that doesn't yet guarantee the spot gets a witness — a
+ * concrete finish where the team misses. Any larger certificate must contradict
+ * it somewhere: the team wins one of its games, or a chaser loses a game the
+ * witness gave it. Branching only on those, by iterative deepening, finds the
+ * smallest set exactly. Before that, greedy walks in several orders, each set
+ * shrunk to irreducible and then improved by exchange and neighbourhood
+ * search, give the upper bound the deepening has to beat. A budget caps the
+ * deepening; past it the best set found is reported as an upper bound
+ * (exact: false) with a proven lower bound: the larger of the depth the walk
+ * cleared and k0 + LR (own wins it can't do without, plus the other results
+ * it needs even winning out — see the split bound in solve).
+ *
+ * teams: [{ rid, div, w, pf }] (w with ties as half). remaining: [[a, b]].
+ * Returns per team { rid, magic, exact, lower, cert: [[winner, loser], ...],
+ * status }: magic 0 = clinched; null = no set of results can guarantee it.
+ */
+function magicNumbers({ teams, remaining, playoffTeams, budget = 2500 }) {
+  const N = teams.length, P = playoffTeams;
+  const divOf = teams.map(t => t.div);
+  const divs = [...new Set(divOf)];
+  const slots = P - divs.length;
+  const left = new Array(N).fill(0);
+  for (const [a, b] of remaining) { left[a]++; left[b]++; }
+  const W2 = teams.map(t => Math.round(t.w * 2));
+  const G = remaining.length;
+
+  // Max flow (Dinic). Returns the flow and the residual capacities.
+  const maxflow = (n, edges, s, t) => {
+    const head = new Array(n).fill(-1), to = [], cap = [], nxt = [];
+    for (const [u, v, c] of edges) {
+      to.push(v); cap.push(c); nxt.push(head[u]); head[u] = to.length - 1;
+      to.push(u); cap.push(0); nxt.push(head[v]); head[v] = to.length - 1;
+    }
+    let flow = 0;
+    const level = new Array(n), it = new Array(n);
+    const dfs = (u, f) => {
+      if (u === t) return f;
+      for (; it[u] !== -1; it[u] = nxt[it[u]]) {
+        const e = it[u], v = to[e];
+        if (cap[e] > 0 && level[v] === level[u] + 1) {
+          const d = dfs(v, Math.min(f, cap[e]));
+          if (d > 0) { cap[e] -= d; cap[e ^ 1] += d; return d; }
+        }
+      }
+      return 0;
+    };
+    for (;;) {
+      level.fill(-1); level[s] = 0;
+      const q = [s];
+      for (let h = 0; h < q.length; h++) for (let e = head[q[h]]; e !== -1; e = nxt[e])
+        if (cap[e] > 0 && level[to[e]] < 0) { level[to[e]] = level[q[h]] + 1; q.push(to[e]); }
+      if (level[t] < 0) return { flow, cap };
+      for (let u = 0; u < n; u++) it[u] = head[u];
+      let f; while ((f = dfs(s, Infinity)) > 0) flow += f;
+    }
+  };
+  const combos = (arr, r, start = 0, acc = [], out = []) => {
+    if (acc.length === r) { out.push(acc.slice()); return out; }
+    for (let x = start; x < arr.length; x++) { acc.push(arr[x]); combos(arr, r, x + 1, acc, out); acc.pop(); }
+    return out;
+  };
+
+  let calls = 0;
+  // fixed: Map game index -> winner. Returns null when i is safe, else the
+  // witness's contradicting results [[game, winner], ...] (possibly empty).
+  // K > 1 looks at up to K chaser sets and keeps the witness with the fewest
+  // contradictions — any one witness is a valid branch, a narrow one is cheaper.
+  const oracle = (i, fixed, K = 1) => {
+    calls++;
+    const base = W2.slice(), free = new Array(N).fill(0);
+    const own = [];
+    for (let g = 0; g < G; g++) {
+      const [a, b] = remaining[g];
+      if (fixed.has(g)) { base[fixed.get(g)] += 2; continue; }
+      if (a === i || b === i) { base[a === i ? b : a] += 2; own.push(g); continue; }   // i loses it
+      free[a]++; free[b]++;
+    }
+    const mine = base[i];
+    const need = new Array(N).fill(Infinity);
+    for (let j = 0; j < N; j++) {
+      if (j === i) continue;
+      if (!left[i] && !left[j]) {
+        need[j] = W2[j] > mine || (W2[j] === mine && teams[j].pf >= teams[i].pf) ? 0 : Infinity;
+        continue;
+      }
+      const d = Math.max(0, mine - base[j]);
+      need[j] = d <= 2 * free[j] ? d : Infinity;
+    }
+    const reach = X => {
+      const total = X.reduce((s, j) => s + need[j], 0);
+      if (!total) return [];
+      const inX = new Set(X), id = new Map(X.map((j, n) => [j, n + 2]));
+      const edges = [], gameEdges = [];
+      let n = X.length + 2;
+      for (let g = 0; g < G; g++) {
+        if (fixed.has(g)) continue;
+        const [a, b] = remaining[g];
+        if (a === i || b === i || (!inX.has(a) && !inX.has(b))) continue;
+        const node = n++;
+        edges.push([0, node, 2]);
+        for (const x of [a, b]) if (inX.has(x)) { gameEdges.push([g, x, edges.length]); edges.push([node, id.get(x), 2]); }
+      }
+      for (const j of X) edges.push([id.get(j), 1, need[j]]);
+      const { flow, cap } = maxflow(n, edges, 0, 1);
+      if (flow < total) return null;
+      // Every game the witness hands (part of) a win to a chaser: that chaser losing contradicts it.
+      const out = [];
+      for (const [g, x, k] of gameEdges) if (cap[2 * k] < 2) {
+        const [a, b] = remaining[g];
+        out.push([g, x === a ? b : a]);
+      }
+      return out;
+    };
+    const pools = divs.map(d => ({ d, c: teams.map((_, j) => j)
+      .filter(j => j !== i && divOf[j] === d && need[j] !== Infinity).sort((x, y) => need[x] - need[y]) }));
+    let witness = null, found = 0;
+    const go = (di, extra, X) => {
+      if (extra >= slots && X.some(j => divOf[j] === divOf[i])) {
+        const w = reach(X);
+        if (w == null) return false;
+        if (!witness || w.length < witness.length) witness = w;
+        return ++found >= K || !witness.length;
+      }
+      if (di === pools.length) return false;
+      const { d, c } = pools[di], isOwn = d === divOf[i];
+      if (!isOwn && go(di + 1, extra, X)) return true;
+      for (let r = isOwn ? 1 : 2; r <= c.length; r++) {
+        if (extra + r - 1 > slots) break;
+        for (const pick of combos(c, r)) if (go(di + 1, extra + r - 1, X.concat(pick))) return true;
+      }
+      return false;
+    };
+    go(0, 0, []);
+    if (!witness) return null;
+    // The team's own games: winning any of them contradicts the witness. Own wins first.
+    return [...own.map(g => [g, i]), ...witness];
+  };
+
+  const solve = i => {
+    calls = 0;
+    const ownG = remaining.map((_, g) => g).filter(g => remaining[g][0] === i || remaining[g][1] === i);
+    // A narrower witness: let the team win its own games too, one at a time,
+    // while it still misses. Those wins then agree with the witness, so they
+    // drop out of the branch (results a set can hold for an own game are only
+    // its wins). Any witness is a sound branch; this one is usually far smaller.
+    const narrow = (S, K = 1) => {
+      let w = oracle(i, S, K);
+      if (w == null || !w.length) return w;
+      const H = new Map(S);
+      for (const g of ownG) {
+        if (H.has(g)) continue;
+        H.set(g, i);
+        const v = oracle(i, H, K);
+        if (v != null && v.length <= w.length) w = v; else H.delete(g);
+      }
+      return w;
+    };
+    const top = narrow(new Map());
+    if (top == null) return { magic: 0, exact: true, lower: 0, cert: [] };
+    if (!top.length) return { magic: null, exact: true, lower: null, cert: null };
+    // Upper bound. A greedy walk adds one contradiction of the current witness
+    // at a time until the spot is guaranteed; several pick orders are tried,
+    // and each set found is shrunk before it can become the best.
+    // Shrink: drop any result the set still guarantees without (repeat until
+    // irreducible). Guarantees are monotone, so this never breaks a set.
+    const shrink = S => {
+      for (let changed = true; changed;) {
+        changed = false;
+        for (const [g, w] of [...S]) {
+          S.delete(g);
+          if (oracle(i, S) == null) changed = true; else S.set(g, w);
+        }
+      }
+      return S;
+    };
+    // Exchange: two results out, one contradiction of the new witness in.
+    const exchange = S => {
+      for (let again = true; again && calls < budget;) {
+        again = false;
+        const E = [...S];
+        for (let x = 0; x < E.length && !again && calls < budget; x++) for (let y = x + 1; y < E.length && !again && calls < budget; y++) {
+          const T = new Map(E.filter((_, k) => k !== x && k !== y));
+          const w = narrow(T);
+          if (w == null) { S = shrink(T); again = true; break; }
+          for (const [g, win] of w) {
+            if (T.has(g)) continue;
+            T.set(g, win);
+            if (oracle(i, T) == null) { S = shrink(T); again = true; break; }
+            T.delete(g);
+          }
+        }
+      }
+      return S;
+    };
+    let seed = 7 + i;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const orders = [
+      w => w[0],                                           // own wins first
+      w => w.find(([, win]) => win !== i) || w[0],         // rival losses first
+      w => w[w.length - 1],
+      ...Array.from({ length: 6 }, () => w => w[Math.floor(rnd() * w.length)]),
+    ];
+    const plain = S => oracle(i, S);
+    // Walk from S to a guaranteeing set, shrunk; null if this walk dead-ends.
+    const walk = (S, see, pick) => {
+      for (;;) {
+        const w = see(S);
+        if (w == null) return shrink(S);
+        if (!w.length) return null;
+        const [g, win] = pick(w);
+        S.set(g, win);
+      }
+    };
+    let best = null;
+    for (const pick of orders) for (const see of [plain, narrow]) {
+      const T = walk(new Map(), see, pick);
+      if (T && (!best || T.size < best.size)) best = T;
+    }
+    if (best) best = exchange(best);
+    // Neighbourhood search: drop two to four results, walk back at random,
+    // keep the result if it is no larger (ties let it wander).
+    for (const stop = calls + budget; best && best.size > 1 && calls < stop;) {
+      const E = [...best], drop = new Set();
+      for (let k = Math.min(E.length, 2 + Math.floor(rnd() * 3)); drop.size < k;) drop.add(Math.floor(rnd() * E.length));
+      const T = walk(new Map(E.filter((_, k) => !drop.has(k))), rnd() < .5 ? plain : narrow, orders[3]);
+      if (T && T.size <= best.size) best = T;
+    }
+    if (best) best = [...best];
+    // Exact: iterative deepening over contradicting results only, on top of a
+    // base set that isn't counted. Returns the first set found (base included),
+    // whether the budget ran out, and the proven fewest results to add to the
+    // base. Every safe superset of S must contradict S's witness somewhere, so
+    // a depth that comes back empty proves no set of that size exists.
+    const deepen = (base, cap) => {
+      calls = 0;
+      let lower = 1, exhausted = false;
+      const seen = new Set();
+      const dfs = (S, depth) => {
+        if (calls > budget) { exhausted = true; return null; }
+        const key = [...S].map(([g, w]) => `${g}:${w}`).sort().join(",");
+        if (seen.has(key + "@" + depth)) return null;
+        seen.add(key + "@" + depth);
+        const w = oracle(i, S, depth > 1 ? 8 : 1);
+        if (w == null) return [...S];
+        if (!depth || !w.length) return null;
+        // Results of the best set found so far first: a smaller one is often a neighbour.
+        if (inBest) w.sort((x, y) => (inBest.has(`${y[0]}:${y[1]}`) ? 1 : 0) - (inBest.has(`${x[0]}:${x[1]}`) ? 1 : 0));
+        for (const [g, win] of w) {
+          if (S.has(g)) continue;
+          S.set(g, win);
+          const r = dfs(S, depth - 1);
+          S.delete(g);
+          if (r || exhausted) return r;
+        }
+        return null;
+      };
+      if (oracle(i, base) == null) return { found: [...base], lower: 0, exhausted };
+      let found = null;
+      for (let d = 1; d <= cap; d++) {
+        const r = dfs(new Map(base), d);
+        if (r) { found = r; lower = d; break; }
+        if (exhausted) break;
+        lower = d + 1;
+      }
+      return { found, lower, exhausted };
+    };
+    const inBest = best && new Set(best.map(([g, w]) => `${g}:${w}`));
+    const cap = best ? best.length - 1 : G;
+    const main = deepen(new Map(), cap);
+    const exhausted = main.exhausted;
+    let lower = main.lower;
+    if (main.found) best = main.found;
+    if (!exhausted && best && lower > cap) lower = best.length;
+    if (!best) return { magic: null, exact: !exhausted, lower: exhausted ? lower : null, cert: null };
+    // Split bound when the walk ran out: a guaranteeing set is own wins A plus
+    // other results R. |A| >= k0, the fewest own wins at which the team isn't
+    // already beaten by the teams at or above that total today (wins only
+    // grow). |R| >= the fewest other results that guarantee it even with every
+    // own game won (fixing more only helps, so R must do it alone there).
+    if (lower < best.length) {
+      const k0 = (() => {
+        for (let k = 0; k <= ownG.length; k++) {
+          const F = W2[i] + 2 * k, top = new Set();
+          let n = 0, champ = true;
+          for (let j = 0; j < N; j++) {
+            if (j === i) continue;
+            if (W2[j] > F || (W2[j] === F && !(!left[i] && !left[j] && teams[i].pf > teams[j].pf))) {
+              n++; top.add(divOf[j]); if (divOf[j] === divOf[i]) champ = false;
+            }
+          }
+          if (champ || n - top.size < slots) return k;
+        }
+        return ownG.length + 1;
+      })();
+      const capR = best.length - 1 - k0;
+      if (capR >= 0) {
+        const r = deepen(new Map(ownG.map(g => [g, i])), capR);
+        const LR = r.found || r.exhausted ? r.lower : capR + 1;
+        lower = Math.max(lower, k0 + LR);
+        if (r.found) { const T = shrink(new Map(r.found)); if (T.size < best.length) best = [...T]; }
+      } else lower = best.length;
+      lower = Math.min(lower, best.length);
+    }
+    return { magic: best.length, exact: lower === best.length, lower, cert: best };
+  };
+
+  return teams.map((t, i) => {
+    const r = solve(i);
+    const cert = r.cert && r.cert.map(([g, w]) => {
+      const [a, b] = remaining[g];
+      return [w, w === a ? b : a];
+    });
+    return { rid: t.rid, magic: r.magic, exact: r.exact, lower: r.lower, cert, left: left[i],
+      clinched: r.magic === 0,
+      status: r.magic === 0 ? "clinched" : r.magic == null ? (r.exact ? "needs-help" : "unknown") : "magic" };
+  });
+}
+
+/**
+ * Standings with the current week's individually final games folded in: a game
+ * with nothing left to play on either side (no spread) is a result, not a
+ * remaining game. Everything else in the week stays remaining — including any
+ * game on the schedule (R.upcoming) that the live board didn't price, which
+ * must never drop out of a clinch or magic check.
+ */
+function settledStandings(live, R = null) {
+  const W = live.W0.slice(), PF = live.PF0.slice(), done = [];
+  const remaining = [];
+  const key = (a, b) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  const final = new Map();
+  for (const g of live.pending || []) {
+    if (!g.sdA && !g.sdB && isFinite(g.eA) && isFinite(g.eB)) final.set(key(g.a, g.b), g);
+  }
+  // This week's games: the schedule's own list when we have it, else the board's.
+  let week = (live.pending || []).map(g => [g.a, g.b]);
+  if (R && live.liveWeek != null && live.idx) {
+    const sched = (R.upcoming || []).filter(g => g.week === live.liveWeek)
+      .map(g => [live.idx.get(g.a), live.idx.get(g.b)]).filter(([a, b]) => a != null && b != null);
+    const seen = new Set(sched.map(([a, b]) => key(a, b)));
+    // Already banked in W0 / PF0: never count a game twice.
+    for (const g of R.decided || []) if (g.week === live.liveWeek) {
+      const a = live.idx.get(g.a.rid), b = live.idx.get(g.b.rid);
+      if (a != null && b != null) seen.add(key(a, b));
+    }
+    week = [...sched, ...week.filter(([a, b]) => !seen.has(key(a, b)))];
+  }
+  for (const [a, b] of week) {
+    const g = final.get(key(a, b));
+    if (g) {
+      PF[g.a] += g.eA; PF[g.b] += g.eB;
+      if (g.eA > g.eB) W[g.a]++; else if (g.eB > g.eA) W[g.b]++; else { W[g.a] += 0.5; W[g.b] += 0.5; }
+      done.push([g.a, g.b]);
+    } else remaining.push([a, b]);
+  }
+  for (const w of live.weeks) remaining.push(...w.pairs);
+  return { W, PF, remaining, done };
+}
+
+/**
  * The games of the current week: the one in flight, or else the next one to be
  * played. Games already final in a week in flight carry no spread and are
  * marked so, because there is nothing left for them to swing.
@@ -10323,10 +11749,33 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     if (a == null || b == null) continue;
     if (g.a.pts > g.b.pts) L[b]++; else if (g.b.pts > g.a.pts) L[a]++; else { T[a]++; T[b]++; }
   }
-  const remaining = [...(live.pending || []).map(g => [g.a, g.b]), ...live.weeks.flatMap(w => w.pairs)];
-  const clinch = exactClinch({
-    teams: live.teams.map((t, i) => ({ rid: t.rid, div: t.div, w: live.W0[i], pf: live.PF0[i] })),
-    remaining, playoffTeams: rules.playoffTeams, byes: rules.byes,
+  // This week's individually final games are results; only the rest is remaining.
+  const settled = settledStandings(live, R);
+  const remaining = settled.remaining;
+  const settledTeams = live.teams.map((t, i) => ({ rid: t.rid, div: t.div, w: settled.W[i], pf: settled.PF[i] }));
+  const clinch = exactClinch({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, byes: rules.byes });
+  // The certificate search is deterministic in its inputs: a poll that changed
+  // nothing reuses the last answer instead of walking it again.
+  const magicKey = JSON.stringify([settledTeams.map(t => [t.div, t.w, t.pf]), remaining, rules.playoffTeams]);
+  if (!MAGIC_CACHE || MAGIC_CACHE.key !== magicKey)
+    MAGIC_CACHE = { key: magicKey, v: magicNumbers({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, budget: MAGIC_BUDGET }) };
+  const magic = MAGIC_CACHE.v;
+  clinch.forEach((c, i) => {
+    c.magic = magic[i].magic;
+    c.magicExact = magic[i].exact;
+    c.magicLower = magic[i].lower;
+    // The certificate as roster ids: [[winner, loser], ...].
+    c.cert = magic[i].cert && magic[i].cert.map(([w, l]) => [live.teams[w].rid, live.teams[l].rid]);
+    // exactClinch's enumeration walks wins and losses only, never a future tied
+    // game. The magic walk admits ties, so it has the last word on a playoff
+    // clinch (a division clinch is pure win bounds, sound either way).
+    const was = c.clinchedPlayoff;
+    c.clinchedPlayoff = c.clinchedDiv || magic[i].clinched;
+    if (c.clinchedPlayoff !== was) c.method = "magic";
+    // Eliminations from that same enumeration could be undone by a tie; keep
+    // only the ones the win bounds prove.
+    if (c.eliminated && c.method === "enumeration") { c.eliminated = false; c.method = "bounds+ties"; }
+    if (c.eliminated && c.magic != null) c.eliminated = false;   // can't be both (never fires if both are right)
   });
   const whatIf = whatIfOf(out);
   // Teams whose game this week is already final: no what-if, but not "no game" either.
@@ -10350,7 +11799,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     whatIf: whatIf.get(i) || null, final: final.has(i), clinch: clinch[i],
   }));
   return {
-    rules, rows, clinch, out, via: out.via, sims: out.main.sims, whatIfSims, order,
+    rules, rows, clinch, magic, out, via: out.via, sims: out.main.sims, whatIfSims, order, settledFinals: settled.done.length,
     tied: live.W0.some(w => !Number.isInteger(w)),
     swings: swingBoard(out), remaining: remaining.length,
     week: live.pending && live.pending.length ? live.liveWeek : (live.weeks[0] ? live.weeks[0].week : null),
@@ -10402,6 +11851,30 @@ function clinchBadge(c) {
 /* x / y / z off the exact clinch table: the strongest one a team has earned. */
 const PP_MARKS = { x: "clinched playoff spot", y: "clinched division", z: "clinched first-round bye" };
 const ppMark = c => !c ? "" : c.clinchedBye ? "z" : c.clinchedDiv ? "y" : c.clinchedPlayoff ? "x" : "";
+/* Magic number chip: only for teams still open — clinched ones carry the mark, eliminated ones are listed. */
+function ppMagicHTML(c) {
+  if (!c || c.clinchedPlayoff || c.eliminated || c.magic === undefined) return "";
+  if (c.magic == null && c.magicExact === false) return `<span class="pp-mg help" data-magic="unknown" title="Too many results still in play to settle the smallest set that guarantees a spot">Magic ?</span>`;
+  if (c.magic == null) return `<span class="pp-mg help" data-magic="help" title="No set of its own wins and rivals' losses guarantees a playoff spot — it can't be locked in by results alone">Needs help</span>`;
+  const n = c.magic, s = n === 1 ? "" : "s";
+  const t = c.magicExact
+    ? `Magic number ${n}: the fewest specific results — its own wins or named rivals' losses — that guarantee a playoff spot, whatever else happens`
+    : `Magic number at most ${n}: ${n} specific result${s} guarantee a playoff spot; no set smaller than ${c.magicLower} does, and the exact fewest wasn't settled`;
+  return `<span class="pp-mg" data-magic="${c.magicExact ? n : `<=${n}`}" role="img" title="${t}" aria-label="${t}">Magic <b>${c.magicExact ? "" : "≤"}${n}</b></span>`;
+}
+/* The certificates: which results make up each team's magic number. */
+function ppCertHTML(rows) {
+  const name = rid => { const r = rows.find(x => String(x.rid) === String(rid)); return esc(r ? nameOf(r.uid) : String(rid)); };
+  const open = rows.filter(r => r.clinch && !r.clinch.clinchedPlayoff && !r.clinch.eliminated && r.clinch.cert)
+    .sort((a, b) => a.clinch.magic - b.clinch.magic);
+  if (!open.length) return "";
+  const line = r => `<li data-rid="${esc(String(r.rid))}"><b>${name(r.rid)}</b> · ${r.clinch.magicExact ? r.clinch.magic
+      : `≤${r.clinch.magic} (at least ${r.clinch.magicLower})`}:
+    ${r.clinch.cert.map(([w, l]) => String(w) === String(r.rid) ? `wins v ${name(l)}` : `${name(l)} loses to ${name(w)}`).join("; ")}</li>`;
+  return `<details class="pp-mgc"><summary>Which results make each number</summary>
+    <p>One guaranteeing set for each team. Where the number is exact (N) this set is a proven smallest one; other sets of the same size may exist, and a result outside every smallest set leaves the number where it is. Where it reads ≤N (at least L) the set works and no set smaller than L can, but the exact fewest between them wasn't settled.</p>
+    <ul>${open.map(line).join("")}</ul></details>`;
+}
 function ppMarkHTML(c) {
   const k = ppMark(c);
   return k ? `<span class="pp-mk" role="img" title="${PP_MARKS[k]}" aria-label="${PP_MARKS[k]}">${k}</span>` : "";
@@ -10432,6 +11905,7 @@ function pictureBoard(PP) {
     <div class="pp-bar"><i style="width:${(Math.max(0, Math.min(1, v)) * 100).toFixed(1)}%"></i></div></div>`;
   const bars = r => `<div class="pp-bars">${B ? pb("Bye", r.bye, "by") : ""}${pb("Playoff", r.playoff, "")}</div>`;
   const ids = r => `data-rid="${esc(String(r.rid))}" data-seed="${r.todaySeed}"`;
+  const mg = r => ppMagicHTML(r.clinch);
 
   const wk = PP.week != null ? `Week ${PP.week} ${PP.inFlight ? "in progress" : "up next"}` : "Playoff Picture";
   const byeWords = !B ? "" : B === 1 ? "; seed 1 skips the first round" : `; seeds 1–${B} skip the first round`;
@@ -10446,7 +11920,7 @@ function pictureBoard(PP) {
     <div class="pp-hero" ${ids(r)}>${avatarHTML(r.uid, "lg")}
       <div class="pp-who"><div class="pp-eye">${r.todaySeed} seed · bye</div>
         <div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
-        <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}</span></div></div>
+        <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}</span>${mg(r)}</div></div>
       ${bars(r)}</div>`).join("");
 
   /* the bracket, as it would be drawn today */
@@ -10486,7 +11960,7 @@ function pictureBoard(PP) {
   /* the list, in seed order today */
   const li = r => `<div class="pp-li${r.todaySeed <= B ? " byer" : ""}" ${ids(r)}>${sd(r)}${avatarHTML(r.uid, "sm")}
     <div class="pp-who"><div class="pp-nm">${name(r)}${ppMarkHTML(r.clinch)}</div>
-      <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}${gb(r)}</span></div></div>
+      <div class="pp-sub">${chip(r)} <span class="pp-nw">${rec(r)}${gb(r)}</span>${mg(r)}</div></div>
     ${bars(r)}</div>`;
   const inOrder = PP.order.map(i => rows[i]);
   const elim = inOrder.filter(r => r.todaySeed > P && r.clinch && r.clinch.eliminated);
@@ -10513,6 +11987,12 @@ function pictureBoard(PP) {
         <p class="pp-hs">${esc(r1Words)} · slot hint = ${B ? "Bye % · " : ""}Playoff %</p>${bracket}${legend}</div>
       <div class="pp-lcol"><h3 class="pp-h">Seeds &amp; the hunt</h3>
         <p class="pp-hs">Ordered by seed today · ${B ? "Bye % and " : ""}Playoff % bars</p>
+        <p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>the fewest specific results — your wins or
+          named rivals' losses — that lock in a spot whatever else happens. A win over a rival is one result.
+          A result in the smallest set takes it down by one; others can leave it unchanged.
+          <b>≤N</b>: a set that size works, the exact fewest isn't settled.
+          <span class="pp-mg help">Needs help</span>no set of results can lock it in.</p>
+        ${ppCertHTML(rows)}
         <div class="pp-lst pp-seeds">${list}</div>
         <h3 class="pp-h">Eliminated</h3>
         <div class="pp-lst pp-elim">${elim.length ? elim.map(li).join("") : `<div class="pp-empty">Nobody is mathematically out yet.</div>`}</div>
@@ -10615,13 +12095,30 @@ function renderPicture(host, PP) {
        Points for can't be known in advance, so a spot that could come down to a points tiebreak is
        never called clinched or eliminated. When the league has a tied game on record, clinched and
        eliminated are computed from the win bounds only — a half win makes more finishes possible
-       than the win-or-lose check walks.</p>
+       than the win-or-lose check walks. Because any future game can also end tied, a playoff clinch
+       is only called when the magic-number walk below (which plays ties too) says so, and an
+       elimination only when the win bounds alone prove it.</p>
+    <p><b>Magic numbers</b> are the size of a smallest set of specific remaining results — the team
+       winning a given game, or a named rival losing one — that guarantees a playoff spot however every
+       other game goes, ties included. A win over a direct rival is one result, and no set fixes a game
+       both ways. Level finishes on wins count against the team, since points for can't be known while
+       either side still plays (only two teams with nothing left are split on their actual points, and a
+       dead-even tie still counts against). Games this week with nothing left to play count as results;
+       scheduled games the live board couldn't price still count as left to play. A result that belongs
+       to some smallest set takes the number down by exactly one; any other result — a rival's loss
+       included — can leave it where it is. Each set is found by search: a candidate set either proves the
+       spot or yields a finish where the team misses, which any bigger set must contradict. Where the
+       search runs out of room the page shows ≤N: a set of N results that works, with no smaller set below
+       the proven floor. "Needs help" means no set of results guarantees a spot at all.</p>
     <p><b>What-if</b> runs the season twice for each game this week, once with each side forced to win,
        ${PP.whatIfSims.toLocaleString()} times a side on the same random draws. Both scores are still drawn
        and swapped if the wrong side won, so forcing a result doesn't inflate anybody's points for.</p>`;
   host.appendChild(m);
 }
 
+/** Certificate search: per-team oracle budget, and the last answer for unchanged inputs. */
+const MAGIC_BUDGET = 12000;
+let MAGIC_CACHE = null;
 let PICTURE_STARTED = false, PICTURE_SEQ = 0, PICTURE_DRAWN = false, PICTURE_STALE = false;
 async function ensurePicture() {
   const host = $("#pictureHost");
@@ -12040,6 +13537,7 @@ async function boot() {
     app.appendChild(panelScoreboard());
     app.appendChild(panelManagers(AT));
     app.appendChild(panelRecords(RB));
+    app.appendChild(panelStats(AT));
     app.appendChild(panelMatchups(AT));
     // rosters.json is a few kilobytes and gives the Position rooms each bench player's position.
     await Promise.all([loadBlurbs(), loadRostered()]);
@@ -12056,6 +13554,15 @@ async function boot() {
     app.appendChild(el("div", "panel")).dataset.panel = "ask";
 
     buildTabs();
+    {
+      const app = $("#app");
+      armReveals(app);
+      let armRaf = 0;
+      new MutationObserver(() => {
+        cancelAnimationFrame(armRaf);
+        armRaf = requestAnimationFrame(() => armReveals(app));
+      }).observe(app, { childList: true, subtree: true });
+    }
     // Deliberately not awaited: the front page paints, then fills itself in.
     ensureHomeWeek();
     $("#loader").hidden = true;
@@ -12109,7 +13616,7 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, pairSchedule,
-      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
+      ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
       weekIsFinal, allWeeks, effectiveState,

@@ -19,12 +19,12 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        9
+        10
       ],
       "weeks": 1,
-      "checked": "2026-11-06",
+      "checked": "2026-11-12",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit []; consensus."
     },
     "2449": {
       "kind": "report",
@@ -131,11 +131,11 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        6
+        10
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-10-14",
-      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
+      "checked": "2026-11-12",
+      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "5859": {
@@ -146,8 +146,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
       "checked": "2026-11-06",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
-      "flag": "uncertain"
+      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "5872": {
       "kind": "report",
@@ -164,11 +164,11 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        9
+        10
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
-      "checked": "2026-11-05",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
+      "checked": "2026-11-12",
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "6786": {
@@ -222,8 +222,8 @@
       ],
       "source": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir",
       "checked": "2026-11-04",
-      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
+      "flag": "uncertain"
     },
     "7611": {
       "kind": "report",
@@ -234,7 +234,7 @@
       "weeks": 1,
       "checked": "2026-11-10",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "8121": {
       "kind": "report",
@@ -565,12 +565,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        9
+        10
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
-      "checked": "2026-11-07",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; uncertain (audit tiebreak wk 10).",
-      "flag": "uncertain"
+      "checked": "2026-11-12",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "12533": {
       "kind": "report",

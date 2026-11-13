@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "matchups", "power", "odds", "injuries", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
+const EXPECT = ["home", "scores", "managers", "records", "stats", "matchups", "power", "odds", "injuries", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 const toiletNav = await page.evaluate(() => {
   const p=document.querySelector('#tabs button[data-tab="picture"]'),t=document.querySelector('#tabs button[data-tab="toilet"]');
@@ -2633,6 +2633,240 @@ check("2025 at week 13: eliminated teams are behind on win bounds", pp13.elimBou
 check("2025 at week 13: badges are consistent with each other and the win bounds", pp13.consistent && pp13.divReal);
 check("2025 at week 13: with one week left the check is by enumeration", pp13.games <= 24 && pp13.clinched > 0, `${pp13.clinched} clinched, method ${pp13.method}`);
 
+group("Playoff Picture: magic numbers");
+const ppMagic = await page.evaluate(() => {
+  const D = window.__DFFL;
+  const T = (ws, divs, pfs) => ws.map((w, i) => ({ rid: i + 1, div: divs[i], w, pf: pfs ? pfs[i] : 0 }));
+  const run = (teams, remaining, P) => D.magicNumbers({ teams, remaining, playoffTeams: P, budget: 50000 });
+  const mag = (teams, remaining, P) => run(teams, remaining, P).map(x => x.magic);
+  // Independent brute force: the smallest set of specific decisive results
+  // (the team winning a game, or another team losing one — never one game two
+  // ways) under which EVERY completion of the other games (win, loss or tie)
+  // puts the team in. Level on wins counts against it unless both teams have
+  // no real game left, when points for decide (an exact points tie against).
+  const brute = (teams, remaining, P) => {
+    const N = teams.length, divs = [...new Set(teams.map(t => t.div))], slots = P - divs.length;
+    const left = teams.map(() => 0); remaining.forEach(([a, b]) => { left[a]++; left[b]++; });
+    const misses = (W, i) => {
+      const ahead = j => W[j] > W[i] || (W[j] === W[i] && !(!left[i] && !left[j] && teams[i].pf > teams[j].pf));
+      let n = 0, champ = true; const top = new Set();
+      for (let j = 0; j < N; j++) { if (j === i || !ahead(j)) continue; n++; top.add(teams[j].div); if (teams[j].div === teams[i].div) champ = false; }
+      return !(champ || n - top.size < slots);
+    };
+    return teams.map((_, i) => {
+      const cand = [];
+      remaining.forEach(([a, b], g) => {
+        if (a === i) cand.push([g, a]); else if (b === i) cand.push([g, b]); else { cand.push([g, a]); cand.push([g, b]); }
+      });
+      const sets = [];
+      for (let m = 0; m < 1 << cand.length; m++) {
+        const pick = cand.filter((_, k) => m >> k & 1);
+        if (new Set(pick.map(p => p[0])).size === pick.length) sets.push(pick);
+      }
+      sets.sort((x, y) => x.length - y.length);
+      for (const S of sets) {
+        const fx = new Map(S), free = remaining.map((_, g) => g).filter(g => !fx.has(g));
+        let safe = true;
+        for (let c = 0; c < 3 ** free.length && safe; c++) {
+          const W = teams.map(t => t.w); let x = c;
+          for (const [g, w] of fx) W[w]++;
+          for (const g of free) { const r = x % 3; x = (x - r) / 3; const [a, b] = remaining[g];
+            if (r === 0) W[a]++; else if (r === 1) W[b]++; else { W[a] += .5; W[b] += .5; } }
+          if (misses(W, i)) safe = false;
+        }
+        if (safe) return S.length;
+      }
+      return null;
+    });
+  };
+  // A certificate really guarantees the spot: fix it, then walk every completion
+  // of the rest (points rule as before: the fixed games are still unplayed).
+  const certHolds = (teams, remaining, P, i, cert) => {
+    const N = teams.length, slots = P - new Set(teams.map(t => t.div)).size;
+    const left = teams.map(() => 0); remaining.forEach(([a, b]) => { left[a]++; left[b]++; });
+    const fixed = remaining.map(() => null);
+    for (const [w, l] of cert) {
+      const g = remaining.findIndex(([a, b], k) => fixed[k] == null && ((a === w && b === l) || (a === l && b === w)));
+      if (g < 0) return false; fixed[g] = w;
+    }
+    const free = remaining.map((_, g) => g).filter(g => fixed[g] == null);
+    for (let c = 0; c < 3 ** free.length; c++) {
+      const W = teams.map(t => t.w); let x = c;
+      fixed.forEach(w => { if (w != null) W[w]++; });
+      for (const g of free) { const r = x % 3; x = (x - r) / 3; const [a, b] = remaining[g];
+        if (r === 0) W[a]++; else if (r === 1) W[b]++; else { W[a] += .5; W[b] += .5; } }
+      const ahead = j => W[j] > W[i] || (W[j] === W[i] && !(!left[i] && !left[j] && teams[i].pf > teams[j].pf));
+      let n = 0, champ = true; const top = new Set();
+      for (let j = 0; j < N; j++) { if (j === i || !ahead(j)) continue; n++; top.add(teams[j].div); if (teams[j].div === teams[i].div) champ = false; }
+      if (!(champ || n - top.size < slots)) return false;
+    }
+    return true;
+  };
+  const NM = ["T", "A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L"], ix = s => NM.indexOf(s);
+  // The audited DFFL-format counterexample (wins sum 78 after 13 weeks), week 14 left.
+  const cxW = [7, 6, 10, 6, 10, 5, 6, 6, 6, 5, 5, 6], cxDiv = cxW.map((_, i) => Math.floor(i / 4));
+  const cxG = [["F", "H"], ["C", "T"], ["E", "L"], ["B", "I"], ["G", "A"], ["K", "J"]].map(([a, b]) => [ix(a), ix(b)]);
+  const cx = run(T(cxW, cxDiv), cxG, 6);
+  const after = (W, games, w, l) => {
+    const g = games.findIndex(([a, b]) => (a === w && b === l) || (a === l && b === w));
+    const W2 = W.slice(); W2[w]++;
+    return run(T(W2, cxDiv), games.filter((_, k) => k !== g), 6);
+  };
+  const cxH = after(cxW, cxG, ix("F"), ix("H"));            // H (relevant) loses: not in T's smallest set
+  const cxTwin = after(cxW, cxG, ix("T"), ix("C"));         // T's own win, on its smallest set
+  // I's smallest set is {I beats B, L loses to E}: L's loss is a rival loss on it.
+  const cxE = after(cxW, cxG, ix("E"), ix("L"));
+  // Last wildcard decided head to head: one result, not two.
+  const h2h = mag(T([9, 7, 9, 7, 9, 2], [1, 1, 2, 2, 3, 3]), [[1, 3], [0, 5], [2, 4]], 4);
+  // Wildcard leader whose rival plays elsewhere: its own win plus the rival's
+  // loss — two results — where its own wins alone could never do it.
+  const wc = run(T([9, 7, 9, 7, 9, 2], [1, 1, 2, 2, 3, 3]), [[1, 0], [3, 5], [2, 4]], 4);
+  // Level on wins with nothing left but points tied dead even: no result can help.
+  const pfTie = mag(T([5, 5, 2, 2], [1, 1, 2, 2], [800, 800, 0, 0]), [], 2);
+  const pfDone = mag(T([5, 5, 2, 2], [1, 1, 2, 2], [900, 700, 0, 0]), [], 2);
+  const pfBoth = mag(T([5, 5, 2, 2], [1, 1, 2, 2], [900, 700, 0, 0]), [[2, 3]], 2);
+  // A future tie between two chasers half a game back blocks the zero-result
+  // clinch; one rival loss fixes it.
+  const tie = mag(T([6, 10, 10, 5.5, 5.5, 0], [1, 1, 2, 2, 2, 1]), [[3, 4], [1, 2]], 4);
+  // The current week: only individually final games become results.
+  const live = { W0: [4, 4, 2, 2], PF0: [400, 390, 300, 300],
+    pending: [{ a: 0, b: 2, eA: 120, eB: 100, sdA: 0, sdB: 0 }, { a: 1, b: 3, eA: 50, eB: 60, sdA: 9, sdB: 0 }],
+    weeks: [{ week: 10, pairs: [[0, 1], [2, 3]] }] };
+  const st = D.settledStandings(live);
+  const live2 = { W0: [4, 4, 2, 2], PF0: [400, 390, 300, 300], liveWeek: 9,
+    idx: new Map([[101, 0], [102, 1], [103, 2], [104, 3]]),
+    pending: [{ a: 0, b: 2, eA: 120, eB: 100, sdA: 0, sdB: 0 }], weeks: [{ week: 10, pairs: [[0, 1], [2, 3]] }] };
+  const R2 = { upcoming: [{ week: 9, a: 101, b: 103 }, { week: 9, a: 102, b: 104 }, { week: 10, a: 101, b: 102 }, { week: 10, a: 103, b: 104 }], decided: [] };
+  const st2 = D.settledStandings(live2, R2);
+  // Random small leagues against the brute force, with every certificate replayed.
+  let rnd = 11; const R = () => (rnd = (rnd * 1103515245 + 12345) % 2147483648) / 2147483648;
+  let agree = 0, trials = 0, positive = 0, certsOk = true, inexact = 0, firstBad = "";
+  // Starved of budget the deepening gives up: the number is then the shrunk
+  // greedy set's size. It must still be a real, irreducible guarantee, and the
+  // bounds must bracket the brute force, with "exact" only when it is.
+  let irreducible = true, honest = true, starvedInexact = 0, honestBad = "";
+  for (let k = 0; k < 60; k++) {
+    const N = 6, divs = Array.from({ length: N }, (_, i) => 1 + (i % 3)).sort(() => R() - .5);
+    const teams = divs.map((d, i) => ({ rid: i, div: d, w: Math.floor(R() * 4) + (R() < .1 ? .5 : 0), pf: Math.floor(R() * 3) }));
+    const rem = []; const G = 1 + Math.floor(R() * 5);
+    for (let g = 0; g < G; g++) { const a = Math.floor(R() * N); let b = Math.floor(R() * N); if (a === b) b = (b + 1) % N; rem.push([a, b]); }
+    const P = 4 + Math.floor(R() * 2);
+    const out = run(teams, rem, P), m = out.map(x => x.magic), b = brute(teams, rem, P);
+    trials++; positive += m.filter(v => v > 0).length; inexact += out.filter(x => !x.exact).length;
+    out.forEach((x, i) => { if (x.cert && x.magic > 0 && !certHolds(teams, rem, P, i, x.cert)) certsOk = false; });
+    if (JSON.stringify(m) === JSON.stringify(b)) agree++; else if (!firstBad) firstBad = JSON.stringify({ teams, rem, P, m, b });
+    const lean = D.magicNumbers({ teams, remaining: rem, playoffTeams: P, budget: 1 });
+    lean.forEach((x, i) => {
+      if (x.cert && x.magic > 0) {
+        if (x.cert.length !== x.magic || !certHolds(teams, rem, P, i, x.cert)) certsOk = false;
+        // Irreducible: drop any one result and the guarantee is gone.
+        if (x.cert.some((_, k) => certHolds(teams, rem, P, i, x.cert.filter((_, q) => q !== k)))) irreducible = false;
+      }
+      if (!x.exact) starvedInexact++;
+      // More search never raises the number: the full run is at most the starved one.
+      const ok = b[i] == null ? x.magic == null
+        : x.magic == null ? !x.exact
+        : x.lower <= b[i] && b[i] <= x.magic && (!x.exact || x.magic === b[i]) && out[i].magic <= x.magic;
+      if (!ok) { honest = false; if (!honestBad) honestBad = JSON.stringify({ teams, rem, P, i, x, b: b[i] }); }
+    });
+  }
+  // Real standings: 2025 with one week left, against the brute force.
+  const season = D.DB.seasons.find(s => s.season === "2025");
+  const rules = D.leagueRules(season);
+  const rids = season.rosters.map(r => r.roster_id), idx = new Map(rids.map((r, i) => [r, i]));
+  const standings = wk => {
+    const Rw = D.raceAsOf(season, wk), W = rids.map(() => 0), PF = rids.map(() => 0);
+    for (const g of Rw.decided) {
+      const x = idx.get(g.a.rid), y = idx.get(g.b.rid);
+      PF[x] += g.a.pts; PF[y] += g.b.pts;
+      if (g.a.pts > g.b.pts) W[x]++; else if (g.b.pts > g.a.pts) W[y]++; else { W[x] += .5; W[y] += .5; }
+    }
+    return { teams: rids.map((rid, i) => ({ rid, div: season.divOf.get(rid), w: W[i], pf: PF[i] })),
+      rem: (Rw.upcoming || []).map(g => [idx.get(g.a), idx.get(g.b)]), W, PF };
+  };
+  const s13 = standings(13);
+  const o13 = run(s13.teams, s13.rem, rules.playoffTeams);
+  const m13 = o13.map(x => x.magic), b13 = brute(s13.teams, s13.rem, rules.playoffTeams);
+  const c13 = D.exactClinch({ teams: s13.teams, remaining: s13.rem, playoffTeams: rules.playoffTeams, byes: rules.byes });
+  const s14 = standings(14);
+  const m14 = s14.rem.length ? null : mag(s14.teams, [], rules.playoffTeams);
+  const rank = rids.map((_, i) => i).sort((a, b) => s14.W[b] - s14.W[a] || s14.PF[b] - s14.PF[a]);
+  const field = D.seedField(rank, i => season.divOf.get(rids[i]), rules.playoffTeams);
+  return { cx, cxH, cxTwin, cxE, h2h, wc, pfTie, pfDone, pfBoth, tie, st, st2,
+    agree, trials, positive, certsOk, inexact, firstBad, irreducible, honest, starvedInexact, honestBad,
+    m13, b13, exact13: o13.every(x => x.exact), games13: s13.rem.length, e13: c13.map(c => c.eliminated), m14, seeds14: field.seeds };
+});
+const MG = ppMagic;
+const certStr = c => c ? c.map(([w, l]) => `${["T", "A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L"][w]}>${["T", "A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L"][l]}`).join(" ") : "none";
+check("magic: audited counterexample — T needs one result, its own win over C",
+  MG.cx[0].magic === 1 && MG.cx[0].exact && certStr(MG.cx[0].cert) === "T>C", `${MG.cx[0].magic} ${certStr(MG.cx[0].cert)}`);
+check("magic: a relevant rival's loss outside every smallest set leaves it unchanged (H loses: T still 1)",
+  MG.cxH[0].magic === 1 && MG.cxH[0].exact, String(MG.cxH[0].magic));
+check("magic: an own win on the smallest set takes it down by one (T beats C: 1 → 0, clinched)",
+  MG.cxTwin[0].magic === 0, String(MG.cxTwin[0].magic));
+check("magic: a rival loss on the smallest set takes it down by one (I: 2 → 1 when L loses to E)",
+  MG.cx[8].magic === 2 && MG.cx[8].exact && MG.cxE[8].magic === 1 && MG.cxE[8].exact, `${MG.cx[8].magic} ${certStr(MG.cx[8].cert)} → ${MG.cxE[8].magic}`);
+check("magic: the last wildcard decided head to head is one result, not two", MG.h2h[1] === 1 && MG.h2h[3] === 1, JSON.stringify(MG.h2h));
+check("magic: own win plus a named rival's loss counts as two results where own wins alone can't do it",
+  MG.wc[1].magic === 2 && MG.wc[1].exact && MG.wc[0].magic === 0, JSON.stringify(MG.wc.map(x => [x.magic, x.cert])));
+check("magic: a dead-even points tie with nothing left can't be fixed by any result", MG.pfTie[0] === null && MG.pfTie[1] === null, JSON.stringify(MG.pfTie));
+check("magic: with nothing left, points for settles it", MG.pfDone[0] === 0 && MG.pfDone[1] === null, JSON.stringify(MG.pfDone));
+check("magic: two teams both done are split on final points while others still play", MG.pfBoth[0] === 0 && MG.pfBoth[1] === null, JSON.stringify(MG.pfBoth));
+check("magic: a possible tie between two chasers blocks the clinch; one rival loss secures it", MG.tie[0] === 1, JSON.stringify(MG.tie));
+check("magic: only this week's individually final games count as results",
+  MG.st.W[0] === 5 && MG.st.W[1] === 4 && MG.st.W[3] === 2 && MG.st.PF[0] === 520 && MG.st.PF[1] === 390
+    && MG.st.done.length === 1 && MG.st.remaining.length === 3 && MG.st.remaining.some(([a, b]) => a === 1 && b === 3),
+  JSON.stringify(MG.st));
+check("magic: an unpriced game on this week's schedule still counts as left to play",
+  MG.st2.done.length === 1 && MG.st2.W[0] === 5 && MG.st2.remaining.length === 3
+    && MG.st2.remaining.some(([a, b]) => a === 1 && b === 3), JSON.stringify(MG.st2));
+check("magic: smallest certificates agree with a brute force over every set and every win/loss/tie",
+  MG.agree === MG.trials && MG.positive > 20 && MG.inexact === 0, `${MG.agree}/${MG.trials}, ${MG.positive} positive, ${MG.inexact} inexact ${MG.firstBad}`);
+check("magic: every certificate, replayed, really guarantees the spot", MG.certsOk);
+check("magic: a shrunk certificate is irreducible — drop any one result and the guarantee is gone", MG.irreducible);
+check("magic: starved of budget, lower ≤ true ≤ shown, exact only when it is, and more search never raises it",
+  MG.honest, `${MG.starvedInexact} inexact ${MG.honestBad}`);
+check("magic: 2025 at week 13 (real standings) matches the brute force exactly",
+  JSON.stringify(MG.m13) === JSON.stringify(MG.b13) && MG.exact13 && MG.games13 > 0, `${JSON.stringify(MG.m13)} v ${JSON.stringify(MG.b13)}`);
+check("magic: 2025 at week 13 no eliminated team has a certificate",
+  MG.m13.every((m, i) => !MG.e13[i] || m == null), JSON.stringify({ m: MG.m13, e: MG.e13 }));
+check("magic: 2025 final standings — exactly the six seeded teams are clinched, the rest need help",
+  MG.m14 && MG.m14.filter(m => m === 0).length === MG.seeds14.length && MG.seeds14.every(i => MG.m14[i] === 0)
+    && MG.m14.every(m => m === 0 || m === null), JSON.stringify({ m: MG.m14, seeds: MG.seeds14 }));
+// The live board: every chip is the exact table's number, and a zero is a clinch.
+const mgLive = await page.evaluate(() => {
+  const P = window.__PICTURE, host = document.querySelector("#pictureHost .ppv");
+  if (document.body.dataset.pictureReady !== "1" || !P || !host) return { skip: true };
+  const byRid = new Map(P.clinch.map(c => [String(c.rid), c]));
+  let n = 0, ok = true;
+  for (const li of host.querySelectorAll(".pp-li[data-rid], .pp-hero[data-rid]")) {
+    const c = byRid.get(li.dataset.rid), chip = li.querySelector(".pp-mg");
+    const want = !c || c.clinchedPlayoff || c.eliminated ? null
+      : c.magic == null ? (c.magicExact === false ? "unknown" : "help")
+      : c.magicExact ? String(c.magic) : `<=${c.magic}`;
+    const got = chip ? chip.dataset.magic : null;
+    if (got) n++;
+    if (got !== want) ok = false;
+  }
+  // The certificate list: a bound reads "≤U (at least L)", an exact number never does.
+  let certLines = 0, certOk = true;
+  for (const li of host.querySelectorAll(".pp-mgc li[data-rid]")) {
+    const c = byRid.get(li.dataset.rid), t = li.textContent;
+    certLines++;
+    if (!c || !c.cert || (c.magicExact ? /≤|at least/.test(t) : !t.includes(`≤${c.magic} (at least ${c.magicLower})`))) certOk = false;
+  }
+  return { n, ok, certLines, certOk, help: !!host.querySelector(".pp-mgh"),
+    // Both ways: a playoff clinch on the board is exactly a magic 0 (the walk that admits ties).
+    zeroIsClinch: P.clinch.every(c => (c.magic === 0) === !!c.clinchedPlayoff),
+    elimHasNoNumber: P.clinch.every(c => !c.eliminated || c.magic == null) };
+});
+if (!mgLive.skip) {
+  check("live: every Magic chip on the board is the exact table's number", mgLive.ok, `${mgLive.n} chips`);
+  check("live: the Magic help line is on the board", mgLive.help);
+  check("live: each certificate line shows a bound with its proven floor, an exact number without one",
+    mgLive.certOk, `${mgLive.certLines} lines`);
+  check("live: a playoff clinch is exactly a magic 0, and no eliminated team carries a number", mgLive.zeroIsClinch && mgLive.elimHasNoNumber);
+}
 group("Toilet Bowl Picture: section and chip proofs");
 await page.click('#tabs button[data-tab="toilet"]');
 const tbNameLines = await page.evaluate(() => {
