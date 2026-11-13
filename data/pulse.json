@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-12T20:29:30.264Z",
- "at": 1794515370264,
+ "generated": "2026-11-13T01:50:14.134Z",
+ "at": 1794534614134,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -34,9 +34,7 @@
    "points_for": 1173.34,
    "points_against": 1006.12,
    "faab_spent": 88,
-   "starters_hurt": [
-    "Jared Goff (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -58,8 +56,7 @@
    "points_against": 1147.62,
    "faab_spent": 26,
    "starters_hurt": [
-    "T.J. Hockenson (Questionable)",
-    "Tank Dell (Questionable)"
+    "T.J. Hockenson (Questionable)"
    ]
   },
   {
@@ -91,7 +88,9 @@
    "points_for": 1082.46,
    "points_against": 1174.54,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Tony Pollard (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -145,7 +144,7 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
+    "points": 2.3,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -157,7 +156,7 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
+    "points": 3.5,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -169,19 +168,19 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 0,
+    "points": 1.9,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
+    "points": 9.2,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 0,
+    "points": 1.4,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -193,19 +192,19 @@
   {
    "a": {
     "manager": "jskule23",
-    "points": 0,
+    "points": 3.7,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "wesley55",
-    "points": 0,
+    "points": -1,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 0,
+    "points": 0.6,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -216,6 +215,31 @@
   }
  ],
  "trades": [
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "jskule23"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 2,
+     "from": "Domo112",
+     "to": "Domo112"
+    },
+    {
+     "season": "2027",
+     "round": 3,
+     "from": "Domo112",
+     "to": "jskule23"
+    }
+   ]
+  },
   {
    "week": 10,
    "type": "trade",

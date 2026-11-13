@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-12T23:21:54.429Z",
+ "generated": "2026-11-13T01:50:13.595Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -114,7 +114,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "5967": {
    "n": "Tony Pollard",
@@ -124,17 +124,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
-  },
-  "6797": {
-   "n": "Justin Herbert",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "6803": {
    "n": "Brandon Aiyuk",
@@ -144,7 +134,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -175,7 +165,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -196,7 +186,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "7611": {
    "n": "Rhamondre Stevenson",
@@ -272,13 +262,14 @@
   },
   "9493": {
    "n": "Puka Nacua",
-   "s": "Out",
-   "ret": "2026-12-13",
+   "s": "IR",
+   "ret": "2026-12-20",
    "retWeeks": null,
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13",
+   "irSince": 10
   },
   "10222": {
    "n": "Jayden Reed",
@@ -308,7 +299,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-12",
+   "retChecked": "2026-11-13",
    "irSince": 10
   },
   "10236": {
@@ -319,7 +310,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -339,7 +330,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -364,7 +355,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "12506": {
    "n": "Harold Fannin Jr.",
@@ -374,7 +365,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -395,7 +386,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -467,7 +458,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-13"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
