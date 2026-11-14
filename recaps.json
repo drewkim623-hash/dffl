@@ -7383,6 +7383,101 @@
      "text": "Trades and pick owners verified against the Sleeper transactions API, week 10, completed 1:32 p.m., 1:38 p.m. and 2:52 p.m. Eastern on Nov 11. Records and points-for from data/pulse.json; playoff and title odds from data/odds-snapshot.json as refreshed this morning. Keeper notes are quoted from Sleeper screenshots and are treated as part of each ticket's consideration; Sleeper does not list rights on the ticket. Joe is read as jskule23, a high-confidence identification, not a name on the Sleeper ticket. Justin Jefferson is a 2026 rental for jadencha; moseslin retains Jefferson's 2027 rights. Grades use the same method as Deadline Desk: rest-of-season points are Sleeper projections for weeks 11–17, scored in league settings (week 10 is still unscored); pick values are 2023–25 non-keeper round averages; keep surplus is the 2026 pace (official weeks 1–9 plus projections for weeks 10–17) minus that cost round's average. Cost rounds come from keepers.json nextCostRound when the player is listed there, otherwise the 2026 draft round. A keeper spot is valued at that team's marginal 2027 keep after the rights notes. Retained rights are not counted as new incoming value. Letters use the Deadline Desk A–F scale, pluses and minuses included; they are not the site engine's VOR cutoffs. The Allen clause is quoted verbatim and is not added as expected value."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-polls-four-still-own-the-bottom",
+   "date": "2026-11-14",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "2026 · week 10",
+   "headline": "The Poll's Four Still Own the Bottom of the Board",
+   "dek": "After week 8, the league was asked which of four 2-6 teams would turn it around first. Two of them played each other in week 9 — and all four still hold four of the five worst playoff numbers in the league.",
+   "byline": "DFFL desk",
+   "standfirst": "jskule23, victorthompson, moseslin and drewkim, one week later",
+   "teaser": "🚨 DFFL | WEEK 10\n\nTHE POLL'S FOUR STILL OWN THE BOTTOM OF THE BOARD\n\n📊 moseslin's playoff chance is 1.3%, the best of the bottom five in the league\n🏆 drewkim beat jskule23 129.78-104.58 in one of two cellar-four games\n📉 jskule23 is at just 0.505% to make the playoffs, the lowest number anywhere\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-polls-four-still-own-the-bottom",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "After week 8, the DFFL poll asked the league which of four 2-6 teams — jskule23, victorthompson, moseslin and drewkim — would turn it around first. The schedule did not wait for a vote. Two of the six games in week 9 paired the four directly against each other: drewkim beat jskule23, 129.78-104.58, and moseslin beat victorthompson, 120.48-101.7. Two of the four picked up a win. All four are still among the five worst playoff numbers left in the league."
+    },
+    {
+     "type": "stat",
+     "n": "1.3%",
+     "text": "moseslin's playoff chance after beating victorthompson — the best number of the five teams now holding the bottom of the board. The other four are jskule23, drewkim, victorthompson and saucebossandrew."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the matchups",
+     "text": "Two of the Four Decided It Themselves"
+    },
+    {
+     "type": "p",
+     "text": "jskule23, victorthompson, moseslin and drewkim were tied for the fewest wins in the league at 2-6 when the poll went out. The schedule put two of those four games directly against each other in week 9. drewkim's 129.78 beat jskule23's 104.58. moseslin's 120.48 beat victorthompson's 101.7. moseslin and drewkim are 3-6. jskule23 and victorthompson are 2-7."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the board",
+     "text": "The Record Changed. The Math Didn't."
+    },
+    {
+     "type": "p",
+     "text": "A win in the standings did not move any of the four off the bottom of the board. jskule23 is at 0.505% to make the playoffs, drewkim at 0.445%, victorthompson at 1.11% and moseslin at 1.3% — four of the five lowest numbers in the league. saucebossandrew, at 1.185%, is the only team squeezed in among them. Every one of the four carried a real number on draft day: jskule23 was 30.57%, victorthompson 32.715%, moseslin 41.645% and drewkim 24.065%."
+    },
+    {
+     "type": "tiers",
+     "title": "The Bottom of the Board",
+     "intro": "Playoff chances right now, the five lowest in the league.",
+     "foot": "Playoff chances as computed live by the site. The next-lowest number, chassinator's, is included for scale.",
+     "tiers": [
+      {
+       "name": "The bottom five",
+       "rows": [
+        {
+         "team": "moseslin",
+         "pct": 1.3,
+         "rec": "3-6"
+        },
+        {
+         "team": "saucebossandrew",
+         "pct": 1.185,
+         "rec": "3-6"
+        },
+        {
+         "team": "victorthompson",
+         "pct": 1.11,
+         "rec": "2-7"
+        },
+        {
+         "team": "jskule23",
+         "pct": 0.505,
+         "rec": "2-7"
+        },
+        {
+         "team": "drewkim",
+         "pct": 0.445,
+         "rec": "3-6"
+        }
+       ]
+      },
+      {
+       "name": "Clear of it",
+       "rows": [
+        {
+         "team": "chassinator",
+         "pct": 47.39,
+         "rec": "4-5"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Two of the four answered half the poll's question for themselves, in the one week they had control over it. Whether it becomes anything more than a head-to-head tiebreaker is a question the board has not started to entertain."
+    }
+   ]
   }
  ]
 }
