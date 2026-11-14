@@ -363,6 +363,20 @@
    "sha256": "16096546137a9ddc0ecaf8f5b1d83de6c172877ae0cf3797ac2b6826ab9e100f",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-14T23:24:26.095Z",
+   "subject": "DFFL Week 10: The Poll's Four Still Own the Bottom of the Board",
+   "lead": "the-polls-four-still-own-the-bottom",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 9
+   },
+   "to": 12,
+   "sha256": "74948bb9730236b352a7e772a996340c03830be584480eb6787166d28f3d9bbf",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
