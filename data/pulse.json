@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-13T17:50:08.169Z",
- "at": 1794592208169,
+ "generated": "2026-11-14T02:30:12.712Z",
+ "at": 1794623412712,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -44,7 +44,9 @@
    "points_against": 1168.08,
    "faab_spent": 67,
    "starters_hurt": [
-    "Denzel Boston (Questionable)"
+    "Kenneth Walker III (Questionable)",
+    "Denzel Boston (Questionable)",
+    "Omar Cooper Jr. (Questionable)"
    ]
   },
   {
@@ -55,7 +57,7 @@
    "points_against": 1147.62,
    "faab_spent": 26,
    "starters_hurt": [
-    "T.J. Hockenson (Questionable)"
+    "T.J. Hockenson (Out)"
    ]
   },
   {
@@ -66,9 +68,7 @@
    "points_against": 1068.46,
    "faab_spent": 100,
    "starters_hurt": [
-    "George Pickens (Questionable)",
-    "Garrett Wilson (Questionable)",
-    "Jakobi Meyers (Questionable)"
+    "Garrett Wilson (Questionable)"
    ]
   },
   {
@@ -87,9 +87,7 @@
    "points_for": 1082.46,
    "points_against": 1174.54,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Tony Pollard (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -99,7 +97,7 @@
    "points_against": 1277.8,
    "faab_spent": 16,
    "starters_hurt": [
-    "Harold Fannin Jr. (Questionable)"
+    "Jordan Addison (Questionable)"
    ]
   },
   {
@@ -110,7 +108,7 @@
    "points_against": 1250.56,
    "faab_spent": 100,
    "starters_hurt": [
-    "Woody Marks (Questionable)"
+    "Adonai Mitchell (Questionable)"
    ]
   },
   {
@@ -121,9 +119,8 @@
    "points_against": 1216.06,
    "faab_spent": 95,
    "starters_hurt": [
-    "Carnell Tate (Out)",
     "Chig Okonkwo (Questionable)",
-    "Mike Evans (Questionable)"
+    "Travis Etienne Jr. (IR)"
    ]
   },
   {
@@ -134,7 +131,6 @@
    "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Questionable)",
     "Ladd McConkey (Questionable)",
     "A.J. Brown (Questionable)"
    ]
