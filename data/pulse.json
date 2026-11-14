@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-14T15:12:03.977Z",
- "at": 1794669123977,
+ "generated": "2026-11-14T22:02:00.245Z",
+ "at": 1794693720246,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -44,7 +44,7 @@
    "points_against": 1168.08,
    "faab_spent": 67,
    "starters_hurt": [
-    "Kenneth Walker III (Questionable)",
+    "Kenneth Walker III (Out)",
     "Denzel Boston (Questionable)",
     "Omar Cooper Jr. (Questionable)"
    ]
@@ -87,7 +87,9 @@
    "points_for": 1082.46,
    "points_against": 1174.54,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Pat Freiermuth (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -120,7 +122,7 @@
    "faab_spent": 95,
    "starters_hurt": [
     "Chig Okonkwo (Questionable)",
-    "Travis Etienne Jr. (IR)"
+    "Travis Etienne Jr. (Questionable)"
    ]
   },
   {

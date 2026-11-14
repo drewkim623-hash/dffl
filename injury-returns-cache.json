@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-14T15:12:03.434Z",
+ "generated": "2026-11-14T22:01:59.831Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -88,7 +88,7 @@
   },
   "5892": {
    "n": "David Montgomery",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
@@ -139,17 +139,26 @@
   },
   "7543": {
    "n": "Travis Etienne Jr.",
-   "s": "IR",
+   "s": "Questionable",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir — Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-04",
-   "irSince": 6
+   "retChecked": "2026-11-04"
   },
   "7547": {
    "n": "Amon-Ra St. Brown",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-14"
+  },
+  "7600": {
+   "n": "Pat Freiermuth",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
@@ -191,12 +200,12 @@
   },
   "8151": {
    "n": "Kenneth Walker III",
-   "s": "Questionable",
+   "s": "Out",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
+   "retNote": "default: Out = coming week only",
    "retChecked": "2026-11-14"
   },
   "8210": {
@@ -358,13 +367,14 @@
   },
   "12529": {
    "n": "TreVeyon Henderson",
-   "s": "Out",
+   "s": "IR",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson — High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-12"
+   "retChecked": "2026-11-12",
+   "irSince": 10
   },
   "12533": {
    "n": "Jacory Croskey-Merritt",
