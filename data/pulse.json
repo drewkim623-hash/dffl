@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-14T22:02:00.245Z",
- "at": 1794693720246,
+ "generated": "2026-11-14T22:29:33.485Z",
+ "at": 1794695373485,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -213,6 +213,25 @@
   }
  ],
  "trades": [
+  {
+   "week": 10,
+   "type": "trade",
+   "managers": [
+    "Domo112",
+    "jskule23"
+   ],
+   "adds": [],
+   "drops": [],
+   "faab": null,
+   "picks": [
+    {
+     "season": "2027",
+     "round": 8,
+     "from": "Domo112",
+     "to": "jskule23"
+    }
+   ]
+  },
   {
    "week": 10,
    "type": "trade",
