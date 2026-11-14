@@ -199,10 +199,19 @@
    "opened": "2026-11-03",
    "closes": "2026-11-07",
    "subject": "DFFL Week 9: The Full Budget Doesn't Buy A Winning Record",
-   "status": "open",
-   "results": null,
+   "status": "closed",
+   "results": {
+    "JSKULE": 0,
+    "VIC": 0,
+    "MOSE": 0,
+    "DREW": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
    "announced": false,
-   "thread_id": "1a1a15ae6155e6db"
+   "thread_id": "1a1a15ae6155e6db",
+   "closed_at": "2026-11-14T23:21:17.989Z"
   }
  ]
 }
