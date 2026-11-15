@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-15T11:02:05.061Z",
- "at": 1794740525061,
+ "generated": "2026-11-15T15:34:51.344Z",
+ "at": 1794756891344,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -14,9 +14,7 @@
    "points_for": 1443.12,
    "points_against": 1055.54,
    "faab_spent": 22,
-   "starters_hurt": [
-    "Amon-Ra St. Brown (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "Domo112",
@@ -74,7 +72,9 @@
    "points_for": 1193.16,
    "points_against": 1158.96,
    "faab_spent": 72,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Drake Maye (Questionable)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -129,8 +129,7 @@
    "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
-    "Ladd McConkey (Questionable)",
-    "A.J. Brown (Questionable)"
+    "Ladd McConkey (Questionable)"
    ]
   }
  ],
@@ -138,7 +137,7 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 19.6,
+    "points": 27.7,
     "startersLeftToPlay": 8
    },
    "b": {
@@ -150,7 +149,7 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 29.7,
+    "points": 46,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -162,19 +161,19 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 7.2,
+    "points": 10.22,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "moseslin",
-    "points": 43.82,
+    "points": 45.82,
     "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 20.3,
+    "points": 34.02,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -198,7 +197,7 @@
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 5.7,
+    "points": 7.1,
     "startersLeftToPlay": 9
    },
    "b": {
