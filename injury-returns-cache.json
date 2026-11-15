@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-15T15:34:50.864Z",
+ "generated": "2026-11-15T16:54:39.228Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -127,16 +127,6 @@
    "retNote": "default: Out = coming week only",
    "retChecked": "2026-11-15"
   },
-  "7543": {
-   "n": "Travis Etienne Jr.",
-   "s": "Questionable",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/story/_/id/50079185/saints-putting-rb-travis-etienne-hamstring-ir — Hamstring strain. IR Oct 1; earliest Week 9 (NO bye Week 8). Moore: 'take a little while' - could run longer. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-04"
-  },
   "7600": {
    "n": "Pat Freiermuth",
    "s": "Questionable",
@@ -163,16 +153,6 @@
    "retNote": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue — Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [10,11]; consensus.",
    "retChecked": "2026-11-15",
    "irSince": 6
-  },
-  "8146": {
-   "n": "Garrett Wilson",
-   "s": "Questionable",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-07"
   },
   "8151": {
    "n": "Kenneth Walker III",
@@ -246,7 +226,7 @@
   },
   "9756": {
    "n": "Jordan Addison",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-15",
    "retWeeks": null,
    "retSource": "report",
@@ -287,23 +267,13 @@
   },
   "11564": {
    "n": "Drake Maye",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
-  },
-  "11625": {
-   "n": "Adonai Mitchell",
-   "s": "Questionable",
-   "ret": "2026-11-15",
+   "s": "Out",
+   "ret": "2026-11-29",
    "retWeeks": null,
-   "retSource": "report",
+   "retSource": "espn-return-date",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Finger. Ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-15"
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-15"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -389,16 +359,6 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-08"
   },
-  "13276": {
-   "n": "Omar Cooper Jr.",
-   "s": "Questionable",
-   "ret": "2026-11-15",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-15"
-  },
   "13279": {
    "n": "Carnell Tate",
    "s": "Out",
@@ -419,16 +379,6 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06",
    "irSince": 9
-  },
-  "13346": {
-   "n": "Denzel Boston",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
