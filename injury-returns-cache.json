@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-14T22:29:32.961Z",
+ "generated": "2026-11-15T11:02:04.528Z",
  "week": 10,
  "entries": {
   "2133": {
@@ -104,7 +104,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -135,7 +135,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "7543": {
    "n": "Travis Etienne Jr.",
@@ -155,7 +155,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "7600": {
    "n": "Pat Freiermuth",
@@ -165,7 +165,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "7611": {
    "n": "Rhamondre Stevenson",
@@ -206,7 +206,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "8210": {
    "n": "Chig Okonkwo",
@@ -216,7 +216,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "8800": {
    "n": "Malik Davis",
@@ -306,7 +306,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-14",
+   "retChecked": "2026-11-15",
    "irSince": 10
   },
   "11625": {
@@ -363,7 +363,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -436,7 +436,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-14"
+   "retChecked": "2026-11-15"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
