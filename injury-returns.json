@@ -114,7 +114,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4036133/tj-hockenson",
       "checked": "2026-11-14",
-      "note": "Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: changed from audit []; consensus.",
+      "note": "Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5849": {
@@ -164,11 +164,13 @@
     },
     "5892": {
       "kind": "report",
-      "weeks": 0,
-      "weeks_list": [],
+      "weeks": 1,
+      "weeks_list": [
+        10
+      ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
-      "checked": "2026-11-14",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit [10]; consensus.",
+      "checked": "2026-11-15",
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "6786": {
@@ -261,15 +263,16 @@
     },
     "8142": {
       "kind": "report",
-      "weeks": 3,
+      "weeks": 4,
       "weeks_list": [
-        9,
         10,
-        11
+        11,
+        12,
+        14
       ],
       "source": "https://www.espn.com.sg/nfl/story/_/id/50034054/colts-officially-place-wr-alec-pierce-ir-heel-issue",
-      "checked": "2026-11-06",
-      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: matches audit; consensus.",
+      "checked": "2026-11-15",
+      "note": "Heel (aggravated, rehab, no surgery). Week 7 is only the earliest eligible date; CBS (Sep 28): 'without a timeline'. No newer report. Consensus: changed from audit [10,11]; consensus.",
       "flag": "consensus"
     },
     "8146": {
@@ -282,6 +285,17 @@
       "checked": "2026-11-07",
       "flag": "consensus",
       "note": "Consensus: matches audit; consensus."
+    },
+    "8151": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        10
+      ],
+      "weeks": 1,
+      "checked": "2026-11-15",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "8155": {
       "kind": "report",
@@ -577,13 +591,16 @@
     },
     "12529": {
       "kind": "report",
-      "weeks": 1,
+      "weeks": 4,
       "weeks_list": [
-        10
+        10,
+        12,
+        13,
+        14
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4432710/treveyon-henderson",
-      "checked": "2026-11-12",
-      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: matches audit; consensus.",
+      "checked": "2026-11-15",
+      "note": "High-ankle sprain (right). Expected to miss multiple weeks; no surgery. Exact length unknown (2 weeks assumed from 'multiple'). Consensus: changed from audit [10]; consensus.",
       "flag": "consensus"
     },
     "12533": {
@@ -628,7 +645,7 @@
       "weeks": 1,
       "checked": "2026-11-14",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13281": {
       "kind": "report",
