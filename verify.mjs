@@ -2554,6 +2554,31 @@ check("every game this week gets a what-if", ppEng.games > 0 && ppEng.whatIfN ==
 check("forced runs use the requested simulation count", ppEng.forcedSims);
 check("winning this week is never worth less than losing it", ppEng.whatIfOk && ppEng.forcedWinner, `worst ${ppEng.worst}`);
 
+group("Standings tiebreak: wins, head to head (two-way), points for");
+const tb = await page.evaluate(() => {
+  const D = window.__DFFL;
+  // 0 and 1 tied on wins; 1 has more points, 0 won the meeting.
+  const H = [[0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  const two = D.tieOrder([0, 1, 2, 3], [8, 8, 5, 3], [1300, 1600, 1500, 1000], H);
+  // Split series 1-1: back to points.
+  const H2 = [[0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  const split = D.tieOrder([0, 1, 2, 3], [8, 8, 5, 3], [1300, 1600, 1500, 1000], H2);
+  // Three-way tie: points only, even though 0 beat both others.
+  const H3 = [[0, 1, 1], [0, 0, 1], [0, 0, 0]];
+  const three = D.tieOrder([0, 1, 2], [7, 7, 7], [1000, 1200, 1100], H3);
+  // Division: 0 and 1 tie inside div 1 while 4 (div 2) is on the same wins —
+  // a three-way league tie, but two-way in the division, so head to head names the winner.
+  const W = [9, 9, 4, 3, 9, 2], PF = [1300, 1600, 1100, 1000, 1700, 900];
+  const Hd = Array.from({ length: 6 }, () => new Array(6).fill(0)); Hd[0][1] = 1;
+  const ord = l => D.tieOrder(l, W, PF, Hd), rank = ord([0, 1, 2, 3, 4, 5]);
+  const f = D.seedField(rank, i => (i < 4 ? 1 : 2), 3, ord);
+  return { two, split, three, champs: f.champs, seeds: f.seeds };
+});
+check("a two-way tie goes to head to head over points", tb.two.join() === "0,1,2,3", tb.two.join());
+check("a split series falls back to points for", tb.split.join() === "1,0,2,3", tb.split.join());
+check("a three-way tie goes straight to points for", tb.three.join() === "1,2,0", tb.three.join());
+check("a division tie is sized inside the division", tb.champs.includes(0) && !tb.champs.includes(1), JSON.stringify(tb));
+
 group("Playoff Picture: exact clinch and elimination");
 const ppClinch = await page.evaluate(() => {
   const D = window.__DFFL;
@@ -6544,7 +6569,9 @@ check("injuries: an empty report says nobody is hurt", injData.emptyState);
       if (live) {
         const a = D.simulateSeason(model, 3000, live), b = M.simulateSeason(model, 3000, live);
         sims = 3000;
-        for (const k of ["title", "playoff", "divWin", "bye", "wins", "seed"]) if (strip(a[k]) !== strip(b[k])) bad.push(`simulateSeason ${k}`);
+        // Seeding moved on purpose (head to head now breaks two-way ties), so only
+        // what the regular season draws — wins and their spread — must match.
+        for (const k of ["wins", "winDist"]) if (strip(a[k]) !== strip(b[k])) bad.push(`simulateSeason ${k}`);
       }
     }
     return { bad, sims, games: glB.games.length, lossAttached: !!pB.loss };

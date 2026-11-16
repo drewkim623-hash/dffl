@@ -6304,14 +6304,57 @@ async function oddsModel() {
  * `rank` is every team already ordered best to worst; `divOfIdx` returns a
  * team's division.
  */
-function seedField(rank, divOfIdx, playoffTeams) {
+function seedField(rank, divOfIdx, playoffTeams, order = null) {
   const pos = new Map(rank.map((i, k) => [i, k]));
+  // `order` re-ranks a subset with the tie rule applied inside that subset — a
+  // tie that is three-way league-wide can be two-way inside a division, or once
+  // the division winners are lifted out. Without it, the overall rank stands.
+  const ord = order || (list => list.slice().sort((a, b) => pos.get(a) - pos.get(b)));
   const divs = [...new Set(rank.map(divOfIdx))].sort((a, b) => a - b);
-  const champs = divs.map(d => rank.find(i => divOfIdx(i) === d))
-    .filter(i => i != null).sort((a, b) => pos.get(a) - pos.get(b));
-  const rest = rank.filter(i => !champs.includes(i));
+  const divRank = new Map(divs.map(d => [d, ord(rank.filter(i => divOfIdx(i) === d))]));
+  const champs = ord(divs.map(d => divRank.get(d)[0]).filter(i => i != null));
+  const rest = ord(rank.filter(i => !champs.includes(i)));
   const wilds = Math.max(0, playoffTeams - champs.length);
-  return { champs, rest, wilds, pos, seeds: [...champs, ...rest.slice(0, wilds)] };
+  return { champs, rest, wilds, pos, divRank, seeds: [...champs, ...rest.slice(0, wilds)] };
+}
+
+/**
+ * DFFL's standings order: wins, then — for a two-way tie — head to head, then
+ * points for. A tie of three or more goes straight to points for. Applied to
+ * whichever subset is being ranked (a division, the wild-card pool, the
+ * division winners), so the tie is sized inside that subset.
+ *
+ * H is an N×N matrix (flat array or rows) of wins: H[a][b] = a's wins over b,
+ * a tied game counting half to each. Returns a new array, best first.
+ */
+function tieOrder(list, W, PF, H) {
+  const h = typeof H === "function" ? H : (a, b) => (H ? H[a][b] : 0);
+  const byPts = (a, b) => PF[b] - PF[a];
+  const s = list.slice().sort((a, b) => W[b] - W[a] || byPts(a, b));
+  const out = [];
+  for (let k = 0; k < s.length;) {
+    let e = k + 1;
+    while (e < s.length && W[s[e]] === W[s[k]]) e++;
+    if (e - k === 2) {
+      const [a, b] = [s[k], s[k + 1]], d = h(a, b) - h(b, a);
+      out.push(...(d > 0 ? [a, b] : d < 0 ? [b, a] : [a, b]));
+    } else out.push(...s.slice(k, e));
+    k = e;
+  }
+  return out;
+}
+
+/** Head-to-head wins from a list of decided games, as an N×N matrix. */
+function h2hFrom(games, idxOf, N) {
+  const H = Array.from({ length: N }, () => new Array(N).fill(0));
+  for (const g of games) {
+    const a = idxOf(g.a.rid), b = idxOf(g.b.rid);
+    if (a == null || b == null) continue;
+    if (g.a.pts > g.b.pts) H[a][b]++;
+    else if (g.b.pts > g.a.pts) H[b][a]++;
+    else { H[a][b] += 0.5; H[b][a] += 0.5; }
+  }
+  return H;
 }
 
 /**
@@ -6359,6 +6402,12 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
   const hasPending = !!(live && live.pending && live.pending.length);
   const forceWeek = F && !hasPending && slate.length ? slate[0] : null;
   const isForced = (a, b) => (a === F.a && b === F.b) || (a === F.b && b === F.a);
+  // Real head-to-head so far, flattened. A preseason run starts from nothing.
+  let H0 = null;
+  if (live && live.H2H0) {
+    H0 = new Float64Array(N * N);
+    for (let a = 0; a < N; a++) for (let b = 0; b < N; b++) H0[a * N + b] = live.H2H0[a][b] || 0;
+  }
 
   for (let s = 0; s < sims; s++) {
     // Preseason: the roster nobody has drafted yet, one draw per manager per
@@ -6367,6 +6416,8 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
     const lvl = teams.map(t => gau(t.mean, live ? t.levelSd : seasonSd));
     const W = live ? live.W0.slice() : zeros();
     const PF = live ? live.PF0.slice() : zeros();
+    // Head to head, flat N×N: H[a*N+b] = a's wins over b, real games banked first.
+    const H = H0 ? H0.slice() : new Float64Array(N * N);
     // The week in flight, drawn from where the lineups actually stand: a side
     // with nothing left to play has no spread and simply banks its score.
     for (const g of (live && live.pending) || []) {
@@ -6374,8 +6425,8 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
       const forced = F && isForced(g.a, g.b);
       if (forced && (F.winner === g.a) !== (sa > sb)) { const t = sa; sa = sb; sb = t; }
       PF[g.a] += sa; PF[g.b] += sb;
-      if (forced) W[F.winner]++;
-      else if (sa > sb) W[g.a]++; else W[g.b]++;
+      const win = forced ? F.winner : sa > sb ? g.a : g.b;
+      W[win]++; H[win * N + (win === g.a ? g.b : g.a)]++;
     }
     for (const wk of slate) {
       // The injury plan's per-week cuts when there is one; otherwise (a rewound
@@ -6394,8 +6445,8 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
       }
       for (let i = 0; i < N; i++) PF[i] += sc[i];
       for (const [a, b] of wk.pairs) {
-        if (fw && isForced(a, b)) W[F.winner]++;
-        else if (sc[a] > sc[b]) W[a]++; else W[b]++;
+        const win = fw && isForced(a, b) ? F.winner : sc[a] > sc[b] ? a : b;
+        W[win]++; H[win * N + (win === a ? b : a)]++;
       }
     }
     for (let i = 0; i < N; i++) {
@@ -6405,13 +6456,15 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
       C.winDist[i][b]++;
     }
 
-    const rank = ids.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a]);
+    const hh = (a, b) => H[a * N + b];
+    const order = list => tieOrder(list, W, PF, hh);
+    const rank = order(ids);
     for (let i = 0; i < N; i++) pos[rank[i]] = i;
 
-    const { champs, rest, wilds, seeds } = seedField(rank, i => teams[i].div, playoffTeams);
+    const { champs, rest, wilds, seeds, divRank } = seedField(rank, i => teams[i].div, playoffTeams, order);
     for (const i of champs) C.divWin[i]++;
     for (const d of divs) {
-      const m = rank.filter(i => teams[i].div === d);
+      const m = divRank.get(d);
       C.divLast[m[m.length - 1]]++;
     }
     for (const i of seeds) C.playoff[i]++;
@@ -7462,6 +7515,7 @@ function liveState(model, season, R, avail, board, throughWeek = null, plan = nu
     }
   }
   const weeks = weeksOf((R.upcoming || []).filter(g => g.week !== liveWk), idx);
+  const H2H0 = h2hFrom(R.decided, rid => idx.get(rid), N);
   // Nothing banked and nothing in flight means there is nothing to reprice from.
   if (!played && !pending.length) return null;
   if (!weeks.length && !pending.length) return null;
@@ -7489,7 +7543,7 @@ function liveState(model, season, R, avail, board, throughWeek = null, plan = nu
     for (let w = (season.pws || 15); w <= (season.pws || 15) + 2; w++) put(w);
   }
   return {
-    teams, idx, W0, PF0, weeks, mult, multByWeek, lostByWeek, plan, pending, liveWeek: liveWk, throughWeek,
+    teams, idx, W0, PF0, H2H0, weeks, mult, multByWeek, lostByWeek, plan, pending, liveWeek: liveWk, throughWeek,
     pws: season.pws || 15,
     // Injuries bite on the next week nobody has started. A week already in
     // flight is priced off who has actually played, not off a status.
@@ -11078,7 +11132,7 @@ function leagueRules(season) {
     roundType: st.playoff_round_type ?? null,
     seedType: st.playoff_seed_type ?? null,
     rosterDivisions: season && season.divOf ? season.divOf.size : 0,
-    tiebreak: "wins, then points for",
+    tiebreak: "wins, then head to head (two-way ties), then points for",
   };
 }
 
@@ -11582,6 +11636,7 @@ function pictureJob(model, live, whatIfSims = WHATIF_SIMS, sims = ODDS_SIMS) {
     teams: live.teams.map(t => ({ mean: t.mean, levelSd: t.levelSd, div: t.div })),
     weeks: live.weeks.map(w => ({ week: w.week, pairs: w.pairs.map(p => p.slice()) })),
     W0: live.W0.slice(), PF0: live.PF0.slice(), mult: live.mult.slice(), adjWeek: live.adjWeek,
+    H2H0: live.H2H0 ? live.H2H0.map(r => r.slice()) : null,
     pending: (live.pending || []).map(g => ({ a: g.a, b: g.b, eA: g.eA, eB: g.eB, sdA: g.sdA, sdB: g.sdB })),
     // The injury plan as the simulator reads it: a cut per week, bracket weeks
     // included (a Map survives the post to the worker). The plan itself is not
@@ -11630,7 +11685,7 @@ function pictureWorkerSource() {
   return [
     `const ODDS_SEED = ${ODDS_SEED};`, `const ODDS_SIMS = ${ODDS_SIMS};`,
     rng.toString(), `const gaussFrom = ${gaussFrom.toString()};`,
-    seedField.toString(), simulateSeason.toString(), pictureRun.toString(),
+    seedField.toString(), tieOrder.toString(), simulateSeason.toString(), pictureRun.toString(),
     `onmessage = e => {
       let msg;
       try { msg = { id: e.data.id, ok: true, out: pictureRun(e.data.job) }; }
@@ -11780,10 +11835,12 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   const whatIf = whatIfOf(out);
   // Teams whose game this week is already final: no what-if, but not "no game" either.
   const final = new Set(currentGames(job.model, job.live).filter(g => g.final).flatMap(g => [g.a, g.b]));
-  // Seeds as of today: the standings the simulator ranks by (wins, then points
-  // for) run through the same seedField every simulated season uses.
-  const rank = live.teams.map((_, i) => i).sort((a, b) => live.W0[b] - live.W0[a] || live.PF0[b] - live.PF0[a]);
-  const field = seedField(rank, i => live.teams[i].div, rules.playoffTeams);
+  // Seeds as of today: the standings the simulator ranks by (wins, then head to
+  // head in a two-way tie, then points for) through the same seedField every
+  // simulated season uses.
+  const tOrd = list => tieOrder(list, live.W0, live.PF0, live.H2H0);
+  const rank = tOrd(live.teams.map((_, i) => i));
+  const field = seedField(rank, i => live.teams[i].div, rules.playoffTeams, tOrd);
   const order = [...field.seeds, ...rank.filter(i => !field.seeds.includes(i))];
   const todaySeed = new Array(N);
   order.forEach((i, k) => { todaySeed[i] = k + 1; });
@@ -11975,7 +12032,8 @@ function pictureBoard(PP) {
   if (hunt.length) list += `<div class="pp-hh">In the hunt</div>${hunt.map(li).join("")}`;
 
   const note = `Seeds = today, odds = full season. Seeds are today's standings — division leaders first,
-    then the best records left, ties by record and then points for — so the odds won't always follow
+    then the best records left; a two-way tie goes to head to head, then points for, and a three-way
+    tie straight to points for — so the odds won't always follow
     seed order. Every percentage is the Odds tab's ${PP.sims.toLocaleString()}-season run: Playoff % is
     the Odds tab's number, and Bye % is how often that run finishes a team in the top ${B} seed${B === 1 ? "" : "s"}.
     The sims still reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.`;
@@ -12085,7 +12143,8 @@ function renderPicture(host, PP) {
        division), playoff_round_type ${esc(String(r.roundType ?? "not set"))}, playoff_seed_type
        ${esc(String(r.seedType ?? "not set"))}, and ${r.byes} first-round bye${r.byes === 1 ? "" : "s"}
        ${r.byesFrom === "bracket" ? "(read off Sleeper's winners bracket)" : "(Sleeper hasn't drawn the bracket yet, so the standard two for a six-team bracket)"}.</p>
-    <p><b>Assumed:</b> ties in the standings go to record, then points for (Sleeper's default).
+    <p><b>League rule:</b> standings go by wins; a two-way tie goes to head to head, then points
+       for, and a tie of three or more goes straight to points for. The same rule seeds the playoffs.
        Division winners are seeded first, in record order, then the best records left — the rule
        DFFL's past seasons were actually seeded by. The bracket above is drawn fixed; the sims still
        reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.</p>
@@ -12225,8 +12284,9 @@ function settledToiletPicture(L, R) {
   const W=rosters.map(()=>0),PF=rosters.map(()=>0),Loss=rosters.map(()=>0),T=rosters.map(()=>0);
   for(const g of season.games.filter(x=>!x.playoff)){const a=idx.get(g.a.rid),b=idx.get(g.b.rid);if(a==null||b==null)continue;PF[a]+=g.a.pts;PF[b]+=g.b.pts;if(g.a.pts>g.b.pts){W[a]++;Loss[b]++;}else if(g.b.pts>g.a.pts){W[b]++;Loss[a]++;}else{T[a]++;T[b]++;}}
   const teams=rosters.map((r,i)=>({rid:r.roster_id,uid:season.uidOf.get(r.roster_id),div:season.divOf.get(r.roster_id),w:W[i]+T[i]/2,pf:PF[i]}));
-  const rank=teams.map((_,i)=>i).sort((a,b)=>teams[b].w-teams[a].w||PF[b]-PF[a]);
-  const field=seedField(rank,i=>teams[i].div,rules.playoffTeams), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
+  const Wt=teams.map(t=>t.w),H=h2hFrom(season.games.filter(x=>!x.playoff),rid=>idx.get(rid),teams.length),tOrd=list=>tieOrder(list,Wt,PF,H);
+  const rank=tOrd(teams.map((_,i)=>i));
+  const field=seedField(rank,i=>teams[i].div,rules.playoffTeams,tOrd), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
   const todaySeed=new Array(teams.length); order.forEach((i,k)=>todaySeed[i]=k+1);
   const C=exactClinch({teams,remaining:[],playoffTeams:rules.playoffTeams,byes:rules.byes});
   const by=new Map(C.map(c=>[c.rid,c]));
@@ -13615,7 +13675,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
-      raceData, raceAsOf, seedField, pairSchedule,
+      raceData, raceAsOf, seedField, tieOrder, h2hFrom, pairSchedule,
       ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
