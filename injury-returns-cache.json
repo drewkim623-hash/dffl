@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-15T20:54:25.711Z",
+ "generated": "2026-11-16T11:03:26.880Z",
  "week": 10,
  "entries": {
   "1466": {
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
   "2133": {
    "n": "Davante Adams",
@@ -109,12 +109,12 @@
   "6803": {
    "n": "Brandon Aiyuk",
    "s": "DNR",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-11-15"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: DNR = coming week only",
+   "retChecked": "2026-11-16"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -145,17 +145,27 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
-  "7600": {
-   "n": "Pat Freiermuth",
+  "8112": {
+   "n": "Drake London",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-16"
+  },
+  "8126": {
+   "n": "Wan'Dale Robinson",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -192,7 +202,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
   "8800": {
    "n": "Malik Davis",
@@ -277,12 +287,12 @@
   "10232": {
    "n": "Michael Wilson",
    "s": "IR",
-   "ret": "2027-02-15",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
-   "retEstimated": false,
-   "retNote": "ESPN return date",
-   "retChecked": "2026-11-15",
+   "ret": null,
+   "retWeeks": 4,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: IR minimum 4 weeks from wk 10 (4 left)",
+   "retChecked": "2026-11-16",
    "irSince": 10
   },
   "11564": {
@@ -293,7 +303,17 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
+  },
+  "11604": {
+   "n": "Brock Bowers",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Out = coming week only",
+   "retChecked": "2026-11-16"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -313,7 +333,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
   "12489": {
    "n": "RJ Harvey",
@@ -349,7 +369,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-15"
+   "retChecked": "2026-11-16"
   },
   "12529": {
    "n": "TreVeyon Henderson",

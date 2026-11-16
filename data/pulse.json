@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-15T15:34:51.344Z",
- "at": 1794756891344,
+ "generated": "2026-11-16T11:03:27.388Z",
+ "at": 1794827007388,
  "season": "2026",
  "nfl_week": 10,
  "season_type": "regular",
@@ -23,7 +23,10 @@
    "points_for": 1203.26,
    "points_against": 1114.52,
    "faab_spent": 88,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Brock Bowers (Out)",
+    "Wan'Dale Robinson (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -42,7 +45,7 @@
    "points_against": 1168.08,
    "faab_spent": 67,
    "starters_hurt": [
-    "Denzel Boston (Questionable)"
+    "Travis Kelce (Questionable)"
    ]
   },
   {
@@ -61,9 +64,7 @@
    "points_for": 1134.66,
    "points_against": 1068.46,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Garrett Wilson (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -73,7 +74,7 @@
    "points_against": 1158.96,
    "faab_spent": 72,
    "starters_hurt": [
-    "Drake Maye (Questionable)"
+    "Drake Maye (Out)"
    ]
   },
   {
@@ -83,9 +84,7 @@
    "points_for": 1082.46,
    "points_against": 1174.54,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Pat Freiermuth (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "moseslin",
@@ -94,9 +93,7 @@
    "points_for": 1038.16,
    "points_against": 1277.8,
    "faab_spent": 16,
-   "starters_hurt": [
-    "Jordan Addison (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "drewkim",
@@ -106,7 +103,7 @@
    "points_against": 1250.56,
    "faab_spent": 100,
    "starters_hurt": [
-    "Adonai Mitchell (Questionable)"
+    "Woody Marks (Out)"
    ]
   },
   {
@@ -117,8 +114,7 @@
    "points_against": 1216.06,
    "faab_spent": 95,
    "starters_hurt": [
-    "Chig Okonkwo (Questionable)",
-    "Travis Etienne Jr. (Questionable)"
+    "Chig Okonkwo (Questionable)"
    ]
   },
   {
@@ -129,7 +125,8 @@
    "points_against": 1092.92,
    "faab_spent": 100,
    "starters_hurt": [
-    "Ladd McConkey (Questionable)"
+    "Drake London (Questionable)",
+    "A.J. Brown (Out)"
    ]
   }
  ],
@@ -137,73 +134,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 27.7,
-    "startersLeftToPlay": 8
+    "points": 155.14,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 100.08,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 46,
-    "startersLeftToPlay": 9
+    "points": 174.24,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "bradyrife",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 208.78,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "chassinator",
-    "points": 10.22,
-    "startersLeftToPlay": 9
+    "points": 81.42,
+    "startersLeftToPlay": 2
    },
    "b": {
     "manager": "moseslin",
-    "points": 45.82,
-    "startersLeftToPlay": 8
+    "points": 145.32,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "willie12w",
-    "points": 34.02,
-    "startersLeftToPlay": 9
+    "points": 166.92,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "drewkim",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 94.76,
+    "startersLeftToPlay": 0
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 6.4,
-    "startersLeftToPlay": 9
+    "points": 142.22,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "wesley55",
-    "points": 2,
-    "startersLeftToPlay": 9
+    "points": 121.46,
+    "startersLeftToPlay": 1
    }
   },
   {
    "a": {
     "manager": "saucebossandrew",
-    "points": 7.1,
-    "startersLeftToPlay": 9
+    "points": 86.5,
+    "startersLeftToPlay": 0
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 103.52,
+    "startersLeftToPlay": 1
    }
   }
  ],
@@ -403,7 +400,7 @@
      "name": "Brock Bowers",
      "pos": "TE",
      "team": "LV",
-     "status": null,
+     "status": "Out",
      "to": "Domo112"
     },
     {
@@ -426,7 +423,7 @@
      "name": "Brock Bowers",
      "pos": "TE",
      "team": "LV",
-     "status": null,
+     "status": "Out",
      "from": "drewkim"
     },
     {
