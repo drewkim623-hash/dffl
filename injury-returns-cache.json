@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-16T11:03:26.880Z",
+ "generated": "2026-11-16T14:43:24.890Z",
  "week": 10,
  "entries": {
   "1466": {
@@ -298,11 +298,14 @@
   "11564": {
    "n": "Drake Maye",
    "s": "Out",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "espn-return-date",
+   "ret": null,
+   "retWeeks": 1,
+   "retWeeksList": [
+    12
+   ],
+   "retSource": "report",
    "retEstimated": false,
-   "retNote": "ESPN return date",
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-11-16"
   },
   "11604": {
@@ -322,7 +325,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-15"
   },
   "12474": {
@@ -330,9 +333,12 @@
    "s": "Out",
    "ret": null,
    "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Out = coming week only",
+   "retWeeksList": [
+    11
+   ],
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-11-16"
   },
   "12489": {

@@ -456,6 +456,17 @@
       "note": "Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
+    "11564": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        12
+      ],
+      "weeks": 1,
+      "checked": "2026-11-16",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
+    },
     "11625": {
       "kind": "report",
       "weeks": 1,
@@ -483,7 +494,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-15",
-      "note": "Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: changed from audit []; consensus.",
+      "note": "Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "11646": {
@@ -494,6 +505,17 @@
       "checked": "2026-10-14",
       "note": "Quad strain. Canales: 'on track' to play Week 6; practiced Tuesday. Sleeper still says Out -> count 0 weeks. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
       "flag": "uncertain"
+    },
+    "12474": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        11
+      ],
+      "weeks": 1,
+      "checked": "2026-11-16",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "12481": {
       "kind": "report",
