@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-17T04:35:34.070Z",
- "at": 1794890134070,
+ "generated": "2026-11-17T05:14:55.404Z",
+ "at": 1794892495404,
  "season": "2026",
- "nfl_week": 10,
+ "nfl_week": 11,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -134,73 +134,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 155.14,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "sizzlemc2",
-    "points": 100.08,
-    "startersLeftToPlay": 0
+    "manager": "chassinator",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 174.24,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "bradyrife",
-    "points": 208.78,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "chassinator",
-    "points": 96.82,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "moseslin",
-    "points": 145.32,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
     "manager": "willie12w",
-    "points": 166.92,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "drewkim",
-    "points": 94.76,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 142.22,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "wesley55",
-    "points": 137.96,
-    "startersLeftToPlay": 0
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
-    "manager": "saucebossandrew",
-    "points": 86.5,
-    "startersLeftToPlay": 0
+    "manager": "wesley55",
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "victorthompson",
-    "points": 109.82,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
@@ -387,248 +387,8 @@
      "to": "jadencha"
     }
    ]
-  },
-  {
-   "week": 9,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "drewkim"
-   ],
-   "adds": [
-    {
-     "name": "Brock Bowers",
-     "pos": "TE",
-     "team": "LV",
-     "status": "Out",
-     "to": "Domo112"
-    },
-    {
-     "name": "Jalen Coker",
-     "pos": "WR",
-     "team": "CAR",
-     "status": null,
-     "to": "drewkim"
-    },
-    {
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "team": "WAS",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Brock Bowers",
-     "pos": "TE",
-     "team": "LV",
-     "status": "Out",
-     "from": "drewkim"
-    },
-    {
-     "name": "Jalen Coker",
-     "pos": "WR",
-     "team": "CAR",
-     "status": null,
-     "from": "Domo112"
-    },
-    {
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "team": "WAS",
-     "status": null,
-     "from": "drewkim"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 7,
-     "from": "Domo112",
-     "to": "drewkim"
-    }
-   ]
-  },
-  {
-   "week": 9,
-   "type": "trade",
-   "managers": [
-    "chassinator",
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Courtland Sutton",
-     "pos": "WR",
-     "team": "DEN",
-     "status": null,
-     "to": "saucebossandrew"
-    },
-    {
-     "name": "Chris Olave",
-     "pos": "WR",
-     "team": "NO",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Courtland Sutton",
-     "pos": "WR",
-     "team": "DEN",
-     "status": null,
-     "from": "chassinator"
-    },
-    {
-     "name": "Chris Olave",
-     "pos": "WR",
-     "team": "NO",
-     "status": null,
-     "from": "saucebossandrew"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 2,
-     "from": "chassinator",
-     "to": "saucebossandrew"
-    }
-   ]
-  },
-  {
-   "week": 9,
-   "type": "trade",
-   "managers": [
-    "willie12w",
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Kendre Miller",
-     "pos": "RB",
-     "team": "DAL",
-     "status": null,
-     "to": "saucebossandrew"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Kendre Miller",
-     "pos": "RB",
-     "team": "DAL",
-     "status": null,
-     "from": "willie12w"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2029",
-     "round": 15,
-     "from": "saucebossandrew",
-     "to": "willie12w"
-    }
-   ]
   }
  ],
- "waivers": [
-  {
-   "week": 9,
-   "type": "waiver",
-   "managers": [
-    "sizzlemc2"
-   ],
-   "adds": [
-    {
-     "name": "Kaleb Johnson",
-     "pos": "RB",
-     "team": "GB",
-     "status": null,
-     "to": "sizzlemc2"
-    }
-   ],
-   "drops": [],
-   "faab": 23,
-   "picks": []
-  },
-  {
-   "week": 9,
-   "type": "waiver",
-   "managers": [
-    "willie12w"
-   ],
-   "adds": [
-    {
-     "name": "Corey Kiner",
-     "pos": "RB",
-     "team": "NE",
-     "status": null,
-     "to": "willie12w"
-    }
-   ],
-   "drops": [],
-   "faab": 23,
-   "picks": []
-  },
-  {
-   "week": 9,
-   "type": "waiver",
-   "managers": [
-    "chassinator"
-   ],
-   "adds": [
-    {
-     "name": "Baltimore Ravens",
-     "pos": "DEF",
-     "team": "BAL",
-     "status": null,
-     "to": "chassinator"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chicago Bears",
-     "pos": "DEF",
-     "team": "CHI",
-     "status": null,
-     "from": "chassinator"
-    }
-   ],
-   "faab": 8,
-   "picks": []
-  },
-  {
-   "week": 9,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Los Angeles Rams",
-     "pos": "DEF",
-     "team": "LAR",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Denver Broncos",
-     "pos": "DEF",
-     "team": "DEN",
-     "status": null,
-     "from": "Domo112"
-    }
-   ],
-   "faab": 5,
-   "picks": []
-  }
- ],
- "free_agent_moves": 50
+ "waivers": [],
+ "free_agent_moves": 19
 }
