@@ -377,6 +377,20 @@
    "sha256": "74948bb9730236b352a7e772a996340c03830be584480eb6787166d28f3d9bbf",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-17T12:22:24.085Z",
+   "subject": "DFFL Week 11: jadencha Lost, and the Board Still Says 100%",
+   "lead": "jadencha-lost-and-the-board-still-says-100",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 10
+   },
+   "to": 12,
+   "sha256": "00a652fe7d25e1fdbeca03a319ba948bb69c9b989f1562ac7fa6fd9ee64d6e99",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
