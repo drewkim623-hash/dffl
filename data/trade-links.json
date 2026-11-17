@@ -1,0 +1,10 @@
+{
+  "_comment": "Trades that are one deal on the league's books. Each later trade in `parts` settled a clause agreed in `parent`, so the trade grades and the site's trade verdicts score them together under the parent and not as separate trades. Read by build-trade-grades.mjs and index.html.",
+  "links": [
+    {
+      "parent": "1416097731843260416",
+      "parts": ["1423043609816502272", "1426778108169588736", "1427440691495055360"],
+      "note": "Domo112 and jskule23's week 8 and week 10 trades settled the clause in their week 6 Puka Nacua trade."
+    }
+  ]
+}

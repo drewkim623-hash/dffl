@@ -52,6 +52,32 @@ export const marginPct = (x, total, n) => { const o = (total - x) / (Math.max(2,
 /** One grade: letter, or C · small trade when too little value moved. */
 export const grade = (x, total, n) => { const p = marginPct(x, total, n), small = total < SMALL_TRADE;
   return { letter: small ? "C" : letter(p), ...(small ? { small: true } : {}), marginPct: Math.round(p * 100), marginPts: Math.round(marginPts(x, total, n) * 10) / 10 }; };
+/**
+ * Fold linked trades (data/trade-links.json) into their parent: each manager's side becomes the sum
+ * of what it received across the parent and every part, each asset valued from its own trade's week,
+ * and the parent is graded on that. A part keeps its assets but carries `partOf` and no grade of its own.
+ * raw: { [txid]: { season, week, pendingAny, sides: [{ rid, uid, manager, assets, day, hind }] } }
+ */
+export function foldLinks(raw, links) {
+  const partOf = new Map();
+  for (const L of links || []) {
+    const P = raw[L.parent]; if (!P) continue;
+    const parts = (L.parts || []).filter(id => raw[id] && id !== L.parent);
+    for (const id of parts) {
+      const T = raw[id];
+      for (const sd of T.sides) {
+        let into = P.sides.find(x => x.rid === sd.rid);
+        if (!into) { into = { rid: sd.rid, uid: sd.uid, manager: sd.manager, assets: [], day: 0, hind: 0 }; P.sides.push(into); }
+        into.assets.push(...sd.assets.map(a => ({ ...a, viaWeek: T.week, via: id })));
+        into.day += sd.day; into.hind += sd.hind;
+      }
+      P.pendingAny ||= T.pendingAny;
+      partOf.set(id, L.parent);
+    }
+    P.includes = parts; P.linkNote = L.note || null;
+  }
+  return partOf;
+}
 export const keeperValue = (lastVor, costRound) => KEEPER_DISCOUNT * Math.max(0, SHRINK * lastVor - curve(midPick(costRound)));
 
 const r1 = x => Math.round(x * 10) / 10;
@@ -93,6 +119,7 @@ async function main() {
     return { ...c, value: keeperValue(vor, c.nextCostRound), lastVor: vor }; }
   const out = { generated: new Date().toISOString(), scale: "v2", cutoffs: CUTOFFS, shrink: SHRINK, keeperDiscount: KEEPER_DISCOUNT, config: CFG, trades: {} };
   const keeperRows = {};
+  const raw = {};
   for (const [y, s] of seasons) for (const t of s.txs) {
     const rids = [...new Set([...(t.roster_ids || []), ...(t.draft_picks || []).flatMap(d => [d.owner_id, d.previous_owner_id])])].filter(r => r != null);
     const sides = []; let pendingAny = false;
@@ -111,10 +138,19 @@ async function main() {
         assets.push({ asset: `${d.season} R${d.round}`, value: r1(v), basis: "mid-slot curve", ...(h != null ? { hindsight: r1(h), ...(dp[1] ? { kept: true, became: `Kept: ${nm(dp[0])}`, hindsightBasis: `kept slot: curve value at pick ${dp[2]}, same as an unused pick there` } : { became: nm(dp[0]) }) } : { hindsight: "Pending" }) }); }
       pendingAny ||= pend || y >= curSeason;
       sides.push({ rid, uid: s.uid(rid), manager: s.mgr(rid), assets, day, hind }); }
+    raw[t.transaction_id] = { season: y, week: t._week, pendingAny, sides };
+  }
+  const LINKS = fs.existsSync("data/trade-links.json") ? JSON.parse(fs.readFileSync("data/trade-links.json", "utf8")).links : [];
+  const partOf = foldLinks(raw, LINKS);
+  for (const [id, T] of Object.entries(raw)) {
+    const { sides, pendingAny } = T, n = sides.length;
     const tot = sides.reduce((a, x) => a + x.day, 0), htot = sides.reduce((a, x) => a + x.hind, 0);
-    const n = sides.length;
-    out.trades[t.transaction_id] = { season: y, week: t._week, sides: sides.map(x => ({ rid: x.rid, uid: x.uid, manager: x.manager, assets: x.assets, total: r1(x.day),
-      tradeDay: grade(x.day, tot, n), hindsight: pendingAny ? "Pending" : grade(x.hind, htot, n) })) };
+    const part = partOf.get(id);
+    out.trades[id] = { season: T.season, week: T.week,
+      ...(part ? { partOf: part, partOfWeek: raw[part].week } : {}),
+      ...(T.includes ? { includes: T.includes.map(x => ({ id: x, week: raw[x].week })), linkNote: T.linkNote } : {}),
+      sides: sides.map(x => ({ rid: x.rid, uid: x.uid, manager: x.manager, assets: x.assets, total: r1(x.day),
+        ...(part ? {} : { tradeDay: grade(x.day, tot, n), hindsight: pendingAny ? "Pending" : grade(x.hind, htot, n) }) })) };
   }
   // keepers.json computed block (current rosters' players drafted this season)
   // Only players on the stated keeper list: appearing in back-to-back drafts can also mean he was simply drafted again.

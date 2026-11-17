@@ -77,7 +77,7 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "stats", "matchups", "power", "odds", "injuries", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
+const EXPECT = ["home", "scores", "managers", "records", "stats", "matchups", "power", "odds", "injuries", "standings", "tiebreakers", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 const toiletNav = await page.evaluate(() => {
   const p=document.querySelector('#tabs button[data-tab="picture"]'),t=document.querySelector('#tabs button[data-tab="toilet"]');
@@ -2579,6 +2579,29 @@ check("a split series falls back to points for", tb.split.join() === "1,0,2,3", 
 check("a three-way tie goes straight to points for", tb.three.join() === "1,2,0", tb.three.join());
 check("a division tie is sized inside the division", tb.champs.includes(0) && !tb.champs.includes(1), JSON.stringify(tb));
 
+group("Standings and Tiebreakers tabs");
+await page.evaluate(() => show("standings"));
+await page.waitForFunction(() => document.body.dataset.standingsReady, null, { timeout: 60000 });
+const stTab = await page.evaluate(() => {
+  const S = window.__STANDINGS, D = window.__DFFL;
+  const tables = document.querySelectorAll('#standingsHost table').length;
+  // Same order the simulator seeds by: rebuild it independently from the raw games.
+  const season = D.DB.seasons[0], rids = season.rosters.map(r => r.roster_id), ix = new Map(rids.map((r, i) => [r, i]));
+  const W = rids.map(() => 0), PF = rids.map(() => 0);
+  for (const g of season.games.filter(g => !g.playoff)) { const a = ix.get(g.a.rid), b = ix.get(g.b.rid);
+    PF[a] += g.a.pts; PF[b] += g.b.pts; if (g.a.pts > g.b.pts) W[a]++; else if (g.b.pts > g.a.pts) W[b]++; else { W[a] += .5; W[b] += .5; } }
+  const H = D.h2hFrom(season.games.filter(g => !g.playoff), r => ix.get(r), rids.length);
+  const ord = l => D.tieOrder(l, W, PF, H), f = D.seedField(ord(rids.map((_, i) => i)), i => season.divOf.get(rids[i]), S.playoffTeams, ord);
+  return { tables, divs: S.divs.size, same: f.seeds.join() === S.field.seeds.join(), wins: S.teams.every((t, i) => t.wt === W[i]) };
+});
+check("Standings draws a table per division plus the league table", stTab.tables === stTab.divs + 1, JSON.stringify(stTab));
+check("Standings seeds match the simulator's tie rule on the raw games", stTab.same && stTab.wins, JSON.stringify(stTab));
+await page.evaluate(() => show("tiebreakers"));
+const tbTab = await page.evaluate(() => ({ rules: !!document.querySelector('#tiebreakHost .tb-rules'),
+  h2h: document.querySelectorAll('#tiebreakHost .tb-h2h').length, ties: document.querySelectorAll('#tiebreakHost .tb-tie, #tiebreakHost .empty').length }));
+check("Tiebreakers shows the rule, the ties (or none), and a head-to-head grid per division", tbTab.rules && tbTab.h2h >= 1 && tbTab.ties >= 1, JSON.stringify(tbTab));
+await page.evaluate(() => show("home"));
+
 group("Playoff Picture: exact clinch and elimination");
 const ppClinch = await page.evaluate(() => {
   const D = window.__DFFL;
@@ -3280,12 +3303,14 @@ group("Trades: v2 grade chips");
   const fs = await import("node:fs");
   const G = JSON.parse(fs.readFileSync("data/trade-grades.json", "utf8"));
   const K = JSON.parse(fs.readFileSync("keepers.json", "utf8"));
-  const sides = Object.values(G.trades).flatMap(t => t.sides);
+  // A linked follow-up trade (data/trade-links.json) is graded inside its parent, not on its own.
+  const own = Object.values(G.trades).filter(t => !t.partOf);
+  const sides = own.flatMap(t => t.sides);
   const share = l => sides.filter(s => s.tradeDay.letter === l).length / sides.length;
   check("every trade side has a trade-day letter", sides.every(s => /^(A\+|A|B|C|D|F|F-)$/.test(s.tradeDay.letter)));
   check("C is the biggest band (about the middle 40%)", share("C") > 0.3 && share("C") < 0.55, share("C").toFixed(2));
   check("A+ and F- are rare (under 6% each)", share("A+") < 0.06 && share("F-") < 0.06, `${share("A+").toFixed(3)} / ${share("F-").toFixed(3)}`);
-  check("margins cancel within each trade", Object.values(G.trades).every(t => Math.abs(t.sides.reduce((a, s) => a + s.tradeDay.marginPts, 0)) < 0.5));
+  check("margins cancel within each trade", own.every(t => Math.abs(t.sides.reduce((a, s) => a + s.tradeDay.marginPts, 0)) < 0.5));
   check("an unresolved pick leaves hindsight Pending", Object.values(G.trades).some(t => t.sides.some(s => s.hindsight === "Pending")));
   const pierce = G.trades["1014788370771537920"];
   check("2023 Pierce-for-R5 resolves the pick to Jordan Addison in hindsight", pierce && pierce.sides.some(s => s.assets.some(a => a.became === "Jordan Addison")));
@@ -3302,10 +3327,25 @@ group("Trades: v2 grade chips");
   const overflow390 = await page.evaluate(() => [...document.querySelectorAll('[data-panel="trades"] .tside')].filter(e => e.scrollWidth > e.clientWidth + 1).length);
   check("chips don't overflow a trade side at 390px", overflow390 === 0, `${overflow390}`);
   if (vp) await page.setViewportSize(vp);
-  const small = Object.values(G.trades).filter(t => t.sides.reduce((a, s) => a + s.total, 0) < 25);
+  const small = own.filter(t => t.sides.reduce((a, s) => a + s.total, 0) < 25);
   check("trades under 25 VOR total grade C · small trade, both sides, point margin kept",
     small.length > 0 && small.every(t => t.sides.every(s => s.tradeDay.letter === "C" && s.tradeDay.small && typeof s.tradeDay.marginPts === "number")), `${small.length} trades`);
   check("every grade stays within ±100%", sides.every(s => Math.abs(s.tradeDay.marginPct) <= 100 && (typeof s.hindsight === "string" || Math.abs(s.hindsight.marginPct) <= 100)));
+  const LK = JSON.parse(fs.readFileSync("data/trade-links.json", "utf8")).links;
+  check("every linked part points at its parent, and the parent lists it",
+    LK.every(L => L.parts.every(id => G.trades[id] && G.trades[id].partOf === L.parent && !G.trades[id].sides.some(s => s.tradeDay))
+      && G.trades[L.parent] && G.trades[L.parent].includes.map(x => x.id).join() === L.parts.join()));
+  const puka = G.trades["1416097731843260416"], pukaSide = r => puka.sides.find(s => s.manager === r);
+  check("the Puka trade is graded with its clause trades folded in (Chig, the R3 and R8 on Joe's side)",
+    ["Chig Okonkwo", "2027 R3", "2027 R8"].every(a => pukaSide("jskule23").assets.some(x => x.asset === a && x.viaWeek))
+      && pukaSide("Domo112").assets.some(x => x.asset === "Marvin Harrison Jr." && x.viaWeek === 8));
+  const linkedCard = await page.evaluate(() => {
+    const L = window.__TRADES, P = L.trades.find(t => t.id === "1416097731843260416");
+    const parts = L.trades.filter(t => t.partOf === P);
+    return { parts: parts.length, ungraded: parts.every(t => !t.graded), net: P.sides.reduce((a, s) => a + s.net, 0) };
+  });
+  check("on the site the clause trades fold into the Puka trade and are not judged alone",
+    linkedCard.parts === 3 && linkedCard.ungraded && Math.abs(linkedCard.net) < 1e-6, JSON.stringify(linkedCard));
   const keptPicks = Object.values(G.trades).flatMap(t => t.sides.flatMap(s => s.assets)).filter(a => a.kept);
   const M0 = await import("./build-trade-grades.mjs");
   check("a pick spent on a keeper is valued at its slot's curve value and labelled Kept: <player>",

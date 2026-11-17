@@ -1111,6 +1111,32 @@
   @media(max-width:560px){.bigg .x{display:none}}
 
   /* ============ playoff picture ============ */
+  .st-note{color:var(--muted);font-size:12.5px;margin:6px 0 14px}
+  .st-divs{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:22px}
+  .st-divs.tb-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))}
+  .st-div{min-width:0}
+  .st-dh{font-family:var(--disp);font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0 0 8px}
+  .st .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+  .st .ppn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+  .st td.st-rk{color:var(--muted);width:28px}
+  .st tr.st-lead td{background:rgba(var(--a-rgb),.05)}
+  .st tr.st-cut td{border-bottom:2px dashed rgba(var(--a-rgb),.55)}
+  .st tr.st-cut-bye td{border-bottom:2px dashed var(--card-line-hi)}
+  .st tr.st-out td{color:var(--ink-2)}
+  .st-tie{font-size:12.5px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+  .tb-rules{padding:16px 18px;margin-bottom:6px}
+  .tb-rules ol{margin:0 0 10px;padding-left:20px;line-height:1.7}
+  .tb-rules p{margin:0;color:var(--ink-2);font-size:13.5px;line-height:1.55}
+  .tb-ties{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:12px;margin-bottom:22px}
+  .tb-tie{padding:14px 16px}
+  .tb-tie.hot{border-color:var(--card-line-hi)}
+  .tb-tie .k{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .tb-who{display:flex;flex-wrap:wrap;gap:6px 4px;align-items:center;margin-bottom:8px;font-weight:700}
+  .tb-who .gt{color:var(--muted);margin:0 6px}
+  .tb-why{font-size:13px;color:var(--ink-2);line-height:1.5}
+  .tb-h2h td.num{text-align:center;min-width:52px}
+  .tb-h2h td.tb-self{color:var(--muted)}
+  .tb-left{display:block;font-size:10.5px;color:var(--muted);font-weight:600;margin-top:2px}
   .pp td.sd,.pp th.num{padding-left:6px;padding-right:6px}
   .pp td.sd{font-size:12.5px;min-width:30px;text-align:center}
   .pp .ppn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
@@ -2924,6 +2950,8 @@ const TABS = [
   { id: "power", label: "Power" },
   { id: "odds", label: "Odds" },
   { id: "injuries", label: "Injuries" },
+  { id: "standings", label: "Standings" },
+  { id: "tiebreakers", label: "Tiebreakers" },
   { id: "picture", label: "Playoff Picture" },
   { id: "toilet", label: "Toilet Bowl" },
   { id: "draft", label: "Draft" },
@@ -3017,6 +3045,8 @@ const TAB_ICONS = {
   power: "M13 2 4 14h7l-1 8 9-12h-7z",
   odds: "M3 3v18h18M7 15l4-4 3 3 6-7",
   injuries: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+  standings: "M4 5h16M4 10h16M4 15h16M4 20h10M8 5v15",
+  tiebreakers: "M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8",
   picture: "M3 5h5v5H3zM3 14h5v5H3zM8 7.5h3v9H8M11 12h4M15 9.5h6v5h-6z",
   toilet: "M12 3v14M6 11l6 6 6-6M5 21h14",
   draft: "M4 4h16v16H4zM4 9.5h16M4 15h16M9.5 4v16M15 4v16",
@@ -3028,7 +3058,8 @@ const TAB_ICONS = {
 const TAB_DESC = {
   home: "This week at a glance", scores: "Every matchup, every week", managers: "Career profiles",
   records: "Trophies and the record book", stats: "Every game, drawn", matchups: "Head-to-head and rivalries", power: "This week's power board",
-  odds: "Game lines, playoff and title prices", injuries: "Who's hurt, and what it costs", picture: "Seeds, byes and the bracket",
+  odds: "Game lines, playoff and title prices", injuries: "Who's hurt, and what it costs",
+  standings: "Every division, and the league table", tiebreakers: "How ties are broken, and every tie now", picture: "Seeds, byes and the bracket",
   toilet: "The race for last", draft: "Draft board and grades", trades: "Every trade, graded",
   rankings: "DFFL position ranks", recaps: "Columns and weekly write-ups", ask: "Ask anything about the league",
 };
@@ -3037,7 +3068,7 @@ const REDUCED = () => !!(window.matchMedia && matchMedia("(prefers-reduced-motio
 
 // The More sheet groups its pages so the list reads like a menu, not a pile.
 const SEC_GROUPS = [
-  { name: "This week", ids: ["home", "scores", "power", "odds", "injuries", "picture", "toilet"] },
+  { name: "This week", ids: ["home", "scores", "standings", "tiebreakers", "power", "odds", "injuries", "picture", "toilet"] },
   { name: "League history", ids: ["managers", "records", "matchups", "draft", "trades"] },
   { name: "Numbers", ids: ["stats", "rankings"] },
   { name: "Reads", ids: ["recaps", "ask"] },
@@ -3538,6 +3569,7 @@ function show(id) {
   if (id === "picture" || id === "toilet") ensurePicture();
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   if (id === "injuries") ensureInjuries();
+  if (id === "standings" || id === "tiebreakers") ensureStandings();
   // Season stats plus Sleeper's player file: only fetched once somebody opens Rankings.
   if (id === "rankings") ensureRankings();
   const stp = $('[data-panel="stats"]');
@@ -12361,6 +12393,269 @@ function panelToilet() {
   return p;
 }
 
+/* ===================================== STANDINGS AND TIEBREAKERS ===== */
+/*
+ * Two tabs off one table. Final games only, the way Sleeper keeps standings: a
+ * week still being played moves nothing here until it is over.
+ *
+ * The order is DFFL's rule, the same tieOrder/seedField the simulator seeds
+ * every season with: wins; a two-way tie goes to head to head, then points for;
+ * a tie of three or more goes straight to points for. A tie is sized inside the
+ * group being ranked — a division, the division winners, the wild-card pool.
+ */
+function standingsData(season, upcoming = []) {
+  if (!season || !season.rosters || !season.divOf) return null;
+  const lastReg = (season.pws || 15) - 1;
+  const rids = season.rosters.map(r => r.roster_id);
+  const idx = new Map(rids.map((r, i) => [r, i]));
+  const N = rids.length;
+  const games = (season.games || []).filter(g => !g.playoff && g.week <= lastReg)
+    .slice().sort((a, b) => a.week - b.week);
+  const div = rids.map(r => season.divOf.get(r));
+  const z = () => new Array(N).fill(0);
+  const W = z(), L = z(), T = z(), PF = z(), PA = z(), DW = z(), DL = z(), DT = z();
+  const res = rids.map(() => []);                  // "W" | "L" | "T", in week order
+  for (const g of games) {
+    const a = idx.get(g.a.rid), b = idx.get(g.b.rid);
+    if (a == null || b == null) continue;
+    PF[a] += g.a.pts; PF[b] += g.b.pts; PA[a] += g.b.pts; PA[b] += g.a.pts;
+    const inDiv = div[a] === div[b];
+    const r = g.a.pts > g.b.pts ? 1 : g.b.pts > g.a.pts ? -1 : 0;
+    if (r > 0) { W[a]++; L[b]++; res[a].push("W"); res[b].push("L"); if (inDiv) { DW[a]++; DL[b]++; } }
+    else if (r < 0) { W[b]++; L[a]++; res[b].push("W"); res[a].push("L"); if (inDiv) { DW[b]++; DL[a]++; } }
+    else { T[a]++; T[b]++; res[a].push("T"); res[b].push("T"); if (inDiv) { DT[a]++; DT[b]++; } }
+  }
+  const Wt = W.map((w, i) => w + T[i] / 2);
+  const H = h2hFrom(games, rid => idx.get(rid), N);
+  const order = list => tieOrder(list, Wt, PF, H);
+  const ids = rids.map((_, i) => i);
+  const rank = order(ids);
+  const field = seedField(rank, i => div[i], (leagueRules(season) || {}).playoffTeams || 6, order);
+  const seedOrder = [...field.seeds, ...field.rest.slice(field.wilds)];
+  const seed = z(); seedOrder.forEach((i, k) => { seed[i] = k + 1; });
+  const streak = res.map(r => {
+    if (!r.length) return "";
+    const last = r[r.length - 1]; let n = 0;
+    for (let k = r.length - 1; k >= 0 && r[k] === last; k--) n++;
+    return last + n;
+  });
+  // Meetings still to come, by pair — the live week counts as still to come.
+  const left = new Map();
+  const pk = (a, b) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  for (const u of upcoming) {
+    const a = idx.get(u.a), b = idx.get(u.b);
+    if (a == null || b == null) continue;
+    const k = pk(a, b); if (!left.has(k)) left.set(k, []); left.get(k).push(u.week);
+  }
+  const teams = ids.map(i => ({
+    i, rid: rids[i], uid: season.uidOf.get(rids[i]), div: div[i],
+    w: W[i], l: L[i], t: T[i], wt: Wt[i], pf: PF[i], pa: PA[i],
+    dw: DW[i], dl: DL[i], dt: DT[i], streak: streak[i], seed: seed[i],
+    champ: field.champs.includes(i),
+  }));
+  return {
+    season, teams, H, Wt, PF, order, field, seedOrder, rank, games: games.length,
+    weeksDone: new Set(games.map(g => g.week)).size, lastReg,
+    divs: field.divRank, divNames: season.divNames || new Map(),
+    meetLeft: (a, b) => left.get(pk(a, b)) || [],
+    playoffTeams: (leagueRules(season) || {}).playoffTeams || 6,
+  };
+}
+
+/** Teams in `list` (already ordered) that share a win total, as groups of 2+. */
+function tieGroupsOf(list, Wt) {
+  const out = [];
+  for (let k = 0; k < list.length;) {
+    let e = k + 1;
+    while (e < list.length && Wt[list[e]] === Wt[list[k]]) e++;
+    if (e - k > 1) out.push(list.slice(k, e));
+    k = e;
+  }
+  return out;
+}
+
+const recStr = (w, l, t) => `${w}–${l}${t ? `–${t}` : ""}`;
+const h2hStr = (S, a, b) => {
+  const aw = S.H[a][b], bw = S.H[b][a];
+  const ties = Math.min(aw, bw) % 1 ? 1 : 0;     // a tied meeting adds ½ to both
+  return recStr(Math.floor(aw), Math.floor(bw), ties);
+};
+
+/** Why a tie group comes out in the order it does, in a sentence. */
+function tieReason(S, group) {
+  const nm = i => nameOf(S.teams[i].uid);
+  const pts = i => f1(S.PF[i]);
+  if (group.length === 2) {
+    const [a, b] = group, d = S.H[a][b] - S.H[b][a];
+    const left = S.meetLeft(a, b);
+    const more = left.length ? ` They meet again in week ${left.join(" and ")}.` : "";
+    if (d !== 0) return { how: "Head to head", text: `${nm(a)} won the season series ${h2hStr(S, a, b)}.${more}` };
+    const met = S.H[a][b] + S.H[b][a] > 0;
+    return { how: "Points for", text: `${met ? `Season series even at ${h2hStr(S, a, b)}` : "They haven't played yet"}, so it goes to points for: ${pts(a)} to ${pts(b)}.${more}` };
+  }
+  return { how: "Points for", text: `A ${group.length}-way tie skips head to head and goes straight to points for: ${group.map(i => `${nm(i)} ${pts(i)}`).join(", ")}.` };
+}
+
+function standingsNote(S) {
+  const wk = DB.live && DB.live.length ? DB.live[0].week : null;
+  return `${S.weeksDone ? `Through week ${S.weeksDone}` : "No weeks final yet"} · final games only${wk ? ` — week ${wk} is still being played and moves nothing here until it's over` : ""}.`;
+}
+
+function renderStandings(host, S) {
+  host.innerHTML = "";
+  const P = S.playoffTeams, byes = (leagueRules(S.season) || {}).byes ?? 2;
+  host.appendChild(el("p", "st-note", esc(standingsNote(S))));
+  const nameCell = (t, extra = "") => `<td><span class="nmcell">${avatarHTML(t.uid, "sm")}<span class="ppn"><span class="nm" title="${esc(nameOf(t.uid))}">${esc(nameOf(t.uid))}</span>${extra}</span></span></td>`;
+  const grid = el("div", "st-divs");
+  for (const [d, list] of [...S.divs.entries()].sort((a, b) => a[0] - b[0])) {
+    const lead = S.teams[list[0]];
+    const box = el("div", "st-div");
+    box.appendChild(el("h3", "st-dh", `${esc(S.divNames.get(d) || `Division ${d}`)}`));
+    const rows = list.map((i, k) => {
+      const t = S.teams[i];
+      const gb = ((lead.wt - t.wt) + 0) || 0;
+      return `<tr class="${k === 0 ? "st-lead" : ""}">
+        <td class="num st-rk">${k + 1}</td>
+        ${nameCell(t, k === 0 ? `<span class="badge gold">Leads division</span>` : "")}
+        <td class="num"><b>${recStr(t.w, t.l, t.t)}</b></td>
+        <td class="num">${k === 0 ? "—" : f1(gb).replace(/\.0$/, "")}</td>
+        <td class="num">${recStr(t.dw, t.dl, t.dt)}</td>
+        <td class="num">${f1(t.pf)}</td>
+        <td class="num">${f1(t.pa)}</td>
+        <td class="num">${esc(t.streak || "—")}</td>
+        <td class="num">${t.seed <= P ? `<b>${t.seed}</b>` : t.seed}</td></tr>`;
+    });
+    box.appendChild(tableCard([{ label: "#", num: 1 }, { label: "Manager" }, { label: "Record", num: 1 },
+      { label: "GB", num: 1, title: "Games behind the division leader" },
+      { label: "Div", num: 1, title: "Record inside the division" },
+      { label: "PF", num: 1, title: "Points for" }, { label: "PA", num: 1, title: "Points against" },
+      { label: "Strk", num: 1, title: "Current streak" }, { label: "Seed", num: 1, title: "League seed if the season ended today" }], rows, "st"));
+    const ties = tieGroupsOf(list, S.Wt).map(g => tieReason(S, g));
+    if (ties.length) box.appendChild(el("div", "st-tie", ties.map(r => `<b>Tie · ${esc(r.how)}:</b> ${esc(r.text)}`).join("<br>")));
+    grid.appendChild(box);
+  }
+  host.appendChild(grid);
+
+  host.appendChild(sechead("League standings", `If the season ended today. The ${S.field.champs.length} division leaders take seeds 1–${S.field.champs.length}, then the best ${S.field.wilds} records left; seeds 1–${byes} get a bye.`));
+  const lrows = S.seedOrder.map((i, k) => {
+    const t = S.teams[i];
+    const cls = [k === byes - 1 ? "st-cut-bye" : "", k === P - 1 ? "st-cut" : "", k >= P ? "st-out" : ""].join(" ").trim();
+    return `<tr class="${cls}">
+      <td class="num st-rk">${k + 1}</td>
+      ${nameCell(t, t.champ ? `<span class="badge gold">${esc(S.divNames.get(t.div) || "Division")} leader</span>` : k < P ? `<span class="badge blue">Wild card</span>` : "")}
+      <td class="num"><b>${recStr(t.w, t.l, t.t)}</b></td>
+      <td class="num">${f1(t.pf)}</td><td class="num">${f1(t.pa)}</td>
+      <td>${esc(S.divNames.get(t.div) || "")}</td></tr>`;
+  });
+  host.appendChild(tableCard([{ label: "Seed", num: 1 }, { label: "Manager" }, { label: "Record", num: 1 },
+    { label: "PF", num: 1 }, { label: "PA", num: 1 }, { label: "Division" }], lrows, "st st-league"));
+  host.appendChild(el("p", "st-note", `Dashed lines: the bye line after seed ${byes}, the playoff line after seed ${P}. Ties are broken on the league's rule — see the Tiebreakers tab.`));
+}
+
+function renderTiebreakers(host, S) {
+  host.innerHTML = "";
+  const rules = el("div", "card tb-rules");
+  rules.innerHTML = `<ol>
+      <li><b>Wins.</b> A tied game counts as half a win.</li>
+      <li><b>Two teams tied:</b> head to head — their record against each other this regular season.</li>
+      <li><b>Still level</b> (series split, or they haven't played): points for.</li>
+      <li><b>Three or more tied:</b> straight to points for. Head to head is skipped.</li>
+    </ol>
+    <p>The same rule decides division titles, playoff seeding and the toilet bowl field. A tie is
+      sized inside the group being ranked: two teams level inside a division is a two-way tie even if a
+      team in another division has the same record. Division winners are seeded 1–${S.field.champs.length} among themselves,
+      then the rule runs again over everyone left for the wild cards.</p>`;
+  host.appendChild(rules);
+  host.appendChild(el("p", "st-note", esc(standingsNote(S))));
+
+  // Every tie on the board right now, at each level the rule is applied.
+  host.appendChild(sechead("Ties right now", "Every group of teams level on wins, and what's separating them."));
+  const nm = i => nameOf(S.teams[i].uid);
+  const items = [];
+  for (const [d, list] of [...S.divs.entries()].sort((a, b) => a[0] - b[0]))
+    for (const g of tieGroupsOf(list, S.Wt)) items.push({ where: `${S.divNames.get(d) || `Division ${d}`} race`, g });
+  for (const g of tieGroupsOf(S.field.champs, S.Wt)) items.push({ where: "Seeding the division winners", g });
+  const pool = S.field.rest;
+  for (const g of tieGroupsOf(pool, S.Wt)) {
+    const at = pool.indexOf(g[0]) + 1, end = at + g.length - 1;
+    const crosses = at <= S.field.wilds && end > S.field.wilds;
+    items.push({ where: crosses ? "Wild card — on the playoff line" : at <= S.field.wilds ? "Wild-card order" : "Outside the playoffs", g, hot: crosses });
+  }
+  if (!items.length) host.appendChild(el("div", "empty", "<b>No ties</b>Nobody is level on wins with anyone they're being ranked against."));
+  else {
+    const list = el("div", "tb-ties");
+    for (const it of items) {
+      const r = tieReason(S, it.g);
+      list.appendChild(el("div", `card tb-tie${it.hot ? " hot" : ""}`, `
+        <div class="k">${esc(it.where)} · ${esc(recStr(S.teams[it.g[0]].w, S.teams[it.g[0]].l, S.teams[it.g[0]].t))}</div>
+        <div class="tb-who">${it.g.map((i, k) => `<span class="nmcell">${k ? '<span class="gt">›</span>' : ""}${avatarHTML(S.teams[i].uid, "sm")}<span class="nm">${esc(nm(i))}</span></span>`).join("")}</div>
+        <div class="tb-why"><span class="badge ${r.how === "Head to head" ? "gold" : "blue"}">${esc(r.how)}</span> ${esc(r.text)}</div>`));
+    }
+    host.appendChild(list);
+  }
+
+  // Inside each division: who has the head-to-head edge, and the meetings left.
+  host.appendChild(sechead("Head to head inside each division",
+    "Row team's record against the column team this season, and the weeks they still meet. Division rivals play twice."));
+  const grid = el("div", "st-divs tb-grid");
+  for (const [d, list] of [...S.divs.entries()].sort((a, b) => a[0] - b[0])) {
+    const box = el("div", "st-div");
+    box.appendChild(el("h3", "st-dh", esc(S.divNames.get(d) || `Division ${d}`)));
+    const heads = [{ label: "" }, ...list.map(i => ({ label: initials(nm(i)), num: 1, title: nm(i) }))];
+    const rows = list.map(a => `<tr>${`<td><span class="nmcell">${avatarHTML(S.teams[a].uid, "sm")}<span class="nm">${esc(nm(a))}</span></span></td>`}${list.map(b => {
+      if (a === b) return `<td class="num tb-self">·</td>`;
+      const played = S.H[a][b] + S.H[b][a] > 0, d2 = S.H[a][b] - S.H[b][a], left = S.meetLeft(a, b);
+      const cls = d2 > 0 ? "pos-t" : d2 < 0 ? "neg-t" : "";
+      return `<td class="num"><b class="${cls}">${played ? h2hStr(S, a, b) : "—"}</b>${left.length ? `<span class="tb-left">wk ${left.join(", ")}</span>` : ""}</td>`;
+    }).join("")}</tr>`);
+    box.appendChild(tableCard(heads, rows, "st tb-h2h"));
+    grid.appendChild(box);
+  }
+  host.appendChild(grid);
+}
+
+let STANDINGS_P = null;
+function ensureStandings() {
+  if (STANDINGS_P) return STANDINGS_P;
+  return (STANDINGS_P = (async () => {
+    const hosts = [$("#standingsHost"), $("#tiebreakHost")];
+    try {
+      const season = DB.seasons[0];
+      // The remaining schedule only adds "they meet again in week N"; standings draw without it.
+      const R = await raceDataOnce().catch(() => null);
+      const S = standingsData(season, (R && R.upcoming) || []);
+      if (!S) throw new Error("This season has no divisions on Sleeper yet.");
+      window.__STANDINGS = S;
+      renderStandings(hosts[0], S);
+      renderTiebreakers(hosts[1], S);
+      document.body.dataset.standingsReady = "1";
+    } catch (e) {
+      for (const h of hosts) if (h) { h.innerHTML = ""; h.appendChild(el("div", "empty", `<b>Couldn't build the standings</b>${esc(e.message)}`)); }
+      document.body.dataset.standingsReady = "error";
+      STANDINGS_P = null;
+      console.error(e);
+    }
+  })());
+}
+
+function panelStandings() {
+  const p = el("div", "panel"); p.dataset.panel = "standings";
+  p.appendChild(sechead("Division Standings", "Every division, then the league table as it would seed today — wins, then head to head, then points for."));
+  const host = el("div"); host.id = "standingsHost";
+  host.appendChild(el("div", "empty", "<b>Building the standings…</b>"));
+  p.appendChild(host);
+  return p;
+}
+
+function panelTiebreakers() {
+  const p = el("div", "panel"); p.dataset.panel = "tiebreakers";
+  p.appendChild(sechead("Tiebreakers", "How DFFL breaks a tie in the standings, every tie on the board right now, and the head-to-head series that will decide the next ones."));
+  const host = el("div"); host.id = "tiebreakHost";
+  host.appendChild(el("div", "empty", "<b>Working out the tiebreakers…</b>"));
+  p.appendChild(host);
+  return p;
+}
+
 /* ============================================== TRADES ============== */
 /*
  * Everything on this tab is judged on one rule: a trade is worth what the
@@ -12640,13 +12935,54 @@ function verdictOf(t) {
   return { cls: m >= TRADE_LOPSIDED ? "fleeced" : m >= TRADE_CLEAR ? "lop" : "win", label };
 }
 
-function tradeLedger(txs) {
+/**
+ * Trades that are one deal (data/trade-links.json): each later part settled a
+ * clause in the parent, so its sides are added into the parent's — every
+ * player still counted from his own trade's week — and the parent is judged on
+ * the total. The part stays in the list, ungraded, pointing at the parent.
+ */
+function foldTradeLinks(trades, links) {
+  const byId = new Map(trades.map(t => [t.id, t]));
+  for (const L of links || []) {
+    const P = byId.get(L.parent);
+    if (!P) continue;
+    const parts = (L.parts || []).map(id => byId.get(id)).filter(t => t && t !== P);
+    if (!parts.length) continue;
+    for (const T of parts) {
+      for (const sd of T.sides) {
+        let into = P.sides.find(x => x.rid === sd.rid);
+        if (!into) {
+          into = { rid: sd.rid, uid: sd.uid, got: [], sent: [], picksIn: [], picksOut: [], playerNet: 0, pickNet: 0, gain: 0, loss: 0, net: 0 };
+          P.sides.push(into);
+        }
+        const tag = xs => xs.map(x => ({ ...x, viaWeek: T.week }));
+        into.got.push(...tag(sd.got)); into.sent.push(...tag(sd.sent));
+        into.picksIn.push(...tag(sd.picksIn)); into.picksOut.push(...tag(sd.picksOut));
+        for (const k of ["playerNet", "pickNet", "gain", "loss", "net"]) into[k] += sd[k];
+      }
+      P.unpriced.push(...T.unpriced); P.pricedPicks += T.pricedPicks; P.nPicks += T.nPicks;
+      P.graded = P.graded || T.graded;
+      T.partOf = P; T.graded = false; T.winner = null; T.margin = 0;
+      T.reason = `part of the week ${P.week} trade — it settled that deal's clause, so the two are judged together there`;
+    }
+    P.includes = parts; P.linkNote = L.note || null;
+    P.moved = P.sides.reduce((a, x) => a + x.gain, 0);
+    P.ranked = P.sides.slice().sort((a, b) => b.net - a.net);
+    P.winner = P.graded && P.ranked.length > 1 && P.ranked[0].net > 0 ? P.ranked[0] : null;
+    P.margin = P.winner ? P.winner.net : 0;
+    P.reason = P.graded ? null : P.reason;
+    P.nTeams = P.sides.length;
+  }
+}
+
+function tradeLedger(txs, links = null) {
   const seasonOf = new Map(DB.seasons.map(s => [s.season, s]));
   const trades = txs.filter(t => t.type === "trade")
     .map(t => gradeTrade(t, seasonOf.get(t.season)))
     .filter(Boolean)
     .sort((a, b) => (b.date - a.date) || (Number(b.season) - Number(a.season)) || (b.week - a.week));
   const reversed = markReversals(trades);
+  foldTradeLinks(trades, links);
 
   const byMgr = new Map();
   for (const t of trades) {
@@ -12906,7 +13242,7 @@ const gradeCls = l => l.startsWith("A") ? "g-a" : l === "B" ? "g-b" : l === "C" 
 function gradeChipHTML(t, sd) {
   const g = TRADE_GRADES && TRADE_GRADES.trades && TRADE_GRADES.trades[t.id];
   const s = g && g.sides.find(x => x.rid === sd.rid);
-  if (!s) return "";
+  if (!s || g.partOf) return "";
   const pts = v => `${v >= 0 ? "+" : "−"}${f1(Math.abs(v))}`;
   const lab = g => g.small ? "C · small trade" : g.letter, cls = g => g.small ? "g-small" : gradeCls(g.letter);
   const h = typeof s.hindsight === "string" ? `<span class="gh pend">Hindsight: Pending</span>`
@@ -12916,7 +13252,7 @@ function gradeChipHTML(t, sd) {
 }
 
 function tradeCard(t) {
-  const v = verdictOf(t);
+  const v = t.partOf ? { cls: "none", label: `Part of the week ${t.partOf.week} trade` } : verdictOf(t);
   const box = el("article", "trade");
   const when = `${t.season} · ${t.week === 1 ? "preseason / week 1" : "week " + t.week}`;
   // Inside the even band nobody is called a winner, so neither the margin nor
@@ -12934,9 +13270,10 @@ function tradeCard(t) {
     const line = (label, pts, priced, sub) => `<li class="tline">
       <span class="pn">${label}${sub ? `<br><i class="sub">${esc(sub)}</i>` : ""}</span>
       <span class="pp">${priced ? f1(pts) : "—"}</span></li>`;
-    const lines = sd.got.map(x => line(plabel(x), x.pts, t.graded && x.priced))
+    const wk = x => x.viaWeek ? ` <span class="pos">wk ${x.viaWeek}</span>` : "";
+    const lines = sd.got.map(x => line(plabel(x) + wk(x), x.pts, t.graded && x.priced))
       .concat(sd.picksIn.map(r => line(
-        `${esc(r.label)}${r.name ? ` → ${esc(r.name)}${r.pos ? ` <span class="pos">${esc(r.pos)}</span>` : ""}` : ""}`,
+        `${esc(r.label)}${r.name ? ` → ${esc(r.name)}${r.pos ? ` <span class="pos">${esc(r.pos)}</span>` : ""}` : ""}${wk(r)}`,
         r.pts, t.graded && r.priced, r.priced ? null : r.why))).join("");
     d.innerHTML = `<div class="who">${avatarHTML(sd.uid, "sm")}
         <span class="n">${esc(sd.uid ? nameOf(sd.uid) : "roster " + sd.rid)}</span>
@@ -12947,6 +13284,7 @@ function tradeCard(t) {
   box.appendChild(sides);
 
   const notes = [];
+  if (t.includes && t.includes.length) notes.push(`One deal with ${t.includes.length} follow-up trade${t.includes.length === 1 ? "" : "s"} (week ${[...new Set(t.includes.map(x => x.week))].join(" and ")}) that settled its clause — everything both sides received is counted here, each player from the week he moved.`);
   if (!t.graded) notes.push(`Not graded — ${t.reason}.`);
   else notes.push(`${f1(t.moved)} points changed hands${t.pricedPicks ? `, counting ${t.pricedPicks} pick${t.pricedPicks === 1 ? "" : "s"} at what ${t.pricedPicks === 1 ? "it" : "they"} drafted` : ""}${t.partial ? ", and the season is still running" : ""}.`);
   if (t.graded && t.unpriced.length)
@@ -13227,7 +13565,8 @@ async function ensureTrades() {
     }
     await loadPlayerNames(need);
     await loadDraftSlots();
-    const L = tradeLedger(txs), W = waiverReport(txs);
+    const links = await jget("data/trade-links.json").then(j => j.links).catch(() => []);
+    const L = tradeLedger(txs, links), W = waiverReport(txs);
     TRADE_GRADES = await jget("data/trade-grades.json").catch(() => null);
     W.card = waiverReportCard(txs);
     window.__TRADES = L; window.__WAIVERS = W; window.__TX = txs;
@@ -13604,6 +13943,8 @@ async function boot() {
     app.appendChild(panelPower(ODDS, SIM));
     app.appendChild(panelOdds(ODDS, SIM));
     app.appendChild(panelInjuries());
+    app.appendChild(panelStandings());
+    app.appendChild(panelTiebreakers());
     app.appendChild(panelPicture());
     app.appendChild(panelToilet());
     app.appendChild(panelDraft());
@@ -13675,7 +14016,7 @@ async function boot() {
       coverSVG, coverKind, COVER_PALETTE,
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
-      raceData, raceAsOf, seedField, tieOrder, h2hFrom, pairSchedule,
+      raceData, raceAsOf, seedField, tieOrder, h2hFrom, pairSchedule, standingsData, ensureStandings,
       ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,
