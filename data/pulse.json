@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-17T21:13:34.671Z",
- "at": 1794950014671,
+ "generated": "2026-11-17T21:29:50.392Z",
+ "at": 1794950990392,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -24,8 +24,7 @@
    "points_against": 1214.6,
    "faab_spent": 88,
    "starters_hurt": [
-    "Brock Bowers (Out)",
-    "Wan'Dale Robinson (Questionable)"
+    "Brock Bowers (Out)"
    ]
   },
   {
@@ -390,5 +389,5 @@
   }
  ],
  "waivers": [],
- "free_agent_moves": 22
+ "free_agent_moves": 23
 }
