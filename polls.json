@@ -212,6 +212,30 @@
    "announced": true,
    "thread_id": "1a1a15ae6155e6db",
    "closed_at": "2026-11-14T23:21:17.989Z"
+  },
+  {
+   "id": "2026-w11-top-two",
+   "question": "jadencha and Domo112 are both 8-2 and both sit at 100% to make the playoffs. If they played today, who wins?",
+   "options": [
+    {
+     "key": "JADEN",
+     "label": "jadencha"
+    },
+    {
+     "key": "DOMO",
+     "label": "Domo112"
+    },
+    {
+     "key": "TOOCLOSE",
+     "label": "too close to call"
+    }
+   ],
+   "opened": "2026-11-17",
+   "closes": "2026-11-21",
+   "subject": "DFFL Week 11: jadencha Lost, and the Board Still Says 100%",
+   "status": "open",
+   "results": null,
+   "announced": false
   }
  ]
 }
