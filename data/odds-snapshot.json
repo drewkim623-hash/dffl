@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-17T05:32:56.360Z",
- "at": 1794893576360,
+ "generated": "2026-11-17T11:02:52.590Z",
+ "at": 1794913372591,
  "season": "2026",
  "week": 11,
  "liveWeek": null,
@@ -178,6 +178,24 @@
    ]
   },
   {
+   "manager": "jskule23",
+   "cost": 0.06704979085638807,
+   "players": [
+    {
+     "name": "Carnell Tate",
+     "status": "Out"
+    },
+    {
+     "name": "Luther Burden III",
+     "status": "Questionable"
+    },
+    {
+     "name": "Chig Okonkwo",
+     "status": "Questionable"
+    }
+   ]
+  },
+  {
    "manager": "Domo112",
    "cost": 0.06506786734208203,
    "players": [
@@ -221,16 +239,6 @@
    "players": [
     {
      "name": "Travis Kelce",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "jskule23",
-   "cost": 0.006914084774757634,
-   "players": [
-    {
-     "name": "Chig Okonkwo",
      "status": "Questionable"
     }
    ]

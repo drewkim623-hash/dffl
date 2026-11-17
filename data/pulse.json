@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-17T05:32:27.166Z",
- "at": 1794893547166,
+ "generated": "2026-11-17T11:02:25.910Z",
+ "at": 1794913345910,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -10,18 +10,18 @@
   {
    "manager": "jadencha",
    "wins": 8,
-   "losses": 1,
-   "points_for": 1443.12,
-   "points_against": 1055.54,
+   "losses": 2,
+   "points_for": 1617.36,
+   "points_against": 1264.32,
    "faab_spent": 22,
    "starters_hurt": []
   },
   {
    "manager": "Domo112",
-   "wins": 7,
+   "wins": 8,
    "losses": 2,
-   "points_for": 1203.26,
-   "points_against": 1114.52,
+   "points_for": 1358.4,
+   "points_against": 1214.6,
    "faab_spent": 88,
    "starters_hurt": [
     "Brock Bowers (Out)",
@@ -30,19 +30,28 @@
   },
   {
    "manager": "willie12w",
-   "wins": 6,
+   "wins": 7,
    "losses": 3,
-   "points_for": 1173.34,
-   "points_against": 1006.12,
+   "points_for": 1340.26,
+   "points_against": 1100.88,
    "faab_spent": 88,
+   "starters_hurt": []
+  },
+  {
+   "manager": "bradyrife",
+   "wins": 6,
+   "losses": 4,
+   "points_for": 1343.44,
+   "points_against": 1242.7,
+   "faab_spent": 100,
    "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
    "wins": 6,
-   "losses": 3,
-   "points_for": 1147.88,
-   "points_against": 1168.08,
+   "losses": 4,
+   "points_for": 1247.96,
+   "points_against": 1323.22,
    "faab_spent": 67,
    "starters_hurt": [
     "Travis Kelce (Questionable)"
@@ -51,82 +60,75 @@
   {
    "manager": "wesley55",
    "wins": 5,
-   "losses": 4,
-   "points_for": 1189.6,
-   "points_against": 1147.62,
+   "losses": 5,
+   "points_for": 1327.56,
+   "points_against": 1289.84,
    "faab_spent": 26,
-   "starters_hurt": []
-  },
-  {
-   "manager": "bradyrife",
-   "wins": 5,
-   "losses": 4,
-   "points_for": 1134.66,
-   "points_against": 1068.46,
-   "faab_spent": 100,
    "starters_hurt": []
   },
   {
    "manager": "chassinator",
    "wins": 4,
-   "losses": 5,
-   "points_for": 1193.16,
-   "points_against": 1158.96,
+   "losses": 6,
+   "points_for": 1289.98,
+   "points_against": 1304.28,
    "faab_spent": 72,
    "starters_hurt": [
     "Drake Maye (Out)"
    ]
   },
   {
-   "manager": "saucebossandrew",
-   "wins": 3,
-   "losses": 6,
-   "points_for": 1082.46,
-   "points_against": 1174.54,
-   "faab_spent": 100,
-   "starters_hurt": []
-  },
-  {
    "manager": "moseslin",
-   "wins": 3,
+   "wins": 4,
    "losses": 6,
-   "points_for": 1038.16,
-   "points_against": 1277.8,
+   "points_for": 1183.48,
+   "points_against": 1374.62,
    "faab_spent": 16,
    "starters_hurt": []
   },
   {
-   "manager": "drewkim",
+   "manager": "jskule23",
    "wins": 3,
-   "losses": 6,
-   "points_for": 994.14,
-   "points_against": 1250.56,
-   "faab_spent": 100,
+   "losses": 7,
+   "points_for": 1247.88,
+   "points_against": 1354.02,
+   "faab_spent": 95,
    "starters_hurt": [
-    "Woody Marks (Out)"
+    "Luther Burden III (Questionable)",
+    "Chig Okonkwo (Questionable)",
+    "Carnell Tate (Out)"
    ]
   },
   {
-   "manager": "jskule23",
-   "wins": 2,
+   "manager": "saucebossandrew",
+   "wins": 3,
    "losses": 7,
-   "points_for": 1105.66,
-   "points_against": 1216.06,
-   "faab_spent": 95,
-   "starters_hurt": [
-    "Chig Okonkwo (Questionable)"
-   ]
+   "points_for": 1168.96,
+   "points_against": 1284.36,
+   "faab_spent": 100,
+   "starters_hurt": []
   },
   {
    "manager": "victorthompson",
-   "wins": 2,
+   "wins": 3,
    "losses": 7,
-   "points_for": 1025.74,
-   "points_against": 1092.92,
+   "points_for": 1135.56,
+   "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
     "Drake London (Questionable)",
     "A.J. Brown (Out)"
+   ]
+  },
+  {
+   "manager": "drewkim",
+   "wins": 3,
+   "losses": 7,
+   "points_for": 1088.9,
+   "points_against": 1417.48,
+   "faab_spent": 100,
+   "starters_hurt": [
+    "Woody Marks (Out)"
    ]
   }
  ],
