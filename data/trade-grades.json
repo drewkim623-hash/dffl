@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-17T01:10:41.165Z",
+ "generated": "2026-11-17T04:36:24.688Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -484,7 +484,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -38,
-      "marginPts": -78.7
+      "marginPts": -78.3
      },
      "hindsight": "Pending"
     },
@@ -496,7 +496,7 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 34,
+       "value": 33.6,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 142.6,
+     "total": 142.2,
      "tradeDay": {
       "letter": "B",
       "marginPct": 38,
-      "marginPts": 78.7
+      "marginPts": 78.3
      },
      "hindsight": "Pending"
     }
@@ -587,7 +587,7 @@
       {
        "asset": "Josh Allen",
        "pid": "4984",
-       "value": 114.6,
+       "value": 114.4,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -596,11 +596,11 @@
        "basis": "next cost R2 (regressed from R3), kept 4 yr, shrunk"
       }
      ],
-     "total": 145.3,
+     "total": 145,
      "tradeDay": {
       "letter": "B",
       "marginPct": 40,
-      "marginPts": 82.7
+      "marginPts": 82.5
      },
      "hindsight": "Pending"
     },
@@ -632,7 +632,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -47,
-      "marginPts": -73.8
+      "marginPts": -73.7
      },
      "hindsight": "Pending"
     },
@@ -652,7 +652,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -5,
-      "marginPts": -8.9
+      "marginPts": -8.8
      },
      "hindsight": "Pending"
     }
@@ -670,7 +670,7 @@
       {
        "asset": "Khalil Shakir",
        "pid": "8134",
-       "value": 5.4,
+       "value": 5.1,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -680,12 +680,12 @@
        "basis": "actual to wk 9 + Sleeper projection"
       }
      ],
-     "total": 5.4,
+     "total": 5.1,
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": -32,
-      "marginPts": -5.1
+      "marginPct": -34,
+      "marginPts": -5.4
      },
      "hindsight": "Pending"
     },
@@ -705,8 +705,8 @@
      "tradeDay": {
       "letter": "C",
       "small": true,
-      "marginPct": 32,
-      "marginPts": 5.1
+      "marginPct": 34,
+      "marginPts": 5.4
      },
      "hindsight": "Pending"
     }
@@ -768,7 +768,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": 18,
-      "marginPts": 62
+      "marginPts": 62.1
      },
      "hindsight": "Pending"
     },
@@ -820,11 +820,11 @@
        "via": "1427440691495055360"
       }
      ],
-     "total": 138.1,
+     "total": 138,
      "tradeDay": {
       "letter": "C",
       "marginPct": -18,
-      "marginPts": -62
+      "marginPts": -62.1
      },
      "hindsight": "Pending"
     }
@@ -1168,11 +1168,11 @@
        "basis": "next cost R7 (regressed from R9), kept 3 yr, shrunk"
       }
      ],
-     "total": 85.5,
+     "total": 85.6,
      "tradeDay": {
       "letter": "C",
       "marginPct": 4,
-      "marginPts": 6.3
+      "marginPts": 6.4
      },
      "hindsight": "Pending"
     },
@@ -1204,7 +1204,7 @@
      "tradeDay": {
       "letter": "C",
       "marginPct": -4,
-      "marginPts": -6.3
+      "marginPts": -6.4
      },
      "hindsight": "Pending"
     }
@@ -1230,7 +1230,7 @@
      "tradeDay": {
       "letter": "B",
       "marginPct": 25,
-      "marginPts": 30.6
+      "marginPts": 30.1
      },
      "hindsight": "Pending"
     },
@@ -1242,7 +1242,7 @@
       {
        "asset": "Breece Hall",
        "pid": "8155",
-       "value": 15.9,
+       "value": 16.3,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -1252,11 +1252,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 45.4,
+     "total": 45.9,
      "tradeDay": {
       "letter": "D",
       "marginPct": -25,
-      "marginPts": -30.6
+      "marginPts": -30.1
      },
      "hindsight": "Pending"
     }
@@ -1274,7 +1274,7 @@
       {
        "asset": "Breece Hall",
        "pid": "8155",
-       "value": 15.9,
+       "value": 16.3,
        "basis": "actual to wk 9 + Sleeper projection"
       },
       {
@@ -1284,11 +1284,11 @@
        "hindsight": "Pending"
       }
      ],
-     "total": 45.4,
+     "total": 45.9,
      "tradeDay": {
       "letter": "A+",
       "marginPct": 100,
-      "marginPts": 45.4
+      "marginPts": 45.9
      },
      "hindsight": "Pending"
     },
@@ -1301,7 +1301,7 @@
      "tradeDay": {
       "letter": "F-",
       "marginPct": -100,
-      "marginPts": -45.4
+      "marginPts": -45.9
      },
      "hindsight": "Pending"
     }

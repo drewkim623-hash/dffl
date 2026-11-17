@@ -1,7 +1,7 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-16T23:21:42.292Z",
- "week": 10,
+ "generated": "2026-11-17T04:35:33.399Z",
+ "week": 11,
  "entries": {
   "1466": {
    "n": "Travis Kelce",
@@ -11,7 +11,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "2133": {
    "n": "Davante Adams",
@@ -89,7 +89,7 @@
   "5859": {
    "n": "A.J. Brown",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -114,12 +114,12 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: DNR = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -130,7 +130,7 @@
   "7525": {
    "n": "DeVonta Smith",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -145,7 +145,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "8112": {
    "n": "Drake London",
@@ -155,7 +155,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "8126": {
    "n": "Wan'Dale Robinson",
@@ -165,15 +165,14 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "8142": {
    "n": "Alec Pierce",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retWeeksList": [
-    10,
     11,
     12,
     14
@@ -202,15 +201,14 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "8800": {
    "n": "Malik Davis",
    "s": "IR",
    "ret": null,
-   "retWeeks": 7,
+   "retWeeks": 6,
    "retWeeksList": [
-    10,
     11,
     12,
     13,
@@ -228,7 +226,7 @@
    "n": "De'Von Achane",
    "s": "IR",
    "ret": null,
-   "retWeeks": 8,
+   "retWeeks": 7,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.nfl.com/news/dolphins-rb-devon-achane-miss-2026-season-acl-tear — Torn ACL. Out for 2026 season (Rapoport/Schefter; Hafley). Consensus: matches audit; consensus.",
@@ -239,9 +237,8 @@
    "n": "Puka Nacua",
    "s": "IR",
    "ret": null,
-   "retWeeks": 6,
+   "retWeeks": 5,
    "retWeeksList": [
-    10,
     12,
     13,
     14,
@@ -257,7 +254,7 @@
   "9756": {
    "n": "Jordan Addison",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -268,9 +265,8 @@
    "n": "Jayden Reed",
    "s": "IR",
    "ret": null,
-   "retWeeks": 7,
+   "retWeeks": 6,
    "retWeeksList": [
-    10,
     12,
     13,
     14,
@@ -288,11 +284,11 @@
    "n": "Michael Wilson",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: IR minimum 4 weeks from wk 10 (4 left)",
-   "retChecked": "2026-11-16",
+   "retNote": "default: IR minimum 4 weeks from wk 10 (3 left)",
+   "retChecked": "2026-11-17",
    "irSince": 10
   },
   "11564": {
@@ -316,7 +312,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -328,14 +324,21 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-15"
   },
+  "11762": {
+   "n": "Anthony Gould",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-17"
+  },
   "12474": {
    "n": "Woody Marks",
    "s": "Out",
-   "ret": null,
-   "retWeeks": 1,
-   "retWeeksList": [
-    11
-   ],
+   "ret": "2026-11-29",
+   "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
@@ -344,12 +347,8 @@
   "12489": {
    "n": "RJ Harvey",
    "s": "IR",
-   "ret": null,
-   "retWeeks": 2,
-   "retWeeksList": [
-    11,
-    12
-   ],
+   "ret": "2026-12-06",
+   "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
@@ -360,7 +359,7 @@
    "n": "Jaxson Dart",
    "s": "IR",
    "ret": null,
-   "retWeeks": 5,
+   "retWeeks": 4,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
@@ -375,15 +374,14 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-16"
+   "retChecked": "2026-11-17"
   },
   "12529": {
    "n": "TreVeyon Henderson",
    "s": "IR",
    "ret": null,
-   "retWeeks": 4,
+   "retWeeks": 3,
    "retWeeksList": [
-    10,
     12,
     13,
     14
@@ -408,7 +406,7 @@
   "12534": {
    "n": "Kyle Monangai",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
@@ -418,7 +416,7 @@
   "13276": {
    "n": "Omar Cooper Jr.",
    "s": "Out",
-   "ret": "2026-11-15",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
