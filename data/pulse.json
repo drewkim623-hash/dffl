@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-17T16:17:34.832Z",
- "at": 1794932254833,
+ "generated": "2026-11-17T21:13:34.671Z",
+ "at": 1794950014671,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -43,7 +43,7 @@
    "losses": 4,
    "points_for": 1343.44,
    "points_against": 1242.7,
-   "faab_spent": 100,
+   "faab_spent": 95,
    "starters_hurt": []
   },
   {
