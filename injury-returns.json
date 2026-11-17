@@ -23,8 +23,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-12",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
     },
     "2449": {
       "kind": "report",
@@ -114,8 +114,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4036133/tj-hockenson",
       "checked": "2026-11-14",
-      "note": "Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
-      "flag": "uncertain"
+      "note": "Concussion. In protocol; MIN on bye Week 6, next game Week 7 Oct 25. 0 games missed. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "5849": {
       "kind": "report",
@@ -170,8 +170,8 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
       "checked": "2026-11-15",
-      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
-      "flag": "uncertain"
+      "note": "Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
+      "flag": "consensus"
     },
     "6786": {
       "kind": "report",
@@ -294,8 +294,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-15",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 10)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "8155": {
       "kind": "report",
@@ -408,12 +408,14 @@
     },
     "9756": {
       "kind": "report",
-      "weeks": 0,
-      "weeks_list": [],
+      "weeks": 1,
+      "weeks_list": [
+        11
+      ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-10-14",
-      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; uncertain (audit tiebreak wk 10).",
-      "flag": "uncertain"
+      "checked": "2026-11-17",
+      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "10222": {
       "kind": "report",
@@ -465,7 +467,7 @@
       "weeks": 1,
       "checked": "2026-11-16",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "11625": {
       "kind": "report",
@@ -515,7 +517,7 @@
       "weeks": 1,
       "checked": "2026-11-16",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "12481": {
       "kind": "report",
@@ -637,8 +639,8 @@
       ],
       "weeks": 3,
       "checked": "2026-10-20",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
     },
     "12534": {
       "kind": "report",
@@ -668,8 +670,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-14",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 10)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "13281": {
       "kind": "report",
