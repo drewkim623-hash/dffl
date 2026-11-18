@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-18T14:25:55.199Z",
- "at": 1795011955199,
+ "generated": "2026-11-18T16:30:32.320Z",
+ "at": 1795019432320,
  "season": "2026",
  "week": 11,
  "liveWeek": null,
@@ -168,16 +168,16 @@
  "games": [],
  "hurt": [
   {
-   "manager": "victorthompson",
-   "cost": 0.03225193393013526,
+   "manager": "jskule23",
+   "cost": 0.02093063988790289,
    "players": [
     {
-     "name": "Drake London",
+     "name": "Mike Evans",
      "status": "Questionable"
     },
     {
-     "name": "A.J. Brown",
-     "status": "Out"
+     "name": "Carnell Tate",
+     "status": "Questionable"
     }
    ]
   },
@@ -192,11 +192,11 @@
    ]
   },
   {
-   "manager": "jskule23",
-   "cost": 0.010834828436869226,
+   "manager": "victorthompson",
+   "cost": 0.00867846772064651,
    "players": [
     {
-     "name": "Carnell Tate",
+     "name": "Ladd McConkey",
      "status": "Questionable"
     }
    ]

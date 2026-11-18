@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-18T14:15:52.245Z",
- "at": 1795011352245,
+ "generated": "2026-11-18T16:30:04.981Z",
+ "at": 1795019404981,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -87,6 +87,7 @@
    "points_against": 1354.02,
    "faab_spent": 100,
    "starters_hurt": [
+    "Mike Evans (Questionable)",
     "Carnell Tate (Questionable)"
    ]
   },
@@ -107,8 +108,7 @@
    "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
-    "Drake London (Questionable)",
-    "A.J. Brown (Out)"
+    "Ladd McConkey (Questionable)"
    ]
   },
   {
@@ -152,7 +152,7 @@
    "a": {
     "manager": "jskule23",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "victorthompson",
@@ -468,5 +468,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 32
+ "free_agent_moves": 36
 }
