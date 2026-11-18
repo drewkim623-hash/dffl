@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-18T11:02:24.539Z",
- "at": 1794999744539,
+ "generated": "2026-11-18T13:29:55.934Z",
+ "at": 1795008595934,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -121,7 +121,7 @@
    "points_against": 1417.48,
    "faab_spent": 100,
    "starters_hurt": [
-    "Woody Marks (Doubtful)"
+    "DeVonta Smith (Questionable)"
    ]
   }
  ],
@@ -178,7 +178,7 @@
    "a": {
     "manager": "drewkim",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "bradyrife",
@@ -470,5 +470,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 27
+ "free_agent_moves": 28
 }
