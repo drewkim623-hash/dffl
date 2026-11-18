@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-18T16:30:04.981Z",
- "at": 1795019404981,
+ "generated": "2026-11-18T16:50:12.880Z",
+ "at": 1795020612881,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -68,7 +68,9 @@
    "points_for": 1289.98,
    "points_against": 1304.28,
    "faab_spent": 72,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Kyle Monangai (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -468,5 +470,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 36
+ "free_agent_moves": 38
 }
