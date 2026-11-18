@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-17T21:29:50.392Z",
- "at": 1794950990392,
+ "generated": "2026-11-18T08:18:48.917Z",
+ "at": 1794989928917,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -22,9 +22,9 @@
    "losses": 2,
    "points_for": 1358.4,
    "points_against": 1214.6,
-   "faab_spent": 88,
+   "faab_spent": 98,
    "starters_hurt": [
-    "Brock Bowers (Out)"
+    "Brock Bowers (Questionable)"
    ]
   },
   {
@@ -52,9 +52,7 @@
    "points_for": 1247.96,
    "points_against": 1323.22,
    "faab_spent": 67,
-   "starters_hurt": [
-    "Travis Kelce (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -80,7 +78,7 @@
    "losses": 6,
    "points_for": 1183.48,
    "points_against": 1374.62,
-   "faab_spent": 16,
+   "faab_spent": 28,
    "starters_hurt": []
   },
   {
@@ -89,11 +87,9 @@
    "losses": 7,
    "points_for": 1247.88,
    "points_against": 1354.02,
-   "faab_spent": 95,
+   "faab_spent": 100,
    "starters_hurt": [
-    "Luther Burden III (Questionable)",
-    "Chig Okonkwo (Questionable)",
-    "Carnell Tate (Out)"
+    "Carnell Tate (Questionable)"
    ]
   },
   {
@@ -125,7 +121,7 @@
    "points_against": 1417.48,
    "faab_spent": 100,
    "starters_hurt": [
-    "Woody Marks (Out)"
+    "Woody Marks (Doubtful)"
    ]
   }
  ],
@@ -134,7 +130,7 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "chassinator",
@@ -158,7 +154,7 @@
    "a": {
     "manager": "jskule23",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "victorthompson",
@@ -182,12 +178,12 @@
    "a": {
     "manager": "drewkim",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "bradyrife",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 8
    }
   },
   {
@@ -388,6 +384,91 @@
    ]
   }
  ],
- "waivers": [],
- "free_agent_moves": 23
+ "waivers": [
+  {
+   "week": 10,
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Elic Ayomanor",
+     "pos": "WR",
+     "team": "TEN",
+     "status": null,
+     "to": "Domo112"
+    }
+   ],
+   "drops": [],
+   "faab": 10,
+   "picks": []
+  },
+  {
+   "week": 10,
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Darren Waller",
+     "pos": "TE",
+     "team": "CAR",
+     "status": null,
+     "to": "moseslin"
+    }
+   ],
+   "drops": [],
+   "faab": 7,
+   "picks": []
+  },
+  {
+   "week": 10,
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
+     "status": null,
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Miami Dolphins",
+     "pos": "DEF",
+     "team": "MIA",
+     "status": null,
+     "from": "jskule23"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "week": 10,
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Cam Ward",
+     "pos": "QB",
+     "team": "TEN",
+     "status": null,
+     "to": "moseslin"
+    }
+   ],
+   "drops": [],
+   "faab": 5,
+   "picks": []
+  }
+ ],
+ "free_agent_moves": 27
 }
