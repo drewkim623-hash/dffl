@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-18T13:29:55.934Z",
- "at": 1795008595934,
+ "generated": "2026-11-18T14:15:52.245Z",
+ "at": 1795011352245,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -23,9 +23,7 @@
    "points_for": 1358.4,
    "points_against": 1214.6,
    "faab_spent": 98,
-   "starters_hurt": [
-    "Brock Bowers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -130,7 +128,7 @@
    "a": {
     "manager": "Domo112",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "chassinator",
@@ -171,7 +169,7 @@
    "b": {
     "manager": "saucebossandrew",
     "points": 0,
-    "startersLeftToPlay": 7
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -470,5 +468,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 28
+ "free_agent_moves": 32
 }
