@@ -118,25 +118,21 @@
     },
     "5850": {
       "kind": "report",
+      "ret": "2026-11-25",
       "weeks": 1,
-      "weeks_list": [
-        10
-      ],
-      "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-12",
-      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "source": "https://www.cbssports.com/fantasy/football/news/packers-josh-jacobs-could-be-back-for-week-12/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Finger surgery; GB bye this week; Rapoport: realistic chance to return vs the Rams."
     },
     "5859": {
       "kind": "report",
+      "ret": "2026-11-29",
       "weeks": 1,
-      "weeks_list": [
-        9
-      ],
-      "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
-      "checked": "2026-11-06",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "source": "https://www.boston.com/sports/new-england-patriots/2026/11/18/new-england-patriots-injury-update-a-j-brown-hamstring-nfl-football/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Hamstring; NE on bye; ESPN lists Questionable for Nov 29 vs LAC; Fowler (Nov 18): hamstring likely keeps him out a little while."
     },
     "5872": {
       "kind": "report",
@@ -719,18 +715,12 @@
     },
     "13417": {
       "kind": "report",
-      "weeks": 5,
-      "weeks_list": [
-        6,
-        7,
-        9,
-        10,
-        11
-      ],
-      "source": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks",
-      "checked": "2026-10-14",
-      "note": "Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "ret": "2026-12-06",
+      "weeks": 2,
+      "source": "https://www.cbssports.com/fantasy/football/news/49ers-dezhaun-stribling-works-on-side-wednesday/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Ankle deltoid ligament surgery. Earliest possible return is Dec 6 vs the Giants, per ESPN and Wagoner. Out Weeks 11-12 (SF plays SEA in Week 12)."
     }
   }
 }
