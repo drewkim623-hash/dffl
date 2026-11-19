@@ -1313,7 +1313,7 @@ const artl = await page.evaluate(async () => {
   // What the file says should lead, rather than a headline frozen into a test
   // that every new piece would then break.
   const j = await (await fetch("recaps.json", { cache: "no-cache" })).json();
-  const byDate = (j.articles || []).slice()
+  const byDate = (j.articles || []).slice().reverse() // same date: the later-added piece leads
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
   out.published = byDate.length;
   out.expectedLead = byDate.length ? byDate[0].headline : null;
