@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 10,
- "generated": "2026-11-17T11:02:21.909Z",
- "generated_at": "2026-11-17T11:02:21.909Z",
+ "generated": "2026-11-19T11:02:23.437Z",
+ "generated_at": "2026-11-19T11:02:23.437Z",
  "final": true,
  "standings_through_week": 10,
  "standings_folded": false,
@@ -1140,7 +1140,7 @@
    "ties": 0,
    "points_for": 1358.4,
    "points_against": 1214.6,
-   "waiver_budget_used": 88
+   "waiver_budget_used": 98
   },
   {
    "manager": "willie12w",
@@ -1162,7 +1162,7 @@
    "ties": 0,
    "points_for": 1343.44,
    "points_against": 1242.7,
-   "waiver_budget_used": 100
+   "waiver_budget_used": 95
   },
   {
    "manager": "sizzlemc2",
@@ -1206,7 +1206,7 @@
    "ties": 0,
    "points_for": 1183.48,
    "points_against": 1374.62,
-   "waiver_budget_used": 16
+   "waiver_budget_used": 28
   },
   {
    "manager": "jskule23",
@@ -1217,7 +1217,7 @@
    "ties": 0,
    "points_for": 1247.88,
    "points_against": 1354.02,
-   "waiver_budget_used": 95
+   "waiver_budget_used": 100
   },
   {
    "manager": "saucebossandrew",
@@ -1255,6 +1255,163 @@
  ],
  "transactions": [
   {
+   "type": "waiver",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [
+    {
+     "name": "Elic Ayomanor",
+     "pos": "WR",
+     "team": "TEN",
+     "to": "Domo112"
+    }
+   ],
+   "drops": [],
+   "faab": 10,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Wan'Dale Robinson",
+     "pos": "WR",
+     "team": "TEN",
+     "from": "Domo112"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Audric Estime",
+     "pos": "RB",
+     "team": "NO",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Brandon Aiyuk",
+     "pos": "WR",
+     "team": "SF",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Kirk Cousins",
+     "pos": "QB",
+     "team": "MIN",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "jskule23"
+   ],
+   "adds": [
+    {
+     "name": "Denver Broncos",
+     "pos": "DEF",
+     "team": "DEN",
+     "to": "jskule23"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Miami Dolphins",
+     "pos": "DEF",
+     "team": "MIA",
+     "from": "jskule23"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Cairo Santos",
+     "pos": "K",
+     "team": "CHI",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Jason Myers",
+     "pos": "K",
+     "team": "SEA",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Pittsburgh Steelers",
+     "pos": "DEF",
+     "team": "PIT",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Indianapolis Colts",
+     "pos": "DEF",
+     "team": "IND",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
    "type": "free_agent",
    "managers": [
     "moseslin"
@@ -1269,6 +1426,64 @@
     }
    ],
    "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Cam Ward",
+     "pos": "QB",
+     "team": "TEN",
+     "to": "moseslin"
+    }
+   ],
+   "drops": [],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "moseslin"
+   ],
+   "adds": [
+    {
+     "name": "Darren Waller",
+     "pos": "TE",
+     "team": "CAR",
+     "to": "moseslin"
+    }
+   ],
+   "drops": [],
+   "faab": 7,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Emari Demercado",
+     "pos": "RB",
+     "team": "HOU",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Demarcus Robinson",
+     "pos": "WR",
+     "team": "SF",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 0,
    "picks": []
   },
   {

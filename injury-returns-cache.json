@@ -1,32 +1,22 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-17T15:28:51.236Z",
+ "generated": "2026-11-19T14:24:56.885Z",
  "week": 11,
  "entries": {
-  "1466": {
-   "n": "Travis Kelce",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
-  },
   "2133": {
    "n": "Davante Adams",
    "s": "IR",
-   "ret": "2026-12-03",
+   "ret": "2026-11-22",
    "retWeeks": null,
-   "retSource": "team",
+   "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nfl.com/news/rams-targeting-week-13-return-for-davante-adams-puka-nacua-out-extended-period-of-time — Ruptured hamstring (surgery). McVay: targeting a return after the Week 12 Packers game, i.e. Week 13 vs KC on TNF Dec 3. Out Week 12 (LAR bye Week 11).",
-   "retChecked": "2026-11-17",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-21",
    "irSince": 7
   },
   "2216": {
    "n": "Mike Evans",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
@@ -34,20 +24,30 @@
    "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
    "retChecked": "2026-11-12"
   },
+  "2505": {
+   "n": "Darren Waller",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
   "4881": {
    "n": "Lamar Jackson",
    "s": "IR",
-   "ret": "2026-12-27",
+   "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nfl.com/news/ravens-lamar-jackson-right-thumb-out-6-9-weeks-expects-to-return-this-season — Broken and dislocated right thumb, surgery (hurt Nov 1). Minter (Nov 13): typically 6-10 weeks. NBC (Nov 13) and USA Today (Nov 16): Week 15 or 16 at the earliest; ESPN return date Dec 27. Back Week 16 (Dec 27): out Weeks 11-15 (BAL bye Week 13).",
-   "retChecked": "2026-11-17",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-03",
    "irSince": 9
   },
   "5844": {
    "n": "T.J. Hockenson",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
@@ -58,12 +58,12 @@
   "5849": {
    "n": "Kyler Murray",
    "s": "Out",
-   "ret": "2026-11-29",
+   "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.cbssports.com/fantasy/football/news/vikings-kyler-murray-targeting-week-12-return/ — Grade 2 hamstring. Pelissero (Nov 14): Vikings targeting Week 12 vs ATL on Nov 29; ESPN return date Nov 29. Out Week 11.",
-   "retChecked": "2026-11-17"
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-09"
   },
   "5850": {
    "n": "Josh Jacobs",
@@ -85,40 +85,40 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
   },
-  "5892": {
-   "n": "David Montgomery",
-   "s": "Out",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4035538/david-montgomery — Groin. Ryans: week-to-week; trending to miss Week 6. HOU bye Week 8; could extend to Week 7. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-15"
-  },
-  "6803": {
-   "n": "Brandon Aiyuk",
-   "s": "DNR",
+  "5947": {
+   "n": "Jakobi Meyers",
+   "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: DNR = coming week only",
-   "retChecked": "2026-11-17"
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
+  "6083": {
+   "n": "Matt Gay",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
-   "ret": null,
-   "retWeeks": 7,
+   "ret": "2026-11-22",
+   "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nfl.com/news/eagles-qb-jalen-hurts-out-2026-season-blood-clots — DVT and bilateral pulmonary emboli; on blood thinners, no contact football. Expected to miss the rest of the 2026 season (Rapoport, Schefter; ESPN; USA Today Nov 8). Out rest of season.",
-   "retChecked": "2026-11-17",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-18",
    "irSince": 6
   },
   "7525": {
    "n": "DeVonta Smith",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
@@ -128,13 +128,13 @@
   },
   "7526": {
    "n": "Jaylen Waddle",
-   "s": "Out",
+   "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
-   "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-17"
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "8112": {
    "n": "Drake London",
@@ -144,17 +144,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
-  },
-  "8126": {
-   "n": "Wan'Dale Robinson",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
+   "retChecked": "2026-11-19"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -174,23 +164,13 @@
   },
   "8151": {
    "n": "Kenneth Walker III",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
    "retChecked": "2026-11-15"
-  },
-  "8210": {
-   "n": "Chig Okonkwo",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
   },
   "8800": {
    "n": "Malik Davis",
@@ -225,12 +205,19 @@
   "9493": {
    "n": "Puka Nacua",
    "s": "IR",
-   "ret": "2026-12-20",
-   "retWeeks": null,
+   "ret": null,
+   "retWeeks": 5,
+   "retWeeksList": [
+    12,
+    13,
+    14,
+    15,
+    16
+   ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-13/mcvay-no-change-in-nacuas-knee-toe-timeline — MCL and PCL sprains plus turf toe; placed on IR Nov 12 (Schefter; NFL.com: out 'extended period of time'). Rapoport: hope is mid-December; McVay: timeline unchanged; NBC: on track for Week 15 vs DAL on Dec 20, his first IR-eligible game (CBS Nov 15 agrees). Out Weeks 12-14 (LAR bye Week 11).",
-   "retChecked": "2026-11-17",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-13",
    "irSince": 10
   },
   "9756": {
@@ -240,8 +227,18 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-17"
+  },
+  "10219": {
+   "n": "Chris Rodriguez Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -270,51 +267,52 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 10 (3 left)",
-   "retChecked": "2026-11-17",
+   "retChecked": "2026-11-19",
    "irSince": 10
   },
-  "11564": {
-   "n": "Drake Maye",
-   "s": "Out",
-   "ret": null,
-   "retWeeks": 1,
-   "retWeeksList": [
-    12
-   ],
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-16"
-  },
-  "11604": {
-   "n": "Brock Bowers",
-   "s": "Out",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-17"
-  },
-  "11635": {
-   "n": "Ladd McConkey",
-   "s": "Out",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-15"
-  },
-  "11762": {
-   "n": "Anthony Gould",
+  "10236": {
+   "n": "Dalton Kincaid",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
+   "retChecked": "2026-11-19"
+  },
+  "11564": {
+   "n": "Drake Maye",
+   "s": "Out",
+   "ret": null,
+   "retWeeks": 2,
+   "retWeeksList": [
+    12,
+    13
+   ],
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: changed from audit [12]; consensus.",
+   "retChecked": "2026-11-19"
+  },
+  "11604": {
+   "n": "Brock Bowers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
+  "11635": {
+   "n": "Ladd McConkey",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Foot. Week-to-week; active but 0 snaps Week 5. Q = Week 6 only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-15"
   },
   "12474": {
    "n": "Woody Marks",
@@ -337,26 +335,26 @@
    "retChecked": "2026-11-01",
    "irSince": 8
   },
-  "12508": {
-   "n": "Jaxson Dart",
-   "s": "IR",
-   "ret": null,
-   "retWeeks": 7,
-   "retSource": "team",
-   "retEstimated": false,
-   "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee (MCL/PCL/meniscus). Harbaugh: out for the rest of the 2026 regular season, which covers every remaining DFFL week. Out rest of season.",
-   "retChecked": "2026-11-17",
-   "irSince": 6
-  },
-  "12519": {
-   "n": "Luther Burden III",
+  "12490": {
+   "n": "Bhayshul Tuten",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-17"
+   "retChecked": "2026-11-19"
+  },
+  "12508": {
+   "n": "Jaxson Dart",
+   "s": "IR",
+   "ret": null,
+   "retWeeks": 4,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14",
+   "irSince": 6
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -385,35 +383,35 @@
    "retChecked": "2026-10-20",
    "irSince": 6
   },
-  "12534": {
-   "n": "Kyle Monangai",
-   "s": "Out",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-08"
-  },
   "13276": {
    "n": "Omar Cooper Jr.",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; uncertain (audit tiebreak wk 11).",
    "retChecked": "2026-10-15"
   },
   "13279": {
    "n": "Carnell Tate",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-14"
+  },
+  "13281": {
+   "n": "Jordyn Tyson",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson — Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-08"
   },
   "13287": {
    "n": "Jeremiyah Love",
@@ -425,6 +423,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06",
    "irSince": 9
+  },
+  "13296": {
+   "n": "Caleb Douglas",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
