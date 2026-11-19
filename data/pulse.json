@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-19T11:02:27.062Z",
- "at": 1795086147062,
+ "generated": "2026-11-19T16:50:13.696Z",
+ "at": 1795107013696,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -129,6 +129,7 @@
    "points_against": 1417.48,
    "faab_spent": 100,
    "starters_hurt": [
+    "Tyjae Spears (Questionable)",
     "DeVonta Smith (Questionable)"
    ]
   }
@@ -478,5 +479,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 38
+ "free_agent_moves": 41
 }
