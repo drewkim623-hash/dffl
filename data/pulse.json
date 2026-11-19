@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-18T16:50:12.880Z",
- "at": 1795020612881,
+ "generated": "2026-11-19T11:02:27.062Z",
+ "at": 1795086147062,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -41,7 +41,9 @@
    "points_for": 1343.44,
    "points_against": 1242.7,
    "faab_spent": 95,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jakobi Meyers (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -50,7 +52,9 @@
    "points_for": 1247.96,
    "points_against": 1323.22,
    "faab_spent": 67,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jordyn Tyson (Questionable)"
+   ]
   },
   {
    "manager": "wesley55",
@@ -69,7 +73,7 @@
    "points_against": 1304.28,
    "faab_spent": 72,
    "starters_hurt": [
-    "Kyle Monangai (Questionable)"
+    "Matt Gay (Questionable)"
    ]
   },
   {
@@ -79,7 +83,9 @@
    "points_for": 1183.48,
    "points_against": 1374.62,
    "faab_spent": 28,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Darren Waller (Questionable)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -90,6 +96,7 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Mike Evans (Questionable)",
+    "Caleb Douglas (Questionable)",
     "Carnell Tate (Questionable)"
    ]
   },
@@ -110,6 +117,7 @@
    "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
+    "Dalton Kincaid (Questionable)",
     "Ladd McConkey (Questionable)"
    ]
   },
@@ -183,7 +191,7 @@
    "b": {
     "manager": "bradyrife",
     "points": 0,
-    "startersLeftToPlay": 8
+    "startersLeftToPlay": 10
    }
   },
   {
@@ -415,7 +423,7 @@
      "name": "Darren Waller",
      "pos": "TE",
      "team": "CAR",
-     "status": null,
+     "status": "Questionable",
      "to": "moseslin"
     }
    ],

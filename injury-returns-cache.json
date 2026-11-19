@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-18T16:50:12.479Z",
+ "generated": "2026-11-19T11:02:26.445Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -23,6 +23,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
    "retChecked": "2026-11-12"
+  },
+  "2505": {
+   "n": "Darren Waller",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -75,6 +85,26 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
   },
+  "5947": {
+   "n": "Jakobi Meyers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
+  "6083": {
+   "n": "Matt Gay",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
@@ -104,7 +134,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-18"
+   "retChecked": "2026-11-19"
   },
   "8112": {
    "n": "Drake London",
@@ -114,7 +144,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-18"
+   "retChecked": "2026-11-19"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -200,6 +230,16 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
    "retChecked": "2026-11-17"
   },
+  "10219": {
+   "n": "Chris Rodriguez Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
+  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -227,8 +267,18 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 10 (3 left)",
-   "retChecked": "2026-11-18",
+   "retChecked": "2026-11-19",
    "irSince": 10
+  },
+  "10236": {
+   "n": "Dalton Kincaid",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "11564": {
    "n": "Drake Maye",
@@ -251,7 +301,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-18"
+   "retChecked": "2026-11-19"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -265,7 +315,7 @@
   },
   "12474": {
    "n": "Woody Marks",
-   "s": "Doubtful",
+   "s": "Out",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
@@ -283,6 +333,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-01",
    "irSince": 8
+  },
+  "12490": {
+   "n": "Bhayshul Tuten",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-19"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -322,16 +382,6 @@
    "retChecked": "2026-10-20",
    "irSince": 6
   },
-  "12534": {
-   "n": "Kyle Monangai",
-   "s": "Questionable",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Toe sprain / thumb. Day-to-day; ruled out Week 5; ESPN Q Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-08"
-  },
   "13276": {
    "n": "Omar Cooper Jr.",
    "s": "Questionable",
@@ -352,6 +402,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-14"
   },
+  "13281": {
+   "n": "Jordyn Tyson",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4880281/jordyn-tyson — Hamstring strain. Practice window not opened; return after NO Week 8 bye 'probably more realistic' (analyst estimate, no team timetable). Consensus: changed from audit [9]; consensus.",
+   "retChecked": "2026-11-08"
+  },
   "13287": {
    "n": "Jeremiyah Love",
    "s": "IR",
@@ -362,6 +422,16 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06",
    "irSince": 9
+  },
+  "13296": {
+   "n": "Caleb Douglas",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle. Missed 3 straight; MIA bye Week 6, ESPN return date Oct 25 (Week 7). 0 games missed. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "13417": {
    "n": "De'Zhaun Stribling",
