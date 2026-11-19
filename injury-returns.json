@@ -2,18 +2,13 @@
   "_comment": "Hand-curated return timetables, read by injury-returns.mjs. entries: { \"<sleeper player_id>\": { \"kind\": \"team\" | \"report\", \"ret\": \"YYYY-MM-DD\" (or \"weeks\": N | \"season\"), \"source\": \"url or publisher\", \"checked\": \"YYYY-MM-DD\", \"note\": \"what was said\" } }. kind \"team\" = the club's own timetable: it wins over everything and is not estimated. kind \"report\" (the default) = a media report: used only when ESPN has no return date and no timetable in its outlook; a dated report is not estimated, a weeks-only one is. flag = the audit's confidence (verified/uncertain). weeks_list = the exact fantasy weeks out (e.g. [6] or [6,7]; [] = not out). When present it wins over weeks/unit: contiguous from the current week it becomes a return date (the Sunday after the last listed week), with a gap the list itself (retWeeksList) is charged week by week; the entry is stale once every listed week is past and it was checked in an earlier week. Entries are rewritten by consensus.mjs (the 2026-10-14 audit merged with the Sleeper/ESPN projection and DraftKings props consensus); weeks there is the count of listed weeks.",
   "entries": {
     "2133": {
-      "kind": "report",
-      "source": "consensus.mjs",
-      "weeks_list": [
-        7,
-        8,
-        9,
-        10
-      ],
-      "weeks": 4,
-      "checked": "2026-10-21",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "kind": "team",
+      "ret": "2026-12-03",
+      "weeks": 2,
+      "source": "https://www.nfl.com/news/rams-targeting-week-13-return-for-davante-adams-puka-nacua-out-extended-period-of-time",
+      "checked": "2026-11-17",
+      "flag": "verified",
+      "note": "Ruptured hamstring (surgery). McVay: targeting a return after the Week 12 Packers game, i.e. Week 13 vs KC on TNF Dec 3. Out Week 12 (LAR bye Week 11)."
     },
     "2216": {
       "kind": "report",
@@ -72,17 +67,12 @@
     },
     "4881": {
       "kind": "report",
-      "weeks": 4,
-      "weeks_list": [
-        9,
-        10,
-        11,
-        12
-      ],
-      "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-03",
-      "note": "Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "ret": "2026-12-27",
+      "weeks": 5,
+      "source": "https://www.nfl.com/news/ravens-lamar-jackson-right-thumb-out-6-9-weeks-expects-to-return-this-season",
+      "checked": "2026-11-17",
+      "flag": "uncertain",
+      "note": "Broken and dislocated right thumb, surgery (hurt Nov 1). Minter (Nov 13): typically 6-10 weeks. NBC (Nov 13) and USA Today (Nov 16): Week 15 or 16 at the earliest; ESPN return date Dec 27. Back Week 16 (Dec 27): out Weeks 11-15 (BAL bye Week 13)."
     },
     "4943": {
       "kind": "report",
@@ -119,37 +109,30 @@
     },
     "5849": {
       "kind": "report",
-      "source": "consensus.mjs",
-      "weeks_list": [
-        9,
-        10
-      ],
-      "weeks": 2,
-      "checked": "2026-11-09",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "ret": "2026-11-29",
+      "weeks": 1,
+      "source": "https://www.cbssports.com/fantasy/football/news/vikings-kyler-murray-targeting-week-12-return/",
+      "checked": "2026-11-17",
+      "flag": "verified",
+      "note": "Grade 2 hamstring. Pelissero (Nov 14): Vikings targeting Week 12 vs ATL on Nov 29; ESPN return date Nov 29. Out Week 11."
     },
     "5850": {
       "kind": "report",
+      "ret": "2026-11-25",
       "weeks": 1,
-      "weeks_list": [
-        10
-      ],
-      "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-12",
-      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "source": "https://www.cbssports.com/fantasy/football/news/packers-josh-jacobs-could-be-back-for-week-12/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Finger surgery; GB bye this week; Rapoport: realistic chance to return vs the Rams."
     },
     "5859": {
       "kind": "report",
+      "ret": "2026-11-29",
       "weeks": 1,
-      "weeks_list": [
-        9
-      ],
-      "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
-      "checked": "2026-11-06",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "source": "https://www.boston.com/sports/new-england-patriots/2026/11/18/new-england-patriots-injury-update-a-j-brown-hamstring-nfl-football/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Hamstring; NE on bye; ESPN lists Questionable for Nov 29 vs LAC; Fowler (Nov 18): hamstring likely keeps him out a little while."
     },
     "5872": {
       "kind": "report",
@@ -184,17 +167,20 @@
     },
     "6904": {
       "kind": "report",
-      "source": "consensus.mjs",
+      "weeks": "season",
       "weeks_list": [
-        6,
-        7,
-        8,
-        9
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
       ],
-      "weeks": 4,
-      "checked": "2026-10-18",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "source": "https://www.nfl.com/news/eagles-qb-jalen-hurts-out-2026-season-blood-clots",
+      "checked": "2026-11-17",
+      "flag": "verified",
+      "note": "DVT and bilateral pulmonary emboli; on blood thinners, no contact football. Expected to miss the rest of the 2026 season (Rapoport, Schefter; ESPN; USA Today Nov 8). Out rest of season."
     },
     "7021": {
       "kind": "report",
@@ -370,19 +356,12 @@
     },
     "9493": {
       "kind": "report",
-      "source": "consensus.mjs",
-      "weeks_list": [
-        10,
-        12,
-        13,
-        14,
-        15,
-        16
-      ],
-      "weeks": 6,
-      "checked": "2026-11-13",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "ret": "2026-12-20",
+      "weeks": 4,
+      "source": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-13/mcvay-no-change-in-nacuas-knee-toe-timeline",
+      "checked": "2026-11-17",
+      "flag": "uncertain",
+      "note": "MCL and PCL sprains plus turf toe; placed on IR Nov 12 (Schefter; NFL.com: out 'extended period of time'). Rapoport: hope is mid-December; McVay: timeline unchanged; NBC: on track for Week 15 vs DAL on Dec 20, his first IR-eligible game (CBS Nov 15 agrees). Out Weeks 12-14 (LAR bye Week 11)."
     },
     "9502": {
       "kind": "report",
@@ -555,22 +534,21 @@
       "flag": "consensus"
     },
     "12508": {
-      "kind": "report",
-      "weeks": 8,
+      "kind": "team",
+      "weeks": "season",
       "weeks_list": [
-        6,
-        7,
-        9,
-        10,
         11,
         12,
         13,
-        14
+        14,
+        15,
+        16,
+        17
       ],
       "source": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh",
-      "checked": "2026-10-14",
-      "note": "Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "checked": "2026-11-17",
+      "flag": "verified",
+      "note": "Knee (MCL/PCL/meniscus). Harbaugh: out for the rest of the 2026 regular season, which covers every remaining DFFL week. Out rest of season."
     },
     "12509": {
       "kind": "report",
@@ -737,18 +715,12 @@
     },
     "13417": {
       "kind": "report",
-      "weeks": 5,
-      "weeks_list": [
-        6,
-        7,
-        9,
-        10,
-        11
-      ],
-      "source": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks",
-      "checked": "2026-10-14",
-      "note": "Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "ret": "2026-12-06",
+      "weeks": 2,
+      "source": "https://www.cbssports.com/fantasy/football/news/49ers-dezhaun-stribling-works-on-side-wednesday/",
+      "checked": "2026-11-19",
+      "flag": "uncertain",
+      "note": "Ankle deltoid ligament surgery. Earliest possible return is Dec 6 vs the Giants, per ESPN and Wagoner. Out Weeks 11-12 (SF plays SEA in Week 12)."
     }
   }
 }
