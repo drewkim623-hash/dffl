@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-20T11:02:42.617Z",
- "at": 1795172562617,
+ "generated": "2026-11-20T13:14:09.350Z",
+ "at": 1795180449350,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -13,7 +13,7 @@
    "losses": 2,
    "points_for": 1617.36,
    "points_against": 1264.32,
-   "faab_spent": 22,
+   "faab_spent": 25,
    "starters_hurt": []
   },
   {
@@ -479,6 +479,33 @@
    ],
    "drops": [],
    "faab": 5,
+   "picks": []
+  },
+  {
+   "week": 11,
+   "type": "waiver",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [
+    {
+     "name": "Rico Dowdle",
+     "pos": "RB",
+     "team": "PIT",
+     "status": null,
+     "to": "jadencha"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Fernando Mendoza",
+     "pos": "QB",
+     "team": "LV",
+     "status": null,
+     "from": "jadencha"
+    }
+   ],
+   "faab": 3,
    "picks": []
   }
  ],
