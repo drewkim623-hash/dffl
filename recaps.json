@@ -7747,6 +7747,101 @@
      "text": "Brock Purdy's 31.66 was the only drewkim starter past 15, and the Kansas City defense's 14 was his next-best score. The 72.16-point margin was the widest of the week, and drewkim falls to 3-7."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "moseslin-climbs-out-of-the-bottom-five",
+   "date": "2026-11-20",
+   "kind": "opinion",
+   "source": "watch",
+   "kicker": "2026 · week 11",
+   "headline": "moseslin Is Out of the Bottom Five. The Poll's Other Three Aren't.",
+   "dek": "After week 8, the league asked which of four losing teams would turn it around first. One of them already has a number that says it did.",
+   "byline": "DFFL desk",
+   "standfirst": "15.56% to make the playoffs, 4.565 points clear of the bottom five",
+   "teaser": "🚨 DFFL | WEEK 11\n\nMOSESLIN IS OUT OF THE BOTTOM FIVE. THE POLL'S OTHER THREE AREN'T.\n\n📊 moseslin sits at 15.56% to make the playoffs, clear of the bottom five\n🔁 saucebossandrew (1.13%) and chassinator (10.995%) now fill two of those spots\n🗳️ jskule23 (5.825%), victorthompson (1.19%) and drewkim (0.095%) are still down there\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=moseslin-climbs-out-of-the-bottom-five",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "After week 8, the DFFL poll asked which of four teams below .500 — jskule23, victorthompson, moseslin and drewkim — would turn it around first. Three of them are still stuck at the bottom of the board. moseslin isn't. On Nov. 12, moseslin traded Justin Jefferson to jadencha for Breece Hall, saucebossandrew's 2027 third-round pick and two years of Isaiah Likely's keeper rights, a deal this desk graded A-. Eight days later, moseslin sits at <b>15.56%</b> to make the playoffs, clear of the league's bottom five. jskule23, victorthompson and drewkim are still in it."
+    },
+    {
+     "type": "stat",
+     "n": "15.56%",
+     "text": "moseslin's playoff chance by the site's math — the only one of the poll's four no longer among the league's five worst. The next-closest, chassinator, is at 10.995%, with the same 4-6 record moseslin carries."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the split",
+     "text": "Same Record, Different Side of the Line"
+    },
+    {
+     "type": "p",
+     "text": "moseslin and chassinator are both 4-6. The 4.565-point gap between their playoff numbers — 15.56% to 10.995% — is also the exact line the site draws between the bottom five and everyone else. chassinator is in it. moseslin is not."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the poll",
+     "text": "Three of the Four Are Still Down There"
+    },
+    {
+     "type": "p",
+     "text": "jskule23 is at 5.825%, victorthompson at 1.19% and drewkim at 0.095% — three of the league's five worst playoff numbers. The fifth belongs to saucebossandrew, at 1.13%, the team that sent Hall and that third-round pick out of its own roster six minutes before they landed, by way of jadencha, on moseslin's."
+    },
+    {
+     "type": "tiers",
+     "title": "The Bottom of the Board After Week 10",
+     "intro": "Playoff chances as computed live by the site.",
+     "foot": "Playoff chances as computed live by the site in week 11; records are through week 10.",
+     "tiers": [
+      {
+       "name": "The bottom five",
+       "rows": [
+        {
+         "team": "drewkim",
+         "pct": 0.095,
+         "rec": "3-7"
+        },
+        {
+         "team": "saucebossandrew",
+         "pct": 1.13,
+         "rec": "3-7"
+        },
+        {
+         "team": "victorthompson",
+         "pct": 1.19,
+         "rec": "3-7"
+        },
+        {
+         "team": "jskule23",
+         "pct": 5.825,
+         "rec": "3-7"
+        },
+        {
+         "team": "chassinator",
+         "pct": 10.995,
+         "rec": "4-6"
+        }
+       ]
+      },
+      {
+       "name": "Clear of it",
+       "rows": [
+        {
+         "team": "moseslin",
+         "pct": 15.56,
+         "rec": "4-6"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of that makes the trade the reason either team is where it is; moseslin still has to hold the spot, and saucebossandrew's week has nothing to do with players he no longer rosters. But of the four teams the league was asked about in October, only one now carries a number that says it already turned around."
+    }
+   ]
   }
  ]
 }
