@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-20T13:14:09.350Z",
- "at": 1795180449350,
+ "generated": "2026-11-20T15:30:10.794Z",
+ "at": 1795188610794,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -132,9 +132,7 @@
    "points_for": 1088.9,
    "points_against": 1417.48,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Tyjae Spears (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -190,7 +188,7 @@
    "a": {
     "manager": "drewkim",
     "points": 6,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "bradyrife",
@@ -509,5 +507,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 41
+ "free_agent_moves": 42
 }

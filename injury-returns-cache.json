@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-20T14:25:10.999Z",
+ "generated": "2026-11-20T15:30:10.250Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -210,16 +210,6 @@
    "retChecked": "2026-11-13",
    "irSince": 10
   },
-  "9508": {
-   "n": "Tyjae Spears",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-20"
-  },
   "9756": {
    "n": "Jordan Addison",
    "s": "Out",
@@ -385,7 +375,7 @@
   },
   "13276": {
    "n": "Omar Cooper Jr.",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-22",
    "retWeeks": null,
    "retSource": "report",
