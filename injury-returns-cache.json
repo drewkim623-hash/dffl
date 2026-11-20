@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-19T23:21:49.590Z",
+ "generated": "2026-11-20T02:19:17.322Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -32,7 +32,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -93,7 +93,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "6083": {
    "n": "Matt Gay",
@@ -103,7 +103,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "6904": {
    "n": "Jalen Hurts",
@@ -124,7 +124,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "8112": {
    "n": "Drake London",
@@ -134,7 +134,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -218,7 +218,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "9756": {
    "n": "Jordan Addison",
@@ -238,7 +238,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -267,7 +267,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 10 (3 left)",
-   "retChecked": "2026-11-19",
+   "retChecked": "2026-11-20",
    "irSince": 10
   },
   "10236": {
@@ -278,7 +278,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "11564": {
    "n": "Drake Maye",
@@ -302,7 +302,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "11635": {
    "n": "Ladd McConkey",
@@ -343,7 +343,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-19"
+   "retChecked": "2026-11-20"
   },
   "12508": {
    "n": "Jaxson Dart",

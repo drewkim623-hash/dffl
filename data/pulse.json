@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-19T16:50:13.696Z",
- "at": 1795107013696,
+ "generated": "2026-11-20T02:19:17.978Z",
+ "at": 1795141157978,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -23,7 +23,9 @@
    "points_for": 1358.4,
    "points_against": 1214.6,
    "faab_spent": 98,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Brock Bowers (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -63,7 +65,9 @@
    "points_for": 1327.56,
    "points_against": 1289.84,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jaylen Waddle (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -129,8 +133,7 @@
    "points_against": 1417.48,
    "faab_spent": 100,
    "starters_hurt": [
-    "Tyjae Spears (Questionable)",
-    "DeVonta Smith (Questionable)"
+    "Tyjae Spears (Questionable)"
    ]
   }
  ],
@@ -150,7 +153,7 @@
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
+    "points": 10.8,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -167,7 +170,7 @@
    },
    "b": {
     "manager": "victorthompson",
-    "points": 0,
+    "points": 5.3,
     "startersLeftToPlay": 10
    }
   },
@@ -186,7 +189,7 @@
   {
    "a": {
     "manager": "drewkim",
-    "points": 0,
+    "points": 2,
     "startersLeftToPlay": 10
    },
    "b": {
@@ -198,7 +201,7 @@
   {
    "a": {
     "manager": "moseslin",
-    "points": 0,
+    "points": 14.8,
     "startersLeftToPlay": 10
    },
    "b": {
