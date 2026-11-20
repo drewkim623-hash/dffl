@@ -391,6 +391,20 @@
    "sha256": "00a652fe7d25e1fdbeca03a319ba948bb69c9b989f1562ac7fa6fd9ee64d6e99",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-20T16:15:53.339Z",
+   "subject": "DFFL Week 11: moseslin Is Out of the Bottom Five. The Poll's Other Three Aren't.",
+   "lead": "moseslin-climbs-out-of-the-bottom-five",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 10
+   },
+   "to": 12,
+   "sha256": "95f03cbb1e63695891fc5ec4e98f798782eebb9a8bf74ea51d0259c50e4c16bb",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
