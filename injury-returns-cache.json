@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-20T02:19:17.322Z",
+ "generated": "2026-11-20T11:02:42.135Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -444,6 +444,16 @@
    "retNote": "https://www.espn.com/nfl/story/_/id/49960208/49ers-dezhaun-stribling-surgery-miss-10-weeks — Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "13424": {
+   "n": "Seth McGowan",
+   "s": "Out",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-20"
   }
  }
 }
