@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 10,
- "generated": "2026-11-20T11:02:38.991Z",
- "generated_at": "2026-11-20T11:02:38.991Z",
+ "generated": "2026-11-21T11:01:48.440Z",
+ "generated_at": "2026-11-21T11:01:48.440Z",
  "final": true,
  "standings_through_week": 10,
  "standings_folded": false,
@@ -1129,7 +1129,7 @@
    "ties": 0,
    "points_for": 1617.36,
    "points_against": 1264.32,
-   "waiver_budget_used": 22
+   "waiver_budget_used": 25
   },
   {
    "manager": "Domo112",
@@ -1675,7 +1675,7 @@
     {
      "name": "Pierre Strong Jr.",
      "pos": "RB",
-     "team": "GB",
+     "team": "FA",
      "from": "chassinator"
     }
    ],
@@ -1998,7 +1998,7 @@
     {
      "name": "Pierre Strong Jr.",
      "pos": "RB",
-     "team": "GB",
+     "team": "FA",
      "to": "chassinator"
     }
    ],

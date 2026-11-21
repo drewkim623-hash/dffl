@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-20T15:30:10.794Z",
- "at": 1795188610794,
+ "generated": "2026-11-21T11:01:52.214Z",
+ "at": 1795258912214,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -43,9 +43,7 @@
    "points_for": 1343.44,
    "points_against": 1242.7,
    "faab_spent": 95,
-   "starters_hurt": [
-    "Jakobi Meyers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -54,9 +52,7 @@
    "points_for": 1247.96,
    "points_against": 1323.22,
    "faab_spent": 67,
-   "starters_hurt": [
-    "Jordyn Tyson (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "wesley55",
@@ -65,9 +61,7 @@
    "points_for": 1327.56,
    "points_against": 1289.84,
    "faab_spent": 26,
-   "starters_hurt": [
-    "Jaylen Waddle (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -100,7 +94,6 @@
    "faab_spent": 100,
    "starters_hurt": [
     "Mike Evans (Questionable)",
-    "Caleb Douglas (Questionable)",
     "Carnell Tate (Questionable)"
    ]
   },
@@ -111,7 +104,9 @@
    "points_for": 1168.96,
    "points_against": 1284.36,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Rachaad White (Questionable)"
+   ]
   },
   {
    "manager": "victorthompson",
@@ -121,7 +116,7 @@
    "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Questionable)",
+    "Dalton Kincaid (Doubtful)",
     "Ladd McConkey (Questionable)"
    ]
   },
@@ -188,7 +183,7 @@
    "a": {
     "manager": "drewkim",
     "points": 6,
-    "startersLeftToPlay": 8
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "bradyrife",
