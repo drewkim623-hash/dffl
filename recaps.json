@@ -7842,6 +7842,141 @@
      "text": "None of that makes the trade the reason either team is where it is; moseslin still has to hold the spot, and saucebossandrew's week has nothing to do with players he no longer rosters. But of the four teams the league was asked about in October, only one now carries a number that says it already turned around."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "bradyrifes-playoff-odds-moved-more-than-anyones",
+   "date": "2026-11-21",
+   "source": "saturday",
+   "kind": "opinion",
+   "kicker": "2026 · week 11",
+   "headline": "bradyrife's Playoff Odds Moved More Than Anyone's in the League",
+   "dek": "Since the draft, no manager's playoff chance has climbed further than bradyrife's — 46.4% to 99.2%, a 52.7-point swing nobody else can match in either direction. His title number is up more too, trailing only jadencha's, and it started turning the week a trade for Chuba Hubbard landed in his backfield.",
+   "byline": "DFFL desk",
+   "standfirst": "6-4 · +52.7 points of playoff odds since the draft, the biggest move anyone has · title price: +1680 to +800",
+   "teaser": "🚨 DFFL | WEEK 11\n\nBRADYRIFE'S PLAYOFF ODDS MOVED MORE THAN ANYONE'S IN THE LEAGUE\n\n📈 Playoff odds: 46.4% → 99.2%, +52.7 points since the draft — the biggest move in the league\n🏆 Title price: +1680 at the draft, now +800 — the second-biggest gain behind only jadencha's\n🔁 Chuba Hubbard scored 31.7 in a 208.78-point week, bradyrife's highest score of week 10\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=bradyrifes-playoff-odds-moved-more-than-anyones",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "bradyrife is 6-4 and third in points for in the league, and the quietest good story the DFFL has going right now. Since the draft, no manager's playoff odds have climbed further: from 46.4% to 99.2%, a 52.7-point gain that is the single biggest swing on the board in either direction. Only jadencha's title number has moved more than bradyrife's has. Both numbers started climbing the week a trade sent Chuba Hubbard to his backfield."
+    },
+    {
+     "type": "stat",
+     "n": "52.7",
+     "text": "Percentage points bradyrife's playoff odds have gained since the draft — 46.4% to 99.2%. It is the biggest move of any manager in the league, in either direction; sizzlemc2's 52.4-point rise, the only one close, is next."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the title number",
+     "text": "Second Only to jadencha"
+    },
+    {
+     "type": "p",
+     "text": "bradyrife's title odds have gone from 5.3% at the draft to 10.5% now, a 5.2-point gain that trails only jadencha's 22.3-point climb among the twelve managers in the league — every other team's title number has either barely moved or fallen. The price tells the same story: bradyrife opened the season at +1680 to win the title and is +800 now."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the trade",
+     "text": "The Hubbard Trade Already Paid for Itself"
+    },
+    {
+     "type": "p",
+     "text": "The lift started in week 10. bradyrife sent Chase Brown and two 2027 draft picks to jskule23 for Chuba Hubbard, then started him that same week. Hubbard went for 31.7 points, bradyrife's third-highest scorer behind Christian McCaffrey's 48.3 and George Pickens' 43.5, in a 208.78-point week that was the highest score anyone posted in week 10."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff odds, change since the draft",
+     "sub": "percentage points, draft-day line to now, by manager",
+     "rows": [
+      {
+       "label": "bradyrife",
+       "sub": "46.4% → 99.2%",
+       "value": 52.7,
+       "group": 1
+      },
+      {
+       "label": "sizzlemc2",
+       "sub": "32.8% → 85.2%",
+       "value": 52.4,
+       "group": 2
+      },
+      {
+       "label": "wesley55",
+       "sub": "58.3% → 88.3%",
+       "value": 29.9,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "sub": "72.4% → 100.0%",
+       "value": 27.5,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "82.2% → 100.0%",
+       "value": 17.7,
+       "group": 2
+      },
+      {
+       "label": "jadencha",
+       "sub": "91.2% → 100.0%",
+       "value": 8.8,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "24.0% → 0.1%",
+       "value": -23.9,
+       "group": 2
+      },
+      {
+       "label": "jskule23",
+       "sub": "31.2% → 5.2%",
+       "value": -25.9,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "40.1% → 9.3%",
+       "value": -30.7,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "41.9% → 10.7%",
+       "value": -31.2,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "sub": "33.1% → 0.9%",
+       "value": -32.2,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "46.3% → 1.1%",
+       "value": -45.1,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "eyebrow": "everyone else",
+     "text": "The Only Other Team Close Is Also 6-4"
+    },
+    {
+     "type": "p",
+     "text": "sizzlemc2, also 6-4, is the only other manager within half a point of bradyrife's gain — a 52.4-point playoff climb of its own. Every team currently below .500 has moved the other way; saucebossandrew's 45.1-point fall is the steepest drop anyone in the league carries."
+    },
+    {
+     "type": "p",
+     "text": "None of this guarantees bradyrife a run deep into January — the board only knows what has already happened. But two months after the draft, the manager the league has spent the least time talking about this fall has the best market-moving story of anyone not named jadencha."
+    }
+   ]
   }
  ]
 }
