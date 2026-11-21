@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-21T12:31:29.123Z",
+ "generated": "2026-11-21T14:24:35.238Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -21,7 +21,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-12"
   },
   "2505": {
@@ -135,12 +135,12 @@
   "8151": {
    "n": "Kenneth Walker III",
    "s": "Out",
-   "ret": "2026-11-22",
+   "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
-   "retChecked": "2026-11-15"
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-11-21"
   },
   "8800": {
    "n": "Malik Davis",
@@ -251,7 +251,7 @@
    ],
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit [12]; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-19"
   },
   "11604": {
@@ -336,12 +336,12 @@
   "13276": {
    "n": "Omar Cooper Jr.",
    "s": "Out",
-   "ret": "2026-11-22",
+   "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; uncertain (audit tiebreak wk 11).",
-   "retChecked": "2026-10-15"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-11-21"
   },
   "13279": {
    "n": "Carnell Tate",

@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-21T12:31:55.931Z",
- "at": 1795264315931,
+ "generated": "2026-11-21T14:25:06.841Z",
+ "at": 1795271106841,
  "season": "2026",
  "week": 11,
  "liveWeek": 11,
@@ -171,8 +171,8 @@
    "b": "saucebossandrew",
    "aPts": 5.7,
    "bPts": 0,
-   "pA": 0.5594304245072618,
-   "pB": 0.44056957549273823,
+   "pA": 0.5594378024943009,
+   "pB": 0.44056219750569914,
    "settled": false,
    "aLeft": 9,
    "bLeft": 10,
@@ -184,8 +184,8 @@
    "b": "sizzlemc2",
    "aPts": 16.8,
    "bPts": 0,
-   "pA": 0.5921474876250437,
-   "pB": 0.40785251237495634,
+   "pA": 0.5921537785589527,
+   "pB": 0.4078462214410473,
    "settled": false,
    "aLeft": 9,
    "bLeft": 9,
@@ -307,7 +307,7 @@
   "pre": 12,
   "live": 0,
   "post": 1,
-  "at": 1795264314601
+  "at": 1795271105242
  },
  "articles": [
   {
