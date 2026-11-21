@@ -233,10 +233,18 @@
    "opened": "2026-11-17",
    "closes": "2026-11-21",
    "subject": "DFFL Week 11: jadencha Lost, and the Board Still Says 100%",
-   "status": "open",
-   "results": null,
+   "status": "closed",
+   "results": {
+    "JADEN": 0,
+    "DOMO": 0,
+    "TOOCLOSE": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
    "announced": false,
-   "thread_id": "1a1e97538ff2084c"
+   "thread_id": "1a1e97538ff2084c",
+   "closed_at": "2026-11-21T23:20:34.317Z"
   }
  ]
 }
