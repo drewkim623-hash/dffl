@@ -5,15 +5,12 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        7,
-        8,
-        9,
-        10
+        12
       ],
-      "weeks": 4,
-      "checked": "2026-10-21",
+      "weeks": 1,
+      "checked": "2026-11-22",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit []; consensus."
     },
     "2216": {
       "kind": "report",
@@ -295,7 +292,7 @@
       "weeks": 1,
       "checked": "2026-11-21",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "8155": {
       "kind": "report",
@@ -448,6 +445,17 @@
       "checked": "2026-10-24",
       "note": "Hamstring. Conflict: Rapoport (Oct 5) 'relatively minor', may play after bye; NBC (Oct 13) 'several-week absence'. Counted Week 6 only. Consensus: matches audit; consensus.",
       "flag": "consensus"
+    },
+    "10236": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        11
+      ],
+      "weeks": 1,
+      "checked": "2026-11-22",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "11560": {
       "kind": "report",
@@ -640,8 +648,8 @@
       ],
       "weeks": 3,
       "checked": "2026-10-20",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "12534": {
       "kind": "report",
@@ -662,7 +670,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-21",
-      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "13279": {
