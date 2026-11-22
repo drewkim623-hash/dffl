@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-22T15:50:15.625Z",
- "at": 1795362615625,
+ "generated": "2026-11-22T16:50:04.794Z",
+ "at": 1795366204794,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -81,9 +81,7 @@
    "points_for": 1183.48,
    "points_against": 1374.62,
    "faab_spent": 28,
-   "starters_hurt": [
-    "Darren Waller (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "jskule23",
@@ -93,8 +91,7 @@
    "points_against": 1354.02,
    "faab_spent": 100,
    "starters_hurt": [
-    "Mike Evans (Questionable)",
-    "Carnell Tate (Questionable)"
+    "Mike Evans (Questionable)"
    ]
   },
   {
@@ -116,7 +113,7 @@
    "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Doubtful)",
+    "Dalton Kincaid (Out)",
     "Ladd McConkey (Questionable)"
    ]
   },
@@ -420,7 +417,7 @@
      "name": "Darren Waller",
      "pos": "TE",
      "team": "CAR",
-     "status": "Questionable",
+     "status": null,
      "to": "moseslin"
     }
    ],
@@ -502,5 +499,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 45
+ "free_agent_moves": 46
 }
