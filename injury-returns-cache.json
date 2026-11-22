@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-22T11:01:52.973Z",
+ "generated": "2026-11-22T14:24:38.765Z",
  "week": 11,
  "entries": {
   "2133": {
