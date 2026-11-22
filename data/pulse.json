@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-22T16:50:04.794Z",
- "at": 1795366204794,
+ "generated": "2026-11-22T21:12:53.640Z",
+ "at": 1795381973640,
  "season": "2026",
  "nfl_week": 11,
  "season_type": "regular",
@@ -23,9 +23,7 @@
    "points_for": 1358.4,
    "points_against": 1214.6,
    "faab_spent": 98,
-   "starters_hurt": [
-    "Brock Bowers (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "willie12w",
@@ -61,7 +59,9 @@
    "points_for": 1327.56,
    "points_against": 1289.84,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Derrick Henry (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -71,7 +71,7 @@
    "points_against": 1304.28,
    "faab_spent": 72,
    "starters_hurt": [
-    "Matt Gay (Questionable)"
+    "DJ Moore (Questionable)"
    ]
   },
   {
@@ -113,8 +113,7 @@
    "points_against": 1179.42,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Out)",
-    "Ladd McConkey (Questionable)"
+    "Dalton Kincaid (Out)"
    ]
   },
   {
@@ -131,73 +130,73 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
+    "points": 58.74,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "chassinator",
-    "points": 0,
+    "points": 98.56,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 20.7,
+    "points": 53.46,
     "startersLeftToPlay": 8
    },
    "b": {
     "manager": "willie12w",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 102.46,
+    "startersLeftToPlay": 9
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 72.36,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "victorthompson",
-    "points": 4.3,
+    "points": 88.6,
     "startersLeftToPlay": 7
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 5.7,
+    "points": 45.2,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 83.08,
+    "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "drewkim",
-    "points": 6,
-    "startersLeftToPlay": 9
+    "points": 50.1,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "bradyrife",
-    "points": 0,
+    "points": 64.8,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "moseslin",
-    "points": 16.8,
+    "points": 70.92,
     "startersLeftToPlay": 9
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 127.18,
+    "startersLeftToPlay": 8
    }
   }
  ],
@@ -499,5 +498,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 46
+ "free_agent_moves": 47
 }

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-22T20:54:20.725Z",
+ "generated": "2026-11-22T21:12:53.097Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -27,6 +27,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-12"
+  },
+  "3198": {
+   "n": "Derrick Henry",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-22"
   },
   "4881": {
    "n": "Lamar Jackson",
