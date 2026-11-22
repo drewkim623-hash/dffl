@@ -5,12 +5,13 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        12
+        12,
+        13
       ],
-      "weeks": 1,
+      "weeks": 2,
       "checked": "2026-11-22",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: changed from audit [12]; consensus."
     },
     "2216": {
       "kind": "report",
@@ -130,11 +131,11 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        10
+        12
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-12",
-      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: matches audit; consensus.",
+      "checked": "2026-11-22",
+      "note": "Commissioner exempt list (not an injury). No return date; possible 4-6 game suspension after activation. Default 1 week used but true absence could be much longer. Consensus: changed from audit []; consensus.",
       "flag": "consensus"
     },
     "5859": {
@@ -454,8 +455,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-22",
-      "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
     },
     "11560": {
       "kind": "report",
@@ -471,12 +472,25 @@
       "source": "consensus.mjs",
       "weeks_list": [
         12,
-        13
+        13,
+        14,
+        15
       ],
-      "weeks": 2,
-      "checked": "2026-11-19",
+      "weeks": 4,
+      "checked": "2026-11-22",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit [12,13]; consensus."
+    },
+    "11604": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        11
+      ],
+      "weeks": 1,
+      "checked": "2026-11-22",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     },
     "11625": {
       "kind": "report",
