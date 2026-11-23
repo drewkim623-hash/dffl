@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-22T21:12:53.097Z",
+ "generated": "2026-11-23T11:02:04.389Z",
  "week": 11,
  "entries": {
   "2133": {
@@ -18,16 +18,6 @@
    "retChecked": "2026-11-22",
    "irSince": 7
   },
-  "2216": {
-   "n": "Mike Evans",
-   "s": "Questionable",
-   "ret": "2026-11-22",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-12"
-  },
   "3198": {
    "n": "Derrick Henry",
    "s": "Questionable",
@@ -36,7 +26,17 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
+  },
+  "4866": {
+   "n": "Saquon Barkley",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -92,6 +92,16 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-06"
   },
+  "6797": {
+   "n": "Justin Herbert",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-23"
+  },
   "6904": {
    "n": "Jalen Hurts",
    "s": "IR",
@@ -111,7 +121,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
   },
   "8112": {
    "n": "Drake London",
@@ -121,7 +131,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
   },
   "8136": {
    "n": "Rachaad White",
@@ -131,7 +141,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -157,7 +167,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
   },
   "8151": {
    "n": "Kenneth Walker III",
@@ -254,7 +264,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 10 (3 left)",
-   "retChecked": "2026-11-22",
+   "retChecked": "2026-11-23",
    "irSince": 10
   },
   "10236": {
@@ -292,6 +302,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
    "retChecked": "2026-11-22"
+  },
+  "11646": {
+   "n": "Jalen Coker",
+   "s": "Questionable",
+   "ret": "2026-11-22",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4695883/jalen-coker — Quad strain. Canales: 'on track' to play Week 6; practiced Tuesday. Sleeper still says Out -> count 0 weeks. Consensus: matches audit; uncertain (audit tiebreak wk 6).",
+   "retChecked": "2026-10-14"
   },
   "12474": {
    "n": "Woody Marks",
@@ -392,7 +412,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Out = coming week only",
-   "retChecked": "2026-11-22"
+   "retChecked": "2026-11-23"
   }
  }
 }
