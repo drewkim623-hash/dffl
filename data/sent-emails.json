@@ -419,6 +419,20 @@
    "sha256": "7d1b33e16fcefa449151ff698c1124d0b2eff7bf868c9f63d2b56b6b24e540d4",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-24T12:19:52.898Z",
+   "subject": "DFFL Week 12: sizzlemc2 Just Had the Best Week on the Board",
+   "lead": "the-weeks-biggest-swing",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 11
+   },
+   "to": 12,
+   "sha256": "f204fc9ba0e7d2cde829a888d856436a1ab551dcf4cccabf885d25d8d0b8ecec",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
