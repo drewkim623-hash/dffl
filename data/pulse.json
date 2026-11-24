@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-24T11:02:25.206Z",
- "at": 1795518145206,
+ "generated": "2026-11-24T16:30:05.942Z",
+ "at": 1795537805942,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -26,7 +26,9 @@
    "points_for": 1733.22,
    "points_against": 1394.18,
    "faab_spent": 25,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Bhayshul Tuten (Questionable)"
+   ]
   },
   {
    "manager": "willie12w",
@@ -76,7 +78,7 @@
    "points_against": 1440.32,
    "faab_spent": 72,
    "starters_hurt": [
-    "DJ Moore (Questionable)"
+    "Kyren Williams (Questionable)"
    ]
   },
   {
@@ -237,5 +239,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 21
+ "free_agent_moves": 23
 }
