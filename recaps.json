@@ -836,6 +836,84 @@
      "body": "Three of the four teams from the league's cellar-four poll two weeks ago — jskule23, victorthompson and drewkim — are joined at 3-7 by saucebossandrew after week 10. moseslin, the fourth name on that poll, is 4-6 after beating chassinator."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "week": 11,
+   "note": "",
+   "lede": "Six games settled the week, and the playoff board split as cleanly as the standings already had: six teams above 90% to make the playoffs, six below 10%, with nobody close to that line in either direction. sizzlemc2 supplied the week's sharpest move, turning a win over moseslin into the largest single-week swing anyone in the league posted. Domo112's closest game of the day, a 9.68-point squeaker over chassinator, was also its manager's seventh straight win. The week's worst result belonged to drewkim, who fell to bradyrife by 83.68 — the third time this season one of his losses has ranked among the five widest margins of the year.",
+   "games": [
+    {
+     "headline": "Domo112 Survives Chassinator by 9.68",
+     "winner": "Domo112",
+     "winner_points": 136.04,
+     "loser": "chassinator",
+     "loser_points": 126.36,
+     "body": "Jahmyr Gibbs's 25.8 and Antonio Williams's 22.2 did the early work, and the San Francisco defense added 18. DJ Moore answered with 23.1 for chassinator and Chris Olave added 19.2, but Kyle Monangai's 1.8 at running back left too much of the roster quiet. It was Domo112's seventh straight win and the tightest result of the week."
+    },
+    {
+     "headline": "willie12w Hands jadencha a Second Straight Loss",
+     "winner": "willie12w",
+     "winner_points": 129.86,
+     "loser": "jadencha",
+     "loser_points": 115.86,
+     "body": "Jameson Williams's 21.3, Jared Goff's 20.36 and Bucky Irving's 17.5 were enough. Ashton Jeanty's 27.4 was the best number in the game, but Jonathan Taylor managed 4.7 and Jaylen Warren 3.9 behind him, and jadencha lost for the second week running."
+    },
+    {
+     "headline": "jskule23 Outlasts Prescott's 35.9",
+     "winner": "jskule23",
+     "winner_points": 130.96,
+     "loser": "victorthompson",
+     "loser_points": 115.4,
+     "body": "Patrick Mahomes threw for 24.96 and Emmett Johnson added 23.3, jskule23's second win in a row. Dak Prescott's 35.9 for victorthompson was the best individual score anywhere in the league this week; with Ladd McConkey's 20.7 and Tetairoa McMillan's 19.1 behind him, that is 75.7 points from three players, and it was still 15.56 short."
+    },
+    {
+     "headline": "wesley55 Beats saucebossandrew by 30.92",
+     "winner": "wesley55",
+     "winner_points": 119,
+     "loser": "saucebossandrew",
+     "loser_points": 88.08,
+     "body": "Joe Burrow's 19.9 led the way, and Drew Stevens, picked up off the wire this week, kicked for 18 in his first game on the roster. saucebossandrew's own defense, the Chicago Bears, was his best starter at 18, with Tony Pollard's 12 next — a quiet night across the rest of the lineup."
+    },
+    {
+     "headline": "sizzlemc2 Routs moseslin by 38.46",
+     "winner": "sizzlemc2",
+     "winner_points": 139.88,
+     "loser": "moseslin",
+     "loser_points": 101.42,
+     "body": "CeeDee Lamb's 30.2, Travis Kelce's 25.4 and Javonte Williams's 22.6 carried the win that moved sizzlemc2's playoff number more than anyone else's this week. Cam Ward's 22.22 led moseslin and Breece Hall added 17.5, but nobody else in the lineup reached double figures."
+    },
+    {
+     "headline": "bradyrife Blows Out drewkim by 83.68",
+     "winner": "bradyrife",
+     "winner_points": 164.44,
+     "loser": "drewkim",
+     "loser_points": 80.76,
+     "body": "Jonah Coleman's 33.9 and Chuba Hubbard's 27 pushed bradyrife to the second-best score of his season. Jayden Daniels's 17.06 led a drewkim lineup that fell to a season-low 80.76 — the third time this year a drewkim loss has ranked among the five widest margins of the season."
+    }
+   ],
+   "around": [
+    {
+     "kind": "waivers",
+     "headline": "One Bid, and Four Books With Nothing Left",
+     "body": "jadencha paid $3 for Rico Dowdle off waivers, dropping Fernando Mendoza — the only FAAB spent anywhere in the league this week. drewkim, victorthompson, saucebossandrew and jskule23 have each already committed their full $100 and could only scavenge free agents: drewkim alone made five such moves, including dropping Tyjae Spears for Kenny Gainwell and then adding Spears back hours later for Emari Demercado."
+    },
+    {
+     "kind": "streak",
+     "headline": "Domo112's Winning Streak Reaches Seven",
+     "body": "The win over chassinator was Domo112's seventh in a row, a run that started in week 5. Nobody else in the league has a longer active streak; willie12w's is next-best at five."
+    },
+    {
+     "kind": "race",
+     "headline": "Same Expected Wins, a Very Different Title Number",
+     "body": "The site's model has Domo112 and jadencha within 0.02 of the same schedule-adjusted win total this week — 10.53 against 10.51. jadencha's title odds, 49.17%, are still close to four times Domo112's 12.75%."
+    },
+    {
+     "kind": "note",
+     "headline": "drewkim's Roster Keeps Turning Over",
+     "body": "Five free-agent or waiver moves passed through drewkim's roster this week, including dropping Tyjae Spears for Kenny Gainwell and then adding Spears back hours later for Emari Demercado. None of it carried a FAAB bid — his $100 is already spent for the season."
+    }
+   ]
   }
  ],
  "articles": [
@@ -7975,6 +8053,208 @@
     {
      "type": "p",
      "text": "None of this guarantees bradyrife a run deep into January — the board only knows what has already happened. But two months after the draft, the manager the league has spent the least time talking about this fall has the best market-moving story of anyone not named jadencha."
+    }
+   ]
+  },
+  {
+   "season": "2026",
+   "slug": "the-weeks-biggest-swing",
+   "date": "2026-11-24",
+   "kind": "opinion",
+   "source": "tuesday",
+   "kicker": "2026 · week 11",
+   "headline": "sizzlemc2 Just Had the Best Week on the Board",
+   "dek": "sizzlemc2's playoff chance rose from 33.17% to 96.91% after beating moseslin — a 63.73-point jump, the biggest one-week swing anyone in the league posted. Six teams now sit above 90% to make the playoffs; the other six are under 10%, and the line between them lands exactly where the standings already do. Every game in full, below.",
+   "byline": "DFFL desk",
+   "standfirst": "6 games · 1,448.06 points · every playoff number checked",
+   "teaser": "🚨 DFFL | WEEK 11\n\nSIZZLEMC2 JUST HAD THE BEST WEEK ON THE BOARD\n\n📈 sizzlemc2's playoff chance jumped from 33.17% to 96.91% this week\n🧮 Six teams now sit above 90% to make the playoffs, six are under 10%\n💥 bradyrife 164.44, drewkim 80.76 — the week's widest margin, 83.68\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=the-weeks-biggest-swing",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Six games settled the ledger this week, and when they were done, the league's playoff board carried a cleaner split than it has all season: six teams above 90% to make the playoffs, six below 10%, and the line between them sits exactly where the standings already draw it. The biggest mover belonged to sizzlemc2, who turned a 139.88-101.42 win over moseslin into the largest single-week swing anyone in the league posted."
+    },
+    {
+     "type": "stat",
+     "n": "63.73",
+     "text": "The percentage points sizzlemc2 gained in playoff probability this week, from 33.17% to 96.91% — the largest one-week move anyone in the league made."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the swing",
+     "text": "A Week Worth Sixty-Four Points"
+    },
+    {
+     "type": "p",
+     "text": "CeeDee Lamb's 30.2, Travis Kelce's 25.4 and Javonte Williams's 22.6 carried sizzlemc2 past moseslin, 139.88-101.42, and the board moved with it: 33.17% to make the playoffs before the game, 96.91% after. Nobody else in the league moved that much in either direction. bradyrife was next closest, up 52.65 points (47.08% to 99.72%) after a blowout of his own, and wesley55 gained 33.28 (58.01% to 91.29%) beating saucebossandrew."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the line",
+     "text": "Six In, Six Out, and the Standings Agree"
+    },
+    {
+     "type": "p",
+     "text": "Domo112, jadencha, willie12w, bradyrife, sizzlemc2 and wesley55 are also the six teams leading the standings — 9-2, 8-3, 8-3, 7-4, 7-4 and 6-5. Every one of them now sits above 90% to make the playoffs. chassinator, jskule23, moseslin, drewkim, saucebossandrew and victorthompson are the other six, every one of them below 10%. The gap between wesley55's 91.29% at the bottom of the top group and chassinator's 9.18% at the top of the bottom group is 82.11 percentage points — the two groups are no longer close to each other."
+    },
+    {
+     "type": "p",
+     "text": "jadencha lost for the second week running, to willie12w, and still gained 9.08 points of playoff probability — the smallest move of anyone already above 90%, but a gain all the same. Domo112's win over chassinator, 136.04-126.36, was the closest game of the week and its manager's seventh straight."
+    },
+    {
+     "type": "h",
+     "eyebrow": "everyone else",
+     "text": "The Rest of the Board Moved Too"
+    },
+    {
+     "type": "p",
+     "text": "Every team in the league saw its playoff number move this week, and the direction split cleanly along the same six-six line."
+    },
+    {
+     "type": "bars",
+     "title": "Playoff odds, before this week to now",
+     "sub": "percentage points gained or lost in playoff probability this week",
+     "rows": [
+      {
+       "label": "sizzlemc2",
+       "sub": "33.17% → 96.91%",
+       "value": 63.73,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "sub": "47.08% → 99.72%",
+       "value": 52.65,
+       "group": 1
+      },
+      {
+       "label": "wesley55",
+       "sub": "58.01% → 91.29%",
+       "value": 33.28,
+       "group": 1
+      },
+      {
+       "label": "willie12w",
+       "sub": "72.35% → 100%",
+       "value": 27.65,
+       "group": 1
+      },
+      {
+       "label": "Domo112",
+       "sub": "82.53% → 100%",
+       "value": 17.47,
+       "group": 1
+      },
+      {
+       "label": "jadencha",
+       "sub": "90.92% → 100%",
+       "value": 9.08,
+       "group": 1
+      },
+      {
+       "label": "jskule23",
+       "sub": "31.38% → 2.73%",
+       "value": -28.66,
+       "group": 2
+      },
+      {
+       "label": "chassinator",
+       "sub": "40.11% → 9.18%",
+       "value": -30.93,
+       "group": 2
+      },
+      {
+       "label": "victorthompson",
+       "sub": "33.23% → 0%",
+       "value": -33.23,
+       "group": 2
+      },
+      {
+       "label": "moseslin",
+       "sub": "41.63% → 0.18%",
+       "value": -41.45,
+       "group": 2
+      },
+      {
+       "label": "saucebossandrew",
+       "sub": "46.03% → 0%",
+       "value": -46.03,
+       "group": 2
+      },
+      {
+       "label": "drewkim",
+       "sub": "23.56% → 0%",
+       "value": -23.56,
+       "group": 2
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Four of the six fallers are near zero now: moseslin, saucebossandrew, drewkim and victorthompson all sit below 1%. jskule23 still has 2.73% and chassinator 9.18%, which is a real number with six weeks left but a long way back from where either started the week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "every game",
+     "text": "The Week in Full"
+    },
+    {
+     "type": "p",
+     "text": "Six games and 1,448.06 points, from a 9.68-point squeaker to an 83.68-point rout. In order of how close they finished."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the closest",
+     "text": "Seven Straight, by the Tightest Margin"
+    },
+    {
+     "type": "p",
+     "text": "<b>Domo112 136.04, chassinator 126.36.</b> Jahmyr Gibbs's 25.8 and Antonio Williams's 22.2 did the early work, and the San Francisco defense added 18. DJ Moore answered with 23.1 for chassinator and Chris Olave added 19.2, but Kyle Monangai's 1.8 at running back left too much of the roster quiet. It was Domo112's seventh straight win and the tightest result of the week."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the second-closest",
+     "text": "The Best Score in the Game Still Lost"
+    },
+    {
+     "type": "p",
+     "text": "<b>willie12w 129.86, jadencha 115.86.</b> Jameson Williams's 21.3, Jared Goff's 20.36 and Bucky Irving's 17.5 were enough. Ashton Jeanty's 27.4 was the best number in the game, but Jonathan Taylor managed 4.7 and Jaylen Warren 3.9 behind him, and jadencha lost for the second week running."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the third-closest",
+     "text": "The Week's Best Score Lost Too"
+    },
+    {
+     "type": "p",
+     "text": "<b>jskule23 130.96, victorthompson 115.4.</b> Patrick Mahomes threw for 24.96 and Emmett Johnson added 23.3, jskule23's second win in a row. Dak Prescott's 35.9 for victorthompson was the best individual score anywhere in the league this week; with Ladd McConkey's 20.7 and Tetairoa McMillan's 19.1 behind him, that is 75.7 points from three players, and it was still 15.56 short."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fourth-closest",
+     "text": "wesley55 Wins Going Away"
+    },
+    {
+     "type": "p",
+     "text": "<b>wesley55 119, saucebossandrew 88.08.</b> Joe Burrow's 19.9 led the way, and Drew Stevens, picked up off the wire this week, kicked for 18 in his first game on the roster. saucebossandrew's own defense, the Chicago Bears, was his best starter at 18, with Tony Pollard's 12 next — a quiet night across the rest of the lineup."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the fifth-closest",
+     "text": "sizzlemc2 Rolls On"
+    },
+    {
+     "type": "p",
+     "text": "<b>sizzlemc2 139.88, moseslin 101.42.</b> CeeDee Lamb's 30.2, Travis Kelce's 25.4 and Javonte Williams's 22.6 carried the win that moved sizzlemc2's playoff number more than anyone else's this week. Cam Ward's 22.22 led moseslin and Breece Hall added 17.5, but nobody else in the lineup reached double figures."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the widest",
+     "text": "The Week's Widest Margin"
+    },
+    {
+     "type": "p",
+     "text": "<b>bradyrife 164.44, drewkim 80.76.</b> Jonah Coleman's 33.9 and Chuba Hubbard's 27 pushed bradyrife to the second-best score of his season. Jayden Daniels's 17.06 led a drewkim lineup that fell to a season-low 80.76 — the third time this year a drewkim loss has ranked among the five widest margins of the season."
     }
    ]
   }
