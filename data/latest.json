@@ -1,10 +1,10 @@
 {
  "_comment": "Points at the most recently finished week written by build-week.mjs. sleeper_state is Sleeper's /state/nfl as read at generated_at; final is true only when every NFL game that week is complete and every league matchup has points.",
  "season": "2026",
- "week": 10,
- "file": "data/week-2026-10.json",
- "generated": "2026-11-23T11:02:01.592Z",
- "generated_at": "2026-11-23T11:02:01.592Z",
+ "week": 11,
+ "file": "data/week-2026-11.json",
+ "generated": "2026-11-24T04:35:48.478Z",
+ "generated_at": "2026-11-24T04:35:48.478Z",
  "final": true,
  "sleeper_state": {
   "week": 11,
@@ -14,8 +14,8 @@
   "season": "2026"
  },
  "finality": {
-  "nfl_games": 14,
-  "nfl_complete": 14,
+  "nfl_games": 13,
+  "nfl_complete": 13,
   "nfl_canceled": 0,
   "league_entries": 12,
   "league_scored": 12
