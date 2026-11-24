@@ -1,11 +1,11 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-24T04:35:52.171Z",
- "at": 1795494952171,
+ "generated": "2026-11-24T05:15:51.745Z",
+ "at": 1795497351745,
  "season": "2026",
- "nfl_week": 11,
+ "nfl_week": 12,
  "season_type": "regular",
- "week_in_progress": false,
+ "week_in_progress": true,
  "standings": [
   {
    "manager": "jadencha",
@@ -136,346 +136,78 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 136.04,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "chassinator",
-    "points": 126.36,
-    "startersLeftToPlay": 0
+    "manager": "moseslin",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 115.86,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
+    "manager": "drewkim",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
+    "manager": "chassinator",
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "sizzlemc2",
+    "points": 0,
+    "startersLeftToPlay": 10
+   }
+  },
+  {
+   "a": {
     "manager": "willie12w",
-    "points": 129.86,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
+   },
+   "b": {
+    "manager": "bradyrife",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 130.96,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "victorthompson",
-    "points": 110.3,
-    "startersLeftToPlay": 0
+    "manager": "saucebossandrew",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "wesley55",
-    "points": 119,
-    "startersLeftToPlay": 0
+    "points": 0,
+    "startersLeftToPlay": 10
    },
    "b": {
-    "manager": "saucebossandrew",
-    "points": 88.08,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "drewkim",
-    "points": 80.76,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "bradyrife",
-    "points": 164.44,
-    "startersLeftToPlay": 0
-   }
-  },
-  {
-   "a": {
-    "manager": "moseslin",
-    "points": 101.42,
-    "startersLeftToPlay": 0
-   },
-   "b": {
-    "manager": "sizzlemc2",
-    "points": 139.88,
-    "startersLeftToPlay": 0
+    "manager": "victorthompson",
+    "points": 0,
+    "startersLeftToPlay": 10
    }
   }
  ],
- "trades": [
-  {
-   "week": 10,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "jskule23"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 8,
-     "from": "Domo112",
-     "to": "jskule23"
-    }
-   ]
-  },
-  {
-   "week": 10,
-   "type": "trade",
-   "managers": [
-    "Domo112",
-    "jskule23"
-   ],
-   "adds": [],
-   "drops": [],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 2,
-     "from": "Domo112",
-     "to": "Domo112"
-    },
-    {
-     "season": "2027",
-     "round": 3,
-     "from": "Domo112",
-     "to": "jskule23"
-    }
-   ]
-  },
-  {
-   "week": 10,
-   "type": "trade",
-   "managers": [
-    "jskule23",
-    "bradyrife"
-   ],
-   "adds": [
-    {
-     "name": "Chuba Hubbard",
-     "pos": "RB",
-     "team": "CAR",
-     "status": null,
-     "to": "bradyrife"
-    },
-    {
-     "name": "Chase Brown",
-     "pos": "RB",
-     "team": "CIN",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Chuba Hubbard",
-     "pos": "RB",
-     "team": "CAR",
-     "status": null,
-     "from": "jskule23"
-    },
-    {
-     "name": "Chase Brown",
-     "pos": "RB",
-     "team": "CIN",
-     "status": null,
-     "from": "bradyrife"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 8,
-     "from": "jskule23",
-     "to": "bradyrife"
-    },
-    {
-     "season": "2027",
-     "round": 9,
-     "from": "drewkim",
-     "to": "bradyrife"
-    }
-   ]
-  },
-  {
-   "week": 10,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "Justin Jefferson",
-     "pos": "WR",
-     "team": "MIN",
-     "status": null,
-     "to": "jadencha"
-    },
-    {
-     "name": "Breece Hall",
-     "pos": "RB",
-     "team": "NYJ",
-     "status": null,
-     "to": "moseslin"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Justin Jefferson",
-     "pos": "WR",
-     "team": "MIN",
-     "status": null,
-     "from": "moseslin"
-    },
-    {
-     "name": "Breece Hall",
-     "pos": "RB",
-     "team": "NYJ",
-     "status": null,
-     "from": "jadencha"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 3,
-     "from": "saucebossandrew",
-     "to": "moseslin"
-    }
-   ]
-  },
-  {
-   "week": 10,
-   "type": "trade",
-   "managers": [
-    "jadencha",
-    "saucebossandrew"
-   ],
-   "adds": [
-    {
-     "name": "Breece Hall",
-     "pos": "RB",
-     "team": "NYJ",
-     "status": null,
-     "to": "jadencha"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Breece Hall",
-     "pos": "RB",
-     "team": "NYJ",
-     "status": null,
-     "from": "saucebossandrew"
-    }
-   ],
-   "faab": null,
-   "picks": [
-    {
-     "season": "2027",
-     "round": 3,
-     "from": "saucebossandrew",
-     "to": "jadencha"
-    }
-   ]
-  }
- ],
+ "trades": [],
  "waivers": [
-  {
-   "week": 10,
-   "type": "waiver",
-   "managers": [
-    "Domo112"
-   ],
-   "adds": [
-    {
-     "name": "Elic Ayomanor",
-     "pos": "WR",
-     "team": "TEN",
-     "status": null,
-     "to": "Domo112"
-    }
-   ],
-   "drops": [],
-   "faab": 10,
-   "picks": []
-  },
-  {
-   "week": 10,
-   "type": "waiver",
-   "managers": [
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "Darren Waller",
-     "pos": "TE",
-     "team": "CAR",
-     "status": null,
-     "to": "moseslin"
-    }
-   ],
-   "drops": [],
-   "faab": 7,
-   "picks": []
-  },
-  {
-   "week": 10,
-   "type": "waiver",
-   "managers": [
-    "jskule23"
-   ],
-   "adds": [
-    {
-     "name": "Denver Broncos",
-     "pos": "DEF",
-     "team": "DEN",
-     "status": null,
-     "to": "jskule23"
-    }
-   ],
-   "drops": [
-    {
-     "name": "Miami Dolphins",
-     "pos": "DEF",
-     "team": "MIA",
-     "status": null,
-     "from": "jskule23"
-    }
-   ],
-   "faab": 5,
-   "picks": []
-  },
-  {
-   "week": 10,
-   "type": "waiver",
-   "managers": [
-    "moseslin"
-   ],
-   "adds": [
-    {
-     "name": "Cam Ward",
-     "pos": "QB",
-     "team": "TEN",
-     "status": null,
-     "to": "moseslin"
-    }
-   ],
-   "drops": [],
-   "faab": 5,
-   "picks": []
-  },
   {
    "week": 11,
    "type": "waiver",
@@ -504,5 +236,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 47
+ "free_agent_moves": 20
 }
