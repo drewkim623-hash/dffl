@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-24T11:02:24.617Z",
+ "generated": "2026-11-24T14:25:54.163Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -92,7 +92,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit []; consensus.",
+   "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-23"
   },
   "6797": {
@@ -214,12 +214,12 @@
   "9756": {
    "n": "Jordan Addison",
    "s": "Out",
-   "ret": "2026-11-29",
+   "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; uncertain (audit tiebreak wk 11).",
-   "retChecked": "2026-11-17"
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-11-24"
   },
   "10222": {
    "n": "Jayden Reed",
@@ -250,7 +250,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
   },
   "10859": {
@@ -280,7 +280,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 11).",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
   },
   "11646": {
@@ -310,7 +310,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 12).",
    "retChecked": "2026-11-16"
   },
   "12489": {
@@ -373,7 +373,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit [11,12]; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-23",
    "irSince": 9
   },

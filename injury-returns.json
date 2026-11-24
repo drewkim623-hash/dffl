@@ -146,7 +146,7 @@
       ],
       "source": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown",
       "checked": "2026-11-23",
-      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: changed from audit []; consensus.",
+      "note": "High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "5872": {
@@ -408,12 +408,12 @@
       "kind": "report",
       "weeks": 1,
       "weeks_list": [
-        11
+        12
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
-      "checked": "2026-11-17",
-      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; uncertain (audit tiebreak wk 11).",
-      "flag": "uncertain"
+      "checked": "2026-11-24",
+      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
+      "flag": "consensus"
     },
     "10222": {
       "kind": "report",
@@ -455,8 +455,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-22",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "11560": {
       "kind": "report",
@@ -489,8 +489,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-22",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 11)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "11625": {
       "kind": "report",
@@ -539,8 +539,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-16",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 12)."
     },
     "12481": {
       "kind": "report",
@@ -727,7 +727,7 @@
       "weeks": 3,
       "checked": "2026-11-23",
       "flag": "consensus",
-      "note": "Consensus: changed from audit [11,12]; consensus."
+      "note": "Consensus: matches audit; consensus."
     },
     "13296": {
       "kind": "report",
