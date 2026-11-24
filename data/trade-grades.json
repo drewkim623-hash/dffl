@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-24T05:33:06.265Z",
+ "generated": "2026-11-24T11:02:57.546Z",
  "scale": "v2",
  "cutoffs": {
   "c": 0.216,
@@ -471,7 +471,7 @@
       {
        "asset": "Ashton Jeanty",
        "pid": "12527",
-       "value": 63,
+       "value": 63.1,
        "basis": "actual to wk 11 + Sleeper projection"
       },
       {
@@ -484,7 +484,7 @@
      "tradeDay": {
       "letter": "D",
       "marginPct": -31,
-      "marginPts": -71.5
+      "marginPts": -71.4
      },
      "hindsight": "Pending"
     },
@@ -496,7 +496,7 @@
       {
        "asset": "DJ Moore",
        "pid": "4983",
-       "value": 53.4,
+       "value": 53.3,
        "basis": "actual to wk 11 + Sleeper projection"
       },
       {
@@ -511,11 +511,11 @@
        "basis": "next cost R1 (regressed from R2), kept 4 yr, shrunk"
       }
      ],
-     "total": 151.1,
+     "total": 151,
      "tradeDay": {
       "letter": "B",
       "marginPct": 31,
-      "marginPts": 71.5
+      "marginPts": 71.4
      },
      "hindsight": "Pending"
     }
@@ -926,7 +926,7 @@
       {
        "asset": "Brock Bowers",
        "pid": "11604",
-       "value": 72.3,
+       "value": 71.9,
        "basis": "actual to wk 11 + Sleeper projection"
       },
       {
@@ -936,11 +936,11 @@
        "basis": "actual to wk 11 + Sleeper projection"
       }
      ],
-     "total": 85.7,
+     "total": 85.2,
      "tradeDay": {
       "letter": "B",
-      "marginPct": 46,
-      "marginPts": 53.6
+      "marginPct": 45,
+      "marginPts": 53.2
      },
      "hindsight": "Pending"
     },
@@ -965,8 +965,8 @@
      "total": 32.1,
      "tradeDay": {
       "letter": "D",
-      "marginPct": -46,
-      "marginPts": -53.6
+      "marginPct": -45,
+      "marginPts": -53.2
      },
      "hindsight": "Pending"
     }

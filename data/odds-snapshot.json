@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-email.mjs, which drives the published site in a headless browser and reads the numbers the page itself computed. compose-email.mjs turns this into the weekly email. Nothing downstream recomputes a probability, so the email and the site cannot disagree.",
- "generated": "2026-11-24T05:50:37.627Z",
- "at": 1795499437627,
+ "generated": "2026-11-24T11:02:51.210Z",
+ "at": 1795518171210,
  "season": "2026",
  "week": 12,
  "liveWeek": null,
@@ -13,7 +13,7 @@
    "rid": 2,
    "manager": "jadencha",
    "titleWas": 0.3085,
-   "titleNow": 0.49195,
+   "titleNow": 0.4917,
    "playoffWas": 0.9092,
    "playoffNow": 1,
    "wins": 10.51355,
@@ -26,10 +26,10 @@
    "rid": 1,
    "manager": "Domo112",
    "titleWas": 0.19965,
-   "titleNow": 0.12745,
+   "titleNow": 0.1275,
    "playoffWas": 0.82525,
    "playoffNow": 1,
-   "wins": 10.5225,
+   "wins": 10.53255,
    "titleOdds": 640,
    "titleOddsOpen": 370,
    "playoffOdds": -19900
@@ -42,7 +42,7 @@
    "titleNow": 0,
    "playoffWas": 0.41635,
    "playoffNow": 0.00185,
-   "wins": 5.1687,
+   "wins": 5.16215,
    "titleOdds": null,
    "titleOddsOpen": 2100,
    "playoffOdds": 50890
@@ -55,7 +55,7 @@
    "titleNow": 0,
    "playoffWas": 0.2356,
    "playoffNow": 0,
-   "wins": 3.79525,
+   "wins": 3.79175,
    "titleOdds": null,
    "titleOddsOpen": 6590,
    "playoffOdds": null
@@ -65,7 +65,7 @@
    "rid": 4,
    "manager": "willie12w",
    "titleWas": 0.1341,
-   "titleNow": 0.15125,
+   "titleNow": 0.1513,
    "playoffWas": 0.7235,
    "playoffNow": 1,
    "wins": 9.99815,
@@ -117,7 +117,7 @@
    "rid": 6,
    "manager": "wesley55",
    "titleWas": 0.075,
-   "titleNow": 0.066,
+   "titleNow": 0.0661,
    "playoffWas": 0.5801,
    "playoffNow": 0.91285,
    "wins": 7.88575,
@@ -143,11 +143,11 @@
    "rid": 11,
    "manager": "sizzlemc2",
    "titleWas": 0.0268,
-   "titleNow": 0.0411,
+   "titleNow": 0.04115,
    "playoffWas": 0.33175,
    "playoffNow": 0.96905,
    "wins": 8.5017,
-   "titleOdds": 2200,
+   "titleOdds": 2190,
    "titleOddsOpen": 3420,
    "playoffOdds": -19900
   },
@@ -167,6 +167,20 @@
  ],
  "games": [],
  "hurt": [
+  {
+   "manager": "Domo112",
+   "cost": 0.06340798550402138,
+   "players": [
+    {
+     "name": "Brock Bowers",
+     "status": "Out"
+    },
+    {
+     "name": "Cam Little",
+     "status": "Questionable"
+    }
+   ]
+  },
   {
    "manager": "victorthompson",
    "cost": 0.054364017370228224,
@@ -223,16 +237,6 @@
    "players": [
     {
      "name": "DJ Moore",
-     "status": "Questionable"
-    }
-   ]
-  },
-  {
-   "manager": "Domo112",
-   "cost": 0.011106822954998319,
-   "players": [
-    {
-     "name": "Cam Little",
      "status": "Questionable"
     }
    ]

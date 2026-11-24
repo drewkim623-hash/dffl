@@ -2,11 +2,11 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 11,
- "generated": "2026-11-24T05:32:25.694Z",
- "generated_at": "2026-11-24T05:32:25.694Z",
+ "generated": "2026-11-24T11:02:21.543Z",
+ "generated_at": "2026-11-24T11:02:21.543Z",
  "final": true,
  "standings_through_week": 11,
- "standings_folded": true,
+ "standings_folded": false,
  "league": {
   "id": "1318040218183417856",
   "name": "DFFL",
@@ -195,6 +195,190 @@
       "points": 8.4
      },
      "benchLeft": 18.6
+    }
+   ]
+  },
+  {
+   "winner": "jskule23",
+   "winner_points": 130.96,
+   "loser": "victorthompson",
+   "loser_points": 115.4,
+   "margin": 15.56,
+   "total": 246.36,
+   "sides": [
+    {
+     "manager": "jskule23",
+     "team": "THE answer",
+     "roster_id": 5,
+     "points": 130.96,
+     "starters": [
+      {
+       "name": "Patrick Mahomes",
+       "pos": "QB",
+       "team": "KC",
+       "points": 24.96
+      },
+      {
+       "name": "Emmett Johnson",
+       "pos": "RB",
+       "team": "KC",
+       "points": 23.3
+      },
+      {
+       "name": "Mike Evans",
+       "pos": "WR",
+       "team": "SF",
+       "points": 22.9
+      },
+      {
+       "name": "Denver Broncos",
+       "pos": "DEF",
+       "team": "DEN",
+       "points": 16
+      },
+      {
+       "name": "Carnell Tate",
+       "pos": "WR",
+       "team": "TEN",
+       "points": 15.8
+      },
+      {
+       "name": "Chig Okonkwo",
+       "pos": "TE",
+       "team": "WAS",
+       "points": 10.6
+      },
+      {
+       "name": "Chase Brown",
+       "pos": "RB",
+       "team": "CIN",
+       "points": 6.1
+      },
+      {
+       "name": "Caleb Douglas",
+       "pos": "WR",
+       "team": "MIA",
+       "points": 5
+      },
+      {
+       "name": "Luther Burden III",
+       "pos": "WR",
+       "team": "CHI",
+       "points": 3.3
+      },
+      {
+       "name": "Will Reichard",
+       "pos": "K",
+       "team": "MIN",
+       "points": 3
+      }
+     ],
+     "top": {
+      "name": "Patrick Mahomes",
+      "pos": "QB",
+      "team": "KC",
+      "points": 24.96
+     },
+     "bust": {
+      "name": "Luther Burden III",
+      "pos": "WR",
+      "team": "CHI",
+      "points": 3.3
+     },
+     "benchBest": {
+      "name": "Germie Bernard",
+      "pos": "WR",
+      "team": "PIT",
+      "points": 10
+     },
+     "benchLeft": 19.6
+    },
+    {
+     "manager": "victorthompson",
+     "team": "marty fakenewsman",
+     "roster_id": 12,
+     "points": 115.4,
+     "starters": [
+      {
+       "name": "Dak Prescott",
+       "pos": "QB",
+       "team": "DAL",
+       "points": 35.9
+      },
+      {
+       "name": "Ladd McConkey",
+       "pos": "WR",
+       "team": "LAC",
+       "points": 20.7
+      },
+      {
+       "name": "Tetairoa McMillan",
+       "pos": "WR",
+       "team": "CAR",
+       "points": 19.1
+      },
+      {
+       "name": "Justice Hill",
+       "pos": "RB",
+       "team": "BAL",
+       "points": 15.6
+      },
+      {
+       "name": "Ollie Gordon II",
+       "pos": "RB",
+       "team": "MIA",
+       "points": 7.7
+      },
+      {
+       "name": "Detroit Lions",
+       "pos": "DEF",
+       "team": "DET",
+       "points": 7
+      },
+      {
+       "name": "Dawson Knox",
+       "pos": "TE",
+       "team": "BUF",
+       "points": 5.1
+      },
+      {
+       "name": "Xavier Hutchinson",
+       "pos": "WR",
+       "team": "HOU",
+       "points": 3.3
+      },
+      {
+       "name": "Spencer Shrader",
+       "pos": "K",
+       "team": "IND",
+       "points": 1
+      },
+      {
+       "name": "Laquon Treadwell",
+       "pos": "WR",
+       "team": "IND",
+       "points": 0
+      }
+     ],
+     "top": {
+      "name": "Dak Prescott",
+      "pos": "QB",
+      "team": "DAL",
+      "points": 35.9
+     },
+     "bust": {
+      "name": "Laquon Treadwell",
+      "pos": "WR",
+      "team": "IND",
+      "points": 0
+     },
+     "benchBest": {
+      "name": "Alvin Kamara",
+      "pos": "RB",
+      "team": "NO",
+      "points": 6.7
+     },
+     "benchLeft": 6.7
     }
    ]
   },
@@ -751,190 +935,6 @@
    ]
   },
   {
-   "winner": "jskule23",
-   "winner_points": 130.96,
-   "loser": "victorthompson",
-   "loser_points": 110.3,
-   "margin": 20.66,
-   "total": 241.26,
-   "sides": [
-    {
-     "manager": "jskule23",
-     "team": "THE answer",
-     "roster_id": 5,
-     "points": 130.96,
-     "starters": [
-      {
-       "name": "Patrick Mahomes",
-       "pos": "QB",
-       "team": "KC",
-       "points": 24.96
-      },
-      {
-       "name": "Emmett Johnson",
-       "pos": "RB",
-       "team": "KC",
-       "points": 23.3
-      },
-      {
-       "name": "Mike Evans",
-       "pos": "WR",
-       "team": "SF",
-       "points": 22.9
-      },
-      {
-       "name": "Denver Broncos",
-       "pos": "DEF",
-       "team": "DEN",
-       "points": 16
-      },
-      {
-       "name": "Carnell Tate",
-       "pos": "WR",
-       "team": "TEN",
-       "points": 15.8
-      },
-      {
-       "name": "Chig Okonkwo",
-       "pos": "TE",
-       "team": "WAS",
-       "points": 10.6
-      },
-      {
-       "name": "Chase Brown",
-       "pos": "RB",
-       "team": "CIN",
-       "points": 6.1
-      },
-      {
-       "name": "Caleb Douglas",
-       "pos": "WR",
-       "team": "MIA",
-       "points": 5
-      },
-      {
-       "name": "Luther Burden III",
-       "pos": "WR",
-       "team": "CHI",
-       "points": 3.3
-      },
-      {
-       "name": "Will Reichard",
-       "pos": "K",
-       "team": "MIN",
-       "points": 3
-      }
-     ],
-     "top": {
-      "name": "Patrick Mahomes",
-      "pos": "QB",
-      "team": "KC",
-      "points": 24.96
-     },
-     "bust": {
-      "name": "Luther Burden III",
-      "pos": "WR",
-      "team": "CHI",
-      "points": 3.3
-     },
-     "benchBest": {
-      "name": "Germie Bernard",
-      "pos": "WR",
-      "team": "PIT",
-      "points": 10
-     },
-     "benchLeft": 19.6
-    },
-    {
-     "manager": "victorthompson",
-     "team": "marty fakenewsman",
-     "roster_id": 12,
-     "points": 110.3,
-     "starters": [
-      {
-       "name": "Dak Prescott",
-       "pos": "QB",
-       "team": "DAL",
-       "points": 35.9
-      },
-      {
-       "name": "Ladd McConkey",
-       "pos": "WR",
-       "team": "LAC",
-       "points": 20.7
-      },
-      {
-       "name": "Tetairoa McMillan",
-       "pos": "WR",
-       "team": "CAR",
-       "points": 19.1
-      },
-      {
-       "name": "Justice Hill",
-       "pos": "RB",
-       "team": "BAL",
-       "points": 15.6
-      },
-      {
-       "name": "Ollie Gordon II",
-       "pos": "RB",
-       "team": "MIA",
-       "points": 7.7
-      },
-      {
-       "name": "Detroit Lions",
-       "pos": "DEF",
-       "team": "DET",
-       "points": 7
-      },
-      {
-       "name": "Xavier Hutchinson",
-       "pos": "WR",
-       "team": "HOU",
-       "points": 3.3
-      },
-      {
-       "name": "Spencer Shrader",
-       "pos": "K",
-       "team": "IND",
-       "points": 1
-      },
-      {
-       "name": "Dalton Kincaid",
-       "pos": "TE",
-       "team": "BUF",
-       "points": 0
-      },
-      {
-       "name": "Laquon Treadwell",
-       "pos": "WR",
-       "team": "IND",
-       "points": 0
-      }
-     ],
-     "top": {
-      "name": "Dak Prescott",
-      "pos": "QB",
-      "team": "DAL",
-      "points": 35.9
-     },
-     "bust": {
-      "name": "Laquon Treadwell",
-      "pos": "WR",
-      "team": "IND",
-      "points": 0
-     },
-     "benchBest": {
-      "name": "Alvin Kamara",
-      "pos": "RB",
-      "team": "NO",
-      "points": 6.7
-     },
-     "benchLeft": 11.8
-    }
-   ]
-  },
-  {
    "winner": "wesley55",
    "winner_points": 119,
    "loser": "saucebossandrew",
@@ -1205,7 +1205,7 @@
    "losses": 7,
    "ties": 0,
    "points_for": 1378.84,
-   "points_against": 1464.32,
+   "points_against": 1469.42,
    "waiver_budget_used": 100
   },
   {
@@ -1237,7 +1237,7 @@
    "wins": 3,
    "losses": 8,
    "ties": 0,
-   "points_for": 1245.86,
+   "points_for": 1250.96,
    "points_against": 1310.38,
    "waiver_budget_used": 100
   },
@@ -1254,6 +1254,23 @@
   }
  ],
  "transactions": [
+  {
+   "type": "free_agent",
+   "managers": [
+    "Domo112"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Michael Mayer",
+     "pos": "TE",
+     "team": "LV",
+     "from": "Domo112"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
   {
    "type": "free_agent",
    "managers": [
