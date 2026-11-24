@@ -3,12 +3,12 @@
  "season": "2026",
  "week": 11,
  "file": "data/week-2026-11.json",
- "generated": "2026-11-24T04:35:48.478Z",
- "generated_at": "2026-11-24T04:35:48.478Z",
+ "generated": "2026-11-24T05:32:25.694Z",
+ "generated_at": "2026-11-24T05:32:25.694Z",
  "final": true,
  "sleeper_state": {
-  "week": 11,
-  "leg": 11,
+  "week": 12,
+  "leg": 12,
   "display_week": 11,
   "season_type": "regular",
   "season": "2026"
