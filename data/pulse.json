@@ -1,56 +1,57 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-24T05:32:28.575Z",
- "at": 1795498348575,
+ "generated": "2026-11-24T05:50:16.520Z",
+ "at": 1795499416521,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
  "week_in_progress": true,
  "standings": [
   {
-   "manager": "jadencha",
-   "wins": 8,
-   "losses": 2,
-   "points_for": 1617.36,
-   "points_against": 1264.32,
-   "faab_spent": 25,
-   "starters_hurt": []
-  },
-  {
    "manager": "Domo112",
-   "wins": 8,
+   "wins": 9,
    "losses": 2,
-   "points_for": 1358.4,
-   "points_against": 1214.6,
+   "points_for": 1494.44,
+   "points_against": 1340.96,
    "faab_spent": 98,
    "starters_hurt": [
+    "Brock Bowers (Out)",
     "Cam Little (Questionable)"
    ]
   },
   {
-   "manager": "willie12w",
-   "wins": 7,
+   "manager": "jadencha",
+   "wins": 8,
    "losses": 3,
-   "points_for": 1340.26,
-   "points_against": 1100.88,
+   "points_for": 1733.22,
+   "points_against": 1394.18,
+   "faab_spent": 25,
+   "starters_hurt": []
+  },
+  {
+   "manager": "willie12w",
+   "wins": 8,
+   "losses": 3,
+   "points_for": 1470.12,
+   "points_against": 1216.74,
    "faab_spent": 88,
    "starters_hurt": []
   },
   {
    "manager": "bradyrife",
-   "wins": 6,
+   "wins": 7,
    "losses": 4,
-   "points_for": 1343.44,
-   "points_against": 1242.7,
+   "points_for": 1507.88,
+   "points_against": 1323.46,
    "faab_spent": 95,
    "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
-   "wins": 6,
+   "wins": 7,
    "losses": 4,
-   "points_for": 1247.96,
-   "points_against": 1323.22,
+   "points_for": 1387.84,
+   "points_against": 1424.64,
    "faab_spent": 67,
    "starters_hurt": [
     "Dallas Goedert (Questionable)"
@@ -58,10 +59,10 @@
   },
   {
    "manager": "wesley55",
-   "wins": 5,
+   "wins": 6,
    "losses": 5,
-   "points_for": 1327.56,
-   "points_against": 1289.84,
+   "points_for": 1446.56,
+   "points_against": 1377.92,
    "faab_spent": 26,
    "starters_hurt": [
     "Derrick Henry (Questionable)"
@@ -70,40 +71,40 @@
   {
    "manager": "chassinator",
    "wins": 4,
-   "losses": 6,
-   "points_for": 1289.98,
-   "points_against": 1304.28,
+   "losses": 7,
+   "points_for": 1416.34,
+   "points_against": 1440.32,
    "faab_spent": 72,
    "starters_hurt": [
     "DJ Moore (Questionable)"
    ]
   },
   {
+   "manager": "jskule23",
+   "wins": 4,
+   "losses": 7,
+   "points_for": 1378.84,
+   "points_against": 1469.42,
+   "faab_spent": 100,
+   "starters_hurt": []
+  },
+  {
    "manager": "moseslin",
    "wins": 4,
-   "losses": 6,
-   "points_for": 1183.48,
-   "points_against": 1374.62,
+   "losses": 7,
+   "points_for": 1284.9,
+   "points_against": 1514.5,
    "faab_spent": 28,
    "starters_hurt": [
     "Saquon Barkley (Questionable)"
    ]
   },
   {
-   "manager": "jskule23",
-   "wins": 3,
-   "losses": 7,
-   "points_for": 1247.88,
-   "points_against": 1354.02,
-   "faab_spent": 100,
-   "starters_hurt": []
-  },
-  {
    "manager": "saucebossandrew",
    "wins": 3,
-   "losses": 7,
-   "points_for": 1168.96,
-   "points_against": 1284.36,
+   "losses": 8,
+   "points_for": 1257.04,
+   "points_against": 1403.36,
    "faab_spent": 100,
    "starters_hurt": [
     "Sam LaPorta (Questionable)"
@@ -112,9 +113,9 @@
   {
    "manager": "victorthompson",
    "wins": 3,
-   "losses": 7,
-   "points_for": 1135.56,
-   "points_against": 1179.42,
+   "losses": 8,
+   "points_for": 1250.96,
+   "points_against": 1310.38,
    "faab_spent": 100,
    "starters_hurt": [
     "Dalton Kincaid (Out)"
@@ -123,9 +124,9 @@
   {
    "manager": "drewkim",
    "wins": 3,
-   "losses": 7,
-   "points_for": 1088.9,
-   "points_against": 1417.48,
+   "losses": 8,
+   "points_for": 1169.66,
+   "points_against": 1581.92,
    "faab_spent": 100,
    "starters_hurt": [
     "Jalen Coker (Questionable)"
@@ -236,5 +237,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 20
+ "free_agent_moves": 21
 }
