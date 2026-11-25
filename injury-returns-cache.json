@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-25T19:29:55.113Z",
+ "generated": "2026-11-25T23:13:31.828Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -13,6 +13,36 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22",
    "irSince": 7
+  },
+  "2216": {
+   "n": "Mike Evans",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
+   "retChecked": "2026-11-12"
+  },
+  "2449": {
+   "n": "Stefon Diggs",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
+  },
+  "3198": {
+   "n": "Derrick Henry",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -55,6 +85,16 @@
    "retNote": "https://www.espn.com/nfl/player/_/id/4047646/aj-brown — High-ankle sprain (right). Eligible off IR; Vrabel: 'a chance' to practice this week. ESPN return date 2026-10-22 => out Week 6, back Week 7. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-23"
   },
+  "5947": {
+   "n": "Jakobi Meyers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
+  },
   "6797": {
    "n": "Justin Herbert",
    "s": "Questionable",
@@ -67,7 +107,7 @@
   },
   "6806": {
    "n": "J.K. Dobbins",
-   "s": "Out",
+   "s": "Sus",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "espn-return-date",
@@ -77,6 +117,16 @@
   },
   "7002": {
    "n": "Juwan Johnson",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
+  },
+  "8131": {
+   "n": "Isaiah Likely",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
@@ -109,6 +159,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-21"
+  },
+  "8183": {
+   "n": "Brock Purdy",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
   },
   "8800": {
    "n": "Malik Davis",
@@ -243,6 +303,26 @@
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-25"
   },
+  "12496": {
+   "n": "Tai Felton",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
+  },
+  "12506": {
+   "n": "Harold Fannin Jr.",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
+  },
   "12508": {
    "n": "Jaxson Dart",
    "s": "IR",
@@ -253,6 +333,16 @@
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "12526": {
+   "n": "Tetairoa McMillan",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-25"
   },
   "12529": {
    "n": "TreVeyon Henderson",

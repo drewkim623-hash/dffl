@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-25T19:29:55.695Z",
- "at": 1795634995695,
+ "generated": "2026-11-25T23:13:32.751Z",
+ "at": 1795648412751,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -26,7 +26,8 @@
    "points_against": 1394.18,
    "faab_spent": 25,
    "starters_hurt": [
-    "Bhayshul Tuten (Questionable)"
+    "Bhayshul Tuten (Questionable)",
+    "Isaiah Likely (Questionable)"
    ]
   },
   {
@@ -36,7 +37,9 @@
    "points_for": 1470.12,
    "points_against": 1216.74,
    "faab_spent": 88,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Stefon Diggs (Questionable)"
+   ]
   },
   {
    "manager": "bradyrife",
@@ -45,7 +48,9 @@
    "points_for": 1507.88,
    "points_against": 1323.46,
    "faab_spent": 95,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Jakobi Meyers (Questionable)"
+   ]
   },
   {
    "manager": "sizzlemc2",
@@ -65,7 +70,9 @@
    "points_for": 1446.56,
    "points_against": 1377.92,
    "faab_spent": 26,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Derrick Henry (Questionable)"
+   ]
   },
   {
    "manager": "chassinator",
@@ -83,7 +90,9 @@
    "points_for": 1378.84,
    "points_against": 1469.42,
    "faab_spent": 100,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Mike Evans (Questionable)"
+   ]
   },
   {
    "manager": "moseslin",
@@ -111,6 +120,7 @@
    "points_against": 1310.38,
    "faab_spent": 100,
    "starters_hurt": [
+    "Tetairoa McMillan (Questionable)",
     "Dalton Kincaid (Questionable)"
    ]
   },
@@ -255,5 +265,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 32
+ "free_agent_moves": 34
 }
