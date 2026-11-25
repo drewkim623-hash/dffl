@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-25T13:16:20.294Z",
- "at": 1795612580294,
+ "generated": "2026-11-25T14:50:22.985Z",
+ "at": 1795618222985,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -153,7 +153,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "sizzlemc2",
@@ -165,7 +165,7 @@
    "a": {
     "manager": "willie12w",
     "points": 0,
-    "startersLeftToPlay": 9
+    "startersLeftToPlay": 10
    },
    "b": {
     "manager": "bradyrife",
@@ -255,5 +255,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 29
+ "free_agent_moves": 32
 }
