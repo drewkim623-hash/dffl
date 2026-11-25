@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-25T05:29:48.948Z",
+ "generated": "2026-11-25T08:19:45.524Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -14,26 +14,6 @@
    "retChecked": "2026-11-22",
    "irSince": 7
   },
-  "3198": {
-   "n": "Derrick Henry",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
-  },
-  "4866": {
-   "n": "Saquon Barkley",
-   "s": "Questionable",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
-  },
   "4881": {
    "n": "Lamar Jackson",
    "s": "IR",
@@ -45,29 +25,9 @@
    "retChecked": "2026-11-03",
    "irSince": 9
   },
-  "4983": {
-   "n": "DJ Moore",
-   "s": "Questionable",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Shoulder AC joint sprain. Missed Week 5; Q for Week 6. Coming week only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-18"
-  },
-  "5022": {
-   "n": "Dallas Goedert",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
-  },
   "5849": {
    "n": "Kyler Murray",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
@@ -77,7 +37,7 @@
   },
   "5850": {
    "n": "Josh Jacobs",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
@@ -87,7 +47,7 @@
   },
   "5859": {
    "n": "A.J. Brown",
-   "s": "Out",
+   "s": "Doubtful",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
@@ -125,16 +85,6 @@
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-25"
   },
-  "8112": {
-   "n": "Drake London",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
-  },
   "8142": {
    "n": "Alec Pierce",
    "s": "IR",
@@ -150,19 +100,9 @@
    "retChecked": "2026-11-15",
    "irSince": 6
   },
-  "8150": {
-   "n": "Kyren Williams",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
-  },
   "8151": {
    "n": "Kenneth Walker III",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
@@ -212,7 +152,7 @@
   },
   "9756": {
    "n": "Jordan Addison",
-   "s": "Out",
+   "s": "Doubtful",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
@@ -244,23 +184,13 @@
   },
   "10236": {
    "n": "Dalton Kincaid",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
-  },
-  "10859": {
-   "n": "Sam LaPorta",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
   },
   "11564": {
    "n": "Drake Maye",
@@ -274,7 +204,7 @@
   },
   "11604": {
    "n": "Brock Bowers",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
@@ -282,29 +212,9 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
   },
-  "11646": {
-   "n": "Jalen Coker",
-   "s": "Questionable",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.espn.com/nfl/player/_/id/4695883/jalen-coker — Quad strain. Canales: 'on track' to play Week 6; practiced Tuesday. Sleeper still says Out -> count 0 weeks. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
-  },
-  "11786": {
-   "n": "Cam Little",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
-  },
   "12474": {
    "n": "Woody Marks",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
@@ -357,7 +267,7 @@
   },
   "13276": {
    "n": "Omar Cooper Jr.",
-   "s": "Out",
+   "s": "Questionable",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",

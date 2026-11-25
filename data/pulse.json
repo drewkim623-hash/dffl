@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-25T05:29:49.461Z",
- "at": 1795584589461,
+ "generated": "2026-11-25T08:19:45.920Z",
+ "at": 1795594785920,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -15,8 +15,7 @@
    "points_against": 1340.96,
    "faab_spent": 98,
    "starters_hurt": [
-    "Brock Bowers (Out)",
-    "Cam Little (Questionable)"
+    "Brock Bowers (Questionable)"
    ]
   },
   {
@@ -56,7 +55,7 @@
    "points_against": 1424.64,
    "faab_spent": 67,
    "starters_hurt": [
-    "Kenneth Walker III (Out)"
+    "Kenneth Walker III (Questionable)"
    ]
   },
   {
@@ -66,9 +65,7 @@
    "points_for": 1446.56,
    "points_against": 1377.92,
    "faab_spent": 26,
-   "starters_hurt": [
-    "Derrick Henry (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "chassinator",
@@ -76,10 +73,8 @@
    "losses": 7,
    "points_for": 1416.34,
    "points_against": 1440.32,
-   "faab_spent": 72,
-   "starters_hurt": [
-    "Kyren Williams (Questionable)"
-   ]
+   "faab_spent": 77,
+   "starters_hurt": []
   },
   {
    "manager": "jskule23",
@@ -97,9 +92,7 @@
    "points_for": 1284.9,
    "points_against": 1514.5,
    "faab_spent": 28,
-   "starters_hurt": [
-    "Saquon Barkley (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "saucebossandrew",
@@ -108,9 +101,7 @@
    "points_for": 1257.04,
    "points_against": 1403.36,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Sam LaPorta (Questionable)"
-   ]
+   "starters_hurt": []
   },
   {
    "manager": "victorthompson",
@@ -120,7 +111,7 @@
    "points_against": 1310.38,
    "faab_spent": 100,
    "starters_hurt": [
-    "Dalton Kincaid (Out)"
+    "Dalton Kincaid (Questionable)"
    ]
   },
   {
@@ -130,9 +121,7 @@
    "points_for": 1169.66,
    "points_against": 1581.92,
    "faab_spent": 100,
-   "starters_hurt": [
-    "Jalen Coker (Questionable)"
-   ]
+   "starters_hurt": []
   }
  ],
  "this_week": [
@@ -164,7 +153,7 @@
    "a": {
     "manager": "chassinator",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "sizzlemc2",
@@ -176,7 +165,7 @@
    "a": {
     "manager": "willie12w",
     "points": 0,
-    "startersLeftToPlay": 10
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "bradyrife",
@@ -215,6 +204,33 @@
    "week": 11,
    "type": "waiver",
    "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Jacksonville Jaguars",
+     "pos": "DEF",
+     "team": "JAX",
+     "status": null,
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Los Angeles Chargers",
+     "pos": "DEF",
+     "team": "LAC",
+     "status": null,
+     "from": "chassinator"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
+   "week": 11,
+   "type": "waiver",
+   "managers": [
     "jadencha"
    ],
    "adds": [
@@ -239,5 +255,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 23
+ "free_agent_moves": 28
 }
