@@ -412,7 +412,7 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-24",
-      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: changed from audit []; consensus.",
+      "note": "Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; consensus.",
       "flag": "consensus"
     },
     "10222": {
@@ -489,8 +489,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-22",
-      "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "flag": "uncertain",
+      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 12)."
     },
     "11625": {
       "kind": "report",
@@ -684,8 +684,8 @@
       ],
       "source": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more",
       "checked": "2026-11-21",
-      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; consensus.",
-      "flag": "consensus"
+      "note": "High-ankle sprain. Eligible Week 6 but not activated, week-to-week; no practice report yet. Consensus: matches audit; uncertain (audit tiebreak wk 12).",
+      "flag": "uncertain"
     },
     "13279": {
       "kind": "report",
@@ -772,6 +772,17 @@
       "checked": "2026-10-14",
       "note": "Ankle deltoid ligament surgery. ~10 weeks from Sep 16 => ~Nov 25, Week 12 (SF bye Week 8). Consensus: matches audit; consensus.",
       "flag": "consensus"
+    },
+    "13424": {
+      "kind": "report",
+      "source": "consensus.mjs",
+      "weeks_list": [
+        12
+      ],
+      "weeks": 1,
+      "checked": "2026-11-25",
+      "flag": "consensus",
+      "note": "Consensus: changed from audit []; consensus."
     }
   }
 }
