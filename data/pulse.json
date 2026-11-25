@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-24T16:30:05.942Z",
- "at": 1795537805942,
+ "generated": "2026-11-25T00:35:39.705Z",
+ "at": 1795566939705,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -56,7 +56,7 @@
    "points_against": 1424.64,
    "faab_spent": 67,
    "starters_hurt": [
-    "Dallas Goedert (Questionable)"
+    "Kenneth Walker III (Out)"
    ]
   },
   {
