@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 11,
- "generated": "2026-11-24T11:02:21.543Z",
- "generated_at": "2026-11-24T11:02:21.543Z",
+ "generated": "2026-11-25T11:03:05.208Z",
+ "generated_at": "2026-11-25T11:03:05.208Z",
  "final": true,
  "standings_through_week": 11,
  "standings_folded": false,
@@ -1195,7 +1195,7 @@
    "ties": 0,
    "points_for": 1416.34,
    "points_against": 1440.32,
-   "waiver_budget_used": 72
+   "waiver_budget_used": 77
   },
   {
    "manager": "jskule23",
@@ -1255,6 +1255,146 @@
  ],
  "transactions": [
   {
+   "type": "waiver",
+   "managers": [
+    "willie12w"
+   ],
+   "adds": [
+    {
+     "name": "New York Jets",
+     "pos": "DEF",
+     "team": "NYJ",
+     "to": "willie12w"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Buffalo Bills",
+     "pos": "DEF",
+     "team": "BUF",
+     "from": "willie12w"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "bradyrife"
+   ],
+   "adds": [
+    {
+     "name": "Tai Felton",
+     "pos": "WR",
+     "team": "MIN",
+     "to": "bradyrife"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Keon Coleman",
+     "pos": "WR",
+     "team": "BUF",
+     "from": "bradyrife"
+    }
+   ],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "willie12w"
+   ],
+   "adds": [
+    {
+     "name": "Dalton Schultz",
+     "pos": "TE",
+     "team": "HOU",
+     "to": "willie12w"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "jadencha"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Jalen Hurts",
+     "pos": "QB",
+     "team": "PHI",
+     "from": "jadencha"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [
+    {
+     "name": "Konata Mumpfield",
+     "pos": "WR",
+     "team": "LAR",
+     "to": "saucebossandrew"
+    }
+   ],
+   "drops": [],
+   "faab": 0,
+   "picks": []
+  },
+  {
+   "type": "free_agent",
+   "managers": [
+    "saucebossandrew"
+   ],
+   "adds": [],
+   "drops": [
+    {
+     "name": "Aaron Rodgers",
+     "pos": "QB",
+     "team": "PIT",
+     "from": "saucebossandrew"
+    }
+   ],
+   "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "chassinator"
+   ],
+   "adds": [
+    {
+     "name": "Jacksonville Jaguars",
+     "pos": "DEF",
+     "team": "JAX",
+     "to": "chassinator"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Los Angeles Chargers",
+     "pos": "DEF",
+     "team": "LAC",
+     "from": "chassinator"
+    }
+   ],
+   "faab": 5,
+   "picks": []
+  },
+  {
    "type": "free_agent",
    "managers": [
     "Domo112"
@@ -1269,6 +1409,30 @@
     }
    ],
    "faab": null,
+   "picks": []
+  },
+  {
+   "type": "waiver",
+   "managers": [
+    "drewkim"
+   ],
+   "adds": [
+    {
+     "name": "Washington Commanders",
+     "pos": "DEF",
+     "team": "WAS",
+     "to": "drewkim"
+    }
+   ],
+   "drops": [
+    {
+     "name": "Pat Bryant",
+     "pos": "WR",
+     "team": "DEN",
+     "from": "drewkim"
+    }
+   ],
+   "faab": 0,
    "picks": []
   },
   {
