@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-26T20:29:31.261Z",
+ "generated": "2026-11-26T23:21:51.023Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -24,15 +24,15 @@
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-12"
   },
-  "2449": {
-   "n": "Stefon Diggs",
+  "2505": {
+   "n": "Darren Waller",
    "s": "Questionable",
-   "ret": "2026-11-29",
-   "retWeeks": null,
-   "retSource": "report",
-   "retEstimated": false,
-   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Ruled out Week 5; ESPN lists Q for Week 6 (return Oct 19). Coming week only. Consensus: matches audit; consensus.",
-   "retChecked": "2026-10-14"
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-26"
   },
   "3198": {
    "n": "Derrick Henry",
@@ -44,6 +44,16 @@
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-26"
   },
+  "4866": {
+   "n": "Saquon Barkley",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring. Week-to-week; team 'hopeful' for Week 6. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
+  },
   "4881": {
    "n": "Lamar Jackson",
    "s": "IR",
@@ -54,6 +64,26 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Ankle sprain (left). Minter unsure he practices Wednesday; ESPN Q Week 6. Coming week only. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-03",
    "irSince": 9
+  },
+  "5001": {
+   "n": "Dalton Schultz",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-26"
+  },
+  "5022": {
+   "n": "Dallas Goedert",
+   "s": "Out",
+   "ret": "2026-12-06",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-26"
   },
   "5849": {
    "n": "Kyler Murray",
@@ -250,16 +280,6 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-24"
   },
-  "9997": {
-   "n": "Zay Flowers",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-26"
-  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -291,6 +311,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
+  },
+  "11560": {
+   "n": "Caleb Williams",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring strain (Grade 2). Reportedly aiming to return Week 6; Sleeper Out, ESPN Q. Week 6 may be 0. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
   },
   "11564": {
    "n": "Drake Maye",
@@ -335,16 +365,6 @@
   },
   "12490": {
    "n": "Bhayshul Tuten",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-26"
-  },
-  "12506": {
-   "n": "Harold Fannin Jr.",
    "s": "Questionable",
    "ret": null,
    "retWeeks": 1,
