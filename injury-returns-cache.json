@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-26T00:55:22.822Z",
+ "generated": "2026-11-26T04:50:16.383Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -159,6 +159,16 @@
    "retEstimated": false,
    "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-21"
+  },
+  "8167": {
+   "n": "Christian Watson",
+   "s": "Out",
+   "ret": "2026-12-06",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-26"
   },
   "8183": {
    "n": "Brock Purdy",

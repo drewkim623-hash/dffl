@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-26T00:55:23.395Z",
- "at": 1795654523396,
+ "generated": "2026-11-26T04:50:16.853Z",
+ "at": 1795668616853,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -105,6 +105,7 @@
    "points_against": 1514.5,
    "faab_spent": 28,
    "starters_hurt": [
+    "Christian Watson (Out)",
     "Harold Fannin Jr. (Questionable)"
    ]
   },
@@ -148,15 +149,15 @@
    },
    "b": {
     "manager": "moseslin",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 45,
+    "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 4.9,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "drewkim",
@@ -167,13 +168,13 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 14.5,
+    "startersLeftToPlay": 9
    },
    "b": {
     "manager": "sizzlemc2",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 3.4,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -196,8 +197,8 @@
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 0,
-    "startersLeftToPlay": 10
+    "points": 10.62,
+    "startersLeftToPlay": 9
    }
   },
   {
@@ -270,5 +271,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 37
+ "free_agent_moves": 38
 }
