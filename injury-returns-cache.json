@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-26T11:02:59.938Z",
+ "generated": "2026-11-26T14:26:13.867Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -153,12 +153,12 @@
   "8151": {
    "n": "Kenneth Walker III",
    "s": "Out",
-   "ret": "2026-11-29",
+   "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
-   "retChecked": "2026-11-21"
+   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retChecked": "2026-11-26"
   },
   "8167": {
    "n": "Christian Watson",
@@ -299,7 +299,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 12).",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-22"
   },
   "12474": {
@@ -309,7 +309,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: matches audit; uncertain (audit tiebreak wk 12).",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-16"
   },
   "12489": {
@@ -434,7 +434,7 @@
    "retWeeks": null,
    "retSource": "report",
    "retEstimated": false,
-   "retNote": "consensus.mjs — Consensus: changed from audit []; consensus.",
+   "retNote": "consensus.mjs — Consensus: matches audit; consensus.",
    "retChecked": "2026-11-25"
   }
  }

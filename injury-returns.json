@@ -288,12 +288,12 @@
       "kind": "report",
       "source": "consensus.mjs",
       "weeks_list": [
-        11
+        12
       ],
       "weeks": 1,
-      "checked": "2026-11-21",
+      "checked": "2026-11-26",
       "flag": "consensus",
-      "note": "Consensus: matches audit; consensus."
+      "note": "Consensus: changed from audit []; consensus."
     },
     "8155": {
       "kind": "report",
@@ -489,8 +489,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-22",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 12)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "11625": {
       "kind": "report",
@@ -539,8 +539,8 @@
       ],
       "weeks": 1,
       "checked": "2026-11-16",
-      "flag": "uncertain",
-      "note": "Consensus: matches audit; uncertain (audit tiebreak wk 12)."
+      "flag": "consensus",
+      "note": "Consensus: matches audit; consensus."
     },
     "12481": {
       "kind": "report",
@@ -782,7 +782,7 @@
       "weeks": 1,
       "checked": "2026-11-25",
       "flag": "consensus",
-      "note": "Consensus: changed from audit []; consensus."
+      "note": "Consensus: matches audit; consensus."
     }
   }
 }
