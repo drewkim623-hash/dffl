@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-25T23:13:31.828Z",
+ "generated": "2026-11-26T00:34:50.636Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -42,7 +42,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "4881": {
    "n": "Lamar Jackson",
@@ -67,7 +67,7 @@
   },
   "5850": {
    "n": "Josh Jacobs",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
@@ -93,7 +93,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "6797": {
    "n": "Justin Herbert",
@@ -103,7 +103,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "6806": {
    "n": "J.K. Dobbins",
@@ -113,7 +113,7 @@
    "retSource": "espn-return-date",
    "retEstimated": false,
    "retNote": "ESPN return date",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "7002": {
    "n": "Juwan Johnson",
@@ -123,7 +123,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "8131": {
    "n": "Isaiah Likely",
@@ -133,7 +133,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "8142": {
    "n": "Alec Pierce",
@@ -168,7 +168,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "8800": {
    "n": "Malik Davis",
@@ -199,6 +199,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "9488": {
+   "n": "Jaxon Smith-Njigba",
+   "s": "Questionable",
+   "ret": "2026-11-29",
+   "retWeeks": null,
+   "retSource": "report",
+   "retEstimated": false,
+   "retNote": "https://www.espn.com/nfl/player/_/id/4430878/jaxon-smith-njigba — Ankle. Limited on estimated reports; Q for Thursday Week 6. Consensus: matches audit; consensus.",
+   "retChecked": "2026-10-14"
+  },
   "9493": {
    "n": "Puka Nacua",
    "s": "IR",
@@ -220,6 +230,16 @@
    "retNote": "https://www.nbcsports.com/fantasy/football/news/2026-nfl-week-6-injury-report-updates-on-lamar-jackson-david-montgomery-treveyon-henderson-and-more — Hamstring soreness. MIN bye Week 6; ESPN return Oct 25. 0 games. Consensus: matches audit; consensus.",
    "retChecked": "2026-11-24"
   },
+  "9997": {
+   "n": "Zay Flowers",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-26"
+  },
   "10222": {
    "n": "Jayden Reed",
    "s": "IR",
@@ -239,7 +259,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: IR minimum 4 weeks from wk 10 (2 left)",
-   "retChecked": "2026-11-25",
+   "retChecked": "2026-11-26",
    "irSince": 10
   },
   "10236": {
@@ -301,7 +321,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "12496": {
    "n": "Tai Felton",
@@ -311,7 +331,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "12506": {
    "n": "Harold Fannin Jr.",
@@ -321,7 +341,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "12508": {
    "n": "Jaxson Dart",
@@ -342,7 +362,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "12529": {
    "n": "TreVeyon Henderson",
@@ -384,7 +404,7 @@
    "retSource": "default",
    "retEstimated": true,
    "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-25"
+   "retChecked": "2026-11-26"
   },
   "13417": {
    "n": "De'Zhaun Stribling",

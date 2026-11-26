@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-25T23:13:32.751Z",
- "at": 1795648412751,
+ "generated": "2026-11-26T00:34:51.106Z",
+ "at": 1795653291107,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -27,6 +27,7 @@
    "faab_spent": 25,
    "starters_hurt": [
     "Bhayshul Tuten (Questionable)",
+    "Jaxon Smith-Njigba (Questionable)",
     "Isaiah Likely (Questionable)"
    ]
   },
@@ -81,7 +82,9 @@
    "points_for": 1416.34,
    "points_against": 1440.32,
    "faab_spent": 77,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Zay Flowers (Questionable)"
+   ]
   },
   {
    "manager": "jskule23",
@@ -101,7 +104,9 @@
    "points_for": 1284.9,
    "points_against": 1514.5,
    "faab_spent": 28,
-   "starters_hurt": []
+   "starters_hurt": [
+    "Harold Fannin Jr. (Questionable)"
+   ]
   },
   {
    "manager": "saucebossandrew",
@@ -265,5 +270,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 34
+ "free_agent_moves": 35
 }
