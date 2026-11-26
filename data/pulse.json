@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-26T11:03:00.485Z",
- "at": 1795690980485,
+ "generated": "2026-11-26T20:29:31.809Z",
+ "at": 1795724971809,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -15,6 +15,7 @@
    "points_against": 1340.96,
    "faab_spent": 98,
    "starters_hurt": [
+    "Colston Loveland (Out)",
     "Brock Bowers (Questionable)"
    ]
   },
@@ -83,7 +84,8 @@
    "points_against": 1440.32,
    "faab_spent": 77,
    "starters_hurt": [
-    "Zay Flowers (Questionable)"
+    "Zay Flowers (Questionable)",
+    "Parker Washington (Questionable)"
    ]
   },
   {
@@ -144,19 +146,19 @@
   {
    "a": {
     "manager": "Domo112",
-    "points": 0,
+    "points": 32.7,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "moseslin",
-    "points": 45,
+    "points": 51,
     "startersLeftToPlay": 8
    }
   },
   {
    "a": {
     "manager": "jadencha",
-    "points": 4.9,
+    "points": 21.3,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -168,7 +170,7 @@
   {
    "a": {
     "manager": "chassinator",
-    "points": 14.5,
+    "points": 36.4,
     "startersLeftToPlay": 9
    },
    "b": {
@@ -180,24 +182,24 @@
   {
    "a": {
     "manager": "willie12w",
-    "points": 0,
+    "points": 22.6,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "bradyrife",
-    "points": 0,
+    "points": 7,
     "startersLeftToPlay": 10
    }
   },
   {
    "a": {
     "manager": "jskule23",
-    "points": 0,
+    "points": 5,
     "startersLeftToPlay": 10
    },
    "b": {
     "manager": "saucebossandrew",
-    "points": 10.62,
+    "points": 24.72,
     "startersLeftToPlay": 9
    }
   },
@@ -271,5 +273,5 @@
    "picks": []
   }
  ],
- "free_agent_moves": 38
+ "free_agent_moves": 39
 }

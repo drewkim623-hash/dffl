@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-26T14:26:13.867Z",
+ "generated": "2026-11-26T20:29:31.261Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -209,6 +209,16 @@
    "retChecked": "2026-10-14",
    "irSince": 6
   },
+  "9487": {
+   "n": "Parker Washington",
+   "s": "Questionable",
+   "ret": null,
+   "retWeeks": 1,
+   "retSource": "default",
+   "retEstimated": true,
+   "retNote": "default: Questionable = coming week only",
+   "retChecked": "2026-11-26"
+  },
   "9488": {
    "n": "Jaxon Smith-Njigba",
    "s": "Questionable",
@@ -333,16 +343,6 @@
    "retNote": "default: Questionable = coming week only",
    "retChecked": "2026-11-26"
   },
-  "12496": {
-   "n": "Tai Felton",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
-   "retChecked": "2026-11-26"
-  },
   "12506": {
    "n": "Harold Fannin Jr.",
    "s": "Questionable",
@@ -363,6 +363,16 @@
    "retNote": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh — Knee MCL/PCL/meniscus surgery. Out rest of regular season; playoff return 'a bit ambitious' (4-6 month recovery) - playoffs 15-17 arguably also out. Consensus: matches audit; consensus.",
    "retChecked": "2026-10-14",
    "irSince": 6
+  },
+  "12517": {
+   "n": "Colston Loveland",
+   "s": "Out",
+   "ret": "2026-12-06",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
+   "retChecked": "2026-11-26"
   },
   "12526": {
    "n": "Tetairoa McMillan",
