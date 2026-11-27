@@ -5,13 +5,20 @@
 # snapshot the site reads, and injury-returns.mjs adds the return dates back.
 #
 # Cron is UTC and does not follow daylight saving, so each slot is listed for
-# both EDT and EST and the gate below lets through only the one that lands
-# within 30 minutes of the intended New York time (strictly under 30: the
-# paired slots are 60 minutes apart, so the off-hour one passes only if GitHub
-# delays it by more than half an hour):
+# both EDT and EST, plus a catch-up 30 minutes later, and the gate below works
+# out which New York slot (if any) this run is for:
 #   09:20 every day, 18:20 Monday and Thursday, 11:50 and 15:50 Sunday.
-# On Sundays (New York) the run is skipped while a weekly-data.yml run is
-# queued or in progress: both write injuries.json and push to main.
+# A run is for a slot when it starts from 10 minutes before to 55 minutes
+# after it. Delays only make a scheduled run later, so the off-DST copy that
+# fires 60 minutes late never passes, and the one that fires 60 minutes early
+# passes only if GitHub held it back 50 minutes or more (it is then on time).
+# A run goes ahead only if no earlier scheduled run for the same slot got its
+# commit step through: GitHub drops or delays scheduled runs at busy times,
+# and a 20-minute poll arriving while a refresh is pending in the shared
+# concurrency group replaces the pending refresh, so the catch-up covers both.
+# On Sundays (New York) the run waits, up to 25 minutes, while a
+# weekly-data.yml run is queued or in progress (both write injuries.json),
+# then goes ahead; publish-data.sh rebases over whatever that run pushed.
 #
 # The odds are computed in the browser from index.html and these files, so the
 # refreshed injuries are read back off the site into data/odds-snapshot.json
@@ -21,9 +28,10 @@ name: Injury refresh
 
 on:
   schedule:
-    - cron: "20 13,14 * * *"          # 09:20 EDT / 09:20 EST
-    - cron: "20 22,23 * * 1,4"        # Mon/Thu 18:20 EDT / EST
+    - cron: "20,50 13,14 * * *"       # 09:20 (+ 09:50 catch-up), EDT / EST
+    - cron: "20,50 22,23 * * 1,4"     # Mon/Thu 18:20 (+ 18:50 catch-up), EDT / EST
     - cron: "50 15,16,19,20 * * 0"    # Sun 11:50 and 15:50, EDT / EST
+    - cron: "20 16,17,20,21 * * 0"    # Sun 12:20 and 16:20 catch-ups, EDT / EST
   workflow_dispatch:
     inputs:
       dry_run:
@@ -39,7 +47,7 @@ permissions:
 # Shared with sleeper-poll.yml: both write the same files and push to main.
 # weekly-data.yml keeps its own group so a queued poll can never cancel a
 # pending weekly-data run (GitHub keeps one pending run per group); the Sunday
-# gate above skips while weekly-data is queued or running.
+# gate above waits while weekly-data is queued or running.
 concurrency:
   group: sleeper-data
   cancel-in-progress: false
@@ -57,28 +65,47 @@ jobs:
             echo "go=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          repo="${{ github.repository }}"
           read -r dow hh mm <<< "$(TZ=America/New_York date '+%u %H %M')"
           now=$((10#$hh * 60 + 10#$mm))
           targets="560"                                   # 09:20 any day
           if [ "$dow" = 1 ] || [ "$dow" = 4 ]; then targets="$targets 1100"; fi  # 18:20 Mon/Thu
           if [ "$dow" = 7 ]; then targets="$targets 710 950"; fi                 # 11:50, 15:50 Sun
-          go=false
+          go=false; late=0
           for t in $targets; do
-            d=$((now - t)); [ $d -lt 0 ] && d=$((-d))
-            if [ $d -lt 30 ]; then go=true; fi
+            d=$((now - t))
+            if [ $d -ge -10 ] && [ $d -lt 55 ]; then go=true; late=$d; fi
           done
           echo "New York $hh:$mm (day $dow): go=$go"
-          # Sunday: stay out of the weekly-data run's way.
-          if [ "$go" = true ] && [ "$dow" = 7 ]; then
-            busy=0
-            for st in in_progress queued; do
-              n=$(gh run list --repo "${{ github.repository }}" --workflow weekly-data.yml --status "$st" --json databaseId --jq length) || n=0
-              busy=$((busy + ${n:-0}))
+          # Already done: an earlier scheduled run for this slot whose commit
+          # step succeeded (it pushed, or found nothing to push).
+          if [ "$go" = true ]; then
+            since=$(( $(date +%s) - (late + 10) * 60 ))
+            ids=$(gh run list --repo "$repo" --workflow injury-refresh.yml --event schedule --limit 30 \
+              --json databaseId,createdAt --jq ".[] | select((.createdAt | fromdateiso8601) >= $since) | .databaseId") || ids=""
+            for id in $ids; do
+              [ "$id" = "${{ github.run_id }}" ] && continue
+              n=$(gh api "repos/$repo/actions/runs/$id/jobs" \
+                --jq '[.jobs[].steps[]? | select(.name == "Commit anything that changed" and .conclusion == "success")] | length') || n=0
+              if [ "${n:-0}" -gt 0 ]; then
+                echo "Run $id already refreshed this slot; skipping."
+                go=false
+                break
+              fi
             done
-            if [ "$busy" -gt 0 ]; then
-              echo "Sunday: $busy weekly-data run(s) queued or in progress; skipping this refresh."
-              go=false
-            fi
+          fi
+          # Sunday: wait out a weekly-data run, then go ahead.
+          if [ "$go" = true ] && [ "$dow" = 7 ]; then
+            for i in $(seq 1 10); do
+              busy=0
+              for st in in_progress queued; do
+                n=$(gh run list --repo "$repo" --workflow weekly-data.yml --status "$st" --json databaseId --jq length) || n=0
+                busy=$((busy + ${n:-0}))
+              done
+              if [ "$busy" -eq 0 ]; then break; fi
+              echo "Sunday: $busy weekly-data run(s) queued or in progress; waiting ($i of 10)."
+              sleep 150
+            done
           fi
           echo "go=$go" >> "$GITHUB_OUTPUT"
 
@@ -131,41 +158,23 @@ jobs:
         if: steps.gate.outputs.go == 'true'
         run: node sleeper-fingerprint.mjs --write
 
+      # publish-data.sh: rebase onto origin and push, up to 5 attempts with
+      # backoff; a failed push keeps the commit, a conflicting rebase resets to
+      # origin and reruns the builds below. No force push.
       - name: Commit anything that changed
         if: steps.gate.outputs.go == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
         run: |
           git config user.name  "dffl-data[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          branch="${GITHUB_REF_NAME:-main}"
-          commit() {
-            git add -A data injuries.json injury-returns.json injury-returns-cache.json \
-              data/odds-snapshot.json data/odds-history.json data/sleeper-fingerprint.json
-            if git diff --staged --quiet; then return 1; fi
-            git commit -m "Data: injury refresh"
-          }
-          if ! commit; then
-            echo "Nothing changed."
-            exit 0
-          fi
-          # No force push. On a rebase (or push) failure: abort, start again from
-          # origin, rerun the build steps above, recommit and try once more.
-          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
-          git rebase --abort || true
-          echo "::warning::Rebase or push failed; regenerating on top of origin/$branch and retrying once."
-          git fetch origin "$branch"
-          git reset --hard "origin/$branch"
-          node consensus.mjs
-          node build-injuries.mjs
-          node injury-returns.mjs
-          node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
-          node build-email.mjs
-          node build-odds-history.mjs || echo "::warning::odds history not updated"
-          node sleeper-fingerprint.mjs --write
-          if ! commit; then
-            echo "Nothing changed on top of origin/$branch."
-            exit 0
-          fi
-          if git pull --rebase origin "$branch" && git push origin "HEAD:$branch"; then exit 0; fi
-          git rebase --abort || true
-          echo "::error::Could not rebase the injury commit onto $branch after one retry; nothing pushed."
-          exit 1
+          rebuild='
+            node consensus.mjs
+            node build-injuries.mjs
+            node injury-returns.mjs
+            node build-roster-weeks.mjs || echo "::warning::roster weeks not updated"
+            node build-email.mjs
+            node build-odds-history.mjs || echo "::warning::odds history not updated"
+            node sleeper-fingerprint.mjs --write
+          '
+          bash publish-data.sh "Data: injury refresh" "$rebuild" \
+            data injuries.json injury-returns.json injury-returns-cache.json \
+            data/odds-snapshot.json data/odds-history.json data/sleeper-fingerprint.json
