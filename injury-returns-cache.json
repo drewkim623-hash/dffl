@@ -1,6 +1,6 @@
 {
  "_comment": "Written by injury-returns.mjs: every rostered injured player's derived return, with its source and the day it was looked up; irSince (IR / PUP: the week he went on the list) is carried forward run to run. A record, not an input — hand entries go in injury-returns.json.",
- "generated": "2026-11-27T14:25:16.996Z",
+ "generated": "2026-11-27T18:49:59.669Z",
  "week": 12,
  "entries": {
   "2133": {
@@ -107,7 +107,7 @@
   },
   "5859": {
    "n": "A.J. Brown",
-   "s": "Doubtful",
+   "s": "Out",
    "ret": "2026-12-06",
    "retWeeks": null,
    "retSource": "report",
@@ -251,12 +251,12 @@
   },
   "9487": {
    "n": "Parker Washington",
-   "s": "Questionable",
-   "ret": null,
-   "retWeeks": 1,
-   "retSource": "default",
-   "retEstimated": true,
-   "retNote": "default: Questionable = coming week only",
+   "s": "Out",
+   "ret": "2026-12-06",
+   "retWeeks": null,
+   "retSource": "espn-return-date",
+   "retEstimated": false,
+   "retNote": "ESPN return date",
    "retChecked": "2026-11-27"
   },
   "9488": {
@@ -417,7 +417,7 @@
   },
   "13276": {
    "n": "Omar Cooper Jr.",
-   "s": "Questionable",
+   "s": "Out",
    "ret": "2026-11-29",
    "retWeeks": null,
    "retSource": "report",
