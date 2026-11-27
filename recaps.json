@@ -8257,6 +8257,84 @@
      "text": "<b>bradyrife 164.44, drewkim 80.76.</b> Jonah Coleman's 33.9 and Chuba Hubbard's 27 pushed bradyrife to the second-best score of his season. Jayden Daniels's 17.06 led a drewkim lineup that fell to a season-low 80.76 — the third time this year a drewkim loss has ranked among the five widest margins of the season."
     }
    ]
+  },
+  {
+   "season": "2026",
+   "slug": "nine-wins-and-a-longer-title-price",
+   "date": "2026-11-27",
+   "source": "watch",
+   "kind": "opinion",
+   "kicker": "2026 · week 12",
+   "headline": "Domo112 Is 9-2. Its Title Price Got Longer, Not Shorter.",
+   "dek": "Domo112 has the league's best record at 9-2, but its title price has drifted from +370 to +430 since the draft. jadencha, at 8-3, has gone the other way — +210 to +115 — on a league-high 1,733.22 points, 225.34 more than anyone else has scored this season.",
+   "byline": "DFFL desk",
+   "standfirst": "9-2, the league's best record · title price: +370 → +430 since the draft",
+   "teaser": "🚨 DFFL | WEEK 12\n\nDOMO112 IS 9-2. ITS TITLE PRICE GOT LONGER, NOT SHORTER.\n\n📊 Domo112's title price: +370 at the draft, now +430, despite a 9-2 record\n🚀 jadencha's title price: +210 to +115 on 1,733.22 points, the league's most\n💰 jadencha leads the league by 225.34 points scored this season\n\nFull story 👇\nhttps://drewkim623-hash.github.io/dffl/?a=nine-wins-and-a-longer-title-price",
+   "blocks": [
+    {
+     "type": "p",
+     "lead": true,
+     "text": "Domo112 has the best record in the league at 9-2, and the market likes it less than it did at the draft. Domo112's title price has drifted from +370 to +430 since August, even as the team strung together nine wins. jadencha, a game behind at 8-3, has moved the opposite way — +210 to +115 — and the reason is on the scoreboard: jadencha has scored <b>1,733.22 points</b> this season, 225.34 more than anyone else in the league."
+    },
+    {
+     "type": "stat",
+     "n": "225.34",
+     "text": "The points jadencha has outscored the rest of the league by. jadencha's 1,733.22 total is the league's highest; bradyrife is second at 1,507.88, and Domo112 — the record leader — is third at 1,494.44."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the record leader",
+     "text": "Nine Wins, a Longer Price"
+    },
+    {
+     "type": "p",
+     "text": "Domo112's title odds opened the season at +370. They are +430 now, a price that got longer while the team went 9-2 and built the league's best record. In probability terms, the market has Domo112's title chance at 17.64% today, down from 19.97% at the draft — the only one of the league's four realistic contenders whose number has fallen since August."
+    },
+    {
+     "type": "h",
+     "eyebrow": "the other direction",
+     "text": "jadencha Keeps Climbing"
+    },
+    {
+     "type": "p",
+     "text": "jadencha's title price has gone the other way, from +210 to +115, and its title probability from 30.85% to 43.38% — the biggest gain of any manager in the league since the draft. willie12w, the league's other 8-3 team, has also climbed, from 13.41% to 16.73%, but nowhere near jadencha's move. bradyrife, at 7-4, has gone from 5.52% to 9.75%. Domo112 is the only one of the four to lose ground."
+    },
+    {
+     "type": "bars",
+     "title": "Title odds, change since the draft",
+     "sub": "percentage points, draft-day line to now, by manager",
+     "rows": [
+      {
+       "label": "jadencha",
+       "sub": "30.85% → 43.38%",
+       "value": 12.53,
+       "group": 1
+      },
+      {
+       "label": "bradyrife",
+       "sub": "5.52% → 9.75%",
+       "value": 4.23,
+       "group": 2
+      },
+      {
+       "label": "willie12w",
+       "sub": "13.41% → 16.73%",
+       "value": 3.32,
+       "group": 2
+      },
+      {
+       "label": "Domo112",
+       "sub": "19.97% → 17.64%",
+       "value": -2.33,
+       "group": 3
+      }
+     ]
+    },
+    {
+     "type": "p",
+     "text": "None of this says Domo112 made a mistake getting to 9-2, and a market can always catch up to a record late. But two months after the draft, the league's best record and the league's best title number belong to two different teams, and the gap between them has only grown since August."
+    }
+   ]
   }
  ]
 }
