@@ -433,6 +433,20 @@
    "sha256": "f204fc9ba0e7d2cde829a888d856436a1ab551dcf4cccabf885d25d8d0b8ecec",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-27T16:10:58.893Z",
+   "subject": "DFFL Week 12: Domo112 Is 9-2. Its Title Price Got Longer, Not Shorter.",
+   "lead": "nine-wins-and-a-longer-title-price",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 11
+   },
+   "to": 12,
+   "sha256": "3db3ca8b519f718c95cddc6b6d9949f6bb022e7b6124322826f730696a036d14",
+   "by": "routine",
+   "note": ""
   }
  ]
 }
