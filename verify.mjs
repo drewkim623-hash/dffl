@@ -2151,7 +2151,7 @@ const byeLazy = await lazyPage.waitForFunction(() => document.body.dataset.paths
   .then(() => lazyPage.evaluate(() => {
     const h = document.querySelector("#byePathHost"), txt = h ? h.textContent : "";
     return { ready: document.body.dataset.pathsReady || null, empty: document.body.dataset.pictureReady === "empty",
-      head: /Path to a first-round bye/.test(txt), stray: txt.replace(/(Bye|Playoffs|Bowl bye) [<>]?[\d.]+% in the sim/g, "").match(/[^ ]*%[^ ]*/g) };
+      head: /Path to a first-round bye/.test(txt), stray: txt.replace(/(Bye|Playoffs|Bowl bye|Bottom two) [<>]?[\d.]+% in the sim/g, "").match(/[^ ]*%[^ ]*/g) };
   })).catch(e => ({ err: String(e) }));
 if (!byeLazy.empty) {
   check("opening Playoff Picture draws the first-round-bye path", byeLazy.ready === "1" && byeLazy.head, JSON.stringify(byeLazy));
@@ -3335,10 +3335,14 @@ for (; pathTries < 6 && pathLive.stale; pathTries++) {
     .map(li => ({ rid: li.dataset.rid, got: (li.querySelector(".pp-mg[data-magic]") || { dataset: {} }).dataset.magic || null }));
   const bowlChips = [...document.querySelectorAll("#toiletHost .pp-li[data-rid]")]
     .map(li => ({ rid: li.dataset.rid, got: (li.querySelector(".pp-mg[data-bowl-magic]") || { dataset: {} }).dataset.bowlMagic || null }));
-  // One row per record, or several records merged into one In / Out row (data-wins="1 0");
+  // One row per record, several records merged into one In / Out row (data-wins="1 0"), or
+  // several lines of ONE record with identical outcomes (data-merge="record", data-wins="2 2");
   // data-li = the rows' indices in the team's worked-out lines.
   const cards = [...document.querySelectorAll(".pa-host ul.pa-lines[data-rid]")].map(ul => ({ rid: ul.dataset.rid, mode: ul.dataset.mode,
+    status: ((ul.closest(".pa-card") || ul).querySelector(".pa-st") || {}).textContent || "",
     rows: [...ul.querySelectorAll(":scope > li[data-wins]")].map(li => ({ wins: li.dataset.wins.split(" ").map(Number), li: li.dataset.li.split(" ").map(Number),
+      merge: li.dataset.merge || null, lab: (li.querySelector(".pa-rec") || {}).textContent || "",
+      verdict: (li.querySelector(".pa-res > b") || {}).textContent || "", text: (li.querySelector(".pa-res") || {}).textContent || "",
       kind: li.dataset.kind, alts: +li.dataset.alts, shown: li.querySelectorAll("[data-alt]").length,
       inline: li.querySelectorAll(".pa-alt[data-alt]").length, listed: li.querySelectorAll("details [data-alt]").length,
       // The full sets as the markup states them, collapsed <details> included.
@@ -3351,14 +3355,16 @@ for (; pathTries < 6 && pathLive.stale; pathTries++) {
     wait: !!ul.querySelector(".pa-wait"), pct: /\d%/.test(ul.textContent),
     needs: ul.querySelectorAll('[data-req="needs"], [data-req="oneof"], [data-req="all"], [data-req="helps"], [data-req="needs-all"]').length }));
   const longs = [...document.querySelectorAll("#playoffPathHost .pa-long [data-rid]")].map(e => e.dataset.rid);
+  const hostText = Object.fromEntries(["playoff", "bye", "bowl"].map(m => [m, (document.querySelector(`#${m}PathHost`) || {}).textContent || ""]));
   const ser = PS && { own: PS.own, teams: PS.teams.map(t => ({ rid: String(t.rid), playoff: t.playoff, bye: t.bye, bowlBye: t.bowlBye })) };
   const det = DET && Object.fromEntries(Object.entries(DET).map(([k, arr]) => [k, arr.map(lines => lines.map(x =>
-    ({ wins: x.wins, of: x.of, owns: x.owns, kind: x.kind, target: x.target, cubes: x.cubes.map(c => c.lits) })))]));
+    ({ wins: x.wins, of: x.of, owns: x.owns, lost: x.lost, kind: x.kind, target: x.target, cubes: x.cubes.map(c => c.lits),
+      uncovered: x.uncovered || 0, rivals: (x.rivals || []).slice().sort((a, b) => a - b) })))]));
   return {
     inputs: { teams: full.pathIn.teams.map(t => ({ rid: String(t.rid), div: t.div, w: t.w, pf: t.pf })), H: full.pathIn.H,
       remaining: full.pathIn.remaining, playoffTeams: full.rules.playoffTeams, byes: full.rules.byes },
     clinch: full.clinch.map(c => ({ rid: String(c.rid), eliminated: !!c.eliminated, clinchedPlayoff: !!c.clinchedPlayoff, winsNeeded: c.winsNeeded, lossesNeeded: c.lossesNeeded })),
-    elimText, elimAttr, chips, bowlChips, cards, longs, PS: ser, det, ready: document.body.dataset.pathsReady || null,
+    elimText, elimAttr, chips, bowlChips, cards, longs, hostText, PS: ser, det, ready: document.body.dataset.pathsReady || null,
   };
   });
 }
@@ -3423,16 +3429,30 @@ else {
     const recs = new Set(c.rows.flatMap(r => r.wins));
     for (let w = 0; w <= m; w++) if (!recs.has(w)) cardBad.push(`${c.mode} ${c.rid}: no line for ${w}-${m - w}`);
     // Every worked-out line is on exactly one row, under its own record and verdict;
-    // only plain In / Out rows merge, and a row shows every alternative it has.
+    // across records only plain In / Out rows merge; within one record only lines with
+    // the same verdict and the same sets merge; a row shows every alternative it has.
     const used = c.rows.flatMap(r => r.li);
     if (used.length !== lines.length || new Set(used).size !== lines.length || used.some(k => !lines[k]))
       cardBad.push(`${c.mode} ${c.rid}: rows cover lines [${used}] of ${lines.length}`);
     for (const r of c.rows) {
       if (r.li.length !== r.wins.length) cardBad.push(`${c.mode} ${c.rid}: row records ${r.wins} vs lines ${r.li}`);
       r.li.forEach((k, d) => { const x = lines[k]; if (x && (x.wins !== r.wins[d] || x.kind !== r.kind)) cardBad.push(`${c.mode} ${c.rid}: row ${r.wins} shows line ${k} wrongly`); });
-      if (r.li.length > 1 && !["yes", "no"].includes(r.kind)) cardBad.push(`${c.mode} ${c.rid}: a ${r.kind} row was merged`);
-      const x = lines[r.li[0]];
-      if (r.li.length === 1 && x) {
+      const recRow = r.merge === "record";
+      if (r.li.length > 1 && !recRow && (!["yes", "no"].includes(r.kind) || r.li.some(k => lines[k] && lines[k].lost))) cardBad.push(`${c.mode} ${c.rid}: a ${r.kind} row was merged`);
+      if (recRow) {
+        // A merged record row: one record, split lines only, identical verdict and sets (as sets);
+        // labelled "any loss / any win" exactly when it stands for every line of that record.
+        const ls = r.li.map(k => lines[k]).filter(Boolean), kk = l => l.join(":");
+        const setKey = y => y.cubes.map(cb => cb.map(kk).sort().join(" ")).sort().join("|");
+        if (r.li.length < 2 || new Set(r.wins).size !== 1 || ls.length !== r.li.length || ls.some(y => !y.lost || y.kind !== ls[0].kind || setKey(y) !== setKey(ls[0])
+          || y.uncovered !== ls[0].uncovered || y.rivals.join() !== ls[0].rivals.join()))
+          cardBad.push(`${c.mode} ${c.rid}: merged record row ${r.wins} joins lines that differ`);
+        const every = lines.filter(y => y.wins === r.wins[0]).length === r.li.length;
+        const anyLab = /\(any (loss|win|\d+ losses|\d+ wins)\)\s*$/.test(r.lab), listLab = /\((loses to|beats) .+ or .+\)\s*$/.test(r.lab);
+        if (every ? !anyLab : !listLab) cardBad.push(`${c.mode} ${c.rid}: merged record row label "${r.lab}" (${r.li.length} of ${lines.filter(y => y.wins === r.wins[0]).length} lines)`);
+      }
+      // Each own-outcome variant the row stands for is checked on its own (a merged row's data is every variant's).
+      for (const x of (r.li.length === 1 || recRow ? r.li.map(k => lines[k]).filter(Boolean) : [])) {
         const kk = l => l.join(":");
         const common = x.cubes.length ? x.cubes[0].filter(l => x.cubes.every(cb => cb.some(q => kk(q) === kk(l)))) : [];
         const alts = x.cubes.filter(cb => cb.some(l => !common.some(q => kk(q) === kk(l)))).length;
@@ -3454,6 +3474,17 @@ else {
         if (want.size !== got.size || [...want].some(s => !got.has(s))) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: the markup's sets differ from the worked-out ones`);
         for (const lits of domSets) domFull.push({ c, i, key, x, lits });
       }
+    }
+    // And nothing that should merge is left apart: two rows of one record, split by game,
+    // with the same verdict, sets, points-for rivals and text are one row.
+    {
+      const kk = l => l.join(":"), setKey = y => y.cubes.map(cb => cb.map(kk).sort().join(" ")).sort().join("|");
+      const split = c.rows.filter(r => r.li.every(k => lines[k] && lines[k].lost));
+      split.forEach((a, p) => split.slice(p + 1).forEach(b => {
+        const x = lines[a.li[0]], y = lines[b.li[0]];
+        if (x.wins === y.wins && x.kind === y.kind && setKey(x) === setKey(y) && x.uncovered === y.uncovered && x.rivals.join() === y.rivals.join() && a.text === b.text)
+          cardBad.push(`${c.mode} ${c.rid}: identical record rows "${a.lab}" and "${b.lab}" not merged`);
+      }));
     }
     if (c.pct) cardBad.push(`${c.mode} ${c.rid}: a percentage inside the lines`);
     needLines += c.needs;
@@ -3498,6 +3529,31 @@ else {
       s = (s - free) & free;
     } while (s);
   }
+  // Wording: each row's verdict word is its section's word for its kind; the bottom-two
+  // (toilet-bowl bye) section reads as a bad outcome — nothing there needs help or gets a bye.
+  const VERD = { playoff: { yes: "In", no: "Out", help: "Needs help", pts: "Down to points" },
+    bye: { yes: "Bye", no: "No bye", help: "Needs help", pts: "Down to points" },
+    bowl: { yes: "Bottom two", no: "Safe", help: "Could land there", pts: "Down to points" } };
+  const wordBad = [];
+  let mergedRows = 0;
+  for (const c of pathLive.cards) {
+    for (const r of c.rows) {
+      if (r.merge) mergedRows++;
+      if (r.verdict !== VERD[c.mode][r.kind]) wordBad.push(`${c.mode} ${c.rid} ${r.lab}: verdict "${r.verdict}" for ${r.kind}`);
+      if (c.mode === "bowl" && r.kind === "help" && !/^Could land there( — depends on other results)?(Bottom two if|Hurts most:|All \d+ ways it lands there)/.test(r.text)) wordBad.push(`bowl ${c.rid} ${r.lab}: "${r.text.slice(0, 60)}"`);
+      if (c.mode === "bowl" && r.kind === "pts" && !/^Down to points — a points-for tiebreak decides it/.test(r.text)) wordBad.push(`bowl ${c.rid} ${r.lab}: "${r.text.slice(0, 60)}"`);
+      if (c.mode === "bowl" && /points for than/.test(r.text) && !/lands there if it has fewer points for than/.test(r.text)) wordBad.push(`bowl ${c.rid} ${r.lab}: points line "${r.text.slice(0, 80)}"`);
+    }
+    if (c.mode === "bowl" && !/^(Could land in the bottom two( — losing out puts it there)?|Down to points — a points-for tiebreak decides it)$/.test(c.status.trim()))
+      wordBad.push(`bowl ${c.rid}: status "${c.status}"`);
+  }
+  const bowlTxt = pathLive.hostText.bowl;
+  if (bowlTxt && !/Path to the bottom two \(toilet-bowl bye\)/.test(bowlTxt)) wordBad.push("bowl section title");
+  const bowlStray = bowlTxt && bowlTxt.match(/Needs help|Needs:|Helps most|gets the bye|No bye|\bBye\b|good outcome|results needed(?! to get level)/g);
+  if (bowlStray) wordBad.push(`bowl section says ${[...new Set(bowlStray)]}`);
+  if (/Bottom two|Could land there/.test(pathLive.hostText.playoff + pathLive.hostText.bye)) wordBad.push("bottom-two words on a playoff section");
+  check("live: path verdicts use each section's words; the bottom-two (toilet-bowl bye) section reads as a bad outcome (Bottom two / Could land there / Safe, never Needs help or a bye)",
+    !wordBad.length, `${mergedRows} merged rows ${wordBad.slice(0, 5).join("; ")}`);
   check("live: the cards' full sets as rendered (data-core + every data-alt, collapsed lists included) are the worked-out sets and each guarantees the outcome",
     domSetsChecked > 0 && !cardBad.some(s => /markup|data-core|results needed|core items/.test(s)), `${domSetsChecked} rendered sets checked ${cardBad.filter(s => /markup|data-core|results needed|core items/.test(s)).slice(0, 4).join("; ")}`);
   check("live: no card line shows more than 3 results inline, and nothing on the cards is under 11px",
