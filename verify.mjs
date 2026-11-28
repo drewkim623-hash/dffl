@@ -2204,12 +2204,15 @@ const ppV4 = await page.evaluate(() => {
   if (document.body.dataset.pictureReady !== "1" || !P || !L || !live || !board) return { skip: true };
   const pctf = v => v <= 0 ? "0%" : v >= 1 ? "100%" : v < 0.005 ? "<1%" : v > 0.995 ? ">99%" : `${(v * 100).toFixed(0)}%`;
   const N = live.teams.length, PT = P.rules.playoffTeams, B = P.rules.byes;
-  // Today's seeding, worked out here from scratch: rank on wins then points for,
-  // division leaders first in rank order, then everyone else in rank order.
-  const rank = live.teams.map((_, i) => i).sort((a, b) => live.W0[b] - live.W0[a] || live.PF0[b] - live.PF0[a]);
-  const champs = [...new Set(live.teams.map(t => t.div))].map(d => rank.find(i => live.teams[i].div === d));
-  champs.sort((a, b) => rank.indexOf(a) - rank.indexOf(b));
-  const expect = [...champs, ...rank.filter(i => !champs.includes(i))].map(i => String(live.teams[i].rid));
+  // Today's seeding, worked out here from the raw records and the shared rule
+  // (DFFLTiebreak.tieOrder: wins; two level: head to head, then division record
+  // if they share a division, then points for; three or more: points for), not
+  // read off the board: each division's winner is the top of its own division,
+  // the winners are ordered among themselves, then everyone else in league order.
+  const TB = window.DFFLTiebreak, all = live.teams.map((_, i) => i), divOf = i => live.teams[i].div;
+  const ord = list => TB.tieOrder(list, live.W0, live.PF0, live.H2H0, divOf, all);
+  const champs = ord([...new Set(all.map(divOf))].map(d => ord(all.filter(i => divOf(i) === d))[0]));
+  const expect = [...champs, ...ord(all.filter(i => !champs.includes(i)))].map(i => String(live.teams[i].rid));
   const idx = new Map(P.rids.map((rid, i) => [String(rid), i]));
   const listRows = [...board.querySelectorAll(".pp-seeds .pp-li, .pp-elim .pp-li")];
   const bySeed = listRows.slice().sort((a, b) => a.dataset.seed - b.dataset.seed);
@@ -2267,7 +2270,7 @@ if (ppV4.skip) {
     JSON.stringify(ppV4.heroSeeds) === JSON.stringify(Array.from({ length: ppV4.B }, (_, k) => k + 1))
     && JSON.stringify(ppV4.heroRids) === JSON.stringify(ppV4.expectTop), `${ppV4.heroSeeds} / ${ppV4.heroRids}`);
   check("v4: one list row per team, seeds 1..N shown in order", ppV4.rows === ppV4.N && ppV4.seedsShown, `${ppV4.rows} rows`);
-  check("v4: the list order is today's seeding (division leaders, then records, ties on points for)",
+  check("v4: the list order is today's seeding (division winners first, then the league tiebreak: head to head, division record for a same-division pair, points for; 3+ level on points for)",
     JSON.stringify(ppV4.order) === JSON.stringify(ppV4.expect) && ppV4.sameAsPicture && ppV4.sectionsAscend, `${ppV4.order} vs ${ppV4.expect}`);
   check("v4: every Bye % is the sim's seed-1 + seed-2 share, exactly", ppV4.badBye.length === 0 && ppV4.checked >= ppV4.N, ppV4.badBye.join(","));
   check("v4: every Playoff % is the Odds tab's number", ppV4.badPo.length === 0, ppV4.badPo.join(","));
@@ -3191,7 +3194,8 @@ if (!mgLive.skip) {
   }
   for (const r of mgLive.bowlChips) {
     const c = tableBy.get(r.rid), e = exactBy.get(r.rid);
-    const w = want(c, c && c.lossesNeeded === undefined ? undefined : e?.losses, false);
+    // On the bowl board a null number reads "Can still escape", not "Needs help".
+    const w0 = want(c, c && c.lossesNeeded === undefined ? undefined : e?.losses, false), w = w0 === "help" ? "escape" : w0;
     if (r.got !== w || r.stray) bad.push(`bowl chip ${r.rid}: ${r.got} != ${w}${r.stray ? " (stray chip)" : ""}`);
   }
   const nP = mgLive.playoffChips.filter(r => r.got).length, nB = mgLive.bowlChips.filter(r => r.got).length;
@@ -3284,6 +3288,22 @@ check("synthetic: a team alive only through a points-for tie is not eliminated",
 check("synthetic: its chip reads Needs help before the paths, Long shot after", /data-magic="help"[^>]*>Needs help</.test(lsSyn.chipBefore) && /data-magic="longshot"[^>]*>Long shot</.test(lsSyn.chipAfter), JSON.stringify([lsSyn.chipBefore, lsSyn.chipAfter]));
 check("synthetic: the path lists it as a long shot, and never says Eliminated", lsSyn.longs.join() === "4" && lsSyn.listed && lsSyn.noWord, JSON.stringify(lsSyn));
 
+{
+  // A points-for tie is open, never settled: teams 0 and 1 share a division, are level
+  // on wins, never met (division record 0.5 each) and have the SAME points for, with
+  // no games left. One wins the division (the only other seed is division 2's winner),
+  // but nothing here says which — so neither may read clinched or eliminated.
+  const pfTie = await page.evaluate(async () => {
+    const D = window.__DFFL;
+    const teams = [{ rid: 1, div: 1, w: 5, pf: 1000 }, { rid: 2, div: 1, w: 5, pf: 1000 }, { rid: 3, div: 2, w: 5, pf: 1000 }, { rid: 4, div: 2, w: 1, pf: 1000 }];
+    const c = D.exactClinch({ teams, remaining: [], playoffTeams: 2, byes: 1 });
+    const PS = await D.pathScenarios({ teams, H: teams.map(() => [0, 0, 0, 0]), remaining: [], playoffTeams: 2, byes: 1 });
+    return { c: c.slice(0, 2).map(x => ({ e: !!x.eliminated, p: !!x.clinchedPlayoff })), po: PS.teams.slice(0, 2).map(t => t.playoff[0]) };
+  });
+  check("synthetic: a points-for tie (equal points for) is open — neither team is clinched or eliminated on it, and the path calls it points",
+    pfTie.c.every(x => !x.e && !x.p) && pfTie.po.every(t => t && t.pts === 1 && t.yes === 0 && t.no === 0), JSON.stringify(pfTie));
+}
+
 group("Paths, eliminations and Needs-help cards (live board, exact)");
 // Live refreshes can start a new path draw at any moment. Read only a finished
 // draw: dataset.pathsDetail is "1" once a draw's detail render is on the page,
@@ -3320,9 +3340,16 @@ for (; pathTries < 6 && pathLive.stale; pathTries++) {
   const cards = [...document.querySelectorAll(".pa-host ul.pa-lines[data-rid]")].map(ul => ({ rid: ul.dataset.rid, mode: ul.dataset.mode,
     rows: [...ul.querySelectorAll(":scope > li[data-wins]")].map(li => ({ wins: li.dataset.wins.split(" ").map(Number), li: li.dataset.li.split(" ").map(Number),
       kind: li.dataset.kind, alts: +li.dataset.alts, shown: li.querySelectorAll("[data-alt]").length,
-      inline: li.querySelectorAll(".pa-alt[data-alt]").length, listed: li.querySelectorAll("details [data-alt]").length })),
+      inline: li.querySelectorAll(".pa-alt[data-alt]").length, listed: li.querySelectorAll("details [data-alt]").length,
+      // The full sets as the markup states them, collapsed <details> included.
+      core: li.dataset.core || "", altSets: [...li.querySelectorAll("[data-alt]")].map(e => e.dataset.alt),
+      coreItems: [...li.querySelectorAll("details [data-core-item]")].map(e => e.dataset.coreItem),
+      needsAll: li.querySelectorAll('[data-req="needs-all"]').length,
+      // Inline phrases (one week tag each): the Needs line, "one of" and Helps most.
+      inlineWk: [...li.querySelectorAll('[data-req="needs"] .pa-wk, [data-req="oneof"] .pa-wk, [data-req="helps"] .pa-wk')].filter(e => !e.closest("details")).length,
+      tooSmall: [...li.querySelectorAll("*")].filter(e => e.offsetParent !== null && parseFloat(getComputedStyle(e).fontSize) < 11).length })),
     wait: !!ul.querySelector(".pa-wait"), pct: /\d%/.test(ul.textContent),
-    needs: ul.querySelectorAll('[data-req="needs"], [data-req="oneof"], [data-req="all"], [data-req="helps"]').length }));
+    needs: ul.querySelectorAll('[data-req="needs"], [data-req="oneof"], [data-req="all"], [data-req="helps"], [data-req="needs-all"]').length }));
   const longs = [...document.querySelectorAll("#playoffPathHost .pa-long [data-rid]")].map(e => e.dataset.rid);
   const ser = PS && { own: PS.own, teams: PS.teams.map(t => ({ rid: String(t.rid), playoff: t.playoff, bye: t.bye, bowlBye: t.bowlBye })) };
   const det = DET && Object.fromEntries(Object.entries(DET).map(([k, arr]) => [k, arr.map(lines => lines.map(x =>
@@ -3363,9 +3390,9 @@ else {
   }
   for (const r of pathLive.bowlChips) {
     const c = byRid.get(r.rid);
-    if (c && !c.eliminated && !c.clinchedPlayoff && c.lossesNeeded === null && r.got !== "help") chipBad.push(`bowl ${r.rid}: ${r.got} != help`);
+    if (c && !c.eliminated && !c.clinchedPlayoff && c.lossesNeeded === null && r.got !== "escape") chipBad.push(`bowl ${r.rid}: ${r.got} != escape`);
   }
-  check("live: every open team that can't clinch on its own shows Needs help (Long shot exactly when only points for gets it in)",
+  check("live: every open team that can't clinch on its own shows Needs help (Long shot exactly when only points for gets it in); a bowl team losing out can't lock reads Can still escape",
     !chipBad.length, `${chipBad.slice(0, 5).join("; ")} long shots [${[...longShot]}]`);
   check("live: the playoff path's long-shot list is exactly the points-for-only teams",
     setEq(new Set(pathLive.longs), longShot), `${pathLive.longs} vs ${[...longShot]}`);
@@ -3389,6 +3416,7 @@ else {
   const modeKey = { playoff: "playoff", bye: "bye", bowl: "bowlBye" };
   const cardBad = [];
   let cubes = 0, needLines = 0;
+  const domFull = [];
   for (const c of pathLive.cards) {
     const i = ridIdx.get(c.rid), key = modeKey[c.mode], m = own[i].length, lines = pathLive.det && pathLive.det[key][i];
     if (c.wait || !lines) { cardBad.push(`${c.mode} ${c.rid}: detail never drawn`); continue; }
@@ -3410,6 +3438,21 @@ else {
         const alts = x.cubes.filter(cb => cb.some(l => !common.some(q => kk(q) === kk(l)))).length;
         if (r.alts !== alts || r.shown !== alts || (r.inline && r.listed)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${alts} alternatives, row says ${r.alts}, shows ${r.shown}`);
         if (r.inline && (r.inline > 3)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.inline} alternatives inline`);
+        // Scannable: at most 3 key results inline; the rest only inside a collapsed list.
+        if (r.inlineWk > 3) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.inlineWk} results inline`);
+        if (r.tooSmall) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.tooSmall} elements under 11px`);
+        // The FULL sets, read from the markup (data-core + each data-alt, collapsed lists
+        // included), are exactly the worked-out sets, and each is brute-forced below.
+        const parse = s => (s ? s.split(" ").map(t => t.split(":").map(Number)) : []);
+        const domCore = parse(r.core), ck = new Set(domCore.map(kk)), domKey = ls => ls.map(kk).sort().join(" ");
+        const coreKey = domKey(domCore);
+        if (coreKey !== domKey(common)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: data-core [${r.core}] is not the shared results`);
+        if (r.needsAll && domKey(r.coreItems.flatMap(parse)) !== coreKey) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: "All results needed" lists [${r.coreItems}] not [${r.core}]`);
+        if (!r.needsAll && r.coreItems.length) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: core items outside an "All results needed" list`);
+        const domSets = r.altSets.length ? r.altSets.map(a => [...domCore, ...parse(a).filter(l => !ck.has(kk(l)))]) : x.cubes.length ? [domCore] : [];
+        const want = new Set(x.cubes.map(domKey)), got = new Set(domSets.map(domKey));
+        if (want.size !== got.size || [...want].some(s => !got.has(s))) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: the markup's sets differ from the worked-out ones`);
+        for (const lits of domSets) domFull.push({ c, i, key, x, lits });
       }
     }
     if (c.pct) cardBad.push(`${c.mode} ${c.rid}: a percentage inside the lines`);
@@ -3440,8 +3483,27 @@ else {
       }
     }
   }
+  // Every full set as the markup states it (core + alternative, collapsed ones too),
+  // brute-forced on its own, for every own result its line covers.
+  let domSetsChecked = 0;
+  for (const { c, i, key, x, lits } of domFull) for (const o of x.owns) {
+    let fixed = 0, val = 0;
+    own[i].forEach((g, kk) => { fixed |= 1 << g; if ((o >> kk) & 1) val |= 1 << g; });
+    for (const [g, w] of lits) { fixed |= 1 << g; if (w === inp.remaining[g][0]) val |= 1 << g; }
+    const free = (total - 1) & ~fixed;
+    let s = 0; domSetsChecked++;
+    do {
+      const v = BR[["playoff", "bye", "bowlBye"].indexOf(key)][i][val | s];
+      if (x.target === "firm" ? v !== 2 : v < 1) { cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: a set in the markup doesn't guarantee it`); break; }
+      s = (s - free) & free;
+    } while (s);
+  }
+  check("live: the cards' full sets as rendered (data-core + every data-alt, collapsed lists included) are the worked-out sets and each guarantees the outcome",
+    domSetsChecked > 0 && !cardBad.some(s => /markup|data-core|results needed|core items/.test(s)), `${domSetsChecked} rendered sets checked ${cardBad.filter(s => /markup|data-core|results needed|core items/.test(s)).slice(0, 4).join("; ")}`);
+  check("live: no card line shows more than 3 results inline, and nothing on the cards is under 11px",
+    !cardBad.some(s => /results inline|under 11px/.test(s)), cardBad.filter(s => /results inline|under 11px/.test(s)).slice(0, 4).join("; "));
   check("live: every open card has a line for every possible record, no percentages, and verdicts match the brute force",
-    pathLive.cards.length > 0 && !cardBad.filter(s => !/guarantee/.test(s)).length, `${pathLive.cards.length} cards ${cardBad.slice(0, 5).join("; ")}`);
+    pathLive.cards.length > 0 && !cardBad.filter(s => !/guarantee|markup|data-core|results needed|core items|results inline|under 11px/.test(s)).length, `${pathLive.cards.length} cards ${cardBad.slice(0, 5).join("; ")}`);
   check("live: every listed requirement set (Needs / one of / every \"All N ways\" entry) really guarantees the outcome",
     cubes > 0 && !cardBad.some(s => /guarantee/.test(s)) && needLines > 0, `${cubes} sets checked, ${needLines} requirement lines`);
   // Phone width: no path section runs off the screen.

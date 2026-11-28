@@ -1136,7 +1136,7 @@
   .pa-lines .pa-all li{display:list-item;padding:0;margin:2px 0;background:none;border:0;border-radius:0;font-size:11.5px;overflow-wrap:anywhere}
   .pa-all p{margin:4px 0 0}
   .pa-host{max-width:100%;overflow-wrap:anywhere}
-  .pa-wk{font:10px var(--mono);color:var(--muted)}
+  .pa-wk{font:11px var(--mono);color:var(--muted);white-space:nowrap}
   .pa-settled{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px}
   .pa-settled .nmcell{gap:6px}
   @media(max-width:520px){.pa-grid{grid-template-columns:minmax(0,1fr)}.pa-lines li{grid-template-columns:minmax(0,1fr);gap:2px}}
@@ -12097,7 +12097,8 @@ function ppMagicHTML(c, longShot = false) {
 /* The toilet-bowl mirror: losses needed to lock into the bowl, whatever else happens. */
 function bowlMagicHTML(c) {
   if (!c || c.clinchedPlayoff || c.eliminated || c.lossesNeeded === undefined) return "";
-  if (c.lossesNeeded == null) return `<span class="pp-mg help" data-bowl-magic="help" title="Even losing out doesn't lock it into the toilet bowl on its own">Needs help</span>`;
+  // The bowl's own word: a team that can't lock itself in could still make the playoffs.
+  if (c.lossesNeeded == null) return `<span class="pp-mg help" data-bowl-magic="escape" title="Even losing out doesn't lock it into the toilet bowl — it could still make the playoffs">Can still escape</span>`;
   const n = c.lossesNeeded;
   if (!n) return "";
   const t = `Magic number ${n}: lose any ${n} more game${n === 1 ? "" : "s"} and the toilet-bowl spot is locked, no matter what else happens`;
@@ -12353,7 +12354,9 @@ function renderPicture(host, PP) {
        losses or ties) and no points-for result gets the team a playoff spot; a team that can still get in
        on points is a long shot, never eliminated. The Toilet Bowl tab mirrors the number with losses: the
        fewest losses that guarantee missing the playoffs, with level finishes going the team's way;
-       "Needs help" there means even losing out doesn't lock it into the bowl on its own.</p>
+       "Can still escape" there means even losing out doesn't lock it into the bowl — it could still make
+       the playoffs. Its bye cards say "Needs help for a bye" (and "No bye"); last place reads "Safe from
+       last" once a team can no longer finish there, and every other bowl team could finish last.</p>
     <p><b>What-if</b> runs the season twice for each game this week, once with each side forced to win,
        ${PP.whatIfSims.toLocaleString()} times a side on the same random draws. Both scores are still drawn
        and swapped if the wrong side won, so forcing a result doesn't inflate anybody's points for.</p>`;
@@ -12684,27 +12687,59 @@ async function pathDetails(PS) {
   return PS._detP;
 }
 
-/** The literals of a cube as words: "A beats B (wk 12) and C beats D (wk 13)". */
+/*
+ * Results as short phrases, one team per phrase where it can be: a team that
+ * must lose twice reads "wesley55 loses wk 12 & 14", one that must win twice
+ * "sizzlemc2 wins wk 12 & 14", anything else "A beats B wk 13". Every team
+ * plays once a week, so "X loses wk N" names exactly one result. Returns
+ * [{ html, lits }] — the literals each phrase stands for — in week order.
+ */
+function pathPhrases(lits, PS, name) {
+  const rem = PS.remaining, left = new Set(lits.map((l, k) => k));
+  const loserOf = ([g, w]) => (rem[g][0] === w ? rem[g][1] : rem[g][0]);
+  const wk = ([g]) => rem[g][2];
+  const out = [];
+  const take = (keyOf, verb) => {
+    const by = new Map();
+    for (const k of left) { const t = keyOf(lits[k]); if (!by.has(t)) by.set(t, []); by.get(t).push(k); }
+    for (const [t, ks] of by) if (ks.length >= 2) {
+      ks.sort((a, b) => wk(lits[a]) - wk(lits[b]));
+      out.push({ at: wk(lits[ks[0]]), lits: ks.map(k => lits[k]),
+        html: `${esc(name(t))} ${verb} <span class="pa-wk">wk ${ks.map(k => wk(lits[k])).join(", ").replace(/, (\d+)$/, " &amp; $1")}</span>` });
+      ks.forEach(k => left.delete(k));
+    }
+  };
+  take(loserOf, "loses");
+  take(([, w]) => w, "wins");
+  for (const k of left) out.push({ at: wk(lits[k]), lits: [lits[k]],
+    html: `${esc(name(lits[k][1]))} beats ${esc(name(loserOf(lits[k])))} <span class="pa-wk">wk ${wk(lits[k])}</span>` });
+  return out.sort((a, b) => a.at - b.at);
+}
+const pathLitAttr = lits => lits.map(([g, w]) => `${g}:${w}`).join(" ");
+/** The literals of a cube as words, in short phrases. */
 function pathCubeText(lits, PS, name, joiner = " and ") {
-  return lits.map(([g, w]) => {
-    const [a, b, wk] = PS.remaining[g];
-    return `${esc(name(w))} beats ${esc(name(w === a ? b : a))} <span class="pa-wk">(wk ${wk})</span>`;
-  }).join(joiner);
+  return pathPhrases(lits, PS, name).map(p => p.html).join(joiner);
 }
 
 /**
- * One line per own record (split by which game is lost when that matters):
- * the verdict, the results every good outcome shares ("Needs"), then either
- * the alternatives inline (at most 3, each at most 3 more results) or the
- * results that help most with every alternative tucked into a collapsed list.
- * `xs` is one or more lines with the same plain verdict (In / Out) for
- * consecutive records, merged into one row; `idx` their indices in the
- * team's detail. No share-of-outcomes number: those count every outcome
- * equally and read like odds, which they aren't — the card's sim % is the
- * only odds.
+ * One line per own record (split by which game is lost when that matters).
+ * At most PATH_KEY key results inline: the results every good outcome shares
+ * ("Needs"; when there are more, the most important — those involving the
+ * teams it could end level with — and the full list collapsed under "All N
+ * results needed"), topped up with "Helps most" only if there is room.
+ * Alternatives go inline only when they fit that budget too; otherwise they
+ * are collapsed under "All N ways …". The markup carries the full sets as
+ * data — data-core on the row (every shared result) and data-alt on each
+ * alternative (its results beyond the core) — so every listed set can be
+ * checked whole. `xs` is one or more lines with the same plain verdict merged
+ * into one row; `idx` their indices in the team's detail. M holds the
+ * section's words (playoff, bye, or the toilet bowl's). No share-of-outcomes
+ * number anywhere: the card's sim % is the only odds.
  */
-const PATH_INLINE_ALTS = 3, PATH_INLINE_LITS = 3, PATH_HELPS = 3, PATH_RIVALS = 3;
-function pathLineHTML(xs, idx, PS, i, name, { yes = "In", no = "Out" } = {}) {
+const PATH_KEY = 3, PATH_RIVALS = 3;
+function pathLineHTML(xs, idx, PS, i, name, M = {}) {
+  const { yes = "In", no = "Out", help = "Needs help", pts = "Down to points", ptsWhat = "it there",
+    goal = yes === "In" ? "gets in" : "gets the bye", cond = yes === "In" ? "in" : "gets the bye" } = M;
   if (!Array.isArray(xs)) { xs = [xs]; idx = [idx == null ? 0 : idx]; }
   const x = xs[0];
   const recOf = y => `${y.wins}–${y.of - y.wins}`;
@@ -12716,32 +12751,44 @@ function pathLineHTML(xs, idx, PS, i, name, { yes = "In", no = "Out" } = {}) {
     lab += x.lost.length <= wonG.length ? ` (loses to ${x.lost.map(vs).join(", ")})` : ` (beats ${wonG.map(vs).join(", ")})`;
   }
   const kk = l => `${l[0]}:${l[1]}`;
-  const text = (lits, j = " and ") => pathCubeText(lits, PS, name, j);
-  // Results every chosen cube shares are "Needs"; the rest are the alternatives.
-  let alts = [], nAlts = 0, collapsed = false;
-  const reqHTML = (cubes, goal) => {
+  const phr = lits => pathPhrases(lits, PS, name);
+  const rivalSet = new Set(x.rivals || []);
+  const weight = p => p.lits.reduce((s, [g]) => { const [a, b] = PS.remaining[g]; return s + (rivalSet.has(a) ? 1 : 0) + (rivalSet.has(b) ? 1 : 0); }, 0);
+  let nAlts = 0, collapsed = false, core = [];
+  const reqHTML = (cubes, goalTxt) => {
     if (!cubes.length) return "";
-    const common = cubes[0].lits.filter(l => cubes.every(c => c.lits.some(q => kk(q) === kk(l))));
-    const ck = new Set(common.map(kk));
-    alts = cubes.map(c => ({ ...c, lits: c.lits.filter(l => !ck.has(kk(l))) })).filter(c => c.lits.length)
+    core = cubes[0].lits.filter(l => cubes.every(c => c.lits.some(q => kk(q) === kk(l))));
+    const ck = new Set(core.map(kk));
+    const alts = cubes.map(c => ({ ...c, lits: c.lits.filter(l => !ck.has(kk(l))) })).filter(c => c.lits.length)
       .sort((a, b) => b.gain - a.gain || a.lits.length - b.lits.length);
     nAlts = alts.length;
-    let h = "";
-    if (common.length) h += `<span class="pa-need" data-req="needs">Needs: ${text(common, " · ")}</span>`;
-    const inline = !x.uncovered && alts.length <= PATH_INLINE_ALTS && alts.every(c => c.lits.length <= PATH_INLINE_LITS);
-    if (alts.length && inline) {
-      h += `<span class="pa-help" data-req="oneof">${common.length ? "and one of" : "One of"}: ${alts.map(c => `<span class="pa-alt" data-alt>(${text(c.lits)})</span>`).join(" / ")}</span>`;
+    let h = "", room = PATH_KEY;
+    if (core.length) {
+      const ps = phr(core);
+      const key = ps.length <= PATH_KEY ? ps : ps.map((p, k) => ({ p, k, w: weight(p) })).sort((a, b) => b.w - a.w || a.k - b.k)
+        .slice(0, PATH_KEY).sort((a, b) => a.k - b.k).map(o => o.p);
+      room -= key.length;
+      h += `<span class="pa-need" data-req="needs">Needs: ${key.map(p => p.html).join(" · ")}${ps.length > key.length ? " …" : ""}</span>`;
+      if (ps.length > key.length)
+        h += `<details class="pa-all" data-req="needs-all"><summary>All ${core.length} results needed</summary><ul>${ps.map(p =>
+          `<li data-core-item="${pathLitAttr(p.lits)}">${p.html}</li>`).join("")}</ul></details>`;
+    }
+    const altPh = alts.map(c => phr(c.lits));
+    const inline = !x.uncovered && alts.length > 0 && altPh.reduce((s, p) => s + p.length, 0) <= room;
+    if (inline) {
+      h += `<span class="pa-help" data-req="oneof">${core.length ? "and one of" : "One of"}: ${alts.map((c, k) =>
+        `<span class="pa-alt" data-alt="${pathLitAttr(c.lits)}">${altPh[k].map(p => p.html).join(" and ")}</span>`).join(" / ")}</span>`;
     } else if (alts.length) {
       collapsed = true;
-      const top = (x.helps || []).filter(([g, w]) => !ck.has(`${g}:${w}`)).slice(0, PATH_HELPS);
-      if (top.length) h += `<span class="pa-help" data-req="helps">Helps most: ${text(top.map(([g, w]) => [g, w]), " · ")}</span>`;
-      h += `<details class="pa-all" data-req="all"><summary>All ${alts.length} ways it ${goal}</summary><ul>${alts.map(c =>
-        `<li data-alt>${text(c.lits)}</li>`).join("")}</ul>${x.uncovered ? `<p>and ${x.uncovered.toLocaleString()} more good outcome${x.uncovered === 1 ? "" : "s"} not listed</p>` : ""}</details>`;
+      const top = (x.helps || []).filter(([g, w]) => !ck.has(`${g}:${w}`)).slice(0, Math.max(room, 0));
+      if (top.length) h += `<span class="pa-help" data-req="helps">Helps most: ${phr(top.map(([g, w]) => [g, w])).map(p => p.html).join(" · ")}</span>`;
+      h += `<details class="pa-all" data-req="all"><summary>All ${alts.length} ways it ${goalTxt}</summary><ul>${alts.map((c, k) =>
+        `<li data-alt="${pathLitAttr(c.lits)}">${altPh[k].map(p => p.html).join(" and ")}</li>`).join("")}</ul>${x.uncovered ? `<p>and ${x.uncovered.toLocaleString()} more good outcome${x.uncovered === 1 ? "" : "s"} not listed</p>` : ""}</details>`;
     }
-    if (!common.length && !alts.length) h += `<span class="pa-need">whatever else happens</span>`;
+    if (!core.length && !alts.length) h += `<span class="pa-need">whatever else happens</span>`;
     return h;
   };
-  const rn = x.rivals.map(j => esc(name(j)));
+  const rn = (x.rivals || []).map(j => esc(name(j)));
   const shownR = rn.slice(0, PATH_RIVALS);
   const rivals = !rn.length ? "" : rn.length === 1 ? rn[0]
     : `${shownR.slice(0, -1).join(", ")}${rn.length > PATH_RIVALS ? `, ${shownR[shownR.length - 1]} or others` : ` or ${shownR[shownR.length - 1]}`} — whoever it ends level with`;
@@ -12749,18 +12796,19 @@ function pathLineHTML(xs, idx, PS, i, name, { yes = "In", no = "Out" } = {}) {
   if (x.kind === "yes") { res = `<b>${yes}</b> — however everything else goes`; cls = "y"; }
   else if (x.kind === "no") { res = `<b>${no}</b> — no way through`; cls = "n"; }
   else if (x.kind === "pts") {
-    res = `<b>Down to points</b> — only a points-for tiebreak gets it there`;
+    res = `<b>${pts}</b> — only a points-for tiebreak gets ${ptsWhat}`;
     if (x.cubes.length) { const req = reqHTML(x.cubes, "gets level"); res += `<span class="pa-need">${collapsed ? "To get level on wins:" : "Gets level on wins if:"}</span>${req}`; }
     if (rivals) res += `<span class="pa-pts" data-req="pts">Then needs more points for than ${rivals}</span>`;
     cls = "p";
   } else {
-    const req = reqHTML(x.cubes, yes === "In" ? "gets in" : "gets the bye");
-    res = `<b>Needs help</b> — ${collapsed ? "needs other results" : `${yes === "In" ? "in" : "gets the bye"} if:`}${req}`;
+    const req = reqHTML(x.cubes, goal);
+    res = `<b>${help}</b> — ${collapsed ? "needs other results" : `${cond} if:`}${req}`;
     if (rivals) res += `<span class="pa-pts" data-req="pts">Or level on wins: needs more points for than ${rivals}</span>`;
     cls = "m";
   }
-  return `<li class="pa-${cls}" data-wins="${xs.map(y => y.wins).join(" ")}" data-of="${x.of}" data-kind="${x.kind}" data-li="${idx.join(" ")}" data-alts="${nAlts}"><span class="pa-rec">${lab}</span><span class="pa-res">${res}</span></li>`;
+  return `<li class="pa-${cls}" data-wins="${xs.map(y => y.wins).join(" ")}" data-of="${x.of}" data-kind="${x.kind}" data-li="${idx.join(" ")}" data-alts="${nAlts}" data-core="${pathLitAttr(core)}"><span class="pa-rec">${lab}</span><span class="pa-res">${res}</span></li>`;
 }
+
 /** A card's lines, with consecutive whole-record In / Out lines merged into one row. */
 function pathLinesHTML(lines, PS, i, name, M) {
   const out = [];
@@ -12783,7 +12831,9 @@ function pathLinesHTML(lines, PS, i, name, M) {
 const PATH_MODES = {
   playoff: { key: "playoff", title: "Path to the playoffs", yes: "In", no: "Out", verb: "Win", locked: "Locked in", none: "Out" },
   bye: { key: "bye", title: "Path to a first-round bye", yes: "Bye", no: "No bye", verb: "Win", locked: "Locked into a bye", none: "No bye possible" },
-  bowl: { key: "bowlBye", title: "Path to a toilet-bowl bye", yes: "Bye", no: "No bye", verb: "Lose", locked: "Locked into a bye", none: "No bye possible" },
+  // The toilet bowl's own words: a bubble team "needs help for a bye", never just "needs help".
+  bowl: { key: "bowlBye", title: "Path to a toilet-bowl bye", yes: "Bye", no: "No bye", verb: "Lose", locked: "Locked into a bye", none: "No bye possible",
+    help: "Needs help for a bye", pts: "Down to points for a bye", ptsWhat: "it the bowl bye", goal: "gets the bye", cond: "gets the bye" },
 };
 function renderPaths(host, PS, PP, mode, det = null) {
   if (!host) return;
@@ -12820,7 +12870,7 @@ function renderPaths(host, PS, PP, mode, det = null) {
     const best = M.verb === "Win" ? lines[lines.length - 1] : lines[0];   // win out / lose out
     const what = po ? "it's in" : "it's a bye";
     if (best.yes === best.tot) return M.verb === "Win" ? `Controls its own fate — win out and ${what}` : `Controls its own fate — lose out and ${what}`;
-    if (best.yes) return M.verb === "Win" ? "Needs help even winning out" : "Needs help even losing out";
+    if (best.yes) return M.verb === "Win" ? "Needs help even winning out" : "Needs help for a bye even losing out";
     return "Only a points tiebreak gets it there";
   };
   const simWord = mode === "bye" ? "Bye" : mode === "bowl" ? "Bowl bye" : "Playoffs";
@@ -13085,7 +13135,7 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   window.__TOILET={seeds:data.map(d=>({...d})),bubbles,safeFromLast:safe,bracket:enrichedPairs,clinches:chipRows,clinchMethod:"exactClinch",sims:PP.sims,settled};
   const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
   const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
-  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>${settled?"":`<p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>losses needed to lock into the toilet bowl — lose any N more and you're in it, no matter what anyone else does. <span class="pp-mg help">Needs help</span>even losing out doesn't lock it into the bowl on its own — it needs other results. Locked into the bowl means no result gets it a playoff spot.</p>`}`;
+  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>${settled?"":`<p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>losses needed to lock into the toilet bowl — lose any N more and you're in it, no matter what anyone else does. <span class="pp-mg help">Can still escape</span>even losing out doesn't lock it into the bowl — it could still make the playoffs. Locked into the bowl means no result gets it a playoff spot. Safe from last means it can no longer finish last; every other bowl team could finish last.</p>`}`;
   const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bye</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
   host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bye line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, ordered on the league tiebreak (two teams level: head to head, then division record if they share a division, then points for; three or more: points for). ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bye % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p>${safe.length?`<div class="tb-safe" data-safe-from-last><span class="tb-safe-h">Safe from last</span>${safe.map(d=>`<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue","Safe from last","Safe")}</span>`).join("")}</div>`:""}</section>`;
 }
