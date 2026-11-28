@@ -32,6 +32,8 @@
 import { writeFile, mkdir } from "fs/promises";
 import { fetchJSON } from "./fetch-json.mjs";
 import { weekFinality, chooseTargetWeek, buildLatest, foldWeekIntoStandings } from "./week-final.mjs";
+import "./tiebreak.js";   // globalThis.DFFLTiebreak: the league's one tiebreak rule, shared with the site
+const { rankStandings, gamesFromMatchups } = globalThis.DFFLTiebreak;
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
@@ -194,7 +196,31 @@ const standings = rosters.map(r => ({
   points_against: Number((((r.settings && r.settings.fpts_against) || 0)
     + ((r.settings && r.settings.fpts_against_decimal) || 0) / 100).toFixed(2)),
   waiver_budget_used: (r.settings && r.settings.waiver_budget_used) || 0,
-})).sort((a, b) => b.wins - a.wins || b.points_for - a.points_for);
+}));
+
+// Ordered on the league tiebreak (tiebreak.js): wins; two teams level go to
+// head to head, then division record if they share a division, then points
+// for; three or more level go to combined head to head among them, then
+// division record if all share a division, then points for (still-level
+// subgroups start the rule over). That needs every decided
+// regular-season game so far, and each roster's division. The row shape is
+// unchanged (no division field): the division is passed alongside.
+const lastReg = (Number(league.settings.playoff_week_start) || 15) - 1;
+const divOf = new Map(rosters.map(r => [r.roster_id, r.settings ? r.settings.division : undefined]));
+const regMatchups = new Map();
+for (let w = 1; w <= Math.min(target, lastReg); w++) {
+  if (w === target) regMatchups.set(w, matchups);
+  else if (cache.has(w)) regMatchups.set(w, cache.get(w));
+  else {
+    try { regMatchups.set(w, await matchupsFor(w)); }
+    catch (e) { console.log(`::warning::build-week: matchups for week ${w} unavailable (${e.message}); head to head ranks without it.`); }
+  }
+}
+const regGamesThrough = n => gamesFromMatchups([...regMatchups].filter(([w]) => w <= n).map(([, m]) => m));
+const playedOf = s => s.wins + s.losses + s.ties;
+const standingsThroughSleeper = standings.length ? Math.max(...standings.map(playedOf)) : 0;
+standings.splice(0, standings.length, ...rankStandings(standings,
+  regGamesThrough(Math.min(standingsThroughSleeper, lastReg)), { division: rid => divOf.get(rid) }));
 
 /* ---- what happened between the games ---- */
 const transactions = (txns || []).filter(t => t.status === "complete").map(t => {
@@ -231,6 +257,7 @@ const isPlayoffs = target >= (league.settings.playoff_week_start || 15);
 const fold = foldWeekIntoStandings({
   standings, games, week: target, isPlayoffs,
   medianMatch: !!(league.settings && Number(league.settings.league_average_match)),
+  h2hGames: regGamesThrough(target - 1), divisionOf: rid => divOf.get(rid),
 });
 const standingsThrough = fold.through;
 if (fold.folded) console.log(`  standings: ${fold.reason}`);

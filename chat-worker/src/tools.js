@@ -2,6 +2,9 @@
 // from fixed paths; the model never supplies a URL. Results are small objects
 // with a `source` label and an `as_of` time.
 import HISTORY from "../data/matchup-history.json";
+// The league's one tiebreak rule, shared with the site (repo root tiebreak.js; wrangler/esbuild bundles it).
+import "../../tiebreak.js";
+const { rankStandings } = globalThis.DFFLTiebreak;
 
 const SLEEPER = "https://api.sleeper.app/v1";
 const RAW = "https://raw.githubusercontent.com/drewkim623-hash/dffl/main";
@@ -170,8 +173,22 @@ const T = {
       const rows = o.rosters.map(r => ({ ...who(o.by[r.owner_id] || { owner_id: r.owner_id, name: r.owner_id, aliases: [] }), team: o.by[r.owner_id]?.team || null,
         wins: r.settings.wins, losses: r.settings.losses, ties: r.settings.ties,
         points_for: pts(r.settings.fpts, r.settings.fpts_decimal), points_against: pts(r.settings.fpts_against, r.settings.fpts_against_decimal) }));
-      rows.sort((a, b) => b.wins - a.wins || b.points_for - a.points_for);
-      return { source: `Sleeper rosters ${cur}`, as_of: o.at, season: cur, standings: rows };
+      // League tiebreak: wins; two level go to head to head, then division record
+      // if they share a division, then points for; three or more: combined head
+      // to head among them, then division record if all share a division, then
+      // points for (still-level subgroups start the rule over).
+      // Head to head from every decided regular-season week the records cover.
+      const [st, lg] = await Promise.all([state(c), leagueInfo(c)]);
+      const lastReg = Number(lg.settings?.playoff_week_start || 15) - 1;
+      const through = Math.min(lastReg, Math.max(0, ...o.rosters.map(r => (r.settings.wins || 0) + (r.settings.losses || 0) + (r.settings.ties || 0))));
+      const weeks = Array.from({ length: through }, (_, i) => i + 1);
+      const res = await Promise.all(weeks.map(w => weekRows(c, w, st).catch(() => null)));
+      const games = res.flatMap(r => r ? pair(r.data, o.rid).filter(([, pa, , pb]) => pa || pb).map(([a, pa, b, pb]) => ({ a, b, a_pts: pa, b_pts: pb })) : []);
+      const divOf = Object.fromEntries(o.rosters.map(r => [r.owner_id, r.settings?.division]));
+      const ranked = rankStandings(rows.map(r => ({ ...r, roster_id: r.owner_id })), games, { division: oid => divOf[oid] })
+        .map(({ roster_id, ...r }) => r);
+      return { source: `Sleeper rosters ${cur}`, as_of: o.at, season: cur, standings: ranked,
+        ...(res.some(r => !r) ? { note: "some weeks' matchups could not be read; head-to-head tiebreaks may be incomplete" } : {}) };
     }
     const s = snap(String(season));
     if (!s) return { error: `no data for season ${season}`, seasons_available: [...Object.keys(HISTORY.seasons), cur] };
@@ -183,9 +200,12 @@ const T = {
       A.points_for += pa; A.points_against += pb; B.points_for += pb; B.points_against += pa;
       if (pa > pb) { A.wins++; B.losses++; } else if (pb > pa) { B.wins++; A.losses++; } else { A.ties++; B.ties++; }
     }
-    const rows = Object.values(t).map(r => ({ ...r, points_for: r2(r.points_for), points_against: r2(r.points_against) }));
-    rows.sort((a, b) => b.wins - a.wins || b.points_for - a.points_for);
-    return { source: `matchup-history snapshot ${season}`, as_of: snapAsOf(), season: String(season), note: "regular season only, computed from game scores; names are each owner's current display name", standings: rows };
+    // League tiebreak on the snapshot's own games. The snapshot has no division
+    // data, so a two-way tie is head to head then points for (no division-record step).
+    const reg = s.games.filter(([w]) => !(s.playoff_week_start && w >= s.playoff_week_start)).map(([, a, pa, b, pb]) => ({ a, b, a_pts: pa, b_pts: pb }));
+    const rows = rankStandings(Object.values(t).map(r => ({ ...r, roster_id: r.owner_id, points_for: r2(r.points_for), points_against: r2(r.points_against) })), reg)
+      .map(({ roster_id, ...r }) => r);
+    return { source: `matchup-history snapshot ${season}`, as_of: snapAsOf(), season: String(season), note: "regular season only, computed from game scores; ordered by wins, then head to head (two-way ties), then points for (no division data in the snapshot); names are each owner's current display name", standings: rows };
   },
 
   async get_matchups(c, { season, week }) {

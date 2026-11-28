@@ -32,6 +32,9 @@
  * fetching; test-week-final.mjs covers the cases.
  */
 
+import "./tiebreak.js";   // side effect: globalThis.DFFLTiebreak (pure, no I/O)
+const { rankStandings } = globalThis.DFFLTiebreak;
+
 const DONE = new Set(["complete", "canceled", "cancelled"]);
 
 /**
@@ -145,9 +148,19 @@ const round2 = n => Math.round(n * 100) / 100;
  * scores as a second result nobody here can see). Anything else is left
  * exactly as Sleeper had it.
  *
+ * The folded table is ordered on the league tiebreak (tiebreak.js rankStandings:
+ * wins; two teams level: head to head, then division record if they share a
+ * division, then points for; three or more: combined head to head among them,
+ * then division record if all share a division, then points for) when `h2hGames` —
+ * the decided regular-season games BEFORE this week, [{a, b, a_pts, b_pts}] by
+ * roster_id — is given; this week's games are added to it. Divisions come from
+ * each row's `division` or `divisionOf(roster_id)`; without them a two-way
+ * tie is head to head then points for. Without h2hGames it falls back to
+ * wins, then points for.
+ *
  * @returns {{standings: Array, through: number, folded: boolean, reason: string}}
  */
-export function foldWeekIntoStandings({ standings, games, week, isPlayoffs = false, medianMatch = false }) {
+export function foldWeekIntoStandings({ standings, games, week, isPlayoffs = false, medianMatch = false, h2hGames = null, divisionOf = null }) {
   const rows = (Array.isArray(standings) ? standings : []).map(s => ({ ...s }));
   const played = s => (Number(s.wins) || 0) + (Number(s.losses) || 0) + (Number(s.ties) || 0);
   const through = rows.length ? Math.max(...rows.map(played)) : 0;
@@ -177,6 +190,10 @@ export function foldWeekIntoStandings({ standings, games, week, isPlayoffs = fal
     A.points_for = round2((Number(A.points_for) || 0) + pa); A.points_against = round2((Number(A.points_against) || 0) + pb);
     B.points_for = round2((Number(B.points_for) || 0) + pb); B.points_against = round2((Number(B.points_against) || 0) + pa);
   }
-  rows.sort((x, y) => y.wins - x.wins || y.points_for - x.points_for);
+  if (Array.isArray(h2hGames)) {
+    const all = [...h2hGames, ...games.map(g => ({ a: g.sides[0].roster_id, b: g.sides[1].roster_id, a_pts: pts(g.sides[0]), b_pts: pts(g.sides[1]) }))];
+    const ranked = rankStandings(rows, all, divisionOf ? { division: divisionOf } : {});
+    rows.splice(0, rows.length, ...ranked);
+  } else rows.sort((x, y) => y.wins - x.wins || y.points_for - x.points_for);
   return { standings: rows, through: w, folded: true, reason: `week ${w} folded in from its games; Sleeper had not posted it yet` };
 }

@@ -14,6 +14,8 @@
  */
 import { writeFile, mkdir } from "fs/promises";
 import { fetchJSON } from "./fetch-json.mjs";
+import "./tiebreak.js";   // globalThis.DFFLTiebreak: the league's one tiebreak rule, shared with the site
+const { rankStandings, gamesFromMatchups } = globalThis.DFFLTiebreak;
 
 const API = "https://api.sleeper.app/v1";
 const LEAGUE = "1318040218183417856";
@@ -68,7 +70,23 @@ const thisWeek = [...byId.values()].filter(a => a.length === 2).map(([x, y]) => 
   return { a: side(x), b: side(y) };
 });
 
-const standings = rosters.map(r => ({
+// Ordered on the league tiebreak (tiebreak.js): wins; two teams level go to
+// head to head, then division record if they share a division, then points
+// for; three or more level go to combined head to head among them, then
+// division record if all share a division, then points for (still-level
+// subgroups start the rule over). Head to head needs the decided
+// regular-season games the records cover, so those weeks' matchups are read.
+const played = r => ((r.settings || {}).wins || 0) + ((r.settings || {}).losses || 0) + ((r.settings || {}).ties || 0);
+const lastReg = (Number(league.settings && league.settings.playoff_week_start) || 15) - 1;
+const through = Math.min(lastReg, rosters.length ? Math.max(...rosters.map(played)) : 0);
+const regWeeks = [];
+for (let w = 1; w <= through; w++)
+  regWeeks.push(w === week ? matchups : await get(`league/${LEAGUE}/matchups/${w}`).catch(() => []));
+const regGames = gamesFromMatchups(regWeeks);
+const divOf = new Map(rosters.map(r => [r.roster_id, (r.settings || {}).division]));
+
+const standings = rankStandings(rosters.map(r => ({
+  roster_id: r.roster_id,
   manager: nameOf(r.roster_id),
   wins: (r.settings || {}).wins || 0,
   losses: (r.settings || {}).losses || 0,
@@ -77,7 +95,10 @@ const standings = rosters.map(r => ({
   faab_spent: (r.settings || {}).waiver_budget_used || 0,
   starters_hurt: (r.starters || []).filter(p => p && p !== "0" && (players[String(p)] || {}).injury_status)
     .map(p => { const x = pl(p); return `${x.name} (${x.status})`; }),
-})).sort((a, b) => b.wins - a.wins || b.points_for - a.points_for);
+  ties: (r.settings || {}).ties || 0,
+})), regGames, { division: rid => divOf.get(rid) })
+  // The file's row shape is unchanged: the ids and ties were only for ranking.
+  .map(({ roster_id, ties, ...row }) => row);
 
 const moves = txns.map(t => ({
   week: t._week, type: t.type,
