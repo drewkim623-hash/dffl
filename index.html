@@ -1139,6 +1139,13 @@
   .pa-wk{font:11px var(--mono);color:var(--muted);white-space:nowrap}
   .pa-settled{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px}
   .pa-settled .nmcell{gap:6px}
+  .pa-link{margin:18px 0 0;font-size:14px;font-weight:600}
+  .pa-link a{color:var(--blue,#5aa9ff);text-decoration:none;display:inline-block;padding:8px 0}
+  .pa-link a:hover{text-decoration:underline}
+  .pa-final{display:grid;gap:12px}
+  .pa-final .pa-settled{margin-top:6px}
+  .tb-esc-list{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:10px}
+  .tb-esc-list .nmcell{gap:6px}
   @media(max-width:520px){.pa-grid{grid-template-columns:minmax(0,1fr)}.pa-lines li{grid-template-columns:minmax(0,1fr);gap:2px}}
   /* ============ playoff picture ============ */
   .st-note{color:var(--muted);font-size:12.5px;margin:6px 0 14px}
@@ -2990,6 +2997,9 @@ const TABS = [
   { id: "tiebreakers", label: "Tiebreakers" },
   { id: "picture", label: "Playoff Picture" },
   { id: "toilet", label: "Toilet Bowl" },
+  // The exact path walk, on its own two tabs: computed only when one is opened.
+  { id: "playoff-path", label: "Path to Playoffs" },
+  { id: "toilet-path", label: "Path to Toilet Bowl" },
   { id: "draft", label: "Draft" },
   { id: "trades", label: "Trades" },
   { id: "rankings", label: "Rankings" },
@@ -2999,6 +3009,9 @@ const TABS = [
 ];
 // Old addresses that still land somewhere: the Playoff Picture replaced the
 // Race tab, and the Trade Machine is gone, so its links open Trades.
+const PATH_TABS = ["playoff-path", "toilet-path"];
+/** Every tab that shows the playoff-picture model (the board, the bowl, the two path tabs). */
+const PICTURE_TABS = ["picture", "toilet", ...PATH_TABS];
 const TAB_ALIAS = new Map([["race", "picture"], ["trade", "trades"], ["machine", "trades"], ["trade-machine", "trades"]]);
 function buildTabs() {
   const bar = $("#tabs"); bar.innerHTML = "";
@@ -3048,8 +3061,12 @@ function revealTab(id, smooth) {
   const bar = $("#tabs"), b = bar && bar.querySelector(`[data-tab="${id}"]`);
   if (!b || bar.scrollWidth <= bar.clientWidth + 2) return;
   const br = b.getBoundingClientRect(), rr = bar.getBoundingClientRect();
-  const left = bar.scrollLeft + (br.left - rr.left) - (rr.width - br.width) / 2;
-  bar.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
+  const left = Math.max(0, bar.scrollLeft + (br.left - rr.left) - (rr.width - br.width) / 2);
+  // Smooth scrolling takes longer the farther it goes, and the row is long now:
+  // a jump of more than a screen of tabs (end of the row back to Home) lands at
+  // once, so the new tab is in view straight away rather than a second later.
+  const far = Math.abs(left - bar.scrollLeft) > bar.clientWidth;
+  bar.scrollTo({ left, behavior: smooth && !far ? "smooth" : "auto" });
 }
 /**
  * The first time somebody sees a row that scrolls, slide it a little and back
@@ -3602,7 +3619,10 @@ function show(id) {
   if (id === "trades") ensureTrades();
   // Same deal for the playoff picture: it reads the rest of the schedule and
   // runs tens of thousands of seasons, so it waits until somebody asks for it.
-  if (id === "picture" || id === "toilet") { ensurePicture(); setTimeout(showPaths, 0); }
+  // The board itself; the path tabs build the same board (it is their input)
+  // and are the only place the exact path walk is drawn.
+  if (id === "picture" || id === "toilet") ensurePicture();
+  if (PATH_TABS.includes(id)) { ensurePicture(); setTimeout(showPaths, 0); }
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   if (id === "injuries") ensureInjuries();
   if (id === "standings" || id === "tiebreakers") ensureStandings();
@@ -11998,9 +12018,12 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     if (c.clinchedPlayoff !== was) c.method = "magic";
     // Eliminations from that same enumeration could be undone by a tie; keep
     // only the ones the win bounds prove.
-    if (c.eliminated && c.method === "enumeration") { c.eliminated = false; c.method = "bounds+ties"; }
+    // With nothing left to play no future tie exists, so the enumeration is final.
+    if (c.eliminated && c.method === "enumeration" && remaining.length) { c.eliminated = false; c.method = "bounds+ties"; }
     if (c.eliminated && c.magic != null) c.eliminated = false;   // can't be both (never fires if both are right)
   });
+  // Every game final (this week's last one included): the chips are the final field, nothing else.
+  if (!remaining.length) finalClinch(clinch, pathFinal({ teams: settledTeams, H: pathH, playoffTeams: rules.playoffTeams, byes: rules.byes }));
   const whatIf = whatIfOf(out);
   // Teams whose game this week is already final: no what-if, but not "no game" either.
   const final = new Set(currentGames(job.model, job.live).filter(g => g.final).flatMap(g => [g.a, g.b]));
@@ -12457,6 +12480,38 @@ function makePathSeeder(N, div, P, B = 0) {
  * thousand outcomes so the tab never freezes.
  */
 const PATH_KEYS = ["playoff", "bye", "bowlBye"];
+
+/**
+ * No games left: nothing to walk. The final field, seeded on the league's rule
+ * (tieOrder + seedField — every points for is now final, so a tie on wins is
+ * settled, not "down to points"), as team indices: the playoff seeds in order,
+ * the first-round byes, and the bowl's bottom two (the two worst seeds, when
+ * the bowl has at least four teams — the walk's own rule).
+ */
+function pathFinal({ teams, H, playoffTeams, byes = 0 }) {
+  const P = playoffTeams, B = Math.min(byes || 0, P);
+  const Wt = teams.map(t => t.w), PF = teams.map(t => t.pf), div = i => teams[i].div;
+  const tOrd = list => tieOrder(list, Wt, PF, H, div);
+  const rank = tOrd(teams.map((_, i) => i));
+  const field = seedField(rank, div, P, tOrd);
+  const order = [...field.seeds, ...rank.filter(i => !field.seeds.includes(i))];
+  const bowl = order.slice(P);
+  return { final: true, games: 0, outcomes: 1, remaining: [], order, champs: field.champs.slice(),
+    playoff: order.slice(0, P), bye: order.slice(0, B), bowlBye: bowl.length >= 4 ? bowl.slice(-2) : [] };
+}
+/** Clinch flags once nothing is left to play: every one final, straight off the final field. */
+function finalClinch(clinch, F) {
+  clinch.forEach((c, i) => {
+    c.clinchedPlayoff = F.playoff.includes(i);
+    c.eliminated = !c.clinchedPlayoff;
+    c.clinchedDiv = F.champs.includes(i);
+    c.clinchedBye = F.bye.includes(i);
+    c.clinchedTop = F.order[0] === i;
+    c.method = "final";
+  });
+  return clinch;
+}
+
 async function pathScenarios({ teams, H, remaining, playoffTeams, byes = 0 }) {
   const N = teams.length, R = remaining.length, P = playoffTeams, B = Math.min(byes || 0, P);
   if (R > PATH_MAX_GAMES) return null;
@@ -12690,33 +12745,52 @@ async function pathDetails(PS) {
 }
 
 /*
- * Results as short phrases, one team per phrase where it can be: a team that
- * must lose twice reads "wesley55 loses wk 12 & 14", one that must win twice
- * "sizzlemc2 wins wk 12 & 14", anything else "A beats B wk 13". Every team
- * plays once a week, so "X loses wk N" names exactly one result. Returns
- * [{ html, lits }] — the literals each phrase stands for — in week order.
+ * Results as short phrases, one team per phrase: all of a team's required
+ * results in one, by week — "moseslin loses wk 12 & 13, beats drewkim wk 14"
+ * — and "A beats B wk 13" for a result whose teams appear nowhere else. Every
+ * team plays once a week, so "X loses wk N" names exactly one result. Returns
+ * [{ html, lits }] — the literals each phrase stands for — ordered by earliest
+ * week, then team name.
  */
 function pathPhrases(lits, PS, name) {
   const rem = PS.remaining, left = new Set(lits.map((l, k) => k));
   const loserOf = ([g, w]) => (rem[g][0] === w ? rem[g][1] : rem[g][0]);
   const wk = ([g]) => rem[g][2];
+  const wks = ks => ks.map(k => wk(lits[k])).join(", ").replace(/, (\d+)$/, " &amp; $1");
   const out = [];
-  const take = (keyOf, verb) => {
+  // One phrase per team: the team in the most of the results still unphrased
+  // takes all of them (ties: earliest week, then name), until no team is in
+  // two. "moseslin loses wk 12 & 13, beats drewkim wk 14" — never the name twice.
+  for (;;) {
     const by = new Map();
-    for (const k of left) { const t = keyOf(lits[k]); if (!by.has(t)) by.set(t, []); by.get(t).push(k); }
-    for (const [t, ks] of by) if (ks.length >= 2) {
-      ks.sort((a, b) => wk(lits[a]) - wk(lits[b]));
-      out.push({ at: wk(lits[ks[0]]), lits: ks.map(k => lits[k]),
-        html: `${esc(name(t))} ${verb} <span class="pa-wk">wk ${ks.map(k => wk(lits[k])).join(", ").replace(/, (\d+)$/, " &amp; $1")}</span>` });
-      ks.forEach(k => left.delete(k));
+    for (const k of left) for (const t of [lits[k][1], loserOf(lits[k])]) { if (!by.has(t)) by.set(t, []); by.get(t).push(k); }
+    let best = null;
+    for (const [t, ks] of by) {
+      if (ks.length < 2) continue;
+      const at = Math.min(...ks.map(k => wk(lits[k])));
+      if (!best || ks.length > best.ks.length || (ks.length === best.ks.length && (at < best.at || (at === best.at && String(name(t)).localeCompare(String(name(best.t))) < 0)))) best = { t, ks, at };
     }
-  };
-  take(loserOf, "loses");
-  take(([, w]) => w, "wins");
-  for (const k of left) out.push({ at: wk(lits[k]), lits: [lits[k]],
-    html: `${esc(name(lits[k][1]))} beats ${esc(name(loserOf(lits[k])))} <span class="pa-wk">wk ${wk(lits[k])}</span>` });
-  return out.sort((a, b) => a.at - b.at);
+    if (!best) break;
+    const { t, ks } = best;
+    ks.sort((a, b) => wk(lits[a]) - wk(lits[b]));
+    const lost = ks.filter(k => lits[k][1] !== t), won = ks.filter(k => lits[k][1] === t);
+    // Each part: several losses (or wins) as one "loses wk 12 & 13"; a single one names the opponent.
+    const parts = [];
+    if (lost.length >= 2) parts.push({ at: wk(lits[lost[0]]), html: `loses <span class="pa-wk">wk ${wks(lost)}</span>` });
+    else if (lost.length) parts.push({ at: wk(lits[lost[0]]), html: `loses to ${esc(name(lits[lost[0]][1]))} <span class="pa-wk">wk ${wks(lost)}</span>` });
+    if (won.length >= 2) parts.push({ at: wk(lits[won[0]]), html: `wins <span class="pa-wk">wk ${wks(won)}</span>` });
+    else if (won.length) parts.push({ at: wk(lits[won[0]]), html: `beats ${esc(name(loserOf(lits[won[0]])))} <span class="pa-wk">wk ${wks(won)}</span>` });
+    parts.sort((a, b) => a.at - b.at);
+    out.push({ at: best.at, who: String(name(t)), lits: ks.map(k => lits[k]), html: `<span class="pa-ph" data-who="${esc(String(t))}">${esc(name(t))} ${parts.map(p => p.html).join(", ")}</span>` });
+    ks.forEach(k => left.delete(k));
+  }
+  for (const k of left) out.push({ at: wk(lits[k]), who: String(name(lits[k][1])), lits: [lits[k]],
+    html: `<span class="pa-ph" data-who="${esc(String(lits[k][1]))}">${esc(name(lits[k][1]))} beats ${esc(name(loserOf(lits[k])))} <span class="pa-wk">wk ${wk(lits[k])}</span></span>` });
+  // Earliest week first, then team name.
+  return out.sort((a, b) => a.at - b.at || a.who.localeCompare(b.who));
 }
+/** Plain text of a way's phrases, for ordering the ways. */
+const pathPhraseKey = ps => ps.map(p => p.html.replace(/<[^>]+>/g, "")).join(" | ");
 const pathLitAttr = lits => lits.map(([g, w]) => `${g}:${w}`).join(" ");
 /** The literals of a cube as words, in short phrases. */
 function pathCubeText(lits, PS, name, joiner = " and ") {
@@ -12754,8 +12828,10 @@ function pathResHTML(x, PS, i, name, M = {}) {
     if (!cubes.length) return "";
     core = cubes[0].lits.filter(l => cubes.every(c => c.lits.some(q => kk(q) === kk(l))));
     const ck = new Set(core.map(kk));
+    // The ways in one fixed order: fewest results first, then by their phrases.
     const alts = cubes.map(c => ({ ...c, lits: c.lits.filter(l => !ck.has(kk(l))) })).filter(c => c.lits.length)
-      .sort((a, b) => b.gain - a.gain || a.lits.length - b.lits.length);
+      .map(c => ({ ...c, ph: phr(c.lits) }))
+      .sort((a, b) => a.lits.length - b.lits.length || pathPhraseKey(a.ph).localeCompare(pathPhraseKey(b.ph)));
     nAlts = alts.length;
     let h = "", room = PATH_KEY;
     if (core.length) {
@@ -12768,7 +12844,7 @@ function pathResHTML(x, PS, i, name, M = {}) {
         h += `<details class="pa-all" data-req="needs-all"><summary>All ${core.length} ${w.needAll}</summary><ul>${ps.map(p =>
           `<li data-core-item="${pathLitAttr(p.lits)}">${p.html}</li>`).join("")}</ul></details>`;
     }
-    const altPh = alts.map(c => phr(c.lits));
+    const altPh = alts.map(c => c.ph);
     const inline = !x.uncovered && alts.length > 0 && altPh.reduce((s, p) => s + p.length, 0) <= room;
     if (inline) {
       h += `<span class="pa-help" data-req="oneof">${core.length ? "and one of" : w.one0}: ${alts.map((c, k) =>
@@ -12970,9 +13046,73 @@ function renderPaths(host, PS, PP, mode, det = null) {
   host.appendChild(el("p", "st-note", `Exact: all ${PS.outcomes.toLocaleString()} ways the last ${PS.games} regular-season games can go, each seeded on the league's tiebreakers — two teams level: head to head, then division record if they share a division, then points for; three or more level: points for. ${how} A record whose lines say the same thing whichever game is lost (or won) shows once ("any loss", or "loses to A or B"). The only percentage shown is the simulation's odds. A future tied game is left out. "Down to points" means only a points-for tiebreak decides it.`));
 }
 
+/**
+ * The Final state of a path section: the regular season is over (no games
+ * left), so there is nothing to enumerate — just who made it, in seed order.
+ */
+function renderPathsFinal(host, F, PP, mode) {
+  if (!host) return;
+  host.innerHTML = "";
+  const M = PATH_MODES[mode], B = PP.rules.byes;
+  host.appendChild(sechead(`${M.title} · Final`, "The regular season is over: every result is in, so there are no paths left to map."));
+  if (mode === "bye" && !B) { host.appendChild(el("div", "empty", "<b>No first-round byes</b>This bracket has none.")); return; }
+  const set = mode === "playoff" ? F.playoff : mode === "bye" ? F.bye : F.bowlBye;
+  const what = mode === "playoff" ? `Made the playoffs (${set.length})` : mode === "bye" ? "Got a first-round bye" : "Landed in the bottom two (seeds 11–12, toilet-bowl bye)";
+  const seedOf = i => F.order.indexOf(i) + 1;
+  const box = el("div", "pa-final");
+  box.dataset.final = mode;
+  box.innerHTML = `<div class="pa-st"><span class="badge gold">Final</span> ${esc(what)}</div>${set.length
+    ? `<div class="pa-settled">${set.map(i => `<span class="nmcell" data-rid="${esc(String(PP.rows[i].rid))}" data-seed="${seedOf(i)}">${avatarHTML(PP.rows[i].uid, "sm")}<span class="nm">${esc(nameOf(PP.rows[i].uid))}</span><span class="badge ${mode === "bowl" ? "blue" : "gold"}">Seed ${seedOf(i)}</span></span>`).join("")}</div>`
+    : `<div class="empty">Nobody.</div>`}`;
+  host.appendChild(box);
+  host.appendChild(el("p", "st-note", "Seeded on the league's tiebreakers with every result final — division winners first; two teams level: head to head, then division record if they share a division, then points for; three or more level: points for."));
+}
+
+/** No board to map (season not started, or no divisions): each path section says so. */
+function pathsUnavailable(msg) {
+  const hosts = [["playoffPathHost", "playoff"], ["byePathHost", "bye"], ["bowlPathHost", "bowl"]];
+  for (const [id, mode] of hosts) {
+    const h = $("#" + id); if (!h) continue;
+    h.innerHTML = "";
+    h.appendChild(sechead(PATH_MODES[mode].title, ""));
+    h.appendChild(el("div", "empty", `<b>No paths to map yet</b>${esc(msg)}`));
+  }
+  const e = $("#toiletEscapeHost"); if (e) e.innerHTML = "";
+  document.body.dataset.pathsReady = "empty";
+}
+
+/**
+ * Path to Toilet Bowl's last-place block: who is safe from finishing last, and
+ * what "Can still escape" means — off the same exact chips as the Toilet Bowl tab.
+ */
+function renderToiletEscape(PP, final) {
+  const host = $("#toiletEscapeHost"), T = window.__TOILET;
+  if (!host) return;
+  host.innerHTML = "";
+  const lastWk = PP.rules.playoffWeekStart + 2;
+  host.appendChild(sechead("Last place and escaping it",
+    `Last place is the loser of the week-${lastWk} toilet-bowl final, not the worst regular-season record.`));
+  if (!T) { host.appendChild(el("div", "empty", "The bowl field isn't available yet.")); return; }
+  const clinch = new Map((PP.clinch || []).map(c => [c.rid, c]));
+  const chip = d => d.chip ? ppBadge(d.chip === "Locked into the bowl" ? "red" : "blue", d.chip, d.chip) : bowlMagicHTML(clinch.get(d.rid));
+  const who = (d, c) => `<span class="nmcell" data-rid="${esc(String(d.rid))}">${avatarHTML(d.uid || (PP.rows.find(r => r.rid === d.rid) || {}).uid, "sm")}<span class="nm">${esc(d.name)}</span>${c}</span>`;
+  host.appendChild(el("p", "st-note", final
+    ? "<b>Locked into the bowl</b> — the regular season is over and it missed the playoffs. <b>Safe from last</b> — it can no longer finish last: it made the playoffs, or has already won a bowl game."
+    : "<b>Can still escape</b> — even losing out doesn't lock it into the toilet bowl: it could still make the playoffs. <b>Magic N</b> — lose any N more and it is in the bowl, whatever else happens. <b>Locked into the bowl</b> — no result gets it a playoff spot. <b>Safe from last</b> — it can no longer finish last."));
+  const inBowl = [...T.seeds, ...(T.bubbles || [])];
+  host.appendChild(el("div", "tb-esc-list", `<span class="tb-safe-h">${final ? "In the bowl" : "In the bowl today, and on the bubble"}</span>` +
+    inBowl.map(d => who(d, chip(d))).join("")));
+  const safe = T.safeFromLast || [];
+  host.appendChild(el("div", "tb-esc-list", `<span class="tb-safe-h">Safe from last</span>` + (safe.length
+    ? safe.map(d => `<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue", "Safe from last", "Safe")}</span>`).join("")
+    : `<span class="st-note">Nobody yet — every team could still finish last.</span>`)));
+  host.dataset.safeFromLast = safe.map(d => String(d.rid)).join(" ");
+}
+
 let PATH_CACHE = null, PATH_PENDING = null, PATH_LONG = null;
-const pathTabOpen = () => ["picture", "toilet"].some(id => { const p = $(`[data-panel="${id}"]`); return p && !p.hidden; });
-/** Called when Playoff Picture or Toilet Bowl is opened: draw the paths for the newest board, if one is waiting. */
+const tabOpen = ids => ids.some(id => { const p = $(`[data-panel="${id}"]`); return p && !p.hidden; });
+const pathTabOpen = () => tabOpen(PATH_TABS);
+/** Called when a path tab is opened: draw the paths for the newest board, if one is waiting. */
 function showPaths() {
   if (!PATH_PENDING) return;
   const PP = PATH_PENDING; PATH_PENDING = null;
@@ -13008,7 +13148,24 @@ async function drawPaths(PP) {
   const seq = ++PATH_SEQ;
   delete document.body.dataset.pathsDetail;
   try {
+    // Nothing left to play: the Final state, straight from the final field — no walk.
+    if (!PP.pathIn.remaining.length) {
+      const F = pathFinal({ ...PP.pathIn, playoffTeams: PP.rules.playoffTeams, byes: PP.rules.byes });
+      window.__PATHS = F; window.__PATH_DETAIL = null;
+      PATH_LONG = { key: pathKeyOf(PP), set: new Set() };
+      hosts.forEach((h, k) => renderPathsFinal(h, F, PP, modes[k]));
+      renderToiletEscape(PP, true);
+      window.__PATH_DRAW = { seq, PS: F, det: null, final: true };
+      for (const h of hosts) if (h) h.dataset.pathsSeq = String(seq);
+      document.body.dataset.pathsReady = "1";
+      document.body.dataset.pathsFinal = "1";
+      document.body.dataset.pathsSeq = String(seq);
+      document.body.dataset.pathsDetail = "1";
+      return;
+    }
+    delete document.body.dataset.pathsFinal;
     if (!PATH_CACHE) for (const h of hosts) if (h && !h.childElementCount) h.innerHTML = `<div class="empty"><b>Mapping every scenario…</b></div>`;
+    renderToiletEscape(PP, false);
     const PS = await pathsFor(PP);
     if (seq !== PATH_SEQ) return;
     window.__PATHS = PS;
@@ -13055,9 +13212,7 @@ async function ensurePicture() {
   // From here on the tab follows the live board: every reprice redraws it —
   // unless nobody is looking, in which case it waits for the next visit.
   onLive(() => {
-    const picturePanel = host.closest('[data-panel="picture"]');
-    const toiletPanel = $('[data-panel="toilet"]');
-    if ((!picturePanel || picturePanel.hidden) && (!toiletPanel || toiletPanel.hidden)) PICTURE_STALE = true;
+    if (!tabOpen(PICTURE_TABS)) PICTURE_STALE = true;
     else drawPicture(host);
   });
   startLivePolling();
@@ -13088,10 +13243,19 @@ async function drawPicture(host) {
       document.body.dataset.pictureReady = "empty";
       PICTURE_DRAWN = false;
       const th = $("#toiletHost");
-      if (R.why === "regular-season-over" && th && L.season && L.season.games) {
+      if (R.why === "regular-season-over" && L.season && L.season.games) {
+        // No games left: the field is final. The path tabs say so (who is in,
+        // who has a bye, who is in the bottom two) and walk nothing.
         const settled = settledToiletPicture(L, R);
-        drawToiletPicture(th, settled, null, L.season, L.season.games, true);
-      } else if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">${R.why === "no-divisions" ? "Division seeding is unavailable, so the bowl field cannot be determined." : "The toilet bowl picture will appear when the regular season starts."}</p></div>`; }
+        if (th) drawToiletPicture(th, settled, null, L.season, L.season.games, true);
+        PATH_PENDING = settled;
+        if (pathTabOpen()) { PATH_PENDING = null; drawPaths(settled); }
+      } else {
+        if (th) { window.__TOILET = null; th.innerHTML = `<div class="tbv"><div class="tb-head">Toilet Bowl Picture</div><p class="tb-note">${R.why === "no-divisions" ? "Division seeding is unavailable, so the bowl field cannot be determined." : "The toilet bowl picture will appear when the regular season starts."}</p></div>`; }
+        PATH_PENDING = null;
+        pathsUnavailable(R.why === "no-divisions" ? "Division seeding is unavailable, so the paths cannot be worked out."
+          : "The paths appear once the regular season has started.");
+      }
       return;
     }
     // A refresh keeps the last table up while it works.
@@ -13157,10 +13321,12 @@ function settledToiletPicture(L, R) {
   const rank=tOrd(teams.map((_,i)=>i));
   const field=seedField(rank,i=>teams[i].div,rules.playoffTeams,tOrd), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
   const todaySeed=new Array(teams.length); order.forEach((i,k)=>todaySeed[i]=k+1);
-  const C=exactClinch({teams,remaining:[],playoffTeams:rules.playoffTeams,byes:rules.byes});
+  const C=finalClinch(exactClinch({teams,remaining:[],playoffTeams:rules.playoffTeams,byes:rules.byes}),pathFinal({teams,H,playoffTeams:rules.playoffTeams,byes:rules.byes}));
   const by=new Map(C.map(c=>[c.rid,c]));
   const rows=teams.map((t,i)=>({i,rid:t.rid,uid:t.uid,div:t.div,w:W[i],l:Loss[i],t:T[i],pf:PF[i],miss:null,playoff:null,todaySeed:todaySeed[i],clinch:by.get(t.rid)||{}}));
-  return {rows,order,rules,clinch:C,week:rules.playoffWeekStart,inFlight:false,sims:0,settled:true};
+  // The path tabs' input: every result final, nothing remaining.
+  const pathIn={teams:teams.map(t=>({rid:t.rid,div:t.div,w:t.w,pf:t.pf})),H,remaining:[],byes:rules.byes};
+  return {rows,order,rules,clinch:C,week:rules.playoffWeekStart,inFlight:false,sims:0,settled:true,pathIn};
 }
 
 function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = false) {
@@ -13194,7 +13360,7 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   const ppMatch=(label,a,b,cls="")=>`<div class="pp-mw"><div class="pp-lb">${esc(label)}</div><div class="pp-mt ${cls}">${a}${b}</div></div>`;
   const bracket=`<div class="pp-br"><div class="pp-rd">${ppMatch(`Wk ${rules.playoffWeekStart} · 7 v 10`,ppslot(7),ppslot(10))}${ppMatch(`Wk ${rules.playoffWeekStart} · 8 v 9`,ppslot(8),ppslot(9))}</div><div class="pp-cn"><i></i><i></i></div><div class="pp-rd semifinals">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 12 v loser of 8/9`,ppslot(12),gslot(advB,null,"Loser of 8/9"),"byeg")}${ppMatch(`Wk ${rules.playoffWeekStart+1} · 11 v loser of 7/10`,ppslot(11),gslot(advA,null,"Loser of 7/10"),"byeg")}</div><div class="pp-join"></div><div class="pp-fin">${ppMatch(`Wk ${rules.playoffWeekStart+2} · Final`,gslot(finalA?.a,null,"Semi loser"),gslot(finalA?.b,null,"Semi loser"),"fin")}</div><div class="pp-troph">Loser finishes last</div><div class="pp-place">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 7th/8th`,gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}${ppMatch(`Wk ${rules.playoffWeekStart+2} · 9th/10th`,gslot(place9?.a,null,"Semi winner"),gslot(place9?.b,null,"Semi winner"))}</div></div>`;
   const badge=d=>d.chip?ppBadge(d.chip==="Locked into the bowl"?"red":"blue",d.chip,d.chip):"";
-  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span>${badge(d)}${bowlMagicHTML(clinch.get(d.rid))}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Bowl",d.bowlPct,""],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}" data-k="${label.toLowerCase()}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
+  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span>${badge(d)}${bowlMagicHTML(clinch.get(d.rid))}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bottom two",d.bowlByePct,"by","bye"],["Bowl",d.bowlPct,"","bowl"],["Last",d.lastPct,"","last"]].map(([label,v,cls,k])=>`<div class="pp-pb ${cls}" data-k="${k}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
   const bubbles=PP.order.map(i=>rows[i]).filter(r=>r.todaySeed<=rules.playoffTeams&&!r.clinch?.clinchedPlayoff).map(r=>({rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,w:r.w,l:r.l,t:r.t||0,pf:r.pf,uid:r.uid,chip:""}));
   const safe=rows.filter(r=>r.clinch?.clinchedPlayoff||escaped.some(x=>String(x)===String(r.rid))).map(r=>{const c=chips.get(r.rid)||{};return {rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,chip:"Safe from last",provingSource:c.provingSource||null};});
   const pair=(week,label,seeds,rids)=>({week,label,seeds,names:rids.map(rid=>{const r=byRid.get(rid);return r?nameOf(r.uid):null;})});
@@ -13203,8 +13369,8 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
   const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
   const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>${settled?"":`<p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>losses needed to lock into the toilet bowl — lose any N more and you're in it, no matter what anyone else does. <span class="pp-mg help">Can still escape</span>even losing out doesn't lock it into the bowl — it could still make the playoffs. Locked into the bowl means no result gets it a playoff spot. Safe from last means it can no longer finish last; every other bowl team could finish last.</p>`}`;
-  const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bye</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
-  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bye line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, ordered on the league tiebreak (two teams level: head to head, then division record if they share a division, then points for; three or more: points for). ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bye % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p>${safe.length?`<div class="tb-safe" data-safe-from-last><span class="tb-safe-h">Safe from last</span>${safe.map(d=>`<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue","Safe from last","Safe")}</span>`).join("")}</div>`:""}</section>`;
+  const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bottom two</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bottom two",d.bowlByePct,"by","bye"],["Last",d.lastPct,"","last"]].map(([label,v,cls,k])=>`<div class="pp-pb ${cls}" data-k="${k}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
+  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bottom-two line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, ordered on the league tiebreak (two teams level: head to head, then division record if they share a division, then points for; three or more: points for). ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bottom two % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p>${safe.length?`<div class="tb-safe" data-safe-from-last><span class="tb-safe-h">Safe from last</span>${safe.map(d=>`<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue","Safe from last","Safe")}</span>`).join("")}</div>`:""}</section>`;
 }
 
 function panelPicture() {
@@ -13220,8 +13386,7 @@ function panelPicture() {
   const host = el("div"); host.id = "pictureHost";
   host.appendChild(el("div", "empty", "<b>Working out the playoff picture…</b>Reading the rest of the schedule and simulating it."));
   p.appendChild(host);
-  const path = el("div", "pa-host"); path.id = "playoffPathHost"; p.appendChild(path);
-  const bye = el("div", "pa-host"); bye.id = "byePathHost"; p.appendChild(bye);
+  p.appendChild(pathLinkEl("playoff-path", "See every path → Path to Playoffs"));
   return p;
 }
 
@@ -13229,7 +13394,34 @@ function panelToilet() {
   const p = el("div", "panel"); p.dataset.panel = "toilet";
   p.appendChild(sechead("Toilet Bowl", "The consolation bracket for teams that miss the playoffs, built from the same season simulation."));
   const host = el("div"); host.id = "toiletHost"; p.appendChild(host);
+  p.appendChild(pathLinkEl("toilet-path", "See every path → Path to Toilet Bowl"));
+  return p;
+}
+
+/** The small link from a board to its path tab: a plain hash link, so the normal route opens it. */
+function pathLinkEl(tab, text) {
+  const d = el("p", "pa-link");
+  d.dataset.pathLink = tab;
+  d.innerHTML = `<a href="#${tab}">${esc(text)}</a>`;
+  return d;
+}
+
+/** Path to Playoffs: the playoff path and the first-round-bye path. Drawn only once the tab is opened. */
+function panelPlayoffPath() {
+  const p = el("div", "panel"); p.dataset.panel = "playoff-path";
+  p.appendChild(sechead("Path to Playoffs",
+    "Every way the rest of the regular season can go, worked out exactly from the live schedule: what each team needs to make the playoffs, and to earn a first-round bye."));
+  const path = el("div", "pa-host"); path.id = "playoffPathHost"; p.appendChild(path);
+  const bye = el("div", "pa-host"); bye.id = "byePathHost"; p.appendChild(bye);
+  return p;
+}
+/** Path to Toilet Bowl: the bottom-two path, plus who is safe from last and who can still escape. */
+function panelToiletPath() {
+  const p = el("div", "panel"); p.dataset.panel = "toilet-path";
+  p.appendChild(sechead("Path to Toilet Bowl",
+    "Who can still land in the bowl's bottom two (seeds 11–12), exactly, from the live schedule — and who is already safe from finishing last."));
   const path = el("div", "pa-host"); path.id = "bowlPathHost"; p.appendChild(path);
+  const esc0 = el("div", "pa-host tb-esc"); esc0.id = "toiletEscapeHost"; p.appendChild(esc0);
   return p;
 }
 
@@ -14802,6 +14994,8 @@ async function boot() {
     app.appendChild(panelTiebreakers());
     app.appendChild(panelPicture());
     app.appendChild(panelToilet());
+    app.appendChild(panelPlayoffPath());
+    app.appendChild(panelToiletPath());
     app.appendChild(panelDraft());
     app.appendChild(panelTrades());
     app.appendChild(panelRankings());
@@ -14851,10 +15045,16 @@ async function boot() {
       const tabId = TAB_ALIAS.get(want) || want;
       show(TABS.some(t => t.id === tabId) ? tabId : "home");
     }
-    // An old address typed or pasted over the current one still redirects.
+    // An old address typed or pasted over the current one still redirects, and
+    // an in-page link to a tab (href="#playoff-path") opens it the normal way.
     window.addEventListener("hashchange", () => {
-      const to = TAB_ALIAS.get(location.hash.replace("#", ""));
-      if (to) show(to);
+      const h = location.hash.replace("#", "");
+      // An alias always goes through show(), even onto the tab already open, so
+      // the address is rewritten to the real tab (#machine becomes #trades).
+      // A plain tab hash skips the redundant re-show of the open tab.
+      if (TAB_ALIAS.has(h)) { show(TAB_ALIAS.get(h)); return; }
+      const cur = (document.querySelector('#tabs button[aria-selected="true"]') || { dataset: {} }).dataset.tab;
+      if (TABS.some(t => t.id === h) && h !== cur) show(h);
     });
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
     window.__DFFL = {
@@ -14872,7 +15072,8 @@ async function boot() {
       POWER_W, FORM_WEEKS, JARGON,
       positionRooms: roomsOnce().rows, positionRoomsOf, roomsOnce, roomsSection, ROOMS,
       raceData, raceAsOf, seedField, tieOrder, h2hFrom, pairSchedule, standingsData, ensureStandings,
-      pathScenarios, makePathSeeder, pathDetail, pathDetails, pathCubes, pathKeyOf, pathLongShots, longShotsFor, renderPaths, drawPaths, PATH_MAX_GAMES, PATH_KEYS, ppMagicHTML, bowlMagicHTML, tieReason,
+      pathScenarios, pathFinal, finalClinch, renderPathsFinal, renderToiletEscape, pathPhrases, pathPhraseKey, PATH_TABS, PICTURE_TABS,
+      makePathSeeder, pathDetail, pathDetails, pathCubes, pathKeyOf, pathLongShots, longShotsFor, renderPaths, drawPaths, PATH_MAX_GAMES, PATH_KEYS, ppMagicHTML, bowlMagicHTML, tieReason,
       ensurePicture, renderPicture, pictureBoard, pictureEmpty, computePicture, exactClinch, magicNumbers, settledStandings, leagueRules, pictureJob, pictureRun, pictureSig, drawToiletPicture, settledToiletPicture, toiletChipMap, toiletEscapes,
       runPicture, runPictureWorker, runPictureMain, pictureWorkerSource, whatIfOf, swingBoard,
       currentGames, WHATIF_SIMS, ENUM_WEEKS,

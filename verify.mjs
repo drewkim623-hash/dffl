@@ -77,13 +77,36 @@ check("twelve managers known", meta.managers >= 12, `${meta.managers}`);
 check("__DFFL internals exposed", await page.evaluate(() => !!window.__DFFL));
 
 group("Tabs");
-const EXPECT = ["home", "scores", "managers", "records", "stats", "matchups", "power", "odds", "injuries", "standings", "tiebreakers", "picture", "toilet", "draft", "trades", "rankings", "recaps", "ask"];
+const EXPECT = ["home", "scores", "managers", "records", "stats", "matchups", "power", "odds", "injuries", "standings", "tiebreakers", "picture", "toilet", "playoff-path", "toilet-path", "draft", "trades", "rankings", "recaps", "ask"];
 check("every tab present and in order", JSON.stringify(meta.tabs) === JSON.stringify(EXPECT), meta.tabs.join(","));
 const toiletNav = await page.evaluate(() => {
   const p=document.querySelector('#tabs button[data-tab="picture"]'),t=document.querySelector('#tabs button[data-tab="toilet"]');
   return {label:t?.textContent.trim(),next:p?.nextElementSibling===t,role:t?.getAttribute("role"),tablist:t?.parentElement?.getAttribute("role"),selected:t?.getAttribute("aria-selected")};
 });
 check("Toilet Bowl tab follows Playoff Picture with matching tab semantics",toiletNav.label==="Toilet Bowl"&&toiletNav.next&&toiletNav.role==="tab"&&toiletNav.tablist==="tablist",JSON.stringify(toiletNav));
+// The two path tabs sit right after Toilet Bowl, in this order, as ordinary tabs;
+// the path hosts live only there, and each board links to its path tab.
+const pathNav = await page.evaluate(() => {
+  const t = document.querySelector('#tabs button[data-tab="toilet"]');
+  const a = document.querySelector('#tabs button[data-tab="playoff-path"]'), b = document.querySelector('#tabs button[data-tab="toilet-path"]');
+  const panel = id => document.querySelector(`[data-panel="${id}"]`);
+  const has = (id, sel) => !!(panel(id) && panel(id).querySelector(sel));
+  const link = id => { const l = panel(id) && panel(id).querySelector("[data-path-link] a"); return l ? { href: l.getAttribute("href"), text: l.textContent.trim() } : null; };
+  return { a: a?.textContent.trim(), b: b?.textContent.trim(), order: t?.nextElementSibling === a && a?.nextElementSibling === b,
+    roles: [a, b].every(x => x && x.getAttribute("role") === "tab"),
+    pictureHosts: ["#playoffPathHost", "#byePathHost", "#bowlPathHost"].filter(s => has("picture", s) || has("toilet", s)),
+    playoffTab: has("playoff-path", "#playoffPathHost") && has("playoff-path", "#byePathHost") && !has("playoff-path", "#bowlPathHost"),
+    toiletTab: has("toilet-path", "#bowlPathHost") && has("toilet-path", "#toiletEscapeHost") && !has("toilet-path", "#playoffPathHost"),
+    pictureLink: link("picture"), toiletLink: link("toilet") };
+});
+check('nav: "Path to Playoffs" then "Path to Toilet Bowl" come right after Toilet Bowl, as tabs',
+  pathNav.a === "Path to Playoffs" && pathNav.b === "Path to Toilet Bowl" && pathNav.order && pathNav.roles, JSON.stringify(pathNav));
+check("the Playoff Picture and Toilet Bowl panels no longer hold any path section", pathNav.pictureHosts.length === 0, pathNav.pictureHosts.join(","));
+check("Path to Playoffs holds the playoff and first-round-bye paths; Path to Toilet Bowl the bottom-two path and the last-place block",
+  pathNav.playoffTab && pathNav.toiletTab, JSON.stringify(pathNav));
+check("each board links to its path tab through the normal hash route",
+  pathNav.pictureLink?.href === "#playoff-path" && /See every path → Path to Playoffs/.test(pathNav.pictureLink?.text || "")
+  && pathNav.toiletLink?.href === "#toilet-path" && /See every path → Path to Toilet Bowl/.test(pathNav.toiletLink?.text || ""), JSON.stringify(pathNav));
 for (const id of EXPECT) {
   await page.click(`#tabs button[data-tab="${id}"]`);
   const shown = await page.evaluate(t => {
@@ -2145,19 +2168,47 @@ const raceLink = await lazyPage.evaluate(() => ({
   visible: !!document.querySelector('[data-panel="picture"]') && !document.querySelector('[data-panel="picture"]').hidden,
 }));
 check("#race opens the Playoff Picture", raceLink.hash === "#picture" && raceLink.selected === "picture" && raceLink.visible, JSON.stringify(raceLink));
-// Opening the tab is what starts the walk; once it lands, the bye section is drawn
-// and its only percentages are the simulation's ("Bye N% in the sim").
-const byeLazy = await lazyPage.waitForFunction(() => document.body.dataset.pathsReady || document.body.dataset.pictureReady === "empty", null, { timeout: 150000 })
-  .then(() => lazyPage.evaluate(() => {
-    const h = document.querySelector("#byePathHost"), txt = h ? h.textContent : "";
-    return { ready: document.body.dataset.pathsReady || null, empty: document.body.dataset.pictureReady === "empty",
-      head: /Path to a first-round bye/.test(txt), stray: txt.replace(/(Bye|Playoffs|Bowl bye|Bottom two) [<>]?[\d.]+% in the sim/g, "").match(/[^ ]*%[^ ]*/g) };
-  })).catch(e => ({ err: String(e) }));
-if (!byeLazy.empty) {
-  check("opening Playoff Picture draws the first-round-bye path", byeLazy.ready === "1" && byeLazy.head, JSON.stringify(byeLazy));
-  check("the bye path shows no percentage but the simulation's Bye %", !byeLazy.stray, JSON.stringify(byeLazy.stray));
-}
+// The Playoff Picture alone no longer walks the paths: they belong to the path tabs.
+await lazyPage.waitForFunction(() => document.body.dataset.pictureReady, null, { timeout: 180000 }).catch(() => {});
+await lazyPage.waitForTimeout(400);
+const pictureOnly = await lazyPage.evaluate(() => ({ paths: document.body.dataset.pathsReady || null, PS: window.__PATHS !== undefined }));
+check("opening Playoff Picture alone does not run the path walk", (pictureOnly.paths === null || pictureOnly.paths === "empty") && !pictureOnly.PS, JSON.stringify(pictureOnly));
+// Its link opens Path to Playoffs through the normal hash route.
+await lazyPage.click('[data-panel="picture"] [data-path-link] a');
+await lazyPage.waitForTimeout(300);
+const viaLink = await lazyPage.evaluate(() => ({ hash: location.hash,
+  selected: (document.querySelector('#tabs button[aria-selected="true"]') || {}).dataset?.tab || null,
+  visible: !document.querySelector('[data-panel="playoff-path"]').hidden }));
+check("the Playoff Picture's path link opens Path to Playoffs", viaLink.hash === "#playoff-path" && viaLink.selected === "playoff-path" && viaLink.visible, JSON.stringify(viaLink));
 await lazyPage.close();
+
+// Fresh pages booted straight on each path tab's hash: the tab opens, and the
+// paths are computed without the Playoff Picture ever being visited.
+for (const [hash, hostSel, head] of [["playoff-path", "#byePathHost", /Path to a first-round bye/], ["toilet-path", "#bowlPathHost", /Path to the bottom two/]]) {
+  const direct = await ctx.newPage();
+  await direct.goto(BASE + "#" + hash, { waitUntil: "domcontentloaded" });
+  await direct.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const opened = await direct.evaluate(h => ({ hash: location.hash,
+    selected: (document.querySelector('#tabs button[aria-selected="true"]') || {}).dataset?.tab || null,
+    visible: !document.querySelector(`[data-panel="${h}"]`).hidden,
+    pictureVisited: !document.querySelector('[data-panel="picture"]').hidden }), hash);
+  check(`a direct load of #${hash} opens that tab`, opened.hash === "#" + hash && opened.selected === hash && opened.visible && !opened.pictureVisited, JSON.stringify(opened));
+  // Opening the tab is what starts the walk; once it lands, the section is drawn
+  // and its only percentages are the simulation's ("Bye N% in the sim").
+  const drawn = await direct.waitForFunction(() => document.body.dataset.pathsDetail === "1" || document.body.dataset.pathsReady === "empty" || document.body.dataset.pictureReady === "error", null, { timeout: 180000 })
+    .then(() => direct.evaluate(([sel, src]) => {
+      const h = document.querySelector(sel), txt = h ? h.textContent : "";
+      return { ready: document.body.dataset.pathsReady || null, detail: document.body.dataset.pathsDetail || null, final: document.body.dataset.pathsFinal === "1",
+        head: new RegExp(src).test(txt), PS: window.__PATHS !== undefined,
+        stray: txt.replace(/(Bye|Playoffs|Bowl bye|Bottom two) [<>]?[\d.]+% in the sim/g, "").match(/[^ ]*%[^ ]*/g) };
+    }, [hostSel, head.source])).catch(e => ({ err: String(e) }));
+  if (drawn.ready === "empty") console.log(`  (#${hash}: no board to map — season not started)`);
+  else {
+    check(`#${hash} computes and draws its paths on a fresh page, no Playoff Picture visit needed`, drawn.ready === "1" && drawn.detail === "1" && drawn.head && drawn.PS, JSON.stringify(drawn));
+    check(`#${hash}: the path shows no percentage but the simulation's`, !drawn.stray, JSON.stringify(drawn.stray));
+  }
+  await direct.close();
+}
 
 group("Playoff Picture: the tab");
 const ppTab = await page.evaluate(() => ({
@@ -3304,12 +3355,128 @@ check("synthetic: the path lists it as a long shot, and never says Eliminated", 
     pfTie.c.every(x => !x.e && !x.p) && pfTie.po.every(t => t && t.pts === 1 && t.yes === 0 && t.no === 0), JSON.stringify(pfTie));
 }
 
+group("Weekly updating: paths and chips come from the live state only (synthetic, no network)");
+{
+  // A 12-team league fed straight to the same functions the page uses:
+  // settledStandings (the board's own definition of a finished game: no players
+  // left on either side), then the path walk / the clinch logic. Weeks 9-10 on
+  // purpose — nothing may assume the season ends in weeks 12-14.
+  const wk = await page.evaluate(async () => {
+    const D = window.__DFFL, N = 12, P = 6, B = 2;
+    const rids = Array.from({ length: N }, (_, i) => 101 + i), idx = new Map(rids.map((r, i) => [r, i]));
+    const div = i => (i % 2) + 1;
+    const W0 = [8, 8, 7, 7, 6, 6, 5, 5, 4, 4, 3, 3], PF0 = W0.map((w, i) => 1200 + w * 20 - i);
+    const H = () => rids.map(() => new Array(N).fill(0));
+    const P1 = [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9], [10, 11]], P2 = [[0, 2], [1, 3], [4, 6], [5, 7], [8, 10], [9, 11]];
+    const key = (a, b) => (a < b ? `${a}-${b}` : `${b}-${a}`);
+    const run = async (label, liveWeek, cur, later, states) => {
+      // states[k]: "final" (no players left either side), "live" (in progress) or "pre" (not started).
+      const pending = cur.map(([a, b], k) => states[k] === "final" ? { a, b, eA: 110 + k, eB: 90 + k, sdA: 0, sdB: 0 }
+        : { a, b, eA: 100 + k, eB: 95, sdA: states[k] === "live" ? 8 : 25, sdB: states[k] === "live" ? 8 : 25 });
+      const live = { W0, PF0, pending, liveWeek, idx, weeks: later.map(([w, pairs]) => ({ week: w, pairs })) };
+      const R = { decided: [], upcoming: [...cur.map(([a, b]) => ({ week: liveWeek, a: rids[a], b: rids[b] })),
+        ...later.flatMap(([w, ps]) => ps.map(([a, b]) => ({ week: w, a: rids[a], b: rids[b] })))] };
+      const S = D.settledStandings(live, R);
+      const teams = rids.map((rid, i) => ({ rid, div: div(i), w: S.W[i], pf: S.PF[i] }));
+      const remaining = S.remaining.map(([a, b], k) => [a, b, S.remWeeks[k]]);
+      const remKeys = new Set(remaining.filter(g => g[2] === liveWeek).map(([a, b]) => key(a, b)));
+      const isFinal = k => states[k] === "final";
+      const PS = remaining.length ? await D.pathScenarios({ teams, H: H(), remaining, playoffTeams: P, byes: B }) : null;
+      const F = remaining.length ? null : D.pathFinal({ teams, H: H(), playoffTeams: P, byes: B });
+      const C = D.exactClinch({ teams, remaining: S.remaining, playoffTeams: P, byes: B });
+      if (F) D.finalClinch(C, F);
+      return { label, games: remaining.length, expect: cur.filter((_, k) => !isFinal(k)).length + later.reduce((s, [, ps]) => s + ps.length, 0),
+        outcomes: PS ? PS.outcomes : F.outcomes, walked: !!PS, done: S.done.length, finals: states.filter(s => s === "final").length,
+        weeks: [...new Set(remaining.map(g => g[2]))].sort((a, b) => a - b),
+        leftWeeks: PS ? [...new Set(PS.teams.flatMap(t => t.left.map(g => g[2])))].sort((a, b) => a - b) : [],
+        decidedRemain: cur.filter(([a, b], k) => isFinal(k) && remKeys.has(key(a, b))).length,
+        openRemain: cur.every(([a, b], k) => isFinal(k) || remKeys.has(key(a, b))),
+        inProgress: states.includes("live"),
+        locked: cur.every(([a, b], k) => isFinal(k)
+          ? S.W[a] === W0[a] + 1 && S.W[b] === W0[b] && S.PF[a] === PF0[a] + 110 + k && S.PF[b] === PF0[b] + 90 + k
+          : S.W[a] === W0[a] && S.W[b] === W0[b] && S.PF[a] === PF0[a] && S.PF[b] === PF0[b]),
+        final: F && { inN: F.playoff.length, byeN: F.bye.length, botN: F.bowlBye.length, games: F.games, outcomes: F.outcomes },
+        chipsFinal: F ? C.every(c => !!c.clinchedPlayoff !== !!c.eliminated && c.method === "final") : null };
+    };
+    return [
+      await run("2 weeks left, mid-week (2 final, 1 in progress, 3 to play)", 9, P1, [[10, P2]], ["final", "final", "live", "pre", "pre", "pre"]),
+      await run("2 weeks left, before kickoff", 9, P1, [[10, P2]], ["pre", "pre", "pre", "pre", "pre", "pre"]),
+      await run("1 week left, before kickoff", 10, P2, [], ["pre", "pre", "pre", "pre", "pre", "pre"]),
+      await run("1 week left, mid-week (3 final, 1 in progress)", 10, P2, [], ["final", "final", "final", "live", "pre", "pre"]),
+      await run("0 left: every game final", 10, P2, [], ["final", "final", "final", "final", "final", "final"]),
+    ];
+  });
+  for (const s of wk.filter(x => x.games)) {
+    check(`synthetic (${s.label}): remaining is exactly the unfinished games — ${s.expect}, walked as 2^${s.expect} outcomes`,
+      s.games === s.expect && s.walked && s.outcomes === 2 ** s.games, JSON.stringify(s));
+    check(`synthetic (${s.label}): a finished game is locked — never remaining, its result in W and PF; unfinished ones are not credited`,
+      s.decidedRemain === 0 && s.done === s.finals && s.locked && s.openRemain, JSON.stringify(s));
+  }
+  const mid = wk[0], one = wk[2], oneMid = wk[3], zero = wk[4];
+  check("synthetic: a game in progress stays remaining until it is final", mid.inProgress && mid.openRemain && oneMid.openRemain, JSON.stringify([mid, oneMid]));
+  check("synthetic: the remaining weeks come from the data (9-10 here), never a fixed 12-14", JSON.stringify(mid.weeks) === "[9,10]" && JSON.stringify(mid.leftWeeks) === "[9,10]", JSON.stringify(mid.weeks));
+  check("synthetic: with 1 week left the paths list only that week's games", JSON.stringify(one.weeks) === "[10]" && JSON.stringify(one.leftWeeks) === "[10]" && one.outcomes === 64, JSON.stringify(one));
+  check("synthetic: outcomes scale as 2^games (12 → 4096, 10 → 1024, 6 → 64, 3 → 8)",
+    wk[1].outcomes === 4096 && mid.outcomes === 1024 && one.outcomes === 64 && oneMid.outcomes === 8, wk.map(s => s.outcomes).join(","));
+  check("synthetic: 0 games left is the Final state — nothing walked, 6 in / 2 byes / bottom two, and every chip final (clinched or eliminated)",
+    zero.games === 0 && !zero.walked && zero.final && zero.final.inN === 6 && zero.final.byeN === 2 && zero.final.botN === 2 && zero.final.outcomes === 1 && zero.chipsFinal, JSON.stringify(zero));
+}
+{
+  // The path tabs' Final state, drawn by drawPaths itself on a throwaway page: no walk, no cards, the lists.
+  const fin = await ctx.newPage();
+  await fin.goto(BASE, { waitUntil: "domcontentloaded" });
+  await fin.waitForFunction(() => document.body.dataset.ready === "1", null, { timeout: 90000 });
+  const r = await fin.evaluate(async () => {
+    const D = window.__DFFL, se = D.DB.seasons[0], N = 12;
+    const rows = se.rosters.slice(0, N).map((ro, i) => ({ i, rid: ro.roster_id, uid: se.uidOf.get(ro.roster_id) }));
+    const teams = rows.map((x, i) => ({ rid: x.rid, div: (i % 2) + 1, w: 12 - i, pf: 1500 - i }));
+    const PP = { rows, rules: { playoffTeams: 6, byes: 2, playoffWeekStart: 15 }, clinch: [], order: rows.map((_, i) => i),
+      pathIn: { teams, H: rows.map(() => new Array(N).fill(0)), remaining: [], byes: 2 } };
+    await D.drawPaths(PP);
+    const ids = sel => [...document.querySelectorAll(`${sel} .pa-final [data-rid]`)].map(e => e.dataset.rid);
+    return { final: document.body.dataset.pathsFinal || null, ready: document.body.dataset.pathsReady || null, detail: document.body.dataset.pathsDetail || null,
+      drawFinal: !!(window.__PATH_DRAW && window.__PATH_DRAW.final), outcomes: window.__PATHS && window.__PATHS.outcomes,
+      cards: document.querySelectorAll(".pa-host ul.pa-lines").length,
+      heads: ["#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => /· Final/.test(document.querySelector(s).textContent)),
+      playoff: ids("#playoffPathHost"), bye: ids("#byePathHost"), bowl: ids("#bowlPathHost"),
+      want: { playoff: rows.slice(0, 6).map(x => String(x.rid)), bye: rows.slice(0, 2).map(x => String(x.rid)), bowl: rows.slice(10, 12).map(x => String(x.rid)) } };
+  });
+  check("Final state: drawPaths with 0 games left walks nothing and draws no path cards", r.final === "1" && r.ready === "1" && r.detail === "1" && r.drawFinal && r.outcomes === 1 && r.cards === 0, JSON.stringify(r));
+  check("Final state: the path tabs list who made the playoffs, who got the byes and who landed in the bottom two",
+    r.heads.every(Boolean) && JSON.stringify(r.playoff) === JSON.stringify(r.want.playoff) && JSON.stringify(r.bye) === JSON.stringify(r.want.bye) && JSON.stringify(r.bowl) === JSON.stringify(r.want.bowl), JSON.stringify(r));
+  await fin.close();
+}
+{
+  // Phrases: one per team, by week; the ways in a fixed order.
+  const ph = await page.evaluate(() => {
+    const D = window.__DFFL;
+    // Literals are [game, winner]. Games: 0 wk12 0v1, 1 wk13 0v2, 2 wk14 0v3, 3 wk13 1v3, 4 wk12 4v5, 5 wk13 2v3.
+    const PS = { remaining: [[0, 1, 12], [0, 2, 13], [0, 3, 14], [1, 3, 13], [4, 5, 12], [2, 3, 13]] };
+    const nm = ["moseslin", "alpha", "beta", "drewkim", "gamma", "zed"], name = i => nm[i];
+    const txt = ps => ps.map(p => p.html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&"));
+    return {
+      grouped: txt(D.pathPhrases([[0, 1], [1, 2], [2, 0]], PS, name)),       // moseslin loses wk12 and wk13, beats drewkim wk14
+      single: txt(D.pathPhrases([[3, 3]], PS, name)),                        // drewkim beats alpha wk 13
+      order: txt(D.pathPhrases([[5, 2], [4, 5], [0, 0]], PS, name)),         // three disjoint results: by week, then name
+      lits: D.pathPhrases([[0, 1], [1, 2], [2, 0]], PS, name).flatMap(p => p.lits).map(l => l.join(":")).sort(),
+    };
+  });
+  check('phrases: one team\'s results group into one phrase by week ("moseslin loses wk 12 & 13, beats drewkim wk 14")',
+    JSON.stringify(ph.grouped) === JSON.stringify(["moseslin loses wk 12 & 13, beats drewkim wk 14"]), JSON.stringify(ph.grouped));
+  check('phrases: a team that appears once reads "A beats B wk N"', JSON.stringify(ph.single) === JSON.stringify(["drewkim beats alpha wk 13"]), JSON.stringify(ph.single));
+  check("phrases: ordered by earliest week, then team name", JSON.stringify(ph.order) === JSON.stringify(["moseslin beats alpha wk 12", "zed beats gamma wk 12", "beta beats drewkim wk 13"]), JSON.stringify(ph.order));
+  check("phrases: a grouped phrase still stands for every one of its results", JSON.stringify(ph.lits) === JSON.stringify(["0:1", "1:2", "2:0"].sort()), JSON.stringify(ph.lits));
+}
+
 group("Paths, eliminations and Needs-help cards (live board, exact)");
 // Live refreshes can start a new path draw at any moment. Read only a finished
 // draw: dataset.pathsDetail is "1" once a draw's detail render is on the page,
 // and the DOM, window.__PATH_DRAW and every host carry that draw's number.
-// The Playoff Picture tab is open so a pending board is drawn, not parked.
+// The board is built on the Playoff Picture tab, then Path to Playoffs is open
+// so a pending board's paths are drawn, not parked.
 await page.click('#tabs button[data-tab="picture"]');
+await page.waitForFunction(() => document.body.dataset.pictureReady, null, { timeout: 180000 }).catch(() => {});
+await page.click('#tabs button[data-tab="playoff-path"]');
 let pathLive = { stale: true }, pathTries = 0;
 for (; pathTries < 6 && pathLive.stale; pathTries++) {
   await page.waitForFunction(() => document.body.dataset.pathsDetail === "1" || document.body.dataset.pictureReady !== "1", null, { timeout: 150000 }).catch(() => {});
@@ -3319,6 +3486,7 @@ for (; pathTries < 6 && pathLive.stale; pathTries++) {
   const pathHosts = ["#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => document.querySelector(s)).filter(Boolean);
   if (document.body.dataset.pathsDetail !== "1" || !draw || String(draw.seq) !== document.body.dataset.pathsSeq
     || pathHosts.some(h => h.dataset.pathsSeq !== String(draw.seq))) return { stale: true };
+  if (draw.final) return { skip: "no games left — the path tabs show the Final state (checked synthetically)" };
   const PS = draw.PS, DET = draw.det;
   const hosts = ["#pictureHost", "#toiletHost", "#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => document.querySelector(s)).filter(Boolean);
   // Every "Eliminated" on these tabs: the row it sits on, or whether it is prose (legend, method, heading).
@@ -3349,8 +3517,11 @@ for (; pathTries < 6 && pathLive.stale; pathTries++) {
       core: li.dataset.core || "", altSets: [...li.querySelectorAll("[data-alt]")].map(e => e.dataset.alt),
       coreItems: [...li.querySelectorAll("details [data-core-item]")].map(e => e.dataset.coreItem),
       needsAll: li.querySelectorAll('[data-req="needs-all"]').length,
-      // Inline phrases (one week tag each): the Needs line, "one of" and Helps most.
-      inlineWk: [...li.querySelectorAll('[data-req="needs"] .pa-wk, [data-req="oneof"] .pa-wk, [data-req="helps"] .pa-wk')].filter(e => !e.closest("details")).length,
+      // Inline phrases (one .pa-ph per team phrase): the Needs line, "one of" and Helps most.
+      inlineWk: [...li.querySelectorAll('[data-req="needs"] .pa-ph, [data-req="oneof"] .pa-ph, [data-req="helps"] .pa-ph')].filter(e => !e.closest("details")).length,
+      // No team named twice inside one phrase list (a way, or the Needs line).
+      dupName: [...li.querySelectorAll('[data-req="needs"], .pa-alt, details li')].map(e => [...e.querySelectorAll(".pa-ph")].map(p => p.dataset.who))
+        .filter(ns => new Set(ns).size < ns.length).length,
       tooSmall: [...li.querySelectorAll("*")].filter(e => e.offsetParent !== null && parseFloat(getComputedStyle(e).fontSize) < 11).length })),
     wait: !!ul.querySelector(".pa-wait"), pct: /\d%/.test(ul.textContent),
     needs: ul.querySelectorAll('[data-req="needs"], [data-req="oneof"], [data-req="all"], [data-req="helps"], [data-req="needs-all"]').length }));
@@ -3460,6 +3631,7 @@ else {
         if (r.inline && (r.inline > 3)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.inline} alternatives inline`);
         // Scannable: at most 3 key results inline; the rest only inside a collapsed list.
         if (r.inlineWk > 3) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.inlineWk} results inline`);
+        if (r.dupName) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: a team named twice in one way`);
         if (r.tooSmall) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.tooSmall} elements under 11px`);
         // The FULL sets, read from the markup (data-core + each data-alt, collapsed lists
         // included), are exactly the worked-out sets, and each is brute-forced below.
@@ -3558,15 +3730,17 @@ else {
     domSetsChecked > 0 && !cardBad.some(s => /markup|data-core|results needed|core items/.test(s)), `${domSetsChecked} rendered sets checked ${cardBad.filter(s => /markup|data-core|results needed|core items/.test(s)).slice(0, 4).join("; ")}`);
   check("live: no card line shows more than 3 results inline, and nothing on the cards is under 11px",
     !cardBad.some(s => /results inline|under 11px/.test(s)), cardBad.filter(s => /results inline|under 11px/.test(s)).slice(0, 4).join("; "));
+  check("live: each way names a team once — all of its results in one phrase (\"X loses wk 12 & 13, beats Y wk 14\")",
+    !cardBad.some(s => /named twice/.test(s)), cardBad.filter(s => /named twice/.test(s)).slice(0, 4).join("; "));
   check("live: every open card has a line for every possible record, no percentages, and verdicts match the brute force",
-    pathLive.cards.length > 0 && !cardBad.filter(s => !/guarantee|markup|data-core|results needed|core items|results inline|under 11px/.test(s)).length, `${pathLive.cards.length} cards ${cardBad.slice(0, 5).join("; ")}`);
+    pathLive.cards.length > 0 && !cardBad.filter(s => !/guarantee|markup|data-core|results needed|core items|results inline|under 11px|named twice/.test(s)).length, `${pathLive.cards.length} cards ${cardBad.slice(0, 5).join("; ")}`);
   check("live: every listed requirement set (Needs / one of / every \"All N ways\" entry) really guarantees the outcome",
     cubes > 0 && !cardBad.some(s => /guarantee/.test(s)) && needLines > 0, `${cubes} sets checked, ${needLines} requirement lines`);
   // Phone width: no path section runs off the screen.
   const vp0 = page.viewportSize();
   await page.setViewportSize({ width: 390, height: 844 });
   const ov = [];
-  for (const tab of ["picture", "toilet"]) {
+  for (const tab of ["playoff-path", "toilet-path"]) {
     await page.click(`#tabs button[data-tab="${tab}"]`);
     await page.waitForTimeout(400);
     // Measured with every "All N ways" list opened.
@@ -3606,7 +3780,7 @@ const tbProof = await page.evaluate(() => {
   return {ready:!!T&&!!P&&!!host,notInPicture:!!host&&!host.closest('[data-panel="picture"]')&&!document.querySelector('[data-panel="picture"] #toiletHost'),
     six:T?.seeds.length===6,seedOrder:T?.seeds.map(x=>x.rid).join(",")===seedOrder.join(","),
     labels:host?[...host.querySelectorAll(".pp-lb")].map(x=>x.textContent):[],text:host?.textContent||"",
-    odds:T?.seeds.every(d=>{const r=P.full.rows.find(x=>x.rid===d.rid),i=P.rids.indexOf(d.rid),txt=shown(d);return d.bowlPct===r?.miss&&d.bowlByePct===r?.bowlBye&&txt?.includes(`Bowl${fmt(r.miss)}`)&&txt?.includes(`Bye${fmt(r.bowlBye)}`)&&(!L||L.sims!==P.sims||(d.lastPct===L.last[i]/L.sims&&txt.includes(`Last${fmt(d.lastPct)}`)))}),
+    odds:T?.seeds.every(d=>{const r=P.full.rows.find(x=>x.rid===d.rid),i=P.rids.indexOf(d.rid),txt=shown(d);return d.bowlPct===r?.miss&&d.bowlByePct===r?.bowlBye&&txt?.includes(`Bowl${fmt(r.miss)}`)&&txt?.includes(`Bottom two${fmt(r.bowlBye)}`)&&(!L||L.sims!==P.sims||(d.lastPct===L.last[i]/L.sims&&txt.includes(`Last${fmt(d.lastPct)}`)))}),
     byeTotal:T?.seeds.reduce((a,d)=>a+d.bowlByePct,0),
     liveChips:T?.seeds.every(d=>d.chip===(chipMap.get(d.rid)?.label||"")&&(!d.chip||!!d.provingSource)),liveChipDetails:T?.seeds.map(x=>({rid:x.rid,chip:x.chip,source:x.provingSource})),
     fixture,escaped,escapeGate,oddsLabels:host?[...host.querySelector(".pp-li .pp-bars")?.querySelectorAll(".pp-pb span")||[]].map(x=>x.textContent.trim()):[],
@@ -3617,10 +3791,24 @@ const tbProof = await page.evaluate(() => {
 check("toilet section is outside the Playoff Picture panel",tbProof.ready&&tbProof.notInPicture,JSON.stringify(tbProof));
 check("the six seeds match the playoff picture's non-playoff order",tbProof.six&&tbProof.seedOrder,JSON.stringify(tbProof));
 check("graphic bracket has week 15 pairs, seeded week 16 semis, and centered week 17 final",["7 v 10","8 v 9","12 v loser of 8/9","11 v loser of 7/10","7th/8th","9th/10th"].every(x=>tbProof.labels.some(y=>y.includes(x)))&&tbProof.bracket,JSON.stringify(tbProof.labels));
-check("bowl rows include the Bye probability column",tbProof.byeColumn,JSON.stringify(tbProof.oddsLabels));
+check("bowl rows include the Bottom two probability column",tbProof.byeColumn,JSON.stringify(tbProof.oddsLabels));
+const tbWords = await page.evaluate(() => {
+  const host = document.querySelector("#toiletHost"), heroes = [...(host?.querySelectorAll(".pp-hero") || [])];
+  return { n: heroes.length,
+    bars: heroes.map(h => [...h.querySelectorAll(".pp-pb span")].map(s => s.textContent.trim()).join(",")),
+    heroKey: heroes.every(h => (h.querySelector('.pp-pb[data-k="bye"] span') || {}).textContent === "Bottom two"),
+    eyes: heroes.map(h => (h.querySelector(".pp-eye") || {}).textContent || ""),
+    line: (host?.querySelector(".pp-cut.byl span") || {}).textContent || "",
+    note: (host?.querySelector(".pp-note") || {}).textContent || "", settled: !!window.__TOILET?.settled,
+    stale: /Bye line|seed · bye|Bye % is/.test(host?.textContent || "") };
+});
+check('toilet heroes read "Bottom two" (bar and "N seed · bottom two" eyebrow), never "Bye"',
+  tbWords.n === 2 && tbWords.heroKey && tbWords.bars.every(b => b === "Bottom two,Last") && tbWords.eyes.every(e => /^\d+ seed · bottom two$/.test(e)) && !tbWords.stale, JSON.stringify(tbWords));
+check('toilet divider reads "Bottom-two line · seeds 11–12 skip round one"', tbWords.line === "Bottom-two line · seeds 11–12 skip round one", tbWords.line);
+if (!tbWords.settled) check('toilet note reads "Bottom two % is the share of runs seeded 11th or 12th"', /Bottom two % is the share of runs seeded 11th or 12th/.test(tbWords.note), tbWords.note.slice(0, 200));
 check("Bye chances sum to the two bowl byes",near(tbProof.byeTotal,2,0.002),String(tbProof.byeTotal));
 check("bowl and last place odds come from the picture's same simulation",tbProof.odds,"displayed values should match PP miss and same-run C.last");
-check("the final is labelled Final and shows no punishment or lower-place distribution",tbProof.labels.some(x=>x.includes("Wk 17 · Final"))&&tbProof.noPunishment&&tbProof.oddsLabels.join(",")==="Bye,Bowl,Last",JSON.stringify(tbProof.oddsLabels));
+check("the final is labelled Final and shows no punishment or lower-place distribution",tbProof.labels.some(x=>x.includes("Wk 17 · Final"))&&tbProof.noPunishment&&tbProof.oddsLabels.join(",")==="Bottom two,Bowl,Last",JSON.stringify(tbProof.oddsLabels));
 check("chip helper maps only exact clinch/elimination and completed escape proofs",tbProof.fixture[0].label==="Safe from last"&&tbProof.fixture[0].provingSource==="exactClinch.clinchedPlayoff"&&tbProof.fixture[1].label==="Locked into the bowl"&&tbProof.fixture[1].provingSource==="exactClinch.eliminated"&&!tbProof.fixture[2].label&&tbProof.escaped[0].label==="Safe from last"&&tbProof.escaped[0].provingSource==="completed inverted bracket",JSON.stringify({fixture:tbProof.fixture,escaped:tbProof.escaped}));
 check("scored bowl winners escape without placements; placements-only and last-place teams do not",tbProof.escapeGate.length===1&&String(tbProof.escapeGate[0])==="40"&&!tbProof.escapeGate.includes(41)&&!tbProof.escapeGate.includes(42),JSON.stringify(tbProof.escapeGate));
 check("every live chip is backed by the exposed exact or completed-bracket proof",tbProof.liveChips,JSON.stringify(tbProof.liveChipDetails));
