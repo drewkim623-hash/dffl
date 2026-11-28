@@ -2125,7 +2125,12 @@ const lazyState = await lazyPage.evaluate(() => ({
   picture: document.body.dataset.pictureReady || null,
   tradeHost: !!document.querySelector("#tradesHost"),
   pictureHost: !!document.querySelector("#pictureHost"),
+  // The path walk (and its first-round-bye section) is lazy too.
+  paths: document.body.dataset.pathsReady || null, pathsObj: window.__PATHS !== undefined, detail: window.__PATH_DETAIL !== undefined,
+  byeHost: !!document.querySelector("#byePathHost"), byeEmpty: !(document.querySelector("#byePathHost") || {}).childElementCount,
 }));
+check("the path walk, its bye section and the Needs-help detail have not run at boot",
+  lazyState.paths === null && !lazyState.pathsObj && !lazyState.detail && lazyState.byeHost && lazyState.byeEmpty, JSON.stringify(lazyState));
 check("booting fetches no transactions, no player file and no draft detail", heavy.length === 0, heavy.slice(0, 3).join(", "));
 check("neither lazy tab has run at boot", lazyState.trades === null && lazyState.picture === null, JSON.stringify(lazyState));
 check("both lazy panels are on the page regardless", lazyState.tradeHost && lazyState.pictureHost);
@@ -2140,6 +2145,18 @@ const raceLink = await lazyPage.evaluate(() => ({
   visible: !!document.querySelector('[data-panel="picture"]') && !document.querySelector('[data-panel="picture"]').hidden,
 }));
 check("#race opens the Playoff Picture", raceLink.hash === "#picture" && raceLink.selected === "picture" && raceLink.visible, JSON.stringify(raceLink));
+// Opening the tab is what starts the walk; once it lands, the bye section is drawn
+// and its only percentages are the simulation's ("Bye N% in the sim").
+const byeLazy = await lazyPage.waitForFunction(() => document.body.dataset.pathsReady || document.body.dataset.pictureReady === "empty", null, { timeout: 150000 })
+  .then(() => lazyPage.evaluate(() => {
+    const h = document.querySelector("#byePathHost"), txt = h ? h.textContent : "";
+    return { ready: document.body.dataset.pathsReady || null, empty: document.body.dataset.pictureReady === "empty",
+      head: /Path to a first-round bye/.test(txt), stray: txt.replace(/(Bye|Playoffs|Bowl bye) [<>]?[\d.]+% in the sim/g, "").match(/[^ ]*%[^ ]*/g) };
+  })).catch(e => ({ err: String(e) }));
+if (!byeLazy.empty) {
+  check("opening Playoff Picture draws the first-round-bye path", byeLazy.ready === "1" && byeLazy.head, JSON.stringify(byeLazy));
+  check("the bye path shows no percentage but the simulation's Bye %", !byeLazy.stray, JSON.stringify(byeLazy.stray));
+}
 await lazyPage.close();
 
 group("Playoff Picture: the tab");
@@ -2579,6 +2596,126 @@ check("a split series falls back to points for", tb.split.join() === "1,0,2,3", 
 check("a three-way tie goes straight to points for", tb.three.join() === "1,2,0", tb.three.join());
 check("a division tie is sized inside the division", tb.champs.includes(0) && !tb.champs.includes(1), JSON.stringify(tb));
 
+group("Final tiebreak rule: division record for ANY two same-division teams, everywhere");
+const tb2 = await page.evaluate(() => {
+  const D = window.__DFFL, TB = window.DFFLTiebreak;
+  // Divisions: 0,1,2 = div 1; 3,4,5 = div 2. 3 and 0 win the divisions, 4 is the
+  // first wild card, 1 and 2 tie for the LAST wild card (not a division lead).
+  // Their series is 1-1; 1 also beat 0 while 2 lost to 0, so 1's division
+  // record (2-1) beats 2's (1-2) — and 2 has MORE points for.
+  const N = 6, div = [1, 1, 1, 2, 2, 2], divOf = i => div[i];
+  const W = [9, 6, 6, 10, 8, 3], PF = [1500, 1200, 1400, 1600, 1450, 1000];
+  const H = Array.from({ length: N }, () => new Array(N).fill(0));
+  H[1][2] = 1; H[2][1] = 1; H[1][0] = 1; H[0][2] = 1;
+  const ord = l => D.tieOrder(l, W, PF, H, divOf);
+  const rank = ord([0, 1, 2, 3, 4, 5]);
+  const f = D.seedField(rank, divOf, 4, ord);
+  const flat = new Float64Array(N * N); for (let a = 0; a < N; a++) for (let b = 0; b < N; b++) flat[a * N + b] = H[a][b];
+  const seeder = D.makePathSeeder(N, div, 4, 2);
+  const inSet = new Uint8Array(N), bye = new Uint8Array(N), top = new Uint8Array(N);
+  seeder([0, 1, 2, 3, 4, 5].sort((a, b) => PF[b] - PF[a]), Float64Array.from(W), flat, inSet, bye, top);
+  // Cross-division pair 1 (div 1) and 4 (div 2) level: head to head, then points — never division record.
+  const W2 = [9, 7, 2, 10, 7, 3];
+  const Hx = Array.from({ length: N }, () => new Array(N).fill(0)); Hx[4][1] = 1; Hx[1][0] = 2;   // 4 beat 1; 1 has the better division record
+  const crossH2H = D.tieOrder([1, 4], W2, [1000, 1700, 0, 0, 900, 0], Hx, divOf);
+  const Hy = Array.from({ length: N }, () => new Array(N).fill(0)); Hy[1][0] = 2;                 // never met: points, despite 1's division record
+  const crossPF = D.tieOrder([1, 4], W2, [0, 900, 0, 0, 1700, 0], Hy, divOf);
+  // Three level, two of them division mates with a decisive series: straight to points.
+  const Hz = Array.from({ length: N }, () => new Array(N).fill(0)); Hz[1][2] = 2; Hz[1][0] = 1;
+  const three = D.tieOrder([1, 2, 4], [0, 6, 6, 0, 6, 0], [0, 1100, 1300, 0, 1200, 0], Hz, divOf);
+  // The shared module agrees with the page, and the old rule would have said otherwise.
+  const shared = TB.tieOrder([1, 2], W, PF, H, divOf).join();
+  return { rank, seeds: f.seeds, wildPair: f.rest.slice(0, 2), inSet: [...inSet], top: [...top], crossH2H, crossPF, three, shared,
+    worker: D.pictureWorkerSource().includes("const DFFLTiebreak = { tieOrder:") };
+});
+check("two same-division teams tied for a WILD CARD, series even: division record beats points for (tieOrder)",
+  tb2.rank.indexOf(1) < tb2.rank.indexOf(2) && tb2.shared === "1,2", JSON.stringify(tb2));
+check("…and seedField seeds the better division record, not the higher points", tb2.seeds.includes(1) && !tb2.seeds.includes(2), JSON.stringify(tb2.seeds));
+check("…and the path seeder agrees (in set and top-two set)", tb2.inSet[1] === 1 && tb2.inSet[2] === 0 && tb2.seeds.every(i => tb2.inSet[i] === 1)
+  && tb2.top[3] === 1 && tb2.top[0] === 1 && tb2.top.reduce((a, b) => a + b, 0) === 2, JSON.stringify(tb2));
+check("a two-team cross-division tie goes head to head, then points for (no division record)",
+  tb2.crossH2H.join() === "4,1" && tb2.crossPF.join() === "4,1", JSON.stringify([tb2.crossH2H, tb2.crossPF]));
+check("a three-team tie goes straight to points for", tb2.three.join() === "2,4,1", tb2.three.join());
+check("the picture worker gets the same shared tieOrder", tb2.worker);
+// Random outcomes: the fast path seeder and tieOrder + seedField agree on every seed, the bye seeds and the bowl byes.
+const seederAgree = await page.evaluate(() => {
+  const D = window.__DFFL;
+  let seed = 7, bad = 0, trials = 0, divTies = 0;
+  const rnd = n => { seed = (Math.imul(seed, 1103515245) + 12345) >>> 0; return (seed >>> 16) % n; };
+  for (let t = 0; t < 1500; t++) {
+    const N = 12, div = Array.from({ length: N }, (_, i) => 1 + (i % 3)), P = 6, B = 2;
+    const W = Array.from({ length: N }, () => 3 + rnd(5)), PF = Array.from({ length: N }, (_, i) => 1000 + rnd(400) + i / 100);   // distinct points: no exact-PF ties
+    const H = new Float64Array(N * N);
+    for (let g = 0; g < 30; g++) { const a = rnd(N); let b = rnd(N - 1); if (b >= a) b++; H[a * N + b]++; }
+    const ord = l => D.tieOrder(l, W, PF, H, i => div[i]);
+    const rank = ord([...Array(N).keys()]), f = D.seedField(rank, i => div[i], P, ord);
+    const inS = new Uint8Array(N), by = new Uint8Array(N), top = new Uint8Array(N);
+    D.makePathSeeder(N, div, P, B)([...Array(N).keys()].sort((a, b) => PF[b] - PF[a]), Float64Array.from(W), H, inS, by, top);
+    const bowl = f.rest.slice(f.wilds);
+    trials++;
+    for (let a = 0; a < N; a++) for (let b = a + 1; b < N; b++) if (W[a] === W[b] && div[a] === div[b] && H[a * N + b] === H[b * N + a]) divTies++;
+    if (![...Array(N).keys()].every(i => !!inS[i] === f.seeds.includes(i) && !!top[i] === f.seeds.slice(0, B).includes(i)
+      && !!by[i] === (bowl.length >= 4 && bowl.slice(-2).includes(i)))) bad++;
+  }
+  return { bad, trials, divTies };
+});
+check("the path seeder matches tieOrder + seedField on random outcomes (seeds, byes, bowl byes)",
+  seederAgree.bad === 0 && seederAgree.divTies > 100, JSON.stringify(seederAgree));
+
+group("Tiebreak: the data writers share the rule (tiebreak.js)");
+{
+  const fs = await import("node:fs");
+  await import("./tiebreak.js");
+  const { rankStandings } = globalThis.DFFLTiebreak;
+  const { foldWeekIntoStandings } = await import("./week-final.mjs");
+  const row = (id, w, l, pf, division) => ({ roster_id: id, wins: w, losses: l, ties: 0, points_for: pf, ...(division ? { division } : {}) });
+  const ids = rows => rows.map(r => r.roster_id).join();
+  // H2H decides a two-way tie (cross-division): 2 beat 1 though 1 has more points.
+  const h2h = rankStandings([row(1, 8, 3, 1500, 1), row(2, 8, 3, 1400, 2), row(3, 5, 6, 1600, 1)], [{ a: 1, b: 2, a_pts: 90, b_pts: 100 }]);
+  // Same division, series split: division record (3's 2-1 vs 4's 1-2) over points.
+  const divGames = [{ a: 3, b: 4, a_pts: 100, b_pts: 90 }, { a: 4, b: 3, a_pts: 100, b_pts: 90 }, { a: 3, b: 5, a_pts: 100, b_pts: 90 }, { a: 5, b: 4, a_pts: 100, b_pts: 90 }];
+  const sameDiv = rankStandings([row(3, 6, 5, 1200, 7), row(4, 6, 5, 1300, 7), row(5, 9, 2, 1400, 7)], divGames);
+  // Three level: points for, whatever head to head says.
+  const three = rankStandings([row(1, 7, 4, 1100, 1), row(2, 7, 4, 1300, 2), row(3, 7, 4, 1200, 1)], [{ a: 1, b: 2, a_pts: 120, b_pts: 100 }, { a: 1, b: 3, a_pts: 120, b_pts: 100 }]);
+  // No divisions: H2H then PF; the division step is skipped (3 would win it, but nobody has a division).
+  const noDiv = rankStandings([row(3, 6, 5, 1200), row(4, 6, 5, 1300), row(5, 9, 2, 1400)], divGames);
+  const noDivH2H = rankStandings([row(1, 8, 3, 1500), row(2, 8, 3, 1400)], [{ a: 1, b: 2, a_pts: 90, b_pts: 100 }]);
+  check("rankStandings: head to head decides a two-way tie", ids(h2h) === "2,1,3", ids(h2h));
+  check("rankStandings: division record decides a same-division pair level on H2H", ids(sameDiv) === "5,3,4", ids(sameDiv));
+  check("rankStandings: a three-way tie goes to points for", ids(three) === "2,3,1", ids(three));
+  check("rankStandings: missing divisions → head to head, then points for", ids(noDiv) === "5,4,3" && ids(noDivH2H) === "2,1", `${ids(noDiv)} ${ids(noDivH2H)}`);
+  // foldWeekIntoStandings: week 3 folded in, then ordered on the league rule.
+  const side = (rid, points) => ({ roster_id: rid, points });
+  const behind = [row(1, 1, 1, 200, 1), row(2, 1, 1, 210, 1), row(3, 2, 0, 230, 2), row(4, 0, 2, 180, 2)];
+  const wk3 = [{ sides: [side(1, 120), side(4, 90)] }, { sides: [side(2, 80), side(3, 100)] }];
+  const earlier = [{ a: 1, b: 2, a_pts: 110, b_pts: 100 }, { a: 2, b: 1, a_pts: 111, b_pts: 90 }, { a: 1, b: 3, a_pts: 90, b_pts: 115 }, { a: 2, b: 4, a_pts: 99, b_pts: 90 }];
+  const plain = foldWeekIntoStandings({ standings: behind, games: wk3, week: 3 });
+  const ruled = foldWeekIntoStandings({ standings: behind, games: wk3, week: 3, h2hGames: earlier, divisionOf: rid => (rid <= 2 ? 1 : 2) });
+  // After week 3: 3 is 3-0, 1 is 2-1, 2 is 1-2, 4 is 0-3 — no ties, so both orders agree.
+  check("foldWeekIntoStandings without h2hGames keeps wins, then points for", plain.folded && ids(plain.standings) === "3,1,2,4", ids(plain.standings));
+  const tie = foldWeekIntoStandings({ standings: [row(1, 1, 1, 300, 1), row(2, 1, 1, 200, 1), row(3, 0, 2, 100, 2), row(4, 2, 0, 50, 2)],
+    games: [{ sides: [side(1, 100), side(3, 110)] }, { sides: [side(2, 100), side(4, 90)] }], week: 3,
+    h2hGames: [{ a: 1, b: 2, a_pts: 100, b_pts: 90 }, { a: 2, b: 1, a_pts: 100, b_pts: 90 }, { a: 2, b: 3, a_pts: 100, b_pts: 90 }, { a: 4, b: 1, a_pts: 100, b_pts: 90 }],
+    divisionOf: rid => (rid <= 2 ? 1 : 2) });
+  // After week 3: 2 and 4 are 2-1 (different divisions) and 2 beat 4 this week → 2 first; 1 and 3 are 1-2 and
+  // 3 beat 1 this week → 3 ahead of 1 despite 210 points to 400 (this week's game counts as head to head).
+  check("foldWeekIntoStandings with h2hGames ranks on the league rule", ruled.folded && ids(ruled.standings) === "3,1,2,4" && tie.folded && ids(tie.standings) === "2,4,3,1", `${ids(ruled.standings)} ${ids(tie.standings)}`);
+  const sameDivFold = foldWeekIntoStandings({ standings: [row(1, 1, 1, 300, 1), row(2, 1, 1, 200, 1), row(3, 0, 2, 100, 2), row(4, 0, 2, 50, 2)],
+    games: [{ sides: [side(1, 100), side(3, 90)] }, { sides: [side(2, 100), side(4, 90)] }], week: 3,
+    h2hGames: [{ a: 1, b: 2, a_pts: 100, b_pts: 90 }, { a: 2, b: 1, a_pts: 100, b_pts: 90 }, { a: 2, b: 3, a_pts: 100, b_pts: 90 }, { a: 4, b: 1, a_pts: 100, b_pts: 90 }],
+    divisionOf: rid => (rid <= 2 ? 1 : 2) });
+  // 1 and 2 both 2-1, same division, series 1-1, division record 1-1 each → points: 1 (400) over 2 (300).
+  check("foldWeekIntoStandings: same-division pair with an even series and level division record falls to points", sameDivFold.folded && ids(sameDivFold.standings).startsWith("1,2"), ids(sameDivFold.standings));
+  const src = f => fs.readFileSync(join(ROOT, f), "utf8");
+  for (const f of ["build-week.mjs", "build-pulse.mjs", "chat-worker/src/tools.js"]) {
+    const t = src(f);
+    check(`${f} imports the shared tiebreak.js and ranks with rankStandings`, /import\s+"(\.\/|\.\.\/\.\.\/)tiebreak\.js"/.test(t) && /rankStandings\(/.test(t)
+      && !/standings[^\n]*\.sort\(\(a, b\) => b\.wins - a\.wins \|\| b\.points_for - a\.points_for\)/.test(t), f);
+  }
+  check("build-week.mjs passes the season's games to foldWeekIntoStandings", /h2hGames:\s*regGamesThrough\(target - 1\)/.test(src("build-week.mjs")));
+  check("chat-worker's ../../tiebreak.js resolves to the repo's tiebreak.js", fs.existsSync(join(ROOT, "chat-worker/src", "../../tiebreak.js")));
+}
+
 group("Standings and Tiebreakers tabs");
 await page.evaluate(() => show("standings"));
 await page.waitForFunction(() => document.body.dataset.standingsReady, null, { timeout: 60000 });
@@ -2591,7 +2728,8 @@ const stTab = await page.evaluate(() => {
   for (const g of season.games.filter(g => !g.playoff)) { const a = ix.get(g.a.rid), b = ix.get(g.b.rid);
     PF[a] += g.a.pts; PF[b] += g.b.pts; if (g.a.pts > g.b.pts) W[a]++; else if (g.b.pts > g.a.pts) W[b]++; else { W[a] += .5; W[b] += .5; } }
   const H = D.h2hFrom(season.games.filter(g => !g.playoff), r => ix.get(r), rids.length);
-  const ord = l => D.tieOrder(l, W, PF, H), f = D.seedField(ord(rids.map((_, i) => i)), i => season.divOf.get(rids[i]), S.playoffTeams, ord);
+  // With divisions: the division-record step now applies to any two same-division teams level on wins.
+  const ord = l => D.tieOrder(l, W, PF, H, i => season.divOf.get(rids[i])), f = D.seedField(ord(rids.map((_, i) => i)), i => season.divOf.get(rids[i]), S.playoffTeams, ord);
   return { tables, divs: S.divs.size, same: f.seeds.join() === S.field.seeds.join(), wins: S.teams.every((t, i) => t.wt === W[i]) };
 });
 check("Standings draws a table per division plus the league table", stTab.tables === stTab.divs + 1, JSON.stringify(stTab));
@@ -3044,10 +3182,12 @@ if (!mgLive.skip) {
   if (undecidedBowl && mgLive.inputs.remaining.length <= 12) bad.push(`${undecidedBowl} bowl numbers left undecided with only ${mgLive.inputs.remaining.length} games left`);
   // Every chip on each board says exactly what the exact number says, and a row with no chip is one that shouldn't have one.
   const want = (c, n, zeroShows) => !c || c.clinchedPlayoff || c.eliminated || n === undefined ? null
-    : n === null ? "out" : !zeroShows && n === 0 ? null : String(n);
+    : n === null ? "help" : !zeroShows && n === 0 ? null : String(n);
+  // A null number is "Needs help" (never "Eliminated"); once the path walk has
+  // run, a points-for-only team may read "Long shot" instead (checked exactly below).
   for (const r of mgLive.playoffChips) {
     const c = tableBy.get(r.rid), w = want(c, exactBy.get(r.rid)?.wins, true);
-    if (r.got !== w || r.stray) bad.push(`playoff chip ${r.rid}: ${r.got} != ${w}${r.stray ? " (stray chip)" : ""}`);
+    if ((r.got !== w && !(w === "help" && r.got === "longshot")) || r.stray) bad.push(`playoff chip ${r.rid}: ${r.got} != ${w}${r.stray ? " (stray chip)" : ""}`);
   }
   for (const r of mgLive.bowlChips) {
     const c = tableBy.get(r.rid), e = exactBy.get(r.rid);
@@ -3064,6 +3204,264 @@ if (!mgLive.skip) {
     mgLive.certOk, `${mgLive.certLines} lines`);
   check("live: a playoff clinch is exactly a magic 0, and no eliminated team carries a number", mgLive.zeroIsClinch && mgLive.elimHasNoNumber);
 }
+/* Independent brute force over every win/loss outcome: the final tiebreak rule,
+ * points for unknown (each team re-seeded with its own points first and last).
+ * res[k][i][m] = 2 yes either way, 1 only with the best points, 0 no; k = 0 playoff, 1 bye, 2 bowl bye. */
+function pathBrute({ teams, H, remaining, playoffTeams: P, byes: B }) {
+  const N = teams.length, R = remaining.length, total = 2 ** R, div = teams.map(t => t.div);
+  const pct = new Float64Array(N);
+  const res = [0, 1, 2].map(() => teams.map(() => new Uint8Array(total)));
+  const W = new Float64Array(N), Hf = new Float64Array(N * N), PF = new Float64Array(N);
+  const H0 = new Float64Array(N * N);
+  for (let a = 0; a < N; a++) for (let b = 0; b < N; b++) H0[a * N + b] = (H[a] && H[a][b]) || 0;
+  const all = [...Array(N).keys()], byDiv = [...new Set(div)].map(d => all.filter(i => div[i] === d));
+  const ord = list => {
+    const s = list.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a] || a - b), out = [];
+    for (let k = 0; k < s.length;) {
+      let e = k + 1; while (e < s.length && W[s[e]] === W[s[k]]) e++;
+      if (e - k === 2) {
+        const a = s[k], b = s[k + 1];
+        let d = Hf[a * N + b] - Hf[b * N + a];
+        if (!d && div[a] === div[b]) d = pct[a] - pct[b];
+        if (d < 0) out.push(b, a); else out.push(a, b);
+      } else for (let j = k; j < e; j++) out.push(s[j]);
+      k = e;
+    }
+    return out;
+  };
+  const seedOf = () => {
+    const champs = ord(byDiv.map(l => ord(l)[0]));
+    const rest = ord(all.filter(i => !champs.includes(i)));
+    const wilds = Math.max(0, P - champs.length), seeds = champs.concat(rest.slice(0, wilds)), bowl = rest.slice(wilds);
+    const o = [new Uint8Array(N), new Uint8Array(N), new Uint8Array(N)];
+    for (const i of seeds) o[0][i] = 1;
+    for (const i of seeds.slice(0, B)) o[1][i] = 1;
+    if (bowl.length >= 4) for (const i of bowl.slice(-2)) o[2][i] = 1;
+    return o;
+  };
+  for (let m = 0; m < total; m++) {
+    for (let i = 0; i < N; i++) { W[i] = teams[i].w; PF[i] = teams[i].pf; }
+    Hf.set(H0);
+    for (let g = 0; g < R; g++) { const [a, b] = remaining[g]; if ((m >> g) & 1) { W[a]++; Hf[a * N + b]++; } else { W[b]++; Hf[b * N + a]++; } }
+    for (let x = 0; x < N; x++) { let w = 0, g = 0; for (let y = 0; y < N; y++) if (y !== x && div[y] === div[x]) { w += Hf[x * N + y]; g += Hf[x * N + y] + Hf[y * N + x]; } pct[x] = g ? w / g : 0.5; }
+    const base = seedOf();
+    for (let i = 0; i < N; i++) {
+      let level = false;
+      for (let j = 0; j < N; j++) if (j !== i && W[j] === W[i]) { level = true; break; }
+      if (!level) { for (let k = 0; k < 3; k++) res[k][i][m] = base[k][i] ? 2 : 0; continue; }
+      const keep = PF[i];
+      PF[i] = Infinity; const hi = seedOf();
+      PF[i] = -Infinity; const lo = seedOf();
+      PF[i] = keep;
+      for (let k = 0; k < 3; k++) res[k][i][m] = hi[k][i] && lo[k][i] ? 2 : hi[k][i] || lo[k][i] ? 1 : 0;
+    }
+  }
+  return res;
+}
+
+group("Eliminated, Needs help and Long shot: a points-for-only team (synthetic)");
+const lsSyn = await page.evaluate(async () => {
+  const D = window.__DFFL;
+  // A, C lead the divisions; B (3 wins) and D (2) chase the one wild card. D can only
+  // draw level — D beats A while B loses to C — and they never meet: then it is points for.
+  const teams = [{ rid: 1, div: 1, w: 5, pf: 1000 }, { rid: 2, div: 1, w: 3, pf: 900 }, { rid: 3, div: 2, w: 5, pf: 950 }, { rid: 4, div: 2, w: 2, pf: 800 }];
+  const remaining = [[3, 0, 12], [1, 2, 12]];
+  const c = D.exactClinch({ teams, remaining: remaining.map(g => g.slice(0, 2)), playoffTeams: 3, byes: 1 })[3];
+  const mg = D.magicNumbers({ teams, remaining: remaining.map(g => g.slice(0, 2)), playoffTeams: 3 })[3];
+  const chipBefore = D.ppMagicHTML({ ...c, winsNeeded: mg.wins });
+  const PS = await D.pathScenarios({ teams, H: teams.map(() => [0, 0, 0, 0]), remaining, playoffTeams: 3, byes: 1 });
+  const longs = D.pathLongShots(PS);
+  const chipAfter = D.ppMagicHTML({ ...c, winsNeeded: mg.wins }, longs.has("4"));
+  const uids = [...D.DB.seasons[0].uidOf.values()];
+  const PP = { rules: { playoffTeams: 3, byes: 1 }, order: [0, 2, 1, 3],
+    rows: teams.map((t, i) => ({ rid: t.rid, uid: uids[i], w: t.w, l: 0, t: 0, todaySeed: [1, 3, 2, 4][i], playoff: 0.5, bye: 0.2, bowlBye: 0 })) };
+  const host = document.createElement("div");
+  D.renderPaths(host, PS, PP, "playoff", await D.pathDetails(PS));
+  return { elim: c.eliminated, wins: mg.wins, chipBefore, chipAfter, longs: [...longs], listed: !!host.querySelector('.pa-long [data-rid="4"]'),
+    noWord: !/Eliminated/.test(chipBefore + chipAfter + host.textContent), lines: PS.teams[3].playoff };
+});
+check("synthetic: a team alive only through a points-for tie is not eliminated", lsSyn.elim === false && lsSyn.wins === null, JSON.stringify(lsSyn));
+check("synthetic: its chip reads Needs help before the paths, Long shot after", /data-magic="help"[^>]*>Needs help</.test(lsSyn.chipBefore) && /data-magic="longshot"[^>]*>Long shot</.test(lsSyn.chipAfter), JSON.stringify([lsSyn.chipBefore, lsSyn.chipAfter]));
+check("synthetic: the path lists it as a long shot, and never says Eliminated", lsSyn.longs.join() === "4" && lsSyn.listed && lsSyn.noWord, JSON.stringify(lsSyn));
+
+group("Paths, eliminations and Needs-help cards (live board, exact)");
+// Live refreshes can start a new path draw at any moment. Read only a finished
+// draw: dataset.pathsDetail is "1" once a draw's detail render is on the page,
+// and the DOM, window.__PATH_DRAW and every host carry that draw's number.
+// The Playoff Picture tab is open so a pending board is drawn, not parked.
+await page.click('#tabs button[data-tab="picture"]');
+let pathLive = { stale: true }, pathTries = 0;
+for (; pathTries < 6 && pathLive.stale; pathTries++) {
+  await page.waitForFunction(() => document.body.dataset.pathsDetail === "1" || document.body.dataset.pictureReady !== "1", null, { timeout: 150000 }).catch(() => {});
+  pathLive = await page.evaluate(() => {
+  const P = window.__PICTURE, full = P && P.full, draw = window.__PATH_DRAW;
+  if (document.body.dataset.pictureReady !== "1" || !full || !full.pathIn) return { skip: "no live board" };
+  const pathHosts = ["#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => document.querySelector(s)).filter(Boolean);
+  if (document.body.dataset.pathsDetail !== "1" || !draw || String(draw.seq) !== document.body.dataset.pathsSeq
+    || pathHosts.some(h => h.dataset.pathsSeq !== String(draw.seq))) return { stale: true };
+  const PS = draw.PS, DET = draw.det;
+  const hosts = ["#pictureHost", "#toiletHost", "#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => document.querySelector(s)).filter(Boolean);
+  // Every "Eliminated" on these tabs: the row it sits on, or whether it is prose (legend, method, heading).
+  const elimText = [];
+  for (const h of hosts) {
+    const tw = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+    for (let n; (n = tw.nextNode());) if (/Eliminated/.test(n.nodeValue)) {
+      const e = n.parentElement, row = e.closest("[data-rid]");
+      elimText.push({ rid: row ? row.dataset.rid : null, prose: !!e.closest("p, h1, h2, h3, h4, summary, .pp-empty, .method, .pp-mgh"), text: n.nodeValue.trim().slice(0, 60) });
+    }
+  }
+  const elimAttr = hosts.flatMap(h => [...h.querySelectorAll('[title*="Eliminated"], [aria-label*="Eliminated"]')].map(e => (e.closest("[data-rid]") || { dataset: {} }).dataset.rid || null));
+  const chips = [...document.querySelectorAll("#pictureHost .pp-li[data-rid], #pictureHost .pp-hero[data-rid]")]
+    .map(li => ({ rid: li.dataset.rid, got: (li.querySelector(".pp-mg[data-magic]") || { dataset: {} }).dataset.magic || null }));
+  const bowlChips = [...document.querySelectorAll("#toiletHost .pp-li[data-rid]")]
+    .map(li => ({ rid: li.dataset.rid, got: (li.querySelector(".pp-mg[data-bowl-magic]") || { dataset: {} }).dataset.bowlMagic || null }));
+  // One row per record, or several records merged into one In / Out row (data-wins="1 0");
+  // data-li = the rows' indices in the team's worked-out lines.
+  const cards = [...document.querySelectorAll(".pa-host ul.pa-lines[data-rid]")].map(ul => ({ rid: ul.dataset.rid, mode: ul.dataset.mode,
+    rows: [...ul.querySelectorAll(":scope > li[data-wins]")].map(li => ({ wins: li.dataset.wins.split(" ").map(Number), li: li.dataset.li.split(" ").map(Number),
+      kind: li.dataset.kind, alts: +li.dataset.alts, shown: li.querySelectorAll("[data-alt]").length,
+      inline: li.querySelectorAll(".pa-alt[data-alt]").length, listed: li.querySelectorAll("details [data-alt]").length })),
+    wait: !!ul.querySelector(".pa-wait"), pct: /\d%/.test(ul.textContent),
+    needs: ul.querySelectorAll('[data-req="needs"], [data-req="oneof"], [data-req="all"], [data-req="helps"]').length }));
+  const longs = [...document.querySelectorAll("#playoffPathHost .pa-long [data-rid]")].map(e => e.dataset.rid);
+  const ser = PS && { own: PS.own, teams: PS.teams.map(t => ({ rid: String(t.rid), playoff: t.playoff, bye: t.bye, bowlBye: t.bowlBye })) };
+  const det = DET && Object.fromEntries(Object.entries(DET).map(([k, arr]) => [k, arr.map(lines => lines.map(x =>
+    ({ wins: x.wins, of: x.of, owns: x.owns, kind: x.kind, target: x.target, cubes: x.cubes.map(c => c.lits) })))]));
+  return {
+    inputs: { teams: full.pathIn.teams.map(t => ({ rid: String(t.rid), div: t.div, w: t.w, pf: t.pf })), H: full.pathIn.H,
+      remaining: full.pathIn.remaining, playoffTeams: full.rules.playoffTeams, byes: full.rules.byes },
+    clinch: full.clinch.map(c => ({ rid: String(c.rid), eliminated: !!c.eliminated, clinchedPlayoff: !!c.clinchedPlayoff, winsNeeded: c.winsNeeded, lossesNeeded: c.lossesNeeded })),
+    elimText, elimAttr, chips, bowlChips, cards, longs, PS: ser, det, ready: document.body.dataset.pathsReady || null,
+  };
+  });
+}
+if (pathLive.stale) check("live: a finished path draw could be read", false, `still mid-redraw after ${pathTries} tries`);
+if (pathLive.stale) { /* reported above */ }
+else if (pathLive.skip) console.log(`  (skipped: ${pathLive.skip})`);
+else if (pathLive.inputs.remaining.length > 18 || !pathLive.PS) console.log(`  (skipped: ${pathLive.inputs.remaining.length} games left — the exact walk starts at 18)`);
+else {
+  const inp = pathLive.inputs, N = inp.teams.length, R = inp.remaining.length, total = 2 ** R;
+  const BR = pathBrute(inp);
+  const ridIdx = new Map(inp.teams.map((t, i) => [t.rid, i]));
+  const noPath = new Set(inp.teams.filter((_, i) => !BR[0][i].some(v => v >= 1)).map(t => t.rid));
+  const longShot = new Set(inp.teams.filter((_, i) => BR[0][i].some(v => v === 1) && !BR[0][i].some(v => v === 2)).map(t => t.rid));
+  const elim = new Set(pathLive.clinch.filter(c => c.eliminated).map(c => c.rid));
+  const setEq = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+  check("live: clinch.eliminated is exactly the set with no path (brute force over every win/loss, points for best or worst)",
+    setEq(noPath, elim), `no path [${[...noPath]}] eliminated [${[...elim]}], ${R} games left`);
+  const strayRow = pathLive.elimText.filter(t => t.rid ? !elim.has(t.rid) : !t.prose);
+  const strayAttr = pathLive.elimAttr.filter(r => !r || !elim.has(r));
+  check("live: \"Eliminated\" appears only on eliminated teams' rows, or in legend / method / heading text",
+    !strayRow.length && !strayAttr.length, JSON.stringify({ strayRow: strayRow.slice(0, 4), strayAttr: strayAttr.slice(0, 4) }));
+  const byRid = new Map(pathLive.clinch.map(c => [c.rid, c]));
+  const chipBad = [];
+  for (const r of pathLive.chips) {
+    const c = byRid.get(r.rid);
+    if (!c || c.eliminated || c.clinchedPlayoff || c.winsNeeded !== null) continue;
+    const want = pathLive.ready === "1" ? (longShot.has(r.rid) ? "longshot" : "help") : "help";
+    if (r.got !== want) chipBad.push(`${r.rid}: ${r.got} != ${want}`);
+  }
+  for (const r of pathLive.bowlChips) {
+    const c = byRid.get(r.rid);
+    if (c && !c.eliminated && !c.clinchedPlayoff && c.lossesNeeded === null && r.got !== "help") chipBad.push(`bowl ${r.rid}: ${r.got} != help`);
+  }
+  check("live: every open team that can't clinch on its own shows Needs help (Long shot exactly when only points for gets it in)",
+    !chipBad.length, `${chipBad.slice(0, 5).join("; ")} long shots [${[...longShot]}]`);
+  check("live: the playoff path's long-shot list is exactly the points-for-only teams",
+    setEq(new Set(pathLive.longs), longShot), `${pathLive.longs} vs ${[...longShot]}`);
+  // Tallies per own record, all three races, against the brute force.
+  const keys = ["playoff", "bye", "bowlBye"], own = pathLive.PS.own;
+  const tallyBad = [];
+  for (let k = 0; k < 3; k++) for (let i = 0; i < N; i++) {
+    const t = Array.from({ length: own[i].length + 1 }, () => [0, 0, 0]);
+    for (let m = 0; m < total; m++) {
+      let w = 0; for (const g of own[i]) if (((m >> g) & 1) === (inp.remaining[g][0] === i ? 1 : 0)) w++;
+      t[w][BR[k][i][m]]++;
+    }
+    pathLive.PS.teams[i][keys[k]].forEach((x, w) => {
+      if (x.yes !== t[w][2] || x.pts !== t[w][1] || x.no !== t[w][0]) tallyBad.push(`${keys[k]} ${inp.teams[i].rid} ${w}W: ${x.yes}/${x.pts}/${x.no} vs ${t[w]}`);
+    });
+  }
+  check("live: the first-round-bye path tallies (yes / points / no per own record) equal the brute force",
+    !tallyBad.filter(s => s.startsWith("bye")).length, tallyBad.filter(s => s.startsWith("bye")).slice(0, 4).join("; "));
+  check("live: the playoff and toilet-bowl-bye path tallies equal the brute force", !tallyBad.length, tallyBad.slice(0, 4).join("; "));
+  // Cards: a line for every possible record, no percentages, and every requirement set really guarantees it.
+  const modeKey = { playoff: "playoff", bye: "bye", bowl: "bowlBye" };
+  const cardBad = [];
+  let cubes = 0, needLines = 0;
+  for (const c of pathLive.cards) {
+    const i = ridIdx.get(c.rid), key = modeKey[c.mode], m = own[i].length, lines = pathLive.det && pathLive.det[key][i];
+    if (c.wait || !lines) { cardBad.push(`${c.mode} ${c.rid}: detail never drawn`); continue; }
+    const recs = new Set(c.rows.flatMap(r => r.wins));
+    for (let w = 0; w <= m; w++) if (!recs.has(w)) cardBad.push(`${c.mode} ${c.rid}: no line for ${w}-${m - w}`);
+    // Every worked-out line is on exactly one row, under its own record and verdict;
+    // only plain In / Out rows merge, and a row shows every alternative it has.
+    const used = c.rows.flatMap(r => r.li);
+    if (used.length !== lines.length || new Set(used).size !== lines.length || used.some(k => !lines[k]))
+      cardBad.push(`${c.mode} ${c.rid}: rows cover lines [${used}] of ${lines.length}`);
+    for (const r of c.rows) {
+      if (r.li.length !== r.wins.length) cardBad.push(`${c.mode} ${c.rid}: row records ${r.wins} vs lines ${r.li}`);
+      r.li.forEach((k, d) => { const x = lines[k]; if (x && (x.wins !== r.wins[d] || x.kind !== r.kind)) cardBad.push(`${c.mode} ${c.rid}: row ${r.wins} shows line ${k} wrongly`); });
+      if (r.li.length > 1 && !["yes", "no"].includes(r.kind)) cardBad.push(`${c.mode} ${c.rid}: a ${r.kind} row was merged`);
+      const x = lines[r.li[0]];
+      if (r.li.length === 1 && x) {
+        const kk = l => l.join(":");
+        const common = x.cubes.length ? x.cubes[0].filter(l => x.cubes.every(cb => cb.some(q => kk(q) === kk(l)))) : [];
+        const alts = x.cubes.filter(cb => cb.some(l => !common.some(q => kk(q) === kk(l)))).length;
+        if (r.alts !== alts || r.shown !== alts || (r.inline && r.listed)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${alts} alternatives, row says ${r.alts}, shows ${r.shown}`);
+        if (r.inline && (r.inline > 3)) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: ${r.inline} alternatives inline`);
+      }
+    }
+    if (c.pct) cardBad.push(`${c.mode} ${c.rid}: a percentage inside the lines`);
+    needLines += c.needs;
+    for (const x of lines) {
+      if ((x.kind === "help") !== (x.target === "firm") || (x.kind === "help" && !x.cubes.length)) cardBad.push(`${c.mode} ${c.rid}: ${x.kind} line with target ${x.target}, ${x.cubes.length} sets`);
+      for (const lits of x.cubes) for (const o of x.owns) {
+        let fixed = 0, val = 0;
+        own[i].forEach((g, kk) => { fixed |= 1 << g; if ((o >> kk) & 1) val |= 1 << g; });
+        for (const [g, w] of lits) { fixed |= 1 << g; if (w === inp.remaining[g][0]) val |= 1 << g; }
+        const free = (total - 1) & ~fixed;
+        let s = 0; cubes++;
+        do {
+          const v = BR[["playoff", "bye", "bowlBye"].indexOf(key)][i][val | s];
+          if (x.target === "firm" ? v !== 2 : v < 1) { cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: a listed set doesn't guarantee it`); break; }
+          s = (s - free) & free;
+        } while (s);
+      }
+      // A line's verdict is the brute force's, for each own result it covers.
+      for (const o of x.owns) {
+        let fixed = 0, val = 0;
+        own[i].forEach((g, kk) => { fixed |= 1 << g; if ((o >> kk) & 1) val |= 1 << g; });
+        const free = (total - 1) & ~fixed, seen = [0, 0, 0];
+        let s = 0;
+        do { seen[BR[["playoff", "bye", "bowlBye"].indexOf(key)][i][val | s]]++; s = (s - free) & free; } while (s);
+        const kind = !seen[0] && !seen[1] ? "yes" : !seen[1] && !seen[2] ? "no" : !seen[2] ? "pts" : "help";
+        if (kind !== x.kind) cardBad.push(`${c.mode} ${c.rid} ${x.wins}W: says ${x.kind}, brute force ${kind}`);
+      }
+    }
+  }
+  check("live: every open card has a line for every possible record, no percentages, and verdicts match the brute force",
+    pathLive.cards.length > 0 && !cardBad.filter(s => !/guarantee/.test(s)).length, `${pathLive.cards.length} cards ${cardBad.slice(0, 5).join("; ")}`);
+  check("live: every listed requirement set (Needs / one of / every \"All N ways\" entry) really guarantees the outcome",
+    cubes > 0 && !cardBad.some(s => /guarantee/.test(s)) && needLines > 0, `${cubes} sets checked, ${needLines} requirement lines`);
+  // Phone width: no path section runs off the screen.
+  const vp0 = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 844 });
+  const ov = [];
+  for (const tab of ["picture", "toilet"]) {
+    await page.click(`#tabs button[data-tab="${tab}"]`);
+    await page.waitForTimeout(400);
+    // Measured with every "All N ways" list opened.
+    ov.push(await page.evaluate(() => { document.querySelectorAll(".pa-host details").forEach(d => { d.open = true; }); return ["#playoffPathHost", "#byePathHost", "#bowlPathHost"].map(s => document.querySelector(s))
+      .filter(h => h && h.offsetParent && h.childElementCount).map(h => ({ id: h.id, sw: h.scrollWidth, cw: h.clientWidth,
+        out: [...h.querySelectorAll("*")].filter(e => e.getBoundingClientRect().right > innerWidth + 1).length })); }));
+  }
+  if (vp0) await page.setViewportSize(vp0);
+  const flat = ov.flat();
+  check("live: at 390px the path sections don't overflow horizontally", flat.length >= 2 && flat.every(o => o.sw <= o.cw + 1 && !o.out), JSON.stringify(flat));
+  await page.click('#tabs button[data-tab="toilet"]');
+}
+
 group("Toilet Bowl Picture: section and chip proofs");
 const tbNameLines = await page.evaluate(() => {
   const host=document.querySelector("#toiletHost"), cells=[...(host?.querySelectorAll(".pp-tnm,.pp-nm .tb-name-text,.tb-slotname")||[])];
