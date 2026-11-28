@@ -200,7 +200,9 @@ const standings = rosters.map(r => ({
 
 // Ordered on the league tiebreak (tiebreak.js): wins; two teams level go to
 // head to head, then division record if they share a division, then points
-// for; three or more level go to points for. That needs every decided
+// for; three or more level go to combined head to head among them, then
+// division record if all share a division, then points for (still-level
+// subgroups start the rule over). That needs every decided
 // regular-season game so far, and each roster's division. The row shape is
 // unchanged (no division field): the division is passed alongside.
 const lastReg = (Number(league.settings.playoff_week_start) || 15) - 1;

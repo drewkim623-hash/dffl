@@ -174,7 +174,9 @@ const T = {
         wins: r.settings.wins, losses: r.settings.losses, ties: r.settings.ties,
         points_for: pts(r.settings.fpts, r.settings.fpts_decimal), points_against: pts(r.settings.fpts_against, r.settings.fpts_against_decimal) }));
       // League tiebreak: wins; two level go to head to head, then division record
-      // if they share a division, then points for; three or more: points for.
+      // if they share a division, then points for; three or more: combined head
+      // to head among them, then division record if all share a division, then
+      // points for (still-level subgroups start the rule over).
       // Head to head from every decided regular-season week the records cover.
       const [st, lg] = await Promise.all([state(c), leagueInfo(c)]);
       const lastReg = Number(lg.settings?.playoff_week_start || 15) - 1;

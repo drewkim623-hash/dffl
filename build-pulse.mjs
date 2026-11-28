@@ -72,7 +72,9 @@ const thisWeek = [...byId.values()].filter(a => a.length === 2).map(([x, y]) => 
 
 // Ordered on the league tiebreak (tiebreak.js): wins; two teams level go to
 // head to head, then division record if they share a division, then points
-// for; three or more level go to points for. Head to head needs the decided
+// for; three or more level go to combined head to head among them, then
+// division record if all share a division, then points for (still-level
+// subgroups start the rule over). Head to head needs the decided
 // regular-season games the records cover, so those weeks' matchups are read.
 const played = r => ((r.settings || {}).wins || 0) + ((r.settings || {}).losses || 0) + ((r.settings || {}).ties || 0);
 const lastReg = (Number(league.settings && league.settings.playoff_week_start) || 15) - 1;

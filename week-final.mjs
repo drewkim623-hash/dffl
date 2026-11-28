@@ -150,7 +150,8 @@ const round2 = n => Math.round(n * 100) / 100;
  *
  * The folded table is ordered on the league tiebreak (tiebreak.js rankStandings:
  * wins; two teams level: head to head, then division record if they share a
- * division, then points for; three or more: points for) when `h2hGames` —
+ * division, then points for; three or more: combined head to head among them,
+ * then division record if all share a division, then points for) when `h2hGames` —
  * the decided regular-season games BEFORE this week, [{a, b, a_pts, b_pts}] by
  * roster_id — is given; this week's games are added to it. Divisions come from
  * each row's `division` or `divisionOf(roster_id)`; without them a two-way

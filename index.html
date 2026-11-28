@@ -1146,6 +1146,94 @@
   .pa-final .pa-settled{margin-top:6px}
   .tb-esc-list{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:10px}
   .tb-esc-list .nmcell{gap:6px}
+  /* path tabs: tier grid, team expand, games that matter (composes .ppv / .tfilter / .pp-hero / .pp-mg) */
+  .pa-tog{margin:18px 0 0}
+  .pa-tv{margin-top:6px}
+  .pa-tv .av.sm,.pa-gms .av.sm{font-size:11px}
+  .pa-tier{margin-top:18px}
+  .pa-tier>.pp-eye{display:block}
+  .pa-tsub{font-size:12px;color:var(--muted);margin:2px 0 8px;line-height:1.45}
+  .pa-rows{border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--ring);overflow:hidden}
+  .pa-row{display:grid;grid-template-columns:minmax(0,1fr) auto 42px;align-items:center;gap:8px;padding:8px 10px}
+  .pa-row+.pa-row{border-top:1px solid rgba(255,255,255,.05)}
+  .pa-rb{display:flex;align-items:center;gap:8px;min-width:0;min-height:40px;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+  .pa-rb .pp-nm{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pa-rb .pp-sub{font:11px var(--mono);color:var(--muted)}
+  .pa-rb:focus-visible,.pa-c:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+  .pa-cells{display:flex;gap:4px}
+  .pa-c{position:relative;display:flex;flex:none;width:32px;height:28px;padding:0;border:0;border-radius:6px;overflow:hidden;background:var(--raised);cursor:pointer}
+  .pa-cells.many .pa-c{width:26px}
+  .pa-sl{flex:1 1 0;min-width:0;display:block}
+  .pa-sl+.pa-sl{box-shadow:inset 1px 0 0 var(--plane)}
+  .pa-c b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 11px var(--mono);color:var(--ink);text-shadow:0 1px 2px rgba(0,0,0,.65);pointer-events:none}
+  .pa-pct{font:700 13px var(--mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pa-tv .k-yes{background:var(--aqua)} .pa-tv .k-help{background:rgba(255,194,61,.55)}
+  .pa-tv .k-pts{background:rgba(185,140,255,.55)} .pa-tv .k-no{background:rgba(255,255,255,.06)}
+  .pa-tv[data-mode="bowl"] .k-yes{background:var(--red)} .pa-tv[data-mode="bowl"] .k-help{background:rgba(230,103,103,.42)}
+  .pa-tv[data-mode="bowl"] .k-no{background:rgba(25,158,112,.30)}
+  .pa-tv .pa-leg{margin:12px 0 0}
+  .pa-sw{display:inline-block;width:14px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .pa-x{grid-column:1/-1;display:grid;gap:10px;margin:4px 0 6px;min-width:0}
+  .pa-x[hidden]{display:none}
+  .pa-x .pp-hero{flex-wrap:wrap;align-items:flex-start}
+  .pa-hpct b{font:800 30px/1 var(--mono);font-variant-numeric:tabular-nums}
+  .pa-hs{font-size:12px;color:var(--ink-2)}
+  .pa-x .pp-hero .badge{margin-top:6px}
+  .pa-ob{display:flex;gap:4px;width:100%}
+  .pa-ob>span{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .pa-ob .pa-blk{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--raised)}
+  .pa-ob small{font:11px var(--mono);color:var(--ink-2);text-align:center}
+  .pa-mus{display:flex;flex-wrap:wrap;gap:6px;width:100%;align-items:center}
+  .pa-mul{flex:1 0 100%;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+  .pa-mu,.pa-why{display:inline-flex;align-items:center;flex-wrap:nowrap;gap:5px;padding:3px 8px;border-radius:999px;min-width:0;max-width:100%;
+    background:rgba(255,255,255,.05);border:1px solid var(--ring);font-size:12px;white-space:nowrap}
+  .pa-mu{display:flex;width:100%}
+  .pa-mt,.pa-why .pa-wn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pa-mt{flex:1 1 auto}
+  .pa-why .pa-wn{flex:0 1 auto}
+  .pa-mr{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:5px}
+  .pa-wrs{flex:none;display:inline-flex;align-items:center;gap:4px;color:var(--ink-2)}
+  .pa-mu .pp-mg,.pa-why .pp-mg,.pa-root .pp-mg{margin-left:0}
+  .pa-more{flex:1 0 100%;min-width:0}
+  .pa-more>summary{cursor:pointer;display:inline-block;font:600 11px var(--mono);color:var(--muted);padding:2px 0}
+  .pa-more[open]>summary{margin-bottom:6px}
+  .pa-more>div{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+  .pa-lines li.pa-hl{box-shadow:0 0 0 2px var(--a)}
+  .pa-tv[data-mode="bowl"] .pp-hero{background:linear-gradient(135deg,rgba(230,103,103,.22),rgba(230,103,103,.04) 55%,rgba(255,255,255,.02));
+    border-color:rgba(230,103,103,.35);box-shadow:0 12px 40px -16px rgba(230,103,103,.6)}
+  .pa-tv[data-mode="bowl"] .pp-hero .av{box-shadow:0 0 0 2px var(--red),0 0 18px rgba(230,103,103,.6)}
+  /* inline avatars in chips: the small 20px size everywhere (beats the hero's large .av) */
+  .pp-hero .pa-mu .av.pp-xs,.pa-gms .pa-why .av.pp-xs,.pa-gms .pa-pick .av.pp-xs{width:20px;height:20px;font-size:11px;flex:none;box-shadow:none}
+  .pa-gms>summary{display:block;cursor:pointer;list-style:none}
+  .pa-gms>summary::-webkit-details-marker{display:none}
+  .pa-gms>summary h2::after{content:"▾";font-size:.7em;margin-left:8px;color:var(--muted)}
+  .pa-gms:not([open])>summary h2::after{content:"▸"}
+  .pa-rootbox{display:grid;gap:8px;min-width:0}
+  .tfilter.pa-pick{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity;margin:0}
+  .tfilter.pa-pick::-webkit-scrollbar{display:none}
+  .tfilter.pa-pick button{flex:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;scroll-snap-align:start}
+  .pa-root[hidden]{display:none}
+  .pa-rw{margin-top:8px}
+  .pa-root ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+  .pa-root li{padding:8px 10px;border-radius:10px;background:var(--raised);font-size:12.5px;line-height:1.5;overflow-wrap:anywhere}
+  .pa-gw{margin-top:14px}
+  .pa-gw>summary{cursor:pointer;font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue);padding:8px 0}
+  .pa-games{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+  .pa-game{padding:12px 14px;min-width:0}
+  .pa-gh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pa-gh .nmcell{min-width:0;flex:1 1 130px}
+  .pa-gh .pp-sub{font:11px var(--mono);color:var(--muted)}
+  .pa-vs{font:700 11px var(--mono);color:var(--muted)}
+  .pa-game .pa-gh .pp-nm{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal}
+  /* games chips: the name keeps ~10ch and the reasons drop to a 2nd line instead of squeezing it to a letter */
+  @media (max-width:600px){
+    .pa-gms .pa-why{flex-wrap:wrap;row-gap:2px;border-radius:12px}
+    .pa-gms .pa-why .pa-wn{flex:1 1 auto;min-width:min(10ch,100%)}
+    .pa-gms .pa-wrs{flex:0 1 auto;flex-wrap:wrap;min-width:0}
+  }
+  .pa-side{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+  .pa-if{flex:1 0 100%;font-size:12px;font-weight:600;color:var(--ink-2)}
+  .pa-none{font-size:12px;color:var(--muted)}
   @media(max-width:520px){.pa-grid{grid-template-columns:minmax(0,1fr)}.pa-lines li{grid-template-columns:minmax(0,1fr);gap:2px}}
   /* ============ playoff picture ============ */
   .st-note{color:var(--muted);font-size:12.5px;margin:6px 0 14px}
@@ -6413,7 +6501,11 @@ function seedField(rank, divOfIdx, playoffTeams, order = null) {
  * in tiebreak.js (shared with the data writers and the chat worker): wins (a
  * tie half); two teams level go to head to head, then — when the two share a
  * division — division record over all their division games, then points for;
- * three or more level go straight to points for. Applied to whichever subset
+ * three or more level go to combined head to head (win % in games among the
+ * tied teams only; none played = .500), then — only if all share a division —
+ * division record, then points for. A step that separates some places them
+ * and restarts the rule (by size) for each group still level; a step that
+ * separates nobody passes to the next step. Applied to whichever subset
  * is being ranked (a division, the wild-card pool, the division winners), so
  * the tie is sized inside that subset; division record always counts the full
  * season's division games, whoever else is in the subset.
@@ -6422,8 +6514,8 @@ function seedField(rank, divOfIdx, playoffTeams, order = null) {
  * tied game counting half to each. `all` = every team index (defaults to
  * 0..W.length-1). Returns a new array, best first.
  */
-function tieOrder(list, W, PF, H, divOf = null, all = null) {
-  return DFFLTiebreak.tieOrder(list, W, PF, H, divOf, all);
+function tieOrder(list, W, PF, H, divOf = null, all = null, trace = null) {
+  return DFFLTiebreak.tieOrder(list, W, PF, H, divOf, all, trace);
 }
 
 /** Head-to-head wins from a list of decided games, as an N×N matrix. */
@@ -11215,7 +11307,7 @@ function leagueRules(season) {
     roundType: st.playoff_round_type ?? null,
     seedType: st.playoff_seed_type ?? null,
     rosterDivisions: season && season.divOf ? season.divOf.size : 0,
-    tiebreak: "wins (a tie counts half); two teams level: head to head, then division record if they share a division, then points for; three or more level: points for",
+    tiebreak: DFFLTiebreak.RULE_TEXT,
   };
 }
 
@@ -12029,7 +12121,8 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   const final = new Set(currentGames(job.model, job.live).filter(g => g.final).flatMap(g => [g.a, g.b]));
   // Seeds as of today: the standings the simulator ranks by (wins; two teams
   // level: head to head, then division record if they share a division, then
-  // points for; three or more: points for) through the same seedField every
+  // points for; three or more: combined head to head, then division record if
+  // all share a division, then points for) through the same seedField every
   // simulated season uses.
   const tOrd = list => tieOrder(list, live.W0, live.PF0, live.H2H0, i => live.teams[i].div);
   const rank = tOrd(live.teams.map((_, i) => i));
@@ -12242,7 +12335,7 @@ function pictureBoard(PP) {
 
   const note = `Seeds = today, odds = full season. Seeds are today's standings — division leaders first,
     then the best records left; two teams level go to head to head, then division record if they share a division, then points for, and three or more
-    level go straight to points for — so the odds won't always follow
+    level go to combined head to head among them, then division record if all share a division, then points for — so the odds won't always follow
     seed order. Every percentage is the Odds tab's ${PP.sims.toLocaleString()}-season run: Playoff % is
     the Odds tab's number, and Bye % is how often that run finishes a team in the top ${B} seed${B === 1 ? "" : "s"}.
     The sims still reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.`;
@@ -12354,7 +12447,11 @@ function renderPicture(host, PP) {
     <p><b>League rule:</b> standings go by wins (a tie counts half). Two teams level go to head to head;
        if still level and the two share a division, division record (every division game of the season);
        then points for. Two teams from different divisions: head to head, then points for. Three or more
-       level go straight to points for. The same rule ranks division winners, seeds, wild cards, the
+       level go to combined head to head — each team's win % in games among the tied teams only (ties half; a
+       team that hasn't played any of the others counts .500) — then, only if all of them share a division,
+       division record, then points for. When a step separates some but not all, those it separates are placed
+       and each group still level starts the rule over (two left: the two-team rule; three or more: combined
+       head to head among just them). The same rule ranks division winners, seeds, wild cards, the
        toilet-bowl order and last place.
        Division winners are seeded first, in record order, then the best records left — the rule
        DFFL's past seasons were actually seeded by. The bracket above is drawn fixed; the sims still
@@ -12403,14 +12500,20 @@ const PATH_MAX_GAMES = 18;
 function makePathSeeder(N, div, P, B = 0) {
   const divs = [...new Set(div)].sort((a, b) => a - b);
   const mem = new Uint8Array(N), isChamp = new Uint8Array(N);
-  // Division record: every division game of the season, against every other team in the division.
-  const mates = Array.from({ length: N }, (_, i) => { const r = []; for (let j = 0; j < N; j++) if (j !== i && div[j] === div[i]) r.push(j); return r; });
-  const divPct = (x, H) => {
-    let w = 0, g = 0;
-    for (const y of mates[x]) { const a = H[x * N + y], b = H[y * N + x]; w += a; g += a + b; }
-    return g ? w / g : 0.5;
+  const all = Array.from({ length: N }, (_, i) => i), divFn = i => div[i];
+  // pfOrder as a points-for array (best = highest) for the shared tieOrder;
+  // the walk reuses a handful of fixed orders, so each is built once.
+  const pfRanks = new WeakMap();
+  const pfRank = pfOrder => {
+    let r = pfRanks.get(pfOrder);
+    if (!r) { r = new Float64Array(N); pfOrder.forEach((i, k) => { r[i] = N - k; }); pfRanks.set(pfOrder, r); }
+    return r;
   };
-  // Order the teams flagged in `mem` (taken in pfOrder) the tieOrder way.
+  // Order the teams flagged in `mem` (taken in pfOrder): sorted on wins here,
+  // and every group level on wins handed to the shared tieOrder (the whole
+  // rule: combined head to head, division record when all share a division,
+  // points for — restarting on each still-level subgroup), so the walk can't
+  // drift from the rest of the site.
   const ord = (pfOrder, W, H) => {
     const s = [];
     for (const i of pfOrder) if (mem[i]) {
@@ -12421,11 +12524,9 @@ function makePathSeeder(N, div, P, B = 0) {
     for (let k = 0; k < s.length;) {
       let e = k + 1;
       while (e < s.length && W[s[e]] === W[s[k]]) e++;
-      if (e - k === 2) {
-        const a = s[k], b = s[k + 1];
-        let d = H[a * N + b] - H[b * N + a];
-        if (d === 0 && div[a] === div[b]) d = divPct(a, H) - divPct(b, H);
-        if (d < 0) { s[k] = b; s[k + 1] = a; }
+      if (e - k >= 2) {
+        const r = tieOrder(s.slice(k, e), W, pfRank(pfOrder), H, divFn, all);
+        for (let j = 0; j < r.length; j++) s[k + j] = r[j];
       }
       k = e;
     }
@@ -12460,11 +12561,16 @@ function makePathSeeder(N, div, P, B = 0) {
  * Every way the rest of the regular season can go, walked exactly — no
  * simulation, no weighting. Each remaining game is a win for one side or the
  * other (2^R outcomes; a future tied game is left out), and every outcome is
- * seeded on the league's rule: wins; two teams level go to head to head, then
- * (two teams in the same division) division record, then points for; three or
- * more level go to points for. Head to head and division record are known
- * exactly inside an outcome; points for are not, so when a team's spot could
- * come down to a points tiebreak it is re-seeded with that team's points pushed
+ * seeded on the league's rule (the shared tieOrder): wins; two teams level go
+ * to head to head, then (two teams in the same division) division record, then
+ * points for; three or more level go to combined head to head among them, then
+ * (all in one division) division record, then points for — each still-level
+ * subgroup starting over. Head to head and division record are known exactly
+ * inside an outcome; points for are not. Points for is the last step of every
+ * branch and the earlier steps never look at it, so a team's own points only
+ * move it inside the win-level group it sits in: when a team's spot could
+ * come down to a points tiebreak (any team level on wins with it across a
+ * line, or a division rival level on wins) it is re-seeded with that team's points pushed
  * to the top and to the bottom (everyone else's as they stand today) — the
  * same both ways is a result, different is "points".
  *
@@ -12972,6 +13078,186 @@ const PATH_MODES = {
     more: "outcome that puts it there", ptsNeed: "Level on wins if:", ptsOne0: "Level on wins if one of", ptsNeedAll: "results needed to get level",
     ptsOr: "Or level on wins: lands there if it has fewer points for than", ptsThen: "Then lands there if it has fewer points for than" },
 };
+/*
+ * The tier grid. A team's tier comes straight from its tallies (PS.teams[i][key],
+ * one per own record, wins ascending): "lock" every record is in; "out" no
+ * record has a way; playoffs and bye — "control" winning out is in whatever
+ * else happens, "long" only a points-for tiebreak ever gets it there, "help"
+ * the rest; the bottom two — "danger" losing out puts it there in every
+ * outcome, "could" the rest. [id, label, subtitle, badge class].
+ */
+const PATH_TIERS = {
+  playoff: [["lock", "Clinched", "In however everything else goes.", "gold"],
+    ["control", "In control", "Win out and it's in, whatever else happens.", "blue"],
+    ["help", "Needs help", "Even winning out, it needs other results.", ""],
+    ["long", "Long shot", "Only a points-for tiebreak gets it in.", ""],
+    ["out", "Out", "No result left gets it in.", ""]],
+  bye: [["lock", "Clinched", "A first-round bye however everything else goes.", "gold"],
+    ["control", "In control", "Win out and it's a bye, whatever else happens.", "blue"],
+    ["help", "Needs help", "Even winning out, it needs other results for a bye.", ""],
+    ["long", "Long shot", "Only a points-for tiebreak gets it a bye.", ""],
+    ["out", "Out", "No result left gets it a bye.", ""]],
+  bowl: [["lock", "Locked into the bottom two", "In the bottom two however everything else goes.", "red"],
+    ["danger", "Danger zone", "Losing out puts it in the bottom two in every outcome.", "red"],
+    ["could", "Could land there", "Some results put it there, but losing out alone doesn't lock it in.", ""],
+    ["out", "Safe", "No result left puts it in the bottom two.", "blue"]],
+};
+const PATH_VERD = {
+  playoff: { yes: "In", help: "Needs other results", pts: "Down to points", no: "Out" },
+  bye: { yes: "Bye", help: "Needs other results", pts: "Down to points", no: "No bye" },
+  bowl: { yes: "Bottom two", help: "Could land there", pts: "Down to points", no: "Safe" },
+};
+const pathTallyKind = x => (x.yes === x.tot ? "yes" : x.yes + x.pts === 0 ? "no" : x.yes === 0 ? "pts" : "help");
+function pathTierOf(T, mode) {
+  if (T.every(x => x.yes === x.tot)) return "lock";
+  if (T.every(x => x.yes + x.pts === 0)) return "out";
+  if (mode === "bowl") return T[0].yes === T[0].tot ? "danger" : "could";
+  if (T.every(x => x.yes === 0)) return "long";
+  const best = T[T.length - 1];
+  return best.yes === best.tot ? "control" : "help";
+}
+const PATH_OPEN = { playoff: new Set(), bye: new Set(), bowl: new Set() };
+
+/*
+ * Swings: for every race (PS.cls key), team and remaining game, which result is
+ * better for the team and by how much — scenario counts only. A side's score is
+ * the sum of its outcomes' values (firm 2, points-for 1; the bottom two counts
+ * 2 − value, since landing there is bad); d is the difference between the two
+ * sides (bit g set = remaining[g][0] wins). "must": the other result leaves no
+ * qualifying outcome (playoffs / bye: value ≥ 1; bottom two: every outcome
+ * lands it there); "big": d is at least PATH_BIG of the most it could be; else
+ * "some". A race whose outcomes are all the same is settled: null.
+ */
+const PATH_BIG = 0.25;
+const PATH_RACE_WORD = { playoff: "playoff spot", bye: "bye", bowlBye: "stays out of bottom two" };
+const PATH_STR = { must: ["MUST", ""], big: ["▲▲", "help"], some: ["▲", "long"] };
+const PATH_STR_RANK = { must: 3, big: 2, some: 1 };
+const pathStrChip = s => `<span class="pp-mg${PATH_STR[s][1] ? " " + PATH_STR[s][1] : ""}" data-str="${s}">${PATH_STR[s][0]}</span>`;
+function pathSwingOf(C, R, rem, bad) {
+  const size = 2 ** R, half = size / 2;
+  const SA = new Float64Array(R), PA = new Float64Array(R), FA = new Float64Array(R);
+  let S = 0, P = 0, F = 0;
+  for (let m = 0; m < size; m++) {
+    const v = C[m];
+    if (!v) continue;
+    S += v; P++; if (v === 2) F++;
+    for (let x = m; x; x &= x - 1) { const g = 31 - Math.clz32(x & -x); SA[g] += v; PA[g]++; if (v === 2) FA[g]++; }
+  }
+  if (P === 0 || F === size || (P === size && F === 0)) return null;
+  const out = [];
+  for (let g = 0; g < R; g++) {
+    let sA = SA[g], sB = S - SA[g], qA = PA[g], qB = P - PA[g];
+    if (bad) { sA = 2 * half - sA; sB = 2 * half - sB; qA = half - FA[g]; qB = half - (F - FA[g]); }
+    const d = sA - sB;
+    if (!d) continue;
+    const other = d > 0 ? qB : qA;
+    out.push({ g, w: d > 0 ? rem[g][0] : rem[g][1], d: Math.abs(d), str: other === 0 ? "must" : Math.abs(d) >= PATH_BIG * 2 * half ? "big" : "some" });
+  }
+  return out;
+}
+/** pathSwingOf for every race and team, yielding between them; cached on PS. */
+async function pathSwings(PS) {
+  if (PS._sw) return PS._sw;
+  if (!PS._swP) PS._swP = (async () => {
+    const out = {};
+    for (const k of PATH_KEYS) {
+      out[k] = [];
+      for (let i = 0; i < PS.teams.length; i++) {
+        out[k][i] = pathSwingOf(PS.cls[k][i], PS.games, PS.remaining, k === "bowlBye");
+        await new Promise(r => setTimeout(r, 0));
+      }
+    }
+    PS._sw = out;
+    return out;
+  })();
+  return PS._swP;
+}
+/** The races a tab's Games section and Root for… weigh: every race on Path to Playoffs; the bottom two on the bowl tab. */
+const pathRaces = (mode, byes) => (mode === "bowl" ? ["bowlBye"] : byes ? ["playoff", "bye", "bowlBye"] : ["playoff", "bowlBye"]);
+/**
+ * What team i should root for: one item per game that moves any race it is
+ * still live in — the side its strongest effect favours (MUST, then ▲▲, then
+ * ▲, then the bigger count), with every race's effect listed, including a race
+ * the other result would help.
+ */
+function pathRootFor(sw, races, i) {
+  const by = new Map();
+  for (const k of races) for (const e of (sw[k] && sw[k][i]) || []) { if (!by.has(e.g)) by.set(e.g, []); by.get(e.g).push({ race: k, ...e }); }
+  return [...by].map(([g, es]) => {
+    es.sort((a, b) => PATH_STR_RANK[b.str] - PATH_STR_RANK[a.str] || b.d - a.d);
+    return { g, w: es[0].w, es };
+  });
+}
+const PATH_ROOT = { playoff: null, bowl: null };
+/** Games that matter (bowl tab: Bottom-two watch): Root for… picker, then every remaining game by week. */
+function renderPathGames(host, PS, PP, mode, sw) {
+  if (!host) return;
+  host.innerHTML = "";
+  if (!PS || !PS.games) return;
+  const bowl = mode === "bowl", title = bowl ? "Bottom-two watch" : "Games that matter";
+  if (!sw) { host.appendChild(el("div", "empty", `<b>${title}</b>Working out which results move each race…`)); return; }
+  const races = pathRaces(mode, PP.rules.byes), rem = PS.remaining;
+  const name = i => nameOf(PP.rows[i].uid), uid = i => PP.rows[i].uid;
+  const rec = i => { const r = PP.rows[i]; return recStr(r.w, r.l, r.t); };
+  const games = rem.map(([a, b, wk], g) => ({ g, a, b, wk, side: [[], []], tot: 0 }));
+  for (const k of races) sw[k].forEach((list, i) => { for (const e of list || []) { const G = games[e.g]; G.side[e.w === G.a ? 0 : 1].push({ i, race: k, ...e }); G.tot += e.d; } });
+  for (const G of games) for (const s of G.side) s.sort((x, y) => PATH_STR_RANK[y.str] - PATH_STR_RANK[x.str] || y.d - x.d || x.i - y.i);
+  // One chip per team: its reasons on this side, strongest first ("jskule23 · bottom two ▲▲ · playoff ▲").
+  const chip = t => `<span class="pa-why" data-i="${t.i}" data-str="${t.es[0].str}">${avatarHTML(uid(t.i), "pp-xs")}<span class="pa-wn" title="${esc(name(t.i))}">${esc(name(t.i))}</span><span class="pa-wrs">${t.es.map(e =>
+    `<span class="pa-wr" data-race="${e.race}" data-str="${e.str}">· ${PATH_RACE_WORD[e.race]} ${pathStrChip(e.str)}</span>`).join("")}</span></span>`;
+  const tm = i => `<span class="nmcell">${avatarHTML(uid(i), "sm")}<span class="pp-who"><span class="pp-nm">${esc(name(i))}</span><span class="pp-sub">${rec(i)}</span></span></span>`;
+  const PATH_INLINE = 4;
+  const side = (G, s) => {
+    const w = s ? G.b : G.a, l = s ? G.a : G.b, es = G.side[s];
+    const by = new Map();   // es is already strongest-first, so each team's first reason is its best and teams come out strongest-first
+    for (const e of es) { if (!by.has(e.i)) by.set(e.i, { i: e.i, es: [] }); by.get(e.i).es.push(e); }
+    const ts = [...by.values()];
+    let inl = ts.filter(t => t.es.some(e => e.str === "must" || e.str === "big")).slice(0, PATH_INLINE);
+    if (!inl.length) inl = ts.slice(0, 2);
+    const rest = ts.filter(t => !inl.includes(t));
+    return `<div class="pa-side" data-w="${w}"><span class="pa-if">If ${esc(name(w))} beats ${esc(name(l))}</span>${ts.length ? inl.map(chip).join("")
+      + (rest.length ? `<details class="pa-more"><summary>+${rest.length} more</summary><div>${rest.map(chip).join("")}</div></details>` : "")
+      : `<span class="pa-none">${bowl ? "Keeps nobody out" : "Helps no race"}</span>`}</div>`;
+  };
+  const card = G => `<div class="card pa-game" data-g="${G.g}" data-wk="${G.wk}"><div class="pa-gh">${tm(G.a)}<span class="pa-vs">v</span>${tm(G.b)}</div>${side(G, 0)}${side(G, 1)}</div>`;
+  const wks = [...new Set(rem.map(x => x[2]))].sort((a, b) => a - b);
+  const weekHTML = (wk, k) => `<details class="pa-gw" data-wk="${wk}"${k === 0 ? " open" : ""}><summary>Week ${wk}${k === 0 ? " · this week" : ""}</summary><div class="pa-games">${games
+    .filter(G => G.wk === wk).sort((x, y) => y.tot - x.tot || x.g - y.g).map(card).join("")}</div></details>`;
+  const order = PP.order;
+  let sel = PATH_ROOT[mode];
+  if (sel == null || !order.includes(sel)) sel = order[0];
+  const reason = (e, x) => `<span class="pa-rr" data-race="${e.race}" data-str="${e.str}" data-w="${e.w}">${e.w === x.w ? "" : `${esc(name(e.w))} winning instead: `}${PATH_RACE_WORD[e.race]} ${pathStrChip(e.str)}</span>`;
+  const rootHTML = i => {
+    const L = pathRootFor(sw, races, i);
+    const body = !L.length ? `<p class="pa-tsub">Nothing to root for — ${bowl ? "its bottom-two race is settled" : "every race it was in is settled"}.</p>`
+      : wks.map(wk => {
+        const items = L.filter(x => rem[x.g][2] === wk).sort((a, b) => b.es[0].d - a.es[0].d || a.g - b.g);
+        if (!items.length) return "";
+        return `<div class="pa-rw"><span class="pp-eye">Week ${wk}</span><ul>${items.map(x => {
+          const [a, b] = rem[x.g], l = x.w === a ? b : a;
+          return `<li data-g="${x.g}" data-w="${x.w}">${x.w === i ? `<b>Win</b> v ${esc(name(l))}` : `<b>${esc(name(x.w))}</b> over ${esc(name(l))}`} — ${x.es.map(e => reason(e, x)).join(" · ")}</li>`;
+        }).join("")}</ul></div>`;
+      }).join("");
+    return `<div class="pa-root" data-i="${i}"${i === sel ? "" : " hidden"}>${body}</div>`;
+  };
+  const box = el("details", "ppv pa-gms");
+  box.open = true;
+  box.innerHTML = `<summary class="sechead"><h2>${title}</h2><p>${bowl
+    ? "Every game left, and which result keeps each team out of the bottom two."
+    : "Every game left, and whose races each result moves: a playoff spot, a first-round bye, staying out of the bottom two."}</p></summary>
+    <div class="pa-rootbox"><span class="pp-eye">Root for…</span><div class="tfilter pa-pick" role="group" aria-label="Root for…">${order.map(i =>
+      `<button type="button" data-i="${i}" aria-pressed="${i === sel}">${avatarHTML(uid(i), "pp-xs")}${esc(name(i))}</button>`).join("")}</div>${order.map(rootHTML).join("")}</div>
+    ${wks.map(weekHTML).join("")}
+    <p class="st-note">Strength is from scenario counts, not odds: <b>MUST</b> — the other result ${bowl ? "puts it in the bottom two in every outcome" : "ends every path for that race"}; <b>▲▲</b> — it moves at least a quarter of the team's scenarios for that race; <b>▲</b> — it moves fewer. An outcome decided only by a points-for tiebreak counts half. A team can show on both sides when one result helps one race and the other helps another.</p>`;
+  host.appendChild(box);
+  box.querySelector(".pa-pick").onclick = e => {
+    const b = e.target.closest("button[data-i]");
+    if (!b) return;
+    PATH_ROOT[mode] = +b.dataset.i;
+    box.querySelectorAll(".pa-pick button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    box.querySelectorAll(".pa-root").forEach(r => { r.hidden = r.dataset.i !== b.dataset.i; });
+  };
+}
 function renderPaths(host, PS, PP, mode, det = null) {
   if (!host) return;
   host.innerHTML = "";
@@ -12993,16 +13279,6 @@ function renderPaths(host, PS, PP, mode, det = null) {
   const list = PS.teams.slice().sort((a, b) => mode === "bowl"
     ? simOf(b) - simOf(a) || order.indexOf(b.rid) - order.indexOf(a.rid)
     : order.indexOf(a.rid) - order.indexOf(b.rid));
-  const settled = [], open = [], longShots = [];
-  for (const t of list) {
-    const lines = t[key];
-    const allYes = lines.every(x => x.yes === x.tot), allNo = lines.every(x => x.yes + x.pts === 0);
-    const onlyPts = !allNo && lines.every(x => x.yes === 0);
-    if (allYes || (allNo && mode !== "bowl")) settled.push({ t, allYes, lines });
-    else if (onlyPts) longShots.push({ t, lines });
-    else if (!allNo) open.push({ t, allYes, lines });
-  }
-  const pill = s => `<span class="badge ${s.allYes ? "gold" : "blue"}">${s.allYes ? M.locked : M.none}</span>`;
   const status = lines => {
     const best = M.verb === "Win" ? lines[lines.length - 1] : lines[0];   // win out / lose out
     // The bottom two is a bad place: an open card there could land in it, never "needs help" for it.
@@ -13014,36 +13290,99 @@ function renderPaths(host, PS, PP, mode, det = null) {
     return "Only a points tiebreak gets it there";
   };
   const simWord = mode === "bye" ? "Bye" : mode === "bowl" ? "Bottom two" : "Playoffs";
-  const wrap = el("div", "pa-grid");
-  for (const s of open) {
-    const r = rowsBy.get(s.t.rid);
-    const left = s.t.left.map(([a, b, wk]) => `wk ${wk} v ${esc(name(a === s.t.i ? b : a))}`).join(" · ");
-    let lines = det ? det[key][s.t.i].map((x, k) => ({ ...x, _k: k })) : null;
+  const tiers = PATH_TIERS[mode], V = PATH_VERD[mode], sw = PS._sw || null;
+  const tierOf = t => pathTierOf(t[key], mode);
+  const tk = pathTallyKind;
+  const recLab = (w, m) => `${w}–${m - w}`;
+  // Own records in reading order: win out first (the bowl: lose out first — losing is the bad direction).
+  const recsOf = t => { const xs = t[key].slice(); return M.verb === "Lose" ? xs : xs.reverse(); };
+  const lostTxt = (i, x) => {
+    if (!x.lost) return "";
+    const loses = x.lost.length <= x.of - x.lost.length;
+    const gs = loses ? x.lost : PS.own[i].filter(g => !x.lost.includes(g));
+    return `${loses ? "loses to" : "beats"} ${gs.map(g => { const [a, b, wk] = PS.remaining[g]; return `${name(a === i ? b : a)} wk ${wk}`; }).join(", ")}`;
+  };
+  // One slice per worked-out line of the record when the answer depends on which game is lost (or won).
+  const slicesOf = (t, w) => {
+    const D = det && det[key][t.i];
+    const at = D ? D.map((x, k) => ({ x, k })).filter(o => o.x.wins === w) : [];
+    if (at.length > 1) return at.map(o => ({ kind: o.x.kind, li: o.k, owns: o.x.owns, title: lostTxt(t.i, o.x) }));
+    return [{ kind: tk(t[key][w]), li: at.length ? at[0].k : null, owns: null, title: "" }];
+  };
+  const slTitle = s => (s.title ? `${s.title}: ${V[s.kind]}` : V[s.kind]);
+  const cellHTML = (t, x) => {
+    const sl = slicesOf(t, x.wins), k = tk(x), lab = recLab(x.wins, x.of);
+    const words = `${lab}: ${sl.length > 1 ? sl.map(slTitle).join("; ") : V[k]}`;
+    return `<button type="button" class="pa-c" data-wins="${x.wins}" data-kind="${k}" aria-label="${esc(words)}" title="${esc(words)}">${sl.map(s =>
+      `<span class="pa-sl k-${s.kind}" data-kind="${s.kind}"${s.li != null ? ` data-li="${s.li}"` : ""}${s.owns ? ` data-owns="${s.owns.join(" ")}"` : ""}></span>`).join("")}<b>${lab}</b></button>`;
+  };
+  const tierBadge = tier => { const T = tiers.find(z => z[0] === tier); return `<span class="badge ${T[3]}">${esc(T[1])}</span>`; };
+  const heroHTML = (t, tier, xs) => {
+    const r = rowsBy.get(t.rid), own = new Set(PS.own[t.i]);
+    const bar = xs.map(x => `<span><i class="pa-blk">${slicesOf(t, x.wins).map(s => `<i class="pa-sl k-${s.kind}" title="${esc(slTitle(s))}"></i>`).join("")}</i><small>${recLab(x.wins, x.of)}</small></span>`).join("");
+    const top = sw && sw[key][t.i] ? sw[key][t.i].filter(e => !own.has(e.g)).sort((a, b) => b.d - a.d || a.g - b.g).slice(0, 3) : [];
+    const mu = top.map(e => { const [a, b, wk] = PS.remaining[e.g], l = e.w === a ? b : a;
+      return `<span class="pa-mu" data-g="${e.g}" data-w="${e.w}">${avatarHTML(PP.rows[e.w].uid, "pp-xs")}<span class="pa-mt" title="${esc(name(e.w))} over ${esc(name(l))}"><b>${esc(name(e.w))}</b> over ${esc(name(l))}</span><span class="pa-mr"><span class="pa-wk">wk ${wk}</span>${pathStrChip(e.str)}</span></span>`; }).join("");
+    return `<div class="pp-hero">${avatarHTML(r.uid)}<div class="pp-who"><div class="pa-hpct"><span class="vh">${simWord} </span><b>${pctf(simOf(t))}</b><span class="pa-hs"> in the sim</span></div>
+      <div class="pp-nm">${esc(name(t.i))}</div><div class="pp-sub">${recStr(r.w, r.l, r.t)} · seed ${r.todaySeed}</div>${tierBadge(tier)}</div>
+      <div class="pa-ob" aria-hidden="true">${bar}</div>
+      ${mu ? `<div class="pa-mus"><span class="pa-mul">${mode === "bowl" ? "Results elsewhere that keep it out most" : "Results elsewhere that help most"}</span>${mu}</div>` : ""}</div>`;
+  };
+  const cardHTML = (t, tier) => {
+    const r = rowsBy.get(t.rid);
+    const left = t.left.map(([a, b, wk]) => `wk ${wk} v ${esc(name(a === t.i ? b : a))}`).join(" · ");
+    let lines = det ? det[key][t.i].map((x, k) => ({ ...x, _k: k })) : null;
     if (lines && M.verb === "Lose") lines = lines.reverse();
-    const body = lines ? pathLinesHTML(lines, PS, s.t.i, name, M)
+    const body = lines ? pathLinesHTML(lines, PS, t.i, name, M)
       : `<li class="pa-p pa-wait"><span class="pa-res">Working out the results each record needs…</span></li>`;
-    wrap.appendChild(el("div", "card pa-card", `
+    const st = tier === "lock" ? M.locked : tier === "out" ? M.none : status(t[key]);
+    return `<div class="card pa-card">
       <div class="pa-top"><span class="nmcell">${avatarHTML(r.uid, "sm")}<span class="nm">${esc(nameOf(r.uid))}</span></span>
-        <span class="pa-recd">${recStr(r.w, r.l, r.t)} · seed ${r.todaySeed} · ${simWord} ${pctf(simOf(s.t))} in the sim</span></div>
-      <div class="pa-st">${esc(status(s.lines))}</div>
+        <span class="pa-recd">${recStr(r.w, r.l, r.t)} · seed ${r.todaySeed} · ${simWord} ${pctf(simOf(t))} in the sim</span></div>
+      <div class="pa-st">${esc(st)}</div>
       <div class="pa-left">${left || "No games left"}</div>
-      <ul class="pa-lines" data-rid="${esc(String(s.t.rid))}" data-mode="${mode}">${body}</ul>`));
-  }
-  if (open.length) host.appendChild(wrap);
-  else host.appendChild(el("div", "empty", `<b>Nothing left to settle</b>${po ? "Every playoff spot is decided." : mode === "bye" ? "Both first-round byes are decided." : "The bottom two are decided."}`));
-  if (longShots.length) {
-    host.appendChild(el("p", "st-note pa-long", `${mode === "bowl" ? "<b>Down to points</b> — a points-for tiebreak decides whether they land in the bottom two" : "<b>Long shots</b> — only a points-for tiebreak gets them there"}: ${longShots.map(s =>
-      `<span data-rid="${esc(String(s.t.rid))}">${esc(name(s.t.i))}, ${simWord} ${pctf(simOf(s.t))} in the sim</span>`).join(" · ")}.`));
-  }
-  if (settled.length) {
-    host.appendChild(el("div", "pa-settled", settled.map(s =>
-      `<span class="nmcell" data-rid="${esc(String(s.t.rid))}">${avatarHTML(PP.rows[s.t.i].uid, "sm")}<span class="nm">${esc(name(s.t.i))}</span>${pill(s)}</span>`).join("")));
-  }
-  if (mode === "bowl") host.appendChild(el("p", "st-note", "Everyone not listed is safe from the bottom two."));
+      <ul class="pa-lines" data-rid="${esc(String(t.rid))}" data-mode="${mode}">${body}</ul></div>`;
+  };
+  const rowHTML = (t, tier) => {
+    const r = rowsBy.get(t.rid), xs = recsOf(t), rid = String(t.rid), open = PATH_OPEN[mode].has(rid), id = `pax-${mode}-${rid}`;
+    return `<div class="pa-row" data-rid="${esc(rid)}" data-mode="${mode}" data-tier="${tier}" data-i="${t.i}">
+      <button type="button" class="pa-rb" aria-expanded="${open}" aria-controls="${esc(id)}">${avatarHTML(r.uid, "sm")}<span class="pp-who"><span class="pp-nm">${esc(name(t.i))}</span><span class="pp-sub">${recStr(r.w, r.l, r.t)} · seed ${r.todaySeed}</span></span></button>
+      <span class="pa-cells${xs.length > 5 ? " many" : ""}">${xs.map(x => cellHTML(t, x)).join("")}</span>
+      <span class="pa-pct"><span class="vh">${simWord} </span>${pctf(simOf(t))}<span class="vh"> in the sim</span></span>
+      <div class="pa-x" id="${esc(id)}"${open ? "" : " hidden"}>${heroHTML(t, tier, xs)}${cardHTML(t, tier)}</div></div>`;
+  };
+  const groups = new Map(tiers.map(z => [z[0], []]));
+  for (const t of list) groups.get(tierOf(t)).push(t);
+  const box = el("div", "ppv pa-tv");
+  box.dataset.mode = mode;
+  box.innerHTML = `<div class="pp-legend pa-leg">${["yes", "help", "pts", "no"].map(k => `<span><i class="pa-sw k-${k}"></i>${V[k]}</span>`).join("")}<span>Split cell: it depends on which game is ${M.verb === "Lose" ? "won" : "lost"} · tap a team or a record</span></div>`
+    + tiers.filter(z => groups.get(z[0]).length).map(([id, label, sub]) => `<section class="pa-tier${id === "long" ? " pa-long" : ""}" data-tier="${id}">
+      <span class="pp-eye">${esc(label)} · ${groups.get(id).length}</span><p class="pa-tsub">${esc(sub)}</p>
+      <div class="pa-rows">${groups.get(id).map(t => rowHTML(t, id)).join("")}</div></section>`).join("");
+  host.appendChild(box);
+  if (list.every(t => ["lock", "out"].includes(tierOf(t))))
+    host.appendChild(el("div", "empty", `<b>Nothing left to settle</b>${po ? "Every playoff spot is decided." : mode === "bye" ? "Both first-round byes are decided." : "The bottom two are decided."}`));
+  // Tap a team: its hero and full card open under the row. Tap a record: the same, scrolled to that record's line.
+  host.onclick = e => {
+    const c = e.target.closest(".pa-c"), b = e.target.closest(".pa-rb"), row = (c || b) && (c || b).closest(".pa-row");
+    if (!row) return;
+    const x = row.querySelector(".pa-x"), open = c ? true : x.hidden;
+    x.hidden = !open;
+    row.querySelector(".pa-rb").setAttribute("aria-expanded", String(open));
+    PATH_OPEN[mode][open ? "add" : "delete"](row.dataset.rid);
+    if (!c) return;
+    const sl = e.target.closest(".pa-sl");
+    const li = (sl && sl.dataset.li != null && x.querySelector(`ul.pa-lines > li[data-li~="${sl.dataset.li}"]`)) || x.querySelector(`ul.pa-lines > li[data-wins~="${c.dataset.wins}"]`);
+    host.querySelectorAll(".pa-hl").forEach(n => n.classList.remove("pa-hl"));
+    if (li) {
+      li.classList.add("pa-hl");
+      li.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    }
+  };
   const how = mode === "bowl"
     ? `"Bottom two if" is what every combination of other results that puts it there shares; "one of" (or the full list under "All … ways it lands there") gives the alternatives, and "Hurts most" the results that push it there most often.`
     : `"Needs" is what every guaranteeing combination of other results shares; "one of" (or the full list under "All … ways") gives the alternatives, and "Helps most" the results that open the most of them.`;
-  host.appendChild(el("p", "st-note", `Exact: all ${PS.outcomes.toLocaleString()} ways the last ${PS.games} regular-season games can go, each seeded on the league's tiebreakers — two teams level: head to head, then division record if they share a division, then points for; three or more level: points for. ${how} A record whose lines say the same thing whichever game is lost (or won) shows once ("any loss", or "loses to A or B"). The only percentage shown is the simulation's odds. A future tied game is left out. "Down to points" means only a points-for tiebreak decides it.`));
+  host.appendChild(el("p", "st-note", `Exact: all ${PS.outcomes.toLocaleString()} ways the last ${PS.games} regular-season games can go, each seeded on the league's tiebreakers — two teams level: head to head, then division record if they share a division, then points for; three or more level: combined head to head among them, then division record if all share a division, then points for (a step that separates some restarts the rule for those still level). ${how} A record whose lines say the same thing whichever game is lost (or won) shows once ("any loss", or "loses to A or B"). The only percentage shown is the simulation's odds. A future tied game is left out. "Down to points" means only a points-for tiebreak decides it.`));
 }
 
 /**
@@ -13065,7 +13404,7 @@ function renderPathsFinal(host, F, PP, mode) {
     ? `<div class="pa-settled">${set.map(i => `<span class="nmcell" data-rid="${esc(String(PP.rows[i].rid))}" data-seed="${seedOf(i)}">${avatarHTML(PP.rows[i].uid, "sm")}<span class="nm">${esc(nameOf(PP.rows[i].uid))}</span><span class="badge ${mode === "bowl" ? "blue" : "gold"}">Seed ${seedOf(i)}</span></span>`).join("")}</div>`
     : `<div class="empty">Nobody.</div>`}`;
   host.appendChild(box);
-  host.appendChild(el("p", "st-note", "Seeded on the league's tiebreakers with every result final — division winners first; two teams level: head to head, then division record if they share a division, then points for; three or more level: points for."));
+  host.appendChild(el("p", "st-note", "Seeded on the league's tiebreakers with every result final — division winners first; two teams level: head to head, then division record if they share a division, then points for; three or more level: combined head to head among them, then division record if all share a division, then points for."));
 }
 
 /** No board to map (season not started, or no divisions): each path section says so. */
@@ -13078,6 +13417,7 @@ function pathsUnavailable(msg) {
     h.appendChild(el("div", "empty", `<b>No paths to map yet</b>${esc(msg)}`));
   }
   const e = $("#toiletEscapeHost"); if (e) e.innerHTML = "";
+  for (const id of ["playoffGamesHost", "bowlGamesHost"]) { const g = $("#" + id); if (g) g.innerHTML = ""; }
   document.body.dataset.pathsReady = "empty";
 }
 
@@ -13123,9 +13463,51 @@ const pathKeyOf = PP => JSON.stringify([PP.pathIn.teams.map(t => [t.div, t.w, t.
 async function pathsFor(PP) {
   const key = pathKeyOf(PP);
   if (PATH_CACHE && PATH_CACHE.key === key) return PATH_CACHE.v;
-  const v = await pathScenarios({ ...PP.pathIn, playoffTeams: PP.rules.playoffTeams, byes: PP.rules.byes });
-  PATH_CACHE = { key, v };
-  return v;
+  // A walk already running on the same inputs (the board's background tally,
+  // or a path tab) is shared, not started twice.
+  if (PATH_INFLIGHT && PATH_INFLIGHT.key === key) return PATH_INFLIGHT.p;
+  const p = pathScenarios({ ...PP.pathIn, playoffTeams: PP.rules.playoffTeams, byes: PP.rules.byes });
+  PATH_INFLIGHT = { key, p };
+  try {
+    const v = await p;
+    PATH_CACHE = { key, v };
+    return v;
+  } finally {
+    if (PATH_INFLIGHT && PATH_INFLIGHT.p === p) PATH_INFLIGHT = null;
+  }
+}
+let PATH_INFLIGHT = null;
+/** Swap the board's "Needs help" chips for "Long shot" where this board's long-shot set says so. */
+function applyLongShotChips(PP) {
+  const set = longShotsFor(PP);
+  if (!set) return;
+  for (const c of document.querySelectorAll('#pictureHost .pp-mg[data-magic="help"]')) {
+    const row = c.closest("[data-rid]");
+    if (row && set.has(row.dataset.rid)) c.outerHTML = PP_LONGSHOT_CHIP;
+  }
+  document.body.dataset.longShotsReady = PATH_LONG.key;
+}
+/*
+ * The board's Long shot chips without a path-tab visit: once Playoff Picture
+ * (or Toilet Bowl) is drawn, the cheap tally (pathScenarios through pathsFor —
+ * the path tabs' own cache — never pathDetails) runs in the background and the
+ * chips are upgraded when it lands. The walk yields every 2048 outcomes, so
+ * the tabs stay responsive. A newer board drops an older tally's result.
+ */
+async function boardLongShots(PP, seq) {
+  try {
+    if (!PP || !PP.pathIn || !PP.rules) return;
+    const key = pathKeyOf(PP);
+    if (!longShotsFor(PP)) {
+      if (!PP.pathIn.remaining.length) PATH_LONG = { key, set: new Set() };
+      else {
+        const PS = await pathsFor(PP);
+        if (seq !== PICTURE_SEQ) return;
+        if (!longShotsFor(PP)) PATH_LONG = { key, set: pathLongShots(PS) };
+      }
+    }
+    applyLongShotChips(PP);
+  } catch (e) { console.error(e); }
 }
 /** Teams whose only way into the playoffs is a points-for tiebreak. */
 function pathLongShots(PS) {
@@ -13144,6 +13526,7 @@ let PATH_SEQ = 0;
 async function drawPaths(PP) {
   const hosts = [$("#playoffPathHost"), $("#byePathHost"), $("#bowlPathHost")];
   const modes = ["playoff", "bye", "bowl"];
+  const gameHosts = [$("#playoffGamesHost"), $("#bowlGamesHost")], gameModes = ["playoff", "bowl"];
   if (!hosts.some(Boolean)) return;
   const seq = ++PATH_SEQ;
   delete document.body.dataset.pathsDetail;
@@ -13154,6 +13537,7 @@ async function drawPaths(PP) {
       window.__PATHS = F; window.__PATH_DETAIL = null;
       PATH_LONG = { key: pathKeyOf(PP), set: new Set() };
       hosts.forEach((h, k) => renderPathsFinal(h, F, PP, modes[k]));
+      for (const h of gameHosts) if (h) h.innerHTML = "";
       renderToiletEscape(PP, true);
       window.__PATH_DRAW = { seq, PS: F, det: null, final: true };
       for (const h of hosts) if (h) h.dataset.pathsSeq = String(seq);
@@ -13171,15 +13555,16 @@ async function drawPaths(PP) {
     window.__PATHS = PS;
     PATH_LONG = { key: pathKeyOf(PP), set: pathLongShots(PS) };
     // The board was drawn before the paths existed: upgrade its chips in place.
-    for (const c of document.querySelectorAll('#pictureHost .pp-mg[data-magic="help"]')) {
-      const row = c.closest("[data-rid]");
-      if (row && PATH_LONG.set.has(row.dataset.rid)) c.outerHTML = PP_LONGSHOT_CHIP;
-    }
+    applyLongShotChips(PP);
     hosts.forEach((h, k) => renderPaths(h, PS, PP, modes[k], PS && PS._det));
-    if (PS && !PS._det) {
+    gameHosts.forEach((h, k) => renderPathGames(h, PS, PP, gameModes[k], PS && PS._sw));
+    if (PS && (!PS._det || !PS._sw)) {
       const det = await pathDetails(PS);
       if (seq !== PATH_SEQ) return;
+      const sw = await pathSwings(PS);
+      if (seq !== PATH_SEQ) return;
       hosts.forEach((h, k) => renderPaths(h, PS, PP, modes[k], det));
+      gameHosts.forEach((h, k) => renderPathGames(h, PS, PP, gameModes[k], sw));
     }
     window.__PATH_DETAIL = PS ? PS._det : null;
     window.__PATH_DRAW = { seq, PS, det: PS ? PS._det : null };
@@ -13190,6 +13575,7 @@ async function drawPaths(PP) {
   } catch (e) {
     if (seq !== PATH_SEQ) return;
     for (const h of hosts) if (h) h.innerHTML = `<div class="empty"><b>Couldn't map the scenarios</b>${esc(e.message)}</div>`;
+    for (const h of gameHosts) if (h) h.innerHTML = "";
     document.body.dataset.pathsReady = "error";
     console.error(e);
   }
@@ -13286,9 +13672,14 @@ async function drawPicture(host) {
     // The path walk is the heaviest thing on these two tabs, so it never runs
     // on page load or behind another tab: only while Playoff Picture or Toilet
     // Bowl is on screen. A board that lands while neither is open waits for
-    // show() to ask for it. Not awaited: the walk yields as it goes.
+    // show() to ask for it. Not awaited: the walk yields as it goes. (The
+    // board itself only ever starts the cheap tally, below; the detail pass
+    // stays with the path tabs.)
     PATH_PENDING = PP;
     if (pathTabOpen()) { PATH_PENDING = null; if (seq === PICTURE_SEQ) drawPaths(PP); }
+    // The board's Long shot chips need only the cheap tally (no detail pass):
+    // run it now in the background, on the cache the path tabs share. Not awaited.
+    boardLongShots(PP, seq);
   } catch (e) {
     if (seq !== PICTURE_SEQ) return;
     if (PICTURE_DRAWN) { console.error(e); return; }
@@ -13370,7 +13761,7 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
   const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>${settled?"":`<p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>losses needed to lock into the toilet bowl — lose any N more and you're in it, no matter what anyone else does. <span class="pp-mg help">Can still escape</span>even losing out doesn't lock it into the bowl — it could still make the playoffs. Locked into the bowl means no result gets it a playoff spot. Safe from last means it can no longer finish last; every other bowl team could finish last.</p>`}`;
   const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bottom two</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bottom two",d.bowlByePct,"by","bye"],["Last",d.lastPct,"","last"]].map(([label,v,cls,k])=>`<div class="pp-pb ${cls}" data-k="${k}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
-  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bottom-two line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, ordered on the league tiebreak (two teams level: head to head, then division record if they share a division, then points for; three or more: points for). ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bottom two % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p>${safe.length?`<div class="tb-safe" data-safe-from-last><span class="tb-safe-h">Safe from last</span>${safe.map(d=>`<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue","Safe from last","Safe")}</span>`).join("")}</div>`:""}</section>`;
+  host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bottom-two line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first, ordered on the league tiebreak (two teams level: head to head, then division record if they share a division, then points for; three or more: combined head to head among them, then division record if all share a division, then points for). ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bottom two % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p>${safe.length?`<div class="tb-safe" data-safe-from-last><span class="tb-safe-h">Safe from last</span>${safe.map(d=>`<span class="tb-safe-i" data-rid="${esc(String(d.rid))}">${esc(d.name)}${ppBadge("blue","Safe from last","Safe")}</span>`).join("")}</div>`:""}</section>`;
 }
 
 function panelPicture() {
@@ -13411,8 +13802,19 @@ function panelPlayoffPath() {
   const p = el("div", "panel"); p.dataset.panel = "playoff-path";
   p.appendChild(sechead("Path to Playoffs",
     "Every way the rest of the regular season can go, worked out exactly from the live schedule: what each team needs to make the playoffs, and to earn a first-round bye."));
+  // Playoffs / First-round bye: one race's grid and cards at a time (both stay in the DOM).
+  const tog = el("div", "tfilter pa-tog", `<button type="button" data-race="playoff" aria-pressed="true">Playoffs</button><button type="button" data-race="bye" aria-pressed="false">First-round bye</button>`);
+  tog.setAttribute("role", "group"); tog.setAttribute("aria-label", "Race");
+  p.appendChild(tog);
   const path = el("div", "pa-host"); path.id = "playoffPathHost"; p.appendChild(path);
-  const bye = el("div", "pa-host"); bye.id = "byePathHost"; p.appendChild(bye);
+  const bye = el("div", "pa-host"); bye.id = "byePathHost"; bye.hidden = true; p.appendChild(bye);
+  tog.onclick = e => {
+    const b = e.target.closest("button[data-race]");
+    if (!b) return;
+    path.hidden = b.dataset.race !== "playoff"; bye.hidden = b.dataset.race !== "bye";
+    tog.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  };
+  const games = el("div", "pa-host"); games.id = "playoffGamesHost"; p.appendChild(games);
   return p;
 }
 /** Path to Toilet Bowl: the bottom-two path, plus who is safe from last and who can still escape. */
@@ -13421,6 +13823,7 @@ function panelToiletPath() {
   p.appendChild(sechead("Path to Toilet Bowl",
     "Who can still land in the bowl's bottom two (seeds 11–12), exactly, from the live schedule — and who is already safe from finishing last."));
   const path = el("div", "pa-host"); path.id = "bowlPathHost"; p.appendChild(path);
+  const games = el("div", "pa-host"); games.id = "bowlGamesHost"; p.appendChild(games);
   const esc0 = el("div", "pa-host tb-esc"); esc0.id = "toiletEscapeHost"; p.appendChild(esc0);
   return p;
 }
@@ -13433,7 +13836,9 @@ function panelToiletPath() {
  * The order is DFFL's rule, the same tieOrder/seedField the simulator seeds
  * every season with (tiebreak.js): wins; two teams level go to head to head,
  * then division record if the two share a division, then points for; three
- * or more level go straight to points for. A tie is sized inside the
+ * or more level go to combined head to head among them, then division record
+ * if all share a division, then points for (still-level subgroups start the
+ * rule over). A tie is sized inside the
  * group being ranked — a division, the division winners, the wild-card pool.
  */
 function standingsData(season, upcoming = []) {
@@ -13539,7 +13944,23 @@ function tieReason(S, group, _unused = false) {
     }
     return { how: "Points for", text: `${even}, so it goes to points for: ${pts(a)} to ${pts(b)}.${more}` };
   }
-  return { how: "Points for", text: `A ${group.length}-way tie skips head to head and goes straight to points for: ${group.map(i => `${nm(i)} ${pts(i)}`).join(", ")}.` };
+  // Three or more: replay the shared rule with a trace and say each step taken.
+  const trace = [];
+  tieOrder(group, S.Wt, S.PF, S.H, i => S.teams[i].div, S.teams.map((_, i) => i), trace);
+  const pct = v => v.toFixed(3).replace(/^0/, "");
+  const label = { h2h: "Head to head", div: "Division record", pf: "Points for" };
+  const used = [];
+  const parts = trace.map((t, k) => {
+    const who = t.teams.length === group.length ? "" : `Between ${t.teams.map(nm).join(" and ")}: `;
+    const val = i => t.step === "pf" ? pts(i) : t.step === "div" ? `${recStr(S.teams[i].dw, S.teams[i].dl, S.teams[i].dt)}` : pct(t.vals.get(i));
+    const list = t.teams.slice().sort((a, b) => t.vals.get(b) - t.vals.get(a)).map(i => `${nm(i)} ${val(i)}`).join(", ");
+    if (!t.level && !used.includes(label[t.step])) used.push(label[t.step]);
+    const name = t.step === "h2h" ? (t.teams.length === 2 ? "head to head" : "combined head to head (win % in games among them; none played = .500)")
+      : t.step === "div" ? (t.teams.length === 2 ? "same division, so division record" : "all in one division, so division record") : "points for";
+    const s = `${k ? who || "Then " : who}${name}${t.level ? " is level" : ""}: ${list}.`;
+    return s[0].toUpperCase() + s.slice(1);
+  });
+  return { how: used.join(" → ") || "Points for", text: `A ${group.length}-way tie. ${parts.join(" ")}` };
 }
 
 function standingsNote(S) {
@@ -13606,7 +14027,8 @@ function renderTiebreakers(host, S) {
       <li><b>Two teams tied:</b> head to head — their record against each other this regular season.</li>
       <li><b>Still level, and the two are in the same division:</b> division record — their record in every division game this regular season. This applies to any two division rivals level on wins, for the division lead, a wild card or anywhere else.</li>
       <li><b>Still level</b> (series split or not played yet, and division records level — or two teams from different divisions): points for.</li>
-      <li><b>Three or more tied:</b> straight to points for. Head to head is skipped.</li>
+      <li><b>Three or more tied:</b> combined head to head — each team's win percentage in its games against the other tied teams only (a tied game counts half; a team that hasn't played any of the others counts as .500). Then, <b>only if all of them are in the same division</b>, division record. Then points for.</li>
+      <li><b>Partly separated:</b> when a step separates some teams but not all, the ones it separates are placed in order and each group still level starts the rule over by its own size — two left go to the two-team rule (head to head, division record if they share a division, points for); three or more go to combined head to head among just them. A step that separates nobody passes the group to the next step.</li>
     </ol>
     <p>The same rule decides division titles, playoff seeding, wild cards, the standings table, the toilet bowl field and last place. A tie is
       sized inside the group being ranked: two teams level inside a division is a two-way tie even if a
@@ -13687,7 +14109,7 @@ function ensureStandings() {
 
 function panelStandings() {
   const p = el("div", "panel"); p.dataset.panel = "standings";
-  p.appendChild(sechead("Division Standings", "Every division, then the league table as it would seed today — wins, then for two teams level head to head, then division record if they share a division, then points for; three or more level go to points for."));
+  p.appendChild(sechead("Division Standings", "Every division, then the league table as it would seed today — wins, then for two teams level head to head, then division record if they share a division, then points for; three or more level go to combined head to head among them, then division record if all share a division, then points for."));
   const host = el("div"); host.id = "standingsHost";
   host.appendChild(el("div", "empty", "<b>Building the standings…</b>"));
   p.appendChild(host);
@@ -15058,6 +15480,7 @@ async function boot() {
     });
     $("#footNote").textContent = DB.state ? ` Currently NFL ${DB.state.season}, week ${DB.state.week}.` : "";
     window.__DFFL = {
+      pathSwingOf, pathSwings, pathRootFor, pathRaces, pathTierOf,
       DB, AT, RB, DIST, draftAnalysis, winProb, titleOdds, scoringDist, TIER_DEMO, tiersHTML, tierPcts,
       ODDS, SIM, oddsModel, simulateSeason, winTotals, buildSchedule, roundRobin,
       americanOdds, impliedProb, roundOdds, addVig, priceMarket, priceBinary, marketHold,

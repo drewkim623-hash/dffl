@@ -7,14 +7,16 @@
  * The rule (every ranking on the site: division winners, seeds, wild cards,
  * the standings table, the toilet-bowl order, last place):
  *   1. Wins. A tied game counts half.
- *   2. Exactly TWO teams level:
- *        a. head to head (their games against each other, ties half);
- *        b. still level AND the two share a division: division record — win %
- *           in every division game of the season (against every other team in
- *           that division, ties half);
- *        c. points for.
- *      Two teams from different divisions: head to head, then points for.
- *   3. THREE OR MORE level: points for, straight.
+ *   2. Exactly TWO teams level: head to head (their games against each other,
+ *      ties half); then, if the two share a division, division record — win %
+ *      in every division game of the season (ties half); then points for.
+ *   3. THREE OR MORE level: combined head to head (each team's win % in games
+ *      among the tied teams only; no such games = .500); then points for. If
+ *      ALL of them share one division: combined head to head, then division
+ *      record, then points for.
+ *   4. A step that separates some but not all: the teams it separates are
+ *      placed in order and every still-level subgroup starts again at step 2
+ *      or 3 (by its own size). A step that separates nobody: next step.
  * A tie is sized inside the list being ranked (a division, the division
  * winners, the wild-card pool, the whole league).
  *
@@ -30,8 +32,10 @@
    *   divOf  i => division, or null to skip the division step
    *   all    every team index (whose games make up a division record);
    *          defaults to 0..W.length-1
+   *   trace  optional array: gets { teams, step: "h2h"|"div"|"pf", vals, parts, level }
+   *          for every step applied to a tied group (for explanations)
    */
-  function tieOrder(list, W, PF, H, divOf, all) {
+  function tieOrder(list, W, PF, H, divOf, all, trace) {
     const N = W.length;
     let h;
     if (typeof H === "function") h = H;
@@ -39,23 +43,60 @@
     else if (H.length === N * N && N > 1 && typeof H[0] === "number") h = (a, b) => H[a * N + b] || 0;
     else h = (a, b) => (H[a] && H[a][b]) || 0;
     const everyone = all || Array.from({ length: N }, (_, i) => i);
+    const dOf = x => (divOf ? divOf(x) : null);
+    const dp = new Map();
+    // Division record: win % in every division game of the season (against
+    // every other team in the division, ties half); no division games = .500.
     const divPct = x => {
-      const d = divOf(x);
+      if (dp.has(x)) return dp.get(x);
+      const d = dOf(x);
       let w = 0, g = 0;
-      for (const y of everyone) if (y !== x && divOf(y) === d) { const a = h(x, y), b = h(y, x); w += a; g += a + b; }
-      return g ? w / g : 0.5;
+      for (const y of everyone) if (y !== x && dOf(y) === d) { const a = h(x, y), b = h(y, x); w += a; g += a + b; }
+      const v = g ? w / g : 0.5;
+      dp.set(x, v);
+      return v;
+    };
+    // COMBINED HEAD TO HEAD: team x's win percentage in the games it has played
+    // against the OTHER teams of the tied group `g` only — games against teams
+    // outside the group don't count, and a tied game is half a win. A team that
+    // has played no one else in the group counts as .500. With exactly two
+    // teams this is plain head to head.
+    const h2hPct = (x, g) => {
+      let w = 0, n = 0;
+      for (const y of g) if (y !== x) { const a = h(x, y), b = h(y, x); w += a; n += a + b; }
+      return n ? w / n : 0.5;
+    };
+    const sameDiv = g => g.every(x => dOf(x) != null && dOf(x) === dOf(g[0]));
+    // Order one group level on wins (g arrives in points-for order). Steps:
+    //   1. combined head to head;
+    //   2. division record — only if EVERY team in g shares one division;
+    //   3. points for (equal points keep the incoming order).
+    // A step that splits g places the pieces in order and re-runs this whole
+    // rule FROM THE START on every piece still holding 2+ teams (two left =
+    // the two-team rule; three or more = combined head to head among just
+    // them, ...). A step that splits nobody hands g to the next step, so it
+    // never loops. `trace`, if given, gets one entry per step taken.
+    const resolve = g => {
+      if (g.length < 2) return g.slice();
+      const steps = sameDiv(g) ? ["h2h", "div", "pf"] : ["h2h", "pf"];
+      for (const step of steps) {
+        const val = step === "h2h" ? (x => h2hPct(x, g)) : step === "div" ? divPct : (x => PF[x]);
+        const v = new Map(g.map(x => [x, val(x)]));
+        const keys = [...new Set(v.values())].sort((a, b) => b - a);
+        const parts = keys.map(k => g.filter(x => v.get(x) === k));
+        if (trace) trace.push({ teams: g.slice(), step, vals: v, parts: parts.map(p => p.slice()), level: keys.length === 1 });
+        if (step === "pf") return parts.flat();
+        if (keys.length > 1) return parts.flatMap(resolve);
+      }
+      return g.slice();
     };
     const s = list.slice().sort((a, b) => W[b] - W[a] || PF[b] - PF[a]);
     const out = [];
     for (let k = 0; k < s.length;) {
       let e = k + 1;
       while (e < s.length && W[s[e]] === W[s[k]]) e++;
-      if (e - k === 2) {
-        const a = s[k], b = s[k + 1];
-        let d = h(a, b) - h(b, a);
-        if (d === 0 && divOf && divOf(a) != null && divOf(a) === divOf(b)) d = divPct(a) - divPct(b);
-        out.push(d < 0 ? b : a, d < 0 ? a : b);   // level all the way: points for (s is in PF order)
-      } else for (let j = k; j < e; j++) out.push(s[j]);
+      if (e - k === 1) out.push(s[k]);
+      else for (const x of resolve(s.slice(k, e))) out.push(x);
       k = e;
     }
     return out;
@@ -138,7 +179,7 @@
     return out;
   }
 
-  const RULE_TEXT = "wins (a tie counts half); two teams level: head to head, then — if they share a division — division record, then points for; three or more level: points for";
+  const RULE_TEXT = "wins (a tie counts half); two teams level: head to head, then — if they share a division — division record, then points for; three or more level: combined head to head among the tied teams (win % in games among them; none played = .500), then — only if all share a division — division record, then points for; when a step separates some teams, each group still level starts the rule over by its own size";
 
   globalThis.DFFLTiebreak = { tieOrder, divisionRecord, h2hFromGames, rankStandings, gamesFromMatchups, RULE_TEXT };
 })();
