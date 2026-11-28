@@ -2,8 +2,8 @@
  "_comment": "Written by build-week.mjs in GitHub Actions. The weekly writing job reads this instead of calling Sleeper, which it cannot reach. Everything is already resolved to manager and player names — no ids need looking up.",
  "season": "2026",
  "week": 11,
- "generated": "2026-11-27T11:02:36.497Z",
- "generated_at": "2026-11-27T11:02:36.497Z",
+ "generated": "2026-11-28T11:02:14.548Z",
+ "generated_at": "2026-11-28T11:02:14.548Z",
  "final": true,
  "standings_through_week": 11,
  "standings_folded": false,
@@ -1132,17 +1132,6 @@
    "waiver_budget_used": 98
   },
   {
-   "manager": "jadencha",
-   "team": "Pandas slave trade",
-   "roster_id": 2,
-   "wins": 8,
-   "losses": 3,
-   "ties": 0,
-   "points_for": 1733.22,
-   "points_against": 1394.18,
-   "waiver_budget_used": 25
-  },
-  {
    "manager": "willie12w",
    "team": "Squirt",
    "roster_id": 4,
@@ -1154,15 +1143,15 @@
    "waiver_budget_used": 88
   },
   {
-   "manager": "bradyrife",
-   "team": "Brady Lawrence🎯",
-   "roster_id": 8,
-   "wins": 7,
-   "losses": 4,
+   "manager": "jadencha",
+   "team": "Pandas slave trade",
+   "roster_id": 2,
+   "wins": 8,
+   "losses": 3,
    "ties": 0,
-   "points_for": 1507.88,
-   "points_against": 1323.46,
-   "waiver_budget_used": 95
+   "points_for": 1733.22,
+   "points_against": 1394.18,
+   "waiver_budget_used": 25
   },
   {
    "manager": "sizzlemc2",
@@ -1176,6 +1165,17 @@
    "waiver_budget_used": 67
   },
   {
+   "manager": "bradyrife",
+   "team": "Brady Lawrence🎯",
+   "roster_id": 8,
+   "wins": 7,
+   "losses": 4,
+   "ties": 0,
+   "points_for": 1507.88,
+   "points_against": 1323.46,
+   "waiver_budget_used": 95
+  },
+  {
    "manager": "wesley55",
    "team": "James Cook’s team ",
    "roster_id": 6,
@@ -1185,17 +1185,6 @@
    "points_for": 1446.56,
    "points_against": 1377.92,
    "waiver_budget_used": 26
-  },
-  {
-   "manager": "chassinator",
-   "team": "Ann Michael Maye",
-   "roster_id": 3,
-   "wins": 4,
-   "losses": 7,
-   "ties": 0,
-   "points_for": 1416.34,
-   "points_against": 1440.32,
-   "waiver_budget_used": 77
   },
   {
    "manager": "jskule23",
@@ -1218,6 +1207,17 @@
    "points_for": 1284.9,
    "points_against": 1514.5,
    "waiver_budget_used": 28
+  },
+  {
+   "manager": "chassinator",
+   "team": "Ann Michael Maye",
+   "roster_id": 3,
+   "wins": 4,
+   "losses": 7,
+   "ties": 0,
+   "points_for": 1416.34,
+   "points_against": 1440.32,
+   "waiver_budget_used": 77
   },
   {
    "manager": "saucebossandrew",

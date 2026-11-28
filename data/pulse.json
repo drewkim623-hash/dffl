@@ -1,7 +1,7 @@
 {
  "_comment": "Written by build-pulse.mjs. A current, factual picture of the league for the story watch to judge. It records what is true; it does not decide what is interesting.",
- "generated": "2026-11-27T18:50:00.217Z",
- "at": 1795805400217,
+ "generated": "2026-11-28T11:02:17.885Z",
+ "at": 1795863737886,
  "season": "2026",
  "nfl_week": 12,
  "season_type": "regular",
@@ -16,21 +16,7 @@
    "faab_spent": 98,
    "starters_hurt": [
     "Caleb Williams (Questionable)",
-    "Colston Loveland (Out)",
-    "Brock Bowers (Questionable)"
-   ]
-  },
-  {
-   "manager": "jadencha",
-   "wins": 8,
-   "losses": 3,
-   "points_for": 1733.22,
-   "points_against": 1394.18,
-   "faab_spent": 25,
-   "starters_hurt": [
-    "Bhayshul Tuten (Questionable)",
-    "Jaxon Smith-Njigba (Questionable)",
-    "Isaiah Likely (Questionable)"
+    "Colston Loveland (Out)"
    ]
   },
   {
@@ -43,15 +29,13 @@
    "starters_hurt": []
   },
   {
-   "manager": "bradyrife",
-   "wins": 7,
-   "losses": 4,
-   "points_for": 1507.88,
-   "points_against": 1323.46,
-   "faab_spent": 95,
-   "starters_hurt": [
-    "Jakobi Meyers (Questionable)"
-   ]
+   "manager": "jadencha",
+   "wins": 8,
+   "losses": 3,
+   "points_for": 1733.22,
+   "points_against": 1394.18,
+   "faab_spent": 25,
+   "starters_hurt": []
   },
   {
    "manager": "sizzlemc2",
@@ -65,6 +49,15 @@
    ]
   },
   {
+   "manager": "bradyrife",
+   "wins": 7,
+   "losses": 4,
+   "points_for": 1507.88,
+   "points_against": 1323.46,
+   "faab_spent": 95,
+   "starters_hurt": []
+  },
+  {
    "manager": "wesley55",
    "wins": 6,
    "losses": 5,
@@ -72,18 +65,7 @@
    "points_against": 1377.92,
    "faab_spent": 26,
    "starters_hurt": [
-    "Derrick Henry (Questionable)"
-   ]
-  },
-  {
-   "manager": "chassinator",
-   "wins": 4,
-   "losses": 7,
-   "points_for": 1416.34,
-   "points_against": 1440.32,
-   "faab_spent": 77,
-   "starters_hurt": [
-    "Parker Washington (Out)"
+    "Tee Higgins (Questionable)"
    ]
   },
   {
@@ -107,6 +89,17 @@
    "starters_hurt": [
     "Christian Watson (Out)",
     "Saquon Barkley (Questionable)"
+   ]
+  },
+  {
+   "manager": "chassinator",
+   "wins": 4,
+   "losses": 7,
+   "points_for": 1416.34,
+   "points_against": 1440.32,
+   "faab_spent": 77,
+   "starters_hurt": [
+    "Parker Washington (Out)"
    ]
   },
   {
@@ -186,27 +179,27 @@
    },
    "b": {
     "manager": "bradyrife",
-    "points": 24.7,
-    "startersLeftToPlay": 7
-   }
-  },
-  {
-   "a": {
-    "manager": "jskule23",
-    "points": 32.26,
-    "startersLeftToPlay": 7
-   },
-   "b": {
-    "manager": "saucebossandrew",
-    "points": 31.92,
+    "points": 35.9,
     "startersLeftToPlay": 6
    }
   },
   {
    "a": {
+    "manager": "jskule23",
+    "points": 39.26,
+    "startersLeftToPlay": 6
+   },
+   "b": {
+    "manager": "saucebossandrew",
+    "points": 33.32,
+    "startersLeftToPlay": 5
+   }
+  },
+  {
+   "a": {
     "manager": "wesley55",
-    "points": 20,
-    "startersLeftToPlay": 9
+    "points": 30.3,
+    "startersLeftToPlay": 8
    },
    "b": {
     "manager": "victorthompson",
