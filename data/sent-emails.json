@@ -377,6 +377,76 @@
    "sha256": "74948bb9730236b352a7e772a996340c03830be584480eb6787166d28f3d9bbf",
    "by": "routine",
    "note": ""
+  },
+  {
+   "at": "2026-11-17T12:22:24.085Z",
+   "subject": "DFFL Week 11: jadencha Lost, and the Board Still Says 100%",
+   "lead": "jadencha-lost-and-the-board-still-says-100",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 10
+   },
+   "to": 12,
+   "sha256": "00a652fe7d25e1fdbeca03a319ba948bb69c9b989f1562ac7fa6fd9ee64d6e99",
+   "by": "routine",
+   "note": ""
+  },
+  {
+   "at": "2026-11-20T16:15:53.339Z",
+   "subject": "DFFL Week 11: moseslin Is Out of the Bottom Five. The Poll's Other Three Aren't.",
+   "lead": "moseslin-climbs-out-of-the-bottom-five",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 10
+   },
+   "to": 12,
+   "sha256": "95f03cbb1e63695891fc5ec4e98f798782eebb9a8bf74ea51d0259c50e4c16bb",
+   "by": "routine",
+   "note": ""
+  },
+  {
+   "at": "2026-11-21T23:23:41.640Z",
+   "subject": "DFFL Week 11: bradyrife's Playoff Odds Moved More Than Anyone's in the League",
+   "lead": "bradyrifes-playoff-odds-moved-more-than-anyones",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 10
+   },
+   "to": 12,
+   "sha256": "7d1b33e16fcefa449151ff698c1124d0b2eff7bf868c9f63d2b56b6b24e540d4",
+   "by": "routine",
+   "note": ""
+  },
+  {
+   "at": "2026-11-24T12:19:52.898Z",
+   "subject": "DFFL Week 12: sizzlemc2 Just Had the Best Week on the Board",
+   "lead": "the-weeks-biggest-swing",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 11
+   },
+   "to": 12,
+   "sha256": "f204fc9ba0e7d2cde829a888d856436a1ab551dcf4cccabf885d25d8d0b8ecec",
+   "by": "routine",
+   "note": ""
+  },
+  {
+   "at": "2026-11-27T16:10:58.893Z",
+   "subject": "DFFL Week 12: Domo112 Is 9-2. Its Title Price Got Longer, Not Shorter.",
+   "lead": "nine-wins-and-a-longer-title-price",
+   "alsoSent": [],
+   "recap": {
+    "season": "2026",
+    "week": 11
+   },
+   "to": 12,
+   "sha256": "3db3ca8b519f718c95cddc6b6d9949f6bb022e7b6124322826f730696a036d14",
+   "by": "routine",
+   "note": ""
   }
  ]
 }

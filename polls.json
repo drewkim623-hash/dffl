@@ -212,6 +212,64 @@
    "announced": true,
    "thread_id": "1a1a15ae6155e6db",
    "closed_at": "2026-11-14T23:21:17.989Z"
+  },
+  {
+   "id": "2026-w11-top-two",
+   "question": "jadencha and Domo112 are both 8-2 and both sit at 100% to make the playoffs. If they played today, who wins?",
+   "options": [
+    {
+     "key": "JADEN",
+     "label": "jadencha"
+    },
+    {
+     "key": "DOMO",
+     "label": "Domo112"
+    },
+    {
+     "key": "TOOCLOSE",
+     "label": "too close to call"
+    }
+   ],
+   "opened": "2026-11-17",
+   "closes": "2026-11-21",
+   "subject": "DFFL Week 11: jadencha Lost, and the Board Still Says 100%",
+   "status": "closed",
+   "results": {
+    "JADEN": 0,
+    "DOMO": 0,
+    "TOOCLOSE": 0,
+    "voters": 0,
+    "invalid": 0,
+    "outside": 0
+   },
+   "announced": true,
+   "thread_id": "1a1e97538ff2084c",
+   "closed_at": "2026-11-21T23:20:34.317Z"
+  },
+  {
+   "id": "2026-w12-title-favorite",
+   "question": "jadencha and Domo112 have almost identical schedule-adjusted win totals this week, but jadencha's title odds are nearly four times Domo112's. Who do you believe?",
+   "options": [
+    {
+     "key": "JADEN",
+     "label": "jadencha"
+    },
+    {
+     "key": "DOMO",
+     "label": "Domo112"
+    },
+    {
+     "key": "NEITHER",
+     "label": "someone else wins it"
+    }
+   ],
+   "opened": "2026-11-24",
+   "closes": "2026-11-28",
+   "subject": "DFFL Week 12: sizzlemc2 Just Had the Best Week on the Board",
+   "status": "open",
+   "results": null,
+   "announced": false,
+   "thread_id": "1a20d7f717e29494"
   }
  ]
 }
