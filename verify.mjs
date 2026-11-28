@@ -2881,42 +2881,190 @@ check("magic: 2025 at week 13 no eliminated team has a certificate",
 check("magic: 2025 final standings — exactly the six seeded teams are clinched, the rest need help",
   MG.m14 && MG.m14.filter(m => m === 0).length === MG.seeds14.length && MG.seeds14.every(i => MG.m14[i] === 0)
     && MG.m14.every(m => m === 0 || m === null), JSON.stringify({ m: MG.m14, seeds: MG.seeds14 }));
-// The live board: every chip is the exact table's number, and a zero is a clinch.
-const mgLive = await page.evaluate(() => {
-  const P = window.__PICTURE, host = document.querySelector("#pictureHost .ppv");
-  if (document.body.dataset.pictureReady !== "1" || !P || !host) return { skip: true };
-  const byRid = new Map(P.clinch.map(c => [String(c.rid), c]));
-  let n = 0, ok = true;
-  for (const li of host.querySelectorAll(".pp-li[data-rid], .pp-hero[data-rid]")) {
-    const c = byRid.get(li.dataset.rid), chip = li.querySelector(".pp-mg");
-    const want = !c || c.clinchedPlayoff || c.eliminated ? null
-      : c.magic == null ? (c.magicExact === false ? "unknown" : "help")
-      : c.magicExact ? String(c.magic) : `<=${c.magic}`;
-    const got = chip ? chip.dataset.magic : null;
-    if (got) n++;
-    if (got !== want) ok = false;
+// The live board's Magic chips. The chip is "wins needed": the fewest k such that
+// winning ANY k of a team's own remaining games (losing the rest) guarantees the
+// playoff spot however every other game goes — wins, losses or ties. The
+// toilet-bowl chip mirrors it: the fewest k such that losing ANY k (winning the
+// rest) means the team can't make the field however everything else goes.
+// Ties on wins count against the team for the playoff chip and for it on the bowl
+// chip, except between two teams with nothing left, split on actual points.
+// Both are recomputed here from the very inputs the page fed its magic table,
+// by a different method from the page's search: for each own-result vector, a
+// set of rivals can all finish ahead (or all stay behind) iff a Hall condition
+// holds on the games among the others — checked over every subset, so exact,
+// ties included. The solver itself is first held to a brute force over every
+// win/loss/tie outcome on random small leagues.
+function ownMagicExact({ teams, remaining, playoffTeams }) {
+  const N = teams.length, div = teams.map(t => t.div);
+  const slots = playoffTeams - new Set(div).size;
+  const left = new Array(N).fill(0);
+  for (const [a, b] of remaining) { left[a]++; left[b]++; }
+  const W2 = teams.map(t => Math.round(t.w * 2));
+  const pop = x => { let c = 0; while (x) { x &= x - 1; c++; } return c; };
+  return teams.map((t, i) => {
+    const others = [...Array(N).keys()].filter(j => j !== i), M = others.length, S = 1 << M;
+    const bit = new Map(others.map((j, k) => [j, k]));
+    const own = remaining.filter(([a, b]) => a === i || b === i);
+    const gm = remaining.filter(([a, b]) => a !== i && b !== i).map(([a, b]) => [1 << bit.get(a), 1 << bit.get(b)]);
+    const touch = new Int32Array(S), inside = new Int32Array(S), makes = new Uint8Array(S);
+    for (let U = 0; U < S; U++) {
+      for (const [x, y] of gm) { if ((x | y) & U) touch[U]++; if ((x & U) && (y & U)) inside[U]++; }
+      // i makes the field with exactly the teams in U ahead of it: it wins its
+      // division (no division-mate ahead) or fewer than `slots` non-leaders are.
+      let champ = true; const ds = new Set();
+      for (let k = 0; k < M; k++) if (U >> k & 1) { ds.add(div[others[k]]); if (div[others[k]] === div[i]) champ = false; }
+      makes[U] = champ || pop(U) - ds.size < slots ? 1 : 0;
+    }
+    const sumOver = vals => { const s = new Float64Array(S); for (let U = 1; U < S; U++) { const k = 31 - Math.clz32(U & -U); s[U] = s[U & (U - 1)] + vals[k]; } return s; };
+    // Hall over every subset: good[U] = cond(U) and good for every U minus one team.
+    const hall = cond => { const g = new Uint8Array(S); g[0] = 1;
+      for (let U = 1; U < S; U++) { let ok = cond(U); for (let r = U; ok && r; r &= r - 1) ok = g[U & ~(r & -r)] === 1; g[U] = ok ? 1 : 0; }
+      return g; };
+    const result = winMask => {   // bit m of winMask: i wins own game m
+      const base = W2.slice();
+      own.forEach(([a, b], m) => { if (winMask >> m & 1) base[i] += 2; else base[a === i ? b : a] += 2; });
+      const F = base[i], done = j => !left[i] && !left[j];
+      // Playoff: can the others push a set T ahead with !makes(T)? need_j half-wins each.
+      const need = others.map(j => Math.max(0, (done(j) && teams[i].pf > teams[j].pf ? F + 1 : F) - base[j]));
+      const needS = sumOver(need), canPush = hall(U => needS[U] <= 2 * touch[U]);
+      let beaten = false;
+      for (let T = 0; T < S && !beaten; T++) if (!makes[T] && canPush[T]) beaten = true;
+      // Bowl: can everything else go so that only a set A is ahead with makes(A)?
+      // Teams outside A take at most cap_j half-wins; games touching A drain into A.
+      const cap = others.map(j => (done(j) && teams[j].pf > teams[i].pf ? F : F + 1) - 1 - base[j]);
+      const capS = sumOver(cap), canHold = hall(U => { for (let r = U; r; r &= r - 1) if (cap[31 - Math.clz32(r & -r)] < 0) return false; return 2 * inside[U] <= capS[U]; });
+      let gets = false;
+      for (let A = 0; A < S && !gets; A++) if (makes[A] && canHold[(S - 1) & ~A]) gets = true;
+      return { safe: !beaten, gets };
+    };
+    const G = own.length, byMask = [];
+    for (let m = 0; m < 1 << G; m++) byMask[m] = result(m);
+    let wins = null, losses = null;
+    for (let k = 0; k <= G && wins === null; k++) if (byMask.every((r, m) => pop(m) !== k || r.safe)) wins = k;
+    for (let k = 0; k <= G && losses === null; k++) if (byMask.every((r, m) => G - pop(m) !== k || !r.gets)) losses = k;
+    return { rid: t.rid, wins, losses };
+  });
+}
+// The definition, by brute force over every win/loss/tie of every other game.
+function ownMagicBrute({ teams, remaining, playoffTeams }) {
+  const N = teams.length, div = teams.map(t => t.div), slots = playoffTeams - new Set(div).size;
+  const left = new Array(N).fill(0);
+  for (const [a, b] of remaining) { left[a]++; left[b]++; }
+  const W2 = teams.map(t => Math.round(t.w * 2));
+  const fieldWith = (i, aheadOf) => { let n = 0, champ = true; const ds = new Set();
+    for (let j = 0; j < N; j++) if (j !== i && aheadOf(j)) { n++; ds.add(div[j]); if (div[j] === div[i]) champ = false; }
+    return champ || n - ds.size < slots; };
+  return teams.map((t, i) => {
+    const own = remaining.filter(([a, b]) => a === i || b === i), rest = remaining.filter(([a, b]) => a !== i && b !== i);
+    const G = own.length, safe = [], gets = [];
+    for (let m = 0; m < 1 << G; m++) {
+      safe[m] = true; gets[m] = false;
+      for (let o = 0; o < 3 ** rest.length; o++) {
+        const W = W2.slice();
+        own.forEach(([a, b], g) => { if (m >> g & 1) W[i] += 2; else W[a === i ? b : a] += 2; });
+        let x = o;
+        for (const [a, b] of rest) { const r = x % 3; x = (x - r) / 3; if (r === 0) W[a] += 2; else if (r === 1) W[b] += 2; else { W[a]++; W[b]++; } }
+        const done = j => !left[i] && !left[j], F = W[i];
+        if (!fieldWith(i, j => W[j] > F || (W[j] === F && !(done(j) && teams[i].pf > teams[j].pf)))) safe[m] = false;
+        if (fieldWith(i, j => W[j] > F || (W[j] === F && done(j) && teams[j].pf > teams[i].pf))) gets[m] = true;
+      }
+    }
+    const pop = x => x.toString(2).replace(/0/g, "").length;
+    let wins = null, losses = null;
+    for (let k = 0; k <= G && wins === null; k++) if (safe.every((s, m) => pop(m) !== k || s)) wins = k;
+    for (let k = 0; k <= G && losses === null; k++) if (gets.every((g, m) => G - pop(m) !== k || !g)) losses = k;
+    return { rid: t.rid, wins, losses };
+  });
+}
+const mgSelf = (() => {
+  let seed = 20261127;
+  const rnd = n => { seed = (Math.imul(seed, 1103515245) + 12345) >>> 0; return (seed >>> 16) % n; };
+  let trials = 0, agree = 0, firstBad = "", nonTrivial = 0, withTies = 0;
+  for (let t = 0; t < 250; t++) {
+    const N = 6, nDiv = 2 + rnd(2), P = nDiv + 1 + rnd(2);
+    const teams = [...Array(N).keys()].map(i => ({ rid: `r${i}`, div: i % nDiv, w: rnd(9) + (rnd(5) === 0 ? 0.5 : 0), pf: 1000 + rnd(4) * 10 }));
+    if (teams.some(x => x.w % 1)) withTies++;
+    const remaining = [];
+    const G = 3 + rnd(5);
+    for (let g = 0; g < G; g++) { const a = rnd(N); let b = rnd(N - 1); if (b >= a) b++; remaining.push([a, b]); }
+    const inp = { teams, remaining, playoffTeams: P }, x = ownMagicExact(inp), y = ownMagicBrute(inp);
+    trials++;
+    if (JSON.stringify(x) === JSON.stringify(y)) agree++; else if (!firstBad) firstBad = JSON.stringify({ inp, x, y });
+    if (x.some(r => r.wins > 0 || r.losses > 0)) nonTrivial++;
   }
+  return { trials, agree, firstBad, nonTrivial, withTies };
+})();
+check("magic: the chip solver matches a brute force over every win/loss/tie on random leagues",
+  mgSelf.agree === mgSelf.trials && mgSelf.nonTrivial > 50,
+  `${mgSelf.agree}/${mgSelf.trials}, ${mgSelf.nonTrivial} non-trivial, ${mgSelf.withTies} with past ties ${mgSelf.firstBad.slice(0, 400)}`);
+// Both boards have to be drawn before they are read.
+await page.click('#tabs button[data-tab="toilet"]');
+const mgLive = await page.evaluate(() => {
+  const P = window.__PICTURE, full = P && P.full;
+  const host = document.querySelector("#pictureHost .ppv"), bowlHost = document.querySelector("#toiletHost");
+  if (document.body.dataset.pictureReady !== "1" || !P || !full || !full.pathIn || !host || !bowlHost) return { skip: true };
+  const chips = (root, sel, key) => [...root.querySelectorAll(sel)].map(li => {
+    const c = li.querySelector(`.pp-mg[data-${key}]`);
+    return { rid: li.dataset.rid, got: c ? c.getAttribute(`data-${key}`) : null, stray: !!li.querySelector(`.pp-mg:not([data-${key}])`) };
+  });
   // The certificate list: a bound reads "≤U (at least L)", an exact number never does.
+  const byRid = new Map(P.clinch.map(c => [String(c.rid), c]));
   let certLines = 0, certOk = true;
   for (const li of host.querySelectorAll(".pp-mgc li[data-rid]")) {
     const c = byRid.get(li.dataset.rid), t = li.textContent;
     certLines++;
     if (!c || !c.cert || (c.magicExact ? /≤|at least/.test(t) : !t.includes(`≤${c.magic} (at least ${c.magicLower})`))) certOk = false;
   }
-  return { n, ok, certLines, certOk, help: !!host.querySelector(".pp-mgh"),
+  return {
+    inputs: { teams: full.pathIn.teams.map(t => ({ rid: String(t.rid), div: t.div, w: t.w, pf: t.pf })),
+      remaining: full.pathIn.remaining.map(g => [g[0], g[1]]), playoffTeams: full.rules.playoffTeams },
+    table: P.clinch.map(c => ({ rid: String(c.rid), winsNeeded: c.winsNeeded, lossesNeeded: c.lossesNeeded,
+      clinchedPlayoff: !!c.clinchedPlayoff, eliminated: !!c.eliminated })),
+    playoffChips: chips(host, ".pp-li[data-rid], .pp-hero[data-rid]", "magic"),
+    bowlChips: chips(bowlHost, ".pp-li[data-rid]", "bowl-magic"),
+    certLines, certOk, help: !!host.querySelector(".pp-mgh"),
     // Both ways: a playoff clinch on the board is exactly a magic 0 (the walk that admits ties).
     zeroIsClinch: P.clinch.every(c => (c.magic === 0) === !!c.clinchedPlayoff),
     elimHasNoNumber: P.clinch.every(c => !c.eliminated || c.magic == null) };
 });
 if (!mgLive.skip) {
-  check("live: every Magic chip on the board is the exact table's number", mgLive.ok, `${mgLive.n} chips`);
+  const exact = ownMagicExact(mgLive.inputs), exactBy = new Map(exact.map(e => [e.rid, e]));
+  const tableBy = new Map(mgLive.table.map(c => [c.rid, c]));
+  const bad = [];
+  // The table: every team's number is the exact one. The bowl walk may decline
+  // (undefined, no chip) only when it is too large to finish; a number is never wrong.
+  for (const c of mgLive.table) {
+    const e = exactBy.get(c.rid);
+    if (!e) { bad.push(`${c.rid}: not in the inputs`); continue; }
+    if (c.winsNeeded !== e.wins) bad.push(`${c.rid} winsNeeded ${c.winsNeeded} != ${e.wins}`);
+    if (c.lossesNeeded !== undefined && c.lossesNeeded !== e.losses) bad.push(`${c.rid} lossesNeeded ${c.lossesNeeded} != ${e.losses}`);
+  }
+  if (mgLive.table.length !== exact.length) bad.push(`table has ${mgLive.table.length} teams, inputs ${exact.length}`);
+  const undecidedBowl = mgLive.table.filter(c => c.lossesNeeded === undefined).length;
+  if (undecidedBowl && mgLive.inputs.remaining.length <= 12) bad.push(`${undecidedBowl} bowl numbers left undecided with only ${mgLive.inputs.remaining.length} games left`);
+  // Every chip on each board says exactly what the exact number says, and a row with no chip is one that shouldn't have one.
+  const want = (c, n, zeroShows) => !c || c.clinchedPlayoff || c.eliminated || n === undefined ? null
+    : n === null ? "out" : !zeroShows && n === 0 ? null : String(n);
+  for (const r of mgLive.playoffChips) {
+    const c = tableBy.get(r.rid), w = want(c, exactBy.get(r.rid)?.wins, true);
+    if (r.got !== w || r.stray) bad.push(`playoff chip ${r.rid}: ${r.got} != ${w}${r.stray ? " (stray chip)" : ""}`);
+  }
+  for (const r of mgLive.bowlChips) {
+    const c = tableBy.get(r.rid), e = exactBy.get(r.rid);
+    const w = want(c, c && c.lossesNeeded === undefined ? undefined : e?.losses, false);
+    if (r.got !== w || r.stray) bad.push(`bowl chip ${r.rid}: ${r.got} != ${w}${r.stray ? " (stray chip)" : ""}`);
+  }
+  const nP = mgLive.playoffChips.filter(r => r.got).length, nB = mgLive.bowlChips.filter(r => r.got).length;
+  const openRows = mgLive.table.filter(c => !c.clinchedPlayoff && !c.eliminated).length;
+  if (!mgLive.playoffChips.length || !mgLive.bowlChips.length) bad.push(`board rows: ${mgLive.playoffChips.length} playoff, ${mgLive.bowlChips.length} bowl`);
+  check("live: every Magic chip on the board is the exact table's number", bad.length === 0,
+    `${nP} playoff chips, ${nB} bowl chips, ${openRows} open teams, ${mgLive.inputs.remaining.length} games left ${bad.slice(0, 6).join("; ")}`);
   check("live: the Magic help line is on the board", mgLive.help);
   check("live: each certificate line shows a bound with its proven floor, an exact number without one",
     mgLive.certOk, `${mgLive.certLines} lines`);
   check("live: a playoff clinch is exactly a magic 0, and no eliminated team carries a number", mgLive.zeroIsClinch && mgLive.elimHasNoNumber);
 }
 group("Toilet Bowl Picture: section and chip proofs");
-await page.click('#tabs button[data-tab="toilet"]');
 const tbNameLines = await page.evaluate(() => {
   const host=document.querySelector("#toiletHost"), cells=[...(host?.querySelectorAll(".pp-tnm,.pp-nm .tb-name-text,.tb-slotname")||[])];
   return {width:innerWidth,hidden:!host||!!host.closest('[hidden]'),multi:cells.flatMap(el=>{
