@@ -1110,6 +1110,29 @@
   .bigg .c{font-size:13px;color:var(--ink-2);line-height:1.55;max-width:74ch;margin-top:6px}
   @media(max-width:560px){.bigg .x{display:none}}
 
+  /* ============ path to the playoffs / bowl bye ============ */
+  .pa-host{margin-top:26px}
+  .pa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+  .pa-card{padding:14px 16px;min-width:0}
+  .pa-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .pa-top .nm{font-weight:700}
+  .pa-recd{font:11px var(--mono);color:var(--muted)}
+  .pa-st{margin-top:8px;font-size:13px;font-weight:600;color:var(--ink)}
+  .pa-left{margin-top:3px;font:11px var(--mono);color:var(--muted)}
+  .pa-lines{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+  .pa-lines li{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;padding:7px 9px;border-radius:10px;background:var(--raised);font-size:12.5px;line-height:1.4;border-left:3px solid var(--card-line-hi)}
+  .pa-lines li.pa-y{border-left-color:var(--pos,#3ddc97)}
+  .pa-lines li.pa-n{border-left-color:var(--neg,#ff6b6b);opacity:.8}
+  .pa-lines li.pa-m{border-left-color:var(--gold,#ffc23d)}
+  .pa-lines li.pa-p{border-left-color:var(--blue,#5aa9ff)}
+  .pa-rec{font:11.5px var(--mono);color:var(--ink-2)}
+  .pa-res{min-width:0;overflow-wrap:anywhere}
+  .pa-need,.pa-help{display:block;margin-top:3px;font-size:11.5px;color:var(--ink-2)}
+  .pa-need{color:var(--ink)}
+  .pa-wk{font:10px var(--mono);color:var(--muted)}
+  .pa-settled{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px}
+  .pa-settled .nmcell{gap:6px}
+  @media(max-width:520px){.pa-grid{grid-template-columns:minmax(0,1fr)}.pa-lines li{grid-template-columns:minmax(0,1fr);gap:2px}}
   /* ============ playoff picture ============ */
   .st-note{color:var(--muted);font-size:12.5px;margin:6px 0 14px}
   .st-divs{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:22px}
@@ -3566,7 +3589,7 @@ function show(id) {
   if (id === "trades") ensureTrades();
   // Same deal for the playoff picture: it reads the rest of the schedule and
   // runs tens of thousands of seasons, so it waits until somebody asks for it.
-  if (id === "picture" || id === "toilet") ensurePicture();
+  if (id === "picture" || id === "toilet") { ensurePicture(); setTimeout(showPaths, 0); }
   if (id === "odds") { ensureLiveOdds(); ensureGameLines(); }
   if (id === "injuries") ensureInjuries();
   if (id === "standings" || id === "tiebreakers") ensureStandings();
@@ -6352,23 +6375,35 @@ function seedField(rank, divOfIdx, playoffTeams, order = null) {
 
 /**
  * DFFL's standings order: wins, then — for a two-way tie — head to head, then
- * points for. A tie of three or more goes straight to points for. Applied to
- * whichever subset is being ranked (a division, the wild-card pool, the
- * division winners), so the tie is sized inside that subset.
+ * (only for two teams in the same division tied for FIRST in it) division
+ * record, then points for. A tie of three or more goes straight to points for.
+ * Applied to whichever subset is being ranked (a division, the wild-card pool,
+ * the division winners), so the tie is sized inside that subset.
  *
  * H is an N×N matrix (flat array or rows) of wins: H[a][b] = a's wins over b,
- * a tied game counting half to each. Returns a new array, best first.
+ * a tied game counting half to each. Division record is read off H against
+ * the rest of `list`, so the division step needs `divOf` and only runs when
+ * `list` is one whole division and the tie is at the top of it.
+ * Returns a new array, best first.
  */
-function tieOrder(list, W, PF, H) {
+function tieOrder(list, W, PF, H, divOf = null) {
   const h = typeof H === "function" ? H : (a, b) => (H ? H[a][b] : 0);
   const byPts = (a, b) => PF[b] - PF[a];
   const s = list.slice().sort((a, b) => W[b] - W[a] || byPts(a, b));
+  const oneDiv = !!divOf && s.length > 1 && s.every(i => divOf(i) === divOf(s[0]));
+  const divPct = x => {
+    let w = 0, g = 0;
+    for (const y of s) if (y !== x) { w += h(x, y); g += h(x, y) + h(y, x); }
+    return g ? w / g : 0.5;
+  };
   const out = [];
   for (let k = 0; k < s.length;) {
     let e = k + 1;
     while (e < s.length && W[s[e]] === W[s[k]]) e++;
     if (e - k === 2) {
-      const [a, b] = [s[k], s[k + 1]], d = h(a, b) - h(b, a);
+      const [a, b] = [s[k], s[k + 1]];
+      let d = h(a, b) - h(b, a);
+      if (d === 0 && oneDiv && k === 0) d = divPct(a) - divPct(b);
       out.push(...(d > 0 ? [a, b] : d < 0 ? [b, a] : [a, b]));
     } else out.push(...s.slice(k, e));
     k = e;
@@ -6489,7 +6524,7 @@ function simulateSeason(model, sims = ODDS_SIMS, live = null, opts = null) {
     }
 
     const hh = (a, b) => H[a * N + b];
-    const order = list => tieOrder(list, W, PF, hh);
+    const order = list => tieOrder(list, W, PF, hh, i => teams[i].div);
     const rank = order(ids);
     for (let i = 0; i < N; i++) pos[rank[i]] = i;
 
@@ -11164,7 +11199,7 @@ function leagueRules(season) {
     roundType: st.playoff_round_type ?? null,
     seedType: st.playoff_seed_type ?? null,
     rosterDivisions: season && season.divOf ? season.divOf.size : 0,
-    tiebreak: "wins, then head to head (two-way ties), then points for",
+    tiebreak: "wins, then head to head (two-way ties), then division record (two division rivals tied for first), then points for",
   };
 }
 
@@ -11591,15 +11626,110 @@ function magicNumbers({ teams, remaining, playoffTeams, budget = 2500 }) {
     return { magic: best.length, exact: lower === best.length, lower, cert: best };
   };
 
+  // Wins needed, on its own: the fewest k such that winning ANY k of its own
+  // remaining games (and losing the rest) guarantees the spot however every
+  // other game goes. null = even winning out doesn't guarantee it.
+  const ownWins = i => {
+    const ownG = remaining.map((_, g) => g).filter(g => remaining[g][0] === i || remaining[g][1] === i);
+    for (let k = 0; k <= ownG.length; k++)
+      if (combos(ownG, k).every(S => oracle(i, new Map(S.map(g => [g, i]))) == null)) return k;
+    return null;
+  };
+
   return teams.map((t, i) => {
     const r = solve(i);
     const cert = r.cert && r.cert.map(([g, w]) => {
       const [a, b] = remaining[g];
       return [w, w === a ? b : a];
     });
-    return { rid: t.rid, magic: r.magic, exact: r.exact, lower: r.lower, cert, left: left[i],
+    return { rid: t.rid, magic: r.magic, exact: r.exact, lower: r.lower, cert, left: left[i], wins: ownWins(i),
       clinched: r.magic === 0,
       status: r.magic === 0 ? "clinched" : r.magic == null ? (r.exact ? "needs-help" : "unknown") : "magic" };
+  });
+}
+
+/**
+ * Toilet-bowl magic numbers: the fewest k such that losing ANY k of its own
+ * remaining games (and winning the rest) guarantees the team misses the
+ * playoffs, however every other game goes — wins, losses or ties. null = even
+ * losing out doesn't lock it into the bowl. Ties on wins go the team's way
+ * (points for are unknown) except between two teams with nothing left, which
+ * are split on actual points — the mirror of magicNumbers' oracle.
+ *
+ * "Can it still get in?" is checked by search: since fewer teams ahead only
+ * ever helps (makes() is monotone), a game with one side that can't change
+ * whether it's ahead goes against the other side, and only games between two
+ * such swing teams are walked, all three ways. Returns undefined for a team
+ * whose walk would be too large to finish (no chip is shown then).
+ */
+function bowlMagic({ teams, remaining, playoffTeams }) {
+  const N = teams.length, P = playoffTeams;
+  const divOf = teams.map(t => t.div);
+  const slots = P - new Set(divOf).size;
+  const left = new Array(N).fill(0);
+  for (const [a, b] of remaining) { left[a]++; left[b]++; }
+  const W2 = teams.map(t => Math.round(t.w * 2));
+  const MAX_WALK = 12;   // 3^12 ≈ 530k outcomes per check at the very most
+  // Can i make the field with its own games fixed by `lose` (lost) and won otherwise?
+  const canMake = (i, lose) => {
+    const base = W2.slice(), free = new Array(N).fill(0), games = [];
+    remaining.forEach(([a, b], g) => {
+      if (a === i || b === i) { if (lose.has(g)) base[a === i ? b : a] += 2; else base[i] += 2; return; }
+      free[a]++; free[b]++; games.push([a, b]);
+    });
+    const mine = base[i];
+    const ahead = (j, w) => w > mine || (w === mine && !left[i] && !left[j] && teams[j].pf > teams[i].pf);
+    // Swing teams: whether they finish ahead depends on results still open.
+    const swing = new Array(N).fill(false);
+    for (let j = 0; j < N; j++) if (j !== i && ahead(j, base[j] + 2 * free[j]) && !ahead(j, base[j])) swing[j] = true;
+    const W = base.slice(), walk = [];
+    for (const [a, b] of games) {
+      if (swing[a] && swing[b]) walk.push([a, b]);
+      else if (swing[a]) W[b] += 2;
+      else if (swing[b]) W[a] += 2;
+      // neither swings: the result can't move either one across i
+    }
+    if (walk.length > MAX_WALK) return undefined;
+    const makes = () => {
+      let n = 0, champ = true;
+      const top = new Set();
+      for (let j = 0; j < N; j++) {
+        if (j === i || !ahead(j, W[j])) continue;
+        n++; top.add(divOf[j]);
+        if (divOf[j] === divOf[i]) champ = false;
+      }
+      return champ || n - top.size < slots;
+    };
+    const go = k => {
+      if (k === walk.length) return makes();
+      const [a, b] = walk[k];
+      for (const [da, db] of [[2, 0], [0, 2], [1, 1]]) {
+        W[a] += da; W[b] += db;
+        const r = go(k + 1);
+        W[a] -= da; W[b] -= db;
+        if (r) return true;
+      }
+      return false;
+    };
+    return go(0);
+  };
+  const combos = (arr, r, start = 0, acc = [], out = []) => {
+    if (acc.length === r) { out.push(acc.slice()); return out; }
+    for (let x = start; x < arr.length; x++) { acc.push(arr[x]); combos(arr, r, x + 1, acc, out); acc.pop(); }
+    return out;
+  };
+  return teams.map((t, i) => {
+    const ownG = remaining.map((_, g) => g).filter(g => remaining[g][0] === i || remaining[g][1] === i);
+    for (let k = 0; k <= ownG.length; k++) {
+      let all = true;
+      for (const S of combos(ownG, k)) {
+        const m = canMake(i, new Set(S));
+        if (m === undefined) return { rid: t.rid, losses: undefined };
+        if (m) { all = false; break; }
+      }
+      if (all) return { rid: t.rid, losses: k };
+    }
+    return { rid: t.rid, losses: null };
   });
 }
 
@@ -11612,7 +11742,7 @@ function magicNumbers({ teams, remaining, playoffTeams, budget = 2500 }) {
  */
 function settledStandings(live, R = null) {
   const W = live.W0.slice(), PF = live.PF0.slice(), done = [];
-  const remaining = [];
+  const remaining = [], remWeeks = [];
   const key = (a, b) => a < b ? `${a}-${b}` : `${b}-${a}`;
   const final = new Map();
   for (const g of live.pending || []) {
@@ -11637,10 +11767,10 @@ function settledStandings(live, R = null) {
       PF[g.a] += g.eA; PF[g.b] += g.eB;
       if (g.eA > g.eB) W[g.a]++; else if (g.eB > g.eA) W[g.b]++; else { W[g.a] += 0.5; W[g.b] += 0.5; }
       done.push([g.a, g.b]);
-    } else remaining.push([a, b]);
+    } else { remaining.push([a, b]); remWeeks.push(live.liveWeek); }
   }
-  for (const w of live.weeks) remaining.push(...w.pairs);
-  return { W, PF, remaining, done };
+  for (const w of live.weeks) for (const pr of w.pairs) { remaining.push(pr); remWeeks.push(w.week); }
+  return { W, PF, remaining, remWeeks, done };
 }
 
 /**
@@ -11840,14 +11970,24 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   const settled = settledStandings(live, R);
   const remaining = settled.remaining;
   const settledTeams = live.teams.map((t, i) => ({ rid: t.rid, div: t.div, w: settled.W[i], pf: settled.PF[i] }));
+  // Head to head through every result, this week's finals included, for the path walk.
+  const pathH = live.H2H0 ? live.H2H0.map(r => r.slice()) : live.teams.map(() => new Array(N).fill(0));
+  const doneKey = new Set(settled.done.map(([a, b]) => `${a}-${b}`));
+  for (const g of live.pending || []) if (doneKey.has(`${g.a}-${g.b}`)) {
+    if (g.eA > g.eB) pathH[g.a][g.b]++; else if (g.eB > g.eA) pathH[g.b][g.a]++; else { pathH[g.a][g.b] += 0.5; pathH[g.b][g.a] += 0.5; }
+  }
+  const pathIn = { teams: settledTeams, H: pathH, remaining: remaining.map(([a, b], k) => [a, b, settled.remWeeks[k]]) };
   const clinch = exactClinch({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, byes: rules.byes });
   // The certificate search is deterministic in its inputs: a poll that changed
   // nothing reuses the last answer instead of walking it again.
   const magicKey = JSON.stringify([settledTeams.map(t => [t.div, t.w, t.pf]), remaining, rules.playoffTeams]);
   if (!MAGIC_CACHE || MAGIC_CACHE.key !== magicKey)
-    MAGIC_CACHE = { key: magicKey, v: magicNumbers({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, budget: MAGIC_BUDGET }) };
-  const magic = MAGIC_CACHE.v;
+    MAGIC_CACHE = { key: magicKey, v: magicNumbers({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams, budget: MAGIC_BUDGET }),
+      bowl: bowlMagic({ teams: settledTeams, remaining, playoffTeams: rules.playoffTeams }) };
+  const magic = MAGIC_CACHE.v, bowl = MAGIC_CACHE.bowl;
   clinch.forEach((c, i) => {
+    c.winsNeeded = magic[i].wins;
+    c.lossesNeeded = bowl[i].losses;
     c.magic = magic[i].magic;
     c.magicExact = magic[i].exact;
     c.magicLower = magic[i].lower;
@@ -11868,9 +12008,9 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
   // Teams whose game this week is already final: no what-if, but not "no game" either.
   const final = new Set(currentGames(job.model, job.live).filter(g => g.final).flatMap(g => [g.a, g.b]));
   // Seeds as of today: the standings the simulator ranks by (wins, then head to
-  // head in a two-way tie, then points for) through the same seedField every
+  // head in a two-way tie, then division record for a division lead, then points for) through the same seedField every
   // simulated season uses.
-  const tOrd = list => tieOrder(list, live.W0, live.PF0, live.H2H0);
+  const tOrd = list => tieOrder(list, live.W0, live.PF0, live.H2H0, i => live.teams[i].div);
   const rank = tOrd(live.teams.map((_, i) => i));
   const field = seedField(rank, i => live.teams[i].div, rules.playoffTeams, tOrd);
   const order = [...field.seeds, ...rank.filter(i => !field.seeds.includes(i))];
@@ -11888,7 +12028,7 @@ async function computePicture(model, live, R, season, { main = false, whatIfSims
     whatIf: whatIf.get(i) || null, final: final.has(i), clinch: clinch[i],
   }));
   return {
-    rules, rows, clinch, magic, out, via: out.via, sims: out.main.sims, whatIfSims, order, settledFinals: settled.done.length,
+    rules, rows, clinch, magic, out, via: out.via, sims: out.main.sims, whatIfSims, order, settledFinals: settled.done.length, pathIn,
     tied: live.W0.some(w => !Number.isInteger(w)),
     swings: swingBoard(out), remaining: remaining.length,
     week: live.pending && live.pending.length ? live.liveWeek : (live.weeks[0] ? live.weeks[0].week : null),
@@ -11942,14 +12082,20 @@ const PP_MARKS = { x: "clinched playoff spot", y: "clinched division", z: "clinc
 const ppMark = c => !c ? "" : c.clinchedBye ? "z" : c.clinchedDiv ? "y" : c.clinchedPlayoff ? "x" : "";
 /* Magic number chip: only for teams still open — clinched ones carry the mark, eliminated ones are listed. */
 function ppMagicHTML(c) {
-  if (!c || c.clinchedPlayoff || c.eliminated || c.magic === undefined) return "";
-  if (c.magic == null && c.magicExact === false) return `<span class="pp-mg help" data-magic="unknown" title="Too many results still in play to settle the smallest set that guarantees a spot">Magic ?</span>`;
-  if (c.magic == null) return `<span class="pp-mg help" data-magic="help" title="No set of its own wins and rivals' losses guarantees a playoff spot — it can't be locked in by results alone">Needs help</span>`;
-  const n = c.magic, s = n === 1 ? "" : "s";
-  const t = c.magicExact
-    ? `Magic number ${n}: the fewest specific results — its own wins or named rivals' losses — that guarantee a playoff spot, whatever else happens`
-    : `Magic number at most ${n}: ${n} specific result${s} guarantee a playoff spot; no set smaller than ${c.magicLower} does, and the exact fewest wasn't settled`;
-  return `<span class="pp-mg" data-magic="${c.magicExact ? n : `<=${n}`}" role="img" title="${t}" aria-label="${t}">Magic <b>${c.magicExact ? "" : "≤"}${n}</b></span>`;
+  if (!c || c.clinchedPlayoff || c.eliminated || c.winsNeeded === undefined) return "";
+  if (c.winsNeeded == null) return `<span class="pp-mg help" data-magic="out" title="Even winning out doesn't guarantee a playoff spot — it can't clinch on its own">Eliminated</span>`;
+  const n = c.winsNeeded, s = n === 1 ? "" : "s";
+  const t = `Magic number ${n}: win any ${n} more game${s} and the playoff spot is locked, no matter what else happens`;
+  return `<span class="pp-mg" data-magic="${n}" role="img" title="${t}" aria-label="${t}">Magic <b>${n}</b></span>`;
+}
+/* The toilet-bowl mirror: losses needed to lock into the bowl, whatever else happens. */
+function bowlMagicHTML(c) {
+  if (!c || c.clinchedPlayoff || c.eliminated || c.lossesNeeded === undefined) return "";
+  if (c.lossesNeeded == null) return `<span class="pp-mg help" data-bowl-magic="out" title="Even losing out doesn't guarantee a toilet-bowl spot — it can't lock itself in">Eliminated</span>`;
+  const n = c.lossesNeeded;
+  if (!n) return "";
+  const t = `Magic number ${n}: lose any ${n} more game${n === 1 ? "" : "s"} and the toilet-bowl spot is locked, no matter what else happens`;
+  return `<span class="pp-mg" data-bowl-magic="${n}" role="img" title="${t}" aria-label="${t}">Magic <b>${n}</b></span>`;
 }
 /* The certificates: which results make up each team's magic number. */
 function ppCertHTML(rows) {
@@ -12064,7 +12210,7 @@ function pictureBoard(PP) {
   if (hunt.length) list += `<div class="pp-hh">In the hunt</div>${hunt.map(li).join("")}`;
 
   const note = `Seeds = today, odds = full season. Seeds are today's standings — division leaders first,
-    then the best records left; a two-way tie goes to head to head, then points for, and a three-way
+    then the best records left; a two-way tie goes to head to head, then division record when it's two rivals tied for a division lead, then points for, and a three-way
     tie straight to points for — so the odds won't always follow
     seed order. Every percentage is the Odds tab's ${PP.sims.toLocaleString()}-season run: Playoff % is
     the Odds tab's number, and Bye % is how often that run finishes a team in the top ${B} seed${B === 1 ? "" : "s"}.
@@ -12077,12 +12223,9 @@ function pictureBoard(PP) {
         <p class="pp-hs">${esc(r1Words)} · slot hint = ${B ? "Bye % · " : ""}Playoff %</p>${bracket}${legend}</div>
       <div class="pp-lcol"><h3 class="pp-h">Seeds &amp; the hunt</h3>
         <p class="pp-hs">Ordered by seed today · ${B ? "Bye % and " : ""}Playoff % bars</p>
-        <p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>the fewest specific results — your wins or
-          named rivals' losses — that lock in a spot whatever else happens. A win over a rival is one result.
-          A result in the smallest set takes it down by one; others can leave it unchanged.
-          <b>≤N</b>: a set that size works, the exact fewest isn't settled.
-          <span class="pp-mg help">Needs help</span>no set of results can lock it in.</p>
-        ${ppCertHTML(rows)}
+        <p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>wins needed to clinch a playoff spot —
+          win any N more and you're in, no matter what anyone else does.
+          <span class="pp-mg help">Eliminated</span>can't clinch on its own, even winning out.</p>
         <div class="pp-lst pp-seeds">${list}</div>
         <h3 class="pp-h">Eliminated</h3>
         <div class="pp-lst pp-elim">${elim.length ? elim.map(li).join("") : `<div class="pp-empty">Nobody is mathematically out yet.</div>`}</div>
@@ -12175,8 +12318,9 @@ function renderPicture(host, PP) {
        division), playoff_round_type ${esc(String(r.roundType ?? "not set"))}, playoff_seed_type
        ${esc(String(r.seedType ?? "not set"))}, and ${r.byes} first-round bye${r.byes === 1 ? "" : "s"}
        ${r.byesFrom === "bracket" ? "(read off Sleeper's winners bracket)" : "(Sleeper hasn't drawn the bracket yet, so the standard two for a six-team bracket)"}.</p>
-    <p><b>League rule:</b> standings go by wins; a two-way tie goes to head to head, then points
-       for, and a tie of three or more goes straight to points for. The same rule seeds the playoffs.
+    <p><b>League rule:</b> standings go by wins; a two-way tie goes to head to head, then — when the
+       two are division rivals tied for first in the division — division record, then points for. A tie
+       of three or more goes straight to points for. The same rule seeds the playoffs.
        Division winners are seeded first, in record order, then the best records left — the rule
        DFFL's past seasons were actually seeded by. The bracket above is drawn fixed; the sims still
        reseed after round one, which affects only playoff-round and title odds, not Bye % or Playoff %.</p>
@@ -12189,22 +12333,331 @@ function renderPicture(host, PP) {
        than the win-or-lose check walks. Because any future game can also end tied, a playoff clinch
        is only called when the magic-number walk below (which plays ties too) says so, and an
        elimination only when the win bounds alone prove it.</p>
-    <p><b>Magic numbers</b> are the size of a smallest set of specific remaining results — the team
-       winning a given game, or a named rival losing one — that guarantees a playoff spot however every
-       other game goes, ties included. A win over a direct rival is one result, and no set fixes a game
-       both ways. Level finishes on wins count against the team, since points for can't be known while
-       either side still plays (only two teams with nothing left are split on their actual points, and a
-       dead-even tie still counts against). Games this week with nothing left to play count as results;
-       scheduled games the live board couldn't price still count as left to play. A result that belongs
-       to some smallest set takes the number down by exactly one; any other result — a rival's loss
-       included — can leave it where it is. Each set is found by search: a candidate set either proves the
-       spot or yields a finish where the team misses, which any bigger set must contradict. Where the
-       search runs out of room the page shows ≤N: a set of N results that works, with no smaller set below
-       the proven floor. "Needs help" means no set of results guarantees a spot at all.</p>
+    <p><b>Magic numbers</b> count only the team's own games: the fewest wins such that winning ANY that
+       many of its remaining games guarantees a playoff spot however every other game goes, ties included.
+       Level finishes on wins count against the team, since points for can't be known while either side
+       still plays. "Eliminated" means even winning out doesn't guarantee a spot on its own. The Toilet
+       Bowl tab mirrors it with losses: the fewest losses that guarantee missing the playoffs, with level
+       finishes going the team's way; "Eliminated" there means even losing out doesn't lock it in.</p>
     <p><b>What-if</b> runs the season twice for each game this week, once with each side forced to win,
        ${PP.whatIfSims.toLocaleString()} times a side on the same random draws. Both scores are still drawn
        and swapped if the wrong side won, so forcing a result doesn't inflate anybody's points for.</p>`;
   host.appendChild(m);
+}
+
+/* ======================================== PATH TO THE PLAYOFFS ======== */
+/*
+ * Every way the rest of the regular season can go, walked exactly — no
+ * simulation, no weighting. Each remaining game is a win for one side or the
+ * other (2^R outcomes; a future tied game is left out), and every outcome is
+ * seeded by the league's own tieOrder/seedField: wins, head to head, division
+ * record for two rivals tied for a division lead, then points for. Head to head
+ * and division record are known exactly inside an outcome; points for are not,
+ * so when a team's spot comes down to a points tiebreak the outcome is counted
+ * as "points", worked out by re-seeding with that team's points pushed to the
+ * top and to the bottom (everyone else's left where they stand today).
+ *
+ * Two things are tracked for every team: making the playoffs (top
+ * playoffTeams seeds) and a toilet-bowl bye (the two worst seeds in the bowl,
+ * who skip its first round). Both are broken out by the team's OWN results —
+ * win k of its m games left — with the outside results every good outcome at
+ * that record shares ("needs") and the ones that help most ("helps").
+ *
+ * teams: [{ rid, div, w, pf }], H: N×N head-to-head wins so far (rows),
+ * remaining: [[a, b, week]] index pairs. Returns null when there are more
+ * than PATH_MAX_GAMES games left. Async: yields to the page every few
+ * thousand outcomes so the tab never freezes.
+ */
+const PATH_MAX_GAMES = 18;
+
+/**
+ * The seeding step of the path walk, specialised for speed: the same rule as
+ * tieOrder + seedField (verify cross-checks the two on random outcomes), but
+ * on flat arrays and a points-for order fixed for the whole walk. `pfOrder` is
+ * every team best points-for first; W the wins; H the flat N×N head to head.
+ * Fills inSet (top P seeds) and byeSet (the two worst seeds in the bowl).
+ */
+function makePathSeeder(N, div, P) {
+  const divs = [...new Set(div)].sort((a, b) => a - b);
+  const mem = new Uint8Array(N), isChamp = new Uint8Array(N);
+  // Order the teams flagged in `mem` (taken in pfOrder) the tieOrder way.
+  const ord = (pfOrder, W, H, oneDiv) => {
+    const s = [];
+    for (const i of pfOrder) if (mem[i]) {
+      let k = s.length; s.push(i);
+      while (k > 0 && W[s[k - 1]] < W[i]) { s[k] = s[k - 1]; k--; }   // stable: points order kept inside a win total
+      s[k] = i;
+    }
+    for (let k = 0; k < s.length;) {
+      let e = k + 1;
+      while (e < s.length && W[s[e]] === W[s[k]]) e++;
+      if (e - k === 2) {
+        const a = s[k], b = s[k + 1];
+        let d = H[a * N + b] - H[b * N + a];
+        if (d === 0 && oneDiv && k === 0) {
+          let wa = 0, ga = 0, wb = 0, gb = 0;
+          for (const y of s) {
+            if (y !== a) { wa += H[a * N + y]; ga += H[a * N + y] + H[y * N + a]; }
+            if (y !== b) { wb += H[b * N + y]; gb += H[b * N + y] + H[y * N + b]; }
+          }
+          d = (ga ? wa / ga : 0.5) - (gb ? wb / gb : 0.5);
+        }
+        if (d < 0) { s[k] = b; s[k + 1] = a; }
+      }
+      k = e;
+    }
+    return s;
+  };
+  return (pfOrder, W, H, inSet, byeSet) => {
+    isChamp.fill(0);
+    const tops = [];
+    for (const d of divs) {
+      mem.fill(0); let n = 0;
+      for (let i = 0; i < N; i++) if (div[i] === d) { mem[i] = 1; n++; }
+      const r = ord(pfOrder, W, H, n > 1);
+      if (r.length) { tops.push(r[0]); isChamp[r[0]] = 1; }
+    }
+    mem.fill(0); for (const i of tops) mem[i] = 1;
+    const champs = ord(pfOrder, W, H, false);
+    mem.fill(0); for (let i = 0; i < N; i++) if (!isChamp[i]) mem[i] = 1;
+    const rest = ord(pfOrder, W, H, false);
+    const wilds = Math.max(0, P - champs.length);
+    inSet.fill(0); byeSet.fill(0);
+    for (const i of champs) inSet[i] = 1;
+    for (let k = 0; k < wilds && k < rest.length; k++) inSet[rest[k]] = 1;
+    if (rest.length - wilds >= 4) { byeSet[rest[rest.length - 1]] = 1; byeSet[rest[rest.length - 2]] = 1; }
+  };
+}
+
+/*
+ * Every way the rest of the regular season can go, walked exactly — no
+ * simulation, no weighting. Each remaining game is a win for one side or the
+ * other (2^R outcomes; a future tied game is left out), and every outcome is
+ * seeded on the league's rule: wins, head to head, division record for two
+ * rivals tied for a division lead, then points for. Head to head and division
+ * record are known exactly inside an outcome; points for are not, so when a
+ * team's spot could come down to a points tiebreak it is re-seeded with that
+ * team's points pushed to the top and to the bottom (everyone else's as they
+ * stand today) — the same both ways is a result, different is "points".
+ *
+ * Two things are tracked for every team: making the playoffs (top
+ * playoffTeams seeds) and a toilet-bowl bye (the two worst seeds in the bowl,
+ * who skip its first round). Both are broken out by the team's OWN results —
+ * win k of its m games left — with the outside results every good outcome at
+ * that record shares ("needs") and the ones that help most ("helps").
+ *
+ * teams: [{ rid, div, w, pf }], H: N×N head-to-head wins so far (rows),
+ * remaining: [[a, b, week]] index pairs. Returns null when there are more
+ * than PATH_MAX_GAMES games left. Async: yields to the page every few
+ * thousand outcomes so the tab never freezes.
+ */
+async function pathScenarios({ teams, H, remaining, playoffTeams }) {
+  const N = teams.length, R = remaining.length, P = playoffTeams;
+  if (R > PATH_MAX_GAMES) return null;
+  const div = teams.map(t => t.div);
+  const ids = teams.map((_, i) => i);
+  const H0 = new Float64Array(N * N);
+  for (let a = 0; a < N; a++) for (let b = 0; b < N; b++) H0[a * N + b] = (H && H[a] && H[a][b]) || 0;
+  const own = ids.map(i => remaining.map((g, k) => (g[0] === i || g[1] === i) ? k : -1).filter(k => k >= 0));
+  const ownMask = own.map(gs => gs.reduce((m, g) => m | (1 << g), 0));
+  // Bits where team i is the first-named side: i won game g iff bit g equals that.
+  const firstMask = ids.map(i => own[i].reduce((m, g) => remaining[g][0] === i ? m | (1 << g) : m, 0));
+  const mk = () => ids.map(i => Array.from({ length: own[i].length + 1 }, () =>
+    ({ tot: 0, yes: 0, pts: 0, a: new Float64Array(R) })));
+  const PO = mk(), BB = mk();
+  const seed = makePathSeeder(N, div, P);
+  const pfBase = ids.slice().sort((a, b) => teams[b].pf - teams[a].pf);
+  const pfHi = ids.map(i => [i, ...pfBase.filter(j => j !== i)]);
+  const pfLo = ids.map(i => [...pfBase.filter(j => j !== i), i]);
+  const W = new Float64Array(N), Hm = new Float64Array(N * N);
+  const inSet = new Uint8Array(N), byeSet = new Uint8Array(N);
+  const inHi = new Uint8Array(N), byeHi = new Uint8Array(N), inLo = new Uint8Array(N), byeLo = new Uint8Array(N);
+  const popc = x => { let c = 0; while (x) { x &= x - 1; c++; } return c; };
+  const total = 2 ** R;
+  for (let m = 0; m < total; m++) {
+    if (m && !(m & 2047)) await new Promise(r => setTimeout(r, 0));
+    for (let i = 0; i < N; i++) W[i] = teams[i].w;
+    Hm.set(H0);
+    for (let g = 0; g < R; g++) {
+      const a = remaining[g][0], b = remaining[g][1];
+      if ((m >> g) & 1) { W[a]++; Hm[a * N + b]++; } else { W[b]++; Hm[b * N + a]++; }
+    }
+    seed(pfBase, W, Hm, inSet, byeSet);
+    for (let i = 0; i < N; i++) {
+      // Could points for flip it? Only if a team on the other side of the line is level on wins.
+      let poAmb = false, bbAmb = false;
+      for (let j = 0; j < N; j++) if (j !== i && W[j] === W[i]) {
+        if (inSet[j] !== inSet[i]) poAmb = true;
+        if (byeSet[j] !== byeSet[i]) bbAmb = true;
+      }
+      let po = inSet[i] ? 2 : 0, bb = byeSet[i] ? 2 : 0;
+      if (poAmb || bbAmb) {
+        seed(pfHi[i], W, Hm, inHi, byeHi);
+        seed(pfLo[i], W, Hm, inLo, byeLo);
+        const st = (x, y) => x && y ? 2 : !x && !y ? 0 : 1;
+        if (poAmb) po = st(inHi[i], inLo[i]);
+        if (bbAmb) bb = st(byeHi[i], byeLo[i]);
+      }
+      const wins = popc(~(m ^ firstMask[i]) & ownMask[i]);
+      const T1 = PO[i][wins], T2 = BB[i][wins];
+      T1.tot++; T2.tot++;
+      if (po === 1) T1.pts++;
+      else if (po === 2) { T1.yes++; for (let x = m; x; x &= x - 1) T1.a[31 - Math.clz32(x & -x)]++; }
+      if (bb === 1) T2.pts++;
+      else if (bb === 2) { T2.yes++; for (let x = m; x; x &= x - 1) T2.a[31 - Math.clz32(x & -x)]++; }
+    }
+  }
+  const summarize = (T, i) => T.map((x, wins) => {
+    const needs = [], helps = [];
+    const half = x.tot / 2;
+    for (let g = 0; g < R; g++) {
+      if (own[i].includes(g)) continue;
+      const [a, b, week] = remaining[g];
+      if (x.yes && x.yes < x.tot) {
+        if (x.a[g] === x.yes) needs.push({ w: a, l: b, week });
+        else if (x.a[g] === 0) needs.push({ w: b, l: a, week });
+        else {
+          const lift = (2 * x.a[g] - x.yes) / half;
+          helps.push(lift >= 0 ? { w: a, l: b, week, lift } : { w: b, l: a, week, lift: -lift });
+        }
+      }
+    }
+    helps.sort((p, q) => q.lift - p.lift);
+    return { wins, of: own[i].length, tot: x.tot, yes: x.yes, pts: x.pts, no: x.tot - x.yes - x.pts,
+      needs, helps: helps.filter(h => h.lift > 0.05).slice(0, 3) };
+  });
+  return {
+    games: R, outcomes: total,
+    teams: teams.map((t, i) => ({
+      i, rid: t.rid, left: own[i].map(g => remaining[g]),
+      playoff: summarize(PO[i], i), bowlBye: summarize(BB[i], i),
+    })),
+  };
+}
+
+/**
+ * One line per record: In / Out / Needs help / Down to points, and the games
+ * that matter. No share-of-outcomes number: those count every outcome equally
+ * and read like odds, which they aren't — the card's sim % is the only odds.
+ */
+function pathLineHTML(x, name, { yes = "In", no = "Out", verb = "Win" } = {}) {
+  const k = verb === "Win" ? x.wins : x.of - x.wins;
+  const rec = `${x.wins}–${x.of - x.wins}`;
+  const lab = x.of === 0 ? "Done playing" : k === x.of ? `${verb} out (${rec})` : k === 0 ? `${verb === "Win" ? "Lose" : "Win"} out (${rec})` : `${verb} ${k} of ${x.of} (${rec})`;
+  const g = r => `${esc(name(r.w))} over ${esc(name(r.l))} <span class="pa-wk">wk ${r.week}</span>`;
+  let res, cls;
+  if (x.yes === x.tot) { res = `<b>${yes}</b> — however everything else goes`; cls = "y"; }
+  else if (x.yes + x.pts === 0) { res = `<b>${no}</b> — no way through`; cls = "n"; }
+  else if (x.yes === 0) { res = `<b>Down to points</b> — only a points-for tiebreak gets it there`; cls = "p"; }
+  else {
+    res = `<b>Needs help</b> — ${yes === "In" ? "gets in" : "gets the bye"} with the right results elsewhere${x.pts ? ", or on a points-for tiebreak" : ""}`;
+    cls = "m";
+    if (x.needs.length) res += `<span class="pa-need">Needs: ${x.needs.map(g).join(" · ")}</span>`;
+    if (x.helps.length) res += `<span class="pa-help">Helps most: ${x.helps.map(g).join(" · ")}</span>`;
+  }
+  return `<li class="pa-${cls}"><span class="pa-rec">${lab}</span><span class="pa-res">${res}</span></li>`;
+}
+
+/**
+ * The two path sections. mode "playoff": every team still with something to
+ * settle; mode "bowl": the race for the toilet-bowl bye.
+ */
+function renderPaths(host, PS, PP, mode) {
+  if (!host) return;
+  host.innerHTML = "";
+  const po = mode === "playoff";
+  const title = po ? "Path to the playoffs" : "Path to a toilet-bowl bye";
+  host.appendChild(sechead(title, po
+    ? `What each team needs from its own games, and from everyone else's, to finish in the top ${PP.rules.playoffTeams}.`
+    : "The two worst records in the bowl (seeds 11 and 12) skip its first round. What each team's results do to its chances of landing there."));
+  if (!PS) {
+    host.appendChild(el("div", "empty", `<b>Too early to map</b>The path is worked out exactly once ${PATH_MAX_GAMES} or fewer regular-season games are left.`));
+    return;
+  }
+  const rowsBy = new Map(PP.rows.map(r => [r.rid, r]));
+  const name = i => nameOf(PP.rows[i].uid);
+  const order = PP.order.map(i => PP.rows[i].rid);
+  const simOf = t => { const r = rowsBy.get(t.rid); return (r && r.bowlBye) || 0; };
+  const list = PS.teams.slice().sort((a, b) => po ? order.indexOf(a.rid) - order.indexOf(b.rid)
+    : simOf(b) - simOf(a) || order.indexOf(b.rid) - order.indexOf(a.rid));
+  const key = po ? "playoff" : "bowlBye";
+  const opts = po ? { yes: "In", no: "Out", verb: "Win" } : { yes: "Bye", no: "No bye", verb: "Lose" };
+  const settled = [], open = [], longShots = [];
+  for (const t of list) {
+    const lines = t[key];
+    const allYes = lines.every(x => x.yes === x.tot), allNo = lines.every(x => x.yes + x.pts === 0);
+    const onlyPts = !allNo && lines.every(x => x.yes === 0);
+    if (allYes || (allNo && po)) settled.push({ t, allYes, lines });
+    else if (onlyPts) longShots.push({ t, lines });
+    else if (!allNo) open.push({ t, allYes, lines });
+  }
+  const pill = s => `<span class="badge ${s.allYes ? "gold" : "blue"}">${s.allYes ? (po ? "Locked in" : "Locked into a bye") : (po ? "Out" : "No bye possible")}</span>`;
+  const status = lines => {
+    const best = po ? lines[lines.length - 1] : lines[0];   // win out / lose out
+    if (best.yes === best.tot) return po ? "Controls its own fate — win out and it's in" : "Controls its own fate — lose out and it's a bye";
+    if (best.yes) return po ? "Needs help even winning out" : "Needs help even losing out";
+    return "Only a points tiebreak gets it there";
+  };
+  const wrap = el("div", "pa-grid");
+  for (const s of open) {
+    const r = rowsBy.get(s.t.rid);
+    const lines = s.lines.slice().sort((a, b) => po ? b.wins - a.wins : a.wins - b.wins);
+    const sim = po ? r.playoff : r.bowlBye;
+    const left = s.t.left.map(([a, b, wk]) => `wk ${wk} v ${esc(name(a === s.t.i ? b : a))}`).join(" · ");
+    wrap.appendChild(el("div", "card pa-card", `
+      <div class="pa-top"><span class="nmcell">${avatarHTML(r.uid, "sm")}<span class="nm">${esc(nameOf(r.uid))}</span></span>
+        <span class="pa-recd">${recStr(r.w, r.l, r.t)} · seed ${r.todaySeed}${sim != null ? ` · ${pctf(sim)} in the sim` : ""}</span></div>
+      <div class="pa-st">${esc(status(s.lines))}</div>
+      <div class="pa-left">${left || "No games left"}</div>
+      <ul class="pa-lines">${lines.map(x => pathLineHTML(x, name, opts)).join("")}</ul>`));
+  }
+  if (open.length) host.appendChild(wrap);
+  else host.appendChild(el("div", "empty", `<b>Nothing left to settle</b>${po ? "Every playoff spot is decided." : "Both bowl byes are decided."}`));
+  if (longShots.length) {
+    const simTxt = s => { const r = rowsBy.get(s.t.rid), v = r && (po ? r.playoff : r.bowlBye); return v != null ? `, ${pctf(v)} in the sim` : ""; };
+    host.appendChild(el("p", "st-note", `<b>Long shots</b> — only a points-for tiebreak gets them there: ${longShots.map(s =>
+      `${esc(name(s.t.i))}${simTxt(s)}`).join(" · ")}.`));
+  }
+  if (settled.length) {
+    host.appendChild(el("div", "pa-settled", settled.map(s =>
+      `<span class="nmcell">${avatarHTML(PP.rows[s.t.i].uid, "sm")}<span class="nm">${esc(name(s.t.i))}</span>${pill(s)}</span>`).join("")));
+  }
+  if (!po) host.appendChild(el("p", "st-note", "Everyone not listed has no way to a bye."));
+  host.appendChild(el("p", "st-note", `Exact: all ${PS.outcomes.toLocaleString()} ways the last ${PS.games} regular-season games can go, each seeded on the league's tiebreakers — head to head, then division record for two rivals tied for a division lead, then points for. The only percentage shown is the simulation's odds. A future tied game is left out. "Down to points" means only a points-for tiebreak decides it.`));
+}
+
+let PATH_CACHE = null, PATH_PENDING = null;
+const pathTabOpen = () => ["picture", "toilet"].some(id => { const p = $(`[data-panel="${id}"]`); return p && !p.hidden; });
+/** Called when Playoff Picture or Toilet Bowl is opened: draw the paths for the newest board, if one is waiting. */
+function showPaths() {
+  if (!PATH_PENDING) return;
+  const PP = PATH_PENDING; PATH_PENDING = null;
+  drawPaths(PP);
+}
+/** The scenarios for this board, cached on the inputs so a poll that changed nothing doesn't walk them again. */
+async function pathsFor(PP) {
+  const key = JSON.stringify([PP.pathIn.teams.map(t => [t.div, t.w, t.pf]), PP.pathIn.H, PP.pathIn.remaining, PP.rules.playoffTeams]);
+  if (PATH_CACHE && PATH_CACHE.key === key) return PATH_CACHE.v;
+  const v = await pathScenarios({ ...PP.pathIn, playoffTeams: PP.rules.playoffTeams });
+  PATH_CACHE = { key, v };
+  return v;
+}
+
+async function drawPaths(PP) {
+  const a = $("#playoffPathHost"), b = $("#bowlPathHost");
+  if (!a && !b) return;
+  try {
+    if (!PATH_CACHE) for (const h of [a, b]) if (h && !h.childElementCount) h.innerHTML = `<div class="empty"><b>Mapping every scenario…</b></div>`;
+    const PS = await pathsFor(PP);
+    window.__PATHS = PS;
+    renderPaths(a, PS, PP, "playoff");
+    renderPaths(b, PS, PP, "bowl");
+    document.body.dataset.pathsReady = "1";
+  } catch (e) {
+    for (const h of [a, b]) if (h) h.innerHTML = `<div class="empty"><b>Couldn't map the scenarios</b>${esc(e.message)}</div>`;
+    document.body.dataset.pathsReady = "error";
+    console.error(e);
+  }
 }
 
 /** Certificate search: per-team oracle budget, and the last answer for unchanged inputs. */
@@ -12288,6 +12741,12 @@ async function drawPicture(host) {
     }
     PICTURE_DRAWN = true;
     document.body.dataset.pictureReady = "1";
+    // The path walk is the heaviest thing on these two tabs, so it never runs
+    // on page load or behind another tab: only while Playoff Picture or Toilet
+    // Bowl is on screen. A board that lands while neither is open waits for
+    // show() to ask for it. Not awaited: the walk yields as it goes.
+    PATH_PENDING = PP;
+    if (pathTabOpen()) { PATH_PENDING = null; if (seq === PICTURE_SEQ) drawPaths(PP); }
   } catch (e) {
     if (seq !== PICTURE_SEQ) return;
     if (PICTURE_DRAWN) { console.error(e); return; }
@@ -12316,7 +12775,7 @@ function settledToiletPicture(L, R) {
   const W=rosters.map(()=>0),PF=rosters.map(()=>0),Loss=rosters.map(()=>0),T=rosters.map(()=>0);
   for(const g of season.games.filter(x=>!x.playoff)){const a=idx.get(g.a.rid),b=idx.get(g.b.rid);if(a==null||b==null)continue;PF[a]+=g.a.pts;PF[b]+=g.b.pts;if(g.a.pts>g.b.pts){W[a]++;Loss[b]++;}else if(g.b.pts>g.a.pts){W[b]++;Loss[a]++;}else{T[a]++;T[b]++;}}
   const teams=rosters.map((r,i)=>({rid:r.roster_id,uid:season.uidOf.get(r.roster_id),div:season.divOf.get(r.roster_id),w:W[i]+T[i]/2,pf:PF[i]}));
-  const Wt=teams.map(t=>t.w),H=h2hFrom(season.games.filter(x=>!x.playoff),rid=>idx.get(rid),teams.length),tOrd=list=>tieOrder(list,Wt,PF,H);
+  const Wt=teams.map(t=>t.w),H=h2hFrom(season.games.filter(x=>!x.playoff),rid=>idx.get(rid),teams.length),tOrd=list=>tieOrder(list,Wt,PF,H,i=>teams[i].div);
   const rank=tOrd(teams.map((_,i)=>i));
   const field=seedField(rank,i=>teams[i].div,rules.playoffTeams,tOrd), order=[...field.seeds,...rank.filter(i=>!field.seeds.includes(i))];
   const todaySeed=new Array(teams.length); order.forEach((i,k)=>todaySeed[i]=k+1);
@@ -12357,7 +12816,7 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   const ppMatch=(label,a,b,cls="")=>`<div class="pp-mw"><div class="pp-lb">${esc(label)}</div><div class="pp-mt ${cls}">${a}${b}</div></div>`;
   const bracket=`<div class="pp-br"><div class="pp-rd">${ppMatch(`Wk ${rules.playoffWeekStart} · 7 v 10`,ppslot(7),ppslot(10))}${ppMatch(`Wk ${rules.playoffWeekStart} · 8 v 9`,ppslot(8),ppslot(9))}</div><div class="pp-cn"><i></i><i></i></div><div class="pp-rd semifinals">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 12 v loser of 8/9`,ppslot(12),gslot(advB,null,"Loser of 8/9"),"byeg")}${ppMatch(`Wk ${rules.playoffWeekStart+1} · 11 v loser of 7/10`,ppslot(11),gslot(advA,null,"Loser of 7/10"),"byeg")}</div><div class="pp-join"></div><div class="pp-fin">${ppMatch(`Wk ${rules.playoffWeekStart+2} · Final`,gslot(finalA?.a,null,"Semi loser"),gslot(finalA?.b,null,"Semi loser"),"fin")}</div><div class="pp-troph">Loser finishes last</div><div class="pp-place">${ppMatch(`Wk ${rules.playoffWeekStart+1} · 7th/8th`,gslot(placeA,null,"7/10 winner"),gslot(placeB,null,"8/9 winner"))}${ppMatch(`Wk ${rules.playoffWeekStart+2} · 9th/10th`,gslot(place9?.a,null,"Semi winner"),gslot(place9?.b,null,"Semi winner"))}</div></div>`;
   const badge=d=>d.chip?ppBadge(d.chip==="Locked into the bowl"?"red":"blue",d.chip,d.chip):"";
-  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span>${badge(d)}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Bowl",d.bowlPct,""],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}" data-k="${label.toLowerCase()}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
+  const row=d=>`<div class="pp-li${d.seed>=11?" byer":""}" data-rid="${esc(String(d.rid))}" data-seed="${d.seed}">${ppsd(d.seed)}${avatarHTML(d.uid,"sm")}<div class="pp-who"><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span>${badge(d)}${bowlMagicHTML(clinch.get(d.rid))}</div><div class="pp-sub"><span class="pp-nw">${d.w}–${d.l}${d.t?`–${d.t}`:""} · ${f1(d.pf)} PF</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Bowl",d.bowlPct,""],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}" data-k="${label.toLowerCase()}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`;
   const bubbles=PP.order.map(i=>rows[i]).filter(r=>r.todaySeed<=rules.playoffTeams&&!r.clinch?.clinchedPlayoff).map(r=>({rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,bowlPct:r.miss,lastPct:last?last[r.i]/lsim.sims:null,w:r.w,l:r.l,t:r.t||0,pf:r.pf,uid:r.uid,chip:""}));
   const safe=rows.filter(r=>r.clinch?.clinchedPlayoff||escaped.some(x=>String(x)===String(r.rid))).map(r=>{const c=chips.get(r.rid)||{};return {rid:r.rid,name:nameOf(r.uid),seed:r.todaySeed,chip:"Safe from last",provingSource:c.provingSource||null};});
   const pair=(week,label,seeds,rids)=>({week,label,seeds,names:rids.map(rid=>{const r=byRid.get(rid);return r?nameOf(r.uid):null;})});
@@ -12365,7 +12824,7 @@ function drawToiletPicture(host, PP, lsim, season = null, games = [], settled = 
   window.__TOILET={seeds:data.map(d=>({...d})),bubbles,safeFromLast:safe,bracket:enrichedPairs,clinches:chipRows,clinchMethod:"exactClinch",sims:PP.sims,settled};
   const week=PP.week==null?rules.playoffWeekStart:PP.week,eye=settled?"Field settled":`Week ${week} ${PP.inFlight?"in progress":"up next"}`;
   const bowlLine=`6 teams · seeds 7–12 · weeks ${rules.playoffWeekStart}–${rules.playoffWeekStart+2}`;
-  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>`;
+  const header=`<div class="pp-meta"><span class="pp-pill">${settled?"Field settled · odds not modelled":"Seeds = today · odds = full season"}</span><span class="pp-pill">Losers advance</span>${settled?"":`<span class="pp-pill">${PP.sims.toLocaleString()} simulations</span>`}</div>${settled?"":`<p class="pp-mgh"><span class="pp-mg">Magic <b>N</b></span>losses needed to lock into the toilet bowl — lose any N more and you're in it, no matter what anyone else does. <span class="pp-mg help">Eliminated</span>can't lock itself in, even losing out.</p>`}`;
   const heroes=data.filter(d=>d.seed>=11).map(d=>`<div class="pp-hero">${avatarHTML(d.uid,"lg")}<div class="pp-who"><div class="pp-eye">${d.seed} seed · bye</div><div class="pp-nm"><span class="tb-name-text" title="${esc(d.name)}">${esc(d.name)}</span></div></div><div class="pp-bars">${[["Bye",d.bowlByePct,"by"],["Last",d.lastPct,""]].map(([label,v,cls])=>`<div class="pp-pb ${cls}"><span>${label}</span><b>${pct(v)}</b><div class="pp-bar"><i style="width:${Math.max(0,Math.min(1,v||0))*100}%"></i></div></div>`).join("")}</div></div>`).join("");
   host.innerHTML=`<section class="tbv ppv"><div class="pp-eye">${esc(eye)}</div><div class="tb-head">Toilet Bowl Picture</div><p class="pp-lede">If the season ended today, the teams that miss the six-team playoffs enter the toilet bowl. You advance by losing; the loser of the week-${rules.playoffWeekStart+2} final finishes last.</p>${header}<div class="pp-heros">${heroes}</div><div class="pp-lay"><div><h3 class="pp-h">The bracket</h3>${bracket}</div><div><h3 class="pp-h">In the bowl · ${esc(bowlLine)}</h3><div class="pp-lst">${data.map((d,i)=>`${i===4?'<div class="pp-cut byl"><span>Bye line · seeds 11–12 skip round one</span></div>':''}${row(d)}`).join("")}<div class="pp-cut pol"><span>Toilet bowl line</span></div>${bubbles.length?`<div class="pp-hh">On the bubble</div>${bubbles.map(d=>row({...d,bowlByePct:null,seed:d.seed})).join("")}`:""}</div></div></div><p class="pp-note">Last place is the week-${rules.playoffWeekStart+2} final loser, not the worst regular-season record. Seeds 7–12 are everyone missing the playoffs after division winners are seeded first. ${settled?"The regular season field is settled; percentages are not modelled.":"Bowl % is the miss rate, Bye % is the share of runs seeded 11th or 12th, and Last % is C.last from that run."} Clinched chips are exact. Only Last place is identified; 7th–11th place odds are not shown.${data.some(d=>d.chip)||safe.length?"":" None clinched yet."}</p></section>`;
 }
@@ -12383,6 +12842,7 @@ function panelPicture() {
   const host = el("div"); host.id = "pictureHost";
   host.appendChild(el("div", "empty", "<b>Working out the playoff picture…</b>Reading the rest of the schedule and simulating it."));
   p.appendChild(host);
+  const path = el("div", "pa-host"); path.id = "playoffPathHost"; p.appendChild(path);
   return p;
 }
 
@@ -12390,6 +12850,7 @@ function panelToilet() {
   const p = el("div", "panel"); p.dataset.panel = "toilet";
   p.appendChild(sechead("Toilet Bowl", "The consolation bracket for teams that miss the playoffs, built from the same season simulation."));
   const host = el("div"); host.id = "toiletHost"; p.appendChild(host);
+  const path = el("div", "pa-host"); path.id = "bowlPathHost"; p.appendChild(path);
   return p;
 }
 
@@ -12399,7 +12860,8 @@ function panelToilet() {
  * week still being played moves nothing here until it is over.
  *
  * The order is DFFL's rule, the same tieOrder/seedField the simulator seeds
- * every season with: wins; a two-way tie goes to head to head, then points for;
+ * every season with: wins; a two-way tie goes to head to head, then (two
+ * division rivals tied for first) division record, then points for;
  * a tie of three or more goes straight to points for. A tie is sized inside the
  * group being ranked — a division, the division winners, the wild-card pool.
  */
@@ -12427,7 +12889,7 @@ function standingsData(season, upcoming = []) {
   }
   const Wt = W.map((w, i) => w + T[i] / 2);
   const H = h2hFrom(games, rid => idx.get(rid), N);
-  const order = list => tieOrder(list, Wt, PF, H);
+  const order = list => tieOrder(list, Wt, PF, H, i => div[i]);
   const ids = rids.map((_, i) => i);
   const rank = order(ids);
   const field = seedField(rank, i => div[i], (leagueRules(season) || {}).playoffTeams || 6, order);
@@ -12481,8 +12943,12 @@ const h2hStr = (S, a, b) => {
   return recStr(Math.floor(aw), Math.floor(bw), ties);
 };
 
-/** Why a tie group comes out in the order it does, in a sentence. */
-function tieReason(S, group) {
+/**
+ * Why a tie group comes out in the order it does, in a sentence. `forFirst`:
+ * the group is two division rivals tied for first in their division, the one
+ * place the division-record step applies.
+ */
+function tieReason(S, group, forFirst = false) {
   const nm = i => nameOf(S.teams[i].uid);
   const pts = i => f1(S.PF[i]);
   if (group.length === 2) {
@@ -12491,7 +12957,16 @@ function tieReason(S, group) {
     const more = left.length ? ` They meet again in week ${left.join(" and ")}.` : "";
     if (d !== 0) return { how: "Head to head", text: `${nm(a)} won the season series ${h2hStr(S, a, b)}.${more}` };
     const met = S.H[a][b] + S.H[b][a] > 0;
-    return { how: "Points for", text: `${met ? `Season series even at ${h2hStr(S, a, b)}` : "They haven't played yet"}, so it goes to points for: ${pts(a)} to ${pts(b)}.${more}` };
+    const even = met ? `Season series even at ${h2hStr(S, a, b)}` : "They haven't played yet";
+    if (forFirst) {
+      const ta = S.teams[a], tb = S.teams[b];
+      const dp = t => { const g = t.dw + t.dl + t.dt; return g ? (t.dw + t.dt / 2) / g : 0.5; };
+      const drec = t => recStr(t.dw, t.dl, t.dt);
+      if (dp(ta) !== dp(tb))
+        return { how: "Division record", text: `${even}, and they're tied for first in the division, so it goes to division record: ${nm(a)} ${drec(ta)}, ${nm(b)} ${drec(tb)}.${more}` };
+      return { how: "Points for", text: `${even} and division records level at ${drec(ta)}, so it goes to points for: ${pts(a)} to ${pts(b)}.${more}` };
+    }
+    return { how: "Points for", text: `${even}, so it goes to points for: ${pts(a)} to ${pts(b)}.${more}` };
   }
   return { how: "Points for", text: `A ${group.length}-way tie skips head to head and goes straight to points for: ${group.map(i => `${nm(i)} ${pts(i)}`).join(", ")}.` };
 }
@@ -12530,7 +13005,7 @@ function renderStandings(host, S) {
       { label: "Div", num: 1, title: "Record inside the division" },
       { label: "PF", num: 1, title: "Points for" }, { label: "PA", num: 1, title: "Points against" },
       { label: "Strk", num: 1, title: "Current streak" }, { label: "Seed", num: 1, title: "League seed if the season ended today" }], rows, "st"));
-    const ties = tieGroupsOf(list, S.Wt).map(g => tieReason(S, g));
+    const ties = tieGroupsOf(list, S.Wt).map(g => tieReason(S, g, g[0] === list[0]));
     if (ties.length) box.appendChild(el("div", "st-tie", ties.map(r => `<b>Tie · ${esc(r.how)}:</b> ${esc(r.text)}`).join("<br>")));
     grid.appendChild(box);
   }
@@ -12558,7 +13033,8 @@ function renderTiebreakers(host, S) {
   rules.innerHTML = `<ol>
       <li><b>Wins.</b> A tied game counts as half a win.</li>
       <li><b>Two teams tied:</b> head to head — their record against each other this regular season.</li>
-      <li><b>Still level</b> (series split, or they haven't played): points for.</li>
+      <li><b>Still level, and they're division rivals tied for first in the division:</b> division record — their record against the rest of the division.</li>
+      <li><b>Still level</b> (series split, or they haven't played, and not a tie for a division lead): points for.</li>
       <li><b>Three or more tied:</b> straight to points for. Head to head is skipped.</li>
     </ol>
     <p>The same rule decides division titles, playoff seeding and the toilet bowl field. A tie is
@@ -12573,7 +13049,7 @@ function renderTiebreakers(host, S) {
   const nm = i => nameOf(S.teams[i].uid);
   const items = [];
   for (const [d, list] of [...S.divs.entries()].sort((a, b) => a[0] - b[0]))
-    for (const g of tieGroupsOf(list, S.Wt)) items.push({ where: `${S.divNames.get(d) || `Division ${d}`} race`, g });
+    for (const g of tieGroupsOf(list, S.Wt)) items.push({ where: `${S.divNames.get(d) || `Division ${d}`} race`, g, forFirst: g[0] === list[0] });
   for (const g of tieGroupsOf(S.field.champs, S.Wt)) items.push({ where: "Seeding the division winners", g });
   const pool = S.field.rest;
   for (const g of tieGroupsOf(pool, S.Wt)) {
@@ -12585,11 +13061,11 @@ function renderTiebreakers(host, S) {
   else {
     const list = el("div", "tb-ties");
     for (const it of items) {
-      const r = tieReason(S, it.g);
+      const r = tieReason(S, it.g, !!it.forFirst);
       list.appendChild(el("div", `card tb-tie${it.hot ? " hot" : ""}`, `
         <div class="k">${esc(it.where)} · ${esc(recStr(S.teams[it.g[0]].w, S.teams[it.g[0]].l, S.teams[it.g[0]].t))}</div>
         <div class="tb-who">${it.g.map((i, k) => `<span class="nmcell">${k ? '<span class="gt">›</span>' : ""}${avatarHTML(S.teams[i].uid, "sm")}<span class="nm">${esc(nm(i))}</span></span>`).join("")}</div>
-        <div class="tb-why"><span class="badge ${r.how === "Head to head" ? "gold" : "blue"}">${esc(r.how)}</span> ${esc(r.text)}</div>`));
+        <div class="tb-why"><span class="badge ${r.how === "Points for" ? "blue" : "gold"}">${esc(r.how)}</span> ${esc(r.text)}</div>`));
     }
     host.appendChild(list);
   }
@@ -12640,7 +13116,7 @@ function ensureStandings() {
 
 function panelStandings() {
   const p = el("div", "panel"); p.dataset.panel = "standings";
-  p.appendChild(sechead("Division Standings", "Every division, then the league table as it would seed today — wins, then head to head, then points for."));
+  p.appendChild(sechead("Division Standings", "Every division, then the league table as it would seed today — wins, then head to head, then division record (for a division lead), then points for."));
   const host = el("div"); host.id = "standingsHost";
   host.appendChild(el("div", "empty", "<b>Building the standings…</b>"));
   p.appendChild(host);
